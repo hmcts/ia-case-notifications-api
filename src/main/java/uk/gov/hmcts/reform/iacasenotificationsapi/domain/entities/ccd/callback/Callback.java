@@ -17,7 +17,7 @@ public class Callback<T extends CaseData> {
     private Event event;
 
     private CaseDetails<T> caseDetails;
-    private Optional<CaseDetails<T>> caseDetailsBefore;
+    private Optional<CaseDetails<T>> caseDetailsBefore = Optional.empty();
 
     private Callback() {
         // noop -- for deserializer
