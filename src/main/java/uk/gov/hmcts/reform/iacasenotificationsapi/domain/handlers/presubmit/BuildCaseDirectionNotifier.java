@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 
@@ -76,7 +77,7 @@ public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<Asyl
         Map<String, String> personalisation =
             ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", Long.toString(callback.getCaseDetails().getId()))
+                .put("Appeal Ref Number", asylumCase.getAppealReferenceNumber().orElse(""))
                 .put("LR reference", asylumCase.getLegalRepReferenceNumber().orElse(""))
                 .put("Given names", asylumCase.getAppellantGivenNames().orElse(""))
                 .put("Family name", asylumCase.getAppellantLastName().orElse(""))
@@ -97,12 +98,12 @@ public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<Asyl
                 reference
             );
 
-        List<String> notificationsSent =
+        List<IdValue<String>> notificationsSent =
             asylumCase
                 .getNotificationsSent()
                 .orElseGet(ArrayList::new);
 
-        notificationsSent.add(notificationId);
+        notificationsSent.add(new IdValue<>(reference, notificationId));
 
         asylumCase.setNotificationsSent(notificationsSent);
 

@@ -40,8 +40,8 @@ public class DirectionFinderTest {
         when(existingDirectionById1.getValue()).thenReturn(existingDirection1);
         when(existingDirectionById2.getValue()).thenReturn(existingDirection2);
 
-        when(existingDirection1.getDirectionTag()).thenReturn(DirectionTag.LEGAL_REPRESENTATIVE_REVIEW);
-        when(existingDirection2.getDirectionTag()).thenReturn(DirectionTag.BUILD_CASE);
+        when(existingDirection1.getTag()).thenReturn(DirectionTag.LEGAL_REPRESENTATIVE_REVIEW);
+        when(existingDirection2.getTag()).thenReturn(DirectionTag.BUILD_CASE);
 
         when(asylumCase.getDirections()).thenReturn(Optional.of(directions));
 
@@ -63,7 +63,7 @@ public class DirectionFinderTest {
 
         when(existingDirectionById1.getValue()).thenReturn(existingDirection1);
 
-        when(existingDirection1.getDirectionTag()).thenReturn(DirectionTag.LEGAL_REPRESENTATIVE_REVIEW);
+        when(existingDirection1.getTag()).thenReturn(DirectionTag.LEGAL_REPRESENTATIVE_REVIEW);
 
         when(asylumCase.getDirections()).thenReturn(Optional.of(directions));
 

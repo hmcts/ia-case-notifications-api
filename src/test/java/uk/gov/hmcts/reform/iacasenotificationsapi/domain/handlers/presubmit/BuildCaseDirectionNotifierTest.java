@@ -9,6 +9,8 @@ import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
@@ -20,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,10 +40,13 @@ public class BuildCaseDirectionNotifierTest {
     @Mock private AsylumCase asylumCase;
     @Mock private Direction buildCaseDirection;
 
+    @Captor private ArgumentCaptor<List<IdValue<String>>> existingNotificationsSentCaptor;
+
     final long caseId = 123L;
 
     final String legalRepresentativeEmailAddress = "legal-representative@example.com";
-    final String legalRepReferenceNumber = "PA/001/2018";
+    final String legalRepReferenceNumber = "SOMETHING";
+    final String appealReferenceNumber = "PA/001/2018";
     final String appellantGivenNames = "Jane";
     final String appellantLastName = "Doe";
     final String buildCaseDirectionExplanation = "Build your case";
@@ -49,7 +55,7 @@ public class BuildCaseDirectionNotifierTest {
     final Map<String, String> expectedPersonalisation =
         ImmutableMap
             .<String, String>builder()
-            .put("Appeal Ref Number", Long.toString(caseId))
+            .put("Appeal Ref Number", appealReferenceNumber)
             .put("LR reference", legalRepReferenceNumber)
             .put("Given names", appellantGivenNames)
             .put("Family name", appellantLastName)
@@ -77,11 +83,10 @@ public class BuildCaseDirectionNotifierTest {
     @Test
     public void should_send_build_case_direction_notification() {
 
-        final List<String> existingNotifications =
-            new ArrayList<>(Arrays.asList("ZZZ-ZZZ-ZZZ-ZZZ"));
-
-        final List<String> expectedNotifications =
-            Arrays.asList("ZZZ-ZZZ-ZZZ-ZZZ", expectedNotificationId);
+        final List<IdValue<String>> existingNotifications =
+            new ArrayList<>(Arrays.asList(
+                new IdValue<>("some-notification-sent", "ZZZ-ZZZ-ZZZ-ZZZ")
+            ));
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(callback.getEvent()).thenReturn(Event.UPLOAD_RESPONDENT_EVIDENCE);
@@ -91,6 +96,7 @@ public class BuildCaseDirectionNotifierTest {
         when(directionFinder.findFirst(asylumCase, DirectionTag.BUILD_CASE)).thenReturn(Optional.of(buildCaseDirection));
 
         when(caseDetails.getId()).thenReturn(caseId);
+        when(asylumCase.getAppealReferenceNumber()).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.getLegalRepReferenceNumber()).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.getAppellantGivenNames()).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.getAppellantLastName()).thenReturn(Optional.of(appellantLastName));
@@ -117,13 +123,24 @@ public class BuildCaseDirectionNotifierTest {
             expectedNotificationReference
         );
 
-        verify(asylumCase, times(1)).setNotificationsSent(expectedNotifications);
+        verify(asylumCase, times(1)).setNotificationsSent(existingNotificationsSentCaptor.capture());
+
+        List<IdValue<String>> actualExistingNotificationsSent =
+            existingNotificationsSentCaptor
+                .getAllValues()
+                .get(0);
+
+        assertEquals(2, actualExistingNotificationsSent.size());
+
+        assertEquals("some-notification-sent", actualExistingNotificationsSent.get(0).getId());
+        assertEquals("ZZZ-ZZZ-ZZZ-ZZZ", actualExistingNotificationsSent.get(0).getValue());
+
+        assertEquals(caseId + "_BUILD_CASE_DIRECTION", actualExistingNotificationsSent.get(1).getId());
+        assertEquals(expectedNotificationId, actualExistingNotificationsSent.get(1).getValue());
     }
 
     @Test
     public void should_send_build_case_direction_notification_when_no_notifications_exist() {
-
-        final List<String> expectedNotifications = Arrays.asList(expectedNotificationId);
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(callback.getEvent()).thenReturn(Event.UPLOAD_RESPONDENT_EVIDENCE);
@@ -133,6 +150,7 @@ public class BuildCaseDirectionNotifierTest {
         when(directionFinder.findFirst(asylumCase, DirectionTag.BUILD_CASE)).thenReturn(Optional.of(buildCaseDirection));
 
         when(caseDetails.getId()).thenReturn(caseId);
+        when(asylumCase.getAppealReferenceNumber()).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.getLegalRepReferenceNumber()).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.getAppellantGivenNames()).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.getAppellantLastName()).thenReturn(Optional.of(appellantLastName));
@@ -159,7 +177,17 @@ public class BuildCaseDirectionNotifierTest {
             expectedNotificationReference
         );
 
-        verify(asylumCase, times(1)).setNotificationsSent(expectedNotifications);
+        verify(asylumCase, times(1)).setNotificationsSent(existingNotificationsSentCaptor.capture());
+
+        List<IdValue<String>> actualExistingNotificationsSent =
+            existingNotificationsSentCaptor
+                .getAllValues()
+                .get(0);
+
+        assertEquals(1, actualExistingNotificationsSent.size());
+
+        assertEquals(caseId + "_BUILD_CASE_DIRECTION", actualExistingNotificationsSent.get(0).getId());
+        assertEquals(expectedNotificationId, actualExistingNotificationsSent.get(0).getValue());
     }
 
     @Test
@@ -168,7 +196,7 @@ public class BuildCaseDirectionNotifierTest {
         final Map<String, String> expectedPersonalisation =
             ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", Long.toString(caseId))
+                .put("Appeal Ref Number", "")
                 .put("LR reference", "")
                 .put("Given names", "")
                 .put("Family name", "")
@@ -176,8 +204,6 @@ public class BuildCaseDirectionNotifierTest {
                 .put("Explanation", buildCaseDirectionExplanation)
                 .put("due date", buildCaseDirectionDateDue)
                 .build();
-
-        final List<String> expectedNotifications = Arrays.asList(expectedNotificationId);
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(callback.getEvent()).thenReturn(Event.UPLOAD_RESPONDENT_EVIDENCE);
@@ -187,6 +213,7 @@ public class BuildCaseDirectionNotifierTest {
         when(directionFinder.findFirst(asylumCase, DirectionTag.BUILD_CASE)).thenReturn(Optional.of(buildCaseDirection));
 
         when(caseDetails.getId()).thenReturn(caseId);
+        when(asylumCase.getAppealReferenceNumber()).thenReturn(Optional.empty());
         when(asylumCase.getLegalRepReferenceNumber()).thenReturn(Optional.empty());
         when(asylumCase.getAppellantGivenNames()).thenReturn(Optional.empty());
         when(asylumCase.getAppellantLastName()).thenReturn(Optional.empty());
@@ -213,7 +240,17 @@ public class BuildCaseDirectionNotifierTest {
             expectedNotificationReference
         );
 
-        verify(asylumCase, times(1)).setNotificationsSent(expectedNotifications);
+        verify(asylumCase, times(1)).setNotificationsSent(existingNotificationsSentCaptor.capture());
+
+        List<IdValue<String>> actualExistingNotificationsSent =
+            existingNotificationsSentCaptor
+                .getAllValues()
+                .get(0);
+
+        assertEquals(1, actualExistingNotificationsSent.size());
+
+        assertEquals(caseId + "_BUILD_CASE_DIRECTION", actualExistingNotificationsSent.get(0).getId());
+        assertEquals(expectedNotificationId, actualExistingNotificationsSent.get(0).getValue());
     }
 
     @Test

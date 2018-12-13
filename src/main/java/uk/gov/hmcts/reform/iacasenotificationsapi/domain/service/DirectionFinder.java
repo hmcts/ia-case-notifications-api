@@ -20,7 +20,7 @@ public class DirectionFinder {
                 .orElseThrow(() -> new IllegalStateException("directions is not present"))
                 .stream()
                 .map(IdValue::getValue)
-                .filter(direction -> direction.getDirectionTag() == directionTag)
+                .filter(direction -> direction.getTag() == directionTag)
                 .findFirst();
     }
 }
