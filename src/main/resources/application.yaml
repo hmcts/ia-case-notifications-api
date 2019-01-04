@@ -14,6 +14,7 @@ spring:
 govnotify.key: ${IA_GOV_NOTIFY_KEY}
 govnotify.template.buildCaseDirection: 13a6331e-b0f5-4e64-ae1b-dc2c2fd0aeeb
 
+notificationSender.deduplicateSendsWithinSeconds: 60
 iaCcdFrontendUrl: ${IA_CCD_FRONTEND_URL:http://localhost:3451/}
 
 security:

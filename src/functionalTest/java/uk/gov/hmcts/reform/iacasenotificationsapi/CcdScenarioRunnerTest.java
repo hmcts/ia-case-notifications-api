@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.lang3.StringUtils;
@@ -146,7 +147,7 @@ public class CcdScenarioRunnerTest {
         );
 
         Map<String, Object> caseDetails = new HashMap<>();
-        caseDetails.put("id", MapValueExtractor.extractOrDefault(data, "input.id", 1));
+        caseDetails.put("id", MapValueExtractor.extractOrDefault(data, "input.id", ThreadLocalRandom.current().nextInt(1, 9999999 + 1)));
         caseDetails.put("jurisdiction", MapValueExtractor.extractOrDefault(data, "input.jurisdiction", "IA"));
         caseDetails.put("state", MapValueExtractor.extractOrThrow(data, "input.state"));
         caseDetails.put("case_data", caseData);
