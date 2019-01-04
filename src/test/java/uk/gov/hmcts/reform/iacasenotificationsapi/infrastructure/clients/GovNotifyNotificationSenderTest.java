@@ -67,11 +67,16 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_not_send_same_email_twice_in_short_space_of_time() throws NotificationClientException {
+    public void should_not_send_duplicate_emails_in_short_space_of_time() throws NotificationClientException {
+
+        final String otherEmailAddress = "foo@bar.com";
+        final String otherReference = "1111_SOME_OTHER_NOTIFICATION";
 
         final UUID expectedNotificationId = UUID.randomUUID();
+        final UUID expectedNotificationIdForOther = UUID.randomUUID();
 
         SendEmailResponse sendEmailResponse = mock(SendEmailResponse.class);
+        SendEmailResponse sendEmailResponseForOther = mock(SendEmailResponse.class);
 
         when(notificationClient.sendEmail(
             templateId,
@@ -80,9 +85,17 @@ public class GovNotifyNotificationSenderTest {
             reference
         )).thenReturn(sendEmailResponse);
 
-        when(sendEmailResponse.getNotificationId()).thenReturn(expectedNotificationId);
+        when(notificationClient.sendEmail(
+            templateId,
+            otherEmailAddress,
+            personalisation,
+            otherReference
+        )).thenReturn(sendEmailResponseForOther);
 
-        String actualNotificationId1 =
+        when(sendEmailResponse.getNotificationId()).thenReturn(expectedNotificationId);
+        when(sendEmailResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
+
+        final String actualNotificationId1 =
             govNotifyNotificationSender.sendEmail(
                 templateId,
                 emailAddress,
@@ -90,16 +103,25 @@ public class GovNotifyNotificationSenderTest {
                 reference
             );
 
-        String actualNotificationId2 =
+        final String actualNotificationId2 =
             govNotifyNotificationSender.sendEmail(
                 templateId,
                 emailAddress,
                 personalisation,
                 reference
+            );
+
+        final String actualNotificationIdForOther =
+            govNotifyNotificationSender.sendEmail(
+                templateId,
+                otherEmailAddress,
+                personalisation,
+                otherReference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
         assertEquals(expectedNotificationId.toString(), actualNotificationId2);
+        assertEquals(expectedNotificationIdForOther.toString(), actualNotificationIdForOther);
 
         try {
             Thread.sleep(2000);
@@ -107,7 +129,7 @@ public class GovNotifyNotificationSenderTest {
             // noop
         }
 
-        String actualNotificationId3 =
+        final String actualNotificationId3 =
             govNotifyNotificationSender.sendEmail(
                 templateId,
                 emailAddress,
@@ -122,6 +144,13 @@ public class GovNotifyNotificationSenderTest {
             emailAddress,
             personalisation,
             reference
+        );
+
+        verify(notificationClient, times(1)).sendEmail(
+            templateId,
+            otherEmailAddress,
+            personalisation,
+            otherReference
         );
     }
 

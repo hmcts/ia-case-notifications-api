@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Map;
@@ -14,6 +16,8 @@ import uk.gov.service.notify.SendEmailResponse;
 
 @Service
 public class GovNotifyNotificationSender implements NotificationSender {
+
+    private static final org.slf4j.Logger LOG = getLogger(GovNotifyNotificationSender.class);
 
     private final int deduplicateSendsWithinSeconds;
     private final NotificationClient notificationClient;
@@ -42,6 +46,8 @@ public class GovNotifyNotificationSender implements NotificationSender {
 
                 try {
 
+                    LOG.info("Attempting to send email notification to GovNotify: {}", reference);
+
                     SendEmailResponse response =
                         notificationClient
                             .sendEmail(
@@ -51,9 +57,18 @@ public class GovNotifyNotificationSender implements NotificationSender {
                                 reference
                             );
 
-                    return response
-                        .getNotificationId()
-                        .toString();
+                    String notificationId =
+                        response
+                            .getNotificationId()
+                            .toString();
+
+                    LOG.info(
+                        "Successfully sent email notification to GovNotify: {} ({})",
+                        reference,
+                        notificationId
+                    );
+
+                    return notificationId;
 
                 } catch (NotificationClientException e) {
                     throw new UnrecoverableException("Failed to send email using GovNotify", e);

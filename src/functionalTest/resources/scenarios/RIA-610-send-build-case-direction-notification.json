@@ -22,7 +22,8 @@
               }
             }
           ],
-          "notificationsSent": []
+          "notificationsSent": [],
+          "legalRepresentativeEmailAddress": "RIA-610-test-case-1@example.com"
         }
       }
     }
@@ -50,13 +51,26 @@
             "id": "1234_BUILD_CASE_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
-        ]
+        ],
+        "legalRepresentativeEmailAddress": "RIA-610-test-case-1@example.com"
       }
     },
     "notifications": [
       {
-        "subject": "xxx",
-        "body": "xxx"
+        "reference": "1234_BUILD_CASE_DIRECTION",
+        "recipient": "RIA-610-test-case-1@example.com",
+        "subject": "Asylum appeal direction: build your case",
+        "body": [
+          "Appeal reference number: A123456",
+          "Your reference: CASE001",
+          "Appellant name: Talha Awan",
+          "Link to the online service: {$iaCcdFrontendUrl}",
+          "You have a direction for this case",
+          "You must now build your case by uploading your appeal argument and evidence",
+          "Your argument must explain why you believe the respondent's decision is wrong",
+          "You must complete this direction by: {$TODAY+28}",
+          "First-tier Tribunal (Immigration and Asylum Chamber)"
+        ]
       }
     ]
   }

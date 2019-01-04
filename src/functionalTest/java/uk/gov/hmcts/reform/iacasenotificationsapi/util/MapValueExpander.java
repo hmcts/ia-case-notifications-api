@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -11,7 +12,8 @@ import java.util.stream.Collectors;
 public final class MapValueExpander {
 
     private static final Pattern TODAY_PATTERN = Pattern.compile("\\{\\$TODAY([+-]?\\d*?)}");
-    private static final Pattern ENV_VARIABLE_PATTERN = Pattern.compile("\\{\\$([A-Z0-9_]+?)}");
+    private static final Pattern ENVIRONMENT_PROPERTY_PATTERN = Pattern.compile("\\{\\$([a-zA-Z0-9].+?)}");
+    public static final Properties ENVIRONMENT_PROPERTIES = new Properties(System.getProperties());
 
     private MapValueExpander() {
         // noop
@@ -49,12 +51,12 @@ public final class MapValueExpander {
 
             String value = (String) untypedValue;
 
-            if (TODAY_PATTERN.matcher(value).matches()) {
+            if (TODAY_PATTERN.matcher(value).find()) {
                 value = expandToday(value);
             }
 
-            if (ENV_VARIABLE_PATTERN.matcher(value).matches()) {
-                value = expandEnvironmentVariable(value);
+            if (ENVIRONMENT_PROPERTY_PATTERN.matcher(value).find()) {
+                value = expandEnvironmentProperty(value);
             }
 
             return value;
@@ -97,9 +99,9 @@ public final class MapValueExpander {
         return expandedValue;
     }
 
-    private static String expandEnvironmentVariable(String value) {
+    private static String expandEnvironmentProperty(String value) {
 
-        Matcher matcher = ENV_VARIABLE_PATTERN.matcher(value);
+        Matcher matcher = ENVIRONMENT_PROPERTY_PATTERN.matcher(value);
 
         String expandedValue = value;
 
@@ -111,7 +113,7 @@ public final class MapValueExpander {
                 String variableName = matcher.group(1);
                 String token = matcher.group(0);
 
-                expandedValue = expandedValue.replace(token, System.getenv(variableName));
+                expandedValue = expandedValue.replace(token, ENVIRONMENT_PROPERTIES.getProperty(variableName));
             }
         }
 

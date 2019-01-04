@@ -1,39 +1,45 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
+import static org.junit.Assert.assertFalse;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.Headers;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.StreamSupport;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.EnumerablePropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.verifiers.Verifier;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest
+@ActiveProfiles("functional")
 public class CcdScenarioRunnerTest {
 
-    private final String targetInstance =
-        StringUtils.defaultIfBlank(
-            System.getenv("TEST_URL"),
-            "http://localhost:8093"
-        );
+    @Value("${targetInstance}") private String targetInstance;
 
+    @Autowired private Environment environment;
     @Autowired private AuthorizationHeadersProvider authorizationHeadersProvider;
     @Autowired private ObjectMapper objectMapper;
+    @Autowired private List<Verifier> verifiers;
 
     @Before
     public void setUp() {
@@ -43,6 +49,13 @@ public class CcdScenarioRunnerTest {
 
     @Test
     public void scenarios_should_behave_as_specified() throws IOException {
+
+        assertFalse(
+            "Verifiers are configured",
+            verifiers.isEmpty()
+        );
+
+        loadPropertiesIntoMapValueExpander();
 
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {
@@ -74,12 +87,20 @@ public class CcdScenarioRunnerTest {
 
             Map<String, String> templatesByFilename = StringResourceLoader.load("/templates/*.json");
 
-            final Headers authorizationHeaders = getAuthorizationHeaders(scenario);
+            final long testCaseId = MapValueExtractor.extractOrDefault(
+                scenario,
+                "request.input.id",
+                ThreadLocalRandom.current().nextInt(1, 9999999 + 1)
+
+            );
+
             final String requestBody = buildCallbackBody(
-                MapValueExtractor.extract(scenario, "request"),
+                testCaseId,
+                MapValueExtractor.extract(scenario, "request.input"),
                 templatesByFilename
             );
 
+            final Headers authorizationHeaders = getAuthorizationHeaders(scenario);
             final String requestUri = MapValueExtractor.extract(scenario, "request.uri");
             final int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200);
 
@@ -106,10 +127,28 @@ public class CcdScenarioRunnerTest {
             Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
             Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
 
-            MapFieldAssertor.assertFields(expectedResponse, actualResponse, (description + ": "));
+            verifiers.forEach(verifier ->
+                verifier.verify(
+                    testCaseId,
+                    scenario,
+                    expectedResponse,
+                    actualResponse
+                )
+            );
         }
 
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
+    }
+
+    private void loadPropertiesIntoMapValueExpander() {
+
+        MutablePropertySources propertySources = ((AbstractEnvironment) environment).getPropertySources();
+        StreamSupport
+            .stream(propertySources.spliterator(), false)
+            .filter(propertySource -> propertySource instanceof EnumerablePropertySource)
+            .map(ropertySource -> ((EnumerablePropertySource) ropertySource).getPropertyNames())
+            .flatMap(Arrays::stream)
+            .forEach(name -> MapValueExpander.ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
     }
 
     private Map<String, Object> deserializeWithExpandedValues(
@@ -137,46 +176,47 @@ public class CcdScenarioRunnerTest {
     }
 
     private String buildCallbackBody(
-        Map<String, Object> data,
+        long testCaseId,
+        Map<String, Object> input,
         Map<String, String> templatesByFilename
     ) throws IOException {
 
         Map<String, Object> caseData = buildCaseData(
-            MapValueExtractor.extract(data, "input.caseData"),
+            MapValueExtractor.extract(input, "caseData"),
             templatesByFilename
         );
 
         Map<String, Object> caseDetails = new HashMap<>();
-        caseDetails.put("id", MapValueExtractor.extractOrDefault(data, "input.id", ThreadLocalRandom.current().nextInt(1, 9999999 + 1)));
-        caseDetails.put("jurisdiction", MapValueExtractor.extractOrDefault(data, "input.jurisdiction", "IA"));
-        caseDetails.put("state", MapValueExtractor.extractOrThrow(data, "input.state"));
+        caseDetails.put("id", testCaseId);
+        caseDetails.put("jurisdiction", MapValueExtractor.extractOrDefault(input, "jurisdiction", "IA"));
+        caseDetails.put("state", MapValueExtractor.extractOrThrow(input, "state"));
         caseDetails.put("case_data", caseData);
 
         Map<String, Object> callback = new HashMap<>();
-        callback.put("event_id", MapValueExtractor.extractOrThrow(data, "input.eventId"));
+        callback.put("event_id", MapValueExtractor.extractOrThrow(input, "eventId"));
         callback.put("case_details", caseDetails);
 
         return MapSerializer.serialize(callback);
     }
 
     private String buildCallbackResponseBody(
-        Map<String, Object> scenario,
+        Map<String, Object> expectation,
         Map<String, String> templatesByFilename
     ) throws IOException {
 
-        if (MapValueExtractor.extract(scenario, "confirmation") != null) {
+        if (MapValueExtractor.extract(expectation, "confirmation") != null) {
 
             final Map<String, Object> callbackResponse = new HashMap<>();
 
-            callbackResponse.put("confirmation_header", MapValueExtractor.extract(scenario, "confirmation.header"));
-            callbackResponse.put("confirmation_body", MapValueExtractor.extract(scenario, "confirmation.body"));
+            callbackResponse.put("confirmation_header", MapValueExtractor.extract(expectation, "confirmation.header"));
+            callbackResponse.put("confirmation_body", MapValueExtractor.extract(expectation, "confirmation.body"));
 
             return MapSerializer.serialize(callbackResponse);
 
         } else {
 
             Map<String, Object> caseData = buildCaseData(
-                MapValueExtractor.extract(scenario, "caseData"),
+                MapValueExtractor.extract(expectation, "caseData"),
                 templatesByFilename
             );
 
@@ -189,7 +229,7 @@ public class CcdScenarioRunnerTest {
                     )
                 );
 
-            preSubmitCallbackResponse.addErrors(MapValueExtractor.extract(scenario, "errors"));
+            preSubmitCallbackResponse.addErrors(MapValueExtractor.extract(expectation, "errors"));
 
             return objectMapper.writeValueAsString(preSubmitCallbackResponse);
         }
