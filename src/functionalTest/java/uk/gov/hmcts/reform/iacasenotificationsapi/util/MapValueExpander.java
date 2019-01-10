@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public final class MapValueExpander {
 
-    private static final Pattern TODAY_PATTERN = Pattern.compile("\\{\\$TODAY([+-]?\\d*?)}");
+    private static final Pattern TODAY_PATTERN = Pattern.compile("\\{\\$TODAY([+-]?\\d*?)\\|?([^0-9]*?)}");
     private static final Pattern ENVIRONMENT_PROPERTY_PATTERN = Pattern.compile("\\{\\$([a-zA-Z0-9].+?)}");
     public static final Properties ENVIRONMENT_PROPERTIES = new Properties(System.getProperties());
 
@@ -76,7 +77,7 @@ public final class MapValueExpander {
             char plusOrMinus = '+';
             int dayAdjustment = 0;
 
-            if (matcher.groupCount() == 1
+            if (matcher.groupCount() >= 1
                 && !matcher.group(1).isEmpty()) {
 
                 plusOrMinus = matcher.group(1).charAt(0);
@@ -91,9 +92,19 @@ public final class MapValueExpander {
                 now = now.minusDays(dayAdjustment);
             }
 
+            String dateFormat = "yyyy-MM-dd";
+
+            if (matcher.groupCount() >= 2
+                && !matcher.group(2).isEmpty()) {
+                dateFormat = matcher.group(2);
+            }
+
             String token = matcher.group(0);
 
-            expandedValue = expandedValue.replace(token, now.toString());
+            expandedValue = expandedValue.replace(
+                token,
+                now.format(DateTimeFormatter.ofPattern(dateFormat))
+            );
         }
 
         return expandedValue;

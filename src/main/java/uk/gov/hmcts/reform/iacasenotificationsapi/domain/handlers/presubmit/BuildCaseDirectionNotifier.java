@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,11 @@ public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<Asyl
                 .getLegalRepresentativeEmailAddress()
                 .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
 
+        String directionDueDate =
+            LocalDate
+                .parse(buildCaseDirection.getDateDue())
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
         Map<String, String> personalisation =
             ImmutableMap
                 .<String, String>builder()
@@ -83,7 +90,7 @@ public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<Asyl
                 .put("Family name", asylumCase.getAppellantLastName().orElse(""))
                 .put("Hyperlink to user’s case list", iaCcdFrontendUrl)
                 .put("Explanation", buildCaseDirection.getExplanation())
-                .put("due date", buildCaseDirection.getDateDue())
+                .put("due date", directionDueDate)
                 .build();
 
         String reference =

@@ -50,7 +50,8 @@ public class BuildCaseDirectionNotifierTest {
     final String appellantGivenNames = "Jane";
     final String appellantLastName = "Doe";
     final String buildCaseDirectionExplanation = "Build your case";
-    final String buildCaseDirectionDateDue = "31-12-2018";
+    final String buildCaseDirectionDateDue = "2018-12-31";
+    final String buildCaseDirectionDateDueFormatted = "31 Dec 2018";
 
     final Map<String, String> expectedPersonalisation =
         ImmutableMap
@@ -61,7 +62,7 @@ public class BuildCaseDirectionNotifierTest {
             .put("Family name", appellantLastName)
             .put("Hyperlink to user’s case list", CCD_URL)
             .put("Explanation", buildCaseDirectionExplanation)
-            .put("due date", buildCaseDirectionDateDue)
+            .put("due date", buildCaseDirectionDateDueFormatted)
             .build();
 
     final String expectedNotificationId = "ABC-DEF-GHI-JKL";
@@ -202,7 +203,7 @@ public class BuildCaseDirectionNotifierTest {
                 .put("Family name", "")
                 .put("Hyperlink to user’s case list", CCD_URL)
                 .put("Explanation", buildCaseDirectionExplanation)
-                .put("due date", buildCaseDirectionDateDue)
+                .put("due date", buildCaseDirectionDateDueFormatted)
                 .build();
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
