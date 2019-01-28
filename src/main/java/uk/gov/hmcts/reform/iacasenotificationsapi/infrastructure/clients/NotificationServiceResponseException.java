@@ -9,10 +9,8 @@ public class NotificationServiceResponseException extends UnknownErrorCodeExcept
     public NotificationServiceResponseException(
         AlertLevel alertLevel,
         String message,
-        Throwable cause) {
-
+        Throwable cause
+    ) {
         super(alertLevel, message, cause);
-
     }
-
 }
