@@ -1,7 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers;
 
-import static org.springframework.http.ResponseEntity.ok;
-
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +21,22 @@ public class WelcomeController {
      *
      * @return Welcome message from the service.
      */
-    @GetMapping(path = "/")
+    @ApiOperation("Welcome message for the Immigration & Asylum case Notifications API")
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Welcome message",
+            response = String.class
+        )
+    })
+    @GetMapping(
+        path = "/",
+        produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
     public ResponseEntity<String> welcome() {
-        return ok("Welcome to Immigration & Asylum case notifications API");
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .body("{\"message\": \"Welcome to Immigration & Asylum case notifications API\"}");
     }
 }
