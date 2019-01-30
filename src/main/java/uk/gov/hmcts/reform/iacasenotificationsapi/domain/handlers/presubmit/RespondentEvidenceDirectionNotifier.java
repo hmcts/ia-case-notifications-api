@@ -23,24 +23,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallb
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 
 @Component
-public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<AsylumCase> {
+public class RespondentEvidenceDirectionNotifier implements PreSubmitCallbackHandler<AsylumCase> {
 
-    private final String buildCaseDirectionTemplate;
-    private final String iaCcdFrontendUrl;
+    private final String respondentEvidenceDirectionTemplate;
+    private final String respondentEmailAddress;
     private final DirectionFinder directionFinder;
     private final NotificationSender notificationSender;
 
-    public BuildCaseDirectionNotifier(
-        @Value("${govnotify.template.buildCaseDirection}") String buildCaseDirectionTemplate,
-        @Value("${iaCcdFrontendUrl}") String iaCcdFrontendUrl,
+    public RespondentEvidenceDirectionNotifier(
+        @Value("${govnotify.template.respondentEvidenceDirection}") String respondentEvidenceDirectionTemplate,
+        @Value("${respondentEmailAddresses.respondentEvidenceDirection}") String respondentEmailAddress,
         DirectionFinder directionFinder,
         NotificationSender notificationSender
     ) {
-        requireNonNull(buildCaseDirectionTemplate, "buildCaseDirectionTemplate must not be null");
-        requireNonNull(iaCcdFrontendUrl, "iaCcdFrontendUrl must not be null");
+        requireNonNull(respondentEvidenceDirectionTemplate, "respondentEvidenceDirectionTemplate must not be null");
+        requireNonNull(respondentEmailAddress, "respondentEmailAddress must not be null");
 
-        this.buildCaseDirectionTemplate = buildCaseDirectionTemplate;
-        this.iaCcdFrontendUrl = iaCcdFrontendUrl;
+        this.respondentEvidenceDirectionTemplate = respondentEvidenceDirectionTemplate;
+        this.respondentEmailAddress = respondentEmailAddress;
         this.directionFinder = directionFinder;
         this.notificationSender = notificationSender;
     }
@@ -53,7 +53,7 @@ public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<Asyl
         requireNonNull(callback, "callback must not be null");
 
         return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-               && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE;
+               && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE;
     }
 
     public PreSubmitCallbackResponse<AsylumCase> handle(
@@ -69,41 +69,35 @@ public class BuildCaseDirectionNotifier implements PreSubmitCallbackHandler<Asyl
                 .getCaseDetails()
                 .getCaseData();
 
-        Direction buildCaseDirection =
+        Direction respondentEvidenceDirection =
             directionFinder
-                .findFirst(asylumCase, DirectionTag.BUILD_CASE)
-                .orElseThrow(() -> new IllegalStateException("build case direction is not present"));
-
-        String emailAddress =
-            asylumCase
-                .getLegalRepresentativeEmailAddress()
-                .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
+                .findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)
+                .orElseThrow(() -> new IllegalStateException("respondent evidence direction is not present"));
 
         String directionDueDate =
             LocalDate
-                .parse(buildCaseDirection.getDateDue())
+                .parse(respondentEvidenceDirection.getDateDue())
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         Map<String, String> personalisation =
             ImmutableMap
                 .<String, String>builder()
                 .put("Appeal Ref Number", asylumCase.getAppealReferenceNumber().orElse(""))
-                .put("LR reference", asylumCase.getLegalRepReferenceNumber().orElse(""))
+                .put("HORef", asylumCase.getHomeOfficeReferenceNumber().orElse(""))
                 .put("Given names", asylumCase.getAppellantGivenNames().orElse(""))
                 .put("Family name", asylumCase.getAppellantFamilyName().orElse(""))
-                .put("Hyperlink to user’s case list", iaCcdFrontendUrl)
-                .put("Explanation", buildCaseDirection.getExplanation())
+                .put("Explanation", respondentEvidenceDirection.getExplanation())
                 .put("due date", directionDueDate)
                 .build();
 
         String reference =
             callback.getCaseDetails().getId()
-            + "_BUILD_CASE_DIRECTION";
+            + "_RESPONDENT_EVIDENCE_DIRECTION";
 
         String notificationId =
             notificationSender.sendEmail(
-                buildCaseDirectionTemplate,
-                emailAddress,
+                respondentEvidenceDirectionTemplate,
+                respondentEmailAddress,
                 personalisation,
                 reference
             );
