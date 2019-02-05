@@ -36,7 +36,7 @@ public class WelcomeController {
      *
      * @return Welcome message from the service.
      */
-    @ApiOperation(MESSAGE)
+    @ApiOperation("Welcome message for the Immigration & Asylum case notifications API")
     @ApiResponses({
         @ApiResponse(
             code = 200,
