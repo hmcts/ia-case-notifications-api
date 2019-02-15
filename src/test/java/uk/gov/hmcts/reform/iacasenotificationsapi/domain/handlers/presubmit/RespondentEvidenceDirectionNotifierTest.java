@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -24,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
@@ -33,6 +35,7 @@ public class RespondentEvidenceDirectionNotifierTest {
 
     @Mock private DirectionFinder directionFinder;
     @Mock private NotificationSender notificationSender;
+    @Mock private StringProvider stringProvider;
 
     @Mock private Callback<AsylumCase> callback;
     @Mock private CaseDetails<AsylumCase> caseDetails;
@@ -44,6 +47,8 @@ public class RespondentEvidenceDirectionNotifierTest {
     final long caseId = 123L;
 
     final String respondentEmailAddress = "respondent@example.com";
+    final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    final String hearingCentreForDisplay = "Taylor House";
     final String homeOfficeReferenceNumber = "SOMETHING";
     final String appealReferenceNumber = "PA/001/2018";
     final String appellantGivenNames = "Jane";
@@ -55,6 +60,7 @@ public class RespondentEvidenceDirectionNotifierTest {
     final Map<String, String> expectedPersonalisation =
         ImmutableMap
             .<String, String>builder()
+            .put("HearingCentre", hearingCentreForDisplay)
             .put("Appeal Ref Number", appealReferenceNumber)
             .put("HORef", homeOfficeReferenceNumber)
             .put("Given names", appellantGivenNames)
@@ -75,25 +81,19 @@ public class RespondentEvidenceDirectionNotifierTest {
                 RESPONDENT_EVIDENCE_DIRECTION_TEMPLATE,
                 respondentEmailAddress,
                 directionFinder,
-                notificationSender
+                notificationSender,
+                stringProvider
             );
-    }
-
-    @Test
-    public void should_send_respondent_evidence_direction_notification() {
-
-        final List<IdValue<String>> existingNotifications =
-            new ArrayList<>(Arrays.asList(
-                new IdValue<>("some-notification-sent", "ZZZ-ZZZ-ZZZ-ZZZ")
-            ));
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(callback.getEvent()).thenReturn(Event.REQUEST_RESPONDENT_EVIDENCE);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.getNotificationsSent()).thenReturn(Optional.of(existingNotifications));
+
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(respondentEvidenceDirection));
+        when(stringProvider.get("hearingCentre", hearingCentre.toString())).thenReturn(Optional.of(hearingCentreForDisplay));
 
         when(caseDetails.getId()).thenReturn(caseId);
+        when(asylumCase.getHearingCentre()).thenReturn(Optional.of(hearingCentre));
         when(asylumCase.getAppealReferenceNumber()).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.getHomeOfficeReferenceNumber()).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.getAppellantGivenNames()).thenReturn(Optional.of(appellantGivenNames));
@@ -107,6 +107,17 @@ public class RespondentEvidenceDirectionNotifierTest {
             expectedPersonalisation,
             expectedNotificationReference
         )).thenReturn(expectedNotificationId);
+    }
+
+    @Test
+    public void should_send_respondent_evidence_direction_notification() {
+
+        final List<IdValue<String>> existingNotifications =
+            new ArrayList<>(Arrays.asList(
+                new IdValue<>("some-notification-sent", "ZZZ-ZZZ-ZZZ-ZZZ")
+            ));
+
+        when(asylumCase.getNotificationsSent()).thenReturn(Optional.of(existingNotifications));
 
         PreSubmitCallbackResponse<AsylumCase> callbackResponse =
             respondentEvidenceDirectionNotifier.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, callback);
@@ -140,26 +151,7 @@ public class RespondentEvidenceDirectionNotifierTest {
     @Test
     public void should_send_respondent_evidence_direction_notification_when_no_notifications_exist() {
 
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(callback.getEvent()).thenReturn(Event.REQUEST_RESPONDENT_EVIDENCE);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.getNotificationsSent()).thenReturn(Optional.empty());
-        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(respondentEvidenceDirection));
-
-        when(caseDetails.getId()).thenReturn(caseId);
-        when(asylumCase.getAppealReferenceNumber()).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.getHomeOfficeReferenceNumber()).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(asylumCase.getAppellantGivenNames()).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.getAppellantFamilyName()).thenReturn(Optional.of(appellantFamilyName));
-        when(respondentEvidenceDirection.getExplanation()).thenReturn(respondentEvidenceDirectionExplanation);
-        when(respondentEvidenceDirection.getDateDue()).thenReturn(respondentEvidenceDirectionDateDue);
-
-        when(notificationSender.sendEmail(
-            RESPONDENT_EVIDENCE_DIRECTION_TEMPLATE,
-            respondentEmailAddress,
-            expectedPersonalisation,
-            expectedNotificationReference
-        )).thenReturn(expectedNotificationId);
 
         PreSubmitCallbackResponse<AsylumCase> callbackResponse =
             respondentEvidenceDirectionNotifier.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, callback);
@@ -193,6 +185,7 @@ public class RespondentEvidenceDirectionNotifierTest {
         final Map<String, String> expectedPersonalisation =
             ImmutableMap
                 .<String, String>builder()
+                .put("HearingCentre", hearingCentreForDisplay)
                 .put("Appeal Ref Number", "")
                 .put("HORef", "")
                 .put("Given names", "")
@@ -201,19 +194,13 @@ public class RespondentEvidenceDirectionNotifierTest {
                 .put("due date", respondentEvidenceDirectionDateDueFormatted)
                 .build();
 
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(callback.getEvent()).thenReturn(Event.REQUEST_RESPONDENT_EVIDENCE);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.getNotificationsSent()).thenReturn(Optional.empty());
-        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(respondentEvidenceDirection));
 
-        when(caseDetails.getId()).thenReturn(caseId);
+        when(asylumCase.getHearingCentre()).thenReturn(Optional.of(hearingCentre));
         when(asylumCase.getAppealReferenceNumber()).thenReturn(Optional.empty());
         when(asylumCase.getHomeOfficeReferenceNumber()).thenReturn(Optional.empty());
         when(asylumCase.getAppellantGivenNames()).thenReturn(Optional.empty());
         when(asylumCase.getAppellantFamilyName()).thenReturn(Optional.empty());
-        when(respondentEvidenceDirection.getExplanation()).thenReturn(respondentEvidenceDirectionExplanation);
-        when(respondentEvidenceDirection.getDateDue()).thenReturn(respondentEvidenceDirectionDateDue);
 
         when(notificationSender.sendEmail(
             RESPONDENT_EVIDENCE_DIRECTION_TEMPLATE,
@@ -258,6 +245,26 @@ public class RespondentEvidenceDirectionNotifierTest {
 
         assertThatThrownBy(() -> respondentEvidenceDirectionNotifier.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, callback))
             .hasMessage("respondent evidence direction is not present")
+            .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void should_throw_when_hearing_centre_not_present() {
+
+        when(asylumCase.getHearingCentre()).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> respondentEvidenceDirectionNotifier.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, callback))
+            .hasMessage("hearingCentre is not present")
+            .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void should_throw_when_hearing_centre_display_string_not_present() {
+
+        when(stringProvider.get("hearingCentre", hearingCentre.toString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> respondentEvidenceDirectionNotifier.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, callback))
+            .hasMessage("hearingCentre display string is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
 

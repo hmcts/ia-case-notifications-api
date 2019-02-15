@@ -21,6 +21,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "manchester",
         "notificationsSent": [
           {
             "id": "1001_APPEAL_SUBMITTED_CASE_OFFICER",

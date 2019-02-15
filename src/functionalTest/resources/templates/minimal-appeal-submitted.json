@@ -26,5 +26,6 @@
   "appealReferenceNumber": "PA/12345/2019",
   "sendDirectionActionAvailable": "Yes",
   "legalRepresentativeName": "A Legal Rep",
-  "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+  "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+  "hearingCentre": "taylorHouse"
 }

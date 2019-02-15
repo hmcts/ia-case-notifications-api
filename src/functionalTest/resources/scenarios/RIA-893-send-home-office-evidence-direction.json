@@ -57,7 +57,7 @@
       {
         "reference": "1003_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
-        "subject": "Asylum appeal direction: appeal lodged",
+        "subject": "Asylum appeal direction: appeal lodged – Taylor House",
         "body": [
           "Appeal reference number: PA/12345/2019",
           "Home Office reference: A1234567",

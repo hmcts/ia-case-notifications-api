@@ -21,6 +21,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
             "id": "1002_APPEAL_SUBMITTED_CASE_OFFICER",

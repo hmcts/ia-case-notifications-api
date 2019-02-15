@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
@@ -21,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @Component
 public class RespondentEvidenceDirectionNotifier implements PreSubmitCallbackHandler<AsylumCase> {
@@ -29,12 +31,14 @@ public class RespondentEvidenceDirectionNotifier implements PreSubmitCallbackHan
     private final String respondentEmailAddress;
     private final DirectionFinder directionFinder;
     private final NotificationSender notificationSender;
+    private final StringProvider stringProvider;
 
     public RespondentEvidenceDirectionNotifier(
         @Value("${govnotify.template.respondentEvidenceDirection}") String respondentEvidenceDirectionTemplate,
         @Value("${respondentEmailAddresses.respondentEvidenceDirection}") String respondentEmailAddress,
         DirectionFinder directionFinder,
-        NotificationSender notificationSender
+        NotificationSender notificationSender,
+        StringProvider stringProvider
     ) {
         requireNonNull(respondentEvidenceDirectionTemplate, "respondentEvidenceDirectionTemplate must not be null");
         requireNonNull(respondentEmailAddress, "respondentEmailAddress must not be null");
@@ -43,6 +47,7 @@ public class RespondentEvidenceDirectionNotifier implements PreSubmitCallbackHan
         this.respondentEmailAddress = respondentEmailAddress;
         this.directionFinder = directionFinder;
         this.notificationSender = notificationSender;
+        this.stringProvider = stringProvider;
     }
 
     public boolean canHandle(
@@ -69,6 +74,16 @@ public class RespondentEvidenceDirectionNotifier implements PreSubmitCallbackHan
                 .getCaseDetails()
                 .getCaseData();
 
+        HearingCentre hearingCentre =
+            asylumCase
+                .getHearingCentre()
+                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+
+        String hearingCentreForDisplay =
+            stringProvider
+                .get("hearingCentre", hearingCentre.toString())
+                .orElseThrow(() -> new IllegalStateException("hearingCentre display string is not present"));
+
         Direction respondentEvidenceDirection =
             directionFinder
                 .findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)
@@ -82,6 +97,7 @@ public class RespondentEvidenceDirectionNotifier implements PreSubmitCallbackHan
         Map<String, String> personalisation =
             ImmutableMap
                 .<String, String>builder()
+                .put("HearingCentre", hearingCentreForDisplay)
                 .put("Appeal Ref Number", asylumCase.getAppealReferenceNumber().orElse(""))
                 .put("HORef", asylumCase.getHomeOfficeReferenceNumber().orElse(""))
                 .put("Given names", asylumCase.getAppellantGivenNames().orElse(""))
