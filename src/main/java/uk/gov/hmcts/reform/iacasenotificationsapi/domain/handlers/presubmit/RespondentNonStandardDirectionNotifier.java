@@ -2,9 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit;
 
 import static java.util.Objects.requireNonNull;
 
-import com.google.common.collect.ImmutableMap;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +9,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RespondentDirectionPersonalisationFactory;
 
 @Component
 public class RespondentNonStandardDirectionNotifier implements PreSubmitCallbackHandler<AsylumCase> {
@@ -38,27 +38,27 @@ public class RespondentNonStandardDirectionNotifier implements PreSubmitCallback
             State.LISTING
         );
 
-    private final String govNotifyTemplateId;
-    private final String respondentEmailAddress;
+    private final String respondentNonStandardDirectionTemplateId;
+    private final String respondentNonStandardDirectionEmailAddress;
+    private final RespondentDirectionPersonalisationFactory respondentDirectionPersonalisationFactory;
     private final DirectionFinder directionFinder;
     private final NotificationSender notificationSender;
-    private final StringProvider stringProvider;
 
     public RespondentNonStandardDirectionNotifier(
-        @Value("${govnotify.template.respondentNonStandardDirection}") String govNotifyTemplateId,
-        @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}") String respondentEmailAddress,
+        @Value("${govnotify.template.respondentNonStandardDirection}") String respondentNonStandardDirectionTemplateId,
+        @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}") String respondentNonStandardDirectionEmailAddress,
+        RespondentDirectionPersonalisationFactory respondentDirectionPersonalisationFactory,
         DirectionFinder directionFinder,
-        NotificationSender notificationSender,
-        StringProvider stringProvider
+        NotificationSender notificationSender
     ) {
-        requireNonNull(govNotifyTemplateId, "govNotifyTemplateId must not be null");
-        requireNonNull(respondentEmailAddress, "respondentEmailAddress must not be null");
+        requireNonNull(respondentNonStandardDirectionTemplateId, "respondentNonStandardDirectionTemplateId must not be null");
+        requireNonNull(respondentNonStandardDirectionEmailAddress, "respondentNonStandardDirectionEmailAddress must not be null");
 
-        this.govNotifyTemplateId = govNotifyTemplateId;
-        this.respondentEmailAddress = respondentEmailAddress;
+        this.respondentNonStandardDirectionTemplateId = respondentNonStandardDirectionTemplateId;
+        this.respondentNonStandardDirectionEmailAddress = respondentNonStandardDirectionEmailAddress;
+        this.respondentDirectionPersonalisationFactory = respondentDirectionPersonalisationFactory;
         this.directionFinder = directionFinder;
         this.notificationSender = notificationSender;
-        this.stringProvider = stringProvider;
     }
 
     public boolean canHandle(
@@ -100,32 +100,9 @@ public class RespondentNonStandardDirectionNotifier implements PreSubmitCallback
             return new PreSubmitCallbackResponse<>(asylumCase);
         }
 
-        HearingCentre hearingCentre =
-            asylumCase
-                .getHearingCentre()
-                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
-
-        String hearingCentreForDisplay =
-            stringProvider
-                .get("hearingCentre", hearingCentre.toString())
-                .orElseThrow(() -> new IllegalStateException("hearingCentre display string is not present"));
-
-        String directionDueDate =
-            LocalDate
-                .parse(nonStandardDirection.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
         Map<String, String> personalisation =
-            ImmutableMap
-                .<String, String>builder()
-                .put("HearingCentre", hearingCentreForDisplay)
-                .put("Appeal Ref Number", asylumCase.getAppealReferenceNumber().orElse(""))
-                .put("HORef", asylumCase.getHomeOfficeReferenceNumber().orElse(""))
-                .put("Given names", asylumCase.getAppellantGivenNames().orElse(""))
-                .put("Family name", asylumCase.getAppellantFamilyName().orElse(""))
-                .put("Explanation", nonStandardDirection.getExplanation())
-                .put("due date", directionDueDate)
-                .build();
+            respondentDirectionPersonalisationFactory
+                .create(asylumCase, nonStandardDirection);
 
         String reference =
             callback.getCaseDetails().getId()
@@ -133,8 +110,8 @@ public class RespondentNonStandardDirectionNotifier implements PreSubmitCallback
 
         String notificationId =
             notificationSender.sendEmail(
-                govNotifyTemplateId,
-                respondentEmailAddress,
+                respondentNonStandardDirectionTemplateId,
+                respondentNonStandardDirectionEmailAddress,
                 personalisation,
                 reference
             );
