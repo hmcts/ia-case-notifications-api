@@ -176,6 +176,8 @@ public class MultipleNotificationsTest {
         DirectionTag directionTag = DirectionTag.NONE;
 
         switch (event) {
+            case SUBMIT_APPEAL:
+                break;
             case UPLOAD_RESPONDENT_EVIDENCE:
                 directionTag = DirectionTag.BUILD_CASE;
                 break;
@@ -195,6 +197,8 @@ public class MultipleNotificationsTest {
             case REQUEST_RESPONDENT_REVIEW:
                 directionTag = DirectionTag.RESPONDENT_REVIEW;
                 break;
+            default:
+                throw new IllegalStateException("unexpected event");
         }
 
         return new Direction(
