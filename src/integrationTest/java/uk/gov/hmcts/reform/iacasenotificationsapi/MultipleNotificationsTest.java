@@ -13,10 +13,7 @@ import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import javafx.util.Pair;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,15 +57,15 @@ public class MultipleNotificationsTest {
     private static final String ABOUT_TO_START_PATH = "/asylum/ccdAboutToStart";
     private static final String ABOUT_TO_SUBMIT_PATH = "/asylum/ccdAboutToSubmit";
 
-    private List<Pair<Event, String>> eventAndNotificationSuffixPair =
+    private List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
         Lists.newArrayList(
-            new Pair<>(Event.SUBMIT_APPEAL, "_APPEAL_SUBMITTED_CASE_OFFICER"),
-            new Pair<>(Event.UPLOAD_RESPONDENT_EVIDENCE, "_BUILD_CASE_DIRECTION"),
-            new Pair<>(Event.REQUEST_HEARING_REQUIREMENTS, "_LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS_DIRECTION"),
-            new Pair<>(Event.ADD_APPEAL_RESPONSE, "_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION"),
-            new Pair<>(Event.REQUEST_RESPONDENT_EVIDENCE, "_RESPONDENT_EVIDENCE_DIRECTION"),
-            new Pair<>(Event.SEND_DIRECTION, "_RESPONDENT_NON_STANDARD_DIRECTION"),
-            new Pair<>(Event.REQUEST_RESPONDENT_REVIEW, "_RESPONDENT_REVIEW_DIRECTION"));
+            new HashMap.SimpleImmutableEntry<>(Event.SUBMIT_APPEAL, "_APPEAL_SUBMITTED_CASE_OFFICER"),
+            new HashMap.SimpleImmutableEntry<>(Event.UPLOAD_RESPONDENT_EVIDENCE, "_BUILD_CASE_DIRECTION"),
+            new HashMap.SimpleImmutableEntry<>(Event.REQUEST_HEARING_REQUIREMENTS, "_LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS_DIRECTION"),
+            new HashMap.SimpleImmutableEntry<>(Event.ADD_APPEAL_RESPONSE, "_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION"),
+            new HashMap.SimpleImmutableEntry<>(Event.REQUEST_RESPONDENT_EVIDENCE, "_RESPONDENT_EVIDENCE_DIRECTION"),
+            new HashMap.SimpleImmutableEntry<>(Event.SEND_DIRECTION, "_RESPONDENT_NON_STANDARD_DIRECTION"),
+            new HashMap.SimpleImmutableEntry<>(Event.REQUEST_RESPONDENT_REVIEW, "_RESPONDENT_REVIEW_DIRECTION"));
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -97,7 +94,7 @@ public class MultipleNotificationsTest {
         );
     }
 
-    public void runTestScenario(String notificationId, Pair<Event, String> eventWithSuffixPair) throws Exception {
+    public void runTestScenario(String notificationId, Map.Entry<Event, String> eventWithSuffixPair) throws Exception {
 
         log.info("Scenario eventId: {} expecting suffix: {}", eventWithSuffixPair.getKey(), eventWithSuffixPair.getValue());
 
