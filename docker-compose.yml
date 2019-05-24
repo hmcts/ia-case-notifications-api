@@ -24,5 +24,14 @@ services:
       - LOGBACK_REQUIRE_THREAD
       - LOGBACK_REQUIRE_ALERT_LEVEL=false
       - LOGBACK_REQUIRE_ERROR_CODE=false
+      - IA_GOV_NOTIFY_KEY=test_key-7f72d0fb-2bc4-421b-bceb-1bf5bf350ff9-3df5a74b-f25b-4052-b00f-3f71d33cd0eb
+      - IA_HEARING_CENTRE_MANCHESTER_EMAIL=manchester@example.com
+      - IA_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL=taylorHouse@example.com
+      - IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL=respondentEvidenceDirection@example.com
+      - IA_RESPONDENT_REVIEW_DIRECTION_EMAIL=respondentReviewDirection@example.com
+      - IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL=respondentNonStandardDirectionUntilListing@example.com
+      - IA_S2S_SECRET:AAAAAAAAAAAAAAAC
+      - IA_S2S_MICROSERVICE:ia
+      - S2S_URL:http://service-auth-provider-api:4502
     ports:
       - ${SERVER_PORT:-8093}:${SERVER_PORT:-8093}
