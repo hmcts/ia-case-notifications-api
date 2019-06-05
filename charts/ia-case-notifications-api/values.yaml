@@ -23,6 +23,3 @@ java:
         - ccd-url
         - idam-url
         - s2s-url
-    envionment:
-      LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
-      LOGBACK_REQUIRE_ERROR_CODE: 'false'
