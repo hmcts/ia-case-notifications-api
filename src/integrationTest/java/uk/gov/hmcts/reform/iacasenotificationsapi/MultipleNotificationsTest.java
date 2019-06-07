@@ -6,6 +6,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +30,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -111,10 +115,10 @@ public class MultipleNotificationsTest {
 
         Direction direction = createExistingDirection(eventWithSuffixPair.getKey());
 
-        AsylumCase caseData = createBasicAsylumCase();
-        caseData.setDirections(Collections.singletonList(new IdValue<>("1", direction)));
-        caseData.setNotificationsSent(existingNotifications);
-        caseData.setLegalRepresentativeEmailAddress("someone@somewhere.com");
+        AsylumCase caseData = new AsylumCase();
+        caseData.write(DIRECTIONS, Collections.singletonList(new IdValue<>("1", direction)));
+        caseData.write(NOTIFICATIONS_SENT, existingNotifications);
+        caseData.write(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, "someone@somewhere.com");
 
         CaseDetails<AsylumCase> caseDetails = new CaseDetails<>(
             caseDetailsId,
@@ -140,10 +144,12 @@ public class MultipleNotificationsTest {
         AsylumCase asylumCaseResponse = callbackResponse.getData();
 
         assertThat(asylumCaseResponse).isNotNull();
-        assertThat(asylumCaseResponse.getNotificationsSent().isPresent()).isTrue();
+        assertThat(asylumCaseResponse.read(NOTIFICATIONS_SENT).isPresent()).isTrue();
+
+        Optional<List<IdValue<String>>> maybeNotificationsSent = asylumCaseResponse.read(NOTIFICATIONS_SENT);
 
         List<IdValue<String>> allNotifications =
-            asylumCaseResponse.getNotificationsSent().orElseThrow(IllegalStateException::new);
+            maybeNotificationsSent.orElseThrow(IllegalStateException::new);
 
         assertThat(allNotifications.size()).isEqualTo(2);
         assertThat(allNotifications.get(0).getId()).isNotEqualTo(allNotifications.get(1).getId());
@@ -208,16 +214,5 @@ public class MultipleNotificationsTest {
             LocalDate.now().format(DateTimeFormatter.ofPattern(dateFormat)),
             directionTag);
     }
-
-
-    private AsylumCase createBasicAsylumCase() {
-
-        AsylumCaseBuilder asylumCaseBuilder = new AsylumCaseBuilder();
-        asylumCaseBuilder.setHearingCentre(Optional.of(HearingCentre.MANCHESTER));
-
-        return new AsylumCase(asylumCaseBuilder);
-
-    }
-
 
 }
