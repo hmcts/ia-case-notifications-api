@@ -30,10 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -119,6 +116,7 @@ public class MultipleNotificationsTest {
         caseData.write(DIRECTIONS, Collections.singletonList(new IdValue<>("1", direction)));
         caseData.write(NOTIFICATIONS_SENT, existingNotifications);
         caseData.write(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, "someone@somewhere.com");
+        caseData.write(HEARING_CENTRE, HearingCentre.MANCHESTER);
 
         CaseDetails<AsylumCase> caseDetails = new CaseDetails<>(
             caseDetailsId,
