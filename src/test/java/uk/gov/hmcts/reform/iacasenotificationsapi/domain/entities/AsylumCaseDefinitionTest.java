@@ -15,5 +15,4 @@ public class AsylumCaseDefinitionTest {
                 .forEach(v -> assertThat(UPPER_UNDERSCORE.to(LOWER_CAMEL, v.name()))
                         .isEqualTo(v.value()));
     }
-
 }
