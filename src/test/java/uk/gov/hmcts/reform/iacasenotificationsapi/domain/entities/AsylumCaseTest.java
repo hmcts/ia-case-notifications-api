@@ -43,7 +43,7 @@ public class AsylumCaseTest {
     @Test
     public void reads_id_value_list() throws IOException {
 
-        String caseData = "\"directions\": [\n" +
+        String caseData = "{\"directions\": [\n" +
                 "    {\n" +
                 "      \"id\": \"2\",\n" +
                 "      \"value\": {\n" +
@@ -51,7 +51,7 @@ public class AsylumCaseTest {
                 "        \"dateDue\": \"2019-06-13\",\n" +
                 "        \"parties\": \"legalRepresentative\",\n" +
                 "        \"dateSent\": \"2019-05-16\",\n" +
-                "        \"explanation\": \"You must now build your case by uploading your appeal argument and evidence.\\n\\nAdvice on writing an appeal argument\\nYou must write a full argument that references:\\n- all the evidence you have or plan to rely on, including any witness statements\\n- the grounds and issues of the case\\n- any new matters\\n- any legal authorities you plan to rely on and why they are applicable to your case\\n\\nYour argument must explain why you believe the respondent's decision is wrong. You must provide all the information for the Home Office to conduct a thorough review of their decision at this stage.\\n\\nNext steps\\nOnce you have uploaded your appeal argument and all evidence, submit your case. The case officer will then review everything you've added. If your case looks ready, the case officer will send it to the respondent for their review. The respondent then has 14 days to respond.\"\n" +
+                "        \"explanation\": \"some-explanation\"\n" +
                 "      }\n" +
                 "    },\n" +
                 "    {\n" +
@@ -61,10 +61,10 @@ public class AsylumCaseTest {
                 "        \"dateDue\": \"2019-05-30\",\n" +
                 "        \"parties\": \"respondent\",\n" +
                 "        \"dateSent\": \"2019-05-16\",\n" +
-                "        \"explanation\": \"A notice of appeal has been lodged against this asylum decision.\\n\\nYou must now send all documents to the case officer. The case officer will send them to the other party. You have 14 days to supply these documents.\\n\\nYou must include:\\n- the notice of decision\\n- any other document provided to the appellant giving reasons for that decision\\n- any statements of evidence\\n- the application form\\n- any record of interview with the appellant in relation to the decision being appealed\\n- any other unpublished documents on which you rely\\n- the notice of any other appealable decision made in relation to the appellant\"\n" +
+                "        \"explanation\": \"some-other-explanation\"\n" +
                 "      }\n" +
                 "    }\n" +
-                "  ],";
+                "  ]}";
 
         AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
 
@@ -72,10 +72,22 @@ public class AsylumCaseTest {
 
         List<IdValue<Direction>> idValues = maybeRespondentDocuments.get();
 
-        Direction direction = idValues.get(0).getValue();
+        Direction direction1 = idValues.get(0).getValue();
+        Direction direction2 = idValues.get(1).getValue();
 
         assertThat(idValues.get(0).getId()).isEqualTo("2");
-        assertThat(direction.getTag()).isInstanceOf(String.class);
+        assertThat(direction1.getTag()).isEqualTo(DirectionTag.BUILD_CASE);
+        assertThat(direction1.getDateDue()).isEqualTo("2019-06-13");
+        assertThat(direction1.getParties()).isEqualTo(Parties.LEGAL_REPRESENTATIVE);
+        assertThat(direction1.getDateSent()).isEqualTo("2019-05-16");
+        assertThat(direction1.getExplanation()).isEqualTo("some-explanation");
+
+        assertThat(idValues.get(1).getId()).isEqualTo("1");
+        assertThat(direction2.getTag()).isEqualTo(DirectionTag.RESPONDENT_EVIDENCE);
+        assertThat(direction2.getDateDue()).isEqualTo("2019-05-30");
+        assertThat(direction2.getParties()).isEqualTo(Parties.RESPONDENT);
+        assertThat(direction2.getDateSent()).isEqualTo("2019-05-16");
+        assertThat(direction2.getExplanation()).isEqualTo("some-other-explanation");
     }
 
     @Test
