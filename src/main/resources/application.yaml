@@ -27,6 +27,7 @@ govnotify.template.legalRepresentativeHearingRequirementsDirection: e6694559-38b
 govnotify.template.caseOfficerCaseListed: 58eab057-b5c0-4a69-8f71-a21d6f02da3d
 govnotify.template.legalRepresentativeCaseListed: b87a1e5b-eec7-4268-a326-059893ab5c28
 govnotify.template.homeOfficeCaseListed: 86936ac9-e8d0-4a4c-8169-0948d7fb7935
+govnotify.template.endAppealHomeOfficeTemplateId: 993c1294-c6b8-4b46-ab0f-ab01b4f6607b
 
 hearingCentreEmailAddresses:
   manchester: ${IA_HEARING_CENTRE_MANCHESTER_EMAIL:manchester@example.com}
@@ -35,6 +36,8 @@ hearingCentreEmailAddresses:
 homeOfficeEmailAddresses:
   manchester: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ReformpbManchester@example.com}
   taylorHouse: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ReformpbCentral@example.com}
+
+endAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_END_APPEAL_EMAIL:ReformpbAPC@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL}
@@ -86,6 +89,7 @@ security:
       - "addAppealResponse"
       - "createCaseSummary"
       - "generateHearingBundle"
+      - "endAppeal"
     caseworker-ia-admofficer:
       - "listCase"
 
