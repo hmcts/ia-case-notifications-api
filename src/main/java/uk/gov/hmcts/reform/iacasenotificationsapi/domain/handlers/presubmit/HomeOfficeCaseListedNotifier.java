@@ -7,23 +7,23 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.CaseOfficerPersonalisationFactory;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.HomeOfficePersonalisationFactory;
 
 @Component
-public class CaseOfficerCaseListedNotifier implements CaseEmailNotifier {
+public class HomeOfficeCaseListedNotifier implements CaseEmailNotifier {
 
-    private final CaseOfficerPersonalisationFactory caseOfficerPersonalisationFactory;
-    private final Map<HearingCentre, String> hearingCentreEmailAddresses;
+    private final HomeOfficePersonalisationFactory homeOfficePersonalisationFactory;
+    private final Map<HearingCentre, String> homeOfficeEmailAddresses;
 
-    public CaseOfficerCaseListedNotifier(
-        CaseOfficerPersonalisationFactory caseOfficerPersonalisationFactory,
-        Map<HearingCentre, String> hearingCentreEmailAddresses
+    public HomeOfficeCaseListedNotifier(
+        HomeOfficePersonalisationFactory homeOfficePersonalisationFactory,
+        Map<HearingCentre, String> homeOfficeEmailAddresses
     ) {
-        requireNonNull(caseOfficerPersonalisationFactory, "caseOfficerPersonalisationFactory must not be null");
-        requireNonNull(hearingCentreEmailAddresses, "hearingCentreEmailAddresses must not be null");
+        requireNonNull(homeOfficePersonalisationFactory, "homeOfficePersonalisationFactory must not be null");
+        requireNonNull(homeOfficeEmailAddresses, "homeOfficeEmailAddresses must not be null");
 
-        this.caseOfficerPersonalisationFactory = caseOfficerPersonalisationFactory;
-        this.hearingCentreEmailAddresses = hearingCentreEmailAddresses;
+        this.homeOfficePersonalisationFactory = homeOfficePersonalisationFactory;
+        this.homeOfficeEmailAddresses = homeOfficeEmailAddresses;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CaseOfficerCaseListedNotifier implements CaseEmailNotifier {
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
 
         final String hearingCentreEmailAddress =
-            hearingCentreEmailAddresses
+            homeOfficeEmailAddresses
                 .get(listCaseHearingCentre);
 
         if (hearingCentreEmailAddress == null) {
@@ -49,7 +49,7 @@ public class CaseOfficerCaseListedNotifier implements CaseEmailNotifier {
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
 
         Map<String, String> personalisation =
-            caseOfficerPersonalisationFactory
+            homeOfficePersonalisationFactory
                 .createListedCase(asylumCase);
 
         return personalisation;
