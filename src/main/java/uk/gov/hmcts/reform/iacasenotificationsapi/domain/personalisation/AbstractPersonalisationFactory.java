@@ -14,6 +14,23 @@ public abstract class AbstractPersonalisationFactory {
         return
                 ImmutableMap
                         .<String, String>builder()
+                        .putAll(getPersonalisation(asylumCase))
+                        .build();
+    }
+
+    public Map<String, String> create(AsylumCase asylumCase, AsylumCase caseBeforeDetails) {
+
+        return
+                ImmutableMap
+                        .<String, String>builder()
+                        .putAll(getPersonalisation(asylumCase))
+                        .build();
+    }
+
+    private Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        return
+                ImmutableMap
+                        .<String, String>builder()
                         .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                         .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                         .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
@@ -21,4 +38,5 @@ public abstract class AbstractPersonalisationFactory {
                         .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                         .build();
     }
+
 }

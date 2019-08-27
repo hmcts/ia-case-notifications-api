@@ -16,4 +16,10 @@ public class GovNotifyTemplateIdConfiguration {
 
     @NotBlank
     private String endAppealLegalRepresentativeTemplateId;
+
+    @NotBlank
+    private String editCaseListingHomeOfficeTemplateId;
+
+    @NotBlank
+    private String editCaseListingLegalRepresentativeTemplateId;
 }

@@ -12,6 +12,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealStateNotificationReference;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
@@ -48,6 +50,20 @@ public abstract  class AbstractNotifier {
         this.personalisationFactory = personalisationFactory;
     }
 
+    public PreSubmitCallbackResponse<AsylumCase> handle(PreSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
+
+        final AsylumCase asylumCase =
+                callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+        sendNotificationToHomeOffice(callback, asylumCase);
+
+        sendNotificationToLegalRepresentative(callback, asylumCase);
+
+        return new PreSubmitCallbackResponse<>(asylumCase);
+    }
+
 
 
     public void sendNotificationToHomeOffice(
@@ -60,6 +76,29 @@ public abstract  class AbstractNotifier {
                     + homeOfficeReference.state();
 
         Map<String, String> personalisation = personalisationFactory.create(asylumCase);
+
+        String notificationId =
+                notificationSender.sendEmail(
+                        homeOfficeTemplateId,
+                        homeOfficeEmailAddresses,
+                        personalisation,
+                        reference
+                );
+
+        setNotificationStatus(asylumCase, reference, notificationId);
+    }
+
+    public void sendNotificationToHomeOffice(
+            Callback<AsylumCase> callback,
+            AsylumCase asylumCase,
+            AsylumCase caseBeforeDetails
+    ) {
+
+        String reference =
+                callback.getCaseDetails().getId()
+                        + homeOfficeReference.state();
+
+        Map<String, String> personalisation = personalisationFactory.create(asylumCase, caseBeforeDetails);
 
         String notificationId =
                 notificationSender.sendEmail(
@@ -87,6 +126,34 @@ public abstract  class AbstractNotifier {
                         .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
 
         Map<String, String> personalisation = personalisationFactory.create(asylumCase);
+
+        String notificationId =
+                notificationSender.sendEmail(
+                        legalRepresentativeTemplateId,
+                        legalRepresentativeEmailAddress,
+                        personalisation,
+                        reference
+                );
+
+        setNotificationStatus(asylumCase, reference, notificationId);
+    }
+
+    public void sendNotificationToLegalRepresentative(
+            Callback<AsylumCase> callback,
+            AsylumCase asylumCase,
+            AsylumCase caseBeforeDetails
+    ) {
+
+        String reference =
+                callback.getCaseDetails().getId()
+                        + legalRepresentativeReference.state();
+
+        String legalRepresentativeEmailAddress =
+                asylumCase
+                        .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
+                        .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
+
+        Map<String, String> personalisation = personalisationFactory.create(asylumCase, caseBeforeDetails);
 
         String notificationId =
                 notificationSender.sendEmail(

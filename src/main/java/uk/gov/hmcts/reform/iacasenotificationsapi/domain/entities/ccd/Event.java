@@ -23,6 +23,7 @@ public enum Event {
     REVERT_STATE_TO_AWAITING_RESPONDENT_EVIDENCE("revertStateToAwaitingRespondentEvidence"),
     GENERATE_HEARING_BUNDLE("generateHearingBundle"),
     END_APPEAL("endAppeal"),
+    EDIT_CASE_LISTING("editCaseListing"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
