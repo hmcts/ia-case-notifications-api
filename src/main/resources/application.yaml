@@ -106,6 +106,7 @@ security:
       - "editCaseListing"
       - "endAppeal"
       - "recordApplication"
+      - "requestCaseBuilding"
     caseworker-ia-admofficer:
       - "listCase"
 

@@ -25,6 +25,7 @@ public enum Event {
     EDIT_CASE_LISTING("editCaseListing"),
     END_APPEAL("endAppeal"),
     RECORD_APPLICATION("recordApplication"),
+    REQUEST_CASE_BUILDING("requestCaseBuilding"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
