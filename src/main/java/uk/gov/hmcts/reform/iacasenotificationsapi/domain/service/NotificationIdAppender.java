@@ -21,13 +21,9 @@ public class NotificationIdAppender {
                 .filter(existingNotificationReference -> existingNotificationReference.startsWith(notificationReference))
                 .count();
 
-        String qualifiedNotificationReference;
-
-        if (numberOfExistingNotificationsOfSameKind > 0) {
-            qualifiedNotificationReference = notificationReference + "_" + UUID.randomUUID().toString();
-        } else {
-            qualifiedNotificationReference = notificationReference;
-        }
+        String qualifiedNotificationReference = numberOfExistingNotificationsOfSameKind > 0
+            ?
+            (notificationReference + "_" + UUID.randomUUID().toString()) : notificationReference;
 
         final List<IdValue<String>> newNotificationsSent = new ArrayList<>(existingNotificationsSent);
 
