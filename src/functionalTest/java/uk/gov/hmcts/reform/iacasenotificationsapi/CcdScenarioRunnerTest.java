@@ -304,6 +304,11 @@ public class CcdScenarioRunnerTest {
             return authorizationHeadersProvider
                 .getHomeOfficeGenericAuthorization();
         }
+        if ("AppellantInPerson".equalsIgnoreCase(credentials)) {
+
+            return authorizationHeadersProvider
+                .getAppellantInPersonAuthorization();
+        }
 
         return new Headers();
     }

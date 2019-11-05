@@ -29,6 +29,7 @@ public enum Event {
     REQUEST_CASE_BUILDING("requestCaseBuilding"),
     UPLOAD_HOME_OFFICE_APPEAL_RESPONSE("uploadHomeOfficeAppealResponse"),
     REQUEST_RESPONSE_REVIEW("requestResponseReview"),
+    APPELLANT_IN_PERSON_SUBMIT_CASE("appellantInPersonSubmitCase"),
 
 
     @JsonEnumDefaultValue
@@ -44,5 +45,5 @@ public enum Event {
     public String toString() {
         return id;
     }
-    
+
 }

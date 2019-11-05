@@ -49,6 +49,8 @@ def secrets = [
         secret('test-homeoffice-pou-password', 'TEST_HOMEOFFICE_POU_PASSWORD'),
         secret('test-homeoffice-generic-username', 'TEST_HOMEOFFICE_GENERIC_USERNAME'),
         secret('test-homeoffice-generic-password', 'TEST_HOMEOFFICE_GENERIC_PASSWORD'),
+        secret('test-appellant-in-person-username', 'TEST_APPELLANT_IN_PERSON_USERNAME'),
+        secret('test-appellant-in-person-password', 'TEST_APPELLANT_IN_PERSON_PASSWORD'),
 
         secret('home-office-end-appeal-email', 'IA_HOME_OFFICE_END_APPEAL_EMAIL'),
 

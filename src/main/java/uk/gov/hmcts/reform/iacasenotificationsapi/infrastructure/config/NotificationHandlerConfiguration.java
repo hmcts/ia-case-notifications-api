@@ -238,4 +238,16 @@ public class NotificationHandlerConfiguration {
             notificationGenerator
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantInPersonSubmitAppealNotificationHandler(
+        @Qualifier("appellantInPersonSubmitCaseNotificationGenerator") NotificationGenerator notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.APPELLANT_IN_PERSON_SUBMIT_CASE,
+            notificationGenerator
+        );
+    }
 }

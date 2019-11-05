@@ -211,4 +211,17 @@ public class NotificationGeneratorConfiguration {
             notificationIdAppender
         );
     }
+
+    @Bean("appellantInPersonSubmitCaseNotificationGenerator")
+    public NotificationGenerator appellantInPersonSubmitCaseNotificationGenerator(
+        AppellantInPersonSubmitAppealPersonalisation appellantInPersonSubmitAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return new NotificationGenerator(
+            newArrayList(appellantInPersonSubmitAppealPersonalisation),
+            notificationSender,
+            notificationIdAppender
+        );
+    }
 }

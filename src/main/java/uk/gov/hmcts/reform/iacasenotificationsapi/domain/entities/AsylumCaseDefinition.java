@@ -86,8 +86,10 @@ public enum AsylumCaseDefinition {
 
     APPLICATION_DECISION(
         "applicationDecision", new TypeReference<String>(){}),
-    ;
 
+    APPELLANT_IN_PERSON_EMAIL_ADDRESS(
+            "appellantInPersonEmailAddress", new TypeReference<String>(){}),
+    ;
     private final String value;
     private final TypeReference typeReference;
 

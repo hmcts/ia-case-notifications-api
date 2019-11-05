@@ -113,4 +113,18 @@ public class AuthorizationHeadersProvider {
             new Header("Authorization", accessToken)
         );
     }
+
+    public Headers getAppellantInPersonAuthorization() {
+
+        String serviceToken = serviceAuthTokenGenerator.generate();
+        String accessToken = idamAuthorizor.exchangeForAccessToken(
+            System.getenv("TEST_APPELLANT_IN_PERSON_USERNAME"),
+            System.getenv("TEST_APPELLANT_IN_PERSON_PASSWORD")
+        );
+
+        return new Headers(
+            new Header("ServiceAuthorization", serviceToken),
+            new Header("Authorization", accessToken)
+        );
+    }
 }
