@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +15,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 
 @Configuration
 public class NotificationHandlerConfiguration {
+
+    private final boolean isSubmitHearingRequirementsEnabled;
+
+    public NotificationHandlerConfiguration(
+        @Value("${featureFlag.isSubmitHearingRequirementsEnabled}") boolean isSubmitHearingRequirementsEnabled
+    ) {
+        this.isSubmitHearingRequirementsEnabled = isSubmitHearingRequirementsEnabled;
+    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> endAppealNotificationHandler(
@@ -67,12 +76,19 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsNotificationHandler(
         @Qualifier("hearingRequirementsNotificationGenerator") NotificationGenerator notificationGenerator) {
 
+        if (!isSubmitHearingRequirementsEnabled)
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS,
             notificationGenerator
         );
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FLAG,
+            notificationGenerator);
     }
 
     @Bean
