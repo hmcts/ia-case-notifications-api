@@ -51,7 +51,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT", appellantSubmitAppealPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT_AIP", appellantSubmitAppealPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test

@@ -50,7 +50,7 @@ public class AppellantSubmitAppealPersonalisationEmail implements EmailNotificat
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPEAL_SUBMITTED_APPELLANT";
+        return caseId + "_APPEAL_SUBMITTED_APPELLANT_AIP";
     }
 
     @Override

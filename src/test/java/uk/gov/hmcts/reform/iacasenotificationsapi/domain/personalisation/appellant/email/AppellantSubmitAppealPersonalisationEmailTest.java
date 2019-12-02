@@ -59,7 +59,7 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT", appellantSubmitAppealPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT_AIP", appellantSubmitAppealPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test

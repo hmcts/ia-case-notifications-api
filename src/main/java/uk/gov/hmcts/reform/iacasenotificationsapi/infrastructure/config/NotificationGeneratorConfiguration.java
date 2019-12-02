@@ -94,8 +94,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitAppealNotificationGenerator")
-    public List<NotificationGenerator> submitAppealNotificationGenerator(
+    @Bean("submitAppealAipNotificationGenerator")
+    public List<NotificationGenerator> submitAppealAipNotificationGenerator(
         CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
         AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
         AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
@@ -104,14 +104,27 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(caseOfficerSubmitAppealPersonalisation),
                 newArrayList(appellantSubmitAppealPersonalisationEmail, caseOfficerSubmitAppealPersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                newArrayList(),
                 newArrayList(appellantSubmitAppealPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitAppealRepNotificationGenerator")
+    public List<NotificationGenerator> submitAppealRepNotificationGenerator(
+        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerSubmitAppealPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
