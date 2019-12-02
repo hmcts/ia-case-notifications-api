@@ -8,7 +8,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -112,7 +110,7 @@ public class NotificationGeneratorTest {
 
     @Test
     public void should_send_notification_for_each_email_personalisation() {
-        notificationGenerator = new EmailNotificationGenerator(repEmailNotificationPersonalisationList, aipEmailNotificationPersonalisationList, notificationSender, notificationIdAppender);
+        notificationGenerator = new EmailNotificationGenerator(repEmailNotificationPersonalisationList, notificationSender, notificationIdAppender);
 
         when(emailNotificationPersonalisation.getRecipientsList(asylumCase)).thenReturn(singleton(emailAddress1));
         when(emailNotificationPersonalisation1.getRecipientsList(asylumCase)).thenReturn(singleton(emailAddress2));
@@ -130,9 +128,7 @@ public class NotificationGeneratorTest {
 
     @Test
     public void should_send_Aip_notification_emails_for_each_email_personalisation_using_the_subscriber_mode() {
-        notificationGenerator = new EmailNotificationGenerator(repEmailNotificationPersonalisationList, aipEmailNotificationPersonalisationList, notificationSender, notificationIdAppender);
-
-        when(asylumCase.read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
+        notificationGenerator = new EmailNotificationGenerator(aipEmailNotificationPersonalisationList, notificationSender, notificationIdAppender);
 
         when(emailNotificationPersonalisation.getRecipientsList(asylumCase)).thenReturn(singleton(emailAddress1));
         when(emailNotificationPersonalisation1.getRecipientsList(asylumCase)).thenReturn(singleton(emailAddress2));
@@ -150,9 +146,7 @@ public class NotificationGeneratorTest {
 
     @Test
     public void should_send_Aip_notification_Sms_for_each_personalisation_using_the_subscriber_mode() {
-        notificationGenerator = new SmsNotificationGenerator(emptyList(), aipSmsNotificationPersonalisationList, notificationSender, notificationIdAppender);
-
-        when(asylumCase.read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
+        notificationGenerator = new SmsNotificationGenerator(aipSmsNotificationPersonalisationList, notificationSender, notificationIdAppender);
 
         when(smsNotificationPersonalisation1.getRecipientsList(asylumCase)).thenReturn(singleton(phoneNumber1));
         when(smsNotificationPersonalisation2.getRecipientsList(asylumCase)).thenReturn(singleton(phoneNumber2));
