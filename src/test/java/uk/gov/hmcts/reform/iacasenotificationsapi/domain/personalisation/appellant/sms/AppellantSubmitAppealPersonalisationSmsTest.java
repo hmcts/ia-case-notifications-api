@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -25,8 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @RunWith(MockitoJUnitRunner.class)
 public class AppellantSubmitAppealPersonalisationSmsTest {
 
-    @Mock
-    AsylumCase asylumCase;
+    @Mock AsylumCase asylumCase;
 
     private Long caseId = 12345L;
     private String smsTemplateId = "someSmsTemplateId";
@@ -40,6 +41,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantSubmitAppealPersonalisationSms = new AppellantSubmitAppealPersonalisationSms(smsTemplateId);
     }
@@ -51,7 +53,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT_AIP", appellantSubmitAppealPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT_AIP_SMS", appellantSubmitAppealPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -88,19 +90,25 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        final String dueDate = LocalDate.now().plusDays(14)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationSms.getPersonalisation(asylumCase);
-
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(dueDate, personalisation.get("due date"));
     }
 
     @Test
     public void should_return_personalisation_when_only_mandatory_information_given() {
+        final String dueDate = LocalDate.now().plusDays(14)
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
+        assertEquals(dueDate, personalisation.get("due date"));
+
     }
 }
