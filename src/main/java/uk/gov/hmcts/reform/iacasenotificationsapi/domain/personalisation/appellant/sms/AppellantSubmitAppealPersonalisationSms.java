@@ -30,7 +30,7 @@ public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationP
     public AppellantSubmitAppealPersonalisationSms(
         @Value("${govnotify.template.appealSubmittedAppellant.sms}") String appealSubmittedAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
-        ) {
+    ) {
         this.appealSubmittedAppellantSmsTemplateId = appealSubmittedAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
     }
