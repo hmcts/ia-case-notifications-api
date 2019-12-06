@@ -8,7 +8,7 @@
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "aip-minimal-appeal-submitted.json",
+        "template": "aip-minimal-appeal-submitted-aip.json",
         "replacements": {
           "hearingCentre": "manchester",
           "subscriptions": [
@@ -31,7 +31,7 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "aip-minimal-appeal-submitted.json",
+      "template": "minimal-appeal-submitted-aip.json",
       "replacements": {
         "hearingCentre": "manchester",
         "subscriptions": [
@@ -72,7 +72,7 @@
           "Appellant name: Pablo Jimenez",
           "Dear Pablo,",
           "Your appeal has been submitted.",
-          "(See your appeal details | link Should be here.)",
+          "See your appeal details: {$iaAipFrontendUrl}",
           "#What happens next",
           "* A case worker will check your application and get in touch with you within 14 days",
           "#What you can do now",
@@ -100,7 +100,8 @@
         "body": [
           "Your appeal application has been sent to the Tribunal. Your appeal reference number is PA/12345/2019",
           "A Tribunal case worker will contact you by {$TODAY+14|d MMM yyyy} to tell you what to do next.",
-          "Sign in to your account to see how your appeal is progressing:"
+          "Sign in to your account to see how your appeal is progressing:",
+          "{$iaAipFrontendUrl}"
         ]
       }
     ]

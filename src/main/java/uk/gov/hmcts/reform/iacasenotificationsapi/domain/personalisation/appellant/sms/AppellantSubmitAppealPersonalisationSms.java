@@ -25,11 +25,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String appealSubmittedAppellantSmsTemplateId;
+    private final String iaAipFrontendUrl;
 
     public AppellantSubmitAppealPersonalisationSms(
-        @Value("${govnotify.template.appealSubmittedAppellant.sms}") String appealSubmittedAppellantSmsTemplateId
-    ) {
+        @Value("${govnotify.template.appealSubmittedAppellant.sms}") String appealSubmittedAppellantSmsTemplateId,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
+        ) {
         this.appealSubmittedAppellantSmsTemplateId = appealSubmittedAppellantSmsTemplateId;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
     }
 
 
@@ -67,6 +70,7 @@ public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationP
                 .<String, String>builder()
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("due date", dueDate)
+                .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }
 }

@@ -23,11 +23,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 public class AppellantSubmitAppealPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String appealSubmittedAppellantEmailTemplateId;
+    private final String iaAipFrontendUrl;
 
     public AppellantSubmitAppealPersonalisationEmail(
-        @Value("${govnotify.template.appealSubmittedAppellant.email}") String appealSubmittedAppellantEmailTemplateId
+        @Value("${govnotify.template.appealSubmittedAppellant.email}") String appealSubmittedAppellantEmailTemplateId,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
     ) {
         this.appealSubmittedAppellantEmailTemplateId = appealSubmittedAppellantEmailTemplateId;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
     }
 
     @Override
@@ -63,6 +66,7 @@ public class AppellantSubmitAppealPersonalisationEmail implements EmailNotificat
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }
 }

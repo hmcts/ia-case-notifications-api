@@ -32,6 +32,8 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private String emailTemplateId = "someEmailTemplateId";
+    private String iaAipFrontendUrl = "http://localhost";
+
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -49,7 +51,7 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
 
-        appellantSubmitAppealPersonalisationEmail = new AppellantSubmitAppealPersonalisationEmail(emailTemplateId);
+        appellantSubmitAppealPersonalisationEmail = new AppellantSubmitAppealPersonalisationEmail(emailTemplateId, iaAipFrontendUrl);
     }
 
     @Test
@@ -95,6 +97,8 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+
     }
 
     @Test
@@ -111,5 +115,6 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         assertEquals("", personalisation.get("HO Ref Number"));
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }

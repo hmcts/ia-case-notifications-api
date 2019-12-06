@@ -31,6 +31,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
 
     private Long caseId = 12345L;
     private String smsTemplateId = "someSmsTemplateId";
+    private String iaAipFrontendUrl = "http://localhost";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
@@ -43,7 +44,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
 
-        appellantSubmitAppealPersonalisationSms = new AppellantSubmitAppealPersonalisationSms(smsTemplateId);
+        appellantSubmitAppealPersonalisationSms = new AppellantSubmitAppealPersonalisationSms(smsTemplateId, iaAipFrontendUrl);
     }
 
     @Test
@@ -96,6 +97,8 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationSms.getPersonalisation(asylumCase);
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(dueDate, personalisation.get("due date"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+
     }
 
     @Test
@@ -109,6 +112,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals(dueDate, personalisation.get("due date"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
     }
 }
