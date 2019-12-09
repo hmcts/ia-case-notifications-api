@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -34,7 +36,7 @@ public class NotificationGeneratorTest {
     @Mock SmsNotificationPersonalisation smsNotificationPersonalisation1;
     @Mock SmsNotificationPersonalisation smsNotificationPersonalisation2;
     @Mock NotificationSender notificationSender;
-    @Mock NotificationIdAppender notificationIdAppender;
+    @Spy NotificationIdAppender notificationIdAppender;
     @Mock Callback<AsylumCase> callback;
     @Mock CaseDetails<AsylumCase> caseDetails;
     @Mock AsylumCase asylumCase;
@@ -120,7 +122,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
 
+        verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
+        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -138,7 +142,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
 
+        verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
+        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -156,7 +162,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1);
         verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2);
 
+        verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
+        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
