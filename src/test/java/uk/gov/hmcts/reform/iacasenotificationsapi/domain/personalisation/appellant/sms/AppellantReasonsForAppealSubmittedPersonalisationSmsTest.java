@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,8 +28,8 @@ public class AppellantReasonsForAppealSubmittedPersonalisationSmsTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
+    @Mock RecipientsFinder recipientsFinder;
+    @Mock SystemDateProvider systemDateProvider;
 
     private Long caseId = 12345L;
     private String smsTemplateId = "someSmsTemplateId";
@@ -48,7 +49,8 @@ public class AppellantReasonsForAppealSubmittedPersonalisationSmsTest {
         appellantReasonsForAppealSubmittedPersonalisationSms = new AppellantReasonsForAppealSubmittedPersonalisationSms(
             smsTemplateId,
             iaAipFrontendUrl,
-            recipientsFinder
+            recipientsFinder,
+            systemDateProvider
         );
     }
 
@@ -64,6 +66,9 @@ public class AppellantReasonsForAppealSubmittedPersonalisationSmsTest {
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
+
+        when(recipientsFinder.findAll(null, NotificationType.SMS))
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         assertThatThrownBy(() -> appellantReasonsForAppealSubmittedPersonalisationSms.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
@@ -91,6 +96,8 @@ public class AppellantReasonsForAppealSubmittedPersonalisationSmsTest {
         final String dueDate = LocalDate.now().plusDays(14)
             .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
+        when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
+
         Map<String, String> personalisation = appellantReasonsForAppealSubmittedPersonalisationSms.getPersonalisation(asylumCase);
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(dueDate, personalisation.get("due date"));
@@ -104,6 +111,7 @@ public class AppellantReasonsForAppealSubmittedPersonalisationSmsTest {
             .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 
         Map<String, String> personalisation = appellantReasonsForAppealSubmittedPersonalisationSms.getPersonalisation(asylumCase);
 

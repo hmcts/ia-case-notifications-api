@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
 public class AppellantReasonsForAppealSubmittedPersonalisationEmail implements EmailNotificationPersonalisation {
@@ -21,16 +20,19 @@ public class AppellantReasonsForAppealSubmittedPersonalisationEmail implements E
     private final String reasonsForAppealSubmittedAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
+    private final SystemDateProvider systemDateProvider;
 
 
     public AppellantReasonsForAppealSubmittedPersonalisationEmail(
         @Value("${govnotify.template.reasonsForAppealSubmittedAppellant.email}") String reasonsForAppealSubmittedAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        RecipientsFinder recipientsFinder
+        RecipientsFinder recipientsFinder,
+        SystemDateProvider systemDateProvider
     ) {
         this.reasonsForAppealSubmittedAppellantEmailTemplateId = reasonsForAppealSubmittedAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
+        this.systemDateProvider = systemDateProvider;
     }
 
     @Override
@@ -40,8 +42,6 @@ public class AppellantReasonsForAppealSubmittedPersonalisationEmail implements E
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
-
         return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
     }
 
@@ -53,9 +53,7 @@ public class AppellantReasonsForAppealSubmittedPersonalisationEmail implements E
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        final String dueDate =
-            LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        final String dueDate = systemDateProvider.dueDate(14);
 
         return
             ImmutableMap

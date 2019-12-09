@@ -8,7 +8,7 @@
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "minimal-appeal-submitted-aip.json",
+        "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "hearingCentre": "manchester"
         }
@@ -19,7 +19,7 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-appeal-submitted-aip.json",
+      "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
         "hearingCentre": "manchester",
         "notificationsSent": [
