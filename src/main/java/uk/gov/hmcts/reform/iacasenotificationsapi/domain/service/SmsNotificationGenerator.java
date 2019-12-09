@@ -1,16 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 
@@ -38,31 +34,8 @@ public class SmsNotificationGenerator implements NotificationGenerator {
         personalisationList.forEach(personalisation -> {
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = create(personalisation, asylumCase, referenceId, callback);
-            appendToSentNotifications(asylumCase, referenceId, notificationIds);
+            notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
         });
-    }
-
-
-    private void appendToSentNotifications(
-        final AsylumCase asylumCase,
-        final String referenceId,
-        final List<String> notificationIds) {
-        Optional<List<IdValue<String>>> maybeNotificationSent =
-            asylumCase.read(NOTIFICATIONS_SENT);
-
-        List<IdValue<String>> notificationsSent =
-            maybeNotificationSent
-                .orElseGet(ArrayList::new);
-
-        notificationIds.forEach(notificationId ->
-            asylumCase.write(NOTIFICATIONS_SENT,
-                notificationIdAppender.append(
-                    notificationsSent,
-                    referenceId,
-                    notificationId
-                )
-            )
-        );
     }
 
     private List<String> create(
