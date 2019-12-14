@@ -5,7 +5,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
@@ -95,6 +94,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitAppealRepNotificationGenerator")
+    public List<NotificationGenerator> submitAppealRepNotificationGenerator(
+        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerSubmitAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("submitAppealOutOfTimeAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
         CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
@@ -116,22 +130,6 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
-
-    @Bean("submitAppealRepNotificationGenerator")
-    public List<NotificationGenerator> submitAppealRepNotificationGenerator(
-        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(caseOfficerSubmitAppealPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("submitCaseNotificationGenerator")
     public List<NotificationGenerator> submitCaseNotificationGenerator(
         CaseOfficerSubmitCasePersonalisation caseOfficerSubmitCasePersonalisation,
@@ -147,8 +145,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("uploadRespondentNotificationGenerator")
-    public List<NotificationGenerator> uploadRespondentNotificationGenerator(
+    @Bean("uploadRespondentEvidenceRepNotificationGenerator")
+    public List<NotificationGenerator> uploadRespondentEvidenceRepNotificationGenerator(
         LegalRepresentativeUploadRespondentEvidencePersonalisation legalRepresentativeUploadRespondentEvidencePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -156,6 +154,49 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeUploadRespondentEvidencePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("requestReasonsForAppealAipNotificationGenerator")
+    public List<NotificationGenerator> requestReasonsForAppealAipNotificationGenerator(
+        AppellantRequestReasonsForAppealPersonalisationEmail appellantRequestReasonsForAppealPersonalisationEmail,
+        AppellantRequestReasonsForAppealPersonalisationSms appellantRequestReasonsForAppealPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantRequestReasonsForAppealPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestReasonsForAppealPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitReasonsForAppealAipNotificationGenerator")
+    public List<NotificationGenerator> submitReasonsForAppealAipNotificationGenerator(
+        CaseOfficerReasonForAppealSubmittedPersonalisation caseOfficerReasonForAppealSubmittedPersonalisation,
+        AppellantSubmitReasonsForAppealPersonalisationEmail appellantSubmitReasonsForAppealPersonalisationEmail,
+        AppellantSubmitReasonsForAppealPersonalisationSms appellantSubmitReasonsForAppealPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerReasonForAppealSubmittedPersonalisation, appellantSubmitReasonsForAppealPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitReasonsForAppealPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
@@ -424,5 +465,4 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
-
 }

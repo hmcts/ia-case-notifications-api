@@ -34,6 +34,8 @@ public enum Event {
     UPLOAD_HOME_OFFICE_APPEAL_RESPONSE("uploadHomeOfficeAppealResponse"),
     REQUEST_RESPONSE_REVIEW("requestResponseReview"),
     SEND_DECISION_AND_REASONS("sendDecisionAndReasons"),
+    REQUEST_REASONS_FOR_APPEAL("requestReasonsForAppeal"),
+    SUBMIT_REASONS_FOR_APPEAL("submitReasonsForAppeal"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
