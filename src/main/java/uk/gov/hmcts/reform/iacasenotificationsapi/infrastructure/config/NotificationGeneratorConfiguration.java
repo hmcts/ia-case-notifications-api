@@ -147,8 +147,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("uploadRespondentNotificationGenerator")
-    public List<NotificationGenerator> uploadRespondentNotificationGenerator(
+    @Bean("uploadRespondentEvidenceRepNotificationGenerator")
+    public List<NotificationGenerator> uploadRespondentEvidenceRepNotificationGenerator(
         LegalRepresentativeUploadRespondentEvidencePersonalisation legalRepresentativeUploadRespondentEvidencePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -156,6 +156,28 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeUploadRespondentEvidencePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("uploadRespondentEvidenceAipNotificationGenerator")
+    public List<NotificationGenerator> uploadRespondentEvidenceAipNotificationGenerator(
+        CaseOfficerReasonForAppealSubmittedPersonalisation caseOfficerReasonForAppealSubmittedPersonalisation,
+        AppellantReasonsForAppealSubmittedPersonalisationEmail appellantReasonsForAppealSubmittedPersonalisationEmail,
+        AppellantReasonsForAppealSubmittedPersonalisationSms appellantReasonsForAppealSubmittedPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerReasonForAppealSubmittedPersonalisation, appellantReasonsForAppealSubmittedPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantReasonsForAppealSubmittedPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
