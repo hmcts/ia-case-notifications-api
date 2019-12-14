@@ -1,0 +1,71 @@
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
+
+import static java.util.Objects.requireNonNull;
+
+import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+
+@Service
+public class AppellantReasonsForAppealSubmittedPersonalisationEmail implements EmailNotificationPersonalisation {
+
+    private final String reasonsForAppealSubmittedAppellantEmailTemplateId;
+    private final String iaAipFrontendUrl;
+    private final RecipientsFinder recipientsFinder;
+
+
+    public AppellantReasonsForAppealSubmittedPersonalisationEmail(
+        @Value("${govnotify.template.reasonsForAppealSubmittedAppellant.email}") String reasonsForAppealSubmittedAppellantEmailTemplateId,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        RecipientsFinder recipientsFinder
+    ) {
+        this.reasonsForAppealSubmittedAppellantEmailTemplateId = reasonsForAppealSubmittedAppellantEmailTemplateId;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.recipientsFinder = recipientsFinder;
+    }
+
+    @Override
+    public String getTemplateId() {
+        return reasonsForAppealSubmittedAppellantEmailTemplateId;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+    }
+
+    @Override
+    public String getReferenceId(Long caseId) {
+        return caseId + "_REASONS_FOR_APPEAL_SUBMITTED_APPELLANT_AIP_EMAIL";
+    }
+
+    @Override
+    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        final String dueDate =
+            LocalDate.now().plusDays(14)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
+        return
+            ImmutableMap
+                .<String, String>builder()
+                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("due date", dueDate)
+                .put("Hyperlink to service", iaAipFrontendUrl)
+                .build();
+    }
+}

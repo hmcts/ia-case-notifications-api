@@ -9,20 +9,13 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReviewHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAppealOutcomePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEditListingPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEndAppealPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeHearingBundleReadyPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeListCasePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRecordApplicationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentEvidenceDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
@@ -132,8 +125,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("uploadRespondentNotificationGenerator")
-    public List<NotificationGenerator> uploadRespondentNotificationGenerator(
+    @Bean("uploadRespondentEvidenceRepNotificationGenerator")
+    public List<NotificationGenerator> uploadRespondentEvidenceRepNotificationGenerator(
         LegalRepresentativeUploadRespondentEvidencePersonalisation legalRepresentativeUploadRespondentEvidencePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -141,6 +134,28 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeUploadRespondentEvidencePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("uploadRespondentEvidenceAipNotificationGenerator")
+    public List<NotificationGenerator> uploadRespondentEvidenceAipNotificationGenerator(
+        CaseOfficerReasonForAppealSubmittedPersonalisation caseOfficerReasonForAppealSubmittedPersonalisation,
+        AppellantReasonsForAppealSubmittedPersonalisationEmail appellantReasonsForAppealSubmittedPersonalisationEmail,
+        AppellantReasonsForAppealSubmittedPersonalisationSms appellantReasonsForAppealSubmittedPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerReasonForAppealSubmittedPersonalisation, appellantReasonsForAppealSubmittedPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantReasonsForAppealSubmittedPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )

@@ -57,6 +57,9 @@ govnotify.template.submittedHearingRequirementsCaseOfficerTemplateId: aa36afd2-2
 
 govnotify.template.appealSubmittedAppellant.email: b53d6e97-b7d9-4112-9669-9db81e563506
 govnotify.template.appealSubmittedAppellant.sms: 2cc4d346-cfb6-4ea9-93b3-c3f1f4f56491
+govnotify.template.reasonsForAppealSubmittedAppellant.email: 91ab0576-f0cc-412f-aadf-ad260fee1428
+govnotify.template.reasonsForAppealSubmittedAppellant.sms: 33758f88-eb3c-469d-8c49-ca3f9fa69a6d
+govnotify.template.reasonsForAppealSubmittedCaseOfficer: 2e3d6dfb-409d-4b45-a50b-0703c47341ea
 
 govnotify.baseUrl: "https://api.notifications.service.gov.uk"
 
@@ -94,6 +97,7 @@ security:
       - "startAppeal"
       - "editAppeal"
       - "submitAppeal"
+      - "uploadRespondentEvidence"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"

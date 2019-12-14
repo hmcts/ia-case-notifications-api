@@ -166,13 +166,31 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadRespondentNotificationHandler(
-        @Qualifier("uploadRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> uploadRespondentEvidenceRepNotificationHandler(
+        @Qualifier("uploadRespondentEvidenceRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE,
+                    && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE
+                    && callback.getCaseDetails().getCaseData()
+                    .read(JOURNEY_TYPE, JourneyType.class)
+                    .map(type -> type == REP).orElse(true),
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadRespondentEvidenceAipNotificationHandler(
+        @Qualifier("uploadRespondentEvidenceAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE
+                    && callback.getCaseDetails().getCaseData()
+                    .read(JOURNEY_TYPE, JourneyType.class)
+                    .map(type -> type == AIP).orElse(false),
             notificationGenerators
         );
     }
