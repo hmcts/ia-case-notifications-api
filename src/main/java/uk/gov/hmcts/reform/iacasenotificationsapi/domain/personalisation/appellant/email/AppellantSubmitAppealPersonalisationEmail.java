@@ -5,6 +5,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,10 @@ public class AppellantSubmitAppealPersonalisationEmail implements EmailNotificat
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+
+        final String dueDate =
+            LocalDate.now().plusDays(14)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         return
             ImmutableMap
                 .<String, String>builder()
@@ -66,6 +72,7 @@ public class AppellantSubmitAppealPersonalisationEmail implements EmailNotificat
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("due date", dueDate)
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }

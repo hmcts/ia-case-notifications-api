@@ -10,6 +10,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -93,10 +95,15 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
 
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(asylumCase);
 
+        final String dueDate =
+            LocalDate.now().plusDays(14)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
+        assertEquals(dueDate, personalisation.get("due date"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
     }
@@ -109,12 +116,17 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
 
+        final String dueDate =
+            LocalDate.now().plusDays(14)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals("", personalisation.get("HO Ref Number"));
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
+        assertEquals(dueDate, personalisation.get("due date"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }
