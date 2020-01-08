@@ -33,7 +33,7 @@
     "notifications": [
       {
         "reference": "1007_APPEAL_SUBMITTED_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.hattonCross}",
+        "recipient": "hatton-cross@example.com",
         "subject": "Asylum appeal: new appeal submitted",
         "body": [
           "Appeal reference number: PA/12345/2019",
