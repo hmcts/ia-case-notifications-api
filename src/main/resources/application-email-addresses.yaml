@@ -2,7 +2,7 @@ hearingCentreEmailAddresses:
   bradford: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:TCWBradfordIA@example.com}
   manchester: ${IA_HEARING_CENTRE_MANCHESTER_EMAIL:TCO.manchesteriac@example.com}
   newport: ${IA_HEARING_CENTRE_NEWPORT_EMAIL:TCO.NewportIAC@example.com}
-  taylorHouse: ${IA_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:tcw.taylorhouse@example.com}
+  taylorHouse: ${IA_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL}
   northShields: ${IA_HEARING_CENTRE_NORTH_SHIELDS_EMAIL:TCWNorthShieldsIA@example.com}
   birmingham: ${IA_HEARING_CENTRE_BIRMINGHAM_EMAIL:IACBirminghamTCW@example.com}
   hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:junk@test.com}
@@ -29,8 +29,8 @@ hearingCentreTelephoneNumber:
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
 
 endAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_END_APPEAL_EMAIL:ReformpbAPC@example.com}
-allowedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL}
-dismissedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL}
+allowedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL:junk@test.com}
+dismissedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL:junk@test.com}
 
 reviewHearingRequirementsAdminOfficerEmailAddress: ${IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL:IACReformlisting@example.com}
 
