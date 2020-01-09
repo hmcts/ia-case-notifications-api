@@ -33,7 +33,7 @@
     "notifications": [
       {
         "reference": "1005_CASE_SUBMITTED_CASE_OFFICER",
-        "recipient": "hatton-cross@example.com",
+        "recipient": "{$hearingCentreEmailAddresses.hattonCross}",
         "subject": "Immigration and Asylum appeal: Appeal Skeleton Argument submitted",
         "body": [
           "Appeal reference number: PA/12345/2019",

@@ -38,7 +38,7 @@
     "notifications": [
       {
         "reference": "1001_APPEAL_OUTCOME_HOME_OFFICE",
-        "recipient": "HOAllowedDeterminations.ccd@gmail.com",
+        "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
           "Appeal reference number: PA/12345/2019",

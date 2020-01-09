@@ -5,7 +5,7 @@ hearingCentreEmailAddresses:
   taylorHouse: ${IA_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:test@junk.com}
   northShields: ${IA_HEARING_CENTRE_NORTH_SHIELDS_EMAIL:TCWNorthShieldsIA@example.com}
   birmingham: ${IA_HEARING_CENTRE_BIRMINGHAM_EMAIL:IACBirminghamTCW@example.com}
-  hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL}
+  hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:test@junk.com}
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:TBD_HC_Glasgow@example.com}
 
 homeOfficeEmailAddresses:
