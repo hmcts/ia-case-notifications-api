@@ -234,7 +234,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitReasonsForAppealAipNotificationGenerator(
+    public PreSubmitCallbackHandler<AsylumCase> submitReasonsForAppealAipNotificationHandler(
         @Qualifier("submitReasonsForAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
