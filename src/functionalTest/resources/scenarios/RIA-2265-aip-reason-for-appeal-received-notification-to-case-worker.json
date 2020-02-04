@@ -1,5 +1,5 @@
 {
-  "description": "RIA-2265 Send Reason for appeal received to case worker",
+  "description": "RIA-2265 Send Reason for appeal received to caseworker",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",

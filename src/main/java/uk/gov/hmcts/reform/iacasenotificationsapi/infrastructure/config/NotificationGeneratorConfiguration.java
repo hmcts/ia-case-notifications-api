@@ -130,6 +130,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
     @Bean("submitCaseNotificationGenerator")
     public List<NotificationGenerator> submitCaseNotificationGenerator(
         CaseOfficerSubmitCasePersonalisation caseOfficerSubmitCasePersonalisation,
