@@ -37,7 +37,7 @@ public class AppellantSubmitReasonsForAppealPersonalisationSmsTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
 
-    private AppellantRequestReasonsForAppealSubmissionPersonalisationSms appellantRequestReasonsForAppealSubmissionPersonalisationSms;
+    private AppellantRequestReasonsForAppealPersonalisationSms appellantRequestReasonsForAppealSubmissionPersonalisationSms;
 
     @Before
     public void setup() {
@@ -45,7 +45,7 @@ public class AppellantSubmitReasonsForAppealPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
 
-        appellantRequestReasonsForAppealSubmissionPersonalisationSms = new AppellantRequestReasonsForAppealSubmissionPersonalisationSms(
+        appellantRequestReasonsForAppealSubmissionPersonalisationSms = new AppellantRequestReasonsForAppealPersonalisationSms(
             smsTemplateId,
             iaAipFrontendUrl,
             recipientsFinder,
@@ -59,7 +59,7 @@ public class AppellantSubmitReasonsForAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPEAL_SUBMIT_REASONS_FOR_APPEAL_AIP_SMS", appellantRequestReasonsForAppealSubmissionPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_REQUEST_REASONS_FOR_APPEAL_APPELLANT_AIP_SMS", appellantRequestReasonsForAppealSubmissionPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test

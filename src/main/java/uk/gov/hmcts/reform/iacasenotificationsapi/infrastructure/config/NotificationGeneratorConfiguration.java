@@ -130,6 +130,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
     @Bean("submitCaseNotificationGenerator")
     public List<NotificationGenerator> submitCaseNotificationGenerator(
         CaseOfficerSubmitCasePersonalisation caseOfficerSubmitCasePersonalisation,
@@ -145,21 +146,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("requestRespondentEvidenceUploadAipNotificationGenerator")
-    public List<NotificationGenerator> submitReasonForAppealAipNotificationGenerator(
-        AppellantRequestReasonsForAppealSubmissionPersonalisationEmail appellantRequestReasonsForAppealSubmissionPersonalisationEmail,
-        AppellantRequestReasonsForAppealSubmissionPersonalisationSms appellantRequestReasonsForAppealSubmissionPersonalisationSms,
+    @Bean("requestReasonsForAppealAipNotificationGenerator")
+    public List<NotificationGenerator> requestReasonsForAppealAipNotificationGenerator(
+        AppellantRequestReasonsForAppealPersonalisationEmail appellantRequestReasonsForAppealPersonalisationEmail,
+        AppellantRequestReasonsForAppealPersonalisationSms appellantRequestReasonsForAppealPersonalisationSms,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantRequestReasonsForAppealSubmissionPersonalisationEmail),
+                newArrayList(appellantRequestReasonsForAppealPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                newArrayList(appellantRequestReasonsForAppealSubmissionPersonalisationSms),
+                newArrayList(appellantRequestReasonsForAppealPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
@@ -181,22 +182,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("uploadRespondentEvidenceAipNotificationGenerator")
-    public List<NotificationGenerator> uploadRespondentEvidenceAipNotificationGenerator(
+    @Bean("submitReasonsForAppealAipNotificationGenerator")
+    public List<NotificationGenerator> submitReasonsForAppealAipNotificationGenerator(
         CaseOfficerReasonForAppealSubmittedPersonalisation caseOfficerReasonForAppealSubmittedPersonalisation,
-        AppellantReasonsForAppealSubmittedPersonalisationEmail appellantReasonsForAppealSubmittedPersonalisationEmail,
-        AppellantReasonsForAppealSubmittedPersonalisationSms appellantReasonsForAppealSubmittedPersonalisationSms,
+        AppellantSubmitReasonsForAppealPersonalisationEmail appellantSubmitReasonsForAppealPersonalisationEmail,
+        AppellantSubmitReasonsForAppealPersonalisationSms appellantSubmitReasonsForAppealPersonalisationSms,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(caseOfficerReasonForAppealSubmittedPersonalisation, appellantReasonsForAppealSubmittedPersonalisationEmail),
+                newArrayList(caseOfficerReasonForAppealSubmittedPersonalisation, appellantSubmitReasonsForAppealPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                newArrayList(appellantReasonsForAppealSubmittedPersonalisationSms),
+                newArrayList(appellantSubmitReasonsForAppealPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )

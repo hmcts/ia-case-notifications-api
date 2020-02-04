@@ -15,20 +15,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantRequestReasonsForAppealSubmissionPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AppellantSubmitReasonsForAppealPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String submitReasonForAppealEmailTemplateId;
+    private final String reasonsForAppealSubmittedAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
 
-    public AppellantRequestReasonsForAppealSubmissionPersonalisationEmail(
-        @Value("${govnotify.template.submitReasonForAppeal.email}") String submitReasonForAppealEmailTemplateId,
+
+    public AppellantSubmitReasonsForAppealPersonalisationEmail(
+        @Value("${govnotify.template.submitReasonsForAppeal.email}") String reasonsForAppealSubmittedAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
-        this.submitReasonForAppealEmailTemplateId = submitReasonForAppealEmailTemplateId;
+        this.reasonsForAppealSubmittedAppellantEmailTemplateId = reasonsForAppealSubmittedAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
@@ -36,25 +37,23 @@ public class AppellantRequestReasonsForAppealSubmissionPersonalisationEmail impl
 
     @Override
     public String getTemplateId() {
-        return submitReasonForAppealEmailTemplateId;
+        return reasonsForAppealSubmittedAppellantEmailTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPEAL_SUBMIT_REASONS_FOR_APPEAL_AIP_EMAIL";
+        return caseId + "_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_EMAIL";
     }
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
-        final String dueDate = systemDateProvider.dueDate(28);
+        final String dueDate = systemDateProvider.dueDate(14);
 
         return
             ImmutableMap
@@ -63,8 +62,8 @@ public class AppellantRequestReasonsForAppealSubmissionPersonalisationEmail impl
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Hyperlink to service", iaAipFrontendUrl)
                 .put("due date", dueDate)
+                .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }
 }

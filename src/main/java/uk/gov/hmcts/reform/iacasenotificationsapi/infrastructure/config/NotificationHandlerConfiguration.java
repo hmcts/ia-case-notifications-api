@@ -219,13 +219,13 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadRespondentEvidenceAipNotificationHandler(
-        @Qualifier("uploadRespondentEvidenceAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
+    public PreSubmitCallbackHandler<AsylumCase> requestReasonForAppealUploadAipNotificationHandler(
+        @Qualifier("requestReasonsForAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE
+                    && callback.getEvent() == Event.REQUEST_REASONS_FOR_APPEAL
                     && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == AIP).orElse(false),
@@ -234,13 +234,13 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestReasonForAppealUploadAipNotificationHandler(
-        @Qualifier("requestRespondentEvidenceUploadAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
+    public PreSubmitCallbackHandler<AsylumCase> uploadRespondentEvidenceAipNotificationHandler(
+        @Qualifier("submitReasonsForAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
+                    && callback.getEvent() == Event.SUBMIT_REASONS_FOR_APPEAL
                     && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == AIP).orElse(false),
