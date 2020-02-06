@@ -58,6 +58,9 @@ govnotify.template.appealSubmittedAppellant.sms: 2cc4d346-cfb6-4ea9-93b3-c3f1f4f
 govnotify.template.appealSubmittedOutOfTimeAppellant.email: 98f18bbb-c746-4fbd-8860-a629957a94ac
 govnotify.template.appealSubmittedOutOfTimeAppellant.sms: 2587432c-aeb9-483d-bc0d-086b175f4fa7
 
+govnotify.template.requestRespondentEvidenceDirectionAppellant.email: 9c8ab848-b1f7-4dbe-9854-4922e94ece67
+govnotify.template.requestRespondentEvidenceDirectionAppellant.sms: e805b3c5-b1e2-4ad1-9416-3298ca765738
+
 govnotify.baseUrl: "https://api.notifications.service.gov.uk"
 
 notificationSender.deduplicateSendsWithinSeconds: 60
