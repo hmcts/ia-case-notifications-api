@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PreSubmitCallbackDispatcher;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -24,6 +25,8 @@ public class PreSubmitCallbackControllerTest {
     @Mock private PreSubmitCallbackResponse<AsylumCase> callbackResponse;
     @Mock private Callback<AsylumCase> callback;
     @Mock private CaseDetails<AsylumCase> caseDetails;
+    @Mock private AsylumCase asylumCase;
+    @Mock private FeatureToggler featureToggler;
 
     private PreSubmitCallbackController preSubmitCallbackController;
 
@@ -31,7 +34,8 @@ public class PreSubmitCallbackControllerTest {
     public void setUp() {
         preSubmitCallbackController =
             new PreSubmitCallbackController(
-                callbackDispatcher
+                callbackDispatcher,
+                featureToggler
             );
     }
 
@@ -39,6 +43,7 @@ public class PreSubmitCallbackControllerTest {
     public void should_deserialize_about_to_start_callback_then_dispatch_then_return_response() {
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
 
         doReturn(callbackResponse)
             .when(callbackDispatcher)
@@ -59,6 +64,7 @@ public class PreSubmitCallbackControllerTest {
     public void should_deserialize_about_to_submit_callback_then_dispatch_then_return_response() {
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
 
         doReturn(callbackResponse)
             .when(callbackDispatcher)
@@ -78,7 +84,7 @@ public class PreSubmitCallbackControllerTest {
     @Test
     public void should_not_allow_null_constructor_arguments() {
 
-        assertThatThrownBy(() -> new PreSubmitCallbackController(null))
+        assertThatThrownBy(() -> new PreSubmitCallbackController(null, null))
             .hasMessage("callbackDispatcher must not be null")
             .isExactlyInstanceOf(NullPointerException.class);
     }

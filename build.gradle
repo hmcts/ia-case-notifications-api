@@ -228,6 +228,8 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
+    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '4.12.0'
+
     compile group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-httpcomponents', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging

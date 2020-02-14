@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PreSubmitCallbackDispatcher;
 
 @Api(
@@ -35,12 +36,16 @@ public class PreSubmitCallbackController {
 
     private final PreSubmitCallbackDispatcher<AsylumCase> callbackDispatcher;
 
+    private FeatureToggler featureToggler;
+
     public PreSubmitCallbackController(
-        PreSubmitCallbackDispatcher<AsylumCase> callbackDispatcher
+        PreSubmitCallbackDispatcher<AsylumCase> callbackDispatcher,
+        FeatureToggler launchDarklyFeatureToggler
     ) {
         requireNonNull(callbackDispatcher, "callbackDispatcher must not be null");
 
         this.callbackDispatcher = callbackDispatcher;
+        this.featureToggler = launchDarklyFeatureToggler;
     }
 
     @ApiOperation(
@@ -134,8 +139,23 @@ public class PreSubmitCallbackController {
         );
 
         PreSubmitCallbackResponse<AsylumCase> callbackResponse =
-            callbackDispatcher.handle(callbackStage, callback);
+            new PreSubmitCallbackResponse<>(
+                callback
+                    .getCaseDetails()
+                    .getCaseData());
 
+
+        boolean skipHandlers = featureToggler.getValue("some-test-key", false);
+
+        if (skipHandlers) {
+            LOG.info("\nMissing handlers and returning an empty response TRUE: {}", skipHandlers);
+        } else {
+            LOG.info("\nExecuting handlers . . .");
+
+
+            callbackResponse = callbackDispatcher.handle(callbackStage, callback);
+
+        }
         LOG.info(
             "Asylum Case CCD `{}` event `{}` handled for Case ID `{}`",
             callbackStage,
