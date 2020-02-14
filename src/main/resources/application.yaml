@@ -52,6 +52,8 @@ govnotify.template.withoutHearingRequirementsAdminOfficerTemplateId: 435ea40a-47
 govnotify.template.caseOfficerRequestHearingRequirementsTemplateId: f6185789-8328-4208-8ee5-8a12d641180f
 govnotify.template.submittedHearingRequirementsLegalRepTemplateId: bfee0880-9bdd-41a1-805a-8be4818bbb6a
 govnotify.template.submittedHearingRequirementsCaseOfficerTemplateId: aa36afd2-254b-4fd7-b7c8-72078176294f
+govnotify.template.uploadedAdditionalEvidenceTemplateId: b012e823-c658-4d10-a7a5-95e54f73dba8
+govnotify.template.uploadedAddendumEvidenceTemplateId: 271ae717-cbc4-4c6e-8011-cd8c6b1ba0b9
 
 govnotify.template.appealSubmittedAppellant.email: b53d6e97-b7d9-4112-9669-9db81e563506
 govnotify.template.appealSubmittedAppellant.sms: 2cc4d346-cfb6-4ea9-93b3-c3f1f4f56491
@@ -112,6 +114,7 @@ security:
       - "uploadAdditionalEvidence"
       - "draftHearingRequirements"
       - "requestHearingRequirementsFeature"
+      - "uploadAddendumEvidenceLegalRep"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -133,6 +136,7 @@ security:
       - "requestCaseBuilding"
       - "requestResponseReview"
       - "sendDecisionAndReasons"
+      - "uploadAddendumEvidence"
       - "requestReasonsForAppeal"
 
     caseworker-ia-admofficer:
@@ -140,12 +144,21 @@ security:
       - "editCaseListing"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
+      - "uploadAdditionalEvidenceHomeOffice"
+      - "uploadAddendumEvidenceHomeOffice"
     caseworker-ia-homeofficelart:
       - "uploadHomeOfficeAppealResponse"
+      - "uploadAdditionalEvidenceHomeOffice"
+      - "uploadAddendumEvidenceHomeOffice"
+    caseworker-ia-homeofficepou:
+      - "uploadAdditionalEvidenceHomeOffice"
+      - "uploadAddendumEvidenceHomeOffice"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"
       - "uploadHomeOfficeAppealResponse"
+      - "uploadAdditionalEvidenceHomeOffice"
+      - "uploadAddendumEvidenceHomeOffice"
 
 ### dependency configuration
 auth.idam.client.baseUrl: ${IDAM_URL:http://127.0.0.1:4501}

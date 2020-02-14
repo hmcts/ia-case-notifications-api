@@ -14,13 +14,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @Service
-public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
+public class CaseOfficerUploadAdditionalEvidencePersonalisation implements EmailNotificationPersonalisation {
 
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
 
-    public CaseOfficerSubmittedHearingRequirementsPersonalisation(
+    public CaseOfficerUploadAdditionalEvidencePersonalisation(
         GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
         PersonalisationProvider personalisationProvider,
         EmailAddressFinder emailAddressFinder
@@ -31,16 +31,10 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements E
     }
 
     @Override
-    public String getReferenceId(Long caseId) {
-        return caseId + "_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS";
-    }
-
-    @Override
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
         return personalisationProvider.getPersonalisation(callback);
-
     }
 
     @Override
@@ -50,6 +44,11 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements E
 
     @Override
     public String getTemplateId() {
-        return govNotifyTemplateIdConfiguration.getSubmittedHearingRequirementsCaseOfficerTemplateId();
+        return govNotifyTemplateIdConfiguration.getUploadedAdditionalEvidenceTemplateId();
+    }
+
+    @Override
+    public String getReferenceId(Long caseId) {
+        return caseId + "_UPLOADED_ADDITIONAL_EVIDENCE_CASE_OFFICER";
     }
 }

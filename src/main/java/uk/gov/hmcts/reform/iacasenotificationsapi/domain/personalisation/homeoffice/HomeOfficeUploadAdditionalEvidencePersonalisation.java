@@ -1,38 +1,49 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @Service
-public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
+public class HomeOfficeUploadAdditionalEvidencePersonalisation implements EmailNotificationPersonalisation {
 
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     private final PersonalisationProvider personalisationProvider;
-    private final EmailAddressFinder emailAddressFinder;
+    private final String homeOfficeEmailAddress;
 
-    public CaseOfficerSubmittedHearingRequirementsPersonalisation(
+    public HomeOfficeUploadAdditionalEvidencePersonalisation(
         GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
         PersonalisationProvider personalisationProvider,
-        EmailAddressFinder emailAddressFinder
+        @Value("${respondentEmailAddresses.respondentReviewDirection}") String homeOfficeEmailAddress
     ) {
         this.govNotifyTemplateIdConfiguration = govNotifyTemplateIdConfiguration;
         this.personalisationProvider = personalisationProvider;
-        this.emailAddressFinder = emailAddressFinder;
+        this.homeOfficeEmailAddress = homeOfficeEmailAddress;
+    }
+
+
+    @Override
+    public String getTemplateId() {
+        return govNotifyTemplateIdConfiguration.getUploadedAdditionalEvidenceTemplateId();
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return Collections.singleton(homeOfficeEmailAddress);
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS";
+        return caseId + "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE";
     }
 
     @Override
@@ -40,16 +51,7 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements E
         requireNonNull(callback, "callback must not be null");
 
         return personalisationProvider.getPersonalisation(callback);
-
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getEmailAddress(asylumCase));
-    }
-
-    @Override
-    public String getTemplateId() {
-        return govNotifyTemplateIdConfiguration.getSubmittedHearingRequirementsCaseOfficerTemplateId();
     }
 }
+
+

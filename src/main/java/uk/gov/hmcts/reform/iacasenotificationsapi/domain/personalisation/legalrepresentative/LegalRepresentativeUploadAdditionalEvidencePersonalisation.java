@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
 
@@ -14,13 +14,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @Service
-public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeUploadAdditionalEvidencePersonalisation implements EmailNotificationPersonalisation {
 
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
 
-    public CaseOfficerSubmittedHearingRequirementsPersonalisation(
+    public LegalRepresentativeUploadAdditionalEvidencePersonalisation(
         GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
         PersonalisationProvider personalisationProvider,
         EmailAddressFinder emailAddressFinder
@@ -31,8 +31,8 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements E
     }
 
     @Override
-    public String getReferenceId(Long caseId) {
-        return caseId + "_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS";
+    public String getTemplateId() {
+        return govNotifyTemplateIdConfiguration.getUploadedAdditionalEvidenceTemplateId();
     }
 
     @Override
@@ -40,16 +40,15 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements E
         requireNonNull(callback, "callback must not be null");
 
         return personalisationProvider.getPersonalisation(callback);
-
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getEmailAddress(asylumCase));
+        return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
     }
 
     @Override
-    public String getTemplateId() {
-        return govNotifyTemplateIdConfiguration.getSubmittedHearingRequirementsCaseOfficerTemplateId();
+    public String getReferenceId(Long caseId) {
+        return caseId + "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP";
     }
 }

@@ -4,11 +4,9 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
-
 import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Collections;
 import java.util.Map;
-
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,8 +15,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.BasePersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class LegalRepresentativeListCasePersonalisation implements EmailNotificationPersonalisation {
@@ -84,7 +82,7 @@ public class LegalRepresentativeListCasePersonalisation implements EmailNotifica
             .put("Hearing Time", dateTimeExtractor.extractHearingTime(hearingDateTime))
             .put("Hearing Centre Address", hearingCentreAddress);
 
-        BasePersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
 
         return listCaseFields.build();
 
