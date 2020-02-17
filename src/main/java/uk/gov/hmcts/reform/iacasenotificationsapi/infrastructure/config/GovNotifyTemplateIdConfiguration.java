@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,4 +36,16 @@ public class GovNotifyTemplateIdConfiguration {
 
     @NotBlank
     private String submittedHearingRequirementsCaseOfficerTemplateId;
+
+    @NotBlank
+    private String uploadedAdditionalEvidenceTemplateId;
+
+    @NotBlank
+    private String uploadedAddendumEvidenceTemplateId;
+
+    @NotBlank
+    private String changeDirectionDueDateTemplateId;
+
+    @NotBlank
+    private String changeDirectionDueDateOfHomeOfficeTemplateId;
 }

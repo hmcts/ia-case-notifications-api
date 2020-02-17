@@ -5,32 +5,30 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
-
 import java.util.Collections;
 import java.util.Map;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeSubmittedHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.BasePersonalisationProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
 public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest {
 
+    @Mock Callback<AsylumCase> callback;
     @Mock AsylumCase asylumCase;
 
     @Mock EmailAddressFinder emailAddressFinder;
     @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
-    @Mock BasePersonalisationProvider basePersonalisationProvider;
+    @Mock PersonalisationProvider personalisationProvider;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -51,7 +49,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
 
         legalRepresentativeSubmittedHearingRequirementsPersonalisation =
             new LegalRepresentativeSubmittedHearingRequirementsPersonalisation(
-                basePersonalisationProvider,
+                personalisationProvider,
                 govNotifyTemplateIdConfiguration,
                 emailAddressFinder
             );
@@ -74,18 +72,18 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-        Map<String, String> personalisation = legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
-        Map<String, String> expectedPersonalisation = getPersonalisation();
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
+        Map<String, String> personalisation = legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        Assertions.assertThat(personalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        Assertions.assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            .hasMessage("callback must not be null");
     }
 
 

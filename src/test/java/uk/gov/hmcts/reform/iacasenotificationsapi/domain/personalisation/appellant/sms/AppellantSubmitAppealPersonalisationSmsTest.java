@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -18,10 +17,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
@@ -29,6 +26,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 public class AppellantSubmitAppealPersonalisationSmsTest {
 
     @Mock AsylumCase asylumCase;
+    @Mock RecipientsFinder recipientsFinder;
     @Mock SystemDateProvider systemDateProvider;
 
     private Long caseId = 12345L;
@@ -49,6 +47,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
         appellantSubmitAppealPersonalisationSms = new AppellantSubmitAppealPersonalisationSms(
             smsTemplateId,
             iaAipFrontendUrl,
+            recipientsFinder,
             systemDateProvider);
     }
 
@@ -65,6 +64,9 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
 
+        when(recipientsFinder.findAll(null, NotificationType.SMS))
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
+
         assertThatThrownBy(() -> appellantSubmitAppealPersonalisationSms.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
@@ -73,15 +75,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
-        Subscriber subscriber = new Subscriber(
-            SubscriberType.APPELLANT, //subscriberType
-            "", //email
-            YesOrNo.NO, // wants email
-            mockedAppellantMobilePhone, //mobileNumber
-            YesOrNo.YES // wants sms
-        );
-
-        when(asylumCase.read(SUBSCRIPTIONS)).thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
+        when(recipientsFinder.findAll(asylumCase, NotificationType.SMS)).thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantSubmitAppealPersonalisationSms.getRecipientsList(asylumCase).contains(mockedAppellantMobilePhone));
     }
@@ -97,7 +91,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
         final String dueDate = LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 

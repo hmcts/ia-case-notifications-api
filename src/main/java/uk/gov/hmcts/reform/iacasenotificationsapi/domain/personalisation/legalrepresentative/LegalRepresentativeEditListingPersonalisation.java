@@ -5,27 +5,26 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.util.Collections;
 import java.util.Map;
-
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.BasePersonalisationProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class LegalRepresentativeEditListingPersonalisation implements EmailNotificationPersonalisation {
 
     private final String legalRepresentativeCaseEditedTemplateId;
-    private final BasePersonalisationProvider basePersonalisationProvider;
+    private final PersonalisationProvider personalisationProvider;
 
     public LegalRepresentativeEditListingPersonalisation(
         @Value("${govnotify.template.legalRepresentativeCaseEditedTemplateId}") String legalRepresentativeCaseEditedTemplateId,
-        BasePersonalisationProvider basePersonalisationProvider
+        PersonalisationProvider personalisationProvider
     ) {
         this.legalRepresentativeCaseEditedTemplateId = legalRepresentativeCaseEditedTemplateId;
-        this.basePersonalisationProvider = basePersonalisationProvider;
+        this.personalisationProvider = personalisationProvider;
     }
 
     @Override
@@ -49,6 +48,6 @@ public class LegalRepresentativeEditListingPersonalisation implements EmailNotif
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        return basePersonalisationProvider.getEditCaseListingPersonalisation(callback);
+        return personalisationProvider.getPersonalisation(callback);
     }
 }

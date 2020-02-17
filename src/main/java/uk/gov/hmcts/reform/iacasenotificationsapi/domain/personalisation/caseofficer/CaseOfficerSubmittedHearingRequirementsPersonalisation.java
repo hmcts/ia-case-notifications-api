@@ -5,42 +5,29 @@ import static java.util.Objects.requireNonNull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.stereotype.Service;
-
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.BasePersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @Service
 public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
 
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
-    private final BasePersonalisationProvider basePersonalisationProvider;
+    private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
 
     public CaseOfficerSubmittedHearingRequirementsPersonalisation(
         GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
-        BasePersonalisationProvider basePersonalisationProvider,
+        PersonalisationProvider personalisationProvider,
         EmailAddressFinder emailAddressFinder
     ) {
         this.govNotifyTemplateIdConfiguration = govNotifyTemplateIdConfiguration;
-        this.basePersonalisationProvider = basePersonalisationProvider;
+        this.personalisationProvider = personalisationProvider;
         this.emailAddressFinder = emailAddressFinder;
-    }
-
-
-    @Override
-    public String getTemplateId() {
-        return govNotifyTemplateIdConfiguration.getSubmittedHearingRequirementsCaseOfficerTemplateId();
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getEmailAddress(asylumCase));
     }
 
     @Override
@@ -52,7 +39,17 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisation implements E
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        return basePersonalisationProvider.getSubmittedHearingRequirementsPersonalisation(callback.getCaseDetails().getCaseData());
+        return personalisationProvider.getPersonalisation(callback);
 
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return Collections.singleton(emailAddressFinder.getEmailAddress(asylumCase));
+    }
+
+    @Override
+    public String getTemplateId() {
+        return govNotifyTemplateIdConfiguration.getSubmittedHearingRequirementsCaseOfficerTemplateId();
     }
 }

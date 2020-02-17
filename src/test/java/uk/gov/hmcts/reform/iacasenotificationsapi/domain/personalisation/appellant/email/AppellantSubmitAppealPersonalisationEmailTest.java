@@ -8,7 +8,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,10 +20,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
@@ -32,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 public class AppellantSubmitAppealPersonalisationEmailTest {
 
     @Mock AsylumCase asylumCase;
+    @Mock RecipientsFinder recipientsFinder;
     @Mock SystemDateProvider systemDateProvider;
 
     private Long caseId = 12345L;
@@ -58,6 +56,7 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         appellantSubmitAppealPersonalisationEmail = new AppellantSubmitAppealPersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
+            recipientsFinder,
             systemDateProvider);
     }
 
@@ -74,21 +73,16 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
-        Subscriber subscriber = new Subscriber(
-            SubscriberType.APPELLANT, //subscriberType
-            mockedAppellantEmailAddress, //email
-            YesOrNo.YES, // wants email
-            "", //mobileNumber
-            YesOrNo.NO // wants sms
-        );
-
-        when(asylumCase.read(SUBSCRIPTIONS)).thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
+        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
         assertTrue(appellantSubmitAppealPersonalisationEmail.getRecipientsList(asylumCase).contains(mockedAppellantEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
+
+        when(recipientsFinder.findAll(null, NotificationType.EMAIL))
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         assertThatThrownBy(() -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
@@ -103,7 +97,6 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(asylumCase);
-
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
