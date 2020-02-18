@@ -8,9 +8,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -20,22 +19,31 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class AppellantSubmitAppealPersonalisationEmailTest {
+public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
 
     @Mock AsylumCase asylumCase;
+    @Mock DirectionFinder directionFinder;
     @Mock RecipientsFinder recipientsFinder;
-    @Mock SystemDateProvider systemDateProvider;
+    @Mock Direction direction;
 
     private Long caseId = 12345L;
     private String emailTemplateId = "someEmailTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
 
+    private String directionDueDate = "2019-08-27";
+    private String expectedDirectionDueDate = "27 Aug 2019";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -43,66 +51,84 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
 
-    private AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail;
+    private AppellantRequestRespondentEvidencePersonalisationEmail appellantRequestRespondentEvidencePersonalisationEmail;
 
     @Before
     public void setup() {
+
+        when((direction.getDateDue())).thenReturn(directionDueDate);
+        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(direction));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
 
-        appellantSubmitAppealPersonalisationEmail = new AppellantSubmitAppealPersonalisationEmail(
+        appellantRequestRespondentEvidencePersonalisationEmail = new AppellantRequestRespondentEvidencePersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
-            recipientsFinder,
-            systemDateProvider);
+            directionFinder,
+            recipientsFinder);
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantSubmitAppealPersonalisationEmail.getTemplateId());
+        assertEquals(emailTemplateId, appellantRequestRespondentEvidencePersonalisationEmail.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPEAL_SUBMITTED_APPELLANT_AIP_EMAIL", appellantSubmitAppealPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL", appellantRequestRespondentEvidencePersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
-        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+        Subscriber subscriber = new Subscriber(
+            SubscriberType.APPELLANT, //subscriberType
+            mockedAppellantEmailAddress, //email
+            YesOrNo.YES, // wants email
+            "", //mobileNumber
+            YesOrNo.NO // wants sms
+        );
 
-        assertTrue(appellantSubmitAppealPersonalisationEmail.getRecipientsList(asylumCase).contains(mockedAppellantEmailAddress));
+        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenCallRealMethod();
+        when(asylumCase.read(SUBSCRIPTIONS)).thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
+
+        assertTrue(appellantRequestRespondentEvidencePersonalisationEmail.getRecipientsList(asylumCase).contains(mockedAppellantEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-            .thenThrow(new NullPointerException("asylumCase must not be null"));
+        when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(null))
+        assertThatThrownBy(() -> appellantRequestRespondentEvidencePersonalisationEmail.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
-        final String dueDate =
-            LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-        when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
+    public void should_throw_exception_on_personalisation_when_direction_is_empty() {
 
-        Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(asylumCase);
+        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("direction 'respondentEvidence' is not present");
+    }
+
+
+    @Test
+    public void should_return_personalisation_when_all_information_given() {
+
+        Map<String, String> personalisation = appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
-        assertEquals(dueDate, personalisation.get("due date"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
     }
@@ -110,23 +136,18 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
     @Test
     public void should_return_personalisation_when_only_mandatory_information_given() {
 
-        final String dueDate =
-            LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 
-        Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals("", personalisation.get("HO Ref Number"));
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
-        assertEquals(dueDate, personalisation.get("due date"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }
