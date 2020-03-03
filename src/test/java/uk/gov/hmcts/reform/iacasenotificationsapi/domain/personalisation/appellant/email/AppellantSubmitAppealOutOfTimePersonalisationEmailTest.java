@@ -61,6 +61,7 @@ public class AppellantSubmitAppealOutOfTimePersonalisationEmailTest {
         appellantSubmitAppealOutOfTimePersonalisationEmail = new AppellantSubmitAppealOutOfTimePersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
+            28,
             systemDateProvider,
             recipientsFinder);
     }

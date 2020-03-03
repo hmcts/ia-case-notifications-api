@@ -52,6 +52,7 @@ public class AppellantSubmitAppealOutOfTimePersonalisationSmsTest {
         appellantSubmitAppealOutOfTimePersonalisationSms = new AppellantSubmitAppealOutOfTimePersonalisationSms(
             smsTemplateId,
             iaAipFrontendUrl,
+            28,
             systemDateProvider,
             recipientsFinder);
     }

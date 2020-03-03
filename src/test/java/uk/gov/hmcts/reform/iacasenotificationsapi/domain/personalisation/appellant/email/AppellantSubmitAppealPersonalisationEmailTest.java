@@ -56,6 +56,7 @@ public class AppellantSubmitAppealPersonalisationEmailTest {
         appellantSubmitAppealPersonalisationEmail = new AppellantSubmitAppealPersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
+            28,
             recipientsFinder,
             systemDateProvider);
     }

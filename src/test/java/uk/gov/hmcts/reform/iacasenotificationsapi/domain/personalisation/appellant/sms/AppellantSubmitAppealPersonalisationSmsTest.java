@@ -47,6 +47,7 @@ public class AppellantSubmitAppealPersonalisationSmsTest {
         appellantSubmitAppealPersonalisationSms = new AppellantSubmitAppealPersonalisationSms(
             smsTemplateId,
             iaAipFrontendUrl,
+            28,
             recipientsFinder,
             systemDateProvider);
     }
