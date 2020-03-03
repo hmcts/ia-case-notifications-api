@@ -49,7 +49,7 @@ public class AppellantSubmitAppealOutOfTimePersonalisationEmail implements Email
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String dueDate = systemDateProvider.dueDate(14);
+        String dueDate = systemDateProvider.dueDate(28);
 
         return
             ImmutableMap

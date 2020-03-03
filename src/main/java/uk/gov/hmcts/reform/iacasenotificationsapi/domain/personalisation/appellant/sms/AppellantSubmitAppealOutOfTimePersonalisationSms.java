@@ -55,7 +55,7 @@ public class AppellantSubmitAppealOutOfTimePersonalisationSms implements SmsNoti
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        final String dueDate = systemDateProvider.dueDate(14);
+        final String dueDate = systemDateProvider.dueDate(28);
 
         return
             ImmutableMap
