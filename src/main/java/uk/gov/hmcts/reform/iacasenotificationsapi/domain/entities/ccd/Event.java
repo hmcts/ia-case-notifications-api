@@ -41,6 +41,8 @@ public enum Event {
     REQUEST_REASONS_FOR_APPEAL("requestReasonsForAppeal"),
     SUBMIT_REASONS_FOR_APPEAL("submitReasonsForAppeal"),
     UPDATE_HEARING_ADJUSTMENTS("updateHearingAdjustments"),
+    APPLY_FOR_FTPA_APPELLANT("applyForFTPAAppellant"),
+    APPLY_FOR_FTPA_RESPONDENT("applyForFTPARespondent"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

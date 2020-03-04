@@ -49,4 +49,10 @@ public class GovNotifyTemplateIdConfiguration {
     @NotBlank
     private String changeDirectionDueDateOfHomeOfficeTemplateId;
 
+    @NotBlank
+    private String ftpaSubmittedAllTemplateId;
+
+    @NotBlank
+    private String ftpaSubmittedAdminTemplateId;
+
 }

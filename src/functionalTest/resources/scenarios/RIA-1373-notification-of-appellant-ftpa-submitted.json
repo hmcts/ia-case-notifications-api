@@ -1,0 +1,66 @@
+{
+  "description": "RIA-1373 Notification of appellant ftpa application submitted",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "LegalRepresentative",
+    "input": {
+      "id": 1373,
+      "eventId": "applyForFTPAAppellant",
+      "state": "ftpaSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json"
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "1373_FTPA_SUBMITTED_LEGAL_REP",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1373_FTPA_SUBMITTED_ADMIN_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "1373_FTPA_SUBMITTED_LEGAL_REP",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "body": [
+          "HMCTS reference: PA/12345/2019",
+          "Legal representative reference: CASE001",
+          "Home Office reference: A1234567",
+          "Appellant name: Talha Awan",
+          "# You've submitted an application for permission to appeal to the Upper Tribunal.",
+          "# Next steps",
+          "The First-tier Tribunal will consider your application and make a decision shortly.",
+          "First-tier Tribunal (Immigration and Asylum Chamber)"
+        ]
+      },
+      {
+        "reference": "1373_FTPA_SUBMITTED_ADMIN_OFFICER",
+        "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "body": [
+          "HMCTS reference: PA/12345/2019",
+          "Legal representative reference: CASE001",
+          "Home Office reference: A1234567",
+          "Appellant name: Talha Awan",
+          "# An application has been submitted for permission to appeal to the Upper Tribunal.",
+          "# Next steps",
+          "Assign the case to a judge and then email the HMCTS reference number to them. You should then sign into the online service to record the name of the judge assigned to this application.",
+          "First-tier Tribunal (Immigration and Asylum Chamber)"
+        ]
+      }
+    ]
+  }
+}
