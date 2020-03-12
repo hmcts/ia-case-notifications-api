@@ -78,8 +78,8 @@ govnotify.template.submitReasonsForAppealCaseOfficer: 2e3d6dfb-409d-4b45-a50b-07
 govnotify.baseUrl: "https://api.notifications.service.gov.uk"
 
 notificationSender.deduplicateSendsWithinSeconds: 60
-iaCcdFrontendUrl: ${IA_CCD_FRONTEND_URL:http://localhost:3451/}
 
+iaCcdFrontendUrl: ${IA_CCD_FRONTEND_URL:http://localhost:3451/}
 iaAipFrontendUrl: ${IA_AIP_FRONTEND_URL:https://localhost:3000/}
 
 tsvStringsFileLocation: strings.tsv
