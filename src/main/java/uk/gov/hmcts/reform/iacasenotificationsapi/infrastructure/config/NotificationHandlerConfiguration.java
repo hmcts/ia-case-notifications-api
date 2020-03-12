@@ -611,4 +611,48 @@ public class NotificationHandlerConfiguration {
             notificationGenerator
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionRefusedOrNotAdmittedNotificationHandler(
+        @Qualifier("ftpaApplicationDecisionRefusedOrNotAdmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isNegative = asylumCase
+                    .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)
+                    .map(decision -> decision.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
+                                     || decision.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_REFUSED.toString()))
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.FTPA_DECISION_LEADERSHIP_JUDGE
+                       && isNegative;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionGrantedOrPartiallyGrantedNotificationHandler(
+        @Qualifier("ftpaApplicationDecisionGrantedOrPartiallyGrantedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isPositive = asylumCase
+                    .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)
+                    .map(decision -> decision.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_GRANTED.toString())
+                                     || decision.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.FTPA_DECISION_LEADERSHIP_JUDGE
+                       && isPositive;
+            },
+            notificationGenerators
+        );
+    }
 }

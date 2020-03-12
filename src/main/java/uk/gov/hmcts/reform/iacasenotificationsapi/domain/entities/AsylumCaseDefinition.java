@@ -128,7 +128,16 @@ public enum AsylumCaseDefinition {
         "submitHearingRequirementsAvailable", new TypeReference<YesOrNo>(){}),
 
     SUBMISSION_OUT_OF_TIME(
-        "submissionOutOfTime", new TypeReference<YesOrNo>(){})
+        "submissionOutOfTime", new TypeReference<YesOrNo>(){}),
+
+    FTPA_APPELLANT_DECISION_OUTCOME_TYPE(
+        "ftpaAppellantDecisionOutcomeType", new TypeReference<FtpaAppellantDecisionOutcomeType>(){}),
+
+    FTPA_APPELLANT_SUBMITTED(
+        "ftpaAppellantSubmitted", new TypeReference<YesOrNo>(){}),
+
+    FTPA_RESPONDENT_SUBMITTED(
+        "ftpaRespondentSubmitted", new TypeReference<YesOrNo>(){})
 
     ;
 

@@ -716,4 +716,37 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyGrantedNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
+        AdminOfficerFtpaDecisionPersonalisation adminOfficerFtpaDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
