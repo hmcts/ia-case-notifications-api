@@ -228,6 +228,16 @@ govnotify:
       caseOfficer:
         email: 89540f93-a31b-4803-a83e-35cacd0c2415
 
+    applicationGrantedApplicant: 565437ef-ab10-4c1a-bf1f-de7306662906
+    applicationGrantedOtherParty: fe630b90-57c1-4b24-9075-9f6f5febc5b5
+    applicationGrantedAdmin: 09044cb9-28b8-4a8e-ad39-77238ba93e9f
+    applicationPartiallyGrantedApplicant: 7a5603de-4b0b-422e-8c5b-79452f3d10dd
+    applicationPartiallyGrantedOtherParty: 49f0f66e-8d90-4ae8-b127-84127c4610ea
+    applicationPartiallyGrantedAdmin: 49227a17-88f6-4f74-a307-20247d7436be
+    applicationNotAdmittedApplicant: 89416836-ea29-4174-819a-1ba20124ae3f
+    applicationNotAdmittedOtherParty: 35fb9871-1607-4bbc-8c4e-7a33988f2107
+    applicationRefusedApplicant: ab6b3c49-7f7e-407a-b46d-8dda10e33803
+    applicationRefusedOtherParty: 59ec29bf-5d40-4a97-bd54-cf7262b65185
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -331,6 +341,7 @@ security:
       - "sendDecisionAndReasons"
       - "changeDirectionDueDate"
       - "sendDirection"
+      - "leadershipJudgeFtpaDecision"
 
 ### dependency configuration
 auth.idam.client.baseUrl: ${IDAM_URL:http://127.0.0.1:4501}
