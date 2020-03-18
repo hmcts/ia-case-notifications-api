@@ -8,12 +8,61 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerChangeToHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReviewHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerWithoutHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestTimeExtensionPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestReasonsForAppealPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestRespondentEvidencePersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealOutOfTimePersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitReasonsForAppealPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestTimeExtensionPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestReasonsForAppealPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestRespondentEvidencePersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealOutOfTimePersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitReasonsForAppealPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerEditListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerHomeOfficeResponseUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerListCasePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerReasonForAppealSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerRequestTimeExtensionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerRespondentEvidenceSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerSubmitAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerSubmitCasePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerSubmittedHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerUploadAddendumEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerUploadAdditionalEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAppealOutcomePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEditListingNoChangePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEditListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEndAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeHearingBundleReadyPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeListCasePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRecordApplicationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAddendumEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAdditionalEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeAddAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeAppealOutcomePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeChangeDirectionDueDatePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEditListingNoChangePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEditListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEndAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeHearingBundleReadyPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeListCasePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeNonStandardDirectionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeRecordApplicationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeRequestCaseBuildingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeRequestHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeRequestResponseReviewPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeSubmittedHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeUploadAddendumEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeUploadAdditionalEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeUploadRespondentEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentDirectionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentEvidenceDirectionPersonalisation;
@@ -396,7 +445,8 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EditListingEmailNotificationGenerator(
-                newArrayList(caseOfficerEditListingPersonalisation, homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation),
+                newArrayList(caseOfficerEditListingPersonalisation, homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation,
+                    legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -621,6 +671,28 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(adminOfficerChangeToHearingRequirementsPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("requestTimeExtensionAipNotificationGenerator")
+    public List<NotificationGenerator> requestTimeExtensionAipNotificationGenerator(
+        CaseOfficerRequestTimeExtensionPersonalisation caseOfficerRequestTimeExtensionPersonalisation,
+        AppellantRequestTimeExtensionPersonalisationEmail appellantRequestTimeExtensionPersonalisationEmail,
+        AppellantRequestTimeExtensionPersonalisationSms appellantRequestTimeExtensionPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerRequestTimeExtensionPersonalisation, appellantRequestTimeExtensionPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestTimeExtensionPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
