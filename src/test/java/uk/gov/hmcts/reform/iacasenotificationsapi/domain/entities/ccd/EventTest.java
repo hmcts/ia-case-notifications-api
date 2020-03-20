@@ -63,6 +63,7 @@ public class EventTest {
         assertEquals("linkAppeal", Event.LINK_APPEAL.toString());
         assertEquals("unlinkAppeal", Event.UNLINK_APPEAL.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
+        assertEquals("editDocuments", Event.EDIT_DOCUMENTS.toString());
     }
 
     @Test

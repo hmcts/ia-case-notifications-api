@@ -1,0 +1,58 @@
+{
+  "description": "RIA-2783 Immigration and Asylum appeal: document deleted",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 1234,
+      "eventId": "editDocuments",
+      "state": "*",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "caseNotes": [
+            {
+              "id": "1",
+              "value": {
+                "caseNoteSubject": "Edit documents audit note",
+                "user": "Case Officer",
+                "dateAdded": "{$TODAY}",
+                "caseNoteDescription": "reason: some reasons\ndateTime:"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [
+    ],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "1234_APPEAL_DOCUMENT_DELETED",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "1234_APPEAL_DOCUMENT_DELETED",
+        "recipient": "{$productOwnerEmail}",
+        "subject": "Immigration and Asylum appeal: document deleted",
+        "body": [
+          "PA/12345/2019",
+          "CASE001",
+          "A1234567",
+          "Talha Awan",
+          "some reason"
+        ]
+      }
+    ]
+  }
+}

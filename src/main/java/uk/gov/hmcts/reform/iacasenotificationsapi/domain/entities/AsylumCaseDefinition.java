@@ -151,6 +151,11 @@ public enum AsylumCaseDefinition {
 
     REASON_FOR_LINK_APPEAL(
         "reasonForLinkAppeal", new TypeReference<ReasonForLinkAppealOptions>() {}),
+    EDIT_DOCUMENTS_REASON(
+        "editDocumentsReason", new TypeReference<String>(){}),
+
+    CASE_NOTES(
+        "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){}),
 
     ;
 
