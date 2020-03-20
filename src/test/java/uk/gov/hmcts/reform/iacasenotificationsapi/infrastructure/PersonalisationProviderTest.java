@@ -75,19 +75,24 @@ public class PersonalisationProviderTest {
     private String applicantPartiallyGrantedTemplateId = "applicantPartiallyGrantedTemplateId";
     private String applicantNotAdmittedTemplateId = "applicantNotAdmittedTemplateId";
     private String applicantRefusedTemplateId = "applicantRefusedTemplateId";
+    private String applicantReheardTemplateId = "applicantReheardTemplateId";
 
     private String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
     private String otherPartyPartiallyGrantedTemplateId = "otherPartyPartiallyGrantedTemplateId";
     private String otherPartyNotAdmittedTemplateId = "otherPartyNotAdmittedTemplateId";
     private String otherPartyRefusedTemplateId = "otherPartyRefusedTemplateId";
+    private String otherPartyReheardTemplateId = "otherPartyReheardTemplateId";
 
-    private String adminGrantedTemplateId = "adminGrantedTemplateId";
-    private String adminPartyPartiallyGrantedTemplateId = "adminPartiallyGrantedTemplateId";
+    private String allowedTemplateId = "allowedTemplateId";
+    private String dismissedTemplateId = "dismissedTemplateId";
 
-    private FtpaAppellantDecisionOutcomeType granted = FtpaAppellantDecisionOutcomeType.FTPA_GRANTED;
-    private FtpaAppellantDecisionOutcomeType partiallyGranted = FtpaAppellantDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
-    private FtpaAppellantDecisionOutcomeType notAdmitted = FtpaAppellantDecisionOutcomeType.FTPA_NOT_ADMITTED;
-    private FtpaAppellantDecisionOutcomeType refused = FtpaAppellantDecisionOutcomeType.FTPA_REFUSED;
+    private FtpaDecisionOutcomeType granted = FtpaDecisionOutcomeType.FTPA_GRANTED;
+    private FtpaDecisionOutcomeType partiallyGranted = FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
+    private FtpaDecisionOutcomeType notAdmitted = FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
+    private FtpaDecisionOutcomeType refused = FtpaDecisionOutcomeType.FTPA_REFUSED;
+    private FtpaDecisionOutcomeType reheard = FtpaDecisionOutcomeType.FTPA_REHEARD;
+    private FtpaDecisionOutcomeType allowed = FtpaDecisionOutcomeType.FTPA_ALLOWED;
+    private FtpaDecisionOutcomeType dismissed = FtpaDecisionOutcomeType.FTPA_DISMISSED;
 
     private YesOrNo yes = YesOrNo.YES;
     private YesOrNo no = YesOrNo.NO;
@@ -210,43 +215,125 @@ public class PersonalisationProviderTest {
     }
 
     @Test
-    public void should_return_correct_template_of_given_ftpa_decision_case() {
-        when(asylumCase.read(FTPA_RESPONDENT_SUBMITTED, YesOrNo.class)).thenReturn(Optional.of(yes));
+    public void should_return_correct_template_of_given_ftpa_decision_appellant_case() {
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(applicantGrantedTemplateId);
-        assertEquals(applicantGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantGrantedTemplateId);
+        assertEquals(applicantGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(partiallyGranted));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(applicantPartiallyGrantedTemplateId);
-        assertEquals(applicantPartiallyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(partiallyGranted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantPartiallyGrantedTemplateId);
+        assertEquals(applicantPartiallyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(notAdmitted));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(applicantNotAdmittedTemplateId);
-        assertEquals(applicantNotAdmittedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(notAdmitted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantNotAdmittedTemplateId);
+        assertEquals(applicantNotAdmittedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(refused));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(applicantRefusedTemplateId);
-        assertEquals(applicantRefusedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(refused));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantRefusedTemplateId);
+        assertEquals(applicantRefusedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
 
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(reheard));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantReheardTemplateId);
+        assertEquals(applicantReheardTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
 
-        when(asylumCase.read(FTPA_RESPONDENT_SUBMITTED, YesOrNo.class)).thenReturn(Optional.of(no));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyGrantedTemplateId);
+        assertEquals(otherPartyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(otherPartyGrantedTemplateId);
-        assertEquals(otherPartyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(partiallyGranted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyPartiallyGrantedTemplateId);
+        assertEquals(otherPartyPartiallyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(partiallyGranted));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(otherPartyPartiallyGrantedTemplateId);
-        assertEquals(otherPartyPartiallyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(notAdmitted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyNotAdmittedTemplateId);
+        assertEquals(otherPartyNotAdmittedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(notAdmitted));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(otherPartyNotAdmittedTemplateId);
-        assertEquals(otherPartyNotAdmittedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(refused));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyRefusedTemplateId);
+        assertEquals(otherPartyRefusedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
 
-        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(refused));
-        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration)).thenReturn(otherPartyRefusedTemplateId);
-        assertEquals(otherPartyRefusedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(reheard));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyReheardTemplateId);
+        assertEquals(otherPartyReheardTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(allowed));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(allowedTemplateId);
+        assertEquals(allowedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(dismissed));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(dismissedTemplateId);
+        assertEquals(dismissedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+    }
+
+    @Test
+    public void should_return_correct_template_of_given_ftpa_decision_respondent_case() {
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantGrantedTemplateId);
+        assertEquals(applicantGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantGrantedTemplateId);
+        assertEquals(applicantGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(partiallyGranted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantPartiallyGrantedTemplateId);
+        assertEquals(applicantPartiallyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(notAdmitted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantNotAdmittedTemplateId);
+        assertEquals(applicantNotAdmittedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(refused));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantRefusedTemplateId);
+        assertEquals(applicantRefusedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(reheard));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes)).thenReturn(applicantReheardTemplateId);
+        assertEquals(applicantReheardTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, yes));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(granted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyGrantedTemplateId);
+        assertEquals(otherPartyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(partiallyGranted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyPartiallyGrantedTemplateId);
+        assertEquals(otherPartyPartiallyGrantedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(notAdmitted));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyNotAdmittedTemplateId);
+        assertEquals(otherPartyNotAdmittedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(refused));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyRefusedTemplateId);
+        assertEquals(otherPartyRefusedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(reheard));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(otherPartyReheardTemplateId);
+        assertEquals(otherPartyReheardTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(allowed));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(allowedTemplateId);
+        assertEquals(allowedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(dismissed));
+        when(personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no)).thenReturn(dismissedTemplateId);
+        assertEquals(dismissedTemplateId, personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, no));
+    }
+
+    @Test
+    public void should_return_ftpa_application_decision_applicant_type() {
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(ApplicantType.APPELLANT));
+        assertEquals(ApplicantType.APPELLANT, personalisationProvider.getApplicantType(asylumCase));
+    }
+
+    @Test
+    public void should_throw_exception_on_applicant_type_when_case_is_null() {
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> personalisationProvider.getApplicantType(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("ftpaApplicantType is not present");
     }
 
     @Test

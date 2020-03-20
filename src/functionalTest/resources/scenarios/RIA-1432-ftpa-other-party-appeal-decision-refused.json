@@ -5,12 +5,13 @@
     "credentials": "Judge",
     "input": {
       "id": 1008,
-      "eventId": "ftpaDecisionLeadershipJudge",
+      "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "ftpaAppellantDecisionOutcomeType": "refused",
+          "ftpaApplicantType": "respondent",
           "ftpaAppellantSubmitted": "No",
           "ftpaRespondentSubmitted": "Yes",
           "notificationsSent": []
@@ -40,7 +41,7 @@
       {
         "reference": "1008_FTPA_APPLICATION_DECISION_HOME_OFFICE",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal refused",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
           "PA/12345/2019",
           "A1234567",
@@ -53,7 +54,7 @@
       {
         "reference": "1008_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal refused",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
           "PA/12345/2019",
           "A1234567",

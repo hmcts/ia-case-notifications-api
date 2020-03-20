@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
@@ -26,7 +28,8 @@ public class LegalRepresentativeFtpaApplicationDecisionPersonalisation  implemen
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration);
+        YesOrNo isAppellant = personalisationProvider.getApplicantType(asylumCase).equals(ApplicantType.APPELLANT) ? YesOrNo.YES : YesOrNo.NO;
+        return personalisationProvider.getFtpaDecisionTemplateId(asylumCase, govNotifyTemplateIdConfiguration, isAppellant);
     }
 
     @Override

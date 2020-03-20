@@ -79,4 +79,19 @@ public class GovNotifyTemplateIdConfiguration {
     @NotBlank
     private String applicationRefusedOtherParty;
 
+    @NotBlank
+    private String applicationReheardApplicant;
+
+    @NotBlank
+    private String applicationReheardOtherParty;
+
+    @NotBlank
+    private String applicationReheardCaseworker;
+
+    @NotBlank
+    private String applicationAllowed;
+
+    @NotBlank
+    private String applicationDismissed;
+
 }

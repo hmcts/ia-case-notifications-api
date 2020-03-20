@@ -226,23 +226,30 @@ public class PersonalisationProvider {
     }
 
     public String getFtpaDecisionTemplateId(AsylumCase asylumCase,
-                                            GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration) {
-        FtpaAppellantDecisionOutcomeType ftpaAppellantDecisionOutcomeType = asylumCase
-            .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)
-            .orElseThrow(() -> new IllegalStateException("ftpaApplicationDecision is not present"));
+                                            GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration, YesOrNo applicant) {
 
-        YesOrNo applicant = asylumCase
-            .read(FTPA_RESPONDENT_SUBMITTED, YesOrNo.class)
-            .orElseThrow(() -> new IllegalStateException("ftpaSubmittedApplicant is not present"));
+        Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
+            .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
 
-        if (ftpaAppellantDecisionOutcomeType.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_GRANTED.toString())) {
+        if (!ftpaDecisionOutcomeType.isPresent()) {
+            ftpaDecisionOutcomeType = asylumCase
+                .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+        }
+
+        if (ftpaDecisionOutcomeType.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())) {
             return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationGrantedApplicant() : govNotifyTemplateIdConfiguration.getApplicationGrantedOtherParty();
-        } else if (ftpaAppellantDecisionOutcomeType.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString())) {
+        } else if (ftpaDecisionOutcomeType.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString())) {
             return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationPartiallyGrantedApplicant() : govNotifyTemplateIdConfiguration.getApplicationPartiallyGrantedOtherParty();
-        } else if (ftpaAppellantDecisionOutcomeType.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_REFUSED.toString())) {
+        } else if (ftpaDecisionOutcomeType.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())) {
             return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationRefusedApplicant() : govNotifyTemplateIdConfiguration.getApplicationRefusedOtherParty();
-        } else {
+        } else if (ftpaDecisionOutcomeType.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD.toString())) {
+            return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationReheardApplicant() : govNotifyTemplateIdConfiguration.getApplicationReheardOtherParty();
+        } else if (ftpaDecisionOutcomeType.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())) {
             return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationNotAdmittedApplicant() : govNotifyTemplateIdConfiguration.getApplicationNotAdmittedOtherParty();
+        } else if (ftpaDecisionOutcomeType.toString().equals(FtpaDecisionOutcomeType.FTPA_ALLOWED.toString())) {
+            return govNotifyTemplateIdConfiguration.getApplicationAllowed();
+        } else {
+            return govNotifyTemplateIdConfiguration.getApplicationDismissed();
         }
     }
 
@@ -257,5 +264,11 @@ public class PersonalisationProvider {
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .build();
+    }
+
+    public ApplicantType getApplicantType(AsylumCase asylumCase) {
+        return asylumCase
+            .read(FTPA_APPLICANT_TYPE, ApplicantType.class)
+            .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"));
     }
 }

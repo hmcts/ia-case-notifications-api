@@ -1,11 +1,11 @@
 {
-  "description": "RIA-1432 FTPA Applicant Application Decision Partially Granted",
+  "description": "RIA-2573 FTPA Applicant Application Decision Partially Granted - Resident Judge",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
       "id": 1003,
-      "eventId": "leadershipJudgeFtpaDecision",
+      "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",

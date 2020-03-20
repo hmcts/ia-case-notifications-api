@@ -131,15 +131,25 @@ public enum AsylumCaseDefinition {
         "submissionOutOfTime", new TypeReference<YesOrNo>(){}),
 
     FTPA_APPELLANT_DECISION_OUTCOME_TYPE(
-        "ftpaAppellantDecisionOutcomeType", new TypeReference<FtpaAppellantDecisionOutcomeType>(){}),
+        "ftpaAppellantDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+    FTPA_RESPONDENT_DECISION_OUTCOME_TYPE(
+        "ftpaRespondentDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
 
     FTPA_APPELLANT_SUBMITTED(
         "ftpaAppellantSubmitted", new TypeReference<YesOrNo>(){}),
 
     FTPA_RESPONDENT_SUBMITTED(
-        "ftpaRespondentSubmitted", new TypeReference<YesOrNo>(){})
+        "ftpaRespondentSubmitted", new TypeReference<YesOrNo>(){}),
 
-    ;
+    FTPA_APPLICANT_TYPE(
+        "ftpaApplicantType", new TypeReference<ApplicantType>(){}),
+
+    IS_FTPA_APPELLANT_DECIDED(
+        "isFtpaAppellantDecided", new TypeReference<YesOrNo>(){}),
+
+    IS_FTPA_RESPONDENT_DECIDED(
+        "isFtpaRespondentDecided", new TypeReference<YesOrNo>(){});
 
     private final String value;
     private final TypeReference typeReference;

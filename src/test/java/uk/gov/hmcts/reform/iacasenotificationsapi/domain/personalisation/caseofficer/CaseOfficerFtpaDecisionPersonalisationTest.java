@@ -1,6 +1,7 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
@@ -10,66 +11,61 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LegalRepresentativeFtpaAppellantDecisionPersonalisationTest {
+public class CaseOfficerFtpaDecisionPersonalisationTest {
 
     @Mock AsylumCase asylumCase;
     @Mock PersonalisationProvider personalisationProvider;
     @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
+    @Mock EmailAddressFinder emailAddressFinder;
 
+    private String caseOfficerEmailAddress = "caseOfficer@example.com";
     private Long caseId = 12345L;
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String legalRepReferenceNumber = "someLegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private String someEmail = "email@gmail.com";
 
-    private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
-    private String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
+    private String applicantReheardTemplateId = "applicantReheardTemplateId";
 
-    private LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation;
+    private CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation;
 
     @Before
     public void setup() {
-        legalRepresentativeFtpaApplicationDecisionPersonalisation = new LegalRepresentativeFtpaApplicationDecisionPersonalisation(
+        caseOfficerFtpaDecisionPersonalisation = new CaseOfficerFtpaDecisionPersonalisation(
             govNotifyTemplateIdConfiguration,
-            personalisationProvider
+            personalisationProvider,
+            emailAddressFinder
         );
     }
 
     @Test
     public void should_return_given_template_id() {
-        when(personalisationProvider.getApplicantType(asylumCase)).thenReturn(ApplicantType.APPELLANT);
-        when(legalRepresentativeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(applicantGrantedTemplateId);
-        assertEquals(applicantGrantedTemplateId, legalRepresentativeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase));
-
-        when(personalisationProvider.getApplicantType(asylumCase)).thenReturn(ApplicantType.RESPONDENT);
-        when(legalRepresentativeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(otherPartyGrantedTemplateId);
-        assertEquals(otherPartyGrantedTemplateId, legalRepresentativeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase));
+        when(caseOfficerFtpaDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(applicantReheardTemplateId);
+        assertEquals(applicantReheardTemplateId, caseOfficerFtpaDecisionPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE", legalRepresentativeFtpaApplicationDecisionPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_FTPA_APPLICATION_DECISION_CASE_OFFICER", caseOfficerFtpaDecisionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
-    public void should_return_given_email_address() {
-        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(java.util.Optional.ofNullable(someEmail));
-        assertEquals(true, legalRepresentativeFtpaApplicationDecisionPersonalisation.getRecipientsList(asylumCase).contains(someEmail));
+    public void should_return_given_email_address_from_lookup_map() {
+        when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
+        assertTrue(caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
     @Test
     public void should_return_personalisation_of_all_information_given() {
         when(personalisationProvider.getFtpaDecisionPersonalisation(asylumCase)).thenReturn(getPersonalisationMapWithGivenValues());
-        Map<String, String> personalisation = legalRepresentativeFtpaApplicationDecisionPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = caseOfficerFtpaDecisionPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));

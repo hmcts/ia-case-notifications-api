@@ -5,12 +5,13 @@
     "credentials": "Judge",
     "input": {
       "id": 1006,
-      "eventId": "ftpaDecisionLeadershipJudge",
+      "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "ftpaAppellantDecisionOutcomeType": "notAdmitted",
+          "ftpaApplicantType": "respondent",
           "ftpaAppellantSubmitted": "No",
           "ftpaRespondentSubmitted": "Yes",
           "notificationsSent": []

@@ -1,13 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
+
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaAppellantDecisionOutcomeType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
@@ -31,7 +34,7 @@ public class AdminOfficerFtpaDecisionPersonalisation implements EmailNotificatio
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return getFtpaApplicationDecision(asylumCase).equals(FtpaAppellantDecisionOutcomeType.FTPA_GRANTED)
+        return getFtpaApplicationDecision(asylumCase).equals(FtpaDecisionOutcomeType.FTPA_GRANTED)
             ? govNotifyTemplateIdConfiguration.getApplicationGrantedAdmin()
             : govNotifyTemplateIdConfiguration.getApplicationPartiallyGrantedAdmin();
     }
@@ -51,9 +54,18 @@ public class AdminOfficerFtpaDecisionPersonalisation implements EmailNotificatio
         return this.personalisationProvider.getFtpaDecisionPersonalisation(asylumCase);
     }
 
-    public FtpaAppellantDecisionOutcomeType getFtpaApplicationDecision(AsylumCase asylumCase) {
-        return asylumCase
-            .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)
-            .orElseThrow(() -> new IllegalStateException("ftpaApplicationDecision is not present"));
+    public FtpaDecisionOutcomeType getFtpaApplicationDecision(AsylumCase asylumCase) {
+
+
+        Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
+            .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+
+        if (!ftpaDecisionOutcomeType.isPresent()) {
+            ftpaDecisionOutcomeType = asylumCase
+                .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+        }
+        return ftpaDecisionOutcomeType.isPresent()
+            ? ftpaDecisionOutcomeType.get()
+            : null;
     }
 }

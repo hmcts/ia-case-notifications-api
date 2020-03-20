@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaAppellantDecisionOutcomeType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
@@ -33,6 +33,7 @@ public class AdminOfficerFtpaDecisionPersonalisationTest {
     private String appellantFamilyName = "someAppellantFamilyName";
 
     private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
+    private String applicantPartiallyGrantedTemplateId = "applicantPartiallyGrantedTemplateId";
 
     private AdminOfficerFtpaDecisionPersonalisation adminOfficerFtpaDecisionPersonalisation;
 
@@ -47,14 +48,36 @@ public class AdminOfficerFtpaDecisionPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)).thenReturn(Optional.of(FtpaAppellantDecisionOutcomeType.FTPA_GRANTED));
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FtpaDecisionOutcomeType.FTPA_GRANTED));
         when(adminOfficerFtpaDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(applicantGrantedTemplateId);
         assertEquals(applicantGrantedTemplateId, adminOfficerFtpaDecisionPersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED));
+        when(adminOfficerFtpaDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(applicantPartiallyGrantedTemplateId);
+        assertEquals(applicantPartiallyGrantedTemplateId, adminOfficerFtpaDecisionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_ftpa_application_decision_type() {
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FtpaDecisionOutcomeType.FTPA_GRANTED));
+        assertEquals(FtpaDecisionOutcomeType.FTPA_GRANTED, adminOfficerFtpaDecisionPersonalisation.getFtpaApplicationDecision(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FtpaDecisionOutcomeType.FTPA_GRANTED));
+        assertEquals(FtpaDecisionOutcomeType.FTPA_GRANTED, adminOfficerFtpaDecisionPersonalisation.getFtpaApplicationDecision(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
+        assertEquals(null, adminOfficerFtpaDecisionPersonalisation.getFtpaApplicationDecision(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_FTPA_APPLICATION_DECISION_ADMIN_OFFICER", adminOfficerFtpaDecisionPersonalisation.getReferenceId(caseId));
+    }
+
+    @Test
+    public void should_return_given_email_address() {
+        assertEquals(true, adminOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(adminOfficeEmailAddress));
     }
 
     @Test

@@ -209,6 +209,13 @@ govnotify:
     applicationRefusedApplicant: ab6b3c49-7f7e-407a-b46d-8dda10e33803
     applicationRefusedOtherParty: 59ec29bf-5d40-4a97-bd54-cf7262b65185
 
+    applicationReheardApplicant: ac94290a-bc6a-4e3b-a9cb-34d48400450c
+    applicationReheardOtherParty: ba98d5c5-3b66-4e60-9e91-604ce8960b3f
+    applicationReheardCaseworker: 0a2e8bd9-0c91-43b5-bbf9-56439002f89a
+
+    applicationAllowed: d9474bfa-3c67-4157-a36e-abbbaebd5e5f
+    applicationDismissed: 9f86c618-713a-4824-a562-9bb51c72f687
+
 notificationSender.deduplicateSendsWithinSeconds: 60
 
 iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:http://localhost:3002/}
@@ -310,7 +317,8 @@ security:
       - "sendDecisionAndReasons"
       - "changeDirectionDueDate"
       - "sendDirection"
-      - "ftpaDecisionLeadershipJudge"
+      - "leadershipJudgeFtpaDecision"
+      - "residentJudgeFtpaDecision"
 
 ### dependency configuration
 auth.idam.client.baseUrl: ${IDAM_URL:http://127.0.0.1:4501}

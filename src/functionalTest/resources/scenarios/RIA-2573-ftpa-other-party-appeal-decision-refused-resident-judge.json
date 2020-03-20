@@ -1,19 +1,19 @@
 {
-  "description": "RIA-1432 FTPA Applicant Application Decision Refused",
+  "description": "RIA-2573 FTPA Other Party Application Decision Refused - Resident Judge",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1004,
-      "eventId": "leadershipJudgeFtpaDecision",
+      "id": 1008,
+      "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "ftpaAppellantDecisionOutcomeType": "refused",
-          "ftpaApplicantType": "appellant",
-          "ftpaAppellantSubmitted": "Yes",
-          "ftpaRespondentSubmitted": "No",
+          "ftpaApplicantType": "respondent",
+          "ftpaAppellantSubmitted": "No",
+          "ftpaRespondentSubmitted": "Yes",
           "notificationsSent": []
         }
       }
@@ -27,11 +27,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1004_FTPA_APPLICATION_DECISION_HOME_OFFICE",
+            "id": "1008_FTPA_APPLICATION_DECISION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1004_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
+            "id": "1008_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "1004_FTPA_APPLICATION_DECISION_HOME_OFFICE",
+        "reference": "1008_FTPA_APPLICATION_DECISION_HOME_OFFICE",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -52,7 +52,7 @@
     ],
     "notifications": [
       {
-        "reference": "1004_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
+        "reference": "1008_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
@@ -30,6 +31,7 @@ public class HomeOfficeFtpaAppellantDecisionPersonalisationTest {
     private String appellantFamilyName = "someAppellantFamilyName";
 
     private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
+    private String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
 
     private HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation;
 
@@ -44,8 +46,18 @@ public class HomeOfficeFtpaAppellantDecisionPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
+        when(personalisationProvider.getApplicantType(asylumCase)).thenReturn(ApplicantType.APPELLANT);
         when(homeOfficeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(applicantGrantedTemplateId);
         assertEquals(applicantGrantedTemplateId, homeOfficeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase));
+
+        when(personalisationProvider.getApplicantType(asylumCase)).thenReturn(ApplicantType.RESPONDENT);
+        when(homeOfficeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase)).thenReturn(otherPartyGrantedTemplateId);
+        assertEquals(otherPartyGrantedTemplateId, homeOfficeFtpaApplicationDecisionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_given_email_address() {
+        assertEquals(true, homeOfficeFtpaApplicationDecisionPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
     }
 
     @Test

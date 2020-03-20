@@ -717,8 +717,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedNotificationGenerator")
-    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedNotificationGenerator(
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
         LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
         NotificationSender notificationSender,
@@ -733,8 +733,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedNotificationGenerator")
-    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyGrantedNotificationGenerator(
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
         LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
         AdminOfficerFtpaDecisionPersonalisation adminOfficerFtpaDecisionPersonalisation,
@@ -744,6 +744,73 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionReheardAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionReheardAppellantNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
+        CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation, caseOfficerFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
+        AdminOfficerFtpaDecisionPersonalisation adminOfficerFtpaDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionReheardRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionReheardRespondentNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionPersonalisation homeOfficeFtpaApplicationDecisionPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation,
+        CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionPersonalisation, legalRepresentativeFtpaApplicationDecisionPersonalisation, caseOfficerFtpaDecisionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
