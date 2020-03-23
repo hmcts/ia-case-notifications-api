@@ -91,7 +91,7 @@
           "You now need to tell us why you think the Home Office was wrong to refuse your claim.",
           "Sign in to your account to do this:",
           "{$iaAipFrontendUrl}",
-          "You have until {$TODAY+28|d MMM yyyy} to give us this information."
+          "You have until {$TODAY+14|d MMM yyyy} to give us this information."
         ]
       }
     ]
