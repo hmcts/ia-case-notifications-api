@@ -173,6 +173,17 @@ govnotify:
     changeToHearingRequirements:
       adminOfficer:
         email: 6e32ccba-3c68-4b7a-a976-96c149492661
+    removeAppealFromOnlineBeforeListing:
+      homeOffice:
+        email: 0a9b00d5-55d1-469c-8479-c1a2df3fce6d
+      legalRep:
+        email: 443044b9-3c96-4e62-824a-7f7294e53661
+    removeAppealFromOnlineAfterListing:
+      homeOffice:
+        email: 0845c427-387e-4587-a923-6114c60c7b5d
+      legalRep:
+        email: b22bac31-7d04-4ad0-a8b3-12ebeb381c9b
+
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 iaCcdFrontendUrl: ${IA_CCD_FRONTEND_URL:http://localhost:3451/}
@@ -244,6 +255,7 @@ security:
       - "uploadAddendumEvidence"
       - "requestReasonsForAppeal"
       - "updateHearingAdjustments"
+      - "removeAppealFromOnline"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -269,6 +281,7 @@ security:
       - "endAppeal"
       - "sendDecisionAndReasons"
       - "changeDirectionDueDate"
+      - "sendDirection"
 
 ### dependency configuration
 auth.idam.client.baseUrl: ${IDAM_URL:http://127.0.0.1:4501}
