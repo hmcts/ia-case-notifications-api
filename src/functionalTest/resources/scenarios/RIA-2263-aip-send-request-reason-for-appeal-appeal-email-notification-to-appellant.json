@@ -22,6 +22,19 @@
                 "wantsSms": "No"
               }
             }
+          ],
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "requestReasonsForAppeal",
+                "parties": "appellant",
+                "dateDue": "{$TODAY+14}",
+                "dateSent": "{$TODAY}",
+                "explanation": "You must now tell us why you think the Home Office decision to refuse your claim is wrong.",
+                "previousDates": []
+              }
+            }
           ]
         }
       }
@@ -43,6 +56,19 @@
               "wantsEmail": "Yes",
               "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
               "wantsSms": "No"
+            }
+          }
+        ],
+        "directions": [
+          {
+            "id": "1",
+            "value": {
+              "tag": "requestReasonsForAppeal",
+              "parties": "appellant",
+              "dateDue": "{$TODAY+14}",
+              "dateSent": "{$TODAY}",
+              "explanation": "You must now tell us why you think the Home Office decision to refuse your claim is wrong.",
+              "previousDates": []
             }
           }
         ],
