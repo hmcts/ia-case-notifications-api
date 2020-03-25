@@ -2,3 +2,6 @@ java:
   # Don't modify below here
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
+  environment:
+    IA_AIP_FRONTEND_URL: "https://ia-aip-frontend-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/"
+    IA_EXUI_FRONTEND_URL: "https://xui-webapp-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal/"

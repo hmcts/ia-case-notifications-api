@@ -3,8 +3,8 @@ properties([
         [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/ia-case-notifications-api.git'],
         pipelineTriggers([[$class: 'GitHubPushTrigger']]),
         parameters([
-                string(name: 'IA_AIP_FRONTEND_URL', defaultValue: 'https://ia-aip-frontend-aat.service.core-compute-aat.internal/', description: 'The AIP frontend URL that will be included in personalisation'),
-                string(name: 'IA_EXUI_FRONTEND_URL', defaultValue: 'https://xui-webapp-aat.service.core-compute-aat.internal/', description: 'The ExUI frontend URL that will be included in personalisation')
+                string(name: 'IA_EXUI_FRONTEND_URL', defaultValue: 'https://xui-webapp-aat.service.core-compute-aat.internal/', description: 'The ExUI frontend URL that will be included in personalisation'),
+                string(name: 'IA_AIP_FRONTEND_URL', defaultValue: 'https://ia-aip-frontend-aat.service.core-compute-aat.internal/', description: 'The AIP frontend URL that will be included in personalisation')
         ])
 ])
 
@@ -104,12 +104,11 @@ withPipeline(type, product, component) {
 
     loadVaultSecrets(secrets)
 
-
     before("functionalTest") {
         env.IA_AIP_FRONTEND_URL = params.IA_AIP_FRONTEND_URL
         env.IA_EXUI_FRONTEND_URL = params.IA_EXUI_FRONTEND_URL
     }
-    
+
     after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
