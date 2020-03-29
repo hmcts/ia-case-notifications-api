@@ -59,6 +59,7 @@ public class EventTest {
         assertEquals("requestCmaRequirements", Event.REQUEST_CMA_REQUIREMENTS.toString());
         assertEquals("submitCmaRequirements", Event.SUBMIT_CMA_REQUIREMENTS.toString());
         assertEquals("listCma", Event.LIST_CMA.toString());
+        assertEquals("editAppealAfterSubmit", Event.EDIT_APPEAL_AFTER_SUBMIT.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 

@@ -236,6 +236,7 @@ govnotify:
         email: 4959d7cc-54f0-4cb4-b386-49940b89925e
       caseOfficer:
         email: 122b7fce-23c9-4b34-9055-8329264fd757
+<<<<<<< HEAD
     applyForFtpa:
       respondent:
         email: 317498af-4da1-44c7-935e-d70009bc687f
@@ -277,6 +278,7 @@ govnotify:
     requestCaseEdit:
       legalRep:
         email: 194e0a44-4fab-4e75-94a9-6d910dc4879a
+<<<<<<< HEAD
     adjournHearingWithoutDate:
       respondent:
         email: 080b563c-7311-4082-bed9-de67bbca14ee
@@ -307,6 +309,9 @@ govnotify:
         email: 3db5f56c-ea9f-4c77-a826-e670fea96404
       homeOffice:
         email: 9b750e75-6701-43e7-abaf-9fd3e6cf7af6
+    editAppealAfterSubmit:
+      legalRep:
+        email: 77d13640-e7f2-45e2-abec-56f34f2a26af
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -391,6 +396,7 @@ security:
       - "adjournHearingWithoutDate"
       - "restoreStateFromAdjourn"
       - "requestCmaRequirements"
+      - "editAppealAfterSubmit"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
