@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import java.util.Map;
 import org.junit.Test;
@@ -40,7 +40,6 @@ public class RespondentForceCaseProgressionPersonalisationTest {
         assertEquals("RP/50001/2020", actualPersonalisation.get("appealReferenceNumber"));
         assertEquals("Lacy Dawson", actualPersonalisation.get("appellantGivenNames"));
         assertEquals("Venus Blevins", actualPersonalisation.get("appellantFamilyName"));
-        assertEquals("CASE001", actualPersonalisation.get("legalRepReferenceNumber"));
         assertEquals("A1234567", actualPersonalisation.get("homeOfficeReferenceNumber"));
     }
 
@@ -49,7 +48,6 @@ public class RespondentForceCaseProgressionPersonalisationTest {
         asylumCase.write(APPEAL_REFERENCE_NUMBER, "RP/50001/2020");
         asylumCase.write(APPELLANT_GIVEN_NAMES, "Lacy Dawson");
         asylumCase.write(APPELLANT_FAMILY_NAME, "Venus Blevins");
-        asylumCase.write(LEGAL_REP_REFERENCE_NUMBER, "CASE001");
         asylumCase.write(HOME_OFFICE_REFERENCE_NUMBER, "A1234567");
         return asylumCase;
     }
