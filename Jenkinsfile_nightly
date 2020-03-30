@@ -102,7 +102,12 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withNightlyPipeline(type, product, component) {
   env.TEST_URL = params.URL_TO_TEST
 
-    loadVaultSecrets(secrets)
+  loadVaultSecrets(secrets)
+
+  before("functionalTest") {
+    env.IA_AIP_FRONTEND_URL = params.IA_AIP_FRONTEND_URL
+    env.IA_EXUI_FRONTEND_URL = params.IA_EXUI_FRONTEND_URL
+  }
 
   enableSecurityScan()
   enableMutationTest()

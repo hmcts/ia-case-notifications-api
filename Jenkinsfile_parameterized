@@ -101,6 +101,11 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
 
     loadVaultSecrets(secrets)
 
+    before("functionalTest") {
+        env.IA_AIP_FRONTEND_URL = params.IA_AIP_FRONTEND_URL
+        env.IA_EXUI_FRONTEND_URL = params.IA_EXUI_FRONTEND_URL
+    }
+
     after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
