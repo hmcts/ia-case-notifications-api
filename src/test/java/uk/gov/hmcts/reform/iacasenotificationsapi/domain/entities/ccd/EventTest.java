@@ -35,6 +35,7 @@ public class EventTest {
         assertEquals("endAppeal", Event.END_APPEAL.toString());
         assertEquals("recordApplication", Event.RECORD_APPLICATION.toString());
         assertEquals("requestCaseBuilding", Event.REQUEST_CASE_BUILDING.toString());
+        assertEquals("forceRequestCaseBuilding", Event.FORCE_REQUEST_CASE_BUILDING.toString());
         assertEquals("uploadHomeOfficeAppealResponse", Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE.toString());
         assertEquals("uploadAddendumEvidence", Event.UPLOAD_ADDENDUM_EVIDENCE.toString());
         assertEquals("uploadAddendumEvidenceLegalRep", Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP.toString());

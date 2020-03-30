@@ -417,6 +417,7 @@ security:
       - "endAppeal"
       - "recordApplication"
       - "requestCaseBuilding"
+      - "forceRequestCaseBuilding"
       - "requestResponseReview"
       - "sendDecisionAndReasons"
       - "uploadAddendumEvidence"
