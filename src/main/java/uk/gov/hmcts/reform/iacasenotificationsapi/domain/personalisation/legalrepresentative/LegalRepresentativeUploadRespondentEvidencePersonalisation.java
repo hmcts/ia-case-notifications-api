@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
 public class LegalRepresentativeUploadRespondentEvidencePersonalisation implements EmailNotificationPersonalisation {
@@ -27,17 +28,20 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisation implemen
     private final String buildCaseDirectionTemplateId;
     private final String iaExUiFrontendUrl;
     private final DirectionFinder directionFinder;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeUploadRespondentEvidencePersonalisation(
         @Value("${govnotify.template.buildCaseDirection.legalRep.email}") String buildCaseDirectionTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        DirectionFinder directionFinder
+        DirectionFinder directionFinder,
+        CustomerServicesProvider customerServicesProvider
     ) {
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
 
         this.buildCaseDirectionTemplateId = buildCaseDirectionTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.directionFinder = directionFinder;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -81,6 +85,7 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisation implemen
                 .put("Hyperlink to user’s case list", iaExUiFrontendUrl)
                 .put("Explanation", direction.getExplanation())
                 .put("due date", directionDueDate)
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .build();
     }
 }

@@ -64,7 +64,7 @@ govnotify:
         email: e3e36c28-b16a-4e85-b8e1-dbb7f6771181
     buildCaseDirection:
       legalRep:
-        email: 13a6331e-b0f5-4e64-ae1b-dc2c2fd0aeeb
+        email: b68e1cb2-ec92-488b-ad38-98a30f965419
     reviewDirection:
       legalRep:
         email: 75c6c191-083d-43a4-8811-f201fc4750a8
@@ -359,6 +359,10 @@ respondentEmailAddresses:
 ftpaSubmitted:
   ctscAdminEmailAddress: ${IA_CTSC_ADMIN_FTPA_SUBMITTED:ctscFtpaSubmitted@example.gov.uk}
   respondentEmailAddress: ${IA_RESPONDENT_FTPA_SUBMITTED:homeOfficeFtpaSubmitted@example.gov.uk}
+
+customerServices:
+  emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:customer.services@example.gov.uk}
+  telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
 
 appellantDaysToWait:
   afterSubmission: 28
