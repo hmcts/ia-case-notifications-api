@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.produc
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
@@ -16,18 +18,36 @@ import java.util.List;
 import java.util.Map;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseNote;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerEditDocumentsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(JUnitParamsRunner.class)
-public class ProductOwnerEditDocumentsPersonalisationTest {
+public class CaseOfficerEditDocumentsPersonalisationTest {
 
-    private ProductOwnerEditDocumentsPersonalisation personalisation =
-        new ProductOwnerEditDocumentsPersonalisation(
-            "templateId", "emailAddress");
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
+    @Mock
+    private EmailAddressFinder emailAddressFinder;
+    @InjectMocks
+    private CaseOfficerEditDocumentsPersonalisation personalisation;
+
+    @Before
+    public void setUp() throws Exception {
+        ReflectionTestUtils.setField(personalisation, "appealDocumentDeletedTemplateId", "some template id");
+    }
 
     @Test
     public void getReferenceId() {
@@ -36,12 +56,14 @@ public class ProductOwnerEditDocumentsPersonalisationTest {
 
     @Test
     public void getTemplateId() {
-        assertEquals("templateId", personalisation.getTemplateId());
+        assertEquals("some template id", personalisation.getTemplateId());
     }
 
     @Test
     public void getRecipientsList() {
-        assertTrue(personalisation.getRecipientsList(new AsylumCase()).contains("emailAddress"));
+        given(emailAddressFinder.getEmailAddress(any(AsylumCase.class))).willReturn("hearingCentre@email.com");
+
+        assertTrue(personalisation.getRecipientsList(new AsylumCase()).contains("hearingCentre@email.com"));
     }
 
     @Test
@@ -106,17 +128,8 @@ public class ProductOwnerEditDocumentsPersonalisationTest {
     }
 
     private String buildCaseNoteDescription(String reason) {
-        return String.format("Idam user Id: %s" + System.lineSeparator()
-                + "user: %s" + System.lineSeparator()
-                + "caseId: %s" + System.lineSeparator()
-                + "documentIds: %s" + System.lineSeparator()
-                + "reason: %s" + System.lineSeparator()
-                + "dateTime: 1-01-2020",
-            "75211309-2318-451a-8cd3-00cdccb4be76",
-            "Case Officer",
-            "1584491276604967",
-            "[d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65]",
-            reason);
+        return String.format("documentIds: %s" + System.lineSeparator() + "reason: %s" + System.lineSeparator(),
+            "[d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65]", reason);
     }
 
     @Test

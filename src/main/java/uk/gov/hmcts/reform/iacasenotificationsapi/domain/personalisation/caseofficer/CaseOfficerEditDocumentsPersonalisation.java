@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.productowner;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -22,20 +22,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseNote;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
-public class ProductOwnerEditDocumentsPersonalisation implements EmailNotificationPersonalisation {
+public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificationPersonalisation {
 
     private final String appealDocumentDeletedTemplateId;
-    private final String productOwnerEmailAddress;
+    private final EmailAddressFinder emailAddressFinder;
 
-    public ProductOwnerEditDocumentsPersonalisation(
+    public CaseOfficerEditDocumentsPersonalisation(
         @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
         @Value("${govnotify.template.appealDocumentDeleted.caseOfficer.email}") String appealDocumentDeletedTemplateId,
-        @Value("${productOwnerEmail}") String productOwnerEmailAddress) {
+        EmailAddressFinder emailAddressFinder) {
 
         this.appealDocumentDeletedTemplateId = appealDocumentDeletedTemplateId;
-        this.productOwnerEmailAddress = productOwnerEmailAddress;
+        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ProductOwnerEditDocumentsPersonalisation implements EmailNotificati
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(productOwnerEmailAddress);
+        return Collections.singleton(emailAddressFinder.getEmailAddress(asylumCase));
     }
 
     @Override
@@ -72,7 +73,7 @@ public class ProductOwnerEditDocumentsPersonalisation implements EmailNotificati
         if (caseNotesOptional.isPresent()) {
             List<IdValue<CaseNote>> caseNotes = caseNotesOptional.get();
             String caseNoteDesc = caseNotes.get(0).getValue().getCaseNoteDescription();
-            return StringUtils.substringBetween(caseNoteDesc, "reason:", "dateTime").trim();
+            return StringUtils.substringAfter(caseNoteDesc, "reason:").trim();
         }
         return "";
     }
