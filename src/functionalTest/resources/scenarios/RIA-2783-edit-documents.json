@@ -10,6 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "hearingCentre": "taylorHouse",
           "caseNotes": [
             {
               "id": "1",
@@ -17,7 +18,7 @@
                 "caseNoteSubject": "Edit documents audit note",
                 "user": "Case Officer",
                 "dateAdded": "{$TODAY}",
-                "caseNoteDescription": "reason: some reasons\ndateTime:"
+                "caseNoteDescription": "reason: some reasons to edit documents"
               }
             }
           ]
@@ -43,14 +44,14 @@
     "notifications": [
       {
         "reference": "1234_APPEAL_DOCUMENT_DELETED",
-        "recipient": "{$productOwnerEmail}",
+        "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: document deleted",
         "body": [
           "PA/12345/2019",
           "CASE001",
           "A1234567",
           "Talha Awan",
-          "some reason"
+          "some reasons to edit documents"
         ]
       }
     ]
