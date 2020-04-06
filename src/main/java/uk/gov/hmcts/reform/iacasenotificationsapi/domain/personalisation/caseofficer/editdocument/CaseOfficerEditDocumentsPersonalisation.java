@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -8,13 +8,15 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
-import com.microsoft.applicationinsights.core.dependencies.apachecommons.lang3.StringUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -29,17 +31,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @Service
 public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificationPersonalisation {
 
-    public static final String NOT_AVAILABLE_MSG = "Oops...there was some issue and the data is not available.";
     private final String appealDocumentDeletedTemplateId;
     private final EmailAddressFinder emailAddressFinder;
+    private final EditDocumentService editDocumentService;
 
     public CaseOfficerEditDocumentsPersonalisation(
         @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
         @Value("${govnotify.template.appealDocumentDeleted.caseOfficer.email}") String appealDocumentDeletedTemplateId,
-        EmailAddressFinder emailAddressFinder) {
+        EmailAddressFinder emailAddressFinder, EditDocumentService editDocumentService) {
 
         this.appealDocumentDeletedTemplateId = appealDocumentDeletedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
+        this.editDocumentService = editDocumentService;
     }
 
     @Override
@@ -63,26 +66,35 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
         requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap.<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(
-                AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(StringUtils.EMPTY))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(StringUtils.EMPTY))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(StringUtils.EMPTY))
+            .put("legalRepReferenceNumber",
+                asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(StringUtils.EMPTY))
+            .put("homeOfficeReferenceNumber",
+                asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("reasonForEditingOrDeletingDocuments", getReasonFromCaseNoteDescription(asylumCase))
             .put("editedOrDeletedDocumentList",
-                getEditedOrDeletedDocumentList(callback.getCaseDetailsBefore().orElse(null)))
+                getEditedOrDeletedDocumentList(asylumCase, callback.getCaseDetailsBefore().orElse(null)))
             .build();
     }
 
-    private String getEditedOrDeletedDocumentList(CaseDetails<AsylumCase> caseDetails) {
-        if (caseDetails == null) {
-            return NOT_AVAILABLE_MSG;
+    private String getEditedOrDeletedDocumentList(AsylumCase asylumCase, CaseDetails<AsylumCase> caseDetailsBefore) {
+        if (caseDetailsBefore == null) {
+            return StringUtils.EMPTY;
         }
-
-        return "";
+        return editDocumentService.findDocumentIdsGivenCaseAndDocIds(
+            caseDetailsBefore.getCaseData(), getCaseNoteDocIdsFromCaseNote(asylumCase)).toString();
     }
 
-    private String getCaseNoteDescriptionForEditDocuments(AsylumCase asylumCase) {
+    private List<String> getCaseNoteDocIdsFromCaseNote(AsylumCase asylumCase) {
+        String caseNoteDescription = getCaseNoteDescriptionFromCaseNote(asylumCase);
+        String[] temp = StringUtils.substringBetween(caseNoteDescription, "documentIds: [", "]")
+            .split(",");
+        return Stream.of(temp).map(String::trim).collect(Collectors.toList());
+    }
+
+    private String getCaseNoteDescriptionFromCaseNote(AsylumCase asylumCase) {
         Optional<List<IdValue<CaseNote>>> caseNotesOptional = asylumCase.read(CASE_NOTES);
         if (caseNotesOptional.isPresent()) {
             List<IdValue<CaseNote>> caseNotes = caseNotesOptional.get();
@@ -93,7 +105,7 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
     }
 
     private String getReasonFromCaseNoteDescription(AsylumCase asylumCase) {
-        String caseNoteDescription = getCaseNoteDescriptionForEditDocuments(asylumCase);
+        String caseNoteDescription = getCaseNoteDescriptionFromCaseNote(asylumCase);
         return StringUtils.substringAfter(caseNoteDescription, "reason:").trim();
     }
 

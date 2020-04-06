@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.productowner;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
@@ -26,6 +29,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -42,22 +47,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerEditDocumentsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.EditDocumentService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(JUnitParamsRunner.class)
 public class CaseOfficerEditDocumentsPersonalisationTest {
 
     public static final String DOC_ID = "d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65";
+    public static final String DOC_ID2 = "ba21d046-6edf-42c4-9b17-1511488a57da";
     @Rule
     public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
     @Mock
     private EmailAddressFinder emailAddressFinder;
+    @Mock
+    private EditDocumentService editDocumentService;
     @InjectMocks
     private CaseOfficerEditDocumentsPersonalisation personalisation;
 
+    @Captor
+    private ArgumentCaptor<List<String>> argCaptor;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ReflectionTestUtils.setField(personalisation, "appealDocumentDeletedTemplateId", "some template id");
     }
 
@@ -81,6 +93,9 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Test
     @Parameters(method = "generateDifferentCaseNotesScenarios")
     public void getPersonalisation(Callback<AsylumCase> callback, String expectedReason) {
+        given(editDocumentService.findDocumentIdsGivenCaseAndDocIds(any(), any()))
+            .willReturn(Collections.singletonList("Document:\nsome doc name\nDescription:\nsome doc desc"));
+
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(callback);
 
         assertEquals("RP/50001/2020", actualPersonalisation.get("appealReferenceNumber"));
@@ -89,8 +104,12 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         assertEquals("CASE001", actualPersonalisation.get("legalRepReferenceNumber"));
         assertEquals("A1234567", actualPersonalisation.get("homeOfficeReferenceNumber"));
         assertEquals(expectedReason, actualPersonalisation.get("reasonForEditingOrDeletingDocuments"));
-//        assertEquals("Document:\nsome doc name\nDescription:\nsome doc desc",
-//            actualPersonalisation.get("editedOrDeletedDocumentList"));
+
+        then(editDocumentService).should(times(1))
+            .findDocumentIdsGivenCaseAndDocIds(any(AsylumCase.class), argCaptor.capture());
+
+        List<String> actualDocsIds = argCaptor.getValue();
+        assertThat(actualDocsIds).containsOnly(DOC_ID, DOC_ID2);
     }
 
 
@@ -101,17 +120,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
             new Object[]{generateSingleCaseNoteWithMultiLineReason(), multiLineReason},
             new Object[]{generateSingleCaseNoteWithSingleLineReason(), singleLine},
             new Object[]{generateTwoCaseNotesWithMultiLineReasons(), multiLineReason},
-//            new Object[]{generateSingleCaseNoteWithSingleLineReasonAndWithSingleDocument(), singleLine},
         };
-    }
-
-    private Object generateSingleCaseNoteWithSingleLineReasonAndWithSingleDocument() {
-        String singleLineReason = "line 1 reason";
-        AsylumCase asylumCase = new AsylumCase();
-        writeCaseNote(asylumCase, Collections.singletonList(buildCaseNote(singleLineReason)));
-        AsylumCase asylumCaseBefore = new AsylumCase();
-        writeDocument(asylumCaseBefore);
-        return buildTestCallback(asylumCase, asylumCaseBefore);
     }
 
     private Callback<AsylumCase> generateTwoCaseNotesWithMultiLineReasons() {
@@ -122,7 +131,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         IdValue<CaseNote> idCaseNote2 = buildCaseNote(singleLine);
         AsylumCase asylumCase = new AsylumCase();
         writeCaseNote(asylumCase, Arrays.asList(idCaseNote1, idCaseNote2));
-        return buildTestCallback(asylumCase, null);
+        return buildTestCallback(asylumCase);
     }
 
     private Callback<AsylumCase> generateSingleCaseNoteWithMultiLineReason() {
@@ -130,7 +139,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         IdValue<CaseNote> idCaseNote = buildCaseNote(multiLineReason);
         AsylumCase asylumCase = new AsylumCase();
         writeCaseNote(asylumCase, Collections.singletonList(idCaseNote));
-        return buildTestCallback(asylumCase, null);
+        return buildTestCallback(asylumCase);
     }
 
     private Callback<AsylumCase> generateSingleCaseNoteWithSingleLineReason() {
@@ -138,14 +147,14 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         IdValue<CaseNote> idCaseNote = buildCaseNote(singleLine);
         AsylumCase asylumCase = new AsylumCase();
         writeCaseNote(asylumCase, Collections.singletonList(idCaseNote));
-        return buildTestCallback(asylumCase, null);
+        return buildTestCallback(asylumCase);
     }
 
-    private Callback<AsylumCase> buildTestCallback(AsylumCase asylumCase, AsylumCase asylumCaseBefore) {
+    private Callback<AsylumCase> buildTestCallback(AsylumCase asylumCase) {
         CaseDetails<AsylumCase> caseDetails = new CaseDetails<>(1L, "IA", State.APPEAL_SUBMITTED,
             asylumCase, LocalDateTime.now());
         CaseDetails<AsylumCase> caseDetailsBefore = new CaseDetails<>(1L, "IA", State.APPEAL_SUBMITTED,
-            asylumCaseBefore, LocalDateTime.now());
+            new AsylumCase(), LocalDateTime.now());
         return new Callback<>(caseDetails, Optional.of(caseDetailsBefore), Event.EDIT_DOCUMENTS);
     }
 
@@ -177,7 +186,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     private String buildCaseNoteDescription(String reason) {
         return String.format("documentIds: %s" + System.lineSeparator() + "reason: %s" + System.lineSeparator(),
-            "[" + DOC_ID + "]", reason);
+            Arrays.asList(DOC_ID, DOC_ID2), reason);
     }
 
     @Test
