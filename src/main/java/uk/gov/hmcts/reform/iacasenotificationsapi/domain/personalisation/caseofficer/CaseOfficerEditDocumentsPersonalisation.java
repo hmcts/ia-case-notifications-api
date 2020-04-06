@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseNote;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
@@ -28,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @Service
 public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificationPersonalisation {
 
+    public static final String NOT_AVAILABLE_MSG = "Oops...there was some issue and the data is not available.";
     private final String appealDocumentDeletedTemplateId;
     private final EmailAddressFinder emailAddressFinder;
 
@@ -66,19 +68,33 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("reasonForEditingOrDeletingDocuments", getReasonForEditDocuments(asylumCase))
-            .put("editedOrDeletedDocumentList", "")
+            .put("reasonForEditingOrDeletingDocuments", getReasonFromCaseNoteDescription(asylumCase))
+            .put("editedOrDeletedDocumentList",
+                getEditedOrDeletedDocumentList(callback.getCaseDetailsBefore().orElse(null)))
             .build();
     }
 
-    private String getReasonForEditDocuments(AsylumCase asylumCase) {
+    private String getEditedOrDeletedDocumentList(CaseDetails<AsylumCase> caseDetails) {
+        if (caseDetails == null) {
+            return NOT_AVAILABLE_MSG;
+        }
+
+        return "";
+    }
+
+    private String getCaseNoteDescriptionForEditDocuments(AsylumCase asylumCase) {
         Optional<List<IdValue<CaseNote>>> caseNotesOptional = asylumCase.read(CASE_NOTES);
         if (caseNotesOptional.isPresent()) {
             List<IdValue<CaseNote>> caseNotes = caseNotesOptional.get();
-            String caseNoteDesc = caseNotes.get(0).getValue().getCaseNoteDescription();
-            return StringUtils.substringAfter(caseNoteDesc, "reason:").trim();
+            int latestCaseNote = 0;
+            return caseNotes.get(latestCaseNote).getValue().getCaseNoteDescription();
         }
-        return "";
+        return StringUtils.EMPTY;
+    }
+
+    private String getReasonFromCaseNoteDescription(AsylumCase asylumCase) {
+        String caseNoteDescription = getCaseNoteDescriptionForEditDocuments(asylumCase);
+        return StringUtils.substringAfter(caseNoteDescription, "reason:").trim();
     }
 
 }
