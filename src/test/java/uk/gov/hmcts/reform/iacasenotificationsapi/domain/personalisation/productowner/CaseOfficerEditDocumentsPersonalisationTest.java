@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -80,10 +81,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     @Test
     @Parameters(method = "generateDifferentCaseNotesScenarios")
-    public void getPersonalisation(AsylumCase asylumCase, String expectedReason) {
-        CaseDetails<AsylumCase> caseDetails = new CaseDetails<>(1L, "IA", State.APPEAL_SUBMITTED,
-            asylumCase, LocalDateTime.now());
-        Callback<AsylumCase> callback = new Callback<>(caseDetails, Optional.empty(), Event.EDIT_DOCUMENTS);
+    public void getPersonalisation(Callback<AsylumCase> callback, String expectedReason) {
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(callback);
 
         assertEquals("RP/50001/2020", actualPersonalisation.get("appealReferenceNumber"));
@@ -95,6 +93,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 //        assertEquals(String.format("Document: \n "), actualPersonalisation.get("editedOrDeletedDocumentList"));
     }
 
+
     private Object[] generateDifferentCaseNotesScenarios() {
         String multiLineReason = "line 1 reason" + System.lineSeparator() + "line 2 reason";
         String singleLine = "line 1 reason";
@@ -102,10 +101,15 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
             new Object[]{generateSingleCaseNoteWithMultiLineReason(), multiLineReason},
             new Object[]{generateSingleCaseNoteWithSingleLineReason(), singleLine},
             new Object[]{generateTwoCaseNotesWithMultiLineReasons(), multiLineReason},
+//            new Object[]{generateSingleCaseNoteWithSingleLineReasonAndWithSingleDocument(), multiLineReason},
         };
     }
 
-    private AsylumCase generateTwoCaseNotesWithMultiLineReasons() {
+    private Object generateSingleCaseNoteWithSingleLineReasonAndWithSingleDocument() {
+        return null;
+    }
+
+    private Callback<AsylumCase> generateTwoCaseNotesWithMultiLineReasons() {
         String multiLineReason = "line 1 reason" + System.lineSeparator() + "line 2 reason";
         IdValue<CaseNote> idCaseNote1 = buildCaseNote(multiLineReason);
 
@@ -113,23 +117,29 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         IdValue<CaseNote> idCaseNote2 = buildCaseNote(singleLine);
         AsylumCase asylumCase = new AsylumCase();
         writeCaseNote(asylumCase, Arrays.asList(idCaseNote1, idCaseNote2));
-        return asylumCase;
+        return buildTestCallback(asylumCase);
     }
 
-    private AsylumCase generateSingleCaseNoteWithMultiLineReason() {
+    private Callback<AsylumCase> generateSingleCaseNoteWithMultiLineReason() {
         String multiLineReason = "line 1 reason" + System.lineSeparator() + "line 2 reason";
         IdValue<CaseNote> idCaseNote = buildCaseNote(multiLineReason);
         AsylumCase asylumCase = new AsylumCase();
         writeCaseNote(asylumCase, Collections.singletonList(idCaseNote));
-        return asylumCase;
+        return buildTestCallback(asylumCase);
     }
 
-    private AsylumCase generateSingleCaseNoteWithSingleLineReason() {
+    private Callback<AsylumCase> generateSingleCaseNoteWithSingleLineReason() {
         String singleLine = "line 1 reason";
         IdValue<CaseNote> idCaseNote = buildCaseNote(singleLine);
         AsylumCase asylumCase = new AsylumCase();
         writeCaseNote(asylumCase, Collections.singletonList(idCaseNote));
-        return asylumCase;
+        return buildTestCallback(asylumCase);
+    }
+
+    private Callback<AsylumCase> buildTestCallback(AsylumCase asylumCase) {
+        CaseDetails<AsylumCase> caseDetails = new CaseDetails<>(1L, "IA", State.APPEAL_SUBMITTED,
+            asylumCase, LocalDateTime.now());
+        return new Callback<>(caseDetails, Optional.empty(), Event.EDIT_DOCUMENTS);
     }
 
     private void writeCaseNote(AsylumCase asylumCase, List<IdValue<CaseNote>> caseNoteList) {
