@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseNote;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
@@ -55,7 +56,8 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap.<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(
@@ -64,11 +66,12 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("reasonForDeletion", getReasonForDeletion(asylumCase))
+            .put("reasonForEditingOrDeletingDocuments", getReasonForEditDocuments(asylumCase))
+            .put("editedOrDeletedDocumentList", "")
             .build();
     }
 
-    private String getReasonForDeletion(AsylumCase asylumCase) {
+    private String getReasonForEditDocuments(AsylumCase asylumCase) {
         Optional<List<IdValue<CaseNote>>> caseNotesOptional = asylumCase.read(CASE_NOTES);
         if (caseNotesOptional.isPresent()) {
             List<IdValue<CaseNote>> caseNotes = caseNotesOptional.get();

@@ -157,6 +157,9 @@ public enum AsylumCaseDefinition {
     CASE_NOTES(
         "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){}),
 
+    LEGAL_REPRESENTATIVE_DOCUMENTS(
+        "legalRepresentativeDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
     ;
 
     private final String value;
