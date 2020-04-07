@@ -9,7 +9,7 @@ public class FormattedDocument {
 
     @Override
     public String toString() {
-        return "Document: \n" + filename + '\n' +
-            "\nDescription: \n" + description;
+        return "Document: \n" + filename + '\n'
+            + "\nDescription: \n" + description;
     }
 }
