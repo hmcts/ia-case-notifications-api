@@ -45,6 +45,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.EditDocumentService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.FormattedDocumentList;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(JUnitParamsRunner.class)
@@ -89,7 +90,8 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Test
     @Parameters(method = "generateDifferentCaseNotesScenarios")
     public void getPersonalisation(Callback<AsylumCase> callback, String expectedReason) {
-        given(editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(any(), any())).willReturn(Collections.emptyList());
+        given(editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(any(), any()))
+            .willReturn(new FormattedDocumentList(null));
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(callback);
 

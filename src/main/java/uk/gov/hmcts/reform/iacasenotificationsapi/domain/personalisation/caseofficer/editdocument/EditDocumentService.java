@@ -25,8 +25,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 @Service
 public class EditDocumentService {
 
-    public List<FormattedDocument> getFormattedDocumentsGivenCaseAndDocIds(AsylumCase asylumCase,
-                                                                           List<String> docIdsMatch) {
+    public FormattedDocumentList getFormattedDocumentsGivenCaseAndDocIds(AsylumCase asylumCase,
+                                                                         List<String> docIdsMatch) {
         List<FormattedDocument> formattedDocList = new ArrayList<>();
         getListOfDocumentFields().forEach(fieldDefinition -> {
             Optional<List<IdValue<DocumentWithMetadata>>> fieldOptional = asylumCase.read(fieldDefinition);
@@ -35,7 +35,7 @@ public class EditDocumentService {
                 docs.forEach(doc -> addToListIfMatch(docIdsMatch, formattedDocList, doc.getValue()));
             }
         });
-        return formattedDocList;
+        return new FormattedDocumentList(formattedDocList);
     }
 
     private void addToListIfMatch(List<String> docIds, List<FormattedDocument> formattedDocList,

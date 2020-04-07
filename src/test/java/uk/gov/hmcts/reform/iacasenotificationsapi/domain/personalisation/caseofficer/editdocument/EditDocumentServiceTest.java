@@ -23,12 +23,18 @@ public class EditDocumentServiceTest {
         writeDocument(asylumCase);
         List<String> docIds = Collections.singletonList(DOC_ID);
 
-        List<FormattedDocument> actual = editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(asylumCase, docIds);
+        FormattedDocumentList actualFormattedDocumentList =
+            editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(asylumCase, docIds);
 
-        actual.forEach(System.out::println);
+        System.out.println(actualFormattedDocumentList.toString());
 
-        FormattedDocument expected = new FormattedDocument("some doc name", "some doc desc");
-        assertThat(actual).containsOnly(expected);
+        FormattedDocument expectedFormattedDocument =
+            new FormattedDocument("some doc name", "some doc desc");
+        assertThat(actualFormattedDocumentList.getFormattedDocuments()).containsOnly(expectedFormattedDocument);
+
+        FormattedDocumentList expectedFormattedDocumentList =
+            new FormattedDocumentList(Collections.singletonList(expectedFormattedDocument));
+        assertThat(actualFormattedDocumentList.toString()).isEqualTo(expectedFormattedDocumentList.toString());
     }
 
     private void writeDocument(AsylumCase asylumCase) {
