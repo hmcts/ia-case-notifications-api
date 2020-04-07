@@ -50,6 +50,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     public static final String DOC_ID = "d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65";
     public static final String DOC_ID2 = "ba21d046-6edf-42c4-9b17-1511488a57da";
+    public static final String DOC_ID3 = "9e04bf7e-2d99-4fa1-8fa9-741727b48991";
     @Rule
     public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
     @Mock

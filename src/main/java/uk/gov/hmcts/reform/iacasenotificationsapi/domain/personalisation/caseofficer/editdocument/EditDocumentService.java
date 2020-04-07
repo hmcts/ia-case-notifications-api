@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HasDocument;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
 @Service
@@ -29,17 +29,16 @@ public class EditDocumentService {
                                                                          List<String> docIdsMatch) {
         List<FormattedDocument> formattedDocList = new ArrayList<>();
         getListOfDocumentFields().forEach(fieldDefinition -> {
-            Optional<List<IdValue<DocumentWithMetadata>>> fieldOptional = asylumCase.read(fieldDefinition);
+            Optional<List<IdValue<HasDocument>>> fieldOptional = asylumCase.read(fieldDefinition);
             if (fieldOptional.isPresent()) {
-                List<IdValue<DocumentWithMetadata>> docs = fieldOptional.get();
+                List<IdValue<HasDocument>> docs = fieldOptional.get();
                 docs.forEach(doc -> addToListIfMatch(docIdsMatch, formattedDocList, doc.getValue()));
             }
         });
         return new FormattedDocumentList(formattedDocList);
     }
 
-    private void addToListIfMatch(List<String> docIds, List<FormattedDocument> formattedDocList,
-                                  DocumentWithMetadata doc) {
+    private void addToListIfMatch(List<String> docIds, List<FormattedDocument> formattedDocList, HasDocument doc) {
         String docId = getIdFromDocUrl(doc.getDocument().getDocumentUrl());
         if (docIds.contains(docId)) {
             FormattedDocument formattedDocument = new FormattedDocument(doc.getDocument().getDocumentFilename(),

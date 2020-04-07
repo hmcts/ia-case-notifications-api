@@ -8,7 +8,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Docu
 
 @EqualsAndHashCode
 @ToString
-public class DocumentWithMetadata {
+public class DocumentWithMetadata implements HasDocument {
 
     private Document document;
     private String description;
@@ -43,11 +43,13 @@ public class DocumentWithMetadata {
         this.suppliedBy = suppliedBy;
     }
 
+    @Override
     public Document getDocument() {
         requireNonNull(document);
         return document;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
