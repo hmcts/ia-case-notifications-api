@@ -4,15 +4,23 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision.GRANTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision.REFUSED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus.SUBMITTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.NotificationHandler;
@@ -64,8 +72,8 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                       && isRespondent;
+                    && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                    && isRespondent;
             },
             notificationGenerators
         );
@@ -88,8 +96,8 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                       && isLegalRepresentative;
+                    && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                    && isLegalRepresentative;
             },
             notificationGenerators
         );
@@ -138,7 +146,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE,
+                    && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE,
             notificationGenerators
         );
     }
@@ -352,7 +360,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
-                       && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT);
+                    && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT);
             },
             notificationGenerators
         );
@@ -455,7 +463,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS,
+                    && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS,
             notificationGenerators
         );
     }
@@ -467,7 +475,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
+                    && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
             notificationGenerator
         );
     }
@@ -479,7 +487,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.LIST_CASE_WITHOUT_HEARING_REQUIREMENTS,
+                    && callback.getEvent() == Event.LIST_CASE_WITHOUT_HEARING_REQUIREMENTS,
             notificationGenerator
         );
     }
@@ -491,7 +499,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE,
+                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE,
             notificationGenerator
         );
     }
@@ -503,7 +511,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
+                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
             notificationGenerator
         );
     }
@@ -515,7 +523,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE,
+                    && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE,
             notificationGenerator
         );
     }
@@ -527,7 +535,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
+                    && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
             notificationGenerator
         );
     }
@@ -539,7 +547,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
+                    && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
             notificationGenerator
         );
     }
@@ -561,7 +569,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPDATE_HEARING_ADJUSTMENTS,
+                    && callback.getEvent() == Event.UPDATE_HEARING_ADJUSTMENTS,
             notificationGenerator
         );
     }
@@ -572,7 +580,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE,
+                    && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE,
             notificationGenerators
         );
     }
@@ -611,4 +619,80 @@ public class NotificationHandlerConfiguration {
             notificationGenerator
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> reviewTimeExtensionGrantedHandler(
+        @Qualifier("reviewTimeExtensionGrantedGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                State currentState = callback.getCaseDetails().getState();
+
+                boolean isAipJourney = asylumCase
+                    .read(JOURNEY_TYPE, JourneyType.class)
+                    .map(type -> type == AIP).orElse(false);
+
+                final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions = asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
+
+                final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
+                    .orElse(Collections.emptyList()).stream()
+                    .filter(timeExtensionIdValue ->
+                        currentState == timeExtensionIdValue.getValue().getState()
+                            && SUBMITTED == timeExtensionIdValue.getValue().getStatus())
+                    .findFirst();
+
+                boolean isTimeExtensionGranted = false;
+
+                if (maybeTargetTimeExtension.isPresent()) {
+                    isTimeExtensionGranted = GRANTED.toString().equals(maybeTargetTimeExtension.get().getValue().getDecisionReason());
+                }
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
+                    && isAipJourney
+                    && isTimeExtensionGranted;
+            }, notificationGenerators
+        );
+    }
+
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> reviewTimeExtensionRefusedHandler(
+        @Qualifier("reviewTimeExtensionRefusedGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                State currentState = callback.getCaseDetails().getState();
+
+                boolean isAipJourney = asylumCase
+                    .read(JOURNEY_TYPE, JourneyType.class)
+                    .map(type -> type == AIP).orElse(false);
+
+                final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions = asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
+
+                final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
+                    .orElse(Collections.emptyList()).stream()
+                    .filter(timeExtensionIdValue ->
+                        currentState == timeExtensionIdValue.getValue().getState()
+                            && SUBMITTED == timeExtensionIdValue.getValue().getStatus())
+                    .findFirst();
+
+                boolean isTimeExtensionRefused = false;
+
+                if (maybeTargetTimeExtension.isPresent()) {
+                    isTimeExtensionRefused = REFUSED.toString().equals(maybeTargetTimeExtension.get().getValue().getDecisionReason());
+                }
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
+                    && isAipJourney
+                    && isTimeExtensionRefused;
+            }, notificationGenerators
+        );
+    }
+
 }
