@@ -107,7 +107,6 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         assertThat(actualDocsIds).containsOnly(DOC_ID, DOC_ID2);
     }
 
-
     private Object[] generateDifferentCaseNotesScenarios() {
         String multiLineReason = "line 1 reason" + System.lineSeparator() + "line 2 reason";
         String singleLine = "line 1 reason";

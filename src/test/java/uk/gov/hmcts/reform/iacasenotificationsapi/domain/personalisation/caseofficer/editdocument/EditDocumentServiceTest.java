@@ -3,8 +3,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseof
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisationTest.DOC_ID;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisationTest.DOC_ID2;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
@@ -17,11 +19,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 public class EditDocumentServiceTest {
 
     @Test
-    public void findDocumentIdsGivenCaseAndDocIds() {
+    public void getFormattedDocumentsGivenCaseAndDocIds() {
         EditDocumentService editDocumentService = new EditDocumentService();
         AsylumCase asylumCase = new AsylumCase();
-        writeDocument(asylumCase);
-        List<String> docIds = Collections.singletonList(DOC_ID);
+        IdValue<DocumentWithMetadata> idDoc =
+            getDocumentWithMetadataIdValue(DOC_ID, "some doc name", "some desc");
+        IdValue<DocumentWithMetadata> idDoc2 =
+            getDocumentWithMetadataIdValue(DOC_ID2, "some other name", "some other desc");
+        asylumCase.write(LEGAL_REPRESENTATIVE_DOCUMENTS, Arrays.asList(idDoc, idDoc2));
+        List<String> docIds = Collections.singletonList(DOC_ID2);
 
         FormattedDocumentList actualFormattedDocumentList =
             editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(asylumCase, docIds);
@@ -29,7 +35,7 @@ public class EditDocumentServiceTest {
         System.out.println(actualFormattedDocumentList.toString());
 
         FormattedDocument expectedFormattedDocument =
-            new FormattedDocument("some doc name", "some doc desc");
+            new FormattedDocument("some other name", "some other desc");
         assertThat(actualFormattedDocumentList.getFormattedDocuments()).containsOnly(expectedFormattedDocument);
 
         FormattedDocumentList expectedFormattedDocumentList =
@@ -37,15 +43,13 @@ public class EditDocumentServiceTest {
         assertThat(actualFormattedDocumentList.toString()).isEqualTo(expectedFormattedDocumentList.toString());
     }
 
-    private void writeDocument(AsylumCase asylumCase) {
-        String documentUrl = "http://dm-store/" + DOC_ID;
-        Document doc = new Document(documentUrl, documentUrl + "/binary",
-            "some doc name");
-        DocumentWithMetadata docWithMetadata = new DocumentWithMetadata(doc, "some doc desc",
-            LocalDate.now().toString(), DocumentTag.NONE);
-        IdValue<DocumentWithMetadata> idDoc = new IdValue<>("1", docWithMetadata);
-        List<IdValue<DocumentWithMetadata>> legalDocs = Collections.singletonList(idDoc);
-        asylumCase.write(LEGAL_REPRESENTATIVE_DOCUMENTS, legalDocs);
+    private IdValue<DocumentWithMetadata> getDocumentWithMetadataIdValue(String docId, String filename,
+                                                                         String description) {
+        String documentUrl = "http://dm-store/" + docId;
+        Document doc = new Document(documentUrl, documentUrl + "/binary", filename);
+        DocumentWithMetadata docWithMetadata = new DocumentWithMetadata(doc, description, LocalDate.now().toString(),
+            DocumentTag.NONE);
+        return new IdValue<>("1", docWithMetadata);
     }
 
 }
