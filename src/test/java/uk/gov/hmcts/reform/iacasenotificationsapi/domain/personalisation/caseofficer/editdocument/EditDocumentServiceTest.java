@@ -32,7 +32,7 @@ public class EditDocumentServiceTest {
     private EditDocumentService editDocumentService = new EditDocumentService();
 
     @Test
-    @Parameters(method = "generateOneFileEditedScenarios")
+    @Parameters(method = "generateOneFileEditedScenarios, generateMultipleFilesEditedScenarios")
     public void getFormattedDocumentsGivenCaseAndDocIds(AsylumCase asylumCase, List<String> docIds,
                                                         FormattedDocumentList expectedFormattedDocumentList) {
         FormattedDocumentList actualFormattedDocumentList =
@@ -64,6 +64,28 @@ public class EditDocumentServiceTest {
                 new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc2))},
             new Object[]{asylumCase, doc1IsEdited,
                 new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc1))}
+        };
+    }
+
+    private Object[] generateMultipleFilesEditedScenarios() {
+        AsylumCase asylumCase = new AsylumCase();
+        IdValue<DocumentWithMetadata> idDoc = getDocumentWithMetadata(
+            DOC_ID, "some name", "some desc");
+        IdValue<DocumentWithMetadata> idDoc2 = getDocumentWithMetadata(
+            DOC_ID2, "some other name", "some other desc");
+        asylumCase.write(LEGAL_REPRESENTATIVE_DOCUMENTS, Arrays.asList(idDoc, idDoc2));
+
+        List<String> doc1AndDoc2AreEdited = Arrays.asList(DOC_ID, DOC_ID2);
+
+        FormattedDocument expectedFormattedDocumentIsDoc2 =
+            new FormattedDocument("some other name", "some other desc");
+
+        FormattedDocument expectedFormattedDocumentIsDoc1 =
+            new FormattedDocument("some name", "some desc");
+
+        return new Object[]{
+            new Object[]{asylumCase, doc1AndDoc2AreEdited, new FormattedDocumentList(
+                Arrays.asList(expectedFormattedDocumentIsDoc1, expectedFormattedDocumentIsDoc2))}
         };
     }
 

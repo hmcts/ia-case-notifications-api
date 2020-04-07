@@ -9,9 +9,12 @@ public class FormattedDocumentList {
 
     @Override
     public String toString() {
-        return formattedDocuments.toString()
-            .replace("[", "")
-            .replace("]", "")
-            .trim();
+        StringBuilder sb = new StringBuilder();
+        formattedDocuments.forEach(s -> {
+            sb.append(s);
+            sb.append(System.getProperty("line.separator"));
+            sb.append(System.getProperty("line.separator"));
+        });
+        return sb.toString().trim();
     }
 }
