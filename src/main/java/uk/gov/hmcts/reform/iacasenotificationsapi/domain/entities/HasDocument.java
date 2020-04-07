@@ -4,5 +4,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Docu
 
 public interface HasDocument {
     Document getDocument();
+
     String getDescription();
 }
