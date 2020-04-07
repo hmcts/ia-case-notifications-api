@@ -9,18 +9,40 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
+@RunWith(JUnitParamsRunner.class)
 public class EditDocumentServiceTest {
 
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.STRICT_STUBS);
+
+    private EditDocumentService editDocumentService = new EditDocumentService();
+
     @Test
-    public void getFormattedDocumentsGivenCaseAndDocIds() {
-        EditDocumentService editDocumentService = new EditDocumentService();
+    @Parameters(method = "generateOneFileEditedScenarios")
+    public void getFormattedDocumentsGivenCaseAndDocIds(AsylumCase asylumCase, List<String> docIds,
+                                                        FormattedDocumentList expectedFormattedDocumentList) {
+        FormattedDocumentList actualFormattedDocumentList =
+            editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(asylumCase, docIds);
+
+        System.out.println(actualFormattedDocumentList.toString());
+        assertThat(actualFormattedDocumentList.toString()).isEqualTo(expectedFormattedDocumentList.toString());
+    }
+
+    private Object[] generateOneFileEditedScenarios() {
         AsylumCase asylumCase = new AsylumCase();
         IdValue<DocumentWithMetadata> idDoc =
             getDocumentWithMetadataIdValue(DOC_ID, "some doc name", "some desc");
@@ -29,18 +51,13 @@ public class EditDocumentServiceTest {
         asylumCase.write(LEGAL_REPRESENTATIVE_DOCUMENTS, Arrays.asList(idDoc, idDoc2));
         List<String> docIds = Collections.singletonList(DOC_ID2);
 
-        FormattedDocumentList actualFormattedDocumentList =
-            editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(asylumCase, docIds);
-
-        System.out.println(actualFormattedDocumentList.toString());
-
         FormattedDocument expectedFormattedDocument =
             new FormattedDocument("some other name", "some other desc");
-        assertThat(actualFormattedDocumentList.getFormattedDocuments()).containsOnly(expectedFormattedDocument);
 
-        FormattedDocumentList expectedFormattedDocumentList =
-            new FormattedDocumentList(Collections.singletonList(expectedFormattedDocument));
-        assertThat(actualFormattedDocumentList.toString()).isEqualTo(expectedFormattedDocumentList.toString());
+        return new Object[]{
+            new Object[]{
+                asylumCase, docIds, new FormattedDocumentList(Collections.singletonList(expectedFormattedDocument))}
+        };
     }
 
     private IdValue<DocumentWithMetadata> getDocumentWithMetadataIdValue(String docId, String filename,
