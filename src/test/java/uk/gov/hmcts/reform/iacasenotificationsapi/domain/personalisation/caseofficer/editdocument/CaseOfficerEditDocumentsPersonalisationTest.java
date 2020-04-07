@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.productowner;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -43,9 +43,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.EditDocumentService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.FormattedDocumentList;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(JUnitParamsRunner.class)
@@ -90,8 +87,9 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Test
     @Parameters(method = "generateDifferentCaseNotesScenarios")
     public void getPersonalisation(Callback<AsylumCase> callback, String expectedReason) {
+        FormattedDocument formattedDocument = new FormattedDocument("some file name", "some desc");
         given(editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(any(), any()))
-            .willReturn(new FormattedDocumentList(null));
+            .willReturn(new FormattedDocumentList(Collections.singletonList(formattedDocument)));
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(callback);
 
