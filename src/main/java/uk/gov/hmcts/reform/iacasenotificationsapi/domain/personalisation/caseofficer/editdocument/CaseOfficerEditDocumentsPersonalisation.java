@@ -62,8 +62,8 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
 
     @Override
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "callback must not be null");
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-        requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap.<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(
                 AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(StringUtils.EMPTY))
@@ -83,8 +83,8 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
         if (caseDetailsBefore == null) {
             return StringUtils.EMPTY;
         }
-        return editDocumentService.findDocumentIdsGivenCaseAndDocIds(
-            caseDetailsBefore.getCaseData(), getCaseNoteDocIdsFromCaseNote(asylumCase)).toString();
+        return editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(caseDetailsBefore.getCaseData(),
+            getCaseNoteDocIdsFromCaseNote(asylumCase)).toString();
     }
 
     private List<String> getCaseNoteDocIdsFromCaseNote(AsylumCase asylumCase) {

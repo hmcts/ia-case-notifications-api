@@ -13,7 +13,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CASE_NOTES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import java.time.LocalDate;
@@ -39,13 +38,10 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseNote;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.EditDocumentService;
@@ -93,8 +89,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Test
     @Parameters(method = "generateDifferentCaseNotesScenarios")
     public void getPersonalisation(Callback<AsylumCase> callback, String expectedReason) {
-        given(editDocumentService.findDocumentIdsGivenCaseAndDocIds(any(), any()))
-            .willReturn(Collections.singletonList("Document:\nsome doc name\nDescription:\nsome doc desc"));
+        given(editDocumentService.getFormattedDocumentsGivenCaseAndDocIds(any(), any())).willReturn(Collections.emptyList());
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(callback);
 
@@ -106,7 +101,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         assertEquals(expectedReason, actualPersonalisation.get("reasonForEditingOrDeletingDocuments"));
 
         then(editDocumentService).should(times(1))
-            .findDocumentIdsGivenCaseAndDocIds(any(AsylumCase.class), argCaptor.capture());
+            .getFormattedDocumentsGivenCaseAndDocIds(any(AsylumCase.class), argCaptor.capture());
 
         List<String> actualDocsIds = argCaptor.getValue();
         assertThat(actualDocsIds).containsOnly(DOC_ID, DOC_ID2);
@@ -167,17 +162,6 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         asylumCase.write(HOME_OFFICE_REFERENCE_NUMBER, "A1234567");
     }
 
-    private void writeDocument(AsylumCase asylumCase) {
-        String documentUrl = "http://dm-store/" + DOC_ID;
-        Document doc = new Document(documentUrl, documentUrl + "/binary",
-            "some doc name");
-        DocumentWithMetadata docWithMetadata = new DocumentWithMetadata(doc, "some doc desc",
-            LocalDate.now().toString(), DocumentTag.NONE);
-        IdValue<DocumentWithMetadata> idDoc = new IdValue<>("1", docWithMetadata);
-        List<IdValue<DocumentWithMetadata>> legalDocs = Collections.singletonList(idDoc);
-        asylumCase.write(LEGAL_REPRESENTATIVE_DOCUMENTS, legalDocs);
-    }
-
     private IdValue<CaseNote> buildCaseNote(String reason) {
         CaseNote caseNote = new CaseNote("subject", buildCaseNoteDescription(reason), "user",
             LocalDate.now().toString());
@@ -191,8 +175,8 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> personalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            .hasMessage("callback must not be null");
     }
 }

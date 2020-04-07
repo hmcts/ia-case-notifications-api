@@ -10,9 +10,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.RESPONDENT_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_DOCUMENTS;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
@@ -22,15 +25,37 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 @Service
 public class EditDocumentService {
 
-    public List<String> findDocumentIdsGivenCaseAndDocIds(AsylumCase asylumCase, List<String> docIds) {
-        getListOfDocumentFields().forEach(field -> {
-            Optional<List<IdValue<DocumentWithMetadata>>> idValuesOptional = asylumCase.read(field);
-            if (idValuesOptional.isPresent()) {
-
+    public List<FormattedDocument> getFormattedDocumentsGivenCaseAndDocIds(AsylumCase asylumCase,
+                                                                           List<String> docIdsMatch) {
+        List<FormattedDocument> formattedDocList = new ArrayList<>();
+        getListOfDocumentFields().forEach(fieldDefinition -> {
+            Optional<List<IdValue<DocumentWithMetadata>>> fieldOptional = asylumCase.read(fieldDefinition);
+            if (fieldOptional.isPresent()) {
+                List<IdValue<DocumentWithMetadata>> docs = fieldOptional.get();
+                docs.forEach(doc -> addToListIfMatch(docIdsMatch, formattedDocList, doc.getValue()));
             }
         });
-        return null;
+        return formattedDocList;
+    }
 
+    private void addToListIfMatch(List<String> docIds, List<FormattedDocument> formattedDocList,
+                                  DocumentWithMetadata doc) {
+        String docId = getIdFromDocUrl(doc.getDocument().getDocumentUrl());
+        if (docIds.contains(docId)) {
+            FormattedDocument formattedDocument = new FormattedDocument(doc.getDocument().getDocumentFilename(),
+                doc.getDescription());
+            formattedDocList.add(formattedDocument);
+        }
+    }
+
+    public static String getIdFromDocUrl(String documentUrl) {
+        String regexToGetStringFromTheLastForwardSlash = "([^/]+$)";
+        Pattern pattern = Pattern.compile(regexToGetStringFromTheLastForwardSlash);
+        Matcher matcher = pattern.matcher(documentUrl);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return documentUrl;
     }
 
     private List<AsylumCaseDefinition> getListOfDocumentFields() {
