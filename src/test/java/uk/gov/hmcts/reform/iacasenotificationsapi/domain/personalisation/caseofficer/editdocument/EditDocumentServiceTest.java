@@ -44,24 +44,31 @@ public class EditDocumentServiceTest {
 
     private Object[] generateOneFileEditedScenarios() {
         AsylumCase asylumCase = new AsylumCase();
-        IdValue<DocumentWithMetadata> idDoc =
-            getDocumentWithMetadataIdValue(DOC_ID, "some doc name", "some desc");
-        IdValue<DocumentWithMetadata> idDoc2 =
-            getDocumentWithMetadataIdValue(DOC_ID2, "some other name", "some other desc");
+        IdValue<DocumentWithMetadata> idDoc = getDocumentWithMetadata(
+            DOC_ID, "some name", "some desc");
+        IdValue<DocumentWithMetadata> idDoc2 = getDocumentWithMetadata(
+            DOC_ID2, "some other name", "some other desc");
         asylumCase.write(LEGAL_REPRESENTATIVE_DOCUMENTS, Arrays.asList(idDoc, idDoc2));
-        List<String> docIds = Collections.singletonList(DOC_ID2);
 
-        FormattedDocument expectedFormattedDocument =
+        List<String> doc2IsEdited = Collections.singletonList(DOC_ID2);
+        List<String> doc1IsEdited = Collections.singletonList(DOC_ID);
+
+        FormattedDocument expectedFormattedDocumentIsDoc2 =
             new FormattedDocument("some other name", "some other desc");
 
+        FormattedDocument expectedFormattedDocumentIsDoc1 =
+            new FormattedDocument("some name", "some desc");
+
         return new Object[]{
-            new Object[]{
-                asylumCase, docIds, new FormattedDocumentList(Collections.singletonList(expectedFormattedDocument))}
+            new Object[]{asylumCase, doc2IsEdited,
+                new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc2))},
+            new Object[]{asylumCase, doc1IsEdited,
+                new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc1))}
         };
     }
 
-    private IdValue<DocumentWithMetadata> getDocumentWithMetadataIdValue(String docId, String filename,
-                                                                         String description) {
+    private IdValue<DocumentWithMetadata> getDocumentWithMetadata(String docId, String filename,
+                                                                  String description) {
         String documentUrl = "http://dm-store/" + docId;
         Document doc = new Document(documentUrl, documentUrl + "/binary", filename);
         DocumentWithMetadata docWithMetadata = new DocumentWithMetadata(doc, description, LocalDate.now().toString(),
