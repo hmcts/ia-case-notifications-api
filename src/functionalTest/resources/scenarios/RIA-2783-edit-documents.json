@@ -18,7 +18,41 @@
                 "caseNoteSubject": "Edit documents audit note",
                 "user": "Case Officer",
                 "dateAdded": "{$TODAY}",
-                "caseNoteDescription": "reason: some reasons to edit documents"
+                "caseNoteDescription": "documentIds: [d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65]\nreason: some reasons to update the documents"
+              }
+            }
+          ],
+          "additionalEvidenceDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "document": {
+                  "document_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65",
+                  "document_binary_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65/binary",
+                  "document_filename": "new-evidence.pdf"
+                },
+                "description": "some updated description",
+                "dateUploaded": "2018-12-25"
+              }
+            }
+          ]
+        }
+      },
+      "caseDataBefore": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "additionalEvidenceDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "document": {
+                  "document_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65",
+                  "document_binary_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65/binary",
+                  "document_filename": "new-evidence.pdf"
+                },
+                "description": "some original description",
+                "dateUploaded": "2018-12-25",
+                "tag": ""
               }
             }
           ]
@@ -51,7 +85,9 @@
           "CASE001",
           "A1234567",
           "Talha Awan",
-          "some reasons to edit documents"
+          "new-evidence.pdf",
+          "some original description",
+          "some reasons to update the documents"
         ]
       }
     ]
