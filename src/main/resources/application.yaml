@@ -207,6 +207,9 @@ govnotify:
         email: 4959d7cc-54f0-4cb4-b386-49940b89925e
       caseOfficer:
         email: 122b7fce-23c9-4b34-9055-8329264fd757
+    recordLengthOfHearing:
+      adminOfficer:
+        email: 060e86b1-c3dc-45c2-8840-d2426bdf0839
     applyForFtpa:
       respondent:
         email: 317498af-4da1-44c7-935e-d70009bc687f
@@ -303,6 +306,7 @@ security:
       - "updateHearingAdjustments"
       - "removeAppealFromOnline"
       - "changeHearingCentre"
+      - "recordLengthOfHearing"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"

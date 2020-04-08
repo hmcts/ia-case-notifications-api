@@ -31,6 +31,7 @@ public enum Event {
     EDIT_CASE_LISTING("editCaseListing"),
     END_APPEAL("endAppeal"),
     RECORD_APPLICATION("recordApplication"),
+    RECORD_LENGTH_OF_HEARING("recordLengthOfHearing"),
     REQUEST_CASE_BUILDING("requestCaseBuilding"),
     UPLOAD_HOME_OFFICE_APPEAL_RESPONSE("uploadHomeOfficeAppealResponse"),
     UPLOAD_ADDENDUM_EVIDENCE("uploadAddendumEvidence"),
