@@ -26,6 +26,11 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+
+featureFlag:
+  isSaveAndContinueEnabled: ${IS_SAVE_AND_CONTINUE_ENABLED:false}
+
+
 govnotify:
   baseUrl: "https://api.notifications.service.gov.uk"
   key: ${IA_GOV_NOTIFY_KEY}
