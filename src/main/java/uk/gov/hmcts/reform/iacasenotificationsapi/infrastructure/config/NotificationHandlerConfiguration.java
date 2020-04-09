@@ -357,8 +357,7 @@ public class NotificationHandlerConfiguration {
         @Qualifier("submitCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-            {
+            (callbackStage, callback) -> {
                 Event validEvent = isSaveAndContinueEnabled ? Event.SUBMIT_CASE : Event.BUILD_CASE;
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == validEvent;
