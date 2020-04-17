@@ -26,6 +26,7 @@ public class StateTest {
         assertEquals("awaitingReasonsForAppeal", State.AWAITING_REASONS_FOR_APPEAL.toString());
         assertEquals("awaitingClarifyingQuestionsAnswers", State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS.toString());
         assertEquals("awaitingCmaRequirements", State.AWAITING_CMA_REQUIREMENTS.toString());
+        assertEquals("adjourned", State.ADJOURNED.toString());
     }
 
     @Test
