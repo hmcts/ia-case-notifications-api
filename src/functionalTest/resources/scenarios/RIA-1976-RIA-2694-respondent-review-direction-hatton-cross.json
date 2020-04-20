@@ -1,10 +1,10 @@
 {
-  "description": "RIA-1976 Send respondent review direction (IAC Glasgow)",
+  "description": "RIA-1976-RIA-2694 Send respondent review direction (IAC Hatton Cross)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1009,
+      "id": 1008,
       "eventId": "requestRespondentReview",
       "state": "caseBuilding",
       "caseData": {
@@ -23,7 +23,7 @@
             }
           ],
           "notificationsSent": [],
-          "hearingCentre": "glasgow"
+          "hearingCentre": "hattonCross"
         }
       }
     }
@@ -48,24 +48,27 @@
         ],
         "notificationsSent": [
           {
-            "id": "1009_RESPONDENT_REVIEW_DIRECTION",
+            "id": "1008_RESPONDENT_REVIEW_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
-        "hearingCentre": "glasgow"
+        "hearingCentre": "hattonCross"
       }
     },
     "notifications": [
       {
-        "reference": "1009_RESPONDENT_REVIEW_DIRECTION",
+        "reference": "1008_RESPONDENT_REVIEW_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
-        "subject": "Asylum appeal direction: review case – Glasgow",
+        "subject": "Immigration and Asylum appeal: review Appeal Skeleton Argument direction",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "Talha Awan",
+          "{$iaExUiFrontendUrl}",
           "Review the built case",
-          "{$TODAY+14|d MMM yyyy}"
+          "{$TODAY+14|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]

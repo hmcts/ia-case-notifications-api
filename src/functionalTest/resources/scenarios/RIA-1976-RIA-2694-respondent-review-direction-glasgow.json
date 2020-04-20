@@ -1,10 +1,10 @@
 {
-  "description": "RIA-1976 Send respondent review direction (IAC North Shields)",
+  "description": "RIA-1976-RIA-2694 Send respondent review direction (IAC Glasgow)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1006,
+      "id": 1009,
       "eventId": "requestRespondentReview",
       "state": "caseBuilding",
       "caseData": {
@@ -23,7 +23,7 @@
             }
           ],
           "notificationsSent": [],
-          "hearingCentre": "northShields"
+          "hearingCentre": "glasgow"
         }
       }
     }
@@ -48,24 +48,27 @@
         ],
         "notificationsSent": [
           {
-            "id": "1006_RESPONDENT_REVIEW_DIRECTION",
+            "id": "1009_RESPONDENT_REVIEW_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
-        "hearingCentre": "northShields"
+        "hearingCentre": "glasgow"
       }
     },
     "notifications": [
       {
-        "reference": "1006_RESPONDENT_REVIEW_DIRECTION",
+        "reference": "1009_RESPONDENT_REVIEW_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
-        "subject": "Asylum appeal direction: review case – North Shields",
+        "subject": "Immigration and Asylum appeal: review Appeal Skeleton Argument direction",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "Talha Awan",
+          "{$iaExUiFrontendUrl}",
           "Review the built case",
-          "{$TODAY+14|d MMM yyyy}"
+          "{$TODAY+14|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]
