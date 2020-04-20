@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -54,7 +55,9 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
 
-    private String timeExtensionNewDate = "2020-04-1";
+    private String timeExtensionRequestDate = "2020-03-01";
+    private String timeExtensionNewDate = "2020-04-01";
+    private String expectedTimeExtensionNewDate = "1 Apr 2020";
     private String timeExtensionReason = "the reason";
 
     private String timeExtensionDecisionReason = "the reason";
@@ -67,7 +70,7 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
     public void setup() {
 
         mockedTimeExtension = new IdValue<>("someId", new TimeExtension(
-            timeExtensionNewDate,
+            timeExtensionRequestDate,
             timeExtensionReason,
             AWAITING_REASONS_FOR_APPEAL,
             SUBMITTED,
@@ -133,7 +136,7 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
         String awaitingReasonsForAppealNextActionText = "why you think the Home Office decision is wrong";
 
         when(callback.getCaseDetails()).thenReturn(new CaseDetails<>(1L, "IA", AWAITING_REASONS_FOR_APPEAL, asylumCase, LocalDateTime.now()));
-        when(timeExtensionFinder.findCurrentTimeExtension(AWAITING_REASONS_FOR_APPEAL, asylumCase)).thenReturn(mockedTimeExtension);
+        when(timeExtensionFinder.findCurrentTimeExtension(AWAITING_REASONS_FOR_APPEAL, TimeExtensionStatus.REFUSED, asylumCase)).thenReturn(mockedTimeExtension);
         when(timeExtensionFinder.findNextActionText(AWAITING_REASONS_FOR_APPEAL)).thenReturn(awaitingReasonsForAppealNextActionText);
 
         Map<String, String> personalisation = appellantReviewTimeExtensionRefusedPersonalisationEmail.getPersonalisation(callback);
@@ -143,7 +146,7 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(timeExtensionDecisionReason, personalisation.get("decision reason"));
         assertEquals(awaitingReasonsForAppealNextActionText, personalisation.get("Next action text"));
-        assertEquals(timeExtensionNewDate, personalisation.get("due date"));
+        assertEquals(expectedTimeExtensionNewDate, personalisation.get("due date"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
     }
@@ -158,7 +161,7 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(timeExtensionFinder.findCurrentTimeExtension(AWAITING_REASONS_FOR_APPEAL, asylumCase)).thenReturn(mockedTimeExtension);
+        when(timeExtensionFinder.findCurrentTimeExtension(AWAITING_REASONS_FOR_APPEAL, TimeExtensionStatus.REFUSED, asylumCase)).thenReturn(mockedTimeExtension);
         when(timeExtensionFinder.findNextActionText(AWAITING_REASONS_FOR_APPEAL)).thenReturn(awaitingReasonsForAppealNextActionText);
 
         Map<String, String> personalisation = appellantReviewTimeExtensionRefusedPersonalisationEmail.getPersonalisation(callback);
@@ -168,7 +171,7 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
         assertEquals("", personalisation.get("Family name"));
         assertEquals(timeExtensionDecisionReason, personalisation.get("decision reason"));
         assertEquals(awaitingReasonsForAppealNextActionText, personalisation.get("Next action text"));
-        assertEquals(timeExtensionNewDate, personalisation.get("due date"));
+        assertEquals(expectedTimeExtensionNewDate, personalisation.get("due date"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }

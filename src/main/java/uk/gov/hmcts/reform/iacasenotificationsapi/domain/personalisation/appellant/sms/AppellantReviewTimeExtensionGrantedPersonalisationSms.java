@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -61,15 +64,19 @@ public class AppellantReviewTimeExtensionGrantedPersonalisationSms implements Sm
         requireNonNull(currentState, "currentState must not be null");
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
-        final IdValue<TimeExtension> timeExtensionIdValue = timeExtensionFinder.findCurrentTimeExtension(currentState, asylumCase);
+        final IdValue<TimeExtension> timeExtensionIdValue = timeExtensionFinder.findCurrentTimeExtension(currentState, TimeExtensionStatus.GRANTED, asylumCase);
         final String nextActionText = timeExtensionFinder.findNextActionText(currentState);
 
+        final String dueDate =
+            LocalDate
+                .parse(timeExtensionIdValue.getValue().getDecisionOutcomeDate())
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         return
             ImmutableMap
                 .<String, String>builder()
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Next action text", nextActionText)
-                .put("due date", timeExtensionIdValue.getValue().getDecisionDueDate())
+                .put("due date", dueDate)
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }

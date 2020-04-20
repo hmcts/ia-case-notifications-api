@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
@@ -23,14 +24,14 @@ public class TimeExtensionFinder {
      * @param asylumCase the asylum case
      * @return the current in-flight time extension
      */
-    public IdValue<TimeExtension> findCurrentTimeExtension(final State currentState, AsylumCase asylumCase) {
+    public IdValue<TimeExtension> findCurrentTimeExtension(final State currentState, final TimeExtensionStatus status,  AsylumCase asylumCase) {
         final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions = asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
 
         final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
             .orElse(Collections.emptyList()).stream()
             .filter(timeExtensionIdValue ->
                 currentState == timeExtensionIdValue.getValue().getState()
-                    && SUBMITTED == timeExtensionIdValue.getValue().getStatus())
+                    && status == timeExtensionIdValue.getValue().getStatus())
             .findFirst();
 
         if (!maybeTargetTimeExtension.isPresent()) {

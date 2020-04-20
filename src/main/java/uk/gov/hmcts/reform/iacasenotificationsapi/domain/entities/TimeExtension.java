@@ -7,35 +7,35 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Docu
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
 public class TimeExtension {
-    private String requestedDate;
+    private String requestDate;
     private String reason;
     private State state;
     private TimeExtensionStatus status;
     private List<IdValue<Document>> evidence;
     private TimeExtensionDecision decision;
     private String decisionReason;
-    private String decisionDueDate;
+    private String decisionOutcomeDate;
 
     private TimeExtension() {
     }
 
-    public TimeExtension(String requestedDate, String reason, State state, TimeExtensionStatus status, List<IdValue<Document>> evidence) {
-        this(requestedDate, reason, state, status, evidence, null, null, null);
+    public TimeExtension(String requestDate, String reason, State state, TimeExtensionStatus status, List<IdValue<Document>> evidence) {
+        this(requestDate, reason, state, status, evidence, null, null, null);
     }
 
-    public TimeExtension(String requestedDate, String reason, State state, TimeExtensionStatus status, List<IdValue<Document>> evidence, TimeExtensionDecision decision, String decisionReason, String decisionDueDate) {
-        this.requestedDate = requestedDate;
+    public TimeExtension(String requestDate, String reason, State state, TimeExtensionStatus status, List<IdValue<Document>> evidence, TimeExtensionDecision decision, String decisionReason, String decisionOutcomeDate) {
+        this.requestDate = requestDate;
         this.reason = reason;
         this.state = state;
         this.status = status;
         this.evidence = evidence;
         this.decision = decision;
         this.decisionReason = decisionReason;
-        this.decisionDueDate = decisionDueDate;
+        this.decisionOutcomeDate = decisionOutcomeDate;
     }
 
-    public String getRequestedDate() {
-        return requestedDate;
+    public String getRequestDate() {
+        return requestDate;
     }
 
     public String getReason() {
@@ -62,8 +62,8 @@ public class TimeExtension {
         return decisionReason;
     }
 
-    public String getDecisionDueDate() {
-        return decisionDueDate;
+    public String getDecisionOutcomeDate() {
+        return decisionOutcomeDate;
     }
 
     @Override
@@ -75,32 +75,32 @@ public class TimeExtension {
             return false;
         }
         TimeExtension that = (TimeExtension) o;
-        return Objects.equals(requestedDate, that.requestedDate)
+        return Objects.equals(requestDate, that.requestDate)
                 && Objects.equals(reason, that.reason)
                 && state == that.state
                 && status == that.status
                 && Objects.equals(evidence, that.evidence)
                 && decision == that.decision
                 && Objects.equals(decisionReason, that.decisionReason)
-                && Objects.equals(decisionDueDate, that.decisionDueDate);
+                && Objects.equals(decisionOutcomeDate, that.decisionOutcomeDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestedDate, reason, state, status, evidence, decision, decisionReason, decisionDueDate);
+        return Objects.hash(requestDate, reason, state, status, evidence, decision, decisionReason, decisionOutcomeDate);
     }
 
     @Override
     public String toString() {
         return "TimeExtension{"
-                + "requestedDate='" + requestedDate + '\''
+                + "requestDate='" + requestDate + '\''
                 + ", reason='" + reason + '\''
                 + ", state=" + state
                 + ", status=" + status
                 + ", evidence=" + evidence
                 + ", decision=" + decision
                 + ", decisionReason='" + decisionReason + '\''
-                + ", decisionDueDate='" + decisionDueDate + '\''
+                + ", decisionOutcomeDate='" + decisionOutcomeDate + '\''
                 + '}';
     }
 }

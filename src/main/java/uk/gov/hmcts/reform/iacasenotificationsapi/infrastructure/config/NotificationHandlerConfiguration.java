@@ -6,7 +6,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision.GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision.REFUSED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus.SUBMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -640,13 +639,13 @@ public class NotificationHandlerConfiguration {
                     .orElse(Collections.emptyList()).stream()
                     .filter(timeExtensionIdValue ->
                         currentState == timeExtensionIdValue.getValue().getState()
-                            && SUBMITTED == timeExtensionIdValue.getValue().getStatus())
+                            && TimeExtensionStatus.GRANTED == timeExtensionIdValue.getValue().getStatus())
                     .findFirst();
 
                 boolean isTimeExtensionGranted = false;
 
                 if (maybeTargetTimeExtension.isPresent()) {
-                    isTimeExtensionGranted = GRANTED.toString().equals(maybeTargetTimeExtension.get().getValue().getDecisionReason());
+                    isTimeExtensionGranted = GRANTED == maybeTargetTimeExtension.get().getValue().getDecision();
                 }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -678,13 +677,13 @@ public class NotificationHandlerConfiguration {
                     .orElse(Collections.emptyList()).stream()
                     .filter(timeExtensionIdValue ->
                         currentState == timeExtensionIdValue.getValue().getState()
-                            && SUBMITTED == timeExtensionIdValue.getValue().getStatus())
+                            && TimeExtensionStatus.REFUSED == timeExtensionIdValue.getValue().getStatus())
                     .findFirst();
 
                 boolean isTimeExtensionRefused = false;
 
                 if (maybeTargetTimeExtension.isPresent()) {
-                    isTimeExtensionRefused = REFUSED.toString().equals(maybeTargetTimeExtension.get().getValue().getDecisionReason());
+                    isTimeExtensionRefused = REFUSED == maybeTargetTimeExtension.get().getValue().getDecision();
                 }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
