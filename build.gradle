@@ -249,7 +249,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
     compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.12.0-RELEASE'
 
-    compile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+    compile group: 'com.google.guava', name: 'guava', version: '28.2-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.23'
