@@ -216,7 +216,12 @@ govnotify:
         email: 90630010-f2ed-4a97-a307-50291b017ed1
       otherHomeOffice:
         email: 9bcae84a-53e4-4971-a778-906506f49527
-
+    submitClarifyingQuestionsAnswers:
+      caseOfficer:
+        email: 988461af-9111-4b4a-abba-6dfb3a40b422
+      appellant:
+        email: 6e439fce-aee0-45e8-97a5-4a79c9baac07
+        sms: 9af78520-ffdb-4d08-b93f-3e6357fe0394
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -386,4 +391,5 @@ customerServices:
 appellantDaysToWait:
   afterSubmission: 28
   afterReasonsForAppeal: 14
+  afterClarifyingQuestionsAnswers: 5
 

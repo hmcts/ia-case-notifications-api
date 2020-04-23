@@ -716,4 +716,27 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("submitClarifyingQuestionsAnswersNotificationGenerator")
+    public List<NotificationGenerator> submitClarifyingQuestionsAnswersNotificationGenerator(
+        CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation,
+        AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms appellantSubmitClarifyingQuestionsAnswersPersonalisationSms,
+        AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail appellantSubmitClarifyingQuestionsAnswersPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmitClarifyingQuestionsAnswersPersonalisationEmail, caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitClarifyingQuestionsAnswersPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
 }
