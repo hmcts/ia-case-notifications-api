@@ -64,6 +64,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> endAppealNotificationHandler(
+        @Qualifier("endAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.END_APPEAL,
+            notificationGenerators
+
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealOutcomeNotificationHandler(
         @Qualifier("appealOutcomeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
