@@ -43,23 +43,17 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final AsylumCase asylumCase,
         final String referenceId,
         final Callback<AsylumCase> callback) {
-        List<String> notificationIds = new ArrayList<>();
 
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
-        notificationIds.addAll(
-            subscriberEmails.stream()
-                .map(email ->
-                    sendEmail(
-                        email,
-                        emailNotificationPersonalisation,
-                        referenceId,
-                        callback))
-                .collect(Collectors.toList())
-        );
-
-        return notificationIds;
+        return subscriberEmails.stream()
+            .map(email ->
+                sendEmail(
+                    email,
+                    emailNotificationPersonalisation,
+                    referenceId,
+                    callback)).collect(Collectors.toList());
     }
 
     protected String sendEmail(
