@@ -27,6 +27,7 @@ public class Direction {
         DirectionTag tag,
         List<IdValue<PreviousDates>> previousDates
     ) {
+        requireNonNull(explanation);
         requireNonNull(parties);
         requireNonNull(dateDue);
         requireNonNull(dateSent);
