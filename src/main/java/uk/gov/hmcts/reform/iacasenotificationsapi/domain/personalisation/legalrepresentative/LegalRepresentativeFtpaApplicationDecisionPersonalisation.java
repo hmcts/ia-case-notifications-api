@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
@@ -18,12 +20,17 @@ public class LegalRepresentativeFtpaApplicationDecisionPersonalisation  implemen
 
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     private final PersonalisationProvider personalisationProvider;
+    private final CustomerServicesProvider customerServicesProvider;
 
 
     public LegalRepresentativeFtpaApplicationDecisionPersonalisation(
-        GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration, PersonalisationProvider personalisationProvider) {
+        GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
+        PersonalisationProvider personalisationProvider,
+        CustomerServicesProvider customerServicesProvider
+    ) {
         this.govNotifyTemplateIdConfiguration = govNotifyTemplateIdConfiguration;
         this.personalisationProvider = personalisationProvider;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -46,6 +53,12 @@ public class LegalRepresentativeFtpaApplicationDecisionPersonalisation  implemen
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return this.personalisationProvider.getFtpaDecisionPersonalisation(asylumCase);
+
+        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(personalisationProvider.getFtpaDecisionPersonalisation(asylumCase));
+
+        return listCaseFields.build();
     }
 }

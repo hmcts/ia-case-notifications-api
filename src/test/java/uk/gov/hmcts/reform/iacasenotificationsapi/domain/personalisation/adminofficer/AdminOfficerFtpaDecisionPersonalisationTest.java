@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaAppellantDecisionOutcomeType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
@@ -23,6 +24,7 @@ public class AdminOfficerFtpaDecisionPersonalisationTest {
     @Mock AsylumCase asylumCase;
     @Mock PersonalisationProvider personalisationProvider;
     @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
     private String adminOfficeEmailAddress = "some-email@example.com";
@@ -31,17 +33,24 @@ public class AdminOfficerFtpaDecisionPersonalisationTest {
     private String legalRepReferenceNumber = "someLegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-
     private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
+    private String iaExUiFrontendUrl = "http://somefrontendurl";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "customer.services@example.com";
 
     private AdminOfficerFtpaDecisionPersonalisation adminOfficerFtpaDecisionPersonalisation;
 
     @Before
     public void setup() {
+
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+
         adminOfficerFtpaDecisionPersonalisation = new AdminOfficerFtpaDecisionPersonalisation(
             govNotifyTemplateIdConfiguration,
             adminOfficeEmailAddress,
-            personalisationProvider
+            personalisationProvider,
+            customerServicesProvider
         );
     }
 
@@ -63,10 +72,13 @@ public class AdminOfficerFtpaDecisionPersonalisationTest {
         Map<String, String> personalisation = adminOfficerFtpaDecisionPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeRefNumber"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
@@ -78,7 +90,7 @@ public class AdminOfficerFtpaDecisionPersonalisationTest {
             .put("appellantFamilyName", appellantFamilyName)
             .put("homeOfficeRefNumber", homeOfficeRefNumber)
             .put("legalRepReferenceNumber", legalRepReferenceNumber)
+            .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
     }
-
 }

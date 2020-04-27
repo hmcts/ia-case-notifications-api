@@ -1,14 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
@@ -17,16 +19,25 @@ public class HomeOfficeFtpaApplicationDecisionPersonalisation implements EmailNo
 
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     private final PersonalisationProvider personalisationProvider;
-    private final String homeOfficeEmailAddress;
-
+    private final String homeOfficeEmailAddressFtpaGranted;
+    private final String homeOfficeEmailAddressFtpaRefused;
+    private EmailAddressFinder emailAddressFinder;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeFtpaApplicationDecisionPersonalisation(
         GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
         PersonalisationProvider personalisationProvider,
-        @Value("${allowedAppealHomeOfficeEmailAddress}") String homeOfficeEmailAddress) {
+        @Value("${allowedAppealHomeOfficeEmailAddress}") String homeOfficeEmailAddressFtpaGranted,
+        @Value("${dismissedAppealHomeOfficeEmailAddress}") String homeOfficeEmailAddressFtpaRefused,
+        EmailAddressFinder emailAddressFinder,
+        CustomerServicesProvider customerServicesProvider
+    ) {
         this.govNotifyTemplateIdConfiguration = govNotifyTemplateIdConfiguration;
         this.personalisationProvider = personalisationProvider;
-        this.homeOfficeEmailAddress = homeOfficeEmailAddress;
+        this.homeOfficeEmailAddressFtpaGranted = homeOfficeEmailAddressFtpaGranted;
+        this.homeOfficeEmailAddressFtpaRefused = homeOfficeEmailAddressFtpaRefused;
+        this.emailAddressFinder = emailAddressFinder;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -37,7 +48,15 @@ public class HomeOfficeFtpaApplicationDecisionPersonalisation implements EmailNo
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(homeOfficeEmailAddress);
+
+        if (getFtpaApplicationDecision(asylumCase).equals(FtpaAppellantDecisionOutcomeType.FTPA_GRANTED)
+            || getFtpaApplicationDecision(asylumCase).equals(FtpaAppellantDecisionOutcomeType.FTPA_PARTIALLY_GRANTED)) {
+            return Collections.singleton(homeOfficeEmailAddressFtpaGranted);
+        } else if (getFtpaApplicationDecision(asylumCase).equals(FtpaAppellantDecisionOutcomeType.FTPA_REFUSED)) {
+            return Collections.singleton(homeOfficeEmailAddressFtpaRefused);
+        } else {
+            return Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
+        }
     }
 
     @Override
@@ -47,6 +66,18 @@ public class HomeOfficeFtpaApplicationDecisionPersonalisation implements EmailNo
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return this.personalisationProvider.getFtpaDecisionPersonalisation(asylumCase);
+
+        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(personalisationProvider.getFtpaDecisionPersonalisation(asylumCase));
+
+        return listCaseFields.build();
+    }
+
+    protected FtpaAppellantDecisionOutcomeType getFtpaApplicationDecision(AsylumCase asylumCase) {
+        return asylumCase
+            .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)
+            .orElseThrow(() -> new IllegalStateException("ftpaApplicationDecision is not present"));
     }
 }

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
@@ -21,6 +22,7 @@ public class LegalRepresentativeFtpaAppellantDecisionPersonalisationTest {
     @Mock AsylumCase asylumCase;
     @Mock PersonalisationProvider personalisationProvider;
     @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
     private String appealReferenceNumber = "someReferenceNumber";
@@ -28,16 +30,22 @@ public class LegalRepresentativeFtpaAppellantDecisionPersonalisationTest {
     private String legalRepReferenceNumber = "someLegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-
     private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "customer.services@example.com";
 
     private LegalRepresentativeFtpaApplicationDecisionPersonalisation legalRepresentativeFtpaApplicationDecisionPersonalisation;
 
     @Before
     public void setup() {
+
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+
         legalRepresentativeFtpaApplicationDecisionPersonalisation = new LegalRepresentativeFtpaApplicationDecisionPersonalisation(
             govNotifyTemplateIdConfiguration,
-            personalisationProvider
+            personalisationProvider,
+            customerServicesProvider
         );
     }
 
@@ -63,6 +71,8 @@ public class LegalRepresentativeFtpaAppellantDecisionPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeRefNumber"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

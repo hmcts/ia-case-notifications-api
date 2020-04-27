@@ -252,5 +252,6 @@ public class PersonalisationProviderTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 }

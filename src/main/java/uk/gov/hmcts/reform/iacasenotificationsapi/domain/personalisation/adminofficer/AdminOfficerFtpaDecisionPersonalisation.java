@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +10,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaAppellantDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
@@ -19,14 +21,18 @@ public class AdminOfficerFtpaDecisionPersonalisation implements EmailNotificatio
     private final GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     private final String reviewHearingRequirementsAdminOfficerEmailAddress;
     private final PersonalisationProvider personalisationProvider;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public AdminOfficerFtpaDecisionPersonalisation(
         GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration,
         @Value("${reviewHearingRequirementsAdminOfficerEmailAddress}") String reviewHearingRequirementsAdminOfficerEmailAddress,
-        PersonalisationProvider personalisationProvider) {
+        PersonalisationProvider personalisationProvider,
+        CustomerServicesProvider customerServicesProvider
+    ) {
         this.govNotifyTemplateIdConfiguration = govNotifyTemplateIdConfiguration;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = reviewHearingRequirementsAdminOfficerEmailAddress;
         this.personalisationProvider = personalisationProvider;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -48,7 +54,13 @@ public class AdminOfficerFtpaDecisionPersonalisation implements EmailNotificatio
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return this.personalisationProvider.getFtpaDecisionPersonalisation(asylumCase);
+
+        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(personalisationProvider.getFtpaDecisionPersonalisation(asylumCase));
+
+        return listCaseFields.build();
     }
 
     public FtpaAppellantDecisionOutcomeType getFtpaApplicationDecision(AsylumCase asylumCase) {

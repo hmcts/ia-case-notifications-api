@@ -228,20 +228,20 @@ govnotify:
       caseOfficer:
         email: 89540f93-a31b-4803-a83e-35cacd0c2415
 
-    applicationGrantedApplicant: 565437ef-ab10-4c1a-bf1f-de7306662906
-    applicationGrantedOtherParty: fe630b90-57c1-4b24-9075-9f6f5febc5b5
-    applicationGrantedAdmin: 09044cb9-28b8-4a8e-ad39-77238ba93e9f
-    applicationPartiallyGrantedApplicant: 7a5603de-4b0b-422e-8c5b-79452f3d10dd
-    applicationPartiallyGrantedOtherParty: 49f0f66e-8d90-4ae8-b127-84127c4610ea
-    applicationPartiallyGrantedAdmin: 49227a17-88f6-4f74-a307-20247d7436be
-    applicationNotAdmittedApplicant: 89416836-ea29-4174-819a-1ba20124ae3f
-    applicationNotAdmittedOtherParty: 35fb9871-1607-4bbc-8c4e-7a33988f2107
-    applicationRefusedApplicant: ab6b3c49-7f7e-407a-b46d-8dda10e33803
-    applicationRefusedOtherParty: 59ec29bf-5d40-4a97-bd54-cf7262b65185
+    applicationGrantedApplicant: a637c520-6ebf-412b-b9dd-79f86553a0c1
+    applicationGrantedOtherParty: c9673303-5a65-4173-8c63-404976d57a33
+    applicationGrantedAdmin: 905a55a9-37bc-4234-b9fa-70e64c237ace
+    applicationPartiallyGrantedApplicant: ce305a58-9bcf-4d69-bcbd-f79077460821
+    applicationPartiallyGrantedOtherParty: cccd2ba7-5b00-48ee-a66e-36619583fea9
+    applicationPartiallyGrantedAdmin: 0bedc186-fdf8-4c27-a153-b26a2a006e5e
+    applicationNotAdmittedApplicant: fa6bb076-b890-4e8e-979c-5ff134d10616
+    applicationNotAdmittedOtherParty: 176b2b70-96fe-4f5f-822f-5e2aedbccee8
+    applicationRefusedApplicant: af83c9e6-956d-4719-977e-c318cfbe2060
+    applicationRefusedOtherParty: 26e7a6e6-4aa6-4ec6-ab26-ccdf33ccb8b0
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
-iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://localhost:3002/}
+iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://manage-case.platform.hmcts.net/}
 iaAipFrontendUrl: ${IA_AIP_FRONTEND_URL:https://localhost:3000/}
 
 tsvStringsFileLocation: strings.tsv

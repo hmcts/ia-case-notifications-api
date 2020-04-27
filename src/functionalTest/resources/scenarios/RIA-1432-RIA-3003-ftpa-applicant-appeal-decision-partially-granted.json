@@ -1,5 +1,5 @@
 {
-  "description": "RIA-1432 FTPA Applicant Application Decision Partially Granted",
+  "description": "RIA-1432-RIA-3003 FTPA Applicant Application Decision Partially Granted",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -50,7 +50,10 @@
           "PA/12345/2019",
           "A1234567",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       },
       {
@@ -61,7 +64,10 @@
           "PA/12345/2019",
           "A1234567",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       },
       {
@@ -72,7 +78,10 @@
           "PA/12345/2019",
           "A1234567",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]

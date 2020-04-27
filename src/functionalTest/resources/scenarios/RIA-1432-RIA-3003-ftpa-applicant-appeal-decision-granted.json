@@ -1,19 +1,19 @@
 {
-  "description": "RIA-1432 FTPA Other Party Application Decision Partially Granted",
+  "description": "RIA-1432-RIA-3003 FTPA Applicant Application Decision Granted",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1007,
+      "id": 1001,
       "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ftpaAppellantDecisionOutcomeType": "partiallyGranted",
-          "ftpaApplicantType": "respondent",
-          "ftpaAppellantSubmitted": "No",
-          "ftpaRespondentSubmitted": "Yes",
+          "ftpaAppellantDecisionOutcomeType": "granted",
+          "ftpaApplicantType": "appellant",
+          "ftpaAppellantSubmitted": "Yes",
+          "ftpaRespondentSubmitted": "No",
           "notificationsSent": []
         }
       }
@@ -27,15 +27,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1007_FTPA_APPLICATION_DECISION_HOME_OFFICE",
+            "id": "1001_FTPA_APPLICATION_DECISION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1007_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
+            "id": "1001_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1007_FTPA_APPLICATION_DECISION_ADMIN_OFFICER",
+            "id": "1001_FTPA_APPLICATION_DECISION_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -43,36 +43,45 @@
     },
     "notifications": [
       {
-        "reference": "1007_FTPA_APPLICATION_DECISION_HOME_OFFICE",
+        "reference": "1001_FTPA_APPLICATION_DECISION_HOME_OFFICE",
         "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       },
       {
-        "reference": "1007_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
+        "reference": "1001_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       },
       {
-        "reference": "1007_FTPA_APPLICATION_DECISION_ADMIN_OFFICER",
+        "reference": "1001_FTPA_APPLICATION_DECISION_ADMIN_OFFICER",
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]
