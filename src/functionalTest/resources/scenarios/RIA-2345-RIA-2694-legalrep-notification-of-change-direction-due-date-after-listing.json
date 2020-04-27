@@ -1,15 +1,16 @@
 {
-  "description": "RIA-2345-RIA-2694 Send legal rep notification of change direction due date",
+  "description": "RIA-2345-RIA-2694 Send legal rep notification of change direction due date (after listing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
       "id": 2345,
       "eventId": "changeDirectionDueDate",
-      "state": "submitHearingRequirements",
+      "state": "finalBundling",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "directionEditExplanation": "Please submit your hearing requirements",
           "directionEditDateDue": "{$TODAY+5}",
@@ -25,6 +26,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "listCaseHearingCentre": "taylorHouse",
         "ariaListingReference": "LP/12345/2019",
         "directionEditExplanation": "Please submit your hearing requirements",
         "directionEditDateDue": "{$TODAY+5}",

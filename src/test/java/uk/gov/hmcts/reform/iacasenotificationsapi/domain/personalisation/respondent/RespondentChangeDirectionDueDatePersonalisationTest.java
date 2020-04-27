@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -30,8 +32,10 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private String beforeListingTemplateId = "beforeListingTemplateId";
+    private String afterListingTemplateId = "afterListingTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
+    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
     private String homeOfficeBhamEmailAddress = "ho-birmingham@example.com";
@@ -49,7 +53,8 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     public void setUp() {
 
         respondentChangeDirectionDueDatePersonalisation = new RespondentChangeDirectionDueDatePersonalisation(
-            templateId,
+            beforeListingTemplateId,
+            afterListingTemplateId,
             iaExUiFrontendUrl,
             personalisationProvider,
             homeOfficeApcEmailAddress,
@@ -61,8 +66,10 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
 
     @Test
     public void should_return_the_given_template_id() {
+        assertEquals(beforeListingTemplateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
 
-        assertEquals(templateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId());
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        assertEquals(afterListingTemplateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -128,5 +135,12 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
             .put("customerServicesTelephone", customerServicesTelephone)
             .put("customerServicesEmail", customerServicesEmail)
             .build();
+    }
+
+    @Test
+    public void should_return_false_if_appeal_not_yet_listed() {
+        assertFalse(respondentChangeDirectionDueDatePersonalisation.isAppealListed(asylumCase));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        assertTrue(respondentChangeDirectionDueDatePersonalisation.isAppealListed(asylumCase));
     }
 }

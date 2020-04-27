@@ -1,8 +1,8 @@
 {
-  "description": "RIA-2240-RIA-2694 Send legal rep notification of change direction due date",
+  "description": "RIA-2345-RIA-2694 Send legal rep notification of change direction due date (before listing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "Judge",
+    "credentials": "CaseOfficer",
     "input": {
       "id": 2345,
       "eventId": "changeDirectionDueDate",
@@ -10,7 +10,6 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ariaListingReference": "LP/12345/2019",
           "directionEditExplanation": "Please submit your hearing requirements",
           "directionEditDateDue": "{$TODAY+5}",
           "directionEditParties": "legalRepresentative",
@@ -25,7 +24,6 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "ariaListingReference": "LP/12345/2019",
         "directionEditExplanation": "Please submit your hearing requirements",
         "directionEditDateDue": "{$TODAY+5}",
         "directionEditParties": "legalRepresentative",
@@ -45,9 +43,9 @@
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2019",
           "CASE001",
           "Talha Awan",
+          "Please submit your hearing requirements",
           "{$TODAY+5|d MMM yyyy}",
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",

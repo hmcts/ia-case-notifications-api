@@ -1,8 +1,8 @@
 {
-  "description": "RIA-2345-RIA-2694 Send respondent notification of change direction due date after respondent review",
+  "description": "RIA-2240-RIA-2694 Send respondent notification of change direction due date after respondent review (after listing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "CaseOfficer",
+    "credentials": "Judge",
     "input": {
       "id": 2345,
       "eventId": "changeDirectionDueDate",
@@ -10,6 +10,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
           "currentCaseStateVisibleToHomeOfficeAll": "finalBundling",
           "directionEditExplanation": "Upload additional evidence",
           "directionEditDateDue": "{$TODAY+14}",
@@ -26,6 +28,8 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "listCaseHearingCentre": "taylorHouse",
+        "ariaListingReference": "LP/12345/2019",
         "directionEditExplanation": "Upload additional evidence",
         "directionEditDateDue": "{$TODAY+14}",
         "directionEditParties": "respondent",
@@ -49,10 +53,10 @@
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "A1234567",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
-          "Upload additional evidence",
           "{$TODAY+14|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
@@ -64,10 +68,10 @@
         "subject": "Immigration and Asylum appeal: revised direction",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "CASE001",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
-          "Upload additional evidence",
           "{$TODAY+14|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"

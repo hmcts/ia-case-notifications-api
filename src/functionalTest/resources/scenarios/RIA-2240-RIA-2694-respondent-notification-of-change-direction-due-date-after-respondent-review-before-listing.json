@@ -1,12 +1,12 @@
 {
-  "description": "RIA-2240-RIA-2694 Send respondent notification of change direction due date after respondent review",
+  "description": "RIA-2240-RIA-2694 Send respondent notification of change direction due date after respondent review (before listing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
       "id": 2345,
       "eventId": "changeDirectionDueDate",
-      "state": "finalBundling",
+      "state": "submitHearingRequirements",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
