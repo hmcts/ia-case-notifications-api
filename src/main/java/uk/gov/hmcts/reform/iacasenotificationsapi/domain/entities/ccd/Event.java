@@ -45,6 +45,7 @@ public enum Event {
     CHANGE_HEARING_CENTRE("changeHearingCentre"),
     APPLY_FOR_FTPA_APPELLANT("applyForFTPAAppellant"),
     APPLY_FOR_FTPA_RESPONDENT("applyForFTPARespondent"),
+    SEND_DIRECTION_WITH_QUESTIONS("sendDirectionWithQuestions"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

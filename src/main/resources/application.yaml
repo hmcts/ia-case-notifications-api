@@ -216,6 +216,10 @@ govnotify:
         email: 90630010-f2ed-4a97-a307-50291b017ed1
       otherHomeOffice:
         email: 9bcae84a-53e4-4971-a778-906506f49527
+    requestClarifyingQuestions:
+      appellant:
+        email: 500c6a6f-7d4f-4833-86c4-a07b43bbe717
+        sms: bcfbd5a8-fc88-4c7f-ad16-e28d62dfbe73
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -291,6 +295,7 @@ security:
       - "updateHearingAdjustments"
       - "removeAppealFromOnline"
       - "changeHearingCentre"
+      - "sendDirectionWithQuestions"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
