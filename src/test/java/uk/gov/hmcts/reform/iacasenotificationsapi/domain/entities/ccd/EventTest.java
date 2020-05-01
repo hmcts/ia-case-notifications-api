@@ -44,7 +44,7 @@ public class EventTest {
         assertEquals("requestReasonsForAppeal", Event.REQUEST_REASONS_FOR_APPEAL.toString());
         assertEquals("submitReasonsForAppeal", Event.SUBMIT_REASONS_FOR_APPEAL.toString());
         assertEquals("updateHearingAdjustments", Event.UPDATE_HEARING_ADJUSTMENTS.toString());
-        assertEquals("requestTimeExtension", Event.REQUEST_TIME_EXTENSION.toString());
+        assertEquals("submitTimeExtension", Event.SUBMIT_TIME_EXTENSION.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 

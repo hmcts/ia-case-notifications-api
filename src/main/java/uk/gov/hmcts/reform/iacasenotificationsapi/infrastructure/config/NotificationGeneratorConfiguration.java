@@ -628,22 +628,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("requestTimeExtensionAipNotificationGenerator")
-    public List<NotificationGenerator> requestTimeExtensionAipNotificationGenerator(
-        CaseOfficerRequestTimeExtensionPersonalisation caseOfficerRequestTimeExtensionPersonalisation,
-        AppellantRequestTimeExtensionPersonalisationEmail appellantRequestTimeExtensionPersonalisationEmail,
-        AppellantRequestTimeExtensionPersonalisationSms appellantRequestTimeExtensionPersonalisationSms,
+    @Bean("submitTimeExtensionAipNotificationGenerator")
+    public List<NotificationGenerator> submitTimeExtensionAipNotificationGenerator(
+        CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation,
+        AppellantSubmitTimeExtensionPersonalisationEmail appellantSubmitTimeExtensionPersonalisationEmail,
+        AppellantSubmitTimeExtensionPersonalisationSms appellantSubmitTimeExtensionPersonalisationSms,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(caseOfficerRequestTimeExtensionPersonalisation, appellantRequestTimeExtensionPersonalisationEmail),
+                newArrayList(caseOfficerSubmitTimeExtensionPersonalisation, appellantSubmitTimeExtensionPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                newArrayList(appellantRequestTimeExtensionPersonalisationSms),
+                newArrayList(appellantSubmitTimeExtensionPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )

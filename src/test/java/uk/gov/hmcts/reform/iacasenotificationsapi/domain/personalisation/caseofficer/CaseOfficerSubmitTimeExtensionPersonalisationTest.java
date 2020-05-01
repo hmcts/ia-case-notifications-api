@@ -22,7 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CaseOfficerRequestTimeExtensionPersonalisationTest {
+public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -38,7 +38,7 @@ public class CaseOfficerRequestTimeExtensionPersonalisationTest {
     private String iaCcdFrontendUrl = "http://localhost";
 
 
-    private CaseOfficerRequestTimeExtensionPersonalisation caseOfficerRequestTimeExtensionPersonalisation;
+    private CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation;
 
     @Before
     public void setUp() {
@@ -48,8 +48,8 @@ public class CaseOfficerRequestTimeExtensionPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenName));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
-        caseOfficerRequestTimeExtensionPersonalisation =
-            new CaseOfficerRequestTimeExtensionPersonalisation(
+        caseOfficerSubmitTimeExtensionPersonalisation =
+            new CaseOfficerSubmitTimeExtensionPersonalisation(
                 templateId,
                 iaCcdFrontendUrl,
                 emailAddressFinder
@@ -58,24 +58,24 @@ public class CaseOfficerRequestTimeExtensionPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, caseOfficerRequestTimeExtensionPersonalisation.getTemplateId());
+        assertEquals(templateId, caseOfficerSubmitTimeExtensionPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_REQUEST_TIME_EXTENSION_CASE_OFFICER", caseOfficerRequestTimeExtensionPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_SUBMIT_TIME_EXTENSION_CASE_OFFICER", caseOfficerSubmitTimeExtensionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(hearingCentreEmailAddress, caseOfficerRequestTimeExtensionPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
+        assertTrue(hearingCentreEmailAddress, caseOfficerSubmitTimeExtensionPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
     }
 
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerRequestTimeExtensionPersonalisation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase cannot be null");
     }
@@ -92,7 +92,7 @@ public class CaseOfficerRequestTimeExtensionPersonalisationTest {
                 .put("Hyperlink to service", iaCcdFrontendUrl)
                 .build();
 
-        Map<String, String> actualPersonalisation = caseOfficerRequestTimeExtensionPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> actualPersonalisation = caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(actualPersonalisation).isEqualTo(expectedPersonalisation);
     }
@@ -113,7 +113,7 @@ public class CaseOfficerRequestTimeExtensionPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
 
-        Map<String, String> actualPersonalisation = caseOfficerRequestTimeExtensionPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> actualPersonalisation = caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(actualPersonalisation).isEqualTo(expectedPersonalisation);
     }

@@ -85,9 +85,9 @@ govnotify.template.submitReasonsForAppeal.email: cd10866a-094d-43aa-bdf5-1e20fda
 govnotify.template.submitReasonsForAppeal.sms: d7b0ef96-ea54-46f1-a605-6e3855b09b91
 govnotify.template.submitReasonsForAppealCaseOfficer: 2e3d6dfb-409d-4b45-a50b-0703c47341ea
 
-govnotify.template.requestTimeExtension.caseOfficer.email: 89540f93-a31b-4803-a83e-35cacd0c2415
-govnotify.template.requestTimeExtension.appellant.email: eab37735-cba7-4b4b-96de-60ab33d96066
-govnotify.template.requestTimeExtension.appellant.sms: 9f0dce67-f8ef-46aa-a2a5-edb7fb19b6fd
+govnotify.template.submitTimeExtension.caseOfficer.email: 89540f93-a31b-4803-a83e-35cacd0c2415
+govnotify.template.submitTimeExtension.appellant.email: eab37735-cba7-4b4b-96de-60ab33d96066
+govnotify.template.submitTimeExtension.appellant.sms: 9f0dce67-f8ef-46aa-a2a5-edb7fb19b6fd
 
 govnotify.baseUrl: "https://api.notifications.service.gov.uk"
 
@@ -127,6 +127,7 @@ security:
       - "editAppeal"
       - "submitAppeal"
       - "submitReasonsForAppeal"
+      - "submitTimeExtension"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"

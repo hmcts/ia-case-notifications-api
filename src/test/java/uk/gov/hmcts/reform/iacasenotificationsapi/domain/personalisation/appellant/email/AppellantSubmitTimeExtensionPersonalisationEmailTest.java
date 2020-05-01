@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AppellantRequestTimeExtensionPersonalisationEmailTest {
+public class AppellantSubmitTimeExtensionPersonalisationEmailTest {
 
     @Mock AsylumCase asylumCase;
     @Mock RecipientsFinder recipientsFinder;
@@ -40,7 +40,7 @@ public class AppellantRequestTimeExtensionPersonalisationEmailTest {
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
 
-    private AppellantRequestTimeExtensionPersonalisationEmail appellantRequestTimeExtensionPersonalisationEmail;
+    private AppellantSubmitTimeExtensionPersonalisationEmail appellantSubmitTimeExtensionPersonalisationEmail;
 
     @Before
     public void setup() {
@@ -50,7 +50,7 @@ public class AppellantRequestTimeExtensionPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
 
-        appellantRequestTimeExtensionPersonalisationEmail = new AppellantRequestTimeExtensionPersonalisationEmail(
+        appellantSubmitTimeExtensionPersonalisationEmail = new AppellantSubmitTimeExtensionPersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
             recipientsFinder);
@@ -58,19 +58,19 @@ public class AppellantRequestTimeExtensionPersonalisationEmailTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantRequestTimeExtensionPersonalisationEmail.getTemplateId());
+        assertEquals(emailTemplateId, appellantSubmitTimeExtensionPersonalisationEmail.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_REQUEST_TIME_EXTENSION_APPELLANT_AIP_EMAIL", appellantRequestTimeExtensionPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_EMAIL", appellantSubmitTimeExtensionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
-        assertTrue(appellantRequestTimeExtensionPersonalisationEmail.getRecipientsList(asylumCase).contains(mockedAppellantEmailAddress));
+        assertTrue(appellantSubmitTimeExtensionPersonalisationEmail.getRecipientsList(asylumCase).contains(mockedAppellantEmailAddress));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class AppellantRequestTimeExtensionPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantRequestTimeExtensionPersonalisationEmail.getRecipientsList(null))
+        assertThatThrownBy(() -> appellantSubmitTimeExtensionPersonalisationEmail.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -87,7 +87,7 @@ public class AppellantRequestTimeExtensionPersonalisationEmailTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
-        Map<String, String> personalisation = appellantRequestTimeExtensionPersonalisationEmail.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = appellantSubmitTimeExtensionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
@@ -109,7 +109,7 @@ public class AppellantRequestTimeExtensionPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
 
-        Map<String, String> personalisation = appellantRequestTimeExtensionPersonalisationEmail.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = appellantSubmitTimeExtensionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals("", personalisation.get("HO Ref Number"));

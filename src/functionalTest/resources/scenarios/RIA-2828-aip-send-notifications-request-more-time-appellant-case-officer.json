@@ -5,7 +5,7 @@
     "credentials": "Citizen",
     "input": {
       "id": 1010,
-      "eventId": "requestTimeExtension",
+      "eventId": "submitTimeExtension",
       "state": "awaitingReasonsForAppeal",
       "caseData": {
         "template": "aip-minimal-appeal-submitted.json",
@@ -51,15 +51,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "1010_REQUEST_TIME_EXTENSION_CASE_OFFICER",
+            "id": "1010_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1010_REQUEST_TIME_EXTENSION_CASE_OFFICER_APPELLANT_AIP_EMAIL",
+            "id": "1010_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1010_REQUEST_TIME_EXTENSION_CASE_OFFICER_APPELLANT_AIP_SMS",
+            "id": "1010_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -67,17 +67,17 @@
     },
     "notifications": [
       {
-        "reference": "1010_REQUEST_TIME_EXTENSION_CASE_OFFICER",
-        "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
+        "reference": "1010_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
+        "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: Request for more time submitted",
         "body": [
-          "A1234567",
+          "PA/12345/2019",
           "Pablo Jimenez",
           "{$iaCcdFrontendUrl}"
         ]
       },
       {
-        "reference": "1010_REQUEST_TIME_EXTENSION_CASE_OFFICER_APPELLANT_AIP_EMAIL",
+        "reference": "1010_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Your request for more time has been sent",
         "body": [
@@ -88,7 +88,7 @@
         ]
       },
       {
-        "reference": "1010_REQUEST_TIME_EXTENSION_CASE_OFFICER_APPELLANT_AIP_SMS",
+        "reference": "1010_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

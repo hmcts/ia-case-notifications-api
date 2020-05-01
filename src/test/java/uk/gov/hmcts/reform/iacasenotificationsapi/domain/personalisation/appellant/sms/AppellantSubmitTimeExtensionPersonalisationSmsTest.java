@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AppellantRequestTimeExtensionPersonalisationSmsTest {
+public class AppellantSubmitTimeExtensionPersonalisationSmsTest {
 
     @Mock AsylumCase asylumCase;
     @Mock RecipientsFinder recipientsFinder;
@@ -36,14 +36,14 @@ public class AppellantRequestTimeExtensionPersonalisationSmsTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
 
-    private AppellantRequestTimeExtensionPersonalisationSms appellantRequestTimeExtensionPersonalisationSms;
+    private AppellantSubmitTimeExtensionPersonalisationSms appellantSubmitTimeExtensionPersonalisationSms;
 
     @Before
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
 
-        appellantRequestTimeExtensionPersonalisationSms = new AppellantRequestTimeExtensionPersonalisationSms(
+        appellantSubmitTimeExtensionPersonalisationSms = new AppellantSubmitTimeExtensionPersonalisationSms(
             emailTemplateId,
             iaAipFrontendUrl,
             recipientsFinder
@@ -52,12 +52,12 @@ public class AppellantRequestTimeExtensionPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantRequestTimeExtensionPersonalisationSms.getTemplateId());
+        assertEquals(emailTemplateId, appellantSubmitTimeExtensionPersonalisationSms.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_REQUEST_TIME_EXTENSION_APPELLANT_AIP_SMS", appellantRequestTimeExtensionPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_SMS", appellantSubmitTimeExtensionPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class AppellantRequestTimeExtensionPersonalisationSmsTest {
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS)).thenCallRealMethod();
         when(asylumCase.read(SUBSCRIPTIONS)).thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
 
-        assertTrue(appellantRequestTimeExtensionPersonalisationSms.getRecipientsList(asylumCase).contains(mockedAppellantMobilePhone));
+        assertTrue(appellantSubmitTimeExtensionPersonalisationSms.getRecipientsList(asylumCase).contains(mockedAppellantMobilePhone));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class AppellantRequestTimeExtensionPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantRequestTimeExtensionPersonalisationSms.getRecipientsList(null))
+        assertThatThrownBy(() -> appellantSubmitTimeExtensionPersonalisationSms.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -90,7 +90,7 @@ public class AppellantRequestTimeExtensionPersonalisationSmsTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
-        Map<String, String> personalisation = appellantRequestTimeExtensionPersonalisationSms.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = appellantSubmitTimeExtensionPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
@@ -102,7 +102,7 @@ public class AppellantRequestTimeExtensionPersonalisationSmsTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
-        Map<String, String> personalisation = appellantRequestTimeExtensionPersonalisationSms.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = appellantSubmitTimeExtensionPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));

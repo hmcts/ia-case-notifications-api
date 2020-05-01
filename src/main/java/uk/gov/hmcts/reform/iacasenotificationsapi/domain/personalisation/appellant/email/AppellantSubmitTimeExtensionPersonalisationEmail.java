@@ -14,25 +14,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class AppellantRequestTimeExtensionPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AppellantSubmitTimeExtensionPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String requestTimeExtensionAppellantEmailTemplateId;
+    private final String submitTimeExtensionAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
 
-    public AppellantRequestTimeExtensionPersonalisationEmail(
-        @Value("${govnotify.template.requestTimeExtension.appellant.email}") String requestTimeExtensionAppellantEmailTemplateId,
+    public AppellantSubmitTimeExtensionPersonalisationEmail(
+        @Value("${govnotify.template.submitTimeExtension.appellant.email}") String submitTimeExtensionAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder
     ) {
-        this.requestTimeExtensionAppellantEmailTemplateId = requestTimeExtensionAppellantEmailTemplateId;
+        this.submitTimeExtensionAppellantEmailTemplateId = submitTimeExtensionAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return requestTimeExtensionAppellantEmailTemplateId;
+        return submitTimeExtensionAppellantEmailTemplateId;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AppellantRequestTimeExtensionPersonalisationEmail implements EmailN
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REQUEST_TIME_EXTENSION_APPELLANT_AIP_EMAIL";
+        return caseId + "_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_EMAIL";
     }
 
     @Override

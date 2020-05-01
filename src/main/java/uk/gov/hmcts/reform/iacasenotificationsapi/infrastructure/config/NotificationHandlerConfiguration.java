@@ -573,8 +573,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestTimeExtensionAipNotificationHandler(
-        @Qualifier("requestTimeExtensionAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> submitTimeExtensionAipNotificationHandler(
+        @Qualifier("submitTimeExtensionAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -585,7 +585,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == AIP).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_TIME_EXTENSION
+                    && callback.getEvent() == Event.SUBMIT_TIME_EXTENSION
                     && isAipJourney;
             }, notificationGenerators
         );

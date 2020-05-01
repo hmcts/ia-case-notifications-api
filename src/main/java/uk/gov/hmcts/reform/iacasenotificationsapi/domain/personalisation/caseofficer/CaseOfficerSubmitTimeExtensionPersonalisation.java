@@ -17,25 +17,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
-public class CaseOfficerRequestTimeExtensionPersonalisation implements EmailNotificationPersonalisation {
+public class CaseOfficerSubmitTimeExtensionPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String requestTimeExtensionCaseOfficerTemplateId;
+    private final String submitTimeExtensionCaseOfficerTemplateId;
     private final String iaCcdFrontendUrl;
     private final EmailAddressFinder emailAddressFinder;
 
-    public CaseOfficerRequestTimeExtensionPersonalisation(
-        @NotNull(message = "reasonsForAppealSubmittedCaseOfficerTemplateId cannot be null") @Value("${govnotify.template.requestTimeExtension.caseOfficer.email}") String requestTimeExtensionCaseOfficerTemplateId,
+    public CaseOfficerSubmitTimeExtensionPersonalisation(
+        @NotNull(message = "reasonsForAppealSubmittedCaseOfficerTemplateId cannot be null") @Value("${govnotify.template.submitTimeExtension.caseOfficer.email}") String submitTimeExtensionCaseOfficerTemplateId,
         @Value("${iaCcdFrontendUrl}") String iaCcdFrontendUrl,
         EmailAddressFinder emailAddressFinder
     ) {
-        this.requestTimeExtensionCaseOfficerTemplateId = requestTimeExtensionCaseOfficerTemplateId;
+        this.submitTimeExtensionCaseOfficerTemplateId = submitTimeExtensionCaseOfficerTemplateId;
         this.iaCcdFrontendUrl = iaCcdFrontendUrl;
         this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return requestTimeExtensionCaseOfficerTemplateId;
+        return submitTimeExtensionCaseOfficerTemplateId;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CaseOfficerRequestTimeExtensionPersonalisation implements EmailNoti
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REQUEST_TIME_EXTENSION_CASE_OFFICER";
+        return caseId + "_SUBMIT_TIME_EXTENSION_CASE_OFFICER";
     }
 
     @Override

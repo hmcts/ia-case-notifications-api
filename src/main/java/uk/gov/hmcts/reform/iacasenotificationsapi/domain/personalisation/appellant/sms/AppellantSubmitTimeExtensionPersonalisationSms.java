@@ -14,26 +14,26 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class AppellantRequestTimeExtensionPersonalisationSms implements SmsNotificationPersonalisation {
+public class AppellantSubmitTimeExtensionPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String requestTimeExtensionAppellantSmsTemplateId;
+    private final String submitTimeExtensionAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
 
 
-    public AppellantRequestTimeExtensionPersonalisationSms(
-        @Value("${govnotify.template.requestTimeExtension.appellant.sms}") String requestTimeExtensionAppellantSmsTemplateId,
+    public AppellantSubmitTimeExtensionPersonalisationSms(
+        @Value("${govnotify.template.submitTimeExtension.appellant.sms}") String submitTimeExtensionAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder
     ) {
-        this.requestTimeExtensionAppellantSmsTemplateId = requestTimeExtensionAppellantSmsTemplateId;
+        this.submitTimeExtensionAppellantSmsTemplateId = submitTimeExtensionAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return requestTimeExtensionAppellantSmsTemplateId;
+        return submitTimeExtensionAppellantSmsTemplateId;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AppellantRequestTimeExtensionPersonalisationSms implements SmsNotif
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REQUEST_TIME_EXTENSION_APPELLANT_AIP_SMS";
+        return caseId + "_SUBMIT_TIME_EXTENSION_APPELLANT_AIP_SMS";
     }
 
     @Override
