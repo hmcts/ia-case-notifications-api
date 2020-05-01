@@ -242,6 +242,7 @@ security:
       - "editAppeal"
       - "submitAppeal"
       - "submitReasonsForAppeal"
+      - "submitTimeExtension"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"

@@ -36,7 +36,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.END_APPEAL,
+                && callback.getEvent() == Event.END_APPEAL,
             notificationGenerators
 
         );
@@ -49,7 +49,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
+                && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
             notificationGenerators
         );
     }
@@ -71,8 +71,8 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                    && isRespondent;
+                       && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                       && isRespondent;
             },
             notificationGenerators
         );
@@ -95,8 +95,8 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                    && isLegalRepresentative;
+                       && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                       && isLegalRepresentative;
             },
             notificationGenerators
         );
@@ -109,7 +109,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.LIST_CASE,
+                && callback.getEvent() == Event.LIST_CASE,
             notificationGenerators
         );
     }
@@ -121,7 +121,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.ADD_APPEAL_RESPONSE,
+                && callback.getEvent() == Event.ADD_APPEAL_RESPONSE,
             notificationGenerators
         );
     }
@@ -133,7 +133,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS,
+                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS,
             notificationGenerators
         );
     }
@@ -145,7 +145,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE,
+                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE,
             notificationGenerators
         );
     }
@@ -163,8 +163,8 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == AIP).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
-                    && isAipJourney;
+                       && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
+                       && isAipJourney;
             }, notificationGenerators
         );
     }
@@ -182,8 +182,8 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == REP).orElse(true);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
-                    && isRepJourney;
+                       && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
+                       && isRepJourney;
             }, notificationGenerators
         );
     }
@@ -195,7 +195,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW,
+                && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW,
             notificationGenerators
         );
     }
@@ -219,9 +219,9 @@ public class NotificationHandlerConfiguration {
                     .map(outOfTime -> outOfTime == NO).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isAipJourney
-                    && isAppealOnTime;
+                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && isAipJourney
+                       && isAppealOnTime;
             }, notificationGenerators
         );
     }
@@ -234,8 +234,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && callback.getCaseDetails().getCaseData()
+                && callback.getEvent() == Event.SUBMIT_APPEAL
+                && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == REP).orElse(true),
             notificationGenerators
@@ -260,9 +260,9 @@ public class NotificationHandlerConfiguration {
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isAipJourney
-                    && isOutOfTimeAppeal;
+                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && isAipJourney
+                       && isOutOfTimeAppeal;
             }, notificationGenerators
         );
     }
@@ -274,7 +274,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_CASE,
+                && callback.getEvent() == Event.SUBMIT_CASE,
             notificationGenerators
         );
     }
@@ -286,7 +286,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE,
+                && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE,
             notificationGenerators
         );
     }
@@ -298,8 +298,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_REASONS_FOR_APPEAL
-                    && callback.getCaseDetails().getCaseData()
+                && callback.getEvent() == Event.REQUEST_REASONS_FOR_APPEAL
+                && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == AIP).orElse(false),
             notificationGenerators
@@ -313,8 +313,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_REASONS_FOR_APPEAL
-                    && callback.getCaseDetails().getCaseData()
+                && callback.getEvent() == Event.SUBMIT_REASONS_FOR_APPEAL
+                && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == AIP).orElse(false),
             notificationGenerators
@@ -328,7 +328,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_BUNDLE,
+                && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_BUNDLE,
             notificationGenerators
         );
     }
@@ -340,7 +340,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_CASE_BUILDING,
+                && callback.getEvent() == Event.REQUEST_CASE_BUILDING,
             notificationGenerators
         );
     }
@@ -358,8 +358,8 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DIRECTION
-                    && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT);
+                       && callback.getEvent() == Event.SEND_DIRECTION
+                       && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT);
             },
             notificationGenerators
         );
@@ -378,8 +378,8 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DIRECTION
-                    && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.LEGAL_REPRESENTATIVE);
+                       && callback.getEvent() == Event.SEND_DIRECTION
+                       && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.LEGAL_REPRESENTATIVE);
             },
             notificationGenerators
         );
@@ -400,8 +400,8 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.RECORD_APPLICATION
-                    && isApplicationRefused;
+                       && callback.getEvent() == Event.RECORD_APPLICATION
+                       && isApplicationRefused;
             },
             notificationGenerators
         );
@@ -414,7 +414,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_CASE_LISTING,
+                && callback.getEvent() == Event.EDIT_CASE_LISTING,
             notificationGenerators
         );
     }
@@ -426,7 +426,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE,
+                && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE,
             notificationGenerators
         );
     }
@@ -438,7 +438,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW,
+                && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW,
             notificationGenerators
         );
     }
@@ -450,7 +450,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.GENERATE_HEARING_BUNDLE,
+                && callback.getEvent() == Event.GENERATE_HEARING_BUNDLE,
             notificationGenerators
         );
     }
@@ -462,7 +462,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS,
+                && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS,
             notificationGenerators
         );
     }
@@ -474,7 +474,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
+                && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
             notificationGenerator
         );
     }
@@ -486,7 +486,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.LIST_CASE_WITHOUT_HEARING_REQUIREMENTS,
+                && callback.getEvent() == Event.LIST_CASE_WITHOUT_HEARING_REQUIREMENTS,
             notificationGenerator
         );
     }
@@ -498,7 +498,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE,
+                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE,
             notificationGenerator
         );
     }
@@ -510,7 +510,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
+                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
             notificationGenerator
         );
     }
@@ -522,7 +522,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE,
+                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE,
             notificationGenerator
         );
     }
@@ -534,7 +534,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
+                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
             notificationGenerator
         );
     }
@@ -546,7 +546,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
+                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
             notificationGenerator
         );
     }
@@ -568,7 +568,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPDATE_HEARING_ADJUSTMENTS,
+                && callback.getEvent() == Event.UPDATE_HEARING_ADJUSTMENTS,
             notificationGenerator
         );
     }
@@ -579,7 +579,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE,
+                && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE,
             notificationGenerators
         );
     }
@@ -590,7 +590,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.CHANGE_HEARING_CENTRE,
+                && callback.getEvent() == Event.CHANGE_HEARING_CENTRE,
             notificationGenerator
         );
     }
@@ -635,23 +635,23 @@ public class NotificationHandlerConfiguration {
 
                 final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions = asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
 
+                System.out.println(maybeTimeExtensions.get().size());
                 final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
                     .orElse(Collections.emptyList()).stream()
                     .filter(timeExtensionIdValue ->
                         currentState == timeExtensionIdValue.getValue().getState()
-                            && TimeExtensionStatus.GRANTED == timeExtensionIdValue.getValue().getStatus())
+                        && String.valueOf(maybeTimeExtensions.get().size()).equals(timeExtensionIdValue.getId())
+                        && TimeExtensionStatus.GRANTED == timeExtensionIdValue.getValue().getStatus())
                     .findFirst();
 
-                boolean isTimeExtensionGranted = false;
 
-                if (maybeTargetTimeExtension.isPresent()) {
-                    isTimeExtensionGranted = GRANTED == maybeTargetTimeExtension.get().getValue().getDecision();
-                }
+                System.out.println("called Approve");
+                System.out.println(maybeTargetTimeExtension.isPresent());
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
-                    && isAipJourney
-                    && isTimeExtensionGranted;
+                       && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
+                       && isAipJourney
+                       && maybeTargetTimeExtension.isPresent();
             }, notificationGenerators
         );
     }
@@ -677,19 +677,17 @@ public class NotificationHandlerConfiguration {
                     .orElse(Collections.emptyList()).stream()
                     .filter(timeExtensionIdValue ->
                         currentState == timeExtensionIdValue.getValue().getState()
-                            && TimeExtensionStatus.REFUSED == timeExtensionIdValue.getValue().getStatus())
+                        && String.valueOf(maybeTimeExtensions.get().size()).equals(timeExtensionIdValue.getId())
+                        && TimeExtensionStatus.REFUSED == timeExtensionIdValue.getValue().getStatus())
                     .findFirst();
 
-                boolean isTimeExtensionRefused = false;
-
-                if (maybeTargetTimeExtension.isPresent()) {
-                    isTimeExtensionRefused = REFUSED == maybeTargetTimeExtension.get().getValue().getDecision();
-                }
+                System.out.println("called Refuse");
+                System.out.println(maybeTargetTimeExtension.isPresent());
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
-                    && isAipJourney
-                    && isTimeExtensionRefused;
+                       && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
+                       && isAipJourney
+                       && maybeTargetTimeExtension.isPresent();
             }, notificationGenerators
         );
     }
