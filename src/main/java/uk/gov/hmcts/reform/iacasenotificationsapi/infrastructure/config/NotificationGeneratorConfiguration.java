@@ -716,4 +716,25 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("requestCmaRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
+        AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
+        AppellantRequestCmaRequirementsPersonalisationSms appellantRequestCmaRequirementsPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantRequestCmaRequirementsPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestCmaRequirementsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
