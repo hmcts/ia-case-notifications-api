@@ -2,27 +2,28 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.AsylumCaseCollectionForTest.someListOf;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.AsylumCaseForTest.anAsylumCase;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.UserDetailsForTest.UserDetailsForTestBuilder.userWith;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.AsylumCaseCollectionForTest.someListOf;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.AsylumCaseForTest.anAsylumCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.UserDetailsForTest.UserDetailsForTestBuilder.userWith;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.Test;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.PreSubmitCallbackResponseForTest;
 
 public class SendsDirectionTest extends SpringBootIntegrationTest {
 
@@ -33,14 +34,21 @@ public class SendsDirectionTest extends SpringBootIntegrationTest {
     public void sends_notification() {
 
         given.someLoggedIn(userWith()
-            .roles(newHashSet("caseworker-ia", "caseworker-ia-caseofficer")));
+            .roles(newHashSet("caseworker-ia", "caseworker-ia-caseofficer"))
+            .id("1")
+            .email("some-email@email.com")
+            .forename("Case")
+            .surname("Officer"));
 
         given.govNotifyWillHandleEmailNotificationAndReturnNotificationId(someNotificationId);
 
         PreSubmitCallbackResponseForTest response = iaCaseNotificationApiClient.aboutToSubmit(callback()
             .event(SEND_DIRECTION)
             .caseDetails(someCaseDetailsWith()
+                .id(1)
                 .state(APPEAL_SUBMITTED)
+                .createdDate(LocalDateTime.now())
+                .jurisdiction("IA")
                 .caseData(anAsylumCase()
                     .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
                     .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")

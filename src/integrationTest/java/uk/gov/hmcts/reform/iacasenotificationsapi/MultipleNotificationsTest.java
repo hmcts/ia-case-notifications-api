@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,8 +56,8 @@ public class MultipleNotificationsTest {
 
     private MockMvc mockMvc;
 
-    private static final String ABOUT_TO_START_PATH = "/asylum/ccdAboutToStart";
     private static final String ABOUT_TO_SUBMIT_PATH = "/asylum/ccdAboutToSubmit";
+    private static final org.slf4j.Logger LOG = getLogger(MultipleNotificationsTest.class);
 
     private List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
         Lists.newArrayList(
@@ -97,7 +98,7 @@ public class MultipleNotificationsTest {
 
     public void runTestScenario(String notificationId, Map.Entry<Event, String> eventWithSuffixPair) throws Exception {
 
-        log.info("Scenario eventId: {} expecting suffix: {}", eventWithSuffixPair.getKey(), eventWithSuffixPair.getValue());
+        LOG.info("Scenario eventId: {} expecting suffix: {}", eventWithSuffixPair.getKey(), eventWithSuffixPair.getValue());
 
         long caseDetailsId = 1L;
 
