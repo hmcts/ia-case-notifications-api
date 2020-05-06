@@ -218,6 +218,12 @@ govnotify:
         email: 90630010-f2ed-4a97-a307-50291b017ed1
       otherHomeOffice:
         email: 9bcae84a-53e4-4971-a778-906506f49527
+    submitCmaRequirements:
+      appellant:
+        email: 721252d6-13d3-4520-a9fb-51ea9a479614
+        sms: fb5987c6-78ad-4583-8123-f793a39bbe2f
+      caseOfficer:
+        email: 5bba5bcb-9da1-4e0b-aa48-7a94e14e1e9a
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -256,6 +262,7 @@ security:
       - "editAppeal"
       - "submitAppeal"
       - "submitReasonsForAppeal"
+      - "submitCmaRequirements"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -388,4 +395,5 @@ customerServices:
 appellantDaysToWait:
   afterSubmission: 28
   afterReasonsForAppeal: 14
+  afterCmaRequirements: 14
 
