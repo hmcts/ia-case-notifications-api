@@ -67,7 +67,7 @@
               "parties": "appellant",
               "dateDue": "{$TODAY+14}",
               "dateSent": "{$TODAY}",
-              "explanation": "You must now tell us why you think the Home Office decision to refuse your claim is wrong.",
+              "explanation": "An explanation of why the meeting was requested",
               "previousDates": []
             }
           }
