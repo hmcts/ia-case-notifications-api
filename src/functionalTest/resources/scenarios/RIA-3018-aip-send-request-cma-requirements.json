@@ -55,7 +55,7 @@
               "email": "{$TEST_CITIZEN_USERNAME}",
               "wantsEmail": "Yes",
               "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-              "wantsSms": "No"
+              "wantsSms": "Yes"
             }
           }
         ],
