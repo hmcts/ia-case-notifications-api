@@ -66,7 +66,7 @@
       {
         "reference": "1011_CMA_REQUIREMENTS_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
-        "subject": "Immigration and Asylum appeal: Reasons for Appeal submitted",
+        "subject": "Immigration and Asylum appeal: Case Management Appointment requirements submitted",
         "body": [
           "PA/12345/2019",
           "Pablo Jimenez",
@@ -76,7 +76,7 @@
       {
         "reference": "1011_SUBMIT_CMA_REQUIREMENTS_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "You told us why you think the Home Office is wrong",
+        "subject": "You sent your appointment needs",
         "body": [
           "PA/12345/2019",
           "A1234567",
