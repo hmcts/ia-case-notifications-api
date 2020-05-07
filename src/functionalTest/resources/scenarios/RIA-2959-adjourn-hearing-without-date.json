@@ -11,7 +11,8 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "adjournHearingWithoutDateReasons": "some reason",
-          "listCaseHearingCentre": "taylorHouse"
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019"
         }
       }
     }
@@ -50,6 +51,7 @@
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "CASE001",
           "Talha Awan",
           "some reason"
@@ -61,6 +63,7 @@
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "A1234567",
           "Talha Awan"
         ]
@@ -71,6 +74,7 @@
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "Talha Awan"
         ]
       },
@@ -80,6 +84,7 @@
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "Talha Awan"
         ]
       }

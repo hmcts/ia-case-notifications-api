@@ -46,7 +46,7 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisation implements Ema
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return adminOfficerPersonalisationProvider.getDefaultPersonlisation(asylumCase);
+        return adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase);
 
     }
 }
