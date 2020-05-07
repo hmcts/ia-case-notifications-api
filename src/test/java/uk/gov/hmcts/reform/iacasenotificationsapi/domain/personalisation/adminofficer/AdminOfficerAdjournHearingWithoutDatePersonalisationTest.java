@@ -18,27 +18,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
-    private Long caseId = 12345L;
     private String templateId = "someTemplateId";
 
     private String adminOfficerEmailAddress = "adminOfficer@example.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
 
     private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerdjournHearingWithoutDatePersonalisation;
 
     @Before
     public void setup() {
-        when(adminOfficerPersonalisationProvider.getDefaultPersonlisation(asylumCase)).thenReturn(ImmutableMap
+        String appealReferenceNumber = "someReferenceNumber";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String listRef = "LP/12345/2019";
+        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase)).thenReturn(ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyName)
+            .put("ariaListingReference", listRef)
             .build());
 
         adminOfficerdjournHearingWithoutDatePersonalisation = new AdminOfficerAdjournHearingWithoutDatePersonalisation(templateId, adminOfficerEmailAddress, adminOfficerPersonalisationProvider);
@@ -51,6 +53,7 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER", adminOfficerdjournHearingWithoutDatePersonalisation.getReferenceId(caseId));
     }
 
