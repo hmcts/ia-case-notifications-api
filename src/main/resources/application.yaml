@@ -359,6 +359,7 @@ security:
       - "forceCaseToCaseUnderReview"
       - "forceCaseToSubmitHearingRequirements"
       - "adjournHearingWithoutDate"
+      - "restoreStateFromAdjourn"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
