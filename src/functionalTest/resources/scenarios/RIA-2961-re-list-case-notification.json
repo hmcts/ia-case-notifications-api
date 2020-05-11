@@ -2,7 +2,7 @@
   "description": "RIA-2961 Re-list case",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "CaseOfficer",
     "input": {
       "id": 1234,
       "eventId": "restoreStateFromAdjourn",
