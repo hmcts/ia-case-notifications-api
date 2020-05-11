@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
@@ -26,7 +25,6 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
     @Mock AsylumCase asylumCase;
     @Mock EmailAddressFinder emailAddressFinder;
     @Mock PersonalisationProvider personalisationProvider;
-    @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -36,7 +34,7 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
     private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyNames = "someAppellantFamilyNames";
-    private String iaCcdFrontendUrl = "http://localhost";
+    private String iaExUiFrontendUrl = "http://localhost";
     private String directionExplanation = "someExplanation";
     private String directionDueDate = "2019-10-29";
 
@@ -44,11 +42,10 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
 
     @Before
     public void setUp() {
-        when(govNotifyTemplateIdConfiguration.getLegalRepresentativeNonStandardDirectionTemplateId()).thenReturn(templateId);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
 
         legalRepresentativeNonStandardDirectionPersonalisation = new LegalRepresentativeNonStandardDirectionPersonalisation(
-            govNotifyTemplateIdConfiguration,
+            templateId,
             personalisationProvider,
             emailAddressFinder
         );
@@ -93,7 +90,7 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
             .put("legalRepReferenceNumber", legalRepReferenceNumber)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyNames)
-            .put("iaCcdFrontendUrl", iaCcdFrontendUrl)
+            .put("iaExUiFrontendUrl", iaExUiFrontendUrl)
             .put("explanation", directionExplanation)
             .put("dueDate", directionDueDate)
             .build();

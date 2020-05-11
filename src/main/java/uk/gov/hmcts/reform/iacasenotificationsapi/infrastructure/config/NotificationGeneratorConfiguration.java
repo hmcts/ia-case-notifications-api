@@ -14,10 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentEvidenceDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
@@ -287,12 +284,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewNotificationGenerator")
     public List<NotificationGenerator> respondentReviewNotificationGenerator(
         RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+        LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentDirectionPersonalisation),
+                newArrayList(
+                    respondentDirectionPersonalisation,
+                    legalRepresentativeRespondentReviewPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -325,12 +325,16 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentEvidenceRepNotificationGenerator")
     public List<NotificationGenerator> respondentEvidenceRepNotificationGenerator(
         RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation,
+        LegalRepresentativeRequestHomeOfficeBundlePersonalisation legalRepresentativeRequestHomeOfficeBundlePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentEvidenceDirectionPersonalisation),
+                newArrayList(
+                    respondentEvidenceDirectionPersonalisation,
+                    legalRepresentativeRequestHomeOfficeBundlePersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )
@@ -396,8 +400,7 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EditListingEmailNotificationGenerator(
-                newArrayList(caseOfficerEditListingPersonalisation, homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation,
-                    legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation),
+                newArrayList(caseOfficerEditListingPersonalisation, homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -622,6 +625,99 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(adminOfficerChangeToHearingRequirementsPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("appealExitedOnlineNotificationGenerator")
+    public List<NotificationGenerator> appealExitedOnlineNotificationGenerator(
+        HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
+        LegalRepresentativeAppealExitedOnlinePersonalisation legalRepresentativeAppealExitedOnlinePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeAppealExitedOnlinePersonalisation, legalRepresentativeAppealExitedOnlinePersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
+    @Bean("changeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
+        LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeChangeHearingCentrePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("changeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
+        LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
+        CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+              newArrayList(
+                  legalRepresentativeChangeHearingCentrePersonalisation,
+                  caseOfficerChangeHearingCentrePersonalisation
+              ),
+              notificationSender,
+              notificationIdAppender
+          )
+        );
+    }
+
+    @Bean("ftpaSubmittedLegalRepNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedLegalRep(
+        LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeFtpaSubmittedPersonalisation,
+                    adminOfficerFtpaSubmittedPersonalisation,
+                    respondentAppellantFtpaSubmittedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaSubmittedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedRespondent(
+        RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        LegalRepresentativeRespondentFtpaSubmittedPersonalisation legalRepresentativeRespondentFtpaSubmittedPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    respondentFtpaSubmittedPersonalisation,
+                    adminOfficerFtpaSubmittedPersonalisation,
+                    legalRepresentativeRespondentFtpaSubmittedPersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )

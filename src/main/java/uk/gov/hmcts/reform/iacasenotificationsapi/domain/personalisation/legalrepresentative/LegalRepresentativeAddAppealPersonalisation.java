@@ -1,7 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -11,7 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 
@@ -19,18 +25,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 public class LegalRepresentativeAddAppealPersonalisation implements EmailNotificationPersonalisation {
 
     private final String legalRepresentativeReviewDirectionTemplateId;
-    private final String iaCcdFrontendUrl;
+    private final String iaExUiFrontendUrl;
     private final DirectionFinder directionFinder;
 
     public LegalRepresentativeAddAppealPersonalisation(
-        @Value("${govnotify.template.legalRepresentativeReviewDirection}") String legalRepresentativeReviewDirectionTemplateId,
-        @Value("${iaCcdFrontendUrl}") String iaCcdFrontendUrl,
+        @Value("${govnotify.template.reviewDirection.legalRep.email}") String legalRepresentativeReviewDirectionTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DirectionFinder directionFinder
     ) {
-        requireNonNull(iaCcdFrontendUrl, "iaCcdFrontendUrl must not be null");
+        requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
 
         this.legalRepresentativeReviewDirectionTemplateId = legalRepresentativeReviewDirectionTemplateId;
-        this.iaCcdFrontendUrl = iaCcdFrontendUrl;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.directionFinder = directionFinder;
     }
 
@@ -72,7 +78,7 @@ public class LegalRepresentativeAddAppealPersonalisation implements EmailNotific
                 .put("LR reference", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Given names", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Hyperlink to user’s case list", iaCcdFrontendUrl)
+                .put("Hyperlink to user’s case list", iaExUiFrontendUrl)
                 .put("Explanation", direction.getExplanation())
                 .put("due date", directionDueDate)
                 .build();

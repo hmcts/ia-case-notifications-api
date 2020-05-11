@@ -26,7 +26,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 public class PersonalisationProvider {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
-    private final String iaCcdFrontendUrl;
+    private final String iaExUiFrontendUrl;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
     private final DateTimeExtractor dateTimeExtractor;
@@ -58,14 +58,18 @@ public class PersonalisationProvider {
             .build())
         .put(SEND_DIRECTION, personalisationBuilder
             .build())
+        .put(APPLY_FOR_FTPA_APPELLANT, personalisationBuilder
+            .build())
+        .put(APPLY_FOR_FTPA_RESPONDENT, personalisationBuilder
+            .build())
         .build();
 
     public PersonalisationProvider(
-        @Value("${iaCcdFrontendUrl}") String iaCcdFrontendUrl,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         HearingDetailsFinder hearingDetailsFinder,
         DirectionFinder directionFinder,
         DateTimeExtractor dateTimeExtractor) {
-        this.iaCcdFrontendUrl = iaCcdFrontendUrl;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.hearingDetailsFinder = hearingDetailsFinder;
         this.directionFinder = directionFinder;
         this.dateTimeExtractor = dateTimeExtractor;
@@ -96,7 +100,7 @@ public class PersonalisationProvider {
 
         final Builder<String, String> caseListingValues = ImmutableMap
             .<String, String>builder()
-            .put("Hyperlink to user’s case list", iaCcdFrontendUrl)
+            .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("oldHearingCentre", hearingCentreNameBefore)
             .put("oldHearingDate", oldHearingDate == null || oldHearingDate.isEmpty() ? "" : dateTimeExtractor.extractHearingDate(oldHearingDate))
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
@@ -115,28 +119,28 @@ public class PersonalisationProvider {
         if (isSubmitRequirementsAvailable.isPresent() && isSubmitRequirementsAvailable.get() == YesOrNo.YES) {
 
             caseListingValues
-                .put("Hearing Requirement Vulnerabilities", readStringCaseField(asylumCase, VULNERABILITIES_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, VULNERABILITIES_TRIBUNAL_RESPONSE,
                     "No special adjustments are being made to accommodate vulnerabilities"))
-                .put("Hearing Requirement Multimedia", readStringCaseField(asylumCase, MULTIMEDIA_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, MULTIMEDIA_TRIBUNAL_RESPONSE,
                     "No multimedia equipment is being provided"))
-                .put("Hearing Requirement Single Sex Court", readStringCaseField(asylumCase, SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
                     "The court will not be single sex"))
-                .put("Hearing Requirement In Camera Court", readStringCaseField(asylumCase, IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
                     "The hearing will be held in public court"))
-                .put("Hearing Requirement Other", readStringCaseField(asylumCase, ADDITIONAL_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementOther", readStringCaseField(asylumCase, ADDITIONAL_TRIBUNAL_RESPONSE,
                     "No other adjustments are being made"));
         } else {
 
             caseListingValues
-                .put("Hearing Requirement Vulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
+                .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
                     "No special adjustments are being made to accommodate vulnerabilities"))
-                .put("Hearing Requirement Multimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
+                .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
                     "No multimedia equipment is being provided"))
-                .put("Hearing Requirement Single Sex Court", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
+                .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
                     "The court will not be single sex"))
-                .put("Hearing Requirement In Camera Court", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
+                .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
                     "The hearing will be held in public court"))
-                .put("Hearing Requirement Other", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
+                .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
                     "No other adjustments are being made"));
         }
     }
@@ -156,7 +160,7 @@ public class PersonalisationProvider {
 
         return ImmutableMap
             .<String, String>builder()
-            .put("iaCaseListHyperLink", iaCcdFrontendUrl)
+            .put("iaCaseListHyperLink", iaExUiFrontendUrl)
             .put("explanation", direction.getExplanation())
             .put("dueDate", directionDueDate)
             .build();
@@ -180,7 +184,7 @@ public class PersonalisationProvider {
 
         return ImmutableMap
             .<String, String>builder()
-            .put("iaCaseListHyperLink", iaCcdFrontendUrl)
+            .put("iaCaseListHyperLink", iaExUiFrontendUrl)
             .put("explanation", directionEditExplanation)
             .put("dueDate", directionDueDate)
             .build();

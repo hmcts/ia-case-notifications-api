@@ -22,6 +22,19 @@
                 "wantsSms": "No"
               }
             }
+          ],
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "requestReasonsForAppeal",
+                "parties": "appellant",
+                "dateDue": "{$TODAY+14}",
+                "dateSent": "{$TODAY}",
+                "explanation": "You must now tell us why you think the Home Office decision to refuse your claim is wrong.",
+                "previousDates": []
+              }
+            }
           ]
         }
       }
@@ -46,6 +59,19 @@
             }
           }
         ],
+        "directions": [
+          {
+            "id": "1",
+            "value": {
+              "tag": "requestReasonsForAppeal",
+              "parties": "appellant",
+              "dateDue": "{$TODAY+14}",
+              "dateSent": "{$TODAY}",
+              "explanation": "You must now tell us why you think the Home Office decision to refuse your claim is wrong.",
+              "previousDates": []
+            }
+          }
+        ],
         "notificationsSent": [
           {
             "id": "1004_REQUEST_REASONS_FOR_APPEAL_APPELLANT_AIP_EMAIL",
@@ -60,14 +86,11 @@
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Tell us why you think the Home Office is wrong",
         "body": [
-          "Appeal reference number: PA/12345/2019",
-          "Home Office reference: A1234567",
-          "Dear Pablo Jimenez",
-          "A Tribunal Caseworker has looked at your appeal details and decided you have the right to appeal.",
-          "You now need to tell us why you think the Home Office was wrong to refuse your claim.",
-          "Sign in to your account to do this:",
+          "PA/12345/2019",
+          "A1234567",
+          "Pablo Jimenez",
           "{$iaAipFrontendUrl}",
-          "You have until {$TODAY+28|d MMM yyyy} to give us this information.",
+          "{$TODAY+14|d MMM yyyy}",
           "# How to contact the Tribunal"
         ]
       }

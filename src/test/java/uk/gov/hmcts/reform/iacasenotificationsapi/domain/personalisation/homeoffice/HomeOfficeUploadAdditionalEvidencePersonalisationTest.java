@@ -1,53 +1,62 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
 public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
 
     @Mock Callback<AsylumCase> callback;
-    @Mock CaseDetails<AsylumCase> caseDetails;
     @Mock AsylumCase asylumCase;
-
-    @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     @Mock PersonalisationProvider personalisationProvider;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-
+    private String beforeListingTemplateId = "beforeListingTemplateId";
+    private String afterListingTemplateId = "afterListingTemplateId";
+    private String iaExUiFrontendUrl = "http://localhost";
+    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String homeOfficeEmailAddress = "homeOffice@example.com";
-
-    private String hmctsReference = "hmctsReference";
-    private String legalRepReference = "legalRepresentativeReference";
+    private String appealReferenceNumber = "hmctsReference";
+    private String ariaListingReference = "someAriaListingReference";
     private String homeOfficeReference = "homeOfficeReference";
-    private String listingReference = "listingReference";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "cust.services@example.com";
 
     private HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation;
 
     @Before
     public void setUp() {
-        when(govNotifyTemplateIdConfiguration.getUploadedAdditionalEvidenceTemplateId()).thenReturn(templateId);
 
-        homeOfficeUploadAdditionalEvidencePersonalisation = new HomeOfficeUploadAdditionalEvidencePersonalisation(govNotifyTemplateIdConfiguration, personalisationProvider, homeOfficeEmailAddress);
+        homeOfficeUploadAdditionalEvidencePersonalisation = new HomeOfficeUploadAdditionalEvidencePersonalisation(
+            beforeListingTemplateId,
+            afterListingTemplateId,
+            iaExUiFrontendUrl,
+            personalisationProvider,
+            homeOfficeEmailAddress,
+            customerServicesProvider
+        );
     }
 
     @Test
@@ -57,7 +66,11 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, homeOfficeUploadAdditionalEvidencePersonalisation.getTemplateId());
+        assertEquals(beforeListingTemplateId, homeOfficeUploadAdditionalEvidencePersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+
+        assertEquals(afterListingTemplateId, homeOfficeUploadAdditionalEvidencePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -85,14 +98,22 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
     private Map<String, String> getPersonalisationForHomeOffice() {
         return ImmutableMap
             .<String, String>builder()
-            .put("hmctsReference", hmctsReference)
-            .put("legalRepReference", legalRepReference)
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
             .put("homeOfficeReference", homeOfficeReference)
-            .put("listingReference", listingReference)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyName)
+            .put("customerServicesTelephone", customerServicesTelephone)
+            .put("customerServicesEmail", customerServicesEmail)
             .build();
     }
 
+    @Test
+    public void should_return_false_if_appeal_not_yet_listed() {
+        assertFalse(homeOfficeUploadAdditionalEvidencePersonalisation.isAppealListed(asylumCase));
 
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+
+        assertTrue(homeOfficeUploadAdditionalEvidencePersonalisation.isAppealListed(asylumCase));
+    }
 }

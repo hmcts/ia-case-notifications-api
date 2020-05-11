@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -17,18 +19,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 public class CaseOfficerSubmitAppealPersonalisation implements EmailNotificationPersonalisation {
 
     private final String appealSubmittedCaseOfficerTemplateId;
-    private final String iaCcdFrontendUrl;
+    private final String iaExUiFrontendUrl;
     private final EmailAddressFinder emailAddressFinder;
 
     public CaseOfficerSubmitAppealPersonalisation(
-        @Value("${govnotify.template.appealSubmittedCaseOfficer}") String appealSubmittedCaseOfficerTemplateId,
-        @Value("${iaCcdFrontendUrl}") String iaCcdFrontendUrl,
+        @Value("${govnotify.template.appealSubmitted.caseOfficer.email}") String appealSubmittedCaseOfficerTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         EmailAddressFinder emailAddressFinder
     ) {
-        requireNonNull(iaCcdFrontendUrl, "iaCcdFrontendUrl must not be null");
+        requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
 
         this.appealSubmittedCaseOfficerTemplateId = appealSubmittedCaseOfficerTemplateId;
-        this.iaCcdFrontendUrl = iaCcdFrontendUrl;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.emailAddressFinder = emailAddressFinder;
     }
 
@@ -55,10 +57,10 @@ public class CaseOfficerSubmitAppealPersonalisation implements EmailNotification
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Hyperlink to user’s case list", iaCcdFrontendUrl)
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }
 }

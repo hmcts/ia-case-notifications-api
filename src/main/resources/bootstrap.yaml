@@ -4,7 +4,6 @@ spring:
       prefixed: false
       paths: /mnt/secrets/ia
       aliases:
-        ia-ccd-frontend-url: IA_CCD_FRONTEND_URL
         ia-gov-notify-key: IA_GOV_NOTIFY_KEY
         hearing-centre-bradford-email: IA_HEARING_CENTRE_BRADFORD_EMAIL
         hearing-centre-manchester-email: IA_HEARING_CENTRE_MANCHESTER_EMAIL
@@ -37,6 +36,10 @@ spring:
         home-office-allowed-appeal-email: IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL
         home-office-dismissed-appeal-email: IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL
         admin-officer-review-hearing-requirements-email: IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL
+        ctsc-admin-ftpa-submitted-email: IA_CTSC_ADMIN_FTPA_SUBMITTED
+        respondent-ftpa-submitted-email: IA_RESPONDENT_FTPA_SUBMITTED
+        customer-services-telephone: IA_CUSTOMER_SERVICES_TELEPHONE
+        customer-services-email: IA_CUSTOMER_SERVICES_EMAIL
         system-username: IA_SYSTEM_USERNAME
         system-password: IA_SYSTEM_PASSWORD
         idam-client-id: IA_IDAM_CLIENT_ID

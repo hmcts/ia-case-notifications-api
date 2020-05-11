@@ -1,7 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -15,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -22,20 +28,26 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 public class HomeOfficeListCasePersonalisation implements EmailNotificationPersonalisation {
 
     private final String homeOfficeCaseListedTemplateId;
+    private final String iaExUiFrontendUrl;
     private final StringProvider stringProvider;
     private final DateTimeExtractor dateTimeExtractor;
     private final Map<HearingCentre, String> homeOfficeEmailAddresses;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeListCasePersonalisation(
-        @Value("${govnotify.template.homeOfficeCaseListed}") String homeOfficeCaseListedTemplateId,
+        @Value("${govnotify.template.caseListed.homeOffice.email}") String homeOfficeCaseListedTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         StringProvider stringProvider,
         DateTimeExtractor dateTimeExtractor,
-        Map<HearingCentre, String> homeOfficeEmailAddresses
+        Map<HearingCentre, String> homeOfficeEmailAddresses,
+        CustomerServicesProvider customerServicesProvider
     ) {
         this.homeOfficeCaseListedTemplateId = homeOfficeCaseListedTemplateId;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.stringProvider = stringProvider;
         this.dateTimeExtractor = dateTimeExtractor;
         this.homeOfficeEmailAddresses = homeOfficeEmailAddresses;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -87,14 +99,16 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
         final Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .put("Appeal Ref Number", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("Listing Ref Number", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-            .put("Home Office Ref Number", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("Appellant Given Names", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("Appellant Family Name", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("Hearing Date", dateTimeExtractor.extractHearingDate(hearingDateTime))
-            .put("Hearing Time", dateTimeExtractor.extractHearingTime(hearingDateTime))
-            .put("Hearing Centre Address", hearingCentreAddress);
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
+            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
+            .put("hearingCentreAddress", hearingCentreAddress);
 
         PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
 
