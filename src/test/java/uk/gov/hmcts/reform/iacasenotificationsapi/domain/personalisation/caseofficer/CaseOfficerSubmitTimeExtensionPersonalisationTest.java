@@ -35,7 +35,7 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenName = "Pablo";
     private String appellantFamilyName = "Jimenez";
-    private String iaCcdFrontendUrl = "http://localhost";
+    private String iaExUiFrontendUrl = "http://localhost";
 
 
     private CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation;
@@ -51,7 +51,7 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
         caseOfficerSubmitTimeExtensionPersonalisation =
             new CaseOfficerSubmitTimeExtensionPersonalisation(
                 templateId,
-                iaCcdFrontendUrl,
+                iaExUiFrontendUrl,
                 emailAddressFinder
             );
     }
@@ -89,7 +89,7 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
                 .put("Appeal Ref Number", appealReferenceNumber)
                 .put("Appellant Given names", appellantGivenName)
                 .put("Appellant Family name", appellantFamilyName)
-                .put("Hyperlink to service", iaCcdFrontendUrl)
+                .put("Hyperlink to service", iaExUiFrontendUrl)
                 .build();
 
         Map<String, String> actualPersonalisation = caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation(asylumCase);
@@ -106,7 +106,7 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
                 .put("Appeal Ref Number", "")
                 .put("Appellant Given names", "")
                 .put("Appellant Family name", "")
-                .put("Hyperlink to service", iaCcdFrontendUrl)
+                .put("Hyperlink to service", iaExUiFrontendUrl)
                 .build();
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
