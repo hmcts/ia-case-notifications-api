@@ -405,15 +405,12 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewNotificationGenerator")
     public List<NotificationGenerator> respondentReviewNotificationGenerator(
         RespondentDirectionPersonalisation respondentDirectionPersonalisation,
-        LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(
-                    respondentDirectionPersonalisation,
-                    legalRepresentativeRespondentReviewPersonalisation),
+                newArrayList(respondentDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
