@@ -5,7 +5,7 @@
     "credentials": "Citizen",
     "input": {
       "id": 1008,
-      "eventId": "ç",
+      "eventId": "submitClarifyingQuestionsAnswers",
       "state": "awaitingClarifyingQuestionsAnswers",
       "caseData": {
         "template": "aip-minimal-appeal-submitted.json",
