@@ -656,8 +656,8 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == AIP).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.SUBMIT_TIME_EXTENSION
-                       && isAipJourney;
+                    && callback.getEvent() == Event.SUBMIT_TIME_EXTENSION
+                    && isAipJourney;
             }, notificationGenerators
         );
     }
