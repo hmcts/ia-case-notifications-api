@@ -47,6 +47,7 @@ public enum Event {
     APPLY_FOR_FTPA_RESPONDENT("applyForFTPARespondent"),
     SUBMIT_TIME_EXTENSION("submitTimeExtension"),
 
+    LEADERSHIP_JUDGE_FTPA_DECISION("leadershipJudgeFtpaDecision"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
