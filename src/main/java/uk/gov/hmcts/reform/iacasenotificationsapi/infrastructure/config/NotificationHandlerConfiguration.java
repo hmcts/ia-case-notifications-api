@@ -4,8 +4,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision.GRANTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionDecision.REFUSED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -635,7 +633,6 @@ public class NotificationHandlerConfiguration {
 
                 final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions = asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
 
-                System.out.println(maybeTimeExtensions.get().size());
                 final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
                     .orElse(Collections.emptyList()).stream()
                     .filter(timeExtensionIdValue ->
@@ -643,10 +640,6 @@ public class NotificationHandlerConfiguration {
                         && String.valueOf(maybeTimeExtensions.get().size()).equals(timeExtensionIdValue.getId())
                         && TimeExtensionStatus.GRANTED == timeExtensionIdValue.getValue().getStatus())
                     .findFirst();
-
-
-                System.out.println("called Approve");
-                System.out.println(maybeTargetTimeExtension.isPresent());
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
@@ -680,9 +673,6 @@ public class NotificationHandlerConfiguration {
                         && String.valueOf(maybeTimeExtensions.get().size()).equals(timeExtensionIdValue.getId())
                         && TimeExtensionStatus.REFUSED == timeExtensionIdValue.getValue().getStatus())
                     .findFirst();
-
-                System.out.println("called Refuse");
-                System.out.println(maybeTargetTimeExtension.isPresent());
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
