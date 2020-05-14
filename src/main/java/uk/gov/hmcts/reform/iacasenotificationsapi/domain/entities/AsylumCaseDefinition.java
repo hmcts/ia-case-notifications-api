@@ -130,7 +130,20 @@ public enum AsylumCaseDefinition {
     SUBMISSION_OUT_OF_TIME(
         "submissionOutOfTime", new TypeReference<YesOrNo>(){}),
 
-    ;
+    FTPA_APPELLANT_DECISION_OUTCOME_TYPE(
+        "ftpaAppellantDecisionOutcomeType", new TypeReference<FtpaAppellantDecisionOutcomeType>(){}),
+
+    FTPA_RESPONDENT_DECISION_OUTCOME_TYPE(
+        "ftpaRespondentDecisionOutcomeType", new TypeReference<FtpaAppellantDecisionOutcomeType>(){}),
+
+    FTPA_APPELLANT_SUBMITTED(
+        "ftpaAppellantSubmitted", new TypeReference<YesOrNo>(){}),
+
+    FTPA_RESPONDENT_SUBMITTED(
+        "ftpaRespondentSubmitted", new TypeReference<YesOrNo>(){}),
+
+    FTPA_APPLICANT_TYPE(
+        "ftpaApplicantType", new TypeReference<ApplicantType>(){});
 
     private final String value;
     private final TypeReference typeReference;
