@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 
@@ -12,32 +13,35 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @Service
 public class PersonalisationProvider {
 
-    private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String HEARING_CENTRE_ADDRESS_CONST = "hearingCentreAddress";
+    private static final String APPEAL_REFERENCE_NUMBER_CONST = "appealReferenceNumber";
+    private static final String APPELLANT_GIVEN_NAMES_CONST = "appellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAME_CONST = "appellantFamilyName";
+
     private final String iaExUiFrontendUrl;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
     private final DateTimeExtractor dateTimeExtractor;
 
+
     ImmutableMap.Builder<String, AsylumCaseDefinition> personalisationBuilder = new ImmutableMap.Builder<String, AsylumCaseDefinition>()
-        .put("appealReferenceNumber", APPEAL_REFERENCE_NUMBER)
+        .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
         .put("legalRepReferenceNumber", LEGAL_REP_REFERENCE_NUMBER)
         .put("ariaListingReference", ARIA_LISTING_REFERENCE)
         .put("homeOfficeReferenceNumber", HOME_OFFICE_REFERENCE_NUMBER)
-        .put("appellantGivenNames", APPELLANT_GIVEN_NAMES)
-        .put("appellantFamilyName", APPELLANT_FAMILY_NAME);
+        .put(APPELLANT_GIVEN_NAMES_CONST, APPELLANT_GIVEN_NAMES)
+        .put(APPELLANT_FAMILY_NAME_CONST, APPELLANT_FAMILY_NAME);
 
     Map<Event, Map<String, AsylumCaseDefinition>> eventDefinition = new ImmutableMap.Builder<Event, Map<String, AsylumCaseDefinition>>()
         .put(CHANGE_DIRECTION_DUE_DATE, personalisationBuilder
@@ -105,7 +109,7 @@ public class PersonalisationProvider {
             .put("oldHearingDate", oldHearingDate == null || oldHearingDate.isEmpty() ? "" : dateTimeExtractor.extractHearingDate(oldHearingDate))
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
             .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
-            .put(HEARING_CENTRE_ADDRESS, hearingCentreAddress);
+            .put(HEARING_CENTRE_ADDRESS_CONST, hearingCentreAddress);
 
         buildHearingRequirementsFields(asylumCase, caseListingValues);
 
@@ -214,9 +218,9 @@ public class PersonalisationProvider {
     public Map<String, String> getReviewedHearingRequirementsPersonalisation(AsylumCase asylumCase) {
         return ImmutableMap
             .<String, String>builder()
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .build();
     }
 
@@ -224,5 +228,42 @@ public class PersonalisationProvider {
 
         final Optional<String> optionalFieldValue = asylumCase.read(caseField, String.class);
         return optionalFieldValue.isPresent() && !optionalFieldValue.get().isEmpty() ? optionalFieldValue.get() : defaultIfNotPresent;
+    }
+
+    public String getFtpaDecisionTemplateId(AsylumCase asylumCase,
+                                            GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration, YesOrNo applicant) {
+        FtpaAppellantDecisionOutcomeType ftpaAppellantDecisionOutcomeType = asylumCase
+            .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaAppellantDecisionOutcomeType.class)
+            .orElseThrow(() -> new IllegalStateException("ftpaApplicationDecision is not present"));
+
+        if (ftpaAppellantDecisionOutcomeType.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_GRANTED.toString())) {
+            return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationGrantedApplicant() : govNotifyTemplateIdConfiguration.getApplicationGrantedOtherParty();
+        } else if (ftpaAppellantDecisionOutcomeType.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString())) {
+            return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationPartiallyGrantedApplicant() : govNotifyTemplateIdConfiguration.getApplicationPartiallyGrantedOtherParty();
+        } else if (ftpaAppellantDecisionOutcomeType.toString().equals(FtpaAppellantDecisionOutcomeType.FTPA_REFUSED.toString())) {
+            return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationRefusedApplicant() : govNotifyTemplateIdConfiguration.getApplicationRefusedOtherParty();
+        } else {
+            return applicant.equals(YesOrNo.YES) ? govNotifyTemplateIdConfiguration.getApplicationNotAdmittedApplicant() : govNotifyTemplateIdConfiguration.getApplicationNotAdmittedOtherParty();
+        }
+    }
+
+    public Map<String, String> getFtpaDecisionPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .build();
+    }
+
+    public ApplicantType getApplicantType(AsylumCase asylumCase) {
+        return asylumCase
+            .read(FTPA_APPLICANT_TYPE, ApplicantType.class)
+            .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"));
     }
 }
