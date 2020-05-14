@@ -3,7 +3,7 @@ properties([
         [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/ia-case-notifications-api.git'],
         pipelineTriggers([[$class: 'GitHubPushTrigger']]),
         parameters([
-                string(name: 'IA_EXUI_FRONTEND_URL', defaultValue: 'https://xui-webapp-aat.service.core-compute-aat.internal/', description: 'The ExUI frontend URL that will be included in personalisation'),
+                string(name: 'IA_EXUI_FRONTEND_URL', defaultValue: 'https://manage-case.aat.platform.hmcts.net/', description: 'The ExUI frontend URL that will be included in personalisation'),
                 string(name: 'IA_AIP_FRONTEND_URL', defaultValue: 'https://immigration-appeal.aat.platform.hmcts.net/', description: 'The AIP frontend URL that will be included in personalisation')
         ])
 ])
@@ -49,7 +49,7 @@ def secrets = [
         secret('respondent-review-direction-email', 'IA_RESPONDENT_REVIEW_DIRECTION_EMAIL'),
         secret('respondent-non-standard-direction-until-listing-email', 'IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL'),
 
-        secret( 'ctsc-admin-ftpa-submitted-email', 'IA_CTSC_ADMIN_FTPA_SUBMITTED'),
+        secret('ctsc-admin-ftpa-submitted-email', 'IA_CTSC_ADMIN_FTPA_SUBMITTED'),
         secret('respondent-ftpa-submitted-email', 'IA_RESPONDENT_FTPA_SUBMITTED'),
 
         secret('test-caseofficer-username', 'TEST_CASEOFFICER_USERNAME'),
@@ -77,6 +77,9 @@ def secrets = [
         secret('home-office-dismissed-appeal-email', 'IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL'),
 
         secret('admin-officer-review-hearing-requirements-email', 'IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL'),
+
+        secret('customer-services-telephone', 'IA_CUSTOMER_SERVICES_TELEPHONE'),
+        secret('customer-services-email', 'IA_CUSTOMER_SERVICES_EMAIL'),
 
         secret('idam-client-id', 'IA_IDAM_CLIENT_ID'),
         secret('idam-secret', 'IA_IDAM_SECRET'),
