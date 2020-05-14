@@ -7,6 +7,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.*;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.Noti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 
+@Slf4j
 @Configuration
 public class NotificationHandlerConfiguration {
 
@@ -63,6 +65,18 @@ public class NotificationHandlerConfiguration {
                     .map(Parties -> Parties.equals(Parties.RESPONDENT))
                     .orElse(false);
 
+                // temporary log variables
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE) {
+                    log.info(
+                        "checking changeDirectionDueDate event for caseId: {}, flag isRespondent: {}, party: {}",
+                        callback.getCaseDetails().getId(),
+                        isRespondent,
+                        asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                            .map(Parties::toString)
+                            .orElse("no party set")
+                    );
+                }
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isRespondent;
@@ -86,6 +100,18 @@ public class NotificationHandlerConfiguration {
                 boolean isLegalRepresentative = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
                     .map(Parties -> Parties.equals(Parties.LEGAL_REPRESENTATIVE))
                     .orElse(false);
+
+                // temporary log variables
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE) {
+                    log.info(
+                        "checking changeDirectionDueDate event for caseId: {}, flag isLegalRepresentative: {}, party: {}",
+                        callback.getCaseDetails().getId(),
+                        isLegalRepresentative,
+                        asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                            .map(Parties::toString)
+                            .orElse("no party set")
+                    );
+                }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
