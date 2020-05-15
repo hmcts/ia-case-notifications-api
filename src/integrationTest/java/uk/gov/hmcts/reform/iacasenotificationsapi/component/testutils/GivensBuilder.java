@@ -5,8 +5,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.Builder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.UserDetailsForTest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.Builder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.UserDetailsForTest;
 
 @SuppressWarnings("OperatorWrap")
 public class GivensBuilder {

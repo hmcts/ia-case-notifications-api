@@ -2,8 +2,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.CallbackForTest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.testutils.fixtures.PreSubmitCallbackResponseForTest;
 
 public class IaCaseNotificationApiClient {
 
