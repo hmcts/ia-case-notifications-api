@@ -388,6 +388,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("recordLengthOfHearingNotificationGenerator")
+    public List<NotificationGenerator> recordLengthOfHearingNotificationGenerator(
+        AdminOfficerRecordLengthOfHearingPersonalisation adminOfficerRecordLengthOfHearingPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(adminOfficerRecordLengthOfHearingPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("editCaseListingNotificationGenerator")
     public List<NotificationGenerator> editCaseListingNotificationGenerator(
         CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation,
