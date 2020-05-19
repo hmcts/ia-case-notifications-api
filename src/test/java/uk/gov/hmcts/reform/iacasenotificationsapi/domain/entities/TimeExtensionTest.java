@@ -2,15 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 
 public class TimeExtensionTest {
 
-    private final Document document = mock(Document.class);
     private final String reason = "the reason";
     private final String requestDate = "2020-03-01";
     private final State state = State.AWAITING_REASONS_FOR_APPEAL;

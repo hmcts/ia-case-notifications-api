@@ -65,6 +65,7 @@ public class AppellantReviewTimeExtensionGrantedPersonalisationSms implements Sm
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
         final IdValue<TimeExtension> timeExtensionIdValue = timeExtensionFinder.findCurrentTimeExtension(currentState, TimeExtensionStatus.GRANTED, asylumCase);
+
         final String nextActionText = timeExtensionFinder.findNextActionText(currentState);
 
         final String dueDate =
