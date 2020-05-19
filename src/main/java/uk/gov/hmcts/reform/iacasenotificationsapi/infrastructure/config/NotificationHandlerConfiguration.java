@@ -244,13 +244,13 @@ public class NotificationHandlerConfiguration {
             @Qualifier("submitAppealHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
-       return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL;
-                }, notificationGenerators
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL;
+            }, notificationGenerators
         );
     }
 
