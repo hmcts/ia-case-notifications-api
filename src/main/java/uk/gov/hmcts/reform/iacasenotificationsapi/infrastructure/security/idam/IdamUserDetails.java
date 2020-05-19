@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collections;
 import java.util.List;
+
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 
 public class IdamUserDetails implements UserDetails {

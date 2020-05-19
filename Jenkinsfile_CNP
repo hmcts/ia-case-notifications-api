@@ -109,8 +109,11 @@ withPipeline(type, product, component) {
     env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 
     installCharts()
-    enableAksStagingDeployment()
-    disableLegacyDeployment()
+
+    if ("demo" != "${env.BRANCH_NAME}") {
+        enableAksStagingDeployment()
+        disableLegacyDeployment()
+    }
 
     loadVaultSecrets(secrets)
 
