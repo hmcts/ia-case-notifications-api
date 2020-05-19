@@ -207,7 +207,7 @@ repositories {
 dependencyManagement {
     dependencies {
         // CVE-2019-0232, CVE-2019-0199 - command line injections on windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.35') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -264,7 +264,7 @@ dependencies {
     }
 
     testCompile "com.github.tomakehurst:wiremock:2.19.0"
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '1.7.4'
     testCompile group: 'org.pitest', name: 'pitest', version: versions.pitest
     testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
@@ -276,6 +276,10 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+
+    testCompile("org.junit.platform:junit-platform-launcher:1.3.2")
+    testCompile("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testCompile("org.junit.vintage:junit-vintage-engine:5.3.2")
 
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
         force = true
