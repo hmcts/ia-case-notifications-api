@@ -1,5 +1,5 @@
 {
-  "description": "RIA-365-RIA-2936 Send appeal submitted notification to Home Office",
+  "description": "RIA-2118 Send appeal submitted notification to Home Office",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
@@ -26,6 +26,10 @@
           {
             "id": "1001_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1001_APPEAL_SUBMITTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
@@ -35,6 +39,16 @@
         "reference": "1001_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
+        "body": [
+          "PA/12345/2019",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "1001_APPEAL_SUBMITTED_HOME_OFFICE",
+        "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
+        "subject": "Immigration and Asylum appeal: Application received",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
