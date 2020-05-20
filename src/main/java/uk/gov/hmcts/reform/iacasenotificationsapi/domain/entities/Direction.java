@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
@@ -20,28 +21,15 @@ public class Direction {
     }
 
     public Direction(
-        String explanation,
-        Parties parties,
-        String dateDue,
-        String dateSent,
-        DirectionTag tag,
-        List<IdValue<PreviousDates>> previousDates
+            String explanation,
+            Parties parties,
+            String dateDue,
+            String dateSent,
+            DirectionTag tag,
+            List<IdValue<PreviousDates>> previousDates
     ) {
-        requireNonNull(explanation);
-        requireNonNull(parties);
-        requireNonNull(dateDue);
-        requireNonNull(dateSent);
-        requireNonNull(tag);
-        requireNonNull(previousDates);
-
-        this.explanation = explanation;
-        this.parties = parties;
-        this.dateDue = dateDue;
-        this.dateSent = dateSent;
-        this.tag = tag;
-        this.previousDates = previousDates;
+        this(explanation, parties, dateDue, dateSent, tag, previousDates, emptyList());
     }
-
 
     public Direction(
         String explanation,
