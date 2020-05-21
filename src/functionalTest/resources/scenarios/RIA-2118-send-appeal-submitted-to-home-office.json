@@ -47,8 +47,8 @@
       },
       {
         "reference": "1001_APPEAL_SUBMITTED_HOME_OFFICE",
-        "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: Application received",
+        "recipient": "{$endAppealHomeOfficeEmailAddress}",
+        "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
