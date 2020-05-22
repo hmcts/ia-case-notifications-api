@@ -46,7 +46,6 @@ public class Direction {
         requireNonNull(dateSent);
         requireNonNull(tag);
         requireNonNull(previousDates);
-        requireNonNull(clarifyingQuestions);
 
         this.explanation = explanation;
         this.parties = parties;
