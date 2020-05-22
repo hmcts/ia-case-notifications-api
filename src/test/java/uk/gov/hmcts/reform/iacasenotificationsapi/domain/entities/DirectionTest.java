@@ -37,7 +37,7 @@ public class DirectionTest {
     );
 
     @Test
-    public void direction_should_hold_onto_values() {
+    public void should_hold_onto_values() {
 
         assertEquals(explanation, direction.getExplanation());
         assertEquals(parties, direction.getParties());
