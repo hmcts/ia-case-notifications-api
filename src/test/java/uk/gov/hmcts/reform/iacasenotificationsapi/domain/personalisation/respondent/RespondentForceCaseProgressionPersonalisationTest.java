@@ -2,10 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Map;
 import org.junit.Test;
@@ -14,8 +11,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 public class RespondentForceCaseProgressionPersonalisationTest {
 
     private RespondentForceCaseProgressionPersonalisation personalisation =
-        new RespondentForceCaseProgressionPersonalisation(
-            "templateId", "emailAddress");
+        new RespondentForceCaseProgressionPersonalisation("templateId",
+            "emailAddress", "https://manage-case.platform.hmcts.net/");
 
     @Test
     public void getTemplateId() {
@@ -39,7 +36,7 @@ public class RespondentForceCaseProgressionPersonalisationTest {
         assertEquals("RP/50001/2020", actualPersonalisation.get("appealReferenceNumber"));
         assertEquals("Lacy Dawson", actualPersonalisation.get("appellantGivenNames"));
         assertEquals("Venus Blevins", actualPersonalisation.get("appellantFamilyName"));
-        assertEquals("A1234567", actualPersonalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("CASE001", actualPersonalisation.get("legalRepReferenceNumber"));
     }
 
     private AsylumCase writeTestAsylumCase() {
@@ -47,7 +44,7 @@ public class RespondentForceCaseProgressionPersonalisationTest {
         asylumCase.write(APPEAL_REFERENCE_NUMBER, "RP/50001/2020");
         asylumCase.write(APPELLANT_GIVEN_NAMES, "Lacy Dawson");
         asylumCase.write(APPELLANT_FAMILY_NAME, "Venus Blevins");
-        asylumCase.write(HOME_OFFICE_REFERENCE_NUMBER, "A1234567");
+        asylumCase.write(LEGAL_REP_REFERENCE_NUMBER, "CASE001");
         return asylumCase;
     }
 }

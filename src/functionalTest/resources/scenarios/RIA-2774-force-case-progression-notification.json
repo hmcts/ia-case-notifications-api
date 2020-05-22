@@ -62,8 +62,9 @@
         "subject": "Immigration and Asylum appeal: Case progressed without respondent evidence",
         "body": [
           "PA/12345/2019",
-          "A1234567",
-          "Talha Awan"
+          "CASE001",
+          "Talha Awan",
+          "https://manage-case.platform.hmcts.net/"
         ]
       }
     ]
