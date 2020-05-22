@@ -25,7 +25,7 @@ public class RespondentForceCaseProgressionPersonalisation implements EmailNotif
         @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
         @Value("${govnotify.template.forceCaseProgression.awaitingRespondentEvidence.to.caseBuilding.respondent.email}")
             String respondentEmailTemplateId,
-        @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddress,
+        @Value("${respondentEmailAddresses.respondentEvidenceDirection}") String respondentEmailAddress,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
     ) {
 
