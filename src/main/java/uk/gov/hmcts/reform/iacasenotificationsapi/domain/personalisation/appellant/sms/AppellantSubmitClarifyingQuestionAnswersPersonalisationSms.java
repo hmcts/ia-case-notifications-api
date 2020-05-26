@@ -25,7 +25,7 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSms implemen
     private final SystemDateProvider systemDateProvider;
 
     public AppellantSubmitClarifyingQuestionAnswersPersonalisationSms(
-        @Value("${govnotify.template.submitReasonsForAppeal.appellant.sms}") String submitClarifyingQuestionAnswersAppellantSmsTemplateId,
+        @Value("${govnotify.template.submitClarifyingQuestionAnswers.appellant.sms}") String submitClarifyingQuestionAnswersAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterClarifyingQuestionsAnswers}") int daysToWaitAfterClarifyingQuestionsAnswers,
         RecipientsFinder recipientsFinder,
