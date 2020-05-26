@@ -26,7 +26,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmailTest {
+public class AppellantSubmitClarifyingQuestionAnswersPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -45,7 +45,7 @@ public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmailTest {
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
 
-    private AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail appellantClarifyingQuestionsAnswersSubmittedPersonalisationEmail;
+    private AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail appellantClarifyingQuestionsAnswersSubmittedPersonalisationEmail;
 
     @Before
     public void setup() {
@@ -55,7 +55,7 @@ public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
 
-        appellantClarifyingQuestionsAnswersSubmittedPersonalisationEmail = new AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail(
+        appellantClarifyingQuestionsAnswersSubmittedPersonalisationEmail = new AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
             5,

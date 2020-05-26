@@ -247,7 +247,7 @@ govnotify:
       appellant:
         email: 500c6a6f-7d4f-4833-86c4-a07b43bbe717
         sms: bcfbd5a8-fc88-4c7f-ad16-e28d62dfbe73
-    submitClarifyingQuestionsAnswers:
+    submitClarifyingQuestionAnswers:
       caseOfficer:
         email: 988461af-9111-4b4a-abba-6dfb3a40b422
       appellant:
@@ -291,7 +291,7 @@ security:
       - "submitAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
-      - "submitClarifyingQuestionsAnswers"
+      - "submitClarifyingQuestionAnswers"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"

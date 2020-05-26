@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationSmsTest {
+public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -40,7 +40,7 @@ public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationSmsTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
 
-    private AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms;
+    private AppellantSubmitClarifyingQuestionAnswersPersonalisationSms appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms;
 
     @Before
     public void setup() {
@@ -48,7 +48,7 @@ public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
 
-        appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms = new AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms(
+        appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms = new AppellantSubmitClarifyingQuestionAnswersPersonalisationSms(
             smsTemplateId,
             iaAipFrontendUrl,
             5,

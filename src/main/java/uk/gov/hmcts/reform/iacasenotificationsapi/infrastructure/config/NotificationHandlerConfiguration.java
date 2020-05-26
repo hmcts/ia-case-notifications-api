@@ -721,8 +721,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitClarifyingQuestionsAnswersNotificationHandler(
-        @Qualifier("submitClarifyingQuestionsAnswersNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> submitClarifyingQuestionAnswersNotificationHandler(
+        @Qualifier("submitClarifyingQuestionAnswersNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -733,7 +733,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == AIP).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.SUBMIT_CLARIFYING_QUESTIONS_ANSWERS
+                       && callback.getEvent() == Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS
                        && isAipJourney;
             }, notificationGenerators
         );

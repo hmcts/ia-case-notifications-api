@@ -16,22 +16,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms implements SmsNotificationPersonalisation {
+public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String submitClarifyingQuestionsAnswersAppellantSmsTemplateId;
+    private final String submitClarifyingQuestionAnswersAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
     private final int daysToWaitAfterClarifyingQuestionsAnswers;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
 
-    public AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms(
-        @Value("${govnotify.template.submitReasonsForAppeal.appellant.sms}") String submitClarifyingQuestionsAnswersAppellantSmsTemplateId,
+    public AppellantSubmitClarifyingQuestionAnswersPersonalisationSms(
+        @Value("${govnotify.template.submitReasonsForAppeal.appellant.sms}") String submitClarifyingQuestionAnswersAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterClarifyingQuestionsAnswers}") int daysToWaitAfterClarifyingQuestionsAnswers,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
-        this.submitClarifyingQuestionsAnswersAppellantSmsTemplateId = submitClarifyingQuestionsAnswersAppellantSmsTemplateId;
+        this.submitClarifyingQuestionAnswersAppellantSmsTemplateId = submitClarifyingQuestionAnswersAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysToWaitAfterClarifyingQuestionsAnswers = daysToWaitAfterClarifyingQuestionsAnswers;
         this.recipientsFinder = recipientsFinder;
@@ -40,7 +40,7 @@ public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms impleme
 
     @Override
     public String getTemplateId() {
-        return submitClarifyingQuestionsAnswersAppellantSmsTemplateId;
+        return submitClarifyingQuestionAnswersAppellantSmsTemplateId;
     }
 
     @Override

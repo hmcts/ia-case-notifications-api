@@ -51,7 +51,7 @@ public class EventTest {
         assertEquals("submitTimeExtension", Event.SUBMIT_TIME_EXTENSION.toString());
         assertEquals("reviewTimeExtension", Event.REVIEW_TIME_EXTENSION.toString());
         assertEquals("sendDirectionWithQuestions", Event.SEND_DIRECTION_WITH_QUESTIONS.toString());
-        assertEquals("submitClarifyingQuestionsAnswers", Event.SUBMIT_CLARIFYING_QUESTIONS_ANSWERS.toString());
+        assertEquals("submitClarifyingQuestionAnswers", Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 

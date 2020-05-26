@@ -15,23 +15,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String submitClarifyingQuestionsAnswersAppellantEmailTemplateId;
+    private final String submitClarifyingQuestionAnswersAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final int daysToWaitAfterClarifyingQuestionsAnswers;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
 
 
-    public AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail(
-        @Value("${govnotify.template.submitClarifyingQuestionsAnswers.appellant.email}") String submitClarifyingQuestionsAnswersAppellantEmailTemplateId,
+    public AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail(
+        @Value("${govnotify.template.submitClarifyingQuestionAnswers.appellant.email}") String submitClarifyingQuestionAnswersAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterClarifyingQuestionsAnswers}") int daysToWaitAfterClarifyingQuestionsAnswers,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
-        this.submitClarifyingQuestionsAnswersAppellantEmailTemplateId = submitClarifyingQuestionsAnswersAppellantEmailTemplateId;
+        this.submitClarifyingQuestionAnswersAppellantEmailTemplateId = submitClarifyingQuestionAnswersAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysToWaitAfterClarifyingQuestionsAnswers = daysToWaitAfterClarifyingQuestionsAnswers;
         this.recipientsFinder = recipientsFinder;
@@ -40,7 +40,7 @@ public class AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail imple
 
     @Override
     public String getTemplateId() {
-        return submitClarifyingQuestionsAnswersAppellantEmailTemplateId;
+        return submitClarifyingQuestionAnswersAppellantEmailTemplateId;
     }
 
     @Override

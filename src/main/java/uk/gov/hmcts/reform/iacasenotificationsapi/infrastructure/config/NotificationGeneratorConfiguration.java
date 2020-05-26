@@ -809,22 +809,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitClarifyingQuestionsAnswersNotificationGenerator")
-    public List<NotificationGenerator> submitClarifyingQuestionsAnswersNotificationGenerator(
+    @Bean("submitClarifyingQuestionAnswersNotificationGenerator")
+    public List<NotificationGenerator> submitClarifyingQuestionAnswersNotificationGenerator(
         CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation,
-        AppellantSubmitClarifyingQuestionsAnswersPersonalisationSms appellantSubmitClarifyingQuestionsAnswersPersonalisationSms,
-        AppellantSubmitClarifyingQuestionsAnswersPersonalisationEmail appellantSubmitClarifyingQuestionsAnswersPersonalisationEmail,
+        AppellantSubmitClarifyingQuestionAnswersPersonalisationSms appellantSubmitClarifyingQuestionAnswersPersonalisationSms,
+        AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail appellantSubmitClarifyingQuestionAnswersPersonalisationEmail,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantSubmitClarifyingQuestionsAnswersPersonalisationEmail, caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation),
+                newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationEmail, caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                newArrayList(appellantSubmitClarifyingQuestionsAnswersPersonalisationSms),
+                newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )

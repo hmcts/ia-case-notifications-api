@@ -17,24 +17,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @Service
 public class CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String submitClarifyingQuestionsAnswersCaseOfficerSmsTemplateId;
+    private final String submitClarifyingQuestionAnswersCaseOfficerSmsTemplateId;
     private final String iaExUiFrontendUrl;
     private final EmailAddressFinder emailAddressFinder;
 
 
     public CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation(
-        @NotNull(message = "submitClarifyingQuestionsAnswersCaseOfficerSmsTemplateId cannot be null") @Value("${govnotify.template.submitClarifyingQuestionsAnswers.caseOfficer.email}") String submitClarifyingQuestionsAnswersCaseOfficerSmsTemplateId,
+        @NotNull(message = "submitClarifyingQuestionAnswersCaseOfficerSmsTemplateId cannot be null") @Value("${govnotify.template.submitClarifyingQuestionAnswers.caseOfficer.email}") String submitClarifyingQuestionAnswersCaseOfficerSmsTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         EmailAddressFinder emailAddressFinder
     ) {
-        this.submitClarifyingQuestionsAnswersCaseOfficerSmsTemplateId = submitClarifyingQuestionsAnswersCaseOfficerSmsTemplateId;
+        this.submitClarifyingQuestionAnswersCaseOfficerSmsTemplateId = submitClarifyingQuestionAnswersCaseOfficerSmsTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return submitClarifyingQuestionsAnswersCaseOfficerSmsTemplateId;
+        return submitClarifyingQuestionAnswersCaseOfficerSmsTemplateId;
     }
 
     @Override
