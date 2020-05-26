@@ -284,12 +284,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewNotificationGenerator")
     public List<NotificationGenerator> respondentReviewNotificationGenerator(
         RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+        LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentDirectionPersonalisation),
+                newArrayList(
+                    respondentDirectionPersonalisation,
+                    legalRepresentativeRespondentReviewPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -322,12 +325,16 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentEvidenceRepNotificationGenerator")
     public List<NotificationGenerator> respondentEvidenceRepNotificationGenerator(
         RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation,
+        LegalRepresentativeRequestHomeOfficeBundlePersonalisation legalRepresentativeRequestHomeOfficeBundlePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentEvidenceDirectionPersonalisation),
+                newArrayList(
+                    respondentEvidenceDirectionPersonalisation,
+                    legalRepresentativeRequestHomeOfficeBundlePersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )
@@ -663,13 +670,13 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-              newArrayList(
-                  legalRepresentativeChangeHearingCentrePersonalisation,
-                  caseOfficerChangeHearingCentrePersonalisation
-              ),
-              notificationSender,
-              notificationIdAppender
-          )
+                newArrayList(
+                    legalRepresentativeChangeHearingCentrePersonalisation,
+                    caseOfficerChangeHearingCentrePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
@@ -717,6 +724,91 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitTimeExtensionAipNotificationGenerator")
+    public List<NotificationGenerator> submitTimeExtensionAipNotificationGenerator(
+        CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation,
+        AppellantSubmitTimeExtensionPersonalisationEmail appellantSubmitTimeExtensionPersonalisationEmail,
+        AppellantSubmitTimeExtensionPersonalisationSms appellantSubmitTimeExtensionPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerSubmitTimeExtensionPersonalisation, appellantSubmitTimeExtensionPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitTimeExtensionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("reviewTimeExtensionGrantedGenerator")
+    public List<NotificationGenerator> reviewTimeExtensionGrantedGenerator(
+        AppellantReviewTimeExtensionGrantedPersonalisationEmail appellantReviewTimeExtensionGrantedPersonalisationEmail,
+        AppellantReviewTimeExtensionGrantedPersonalisationSms appellantReviewTimeExtensionGrantedPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+              newArrayList(appellantReviewTimeExtensionGrantedPersonalisationEmail),
+              notificationSender,
+              notificationIdAppender
+          ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantReviewTimeExtensionGrantedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("reviewTimeExtensionRefusedGenerator")
+    public List<NotificationGenerator> reviewTimeExtensionRefusedGenerator(
+        AppellantReviewTimeExtensionRefusedPersonalisationEmail appellantReviewTimeExtensionRefusedPersonalisationEmail,
+        AppellantReviewTimeExtensionRefusedPersonalisationSms appellantReviewTimeExtensionRefusedPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+              newArrayList(appellantReviewTimeExtensionRefusedPersonalisationEmail),
+              notificationSender,
+              notificationIdAppender
+          ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantReviewTimeExtensionRefusedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("requestClarifyingQuestionsAipNotificationGenerator")
+    public List<NotificationGenerator> requestClarifyingQuestionsAipNotificationGenerator(
+        AppellantRequestClarifyingQuestionsPersonalisationEmail appellantRequestClarifyingQuestionsPersonalisationEmail,
+        AppellantRequestClarifyingQuestionsPersonalisationSms appellantRequestClarifyingQuestionsPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantRequestClarifyingQuestionsPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestClarifyingQuestionsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("submitClarifyingQuestionsAnswersNotificationGenerator")
     public List<NotificationGenerator> submitClarifyingQuestionsAnswersNotificationGenerator(
         CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation,
@@ -738,5 +830,6 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
 
 }
