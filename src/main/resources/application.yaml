@@ -286,6 +286,7 @@ security:
       - "submitAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
+      - "submitClarifyingQuestionAnswers"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
