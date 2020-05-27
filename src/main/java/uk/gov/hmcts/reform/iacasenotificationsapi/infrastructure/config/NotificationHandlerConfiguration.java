@@ -229,16 +229,17 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
+                System.out.println("submitAppealAipNotificationGenerator");
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean isAipJourney = asylumCase
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == AIP).orElse(false);
-
+                System.out.println("isAipJourney " + isAipJourney);
                 boolean isAppealOnTime = asylumCase
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == NO).orElse(false);
-
+                System.out.println("isAppealOnTime " + isAppealOnTime);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isAipJourney
@@ -249,17 +250,39 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealRepNotificationHandler(
-        @Qualifier("submitAppealRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
+            @Qualifier("submitAppealRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && callback.getCaseDetails().getCaseData()
-                    .read(JOURNEY_TYPE, JourneyType.class)
-                    .map(type -> type == REP).orElse(true),
-            notificationGenerators
+                (callbackStage, callback) -> {
+                    System.out.println("submitAppealRepNotificationGenerator");
+                    System.out.println("JOURNEY_TYPE "+ callback.getCaseDetails().getCaseData()
+                            .read(JOURNEY_TYPE, JourneyType.class));
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SUBMIT_APPEAL
+                            && callback.getCaseDetails().getCaseData()
+                            .read(JOURNEY_TYPE, JourneyType.class)
+                            .map(type -> type == REP).orElse(true);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealSubmitToRepRepNotificationHandler(
+            @Qualifier("submitAppealRepSubmitToRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    System.out.println("submitAppealRepSubmitToRepNotificationGenerator");
+                    System.out.println("JOURNEY_TYPE "+ callback.getCaseDetails().getCaseData()
+                            .read(JOURNEY_TYPE, JourneyType.class));
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SUBMIT_APPEAL
+                            && callback.getCaseDetails().getCaseData()
+                            .read(JOURNEY_TYPE, JourneyType.class)
+                            .map(type -> type == REP).orElse(true);
+                }, notificationGenerators
         );
     }
 
@@ -285,16 +308,17 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
+                System.out.println("submitAppealOutOfTimeAipNotificationGenerator");
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean isAipJourney = asylumCase
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == AIP).orElse(false);
-
+                System.out.println("isAipJourney " + isAipJourney);
                 boolean isOutOfTimeAppeal = asylumCase
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
-
+                System.out.println("isOutOfTimeAppeal " + isOutOfTimeAppeal);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isAipJourney

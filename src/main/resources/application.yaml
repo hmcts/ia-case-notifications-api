@@ -142,6 +142,9 @@ govnotify:
         email: da6ca0ff-3955-498c-8d27-0eca1fbdf006
       homeOffice:
         email: 97b95f02-4dc3-4282-8c8c-802efb2d21ef
+    submitAppeal:
+      legalRep:
+        email: a1df610c-cd9a-494a-9100-15ed94f6fe66
     recordRefusedApplicationBeforeListing:
       legalRep:
         email: 8bbb1537-9856-4a3e-b6cd-b862b1e192ff
