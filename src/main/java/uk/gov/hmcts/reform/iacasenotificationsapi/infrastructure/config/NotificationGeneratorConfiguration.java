@@ -686,13 +686,13 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-              newArrayList(
-                  legalRepresentativeChangeHearingCentrePersonalisation,
-                  caseOfficerChangeHearingCentrePersonalisation
-              ),
-              notificationSender,
-              notificationIdAppender
-          )
+                newArrayList(
+                    legalRepresentativeChangeHearingCentrePersonalisation,
+                    caseOfficerChangeHearingCentrePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
@@ -803,4 +803,49 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("requestClarifyingQuestionsAipNotificationGenerator")
+    public List<NotificationGenerator> requestClarifyingQuestionsAipNotificationGenerator(
+        AppellantRequestClarifyingQuestionsPersonalisationEmail appellantRequestClarifyingQuestionsPersonalisationEmail,
+        AppellantRequestClarifyingQuestionsPersonalisationSms appellantRequestClarifyingQuestionsPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantRequestClarifyingQuestionsPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestClarifyingQuestionsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitClarifyingQuestionAnswersNotificationGenerator")
+    public List<NotificationGenerator> submitClarifyingQuestionAnswersNotificationGenerator(
+        CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation,
+        AppellantSubmitClarifyingQuestionAnswersPersonalisationSms appellantSubmitClarifyingQuestionAnswersPersonalisationSms,
+        AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail appellantSubmitClarifyingQuestionAnswersPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationEmail, caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+
 }
