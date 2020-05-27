@@ -141,6 +141,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitAppealRepSubmitToRepNotificationGenerator")
+    public List<NotificationGenerator> submitAppealRepSubmitToRepNotificationGenerator(
+            LegalRepresentativeSubmitAppealPersonalisation legalRepresentativeSubmitAppealPersonalisation,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
     @Bean("submitAppealOutOfTimeAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
         CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
