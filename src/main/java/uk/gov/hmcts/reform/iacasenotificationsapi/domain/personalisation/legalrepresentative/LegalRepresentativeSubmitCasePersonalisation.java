@@ -23,14 +23,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 
 @Service
-public class LegalRepresentativeSubmitAppealPersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeSubmitCasePersonalisation implements EmailNotificationPersonalisation {
 
     private final String submitAppealLegalRepresentativeBeforeListingTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public LegalRepresentativeSubmitAppealPersonalisation(
-        @NotNull(message = "endAppealLegalRepresentativeTemplateId cannot be null") @Value("${govnotify.template.submitAppeal.legalRep.email}") String submitAppealLegalRepresentativeBeforeListingTemplateId,
+    public LegalRepresentativeSubmitCasePersonalisation(
+        @NotNull(message = "endAppealLegalRepresentativeTemplateId cannot be null") @Value("${govnotify.template.submitCase.legalRep.email}") String submitAppealLegalRepresentativeBeforeListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -53,7 +53,7 @@ public class LegalRepresentativeSubmitAppealPersonalisation implements EmailNoti
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_SUBMIT_APPEAL_LEGAL_REPRESENTATIVE";
+        return caseId + "_CASE_SUBMITTED_LEGAL_REPRESENTATIVE";
     }
 
     @Override

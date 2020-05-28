@@ -165,7 +165,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
-
+    
     @Bean("submitAppealHoNotificationGenerator")
     public List<NotificationGenerator> submitAppealHoNotificationGenerator(
             HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
@@ -180,6 +180,7 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
 
     @Bean("submitCaseRepSubmitToRepNotificationGenerator")
     public List<NotificationGenerator> submitCaseRepSubmitToRepNotificationGenerator(
