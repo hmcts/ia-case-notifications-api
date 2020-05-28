@@ -141,9 +141,9 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitAppealRepSubmitToRepNotificationGenerator")
-    public List<NotificationGenerator> submitAppealRepSubmitToRepNotificationGenerator(
-            LegalRepresentativeSubmitAppealPersonalisation legalRepresentativeSubmitAppealPersonalisation,
+    @Bean("submitCaseRepSubmitToRepNotificationGenerator")
+    public List<NotificationGenerator> submitCaseRepSubmitToRepNotificationGenerator(
+            LegalRepresentativeSubmitCasePersonalisation legalRepresentativeSubmitAppealPersonalisation,
             NotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
