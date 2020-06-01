@@ -10,19 +10,22 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LegalRepresentativeEditListingPersonalisationTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class LegalRepresentativeEditListingPersonalisationTest {
 
     @Mock Callback<AsylumCase> callback;
     @Mock AsylumCase asylumCase;
@@ -54,7 +57,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
 
     private LegalRepresentativeEditListingPersonalisation legalRepresentativeEditListingPersonalisation;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmailAddress));
@@ -67,22 +70,22 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_template_id() {
+    void should_return_given_template_id() {
         assertEquals(templateId, legalRepresentativeEditListingPersonalisation.getTemplateId());
     }
 
     @Test
-    public void should_return_given_reference_id() {
+    void should_return_given_reference_id() {
         assertEquals(caseId + "_CASE_RE_LISTED_LEGAL_REPRESENTATIVE", legalRepresentativeEditListingPersonalisation.getReferenceId(caseId));
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
+    void should_return_given_email_address_from_asylum_case() {
         assertTrue(legalRepresentativeEditListingPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
     }
 
     @Test
-    public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
+    void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> legalRepresentativeEditListingPersonalisation.getRecipientsList(asylumCase))
@@ -91,7 +94,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> legalRepresentativeEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
@@ -99,7 +102,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation = legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
@@ -108,7 +111,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_optional_fields_are_blank() {
+    void should_return_personalisation_when_optional_fields_are_blank() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithBlankValues());
 
         Map<String, String> personalisation = legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);

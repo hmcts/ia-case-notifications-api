@@ -2,9 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.function.BiPredicate;
@@ -59,7 +57,7 @@ public class NotificationHandlerTest {
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("Cannot handle callback");
 
-        verifyZeroInteractions(notificationGenerator);
+        verifyNoInteractions(notificationGenerator);
     }
 
     @Test
