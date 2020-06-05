@@ -237,17 +237,31 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealRepNotificationHandler(
-        @Qualifier("submitAppealRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
+            @Qualifier("submitAppealRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && callback.getCaseDetails().getCaseData()
-                    .read(JOURNEY_TYPE, JourneyType.class)
-                    .map(type -> type == REP).orElse(true),
-            notificationGenerators
+            (callbackStage, callback) -> {
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && callback.getCaseDetails().getCaseData()
+                        .read(JOURNEY_TYPE, JourneyType.class)
+                        .map(type -> type == REP).orElse(true);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitCaseRepSubmitToRepNotificationHandler(
+            @Qualifier("submitCaseRepSubmitToRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_CASE
+                        && callback.getCaseDetails().getCaseData()
+                        .read(JOURNEY_TYPE, JourneyType.class)
+                        .map(type -> type == REP).orElse(true);
+            }, notificationGenerators
         );
     }
 
