@@ -163,14 +163,5 @@ public class HomeOfficeEndAppealPersonalisationTest {
         assertTrue(homeOfficeEndAppealPersonalisation.isAppealListed(asylumCase));
     }
 
-    @Test
-    public void should_return_false_if_appeal_not_yet_listed_unless_in_listing() {
-        assertFalse(homeOfficeEndAppealPersonalisation.isAppealListed(asylumCase));
-
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-
-        assertTrue(homeOfficeEndAppealPersonalisation.isAppealListed(asylumCase));
-    }
-
 
 }
