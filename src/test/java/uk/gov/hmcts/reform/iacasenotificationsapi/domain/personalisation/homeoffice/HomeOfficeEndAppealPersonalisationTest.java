@@ -15,22 +15,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HomeOfficeEndAppealPersonalisationTest {
 
     @Mock AsylumCase asylumCase;
     @Mock CustomerServicesProvider customerServicesProvider;
-    @Mock EmailAddressFinder emailAddressFinder;
 
     private Long caseId = 12345L;
     private String beforeListingTemplateId = "beforeListingTemplateId";
     private String afterListingTemplateId = "afterListingTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String beforeListingEmailAddress = "homeoffice@example.com";
-    private String afterListingEmailAddress = "hearinge@example.com";
+    private String emailAddress = "homeoffice@example.com";
 
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
@@ -63,15 +60,13 @@ public class HomeOfficeEndAppealPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(afterListingEmailAddress);
 
         homeOfficeEndAppealPersonalisation = new HomeOfficeEndAppealPersonalisation(
             beforeListingTemplateId,
             afterListingTemplateId,
-            beforeListingEmailAddress,
+            emailAddress,
             iaExUiFrontendUrl,
-            customerServicesProvider,
-            emailAddressFinder
+            customerServicesProvider
         );
     }
 
@@ -91,11 +86,7 @@ public class HomeOfficeEndAppealPersonalisationTest {
 
     @Test
     public void should_return_given_email_address() {
-        assertTrue(homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(beforeListingEmailAddress));
-
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-
-        assertTrue(homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(afterListingEmailAddress));
+        assertTrue(homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(emailAddress));
     }
 
     @Test
