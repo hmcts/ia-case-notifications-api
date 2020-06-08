@@ -30,7 +30,7 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisation implements 
             String editAppealAfterSubmitBeforeListingTemplateId,
         @Value("${govnotify.template.editAppealAfterSubmitAfterListing.legalRep.email}")
             String editAppealAfterSubmitAfterListingTemplateId,
-        String iaExUiFrontendUrl,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider) {
 
         this.editAppealAfterSubmitBeforeListingTemplateId = editAppealAfterSubmitBeforeListingTemplateId;

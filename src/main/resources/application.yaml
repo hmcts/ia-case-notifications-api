@@ -312,7 +312,7 @@ govnotify:
         email: 77d13640-e7f2-45e2-abec-56f34f2a26af
     editAppealAfterSubmitAfterListing:
       legalRep:
-        email: 77d13640-e7f2-45e2-abec-56f34f2a26af
+        email: 9e3d4485-4b36-4f83-aad7-4896e9dfc97b
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 

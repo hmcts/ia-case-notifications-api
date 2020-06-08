@@ -1,5 +1,5 @@
 {
-  "description": "RIA-2338 CaseOfficer Edited the appeal after it was submitted",
+  "description": "RIA-2338 CaseOfficer Edited the appeal after it was submitted before listing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -34,7 +34,10 @@
         "body": [
           "PA/12345/2019",
           "CASE001",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]
