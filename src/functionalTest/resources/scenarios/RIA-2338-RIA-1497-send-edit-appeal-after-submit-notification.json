@@ -57,7 +57,10 @@
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Talha Awan"
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]

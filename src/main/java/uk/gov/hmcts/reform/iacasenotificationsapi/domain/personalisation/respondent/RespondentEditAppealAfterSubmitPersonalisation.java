@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
@@ -22,18 +23,22 @@ public class RespondentEditAppealAfterSubmitPersonalisation implements EmailNoti
     private final String respondentEmailAddressUntilRespondentReview;
     private final String respondentEmailAddressAtRespondentReview;
     private final EmailAddressFinder respondentEmailAddressAfterRespondentReview;
+    private final String iaExUiFrontendUrl;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public RespondentEditAppealAfterSubmitPersonalisation(
         @Value("${govnotify.template.editAppealAfterSubmit.respondent.email}") String respondentEditAppealAfterSubmitTemplateId,
         @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}") String respondentEmailAddressUntilRespondentReview,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddressAtRespondentReview,
-        EmailAddressFinder respondentEmailAddressAfterRespondentReview
-    ) {
+        EmailAddressFinder respondentEmailAddressAfterRespondentReview,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl, CustomerServicesProvider customerServicesProvider) {
 
         this.respondentEditAppealAfterSubmitTemplateId = respondentEditAppealAfterSubmitTemplateId;
         this.respondentEmailAddressUntilRespondentReview = respondentEmailAddressUntilRespondentReview;
         this.respondentEmailAddressAtRespondentReview = respondentEmailAddressAtRespondentReview;
         this.respondentEmailAddressAfterRespondentReview = respondentEmailAddressAfterRespondentReview;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -61,6 +66,8 @@ public class RespondentEditAppealAfterSubmitPersonalisation implements EmailNoti
             .put("homeOfficeReference", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .build();
     }
 

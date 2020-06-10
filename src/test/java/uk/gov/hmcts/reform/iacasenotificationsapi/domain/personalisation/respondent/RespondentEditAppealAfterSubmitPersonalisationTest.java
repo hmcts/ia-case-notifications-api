@@ -1,12 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,6 +25,8 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
     @Mock AsylumCase asylumCase;
 
     @Mock EmailAddressFinder emailAddressFinder;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -36,6 +40,10 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
 
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+
     private RespondentEditAppealAfterSubmitPersonalisation editAppealAfterSubmitPersonalisation;
 
     @Before
@@ -46,12 +54,16 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+
         editAppealAfterSubmitPersonalisation = new RespondentEditAppealAfterSubmitPersonalisation(
             templateId,
             homeOfficeApcEmailAddress,
             homeOfficeLartEmailAddress,
-            emailAddressFinder
-        );
+            emailAddressFinder,
+            iaExUiFrontendUrl,
+            customerServicesProvider);
     }
 
     @Test
@@ -105,6 +117,9 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
         assertEquals(homeOfficeReference, personalisation.get("homeOfficeReference"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
     @Test
@@ -115,13 +130,4 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
             .hasMessage("asylumCase must not be null");
     }
 
-    private Map<String, String> getPersonalisation() {
-        return ImmutableMap
-            .<String, String>builder()
-            .put("appealReferenceNumber", appealReferenceNumber)
-            .put("homeOfficeReference", homeOfficeReference)
-            .put("appellantGivenNames", appellantGivenNames)
-            .put("appellantFamilyName", appellantFamilyName)
-            .build();
-    }
 }
