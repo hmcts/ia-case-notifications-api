@@ -69,6 +69,7 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisation implements 
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
     }
