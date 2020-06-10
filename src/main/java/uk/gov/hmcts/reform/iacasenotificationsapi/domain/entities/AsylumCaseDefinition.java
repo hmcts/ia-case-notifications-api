@@ -224,7 +224,11 @@ public enum AsylumCaseDefinition {
         "isFtpaRespondentDecided", new TypeReference<YesOrNo>(){}),
 
     PAYMENT_STATUS(
-        "paymentStatus", new TypeReference<PaymentStatus>(){});
+        "paymentStatus", new TypeReference<PaymentStatus>(){}),
+
+    APPEAL_TYPE(
+        "appealType", new TypeReference<AppealType>(){})
+    ;
 
     private final String value;
     private final TypeReference typeReference;
