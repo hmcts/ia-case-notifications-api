@@ -149,6 +149,11 @@ public enum AsylumCaseDefinition {
     ADJOURN_HEARING_WITHOUT_DATE_REASONS(
         "adjournHearingWithoutDateReasons", new TypeReference<String>() {}),
 
+    PAYMENT_STATUS(
+        "paymentStatus", new TypeReference<String>(){}),
+
+    APPEAL_TYPE(
+        "appealType", new TypeReference<AppealType>(){}),
     ;
 
     private final String value;
