@@ -15,7 +15,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 
-
 @Service
 public class HomeOfficeSubmitAppealPersonalisation  implements EmailNotificationPersonalisation {
 
