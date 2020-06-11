@@ -8,7 +8,10 @@
       "eventId": "editAppealAfterSubmit",
       "state": "awaitingRespondentEvidence",
       "caseData": {
-        "template": "minimal-appeal-submitted.json"
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "currentCaseStateVisibleToHomeOfficeAll": "awaitingRespondentEvidence"
+        }
       }
     }
   },
@@ -29,7 +32,7 @@
     "notifications": [
       {
         "reference": "1234_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
-        "recipient": "{$homeOfficeEmailAddresses.birmingham}",
+        "recipient": "{$respondentEmailAddresses.nonStandardDirectionUntilListing}",
         "subject": "Immigration and Asylum appeal: application amended",
         "body": [
           "PA/12345/2019",

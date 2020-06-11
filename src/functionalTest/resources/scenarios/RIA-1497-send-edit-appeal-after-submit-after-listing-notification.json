@@ -10,10 +10,9 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "replacements": {
-            "listCaseHearingCentre": "taylorHouse",
-            "ariaListingReference": "LP/12345/2019"
-          }
+          "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
+          "listCaseHearingCentre": "birmingham",
+          "ariaListingReference": "LP/12345/2019"
         }
       }
     }
@@ -24,7 +23,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "listCaseHearingCentre": "taylorHouse",
+        "listCaseHearingCentre": "birmingham",
         "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
           {
@@ -41,6 +40,7 @@
         "subject": "Immigration and Asylum appeal: application amended",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "A1234567",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
