@@ -4,13 +4,12 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -19,7 +18,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @Service
 public class RespondentEditAppealAfterSubmitPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String respondentEditAppealAfterSubmitTemplateId;
+    private final String respondentEditAppealAfterSubmitBeforeListingTemplateId;
+    private final String respondentEditAppealAfterSubmitAfterListingTemplateId;
     private final String respondentEmailAddressUntilRespondentReview;
     private final String respondentEmailAddressAtRespondentReview;
     private final EmailAddressFinder respondentEmailAddressAfterRespondentReview;
@@ -27,13 +27,19 @@ public class RespondentEditAppealAfterSubmitPersonalisation implements EmailNoti
     private final CustomerServicesProvider customerServicesProvider;
 
     public RespondentEditAppealAfterSubmitPersonalisation(
-        @Value("${govnotify.template.editAppealAfterSubmit.respondent.email}") String respondentEditAppealAfterSubmitTemplateId,
-        @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}") String respondentEmailAddressUntilRespondentReview,
+        @Value("${govnotify.template.editAppealAfterSubmitBeforeListing.respondent.email}")
+            String respondentEditAppealAfterSubmitBeforeListingTemplateId,
+        @Value("${govnotify.template.editAppealAfterSubmitAfterListing.respondent.email}")
+            String respondentEditAppealAfterSubmitAfterListingTemplateId,
+        @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}")
+            String respondentEmailAddressUntilRespondentReview,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddressAtRespondentReview,
         EmailAddressFinder respondentEmailAddressAfterRespondentReview,
-        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl, CustomerServicesProvider customerServicesProvider) {
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        CustomerServicesProvider customerServicesProvider) {
 
-        this.respondentEditAppealAfterSubmitTemplateId = respondentEditAppealAfterSubmitTemplateId;
+        this.respondentEditAppealAfterSubmitBeforeListingTemplateId = respondentEditAppealAfterSubmitBeforeListingTemplateId;
+        this.respondentEditAppealAfterSubmitAfterListingTemplateId = respondentEditAppealAfterSubmitAfterListingTemplateId;
         this.respondentEmailAddressUntilRespondentReview = respondentEmailAddressUntilRespondentReview;
         this.respondentEmailAddressAtRespondentReview = respondentEmailAddressAtRespondentReview;
         this.respondentEmailAddressAfterRespondentReview = respondentEmailAddressAfterRespondentReview;
@@ -42,8 +48,16 @@ public class RespondentEditAppealAfterSubmitPersonalisation implements EmailNoti
     }
 
     @Override
-    public String getTemplateId() {
-        return respondentEditAppealAfterSubmitTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return isAppealListed(asylumCase) ? respondentEditAppealAfterSubmitAfterListingTemplateId
+            : respondentEditAppealAfterSubmitBeforeListingTemplateId;
+    }
+
+    protected boolean isAppealListed(AsylumCase asylumCase) {
+        final Optional<HearingCentre> appealListed = asylumCase
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+
+        return appealListed.isPresent();
     }
 
     @Override
@@ -63,6 +77,7 @@ public class RespondentEditAppealAfterSubmitPersonalisation implements EmailNoti
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("homeOfficeReference", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
