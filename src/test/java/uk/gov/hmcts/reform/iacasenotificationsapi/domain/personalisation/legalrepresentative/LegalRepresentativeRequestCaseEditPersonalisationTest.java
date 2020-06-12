@@ -147,6 +147,23 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
         String appellantFamilyName;
         String legalRepRefNumber;
 
+        public Scenario(String appealReferenceNumber,
+                        String appellantGivenNames,
+                        String appellantFamilyName,
+                        String legalRepRefNumber) {
+            this.appealReferenceNumber = appealReferenceNumber;
+            this.appellantGivenNames = appellantGivenNames;
+            this.appellantFamilyName = appellantFamilyName;
+            this.legalRepRefNumber = legalRepRefNumber;
+        }
+
+        public Scenario() {
+            this.appealReferenceNumber = null;
+            this.appellantGivenNames = null;
+            this.appellantFamilyName = null;
+            this.legalRepRefNumber = null;
+        }
+
         private static List<Scenario> builder() {
             List<Scenario> scenarios = new ArrayList<>();
 
