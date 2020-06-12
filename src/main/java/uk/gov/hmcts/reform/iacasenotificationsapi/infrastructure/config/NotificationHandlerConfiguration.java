@@ -43,11 +43,16 @@ public class NotificationHandlerConfiguration {
         @Qualifier("endAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.END_APPEAL,
-            notificationGenerators
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean isAppealPaid = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, String.class).isPresent();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.END_APPEAL
+                       && !isAppealPaid;
+            }, notificationGenerators
         );
     }
 
@@ -899,6 +904,35 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.MAKE_PAYMENT
                        && isCorrectAppealTypeAndState
                        && paymentStatus.equals("Success");
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealEndedNonPaymentLegalRepNotificationHandler(
+        @Qualifier("appealEndedNonPaymentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                State currentState = callback.getCaseDetails().getState();
+
+                boolean isCorrectAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == HU || type == EA).orElse(false);
+
+                boolean isCorrectAppealTypeAndState =
+                    isCorrectAppealType
+                    && (currentState == State.PENDING_PAYMENT);
+
+                String paymentStatus = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, String.class).orElse("");
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.END_APPEAL
+                       && isCorrectAppealTypeAndState
+                       && paymentStatus.equals("Payment due");
             }, notificationGenerators
         );
     }

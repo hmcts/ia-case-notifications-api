@@ -146,6 +146,7 @@ govnotify:
     endAppealBeforeListing:
       legalRep:
         email: 998bebf1-bb6c-44d6-a65b-ae7bb4ab186b
+        nonPaymentEmail: b333bbd7-c675-4a77-87a8-9eba9d04ee6e
       homeOffice:
         email: 287f890a-47bc-41e1-a4a9-d143f8eecb9b
     endAppealAfterListing:

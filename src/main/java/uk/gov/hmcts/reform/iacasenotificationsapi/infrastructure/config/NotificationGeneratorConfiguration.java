@@ -953,4 +953,22 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("appealEndedNonPaymentNotificationGenerator")
+    public List<NotificationGenerator> appealEndedNonPaymentLegalRepNotificationHandler(
+        LegalRepresentativeEndAppealNonPaymentPersonalisation legalRepresentativeEndAppealNonPaymentPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeEndAppealNonPaymentPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
