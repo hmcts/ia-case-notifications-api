@@ -882,4 +882,93 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitAppealPaidNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPaidLegalRepNotificationHandler(
+        LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPaidPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitAppealPaymentPendingNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPaymentPendingLegalRepNotificationHandler(
+        LegalRepresentativeAppealSubmittedPaymentPendingPersonalisation legalRepresentativeAppealSubmittedPaymentPendingPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPaymentPendingPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("paymentPendingPaidNotificationGenerator")
+    public List<NotificationGenerator> paymentPendingPaidLegalRepNotificationHandler(
+        LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativePendingPaymentPaidPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("paymentPaidNotificationGenerator")
+    public List<NotificationGenerator> paymentPaidLegalRepNotificationHandler(
+        LegalRepresentativePaymentPaidPersonalisation legalRepresentativePaymentPaidPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativePaymentPaidPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("appealEndedNonPaymentNotificationGenerator")
+    public List<NotificationGenerator> appealEndedNonPaymentLegalRepNotificationHandler(
+        LegalRepresentativeEndAppealNonPaymentPersonalisation legalRepresentativeEndAppealNonPaymentPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeEndAppealNonPaymentPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

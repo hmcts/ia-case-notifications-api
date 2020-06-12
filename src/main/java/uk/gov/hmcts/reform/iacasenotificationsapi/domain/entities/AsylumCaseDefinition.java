@@ -142,6 +142,12 @@ public enum AsylumCaseDefinition {
         "reviewTimeExtensionDecisionReason", new TypeReference<String>(){}),
     TIME_EXTENSIONS(
         "timeExtensions", new TypeReference<List<IdValue<TimeExtension>>>(){}),
+
+    PAYMENT_STATUS(
+        "paymentStatus", new TypeReference<String>(){}),
+
+    APPEAL_TYPE(
+        "appealType", new TypeReference<AppealType>(){}),
     ;
 
     private final String value;
