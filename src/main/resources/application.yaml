@@ -35,6 +35,11 @@ govnotify:
         legalRep:
           email: e8197293-3db9-4af9-95d2-067e217c03c2
     appealSubmitted:
+      legalRep:
+        paid:
+          email: e767a7ab-adc7-4784-9542-547ebe717fa4
+        paymentPending:
+          email: 2ef16c77-144d-49b5-b720-b88bedf8bda1
       appellant:
         email: 4625616a-178b-45fb-aebf-8cb945369ae0
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
@@ -46,6 +51,15 @@ govnotify:
       appellant:
         email: b864d01f-c80c-4d91-947f-9599f0b64163
         sms: c52f3074-4b5a-47e0-8dec-154ac5fc0513
+    pendingPayment:
+      legalRep:
+        paid:
+          email: 91cf84fe-55f0-41a4-9d0f-fe13ae45fb8c
+        paidAfterAppealSubmitted:
+          beforeListing:
+            email: da72f9c7-5654-40b3-b9e6-c474281b023e
+          afterListing:
+            email: 933df53d-5700-4ec5-8488-aa33b1541aaa
     requestRespondentEvidenceDirection:
       appellant:
         email: 9c8ab848-b1f7-4dbe-9854-4922e94ece67
@@ -305,6 +319,7 @@ security:
       - "startAppeal"
       - "editAppeal"
       - "submitAppeal"
+      - "makePayment"
       - "buildCase"
       - "submitCase"
       - "uploadAdditionalEvidence"
