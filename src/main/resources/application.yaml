@@ -244,7 +244,6 @@ govnotify:
         sms: 9f0dce67-f8ef-46aa-a2a5-edb7fb19b6fd
       caseOfficer:
         email: 89540f93-a31b-4803-a83e-35cacd0c2415
-<<<<<<< HEAD
     reviewTimeExtensionGranted:
       appellant:
         email: c445e51c-c41b-4bac-ba54-2fc576e5a100
