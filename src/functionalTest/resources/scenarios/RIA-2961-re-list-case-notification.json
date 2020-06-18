@@ -33,7 +33,7 @@
       {
         "reference": "1234_RE_LIST_CASE_ADMIN_OFFICER",
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
-        "subject": "Immigration and Asylum appeal: Re-list case",
+        "subject": "Immigration and Asylum appeal: re-list case",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
