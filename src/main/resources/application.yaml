@@ -274,6 +274,9 @@ govnotify:
         email: f5e4cbca-4fc8-4e39-bb92-9fe915aa8c61
       adminOfficer:
         email: 5469078a-4ccf-4579-b72b-37900e091455
+    reListCase:
+      adminOfficer:
+        email: efec8c6f-38ea-46b6-ad00-9e6870935a4b
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -355,11 +358,13 @@ security:
       - "forceCaseToCaseUnderReview"
       - "forceCaseToSubmitHearingRequirements"
       - "adjournHearingWithoutDate"
+      - "restoreStateFromAdjourn"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
       - "sendDecisionAndReasons"
       - "adjournHearingWithoutDate"
+      - "restoreStateFromAdjourn"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"

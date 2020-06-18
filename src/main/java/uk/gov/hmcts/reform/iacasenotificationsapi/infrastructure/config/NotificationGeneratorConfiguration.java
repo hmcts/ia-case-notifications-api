@@ -15,14 +15,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 
 @Configuration
 public class NotificationGeneratorConfiguration {
+
+    @Bean("reListCaseNotificationGenerator")
+    public List<NotificationGenerator> reListCaseNotificationGenerator(
+        AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(adminOfficerReListCasePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 
     @Bean("requestCaseEditNotificationGenerator")
     public List<NotificationGenerator> requestCaseEditNotificationGenerator(
