@@ -988,4 +988,21 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("bothPartiesNonStandardDirectionGenerator")
+    public List<NotificationGenerator> bothPartiesNonStandardDirectionGenerator(
+        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+        LegalRepresentativeNonStandardDirectionPersonalisation legalRepresentativeNonStandardDirectionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
 }

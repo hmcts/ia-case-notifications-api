@@ -437,6 +437,29 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> bothPartiesNonStandardDirectionHandler(
+        @Qualifier("bothPartiesNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.SEND_DIRECTION
+                       && directionFinder
+                           .findFirst(asylumCase, DirectionTag.NONE)
+                           .map(direction -> direction.getParties().equals(Parties.BOTH))
+                           .orElse(false);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordApplicationNotificationHandler(
         @Qualifier("recordApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
