@@ -124,6 +124,30 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> bothPartiesChangeDirectionDueDateNotificationHandler(
+        @Qualifier("bothPartiesChangeDirectionDueDateNotificationGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                    .map(Parties -> Parties.equals(Parties.BOTH))
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                       && isRespondent;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
         @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
