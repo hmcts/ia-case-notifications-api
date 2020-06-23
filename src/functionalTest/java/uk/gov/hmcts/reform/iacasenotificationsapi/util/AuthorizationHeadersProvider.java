@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.idam.IdamAuthorizor;
 
+
 @Service
 public class AuthorizationHeadersProvider {
 
