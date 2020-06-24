@@ -45,6 +45,10 @@ public enum Event {
     CHANGE_HEARING_CENTRE("changeHearingCentre"),
     APPLY_FOR_FTPA_APPELLANT("applyForFTPAAppellant"),
     APPLY_FOR_FTPA_RESPONDENT("applyForFTPARespondent"),
+    SUBMIT_TIME_EXTENSION("submitTimeExtension"),
+    REVIEW_TIME_EXTENSION("reviewTimeExtension"),
+    SEND_DIRECTION_WITH_QUESTIONS("sendDirectionWithQuestions"),
+    SUBMIT_CLARIFYING_QUESTION_ANSWERS("submitClarifyingQuestionAnswers"),
     REQUEST_CMA_REQUIREMENTS("requestCmaRequirements"),
 
     @JsonEnumDefaultValue
