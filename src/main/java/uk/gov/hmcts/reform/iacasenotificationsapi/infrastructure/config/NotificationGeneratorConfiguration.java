@@ -15,14 +15,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 
 @Configuration
 public class NotificationGeneratorConfiguration {
+
+    @Bean("reListCaseNotificationGenerator")
+    public List<NotificationGenerator> reListCaseNotificationGenerator(
+        AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(adminOfficerReListCasePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 
     @Bean("requestCaseEditNotificationGenerator")
     public List<NotificationGenerator> requestCaseEditNotificationGenerator(
@@ -154,6 +165,22 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("submitAppealHoNotificationGenerator")
+    public List<NotificationGenerator> submitAppealHoNotificationGenerator(
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
 
     @Bean("submitAppealOutOfTimeAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
@@ -839,6 +866,66 @@ public class NotificationGeneratorConfiguration {
             ),
             new SmsNotificationGenerator(
                 newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
+    public List<NotificationGenerator> forceCaseProgressionToCaseUnderReviewNotificationGenerator(
+        LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation forceCaseProgressionToCaseUnderReviewPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    forceCaseProgressionToCaseUnderReviewPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("forceCaseToSubmitHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> forceCaseToSubmitHearingRequirementsNotificationGenerator(
+        RespondentForceCaseToSubmitHearingRequirementsPersonalisation respondentForceCaseToSubmitHearingRequirementsPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    respondentForceCaseToSubmitHearingRequirementsPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("adjournHearingWithoutDateNotificationGenerator")
+    public List<NotificationGenerator> adjournHearingWithoutDateNotificationGenerator(
+        LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
+        RespondentAdjournHearingWithoutDatePersonalisation respondentAdjournHearingWithoutDatePersonalisation,
+        CaseOfficerAdjournHearingWithoutDatePersonalisation caseOfficerAdjournHearingWithoutDatePersonalisation,
+        AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerAdjournHearingWithoutDatePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAdjournHearingWithoutDatePersonalisation,
+                    respondentAdjournHearingWithoutDatePersonalisation,
+                    caseOfficerAdjournHearingWithoutDatePersonalisation,
+                    adminOfficerAdjournHearingWithoutDatePersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )

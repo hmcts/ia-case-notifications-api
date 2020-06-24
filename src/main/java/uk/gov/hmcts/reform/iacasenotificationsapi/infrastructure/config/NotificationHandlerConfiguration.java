@@ -27,6 +27,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 public class NotificationHandlerConfiguration {
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> reListCaseNotificationHandler(
+        @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN,
+            notificationGenerators
+        );
+    }
+
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCaseEditNotificationHandler(
         @Qualifier("requestCaseEditNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -247,6 +260,21 @@ public class NotificationHandlerConfiguration {
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == REP).orElse(true),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealHoNotificationHandler(
+            @Qualifier("submitAppealHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL;
+            }, notificationGenerators
         );
     }
 
@@ -640,8 +668,8 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == AIP).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.SUBMIT_TIME_EXTENSION
-                       && isAipJourney;
+                    && callback.getEvent() == Event.SUBMIT_TIME_EXTENSION
+                    && isAipJourney;
             }, notificationGenerators
         );
     }
@@ -747,6 +775,42 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS
                        && isAipJourney;
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionToCaseUnderReviewHandler(
+        @Qualifier("forceCaseProgressionToCaseUnderReviewNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW,
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> forceCaseToSubmitHearingRequirementsNotificationHandler(
+        @Qualifier("forceCaseToSubmitHearingRequirementsNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS,
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateHandler(
+        @Qualifier("adjournHearingWithoutDateNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE,
+            notificationGenerator
         );
     }
 
