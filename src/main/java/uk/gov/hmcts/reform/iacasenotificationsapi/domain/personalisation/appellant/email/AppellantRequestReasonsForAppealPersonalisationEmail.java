@@ -21,18 +21,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @Service
 public class AppellantRequestReasonsForAppealPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String submitReasonForAppealEmailTemplateId;
+    private final String requestReasonForAppealEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final DirectionFinder directionFinder;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantRequestReasonsForAppealPersonalisationEmail(
-        @Value("${govnotify.template.requestReasonsForAppeal.appellant.email}") String submitReasonForAppealEmailTemplateId,
+        @Value("${govnotify.template.requestReasonsForAppeal.appellant.email}") String requestReasonForAppealEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DirectionFinder directionFinder,
         RecipientsFinder recipientsFinder
     ) {
-        this.submitReasonForAppealEmailTemplateId = submitReasonForAppealEmailTemplateId;
+        this.requestReasonForAppealEmailTemplateId = requestReasonForAppealEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.directionFinder = directionFinder;
         this.recipientsFinder = recipientsFinder;
@@ -40,7 +40,7 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
 
     @Override
     public String getTemplateId() {
-        return submitReasonForAppealEmailTemplateId;
+        return requestReasonForAppealEmailTemplateId;
     }
 
     @Override

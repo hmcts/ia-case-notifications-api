@@ -130,6 +130,22 @@ public enum AsylumCaseDefinition {
     SUBMISSION_OUT_OF_TIME(
         "submissionOutOfTime", new TypeReference<YesOrNo>(){}),
 
+    REVIEW_TIME_EXTENSION_DATE(
+        "reviewTimeExtensionDate", new TypeReference<String>(){}),
+    REVIEW_TIME_EXTENSION_PARTY(
+        "reviewTimeExtensionParty", new TypeReference<Parties>(){}),
+    REVIEW_TIME_EXTENSION_REASON(
+        "reviewTimeExtensionReason", new TypeReference<String>(){}),
+    REVIEW_TIME_EXTENSION_DECISION(
+        "reviewTimeExtensionDecision", new TypeReference<TimeExtensionDecision>(){}),
+    REVIEW_TIME_EXTENSION_DECISION_REASON(
+        "reviewTimeExtensionDecisionReason", new TypeReference<String>(){}),
+    TIME_EXTENSIONS(
+        "timeExtensions", new TypeReference<List<IdValue<TimeExtension>>>(){}),
+
+    ADJOURN_HEARING_WITHOUT_DATE_REASONS(
+        "adjournHearingWithoutDateReasons", new TypeReference<String>() {}),
+
     ;
 
     private final String value;

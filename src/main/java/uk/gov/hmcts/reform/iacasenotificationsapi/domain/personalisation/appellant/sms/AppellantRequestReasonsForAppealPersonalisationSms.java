@@ -21,19 +21,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @Service
 public class AppellantRequestReasonsForAppealPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String submitReasonForAppealSmsTemplateId;
+    private final String requestReasonForAppealSmsTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final DirectionFinder directionFinder;
 
 
     public AppellantRequestReasonsForAppealPersonalisationSms(
-        @Value("${govnotify.template.requestReasonsForAppeal.appellant.sms}") String submitReasonForAppealSmsTemplateId,
+        @Value("${govnotify.template.requestReasonsForAppeal.appellant.sms}") String requestReasonForAppealSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         DirectionFinder directionFinder
     ) {
-        this.submitReasonForAppealSmsTemplateId = submitReasonForAppealSmsTemplateId;
+        this.requestReasonForAppealSmsTemplateId = requestReasonForAppealSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.directionFinder = directionFinder;
@@ -43,7 +43,7 @@ public class AppellantRequestReasonsForAppealPersonalisationSms implements SmsNo
 
     @Override
     public String getTemplateId() {
-        return submitReasonForAppealSmsTemplateId;
+        return requestReasonForAppealSmsTemplateId;
     }
 
     @Override
