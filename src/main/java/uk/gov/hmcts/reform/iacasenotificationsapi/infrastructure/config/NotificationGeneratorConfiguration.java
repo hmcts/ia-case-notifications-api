@@ -112,6 +112,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("bothPartiesChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> bothPartiesChangeDirectionDueDateNotificationGenerator(
+        LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation,
+        RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeChangeDirectionDueDatePersonalisation,
+                    respondentChangeDirectionDueDatePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("listCaseNotificationGenerator")
     public List<NotificationGenerator> listCaseNotificationGenerator(
         CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
@@ -181,6 +199,20 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitCaseRepSubmitToRepNotificationGenerator")
+    public List<NotificationGenerator> submitCaseRepSubmitToRepNotificationGenerator(
+            LegalRepresentativeSubmitCasePersonalisation legalRepresentativeSubmitAppealPersonalisation,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
     @Bean("submitAppealOutOfTimeAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
@@ -969,6 +1001,22 @@ public class NotificationGeneratorConfiguration {
             ),
             new SmsNotificationGenerator(
                 newArrayList(appellantSubmitCmaRequirementsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("bothPartiesNonStandardDirectionGenerator")
+    public List<NotificationGenerator> bothPartiesNonStandardDirectionGenerator(
+        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+        LegalRepresentativeNonStandardDirectionPersonalisation legalRepresentativeNonStandardDirectionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
