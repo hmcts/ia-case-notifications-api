@@ -8,7 +8,7 @@
       "eventId": "listCma",
       "state": "cmaAdjustmentsAgreed",
       "caseData": {
-        "template": "minimal-aip-appeal-submitted.json",
+        "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "bradford",
@@ -33,7 +33,7 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-aip-appeal-submitted.json",
+      "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
         "listCaseHearingCentre": "bradford",
         "listCaseHearingDate": "2019-05-03T14:25:15.000",
@@ -51,10 +51,6 @@
         ],
         "notificationsSent": [
           {
-            "id": "1003_LIST_CMA_APPELLANT_AIP_SMS",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "1003_LIST_CMA_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
@@ -65,15 +61,19 @@
           {
             "id": "1003_LIST_CMA_CASE_OFFICER_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1003_LIST_CMA_APPELLANT_AIP_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
     },
     "notifications": [
       {
-        "reference": "1011_SUBMIT_CMA_REQUIREMENTS_APPELLANT_AIP_EMAIL",
+        "reference": "1003_LIST_CMA_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "You sent your appointment needs",
+        "subject": "Your case management appointment details",
         "body": [
           "PA/12345/2019",
           "A1234567",
@@ -85,7 +85,7 @@
         ]
       },
       {
-        "reference": "1011_SUBMIT_CMA_REQUIREMENTS_APPELLANT_AIP_SMS",
+        "reference": "1003_LIST_CMA_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
@@ -97,29 +97,29 @@
         ]
       },
       {
-        "reference": "1003_CASE_LISTED_CASE_OFFICER",
+        "reference": "1003_LIST_CMA_CASE_OFFICER_EMAIL",
         "recipient": "{$hearingCentreEmailAddresses.bradford}",
-        "subject": "Immigration and Asylum appeal: case listed",
+        "subject": "Immigration and Asylum appeal: Case Management Appointment listed",
         "body": [
           "PA/12345/2019",
           "Pablo Jimenez",
           "3 May 2019",
           "14:25",
           "IAC Bradford, Phoenix House, Rushton Avenue, Thornbury, Bradford, BD3 7BH",
-          "{iaExUiFrontendUrl}"
+          "{$iaExUiFrontendUrl}"
         ]
       },
       {
-        "reference": "1003_CASE_LISTED_HOME_OFFICE",
+        "reference": "1003_LIST_CMA_HOME_OFFICE_EMAIL",
         "recipient": "{$homeOfficeEmailAddresses.bradford}",
-        "subject": "Immigration and Asylum appeal: case listed",
+        "subject": "Immigration and Asylum appeal: Case Management Appointment date booked",
         "body": [
           "PA/12345/2019",
           "Pablo Jimenez",
           "3 May 2019",
           "14:25",
           "IAC Bradford, Phoenix House, Rushton Avenue, Thornbury, Bradford, BD3 7BH",
-          "{iaExUiFrontendUrl}"
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]
