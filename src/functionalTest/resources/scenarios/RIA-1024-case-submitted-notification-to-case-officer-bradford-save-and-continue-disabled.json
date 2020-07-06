@@ -1,6 +1,5 @@
 {
   "description": "RIA-1024 Send case submitted notification to case officer - bradford hearing centre (save and continue disabled)",
-  "disabled": "{$featureFlag.isSaveAndContinueEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
