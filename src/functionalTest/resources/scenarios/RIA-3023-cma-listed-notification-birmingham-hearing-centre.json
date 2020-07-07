@@ -1,5 +1,5 @@
 {
-  "description": "RIA-3023 Send cma listed notification to case officer, appellant and home office (Bradford hearing centre)",
+  "description": "RIA-3023 Send cma listed notification to case officer, appellant and home office (Birmingham hearing centre)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -11,7 +11,7 @@
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "ariaListingReference": "LP/12345/2019",
-          "listCaseHearingCentre": "bradford",
+          "listCaseHearingCentre": "birmingham",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
           "subscriptions": [
             {
@@ -35,7 +35,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
-        "listCaseHearingCentre": "bradford",
+        "listCaseHearingCentre": "birmingham",
         "listCaseHearingDate": "2019-05-03T14:25:15.000",
         "subscriptions": [
           {
@@ -80,7 +80,7 @@
           "Pablo Jimenez",
           "3 May 2019",
           "14:25",
-          "IAC Bradford, Phoenix House, Rushton Avenue, Thornbury, Bradford, BD3 7BH",
+          "IAC Birmingham, Birmingham Justice Centre, 33 Bull Street, Birmingham, B4 6DS",
           "{$iaAipFrontendUrl}"
         ]
       },
@@ -92,33 +92,33 @@
           "PA/12345/2019",
           "3 May 2019",
           "14:25",
-          "IAC Bradford, Phoenix House, Rushton Avenue, Thornbury, Bradford, BD3 7BH",
+          "IAC Birmingham, Birmingham Justice Centre, 33 Bull Street, Birmingham, B4 6DS",
           "{$iaAipFrontendUrl}"
         ]
       },
       {
         "reference": "1003_LIST_CMA_CASE_OFFICER_EMAIL",
-        "recipient": "{$hearingCentreEmailAddresses.bradford}",
+        "recipient": "{$hearingCentreEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: Case Management Appointment listed",
         "body": [
           "PA/12345/2019",
           "Pablo Jimenez",
           "3 May 2019",
           "14:25",
-          "IAC Bradford, Phoenix House, Rushton Avenue, Thornbury, Bradford, BD3 7BH",
+          "IAC Birmingham, Birmingham Justice Centre, 33 Bull Street, Birmingham, B4 6DS",
           "{$iaExUiFrontendUrl}"
         ]
       },
       {
         "reference": "1003_LIST_CMA_HOME_OFFICE_EMAIL",
-        "recipient": "{$homeOfficeEmailAddresses.bradford}",
+        "recipient": "{$homeOfficeEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: Case Management Appointment date booked",
         "body": [
           "PA/12345/2019",
           "Pablo Jimenez",
           "3 May 2019",
           "14:25",
-          "IAC Bradford, Phoenix House, Rushton Avenue, Thornbury, Bradford, BD3 7BH",
+          "IAC Birmingham, Birmingham Justice Centre, 33 Bull Street, Birmingham, B4 6DS",
           "{$iaExUiFrontendUrl}"
         ]
       }
