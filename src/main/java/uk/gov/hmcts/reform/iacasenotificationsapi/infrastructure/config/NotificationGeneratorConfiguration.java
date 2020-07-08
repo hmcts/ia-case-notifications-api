@@ -1028,13 +1028,13 @@ public class NotificationGeneratorConfiguration {
         AppellantListCmaPersonalisationEmail appellantListCmaPersonalisationEmail,
         AppellantListCmaPersonalisationSms appellantListCmaPersonalisationSms,
         HomeOfficeListCmaPersonalisation homeOfficeListCmaPersonalisation,
-        CaseOfficerListCmaPersonalisation CaseOfficerListCmaPersonalisation,
+        CaseOfficerListCmaPersonalisation caseOfficerListCmaPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantListCmaPersonalisationEmail, homeOfficeListCmaPersonalisation, CaseOfficerListCmaPersonalisation),
+                newArrayList(appellantListCmaPersonalisationEmail, homeOfficeListCmaPersonalisation, caseOfficerListCmaPersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
