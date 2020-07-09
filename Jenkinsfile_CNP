@@ -121,5 +121,6 @@ withPipeline(type, product, component) {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
+    enableSecurityScan()
     enableSlackNotifications('#ia-tech')
 }
