@@ -286,7 +286,13 @@ public class NotificationHandlerConfiguration {
                 && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == REP).orElse(true),
-            notificationGenerators
+            notificationGenerators,
+            (callback, e) -> {
+                callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+            }
         );
     }
 
@@ -313,7 +319,14 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL, notificationGenerators
+                    && callback.getEvent() == Event.SUBMIT_APPEAL,
+            notificationGenerators,
+            (callback, e) -> {
+                callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+            }
         );
     }
 
@@ -942,7 +955,14 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isCorrectAppealType
                        && paymentStatus.equals("Paid");
-            }, notificationGenerators
+            },
+            notificationGenerators,
+            (callback, e) -> {
+                callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+            }
         );
     }
 }
