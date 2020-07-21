@@ -60,8 +60,6 @@ public enum Event {
     LINK_APPEAL("linkAppeal"),
     UNLINK_APPEAL("unlinkAppeal"),
     EDIT_DOCUMENTS("editDocuments"),
-    SUBMIT_TIME_EXTENSION("submitTimeExtension"),
-        
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
