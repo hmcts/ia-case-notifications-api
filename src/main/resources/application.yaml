@@ -281,14 +281,20 @@ govnotify:
       respondent:
         email: 080b563c-7311-4082-bed9-de67bbca14ee
       caseOfficer:
-        email: eba2cb81-042c-4af6-90ea-5391a382177c
+        email: bb3e9248-3365-467c-b560-0d8b888737f6
       legalRep:
-        email: f5e4cbca-4fc8-4e39-bb92-9fe915aa8c61
+        email: 7e31180b-551a-47cc-8357-38f2d8601252
       adminOfficer:
         email: 5469078a-4ccf-4579-b72b-37900e091455
+      homeOffice:
+        email: 87eed8a7-a09f-4d24-996b-cf6599852d00
     reListCase:
       adminOfficer:
         email: efec8c6f-38ea-46b6-ad00-9e6870935a4b
+      legalRep:
+        email: c701b1bc-9ccb-412d-a6c3-38e422ed680a
+      homeOffice:
+        email: b320c927-983f-4651-8b4a-5c26ed093928
     requestCmaRequirements:
       appellant:
         email: 84c2958e-cea0-4a5f-a1e2-7099673d8aa1
