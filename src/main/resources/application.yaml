@@ -345,7 +345,7 @@ govnotify:
         email: 9d289019-12d4-4815-8461-80cc3b890406
     appealDocumentDeleted:
       caseOfficer:
-        email: 62513161-34ae-473e-a6cd-e5f38bef9d47
+        email: ffb01a0c-4e1b-4faf-b296-f635182d6353
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
