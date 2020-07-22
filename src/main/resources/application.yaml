@@ -350,7 +350,6 @@ govnotify:
       caseOfficer:
         email: aef0bfa4-03ed-431b-87d0-c77124bd5f68
 
-
 notificationSender.deduplicateSendsWithinSeconds: 60
 
 iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://manage-case.platform.hmcts.net/}
