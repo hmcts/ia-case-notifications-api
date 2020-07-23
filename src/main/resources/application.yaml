@@ -391,6 +391,7 @@ security:
       - "requestHearingRequirementsFeature"
       - "uploadAddendumEvidenceLegalRep"
       - "applyForFTPAAppellant"
+      - "payAndSubmitAppeal"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
