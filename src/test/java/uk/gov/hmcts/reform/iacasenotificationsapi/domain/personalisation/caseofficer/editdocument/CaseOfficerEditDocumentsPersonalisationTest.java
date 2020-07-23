@@ -33,6 +33,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -50,11 +51,17 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     private EditDocumentService editDocumentService;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private AppealService appealService;
+    @Mock
+    private AsylumCase asylumCase;
 
     private CaseOfficerEditDocumentsPersonalisation personalisation;
 
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
 
     @Captor
     private ArgumentCaptor<List<String>> argCaptor;
@@ -62,11 +69,13 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Before
     public void setUp() {
         personalisation = new CaseOfficerEditDocumentsPersonalisation(
-            "some template id",
+            beforeListingTemplateId,
+            afterListingTemplateId,
             emailAddressFinder,
             editDocumentService,
             "http://localhost",
-            customerServicesProvider);
+            customerServicesProvider,
+            appealService);
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
@@ -79,7 +88,11 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     @Test
     public void getTemplateId() {
-        assertEquals("some template id", personalisation.getTemplateId());
+        when(appealService.isAppealListed(asylumCase)).thenReturn(false);
+        assertEquals(beforeListingTemplateId, personalisation.getTemplateId(asylumCase));
+
+        when(appealService.isAppealListed(asylumCase)).thenReturn(true);
+        assertEquals(afterListingTemplateId, personalisation.getTemplateId(asylumCase));
     }
 
     @Test

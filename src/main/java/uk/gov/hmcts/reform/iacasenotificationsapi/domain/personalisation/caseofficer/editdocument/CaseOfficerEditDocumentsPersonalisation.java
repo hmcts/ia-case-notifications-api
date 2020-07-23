@@ -18,30 +18,41 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
 public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String appealDocumentDeletedTemplateId;
+    private final String appealDocumentDeletedCaseOfficerBeforeListingTemplateId;
+    private final String appealDocumentDeletedCaseOfficerAfterListingTemplateId;
     private final EmailAddressFinder emailAddressFinder;
     private final EditDocumentService editDocumentService;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+    private final AppealService appealService;
 
     public CaseOfficerEditDocumentsPersonalisation(
-        @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
-        @Value("${govnotify.template.appealDocumentDeleted.caseOfficer.email}") String appealDocumentDeletedTemplateId,
-        EmailAddressFinder emailAddressFinder, EditDocumentService editDocumentService,
+        @NotNull(message = "appealDocumentDeletedCaseOfficerBeforeListingTemplateId cannot be null")
+        @Value("${govnotify.template.appealDocumentDeletedBeforeListing.caseOfficer.email}")
+            String appealDocumentDeletedCaseOfficerBeforeListingTemplateId,
+        @NotNull(message = "appealDocumentDeletedCaseOfficerAfterListingTemplateId cannot be null")
+        @Value("${govnotify.template.appealDocumentDeletedAfterListing.caseOfficer.email}")
+            String appealDocumentDeletedCaseOfficerAfterListingTemplateId,
+        EmailAddressFinder emailAddressFinder,
+        EditDocumentService editDocumentService,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        CustomerServicesProvider customerServicesProvider) {
+        CustomerServicesProvider customerServicesProvider,
+        AppealService appealService) {
 
-        this.appealDocumentDeletedTemplateId = appealDocumentDeletedTemplateId;
+        this.appealDocumentDeletedCaseOfficerBeforeListingTemplateId = appealDocumentDeletedCaseOfficerBeforeListingTemplateId;
+        this.appealDocumentDeletedCaseOfficerAfterListingTemplateId = appealDocumentDeletedCaseOfficerAfterListingTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.editDocumentService = editDocumentService;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
+        this.appealService = appealService;
     }
 
     @Override
@@ -50,8 +61,9 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
     }
 
     @Override
-    public String getTemplateId() {
-        return appealDocumentDeletedTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return appealService.isAppealListed(asylumCase) ? appealDocumentDeletedCaseOfficerAfterListingTemplateId
+            : appealDocumentDeletedCaseOfficerBeforeListingTemplateId;
     }
 
     @Override
@@ -68,6 +80,7 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
                 AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(StringUtils.EMPTY))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(StringUtils.EMPTY))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(StringUtils.EMPTY))
+            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("reasonForEditingOrDeletingDocuments", getReasonFromCaseNoteDescription(asylumCase))
             .put("editedOrDeletedDocumentList",
                 getEditedOrDeletedDocumentList(asylumCase, callback.getCaseDetailsBefore().orElse(null)))
