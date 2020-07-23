@@ -50,16 +50,12 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Mock
     private EditDocumentService editDocumentService;
     @Mock
-    private CustomerServicesProvider customerServicesProvider;
-    @Mock
     private AppealService appealService;
     @Mock
     private AsylumCase asylumCase;
 
     private CaseOfficerEditDocumentsPersonalisation personalisation;
 
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
 
@@ -74,11 +70,7 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
             emailAddressFinder,
             editDocumentService,
             "http://localhost",
-            customerServicesProvider,
             appealService);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
     }
 
     @Test
@@ -116,8 +108,6 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         assertEquals("Venus Blevins", actualPersonalisation.get("appellantFamilyName"));
         assertEquals("http://localhost", actualPersonalisation.get("linkToOnlineService"));
         assertEquals(expectedReason, actualPersonalisation.get("reasonForEditingOrDeletingDocuments"));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         then(editDocumentService).should(times(1))
             .getFormattedDocumentsGivenCaseAndDocIds(any(AsylumCase.class), argCaptor.capture());

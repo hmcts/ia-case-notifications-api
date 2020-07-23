@@ -101,9 +101,7 @@
           "new-other-evidence.pdf",
           "some other original description",
           "some reasons to update the documents",
-          "{$iaExUiFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]

@@ -30,7 +30,6 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
     private final EmailAddressFinder emailAddressFinder;
     private final EditDocumentService editDocumentService;
     private final String iaExUiFrontendUrl;
-    private final CustomerServicesProvider customerServicesProvider;
     private final AppealService appealService;
 
     public CaseOfficerEditDocumentsPersonalisation(
@@ -43,7 +42,6 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
         EmailAddressFinder emailAddressFinder,
         EditDocumentService editDocumentService,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        CustomerServicesProvider customerServicesProvider,
         AppealService appealService) {
 
         this.appealDocumentDeletedCaseOfficerBeforeListingTemplateId = appealDocumentDeletedCaseOfficerBeforeListingTemplateId;
@@ -51,7 +49,6 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
         this.emailAddressFinder = emailAddressFinder;
         this.editDocumentService = editDocumentService;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.customerServicesProvider = customerServicesProvider;
         this.appealService = appealService;
     }
 
@@ -85,7 +82,6 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
             .put("editedOrDeletedDocumentList",
                 getEditedOrDeletedDocumentList(asylumCase, callback.getCaseDetailsBefore().orElse(null)))
             .put("linkToOnlineService", iaExUiFrontendUrl)
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .build();
     }
 
