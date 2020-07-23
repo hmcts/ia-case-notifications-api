@@ -1,16 +1,15 @@
 {
-  "description": "RIA-2783 Immigration and Asylum appeal: document deleted",
+  "description": "RIA-2783 Immigration and Asylum appeal: document deleted before listing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
       "id": 1234,
       "eventId": "editDocuments",
-      "state": "*",
+      "state": "awaitingRespondentEvidence",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "hearingCentre": "taylorHouse",
           "caseNotes": [
             {
               "id": "1",
