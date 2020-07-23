@@ -1,18 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CASE_NOTES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
@@ -26,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
@@ -34,20 +27,26 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
     private final String appealDocumentDeletedTemplateId;
     private final EmailAddressFinder emailAddressFinder;
     private final EditDocumentService editDocumentService;
+    private final String iaExUiFrontendUrl;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public CaseOfficerEditDocumentsPersonalisation(
         @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
         @Value("${govnotify.template.appealDocumentDeleted.caseOfficer.email}") String appealDocumentDeletedTemplateId,
-        EmailAddressFinder emailAddressFinder, EditDocumentService editDocumentService) {
+        EmailAddressFinder emailAddressFinder, EditDocumentService editDocumentService,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        CustomerServicesProvider customerServicesProvider) {
 
         this.appealDocumentDeletedTemplateId = appealDocumentDeletedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.editDocumentService = editDocumentService;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPEAL_DOCUMENT_DELETED";
+        return caseId + "_APPEAL_DOCUMENT_DELETED_CASE_OFFICER";
     }
 
     @Override
@@ -69,13 +68,11 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
                 AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(StringUtils.EMPTY))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(StringUtils.EMPTY))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(StringUtils.EMPTY))
-            .put("legalRepReferenceNumber",
-                asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(StringUtils.EMPTY))
-            .put("homeOfficeReferenceNumber",
-                asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("reasonForEditingOrDeletingDocuments", getReasonFromCaseNoteDescription(asylumCase))
             .put("editedOrDeletedDocumentList",
                 getEditedOrDeletedDocumentList(asylumCase, callback.getCaseDetailsBefore().orElse(null)))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .build();
     }
 
