@@ -487,6 +487,7 @@ security:
       - "createCaseSummary"
       - "generateHearingBundle"
       - "asyncStitchingComplete"
+      - "customiseHearingBundle"
       - "editCaseListing"
       - "endAppeal"
       - "recordApplication"
