@@ -2,6 +2,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBMIT_NOTIFICATION_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.BUILD_CASE;
@@ -337,7 +341,13 @@ public class NotificationHandlerConfiguration {
                            .read(JOURNEY_TYPE, JourneyType.class)
                            .map(type -> type == REP).orElse(true)
                        && !paymentFailed;
-            }, notificationGenerators
+            }, notificationGenerators,
+            (callback, e) -> {
+                callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+            }
         );
     }
 
@@ -373,7 +383,13 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.SUBMIT_APPEAL || callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL)
                        && !paymentFailed;
-            }, notificationGenerators
+            }, notificationGenerators,
+            (callback, e) -> {
+                callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+            }
         );
     }
 
@@ -1110,10 +1126,16 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA || type == HU || type == EA).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
                        && isCorrectAppealType
                        && paymentStatus == PaymentStatus.PAID;
-            }, notificationGenerators
+            }, notificationGenerators,
+            (callback, e) -> {
+                callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+            }
         );
     }
 

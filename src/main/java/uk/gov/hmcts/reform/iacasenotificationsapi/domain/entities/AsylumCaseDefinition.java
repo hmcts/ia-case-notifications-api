@@ -227,7 +227,11 @@ public enum AsylumCaseDefinition {
         "paymentStatus", new TypeReference<PaymentStatus>(){}),
 
     APPEAL_TYPE(
-        "appealType", new TypeReference<AppealType>(){})
+        "appealType", new TypeReference<AppealType>(){}),
+
+    SUBMIT_NOTIFICATION_STATUS(
+        "submitNotificationStatus", new TypeReference<String>(){}),
+
     ;
 
     private final String value;
