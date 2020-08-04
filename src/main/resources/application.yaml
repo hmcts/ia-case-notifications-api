@@ -83,11 +83,15 @@ govnotify:
       respondent:
         email: 4d7dbe9b-f8e4-4508-a7d0-b7f4f1e26269
     nonStandardDirectionBeforeListing:
+      homeOffice:
+        email: cfa7ad53-9387-4806-b9ba-f8b3174b8d3b
       respondent:
         email: 7a3b6e21-9296-4c9c-8644-782f7e4ee475
       legalRep:
         email: 2094dbc5-afa8-41bb-af4c-bbf8a520952e
     nonStandardDirectionAfterListing:
+      homeOffice:
+        email: 470ba625-baca-4968-bd72-29376127b2a6
       respondent:
         email: 1780cfa2-965b-43bf-ac24-c964d36ebe4e
       legalRep:

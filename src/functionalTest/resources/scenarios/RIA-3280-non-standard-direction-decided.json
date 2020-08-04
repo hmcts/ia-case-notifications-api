@@ -1,0 +1,103 @@
+{
+  "description": "RIA-3280 Send a non-standard direction to legal representative (after listing) - decided",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 32805,
+      "eventId": "sendDirection",
+      "state": "decided",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
+          "homeOfficeReferenceNumber": "HO-REF123",
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "explanation": "The non-standard direction explanation goes here",
+                "parties": "legalRepresentative",
+                "dateDue": "{$TODAY+14}",
+                "dateSent": "{$TODAY}",
+                "tag": ""
+              }
+            }
+          ],
+          "notificationsSent": [],
+          "legalRepresentativeEmailAddress": "RIA-3280-test-case-5@example.com"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "listCaseHearingCentre": "taylorHouse",
+        "ariaListingReference": "LP/12345/2019",
+        "homeOfficeReferenceNumber": "HO-REF123",
+        "directions": [
+          {
+            "id": "1",
+            "value": {
+              "explanation": "The non-standard direction explanation goes here",
+              "parties": "legalRepresentative",
+              "dateDue": "{$TODAY+14}",
+              "dateSent": "{$TODAY}",
+              "tag": ""
+            }
+          }
+        ],
+        "notificationsSent": [
+          {
+            "id": "32805_LEGAL_REP_NON_STANDARD_DIRECTION",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "32805_HOME_OFFICE_NON_STANDARD_DIRECTION_SENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ],
+        "legalRepresentativeEmailAddress": "RIA-3280-test-case-5@example.com"
+      }
+    },
+    "notifications": [
+      {
+        "reference": "32805_LEGAL_REP_NON_STANDARD_DIRECTION",
+        "recipient": "RIA-3280-test-case-5@example.com",
+        "subject": "Immigration and Asylum appeal: direction",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "CASE001",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "The non-standard direction explanation goes here",
+          "{$TODAY+14|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "32805_HOME_OFFICE_NON_STANDARD_DIRECTION_SENT",
+        "recipient": "ho-taylorhouse@example.com",
+        "subject": "Immigration and Asylum appeal: A direction has been sent to the appellant",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "HO-REF123",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "The non-standard direction explanation goes here",
+          "{$TODAY+14|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      }
+    ]
+  }
+}
