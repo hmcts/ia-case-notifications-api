@@ -6,7 +6,7 @@
     "input": {
       "id": 32800,
       "eventId": "sendDirection",
-      "state": "preHearing",
+      "state": "respondentReview",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
@@ -79,7 +79,7 @@
       },
       {
         "reference": "32800_HOME_OFFICE_NON_STANDARD_DIRECTION_SENT",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
+        "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: A direction has been sent to the appellant",
         "body": [
           "PA/12345/2019",
