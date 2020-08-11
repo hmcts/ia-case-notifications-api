@@ -84,7 +84,7 @@
       },
       {
         "reference": "32804_HOME_OFFICE_NON_STANDARD_DIRECTION_SENT",
-        "recipient": "ho-taylorhouse@example.com",
+        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: A direction has been sent to the appellant",
         "body": [
           "PA/12345/2019",
