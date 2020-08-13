@@ -4,18 +4,40 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.UUID;
+import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.Builder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.UserDetailsForTest;
 
 @SuppressWarnings("OperatorWrap")
 public class GivensBuilder {
 
+    private final Resource resourceJwksFile;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public GivensBuilder(Resource resourceJwksFile) {
+        this.resourceJwksFile = resourceJwksFile;
+    }
 
     public GivensBuilder someLoggedIn(UserDetailsForTest.UserDetailsForTestBuilder userDetailsForTestBuilder) {
 
-        stubFor(get(urlEqualTo("/userAuth/details"))
+        String jwksResponse = "";
+        try {
+            jwksResponse = FileUtils.readFileToString(resourceJwksFile.getFile());
+        } catch (IOException e) {
+            // ignore this
+        }
+
+        stubFor(get(urlEqualTo("/userAuth/o/jwks"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBody(jwksResponse)));
+
+        stubFor(get(urlEqualTo("/userAuth/o/userinfo"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
