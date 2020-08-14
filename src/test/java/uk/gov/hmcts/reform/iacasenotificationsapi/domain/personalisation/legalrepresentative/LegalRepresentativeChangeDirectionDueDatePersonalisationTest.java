@@ -4,20 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
@@ -25,33 +28,36 @@ public class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
 
     @Mock Callback<AsylumCase> callback;
     @Mock AsylumCase asylumCase;
-
     @Mock EmailAddressFinder emailAddressFinder;
-    @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
     @Mock PersonalisationProvider personalisationProvider;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-
+    private String afterListingTemplateId = "afterListingTemplateId";
+    private String beforeListingTemplateId = "beforeListingTemplateId";
+    private String iaExUiFrontendUrl = "http://localhost";
     private String legalRepEmailAddress = "legalRep@example.com";
-
-    private String hmctsReference = "hmctsReference";
+    private String appealReferenceNumber = "hmctsReference";
+    private String ariaListingReference = "someAriaListingReference";
     private String legalRepReference = "legalRepresentativeReference";
-    private String homeOfficeReference = "homeOfficeReference";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation;
 
     @Before
     public void setUp() {
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
-        when(govNotifyTemplateIdConfiguration.getChangeDirectionDueDateTemplateId()).thenReturn(templateId);
 
         legalRepresentativeChangeDirectionDueDatePersonalisation = new LegalRepresentativeChangeDirectionDueDatePersonalisation(
-            govNotifyTemplateIdConfiguration,
+            afterListingTemplateId,
+            beforeListingTemplateId,
+            iaExUiFrontendUrl,
             personalisationProvider,
-            emailAddressFinder
+            emailAddressFinder,
+            customerServicesProvider
         );
     }
 
@@ -61,8 +67,27 @@ public class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
     }
 
     @Test
-    public void should_return_the_given_template_id() {
-        assertEquals(templateId, legalRepresentativeChangeDirectionDueDatePersonalisation.getTemplateId());
+    public void should_return_the_given_before_listing_template_id() {
+        when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_LEGAL_REPRESENTATIVE, State.class))
+            .thenReturn(Optional.of(State.CASE_BUILDING));
+
+        assertEquals(beforeListingTemplateId, legalRepresentativeChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_after_listing_template_id() {
+        when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_LEGAL_REPRESENTATIVE, State.class))
+            .thenReturn(Optional.of(State.FINAL_BUNDLING));
+
+        assertEquals(afterListingTemplateId, legalRepresentativeChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_throw_exception_if_current_visible_state_to_legal_rep_is_not_present() {
+
+        assertThatThrownBy(() -> legalRepresentativeChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("currentCaseStateVisibleToLegalRepresentative flag is not present");
     }
 
     @Test
@@ -89,11 +114,13 @@ public class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
     private Map<String, String> getPersonalisationForLegalRep() {
         return ImmutableMap
             .<String, String>builder()
-            .put("hmctsReference", hmctsReference)
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
             .put("legalRepReference", legalRepReference)
-            .put("homeOfficeReference", homeOfficeReference)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyName)
+            .put("customerServicesTelephone", customerServicesTelephone)
+            .put("customerServicesEmail", customerServicesEmail)
             .build();
     }
 }

@@ -20,29 +20,30 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
 
     @Mock AsylumCase asylumCase;
-    @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String legalRepEmailAddress = "legalrep@example.com";
-
     private String appealReferenceNumber = "someAppealReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
     private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeHearingBundleReadyPersonalisation legalRepresentativeHearingBundleReadyPersonalisation;
 
     @Before
     public void setUp() {
-        when(govNotifyTemplateIdConfiguration.getHearingBundleReadyLegalRepTemplateId()).thenReturn(templateId);
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
@@ -50,9 +51,13 @@ public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmailAddress));
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeHearingBundleReadyPersonalisation = new LegalRepresentativeHearingBundleReadyPersonalisation(
-            govNotifyTemplateIdConfiguration
+            templateId,
+            iaExUiFrontendUrl,
+            customerServicesProvider
         );
     }
 
@@ -94,6 +99,9 @@ public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
         Map<String, String> personalisation = legalRepresentativeHearingBundleReadyPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -108,6 +116,8 @@ public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
         Map<String, String> personalisation = legalRepresentativeHearingBundleReadyPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
-
 }

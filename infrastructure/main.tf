@@ -25,11 +25,6 @@ data "azurerm_key_vault" "ia_key_vault" {
   resource_group_name = "${local.key_vault_name}"
 }
 
-data "azurerm_key_vault_secret" "ia_ccd_frontend_url" {
-  name      = "ia-ccd-frontend-url"
-  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
 data "azurerm_key_vault_secret" "ia_gov_notify_key" {
   name      = "ia-gov-notify-key"
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
@@ -190,6 +185,16 @@ data "azurerm_key_vault_secret" "ia_admin_officer_review_hearing_requirements_em
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
 }
 
+data "azurerm_key_vault_secret" "ia_ctsc_admin_ftpa_submitted_email" {
+  name      = "ctsc-admin-ftpa-submitted-email"
+  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "ia_respondent_ftpa_submitted_email" {
+  name      = "respondent-ftpa-submitted-email"
+  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
+}
+
 data "azurerm_key_vault_secret" "test_caseofficer_username" {
   name      = "test-caseofficer-username"
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
@@ -220,6 +225,16 @@ data "azurerm_key_vault_secret" "system_password" {
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
 }
 
+data "azurerm_key_vault_secret" "ia_customer_services_telephone" {
+  name      = "customer-services-telephone"
+  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "ia_customer_services_email" {
+  name      = "customer-services-email"
+  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
+}
+
 data "azurerm_key_vault_secret" "idam_client_id" {
   name      = "idam-client-id"
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
@@ -227,11 +242,6 @@ data "azurerm_key_vault_secret" "idam_client_id" {
 
 data "azurerm_key_vault_secret" "idam_secret" {
   name      = "idam-secret"
-  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "idam_redirect_uri" {
-  name      = "idam-redirect-uri"
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
 }
 
@@ -243,103 +253,4 @@ data "azurerm_key_vault_secret" "s2s_secret" {
 data "azurerm_key_vault_secret" "s2s_microservice" {
   name      = "s2s-microservice"
   vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "ccd_url" {
-  name      = "ccd-url"
-  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "dm_url" {
-  name      = "dm-url"
-  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "idam_url" {
-  name      = "idam-url"
-  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "s2s_url" {
-  name      = "s2s-url"
-  vault_uri = "${data.azurerm_key_vault.ia_key_vault.vault_uri}"
-}
-
-module "ia_case_notifications_api" {
-  source                          = "git@github.com:hmcts/cnp-module-webapp?ref=master"
-  product                         = "${var.product}-${var.component}"
-  location                        = "${var.location}"
-  env                             = "${var.env}"
-  enable_ase                      = "${var.enable_ase}"
-  ilbIp                           = "${var.ilbIp}"
-  resource_group_name             = "${azurerm_resource_group.rg.name}"
-  subscription                    = "${var.subscription}"
-  capacity                        = "${var.capacity}"
-  instance_size                   = "${var.instance_size}"
-  common_tags                     = "${merge(var.common_tags, map("lastUpdated", "${timestamp()}"))}"
-  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
-  asp_name                        = "${local.app_service_plan}"
-  asp_rg                          = "${local.app_service_plan}"
-
-  app_settings = {
-    LOGBACK_REQUIRE_ALERT_LEVEL = false
-    LOGBACK_REQUIRE_ERROR_CODE  = false
-
-    IA_CCD_FRONTEND_URL = "${data.azurerm_key_vault_secret.ia_ccd_frontend_url.value}"
-    IA_GOV_NOTIFY_KEY   = "${data.azurerm_key_vault_secret.ia_gov_notify_key.value}"
-
-    IA_HEARING_CENTRE_BRADFORD_EMAIL                         = "${data.azurerm_key_vault_secret.ia_hearing_centre_bradford_email.value}"
-    IA_HEARING_CENTRE_MANCHESTER_EMAIL                       = "${data.azurerm_key_vault_secret.ia_hearing_centre_manchester_email.value}"
-    IA_HEARING_CENTRE_NEWPORT_EMAIL                          = "${data.azurerm_key_vault_secret.ia_hearing_centre_newport_email.value}"
-    IA_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL                     = "${data.azurerm_key_vault_secret.ia_hearing_centre_taylor_house_email.value}"
-    IA_HEARING_CENTRE_NORTH_SHIELDS_EMAIL                    = "${data.azurerm_key_vault_secret.ia_hearing_centre_north_shields_email.value}"
-    IA_HEARING_CENTRE_BIRMINGHAM_EMAIL                       = "${data.azurerm_key_vault_secret.ia_hearing_centre_birmingham_email.value}"
-    IA_HEARING_CENTRE_HATTON_CROSS_EMAIL                     = "${data.azurerm_key_vault_secret.ia_hearing_centre_hatton_cross_email.value}"
-    IA_HEARING_CENTRE_GLASGOW_EMAIL                          = "${data.azurerm_key_vault_secret.ia_hearing_centre_glasgow_email.value}"
-
-    IA_HOME_OFFICE_BRADFORD_EMAIL                            = "${data.azurerm_key_vault_secret.ia_home_office_bradford_email.value}"
-    IA_HOME_OFFICE_MANCHESTER_EMAIL                          = "${data.azurerm_key_vault_secret.ia_home_office_manchester_email.value}"
-    IA_HOME_OFFICE_NEWPORT_EMAIL                             = "${data.azurerm_key_vault_secret.ia_home_office_newport_email.value}"
-    IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL                        = "${data.azurerm_key_vault_secret.ia_home_office_taylor_house_email.value}"
-    IA_HOME_OFFICE_NORTH_SHIELDS_EMAIL                       = "${data.azurerm_key_vault_secret.ia_home_office_north_shields_email.value}"
-    IA_HOME_OFFICE_BIRMINGHAM_EMAIL                          = "${data.azurerm_key_vault_secret.ia_home_office_birmingham_email.value}"
-    IA_HOME_OFFICE_HATTON_CROSS_EMAIL                        = "${data.azurerm_key_vault_secret.ia_home_office_hatton_cross_email.value}"
-    IA_HOME_OFFICE_GLASGOW_EMAIL                             = "${data.azurerm_key_vault_secret.ia_home_office_glasgow_email.value}"
-
-    IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL                   = "${data.azurerm_key_vault_secret.ia_respondent_evidence_direction_email.value}"
-    IA_RESPONDENT_REVIEW_DIRECTION_EMAIL                     = "${data.azurerm_key_vault_secret.ia_respondent_review_direction_email.value}"
-    IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL = "${data.azurerm_key_vault_secret.ia_respondent_non_standard_direction_until_listing_email.value}"
-
-    IA_HOME_OFFICE_END_APPEAL_EMAIL                          = "${data.azurerm_key_vault_secret.ia_home_office_end_appeal_email.value}"
-    IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL                      = "${data.azurerm_key_vault_secret.ia_home_office_allowed_appeal_email.value}"
-    IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL                    = "${data.azurerm_key_vault_secret.ia_home_office_dismissed_appeal_email.value}"
-
-    IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL       = "${data.azurerm_key_vault_secret.ia_admin_officer_review_hearing_requirements_email.value}"
-
-    IA_HEARING_CENTRE_BRADFORD_TELEPHONE                     = "${data.azurerm_key_vault_secret.ia_hearing_centre_bradford_telephone.value}"
-    IA_HEARING_CENTRE_MANCHESTER_TELEPHONE                   = "${data.azurerm_key_vault_secret.ia_hearing_centre_manchester_telephone.value}"
-    IA_HEARING_CENTRE_NEWPORT_TELEPHONE                      = "${data.azurerm_key_vault_secret.ia_hearing_centre_newport_telephone.value}"
-    IA_HEARING_CENTRE_TAYLOR_HOUSE_TELEPHONE                 = "${data.azurerm_key_vault_secret.ia_hearing_centre_taylor_house_telephone.value}"
-    IA_HEARING_CENTRE_NORTH_SHIELDS_TELEPHONE                = "${data.azurerm_key_vault_secret.ia_hearing_centre_north_shields_telephone.value}"
-    IA_HEARING_CENTRE_BIRMINGHAM_TELEPHONE                   = "${data.azurerm_key_vault_secret.ia_hearing_centre_birmingham_telephone.value}"
-    IA_HEARING_CENTRE_HATTON_CROSS_TELEPHONE                 = "${data.azurerm_key_vault_secret.ia_hearing_centre_hatton_cross_telephone.value}"
-    IA_HEARING_CENTRE_GLASGOW_TELEPHONE                      = "${data.azurerm_key_vault_secret.ia_hearing_centre_glasgow_telephone.value}"
-
-    IA_SYSTEM_USERNAME   = "${data.azurerm_key_vault_secret.system_username.value}"
-    IA_SYSTEM_PASSWORD   = "${data.azurerm_key_vault_secret.system_password.value}"
-    IA_IDAM_CLIENT_ID    = "${data.azurerm_key_vault_secret.idam_client_id.value}"
-    IA_IDAM_SECRET       = "${data.azurerm_key_vault_secret.idam_secret.value}"
-    IA_IDAM_REDIRECT_URI = "${data.azurerm_key_vault_secret.idam_redirect_uri.value}"
-    IA_S2S_SECRET        = "${data.azurerm_key_vault_secret.s2s_secret.value}"
-    IA_S2S_MICROSERVICE  = "${data.azurerm_key_vault_secret.s2s_microservice.value}"
-
-    CCD_URL  = "${data.azurerm_key_vault_secret.ccd_url.value}"
-    DM_URL   = "${data.azurerm_key_vault_secret.dm_url.value}"
-    IDAM_URL = "${data.azurerm_key_vault_secret.idam_url.value}"
-    S2S_URL  = "${data.azurerm_key_vault_secret.s2s_url.value}"
-
-    ROOT_LOGGING_LEVEL   = "${var.root_logging_level}"
-    LOG_LEVEL_SPRING_WEB = "${var.log_level_spring_web}"
-    LOG_LEVEL_IA         = "${var.log_level_ia}"
-  }
 }

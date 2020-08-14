@@ -1,7 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -11,28 +15,32 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
 public class LegalRepresentativeHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
 
-
     private final String legalRepresentativeHearingRequirementsDirectionTemplateId;
-    private final String iaCcdFrontendUrl;
+    private final String iaExUiFrontendUrl;
     private final DirectionFinder directionFinder;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeHearingRequirementsPersonalisation(
-        @Value("${govnotify.template.legalRepresentativeHearingRequirementsDirection}") String legalRepresentativeHearingRequirementsDirectionTemplateId,
-        @Value("${iaCcdFrontendUrl}") String iaCcdFrontendUrl,
-        DirectionFinder directionFinder
+        @Value("${govnotify.template.hearingRequirementsDirection.legalRep.email}") String legalRepresentativeHearingRequirementsDirectionTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        DirectionFinder directionFinder,
+        CustomerServicesProvider customerServicesProvider
     ) {
-        requireNonNull(iaCcdFrontendUrl, "iaCcdFrontendUrl must not be null");
-
+        requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
         this.legalRepresentativeHearingRequirementsDirectionTemplateId = legalRepresentativeHearingRequirementsDirectionTemplateId;
-        this.iaCcdFrontendUrl = iaCcdFrontendUrl;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.directionFinder = directionFinder;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -70,13 +78,14 @@ public class LegalRepresentativeHearingRequirementsPersonalisation implements Em
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("LR reference", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("Given names", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("Family name", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Hyperlink to user’s case list", iaCcdFrontendUrl)
-                .put("Explanation", direction.getExplanation())
-                .put("due date", directionDueDate)
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("explanation", direction.getExplanation())
+                .put("dueDate", directionDueDate)
                 .build();
     }
 }

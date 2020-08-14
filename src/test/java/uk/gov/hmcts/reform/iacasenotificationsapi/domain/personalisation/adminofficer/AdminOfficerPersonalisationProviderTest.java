@@ -10,24 +10,26 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 
-
-
 @RunWith(MockitoJUnitRunner.class)
 public class AdminOfficerPersonalisationProviderTest {
 
     @Mock AsylumCase asylumCase;
+
+    private String iaExUiFrontendUrl = "http://somefrontendurl";
     private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
     @Before
     public void setUp() {
 
-        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider();
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(
+            iaExUiFrontendUrl
+        );
     }
 
     @Test
     public void should_return_default_personalisation() {
 
-        Map<String, String> personalisation = adminOfficerPersonalisationProvider.getDefaultPersonlisation(asylumCase);
+        Map<String, String> personalisation = adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }

@@ -8,6 +8,33 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 
 public enum AsylumCaseDefinition {
 
+    TRIBUNAL_DOCUMENTS(
+        "tribunalDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+
+    HEARING_RECORDING_DOCUMENTS(
+        "hearingRecordingDocuments", new TypeReference<List<IdValue<HearingRecordingDocument>>>(){}),
+
+    FINAL_DECISION_AND_REASONS_DOCUMENTS(
+        "finalDecisionAndReasonsDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    DRAFT_DECISION_AND_REASONS_DOCUMENTS(
+        "draftDecisionAndReasonsDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    RESPONDENT_DOCUMENTS(
+        "respondentDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    ADDENDUM_EVIDENCE_DOCUMENTS(
+        "addendumEvidenceDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    LEGAL_REPRESENTATIVE_DOCUMENTS(
+        "legalRepresentativeDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    ADDITIONAL_EVIDENCE_DOCUMENTS(
+        "additionalEvidenceDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    HEARING_DOCUMENTS(
+        "hearingDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
     HOME_OFFICE_REFERENCE_NUMBER(
             "homeOfficeReferenceNumber", new TypeReference<String>(){}),
 
@@ -31,6 +58,9 @@ public enum AsylumCaseDefinition {
 
     CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL(
             "currentCaseStateVisibleToHomeOfficeAll", new TypeReference<State>(){}),
+
+    CURRENT_CASE_STATE_VISIBLE_TO_LEGAL_REPRESENTATIVE(
+        "currentCaseStateVisibleToLegalRepresentative", new TypeReference<State>(){}),
 
     DIRECTION_EDIT_DATE_DUE(
             "directionEditDateDue", new TypeReference<String>(){}),
@@ -128,9 +158,65 @@ public enum AsylumCaseDefinition {
         "submitHearingRequirementsAvailable", new TypeReference<YesOrNo>(){}),
 
     SUBMISSION_OUT_OF_TIME(
-        "submissionOutOfTime", new TypeReference<YesOrNo>(){})
+        "submissionOutOfTime", new TypeReference<YesOrNo>(){}),
 
-    ;
+    REVIEW_TIME_EXTENSION_DATE(
+        "reviewTimeExtensionDate", new TypeReference<String>(){}),
+    REVIEW_TIME_EXTENSION_PARTY(
+        "reviewTimeExtensionParty", new TypeReference<Parties>(){}),
+    REVIEW_TIME_EXTENSION_REASON(
+        "reviewTimeExtensionReason", new TypeReference<String>(){}),
+    REVIEW_TIME_EXTENSION_DECISION(
+        "reviewTimeExtensionDecision", new TypeReference<TimeExtensionDecision>(){}),
+    REVIEW_TIME_EXTENSION_DECISION_REASON(
+        "reviewTimeExtensionDecisionReason", new TypeReference<String>(){}),
+    TIME_EXTENSIONS(
+        "timeExtensions", new TypeReference<List<IdValue<TimeExtension>>>(){}),
+
+    ADJOURN_HEARING_WITHOUT_DATE_REASONS(
+        "adjournHearingWithoutDateReasons", new TypeReference<String>() {}),
+
+    REASON_FOR_LINK_APPEAL(
+        "reasonForLinkAppeal", new TypeReference<ReasonForLinkAppealOptions>() {}),
+    EDIT_DOCUMENTS_REASON(
+        "editDocumentsReason", new TypeReference<String>(){}),
+
+    CASE_NOTES(
+        "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){}),
+
+    FTPA_APPELLANT_DECISION_OUTCOME_TYPE(
+        "ftpaAppellantDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+    FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE(
+        "ftpaAppellantRjDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+    FTPA_RESPONDENT_DECISION_OUTCOME_TYPE(
+        "ftpaRespondentDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+    FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE(
+        "ftpaRespondentRjDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+    FTPA_APPELLANT_DECISION_REMADE_RULE_32(
+        "ftpaAppellantDecisionRemadeRule32", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+    FTPA_RESPONDENT_DECISION_REMADE_RULE_32(
+        "ftpaRespondentDecisionRemadeRule32", new TypeReference<FtpaDecisionOutcomeType>(){}),
+
+
+    FTPA_APPELLANT_SUBMITTED(
+        "ftpaAppellantSubmitted", new TypeReference<YesOrNo>(){}),
+
+    FTPA_RESPONDENT_SUBMITTED(
+        "ftpaRespondentSubmitted", new TypeReference<YesOrNo>(){}),
+
+    FTPA_APPLICANT_TYPE(
+        "ftpaApplicantType", new TypeReference<ApplicantType>(){}),
+
+    IS_FTPA_APPELLANT_DECIDED(
+        "isFtpaAppellantDecided", new TypeReference<YesOrNo>(){}),
+
+    IS_FTPA_RESPONDENT_DECIDED(
+        "isFtpaRespondentDecided", new TypeReference<YesOrNo>(){});
 
     private final String value;
     private final TypeReference typeReference;

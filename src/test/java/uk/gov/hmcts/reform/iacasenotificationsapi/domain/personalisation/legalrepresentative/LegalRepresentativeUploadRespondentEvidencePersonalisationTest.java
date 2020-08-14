@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
@@ -28,10 +29,11 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
     @Mock AsylumCase asylumCase;
     @Mock DirectionFinder directionFinder;
     @Mock Direction direction;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
-    private String iaCcdFrontendUrl = "http://somefrontendurl";
+    private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String directionDueDate = "2019-08-27";
     private String expectedDirectionDueDate = "27 Aug 2019";
     private String directionExplanation = "someExplanation";
@@ -42,6 +44,8 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
     private String legalRepRefNumber = "somelegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "customer.services@example.com";
 
     private LegalRepresentativeUploadRespondentEvidencePersonalisation legalRepresentativeUploadRespondentEvidencePersonalisation;
 
@@ -58,10 +62,14 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmailAddress));
 
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+
         legalRepresentativeUploadRespondentEvidencePersonalisation = new LegalRepresentativeUploadRespondentEvidencePersonalisation(
             templateId,
-            iaCcdFrontendUrl,
-            directionFinder
+            iaExUiFrontendUrl,
+            directionFinder,
+            customerServicesProvider
         );
     }
 
@@ -102,13 +110,15 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
 
         Map<String, String> personalisation = legalRepresentativeUploadRespondentEvidencePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(appellantGivenNames, personalisation.get("Given names"));
-        assertEquals(appellantFamilyName, personalisation.get("Family name"));
-        assertEquals(iaCcdFrontendUrl, personalisation.get("Hyperlink to user’s case list"));
-        assertEquals(directionExplanation, personalisation.get("Explanation"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("due date"));
-        assertEquals(legalRepRefNumber, personalisation.get("LR reference"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -121,13 +131,15 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
 
         Map<String, String> personalisation = legalRepresentativeUploadRespondentEvidencePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(iaCcdFrontendUrl, personalisation.get("Hyperlink to user’s case list"));
-        assertEquals(directionExplanation, personalisation.get("Explanation"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("due date"));
-        assertEquals("", personalisation.get("LR reference"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

@@ -12,20 +12,104 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentEvidenceDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 
 @Configuration
 public class NotificationGeneratorConfiguration {
+
+    @Bean("forceCaseProgressionNotificationGenerator")
+    public List<NotificationGenerator> forceCaseProgressionNotificationGenerator(
+        RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
+        LegalRepresentativeRequestCaseBuildingPersonalisation legalRepresentativeRequestCaseBuildingPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+                newArrayList(homeOfficePersonalisation, legalRepresentativeRequestCaseBuildingPersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
+    @Bean("editDocumentsNotificationGenerator")
+    public List<NotificationGenerator> editDocumentsNotificationGenerator(
+        CaseOfficerEditDocumentsPersonalisation personalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(newArrayList(personalisation), notificationSender, notificationIdAppender)
+        );
+    }
+
+    @Bean("unlinkAppealNotificationGenerator")
+    public List<NotificationGenerator> unlinkAppealNotificationGenerator(
+        LegalRepresentativeUnlinkAppealPersonalisation legalRepresentativeUnlinkAppealPersonalisation,
+        HomeOfficeUnlinkAppealPersonalisation homeOfficeUnlinkAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeUnlinkAppealPersonalisation, homeOfficeUnlinkAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("linkAppealNotificationGenerator")
+    public List<NotificationGenerator> linkAppealNotificationGenerator(
+        LegalRepresentativeLinkAppealPersonalisation legalRepresentativeLinkAppealPersonalisation,
+        HomeOfficeLinkAppealPersonalisation homeOfficeLinkAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeLinkAppealPersonalisation, homeOfficeLinkAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("reListCaseNotificationGenerator")
+    public List<NotificationGenerator> reListCaseNotificationGenerator(
+        AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(adminOfficerReListCasePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("requestCaseEditNotificationGenerator")
+    public List<NotificationGenerator> requestCaseEditNotificationGenerator(
+        LegalRepresentativeRequestCaseEditPersonalisation legalRepresentativeRequestCaseEditPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                Collections.singletonList(legalRepresentativeRequestCaseEditPersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
 
     @Bean("endAppealNotificationGenerator")
     public List<NotificationGenerator> endAppealNotificationGenerator(
@@ -90,6 +174,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("bothPartiesChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> bothPartiesChangeDirectionDueDateNotificationGenerator(
+        LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation,
+        RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeChangeDirectionDueDatePersonalisation,
+                    respondentChangeDirectionDueDatePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("listCaseNotificationGenerator")
     public List<NotificationGenerator> listCaseNotificationGenerator(
         CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
@@ -144,6 +246,36 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitAppealHoNotificationGenerator")
+    public List<NotificationGenerator> submitAppealHoNotificationGenerator(
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitCaseRepSubmitToRepNotificationGenerator")
+    public List<NotificationGenerator> submitCaseRepSubmitToRepNotificationGenerator(
+            LegalRepresentativeSubmitCasePersonalisation legalRepresentativeSubmitAppealPersonalisation,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeSubmitAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("submitAppealOutOfTimeAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
         CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
@@ -172,7 +304,7 @@ public class NotificationGeneratorConfiguration {
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(caseOfficerSubmitCasePersonalisation),
                 notificationSender,
@@ -287,12 +419,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewNotificationGenerator")
     public List<NotificationGenerator> respondentReviewNotificationGenerator(
         RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+        LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentDirectionPersonalisation),
+                newArrayList(
+                    respondentDirectionPersonalisation,
+                    legalRepresentativeRespondentReviewPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -325,12 +460,16 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentEvidenceRepNotificationGenerator")
     public List<NotificationGenerator> respondentEvidenceRepNotificationGenerator(
         RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation,
+        LegalRepresentativeRequestHomeOfficeBundlePersonalisation legalRepresentativeRequestHomeOfficeBundlePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentEvidenceDirectionPersonalisation),
+                newArrayList(
+                    respondentEvidenceDirectionPersonalisation,
+                    legalRepresentativeRequestHomeOfficeBundlePersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )
@@ -637,6 +776,451 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeAppealExitedOnlinePersonalisation, legalRepresentativeAppealExitedOnlinePersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
+    @Bean("changeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
+        LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeChangeHearingCentrePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("changeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
+        LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
+        CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeChangeHearingCentrePersonalisation,
+                    caseOfficerChangeHearingCentrePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaSubmittedLegalRepNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedLegalRep(
+        LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeFtpaSubmittedPersonalisation,
+                    adminOfficerFtpaSubmittedPersonalisation,
+                    respondentAppellantFtpaSubmittedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaSubmittedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedRespondent(
+        RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        LegalRepresentativeRespondentFtpaSubmittedPersonalisation legalRepresentativeRespondentFtpaSubmittedPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    respondentFtpaSubmittedPersonalisation,
+                    adminOfficerFtpaSubmittedPersonalisation,
+                    legalRepresentativeRespondentFtpaSubmittedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitTimeExtensionAipNotificationGenerator")
+    public List<NotificationGenerator> submitTimeExtensionAipNotificationGenerator(
+        CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation,
+        AppellantSubmitTimeExtensionPersonalisationEmail appellantSubmitTimeExtensionPersonalisationEmail,
+        AppellantSubmitTimeExtensionPersonalisationSms appellantSubmitTimeExtensionPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerSubmitTimeExtensionPersonalisation, appellantSubmitTimeExtensionPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitTimeExtensionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("reviewTimeExtensionGrantedGenerator")
+    public List<NotificationGenerator> reviewTimeExtensionGrantedGenerator(
+        AppellantReviewTimeExtensionGrantedPersonalisationEmail appellantReviewTimeExtensionGrantedPersonalisationEmail,
+        AppellantReviewTimeExtensionGrantedPersonalisationSms appellantReviewTimeExtensionGrantedPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+              newArrayList(appellantReviewTimeExtensionGrantedPersonalisationEmail),
+              notificationSender,
+              notificationIdAppender
+          ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantReviewTimeExtensionGrantedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("reviewTimeExtensionRefusedGenerator")
+    public List<NotificationGenerator> reviewTimeExtensionRefusedGenerator(
+        AppellantReviewTimeExtensionRefusedPersonalisationEmail appellantReviewTimeExtensionRefusedPersonalisationEmail,
+        AppellantReviewTimeExtensionRefusedPersonalisationSms appellantReviewTimeExtensionRefusedPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+              newArrayList(appellantReviewTimeExtensionRefusedPersonalisationEmail),
+              notificationSender,
+              notificationIdAppender
+          ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantReviewTimeExtensionRefusedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("requestClarifyingQuestionsAipNotificationGenerator")
+    public List<NotificationGenerator> requestClarifyingQuestionsAipNotificationGenerator(
+        AppellantRequestClarifyingQuestionsPersonalisationEmail appellantRequestClarifyingQuestionsPersonalisationEmail,
+        AppellantRequestClarifyingQuestionsPersonalisationSms appellantRequestClarifyingQuestionsPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantRequestClarifyingQuestionsPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestClarifyingQuestionsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitClarifyingQuestionAnswersNotificationGenerator")
+    public List<NotificationGenerator> submitClarifyingQuestionAnswersNotificationGenerator(
+        CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation,
+        AppellantSubmitClarifyingQuestionAnswersPersonalisationSms appellantSubmitClarifyingQuestionAnswersPersonalisationSms,
+        AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail appellantSubmitClarifyingQuestionAnswersPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationEmail, caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
+    public List<NotificationGenerator> forceCaseProgressionToCaseUnderReviewNotificationGenerator(
+        LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation forceCaseProgressionToCaseUnderReviewPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    forceCaseProgressionToCaseUnderReviewPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("forceCaseToSubmitHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> forceCaseToSubmitHearingRequirementsNotificationGenerator(
+        RespondentForceCaseToSubmitHearingRequirementsPersonalisation respondentForceCaseToSubmitHearingRequirementsPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    respondentForceCaseToSubmitHearingRequirementsPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("adjournHearingWithoutDateNotificationGenerator")
+    public List<NotificationGenerator> adjournHearingWithoutDateNotificationGenerator(
+        LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
+        RespondentAdjournHearingWithoutDatePersonalisation respondentAdjournHearingWithoutDatePersonalisation,
+        CaseOfficerAdjournHearingWithoutDatePersonalisation caseOfficerAdjournHearingWithoutDatePersonalisation,
+        AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerAdjournHearingWithoutDatePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAdjournHearingWithoutDatePersonalisation,
+                    respondentAdjournHearingWithoutDatePersonalisation,
+                    caseOfficerAdjournHearingWithoutDatePersonalisation,
+                    adminOfficerAdjournHearingWithoutDatePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("requestCmaRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
+        AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
+        AppellantRequestCmaRequirementsPersonalisationSms appellantRequestCmaRequirementsPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantRequestCmaRequirementsPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantRequestCmaRequirementsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitCmaRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> submitCmaRequirementsAipNotificationGenerator(
+        CaseOfficerCmaRequirementsSubmittedPersonalisation caseOfficerCmaRequirementsSubmittedPersonalisation,
+        AppellantSubmitCmaRequirementsPersonalisationEmail appellantSubmitCmaRequirementsPersonalisationEmail,
+        AppellantSubmitCmaRequirementsPersonalisationSms appellantSubmitCmaRequirementsPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerCmaRequirementsSubmittedPersonalisation, appellantSubmitCmaRequirementsPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitCmaRequirementsPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("bothPartiesNonStandardDirectionGenerator")
+    public List<NotificationGenerator> bothPartiesNonStandardDirectionGenerator(
+        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+        LegalRepresentativeNonStandardDirectionPersonalisation legalRepresentativeNonStandardDirectionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("listCmaAipNotificationGenerator")
+    public List<NotificationGenerator> listCmaAipNotificationGenerator(
+        AppellantListCmaPersonalisationEmail appellantListCmaPersonalisationEmail,
+        AppellantListCmaPersonalisationSms appellantListCmaPersonalisationSms,
+        HomeOfficeListCmaPersonalisation homeOfficeListCmaPersonalisation,
+        CaseOfficerListCmaPersonalisation caseOfficerListCmaPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantListCmaPersonalisationEmail, homeOfficeListCmaPersonalisation, caseOfficerListCmaPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantListCmaPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("editAppealAfterSubmitNotificationGenerator")
+    public List<NotificationGenerator> editAppealAfterSubmitNotificationGenerator(
+        LegalRepresentativeEditAppealAfterSubmitPersonalisation legalRepresentativeEditAppealAfterSubmitPersonalisation,
+        RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeEditAppealAfterSubmitPersonalisation,
+                    respondentEditAppealAfterSubmitPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyAppellantGrantedNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation,
+        AdminOfficerFtpaDecisionAppellantPersonalisation adminOfficerFtpaDecisionAppellantPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation, adminOfficerFtpaDecisionAppellantPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation,
+        AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionReheardAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionReheardAppellantNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation,
+        CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation, caseOfficerFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionReheardRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionReheardRespondentNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+        LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation,
+        CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation, caseOfficerFtpaDecisionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )

@@ -49,4 +49,58 @@ public class GovNotifyTemplateIdConfiguration {
     @NotBlank
     private String changeDirectionDueDateOfHomeOfficeTemplateId;
 
+    @NotBlank
+    private String applicationGrantedApplicantLegalRep;
+
+    @NotBlank
+    private String applicationGrantedApplicantHomeOffice;
+
+    @NotBlank
+    private String applicationGrantedOtherPartyLegalRep;
+
+    @NotBlank
+    private String applicationGrantedOtherPartyHomeOffice;
+
+    @NotBlank
+    private String applicationGrantedAdmin;
+
+    @NotBlank
+    private String applicationPartiallyGrantedApplicantLegalRep;
+
+    @NotBlank
+    private String applicationPartiallyGrantedApplicantHomeOffice;
+
+    @NotBlank
+    private String applicationPartiallyGrantedOtherPartyLegalRep;
+
+    @NotBlank
+    private String applicationPartiallyGrantedOtherPartyHomeOffice;
+
+    @NotBlank
+    private String applicationPartiallyGrantedAdmin;
+
+    @NotBlank
+    private String applicationNotAdmittedApplicantLegalRep;
+
+    @NotBlank
+    private String applicationNotAdmittedApplicantHomeOffice;
+
+    @NotBlank
+    private String applicationNotAdmittedOtherPartyLegalRep;
+
+    @NotBlank
+    private String applicationNotAdmittedOtherPartyHomeOffice;
+
+    @NotBlank
+    private String applicationRefusedApplicantLegalRep;
+
+    @NotBlank
+    private String applicationRefusedApplicantHomeOffice;
+
+    @NotBlank
+    private String applicationRefusedOtherPartyLegalRep;
+
+    @NotBlank
+    private String applicationRefusedOtherPartyHomeOffice;
+
 }

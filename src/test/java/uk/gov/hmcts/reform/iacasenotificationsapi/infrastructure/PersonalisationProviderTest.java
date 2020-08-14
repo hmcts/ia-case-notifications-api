@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -31,7 +32,7 @@ public class PersonalisationProviderTest {
     @Mock Direction direction;
     @Mock DirectionFinder directionFinder;
 
-    private String iaCcdFrontendUrl = "http://localhost";
+    private String iaExUiFrontendUrl = "http://localhost";
 
     private String hearingCentreAddress = "some hearing centre address";
 
@@ -111,7 +112,7 @@ public class PersonalisationProviderTest {
         when(direction.getExplanation()).thenReturn(directionExplanation);
 
         personalisationProvider = new PersonalisationProvider(
-            iaCcdFrontendUrl,
+            iaExUiFrontendUrl,
             hearingDetailsFinder,
             directionFinder,
             dateTimeExtractor
@@ -125,11 +126,11 @@ public class PersonalisationProviderTest {
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertThat(personalisation.get("Hearing Requirement Vulnerabilities")).isEqualTo(requirementsVulnerabilities);
-        assertThat(personalisation.get("Hearing Requirement Multimedia")).isEqualTo(requirementsMultimedia);
-        assertThat(personalisation.get("Hearing Requirement Single Sex Court")).isEqualTo(requirementsSingleSexCourt);
-        assertThat(personalisation.get("Hearing Requirement In Camera Court")).isEqualTo(requirementsInCamera);
-        assertThat(personalisation.get("Hearing Requirement Other")).isEqualTo(requirementsOther);
+        assertThat(personalisation.get("hearingRequirementVulnerabilities")).isEqualTo(requirementsVulnerabilities);
+        assertThat(personalisation.get("hearingRequirementMultimedia")).isEqualTo(requirementsMultimedia);
+        assertThat(personalisation.get("hearingRequirementSingleSexCourt")).isEqualTo(requirementsSingleSexCourt);
+        assertThat(personalisation.get("hearingRequirementInCameraCourt")).isEqualTo(requirementsInCamera);
+        assertThat(personalisation.get("hearingRequirementOther")).isEqualTo(requirementsOther);
     }
 
     @Test
@@ -140,11 +141,11 @@ public class PersonalisationProviderTest {
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertThat(personalisation.get("Hearing Requirement Vulnerabilities")).isEqualTo(caseOfficerReviewedVulnerabilities);
-        assertThat(personalisation.get("Hearing Requirement Multimedia")).isEqualTo(caseOfficerReviewedMultimedia);
-        assertThat(personalisation.get("Hearing Requirement Single Sex Court")).isEqualTo(caseOfficerReviewedSingleSexCourt);
-        assertThat(personalisation.get("Hearing Requirement In Camera Court")).isEqualTo(caseOfficerReviewedInCamera);
-        assertThat(personalisation.get("Hearing Requirement Other")).isEqualTo(caseOfficerReviewedOther);
+        assertThat(personalisation.get("hearingRequirementVulnerabilities")).isEqualTo(caseOfficerReviewedVulnerabilities);
+        assertThat(personalisation.get("hearingRequirementMultimedia")).isEqualTo(caseOfficerReviewedMultimedia);
+        assertThat(personalisation.get("hearingRequirementSingleSexCourt")).isEqualTo(caseOfficerReviewedSingleSexCourt);
+        assertThat(personalisation.get("hearingRequirementInCameraCourt")).isEqualTo(caseOfficerReviewedInCamera);
+        assertThat(personalisation.get("hearingRequirementOther")).isEqualTo(caseOfficerReviewedOther);
     }
 
     @Test
@@ -183,5 +184,40 @@ public class PersonalisationProviderTest {
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+    }
+
+    @Test
+    public void should_return_legal_rep_header_personalisation_when_all_information_given() {
+
+        Map<String, String> personalisation = personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+    }
+
+    @Test
+    public void should_return_home_office_header_personalisation_when_all_information_given() {
+
+        Map<String, String> personalisation = personalisationProvider.getHomeOfficeHeaderPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+    }
+
+    @Test
+    public void should_return_personalisation_when_all_information_given() {
+
+        Map<String, String> personalisation = personalisationProvider.getTribunalHeaderPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
     }
 }

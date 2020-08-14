@@ -35,6 +35,7 @@ public class EventTest {
         assertEquals("endAppeal", Event.END_APPEAL.toString());
         assertEquals("recordApplication", Event.RECORD_APPLICATION.toString());
         assertEquals("requestCaseBuilding", Event.REQUEST_CASE_BUILDING.toString());
+        assertEquals("forceRequestCaseBuilding", Event.FORCE_REQUEST_CASE_BUILDING.toString());
         assertEquals("uploadHomeOfficeAppealResponse", Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE.toString());
         assertEquals("uploadAddendumEvidence", Event.UPLOAD_ADDENDUM_EVIDENCE.toString());
         assertEquals("uploadAddendumEvidenceLegalRep", Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP.toString());
@@ -45,11 +46,31 @@ public class EventTest {
         assertEquals("submitReasonsForAppeal", Event.SUBMIT_REASONS_FOR_APPEAL.toString());
         assertEquals("updateHearingAdjustments", Event.UPDATE_HEARING_ADJUSTMENTS.toString());
         assertEquals("removeAppealFromOnline", Event.REMOVE_APPEAL_FROM_ONLINE.toString());
+        assertEquals("changeHearingCentre", Event.CHANGE_HEARING_CENTRE.toString());
+        assertEquals("applyForFTPAAppellant", Event.APPLY_FOR_FTPA_APPELLANT.toString());
+        assertEquals("applyForFTPARespondent", Event.APPLY_FOR_FTPA_RESPONDENT.toString());
+        assertEquals("submitTimeExtension", Event.SUBMIT_TIME_EXTENSION.toString());
+        assertEquals("reviewTimeExtension", Event.REVIEW_TIME_EXTENSION.toString());
+        assertEquals("sendDirectionWithQuestions", Event.SEND_DIRECTION_WITH_QUESTIONS.toString());
+        assertEquals("submitClarifyingQuestionAnswers", Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS.toString());
+        assertEquals("forceCaseToCaseUnderReview", Event.FORCE_CASE_TO_CASE_UNDER_REVIEW.toString());
+        assertEquals("forceCaseToSubmitHearingRequirements", Event.FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS.toString());
+        assertEquals("adjournHearingWithoutDate", Event.ADJOURN_HEARING_WITHOUT_DATE.toString());
+        assertEquals("restoreStateFromAdjourn", Event.RESTORE_STATE_FROM_ADJOURN.toString());
+        assertEquals("requestCmaRequirements", Event.REQUEST_CMA_REQUIREMENTS.toString());
+        assertEquals("submitCmaRequirements", Event.SUBMIT_CMA_REQUIREMENTS.toString());
+        assertEquals("listCma", Event.LIST_CMA.toString());
+        assertEquals("editAppealAfterSubmit", Event.EDIT_APPEAL_AFTER_SUBMIT.toString());
+        assertEquals("linkAppeal", Event.LINK_APPEAL.toString());
+        assertEquals("unlinkAppeal", Event.UNLINK_APPEAL.toString());
+        assertEquals("leadershipJudgeFtpaDecision", Event.LEADERSHIP_JUDGE_FTPA_DECISION.toString());
+        assertEquals("residentJudgeFtpaDecision", Event.RESIDENT_JUDGE_FTPA_DECISION.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
+        assertEquals("editDocuments", Event.EDIT_DOCUMENTS.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(39, Event.values().length);
+        assertEquals(60, Event.values().length);
     }
 }

@@ -15,9 +15,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.GovNotifyTemplateIdConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("unchecked")
@@ -25,23 +25,24 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
 
     @Mock Callback<AsylumCase> callback;
     @Mock AsylumCase asylumCase;
-
     @Mock EmailAddressFinder emailAddressFinder;
     @Mock PersonalisationProvider personalisationProvider;
-    @Mock GovNotifyTemplateIdConfiguration govNotifyTemplateIdConfiguration;
+    @Mock CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-
+    private String afterListingTemplateId = "afterListingTemplateId";
+    private String beforeListingTemplateId = "beforeListingTemplateId";
+    private String iaExUiFrontendUrl = "http://localhost";
     private String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
     private String homeOfficeBhamEmailAddress = "ho-birmingham@example.com";
-
     private String hmctsReference = "hmctsReference";
-    private String legalRepReference = "legalRepresentativeReference";
+    private String ariaListingReference = "someAriaListingReference";
     private String homeOfficeReference = "homeOfficeReference";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "cust.services@example.com";
 
     private RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation;
 
@@ -49,19 +50,39 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     public void setUp() {
 
         respondentChangeDirectionDueDatePersonalisation = new RespondentChangeDirectionDueDatePersonalisation(
-            govNotifyTemplateIdConfiguration,
+            afterListingTemplateId,
+            beforeListingTemplateId,
+            iaExUiFrontendUrl,
             personalisationProvider,
             homeOfficeApcEmailAddress,
             homeOfficeLartEmailAddress,
-            emailAddressFinder
+            emailAddressFinder,
+            customerServicesProvider
         );
     }
 
     @Test
-    public void should_return_the_given_template_id() {
-        when(govNotifyTemplateIdConfiguration.getChangeDirectionDueDateTemplateId()).thenReturn(templateId);
+    public void should_return_the_given_before_listing_template_id() {
+        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+            .thenReturn(Optional.of(State.CASE_BUILDING));
 
-        assertEquals(templateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId());
+        assertEquals(beforeListingTemplateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_after_listing_template_id() {
+        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+            .thenReturn(Optional.of(State.FINAL_BUNDLING));
+
+        assertEquals(afterListingTemplateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_throw_exception_if_current_visible_state_to_home_office_all_is_not_present() {
+
+        assertThatThrownBy(() -> respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
     }
 
     @Test
@@ -120,10 +141,12 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         return ImmutableMap
             .<String, String>builder()
             .put("hmctsReference", hmctsReference)
-            .put("legalRepReference", legalRepReference)
+            .put("ariaListingReference", ariaListingReference)
             .put("homeOfficeReference", homeOfficeReference)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyName)
+            .put("customerServicesTelephone", customerServicesTelephone)
+            .put("customerServicesEmail", customerServicesEmail)
             .build();
     }
 }

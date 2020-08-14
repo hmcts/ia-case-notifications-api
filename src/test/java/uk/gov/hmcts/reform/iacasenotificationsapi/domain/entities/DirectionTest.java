@@ -16,7 +16,7 @@ public class DirectionTest {
     private final String dateSent = "2018-12-25";
     private DirectionTag tag = DirectionTag.LEGAL_REPRESENTATIVE_REVIEW;
     private List<IdValue<PreviousDates>> previousDates = Collections.emptyList();
-
+    private List<IdValue<ClarifyingQuestion>> clarifyingQuestions = Collections.emptyList();
     private Direction direction = new Direction(
         explanation,
         parties,
@@ -24,6 +24,16 @@ public class DirectionTest {
         dateSent,
         tag,
         previousDates
+    );
+
+    private Direction directionWithQuestions = new Direction(
+        explanation,
+        parties,
+        dateDue,
+        dateSent,
+        tag,
+        previousDates,
+        clarifyingQuestions
     );
 
     @Test
@@ -38,7 +48,7 @@ public class DirectionTest {
     }
 
     @Test
-    public void should_not_allow_null_arguments() {
+    public void direction_should_not_allow_null_arguments() {
 
         assertThatThrownBy(() -> new Direction(null, parties, dateDue, dateSent, tag, previousDates))
             .isExactlyInstanceOf(NullPointerException.class);
@@ -53,6 +63,41 @@ public class DirectionTest {
             .isExactlyInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> new Direction(explanation, parties, dateDue, dateSent, null, previousDates))
+            .isExactlyInstanceOf(NullPointerException.class);
+    }
+
+
+    @Test
+    public void direction_with_questions_should_hold_onto_values() {
+
+        assertEquals(explanation, directionWithQuestions.getExplanation());
+        assertEquals(parties, directionWithQuestions.getParties());
+        assertEquals(dateDue, directionWithQuestions.getDateDue());
+        assertEquals(dateSent, directionWithQuestions.getDateSent());
+        assertEquals(tag, directionWithQuestions.getTag());
+        assertEquals(previousDates, directionWithQuestions.getPreviousDates());
+        assertEquals(clarifyingQuestions, directionWithQuestions.getClarifyingQuestions());
+    }
+
+    @Test
+    public void direction_with_questions_should_not_allow_null_arguments() {
+
+        assertThatThrownBy(() -> new Direction(null, parties, dateDue, dateSent, tag, previousDates, clarifyingQuestions))
+            .isExactlyInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> new Direction(explanation, null, dateDue, dateSent, tag, previousDates, clarifyingQuestions))
+            .isExactlyInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> new Direction(explanation, parties, null, dateSent, tag, previousDates, clarifyingQuestions))
+            .isExactlyInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> new Direction(explanation, parties, dateDue, null, tag, previousDates, clarifyingQuestions))
+            .isExactlyInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> new Direction(explanation, parties, dateDue, dateSent, null, previousDates, clarifyingQuestions))
+            .isExactlyInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> new Direction(explanation, parties, dateDue, dateSent, tag, null, clarifyingQuestions))
             .isExactlyInstanceOf(NullPointerException.class);
     }
 }
