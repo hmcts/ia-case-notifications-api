@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -9,6 +8,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -97,7 +97,7 @@ public class PreSubmitCallbackDispatcherTest {
 
             assertNotNull(callbackResponse);
             assertEquals(caseDataMutation2, callbackResponse.getData());
-            assertThat(callbackResponse.getErrors(), is(expectedErrors));
+            Assertions.assertThat(callbackResponse.getErrors()).isEqualTo(expectedErrors);
 
             verify(ccdEventAuthorizor, times(1)).throwIfNotAuthorized(Event.BUILD_CASE);
 
