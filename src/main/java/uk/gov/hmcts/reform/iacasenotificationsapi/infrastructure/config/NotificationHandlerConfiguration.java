@@ -320,7 +320,10 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
+                    && Arrays.asList(
+                            Event.SUBMIT_APPEAL,
+                            Event.PAY_AND_SUBMIT_APPEAL)
+                        .contains(callback.getEvent())
                     && callback.getCaseDetails().getCaseData()
                     .read(JOURNEY_TYPE, JourneyType.class)
                     .map(type -> type == REP).orElse(true),
@@ -351,7 +354,10 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL, notificationGenerators
+                    && Arrays.asList(
+                            Event.SUBMIT_APPEAL,
+                            Event.PAY_AND_SUBMIT_APPEAL)
+                       .contains(callback.getEvent()), notificationGenerators
         );
     }
 
