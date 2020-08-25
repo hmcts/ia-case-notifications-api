@@ -30,6 +30,7 @@ public enum State {
     DECISION("decision"),
     ENDED("ended"),
     APPEAL_TAKEN_OFFLINE("appealTakenOffline"),
+    PENDING_PAYMENT("pendingPayment"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
