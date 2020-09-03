@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -19,8 +20,7 @@ public class RequestUserAccessTokenProviderTest {
 
     @Mock private HttpServletRequest httpServletRequest;
 
-    private RequestUserAccessTokenProvider requestUserAccessTokenProvider =
-        new RequestUserAccessTokenProvider();
+    private RequestUserAccessTokenProvider requestUserAccessTokenProvider;
 
     @Before
     public void setUp() {
@@ -28,6 +28,8 @@ public class RequestUserAccessTokenProviderTest {
         RequestContextHolder.setRequestAttributes(
             new ServletRequestAttributes(httpServletRequest)
         );
+
+        requestUserAccessTokenProvider = new RequestUserAccessTokenProvider();
     }
 
     @Test
@@ -73,5 +75,15 @@ public class RequestUserAccessTokenProviderTest {
         Optional<String> optionalAccessToken = requestUserAccessTokenProvider.tryGetAccessToken();
 
         assertFalse(optionalAccessToken.isPresent());
+    }
+
+    @Test
+    public void when_no_current_http_request_exists_it_throws() {
+
+        RequestContextHolder.resetRequestAttributes();
+
+        assertThatThrownBy(() -> requestUserAccessTokenProvider.tryGetAccessToken())
+            .hasMessage("No current HTTP request")
+            .isExactlyInstanceOf(IllegalStateException.class);
     }
 }

@@ -82,7 +82,7 @@ public class IdamAuthorizor {
                     ).getBody();
 
             if (authCode == null) {
-                throw new IllegalStateException("Error in getting auth code from IDAM");
+                throw new RestClientException("");
             }
 
         } catch (RestClientException e) {
@@ -126,7 +126,7 @@ public class IdamAuthorizor {
                     ).getBody();
 
             if (authToken == null) {
-                throw new IllegalStateException("Error in getting auth token from IDAM");
+                throw new RestClientException("");
             }
 
         } catch (RestClientException e) {

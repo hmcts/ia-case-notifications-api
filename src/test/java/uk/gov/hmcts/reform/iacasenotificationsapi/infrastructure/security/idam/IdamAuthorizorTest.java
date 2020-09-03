@@ -20,6 +20,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -162,8 +163,8 @@ public class IdamAuthorizorTest {
             );
 
         assertThatThrownBy(() -> idamAuthorizor.exchangeForAccessToken("username", "password"))
-            .isInstanceOf(IllegalStateException.class)
-            .hasMessage("Error in getting auth code from IDAM");
+            .isInstanceOf(IdentityManagerResponseException.class)
+            .hasMessage("Could not get auth code with IDAM");
     }
 
     @Test
