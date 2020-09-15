@@ -525,6 +525,7 @@ security:
       - "linkAppeal"
       - "unlinkAppeal"
       - "editDocuments"
+      - "requestResponseAmend"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
