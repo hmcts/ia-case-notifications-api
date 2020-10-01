@@ -15,6 +15,6 @@ public class PaymentStatusTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(4, PaymentStatus.values().length);
+        assertEquals(3, PaymentStatus.values().length);
     }
 }
