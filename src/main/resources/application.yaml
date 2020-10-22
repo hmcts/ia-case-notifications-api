@@ -647,7 +647,6 @@ security:
       - "editDocuments"
       - "requestResponseAmend"
       - "reinstateAppeal"
-      - "makeAnApplication"
       - "decideAnApplication"
     caseworker-ia-admofficer:
       - "listCase"
