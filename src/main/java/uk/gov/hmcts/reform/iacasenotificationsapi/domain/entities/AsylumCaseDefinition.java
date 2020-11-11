@@ -257,6 +257,15 @@ public enum AsylumCaseDefinition {
 
     IS_REHEARD_APPEAL_ENABLED(
         "isReheardAppealEnabled", new TypeReference<YesOrNo>() {}),
+
+    IS_REMISSIONS_ENABLED(
+        "isRemissionsEnabled", new TypeReference<YesOrNo>(){}),
+
+    REMISSION_TYPE(
+        "remissionType", new TypeReference<RemissionType>(){}),
+
+    REMISSION_CLAIM(
+        "remissionClaim", new TypeReference<String>(){}),
     ;
 
     private final String value;
