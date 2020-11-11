@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum RemissionType {
 
     NO_REMISSION("noRemission"),
-    HO_WAIVER_REMISSION("hoWaiverRemission");
+    HO_WAIVER_REMISSION("hoWaiverRemission"),
+    HELP_WITH_FEES("helpWithFees"),
+    EXCEPTIONAL_CIRCUMSTANCES_REMISSION("exceptionalCircumstancesRemission");
 
     @JsonValue
     private final String id;
