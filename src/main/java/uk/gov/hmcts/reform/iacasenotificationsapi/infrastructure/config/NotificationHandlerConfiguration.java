@@ -2086,6 +2086,58 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> manageFeeUpdateCaseOfficerNotificationHandler(
+            @Qualifier("caseOfficerManageFeeUpdateGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isEaAndHuAppealType = isEaAndHuAppeal(asylumCase);
+
+                boolean isPaAppealType = isPaAppeal(asylumCase);
+
+                String eaHuAppealTypePaymentOption = asylumCase
+                    .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                String paAppealTypePaymentOption = asylumCase
+                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                Optional<PaymentStatus> paymentStatus = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+
+                boolean maybeFeeUpdateRecorded = asylumCase
+                    .read(FEE_UPDATE_RECORDED, CheckValues.class)
+                    .map(value -> value.getValues().contains("feeUpdateRecorded")).orElse(false);
+
+                boolean isPaidByCard = ((isEaAndHuAppealType && eaHuAppealTypePaymentOption.equals("payOffline"))
+                                || (isPaAppealType && paAppealTypePaymentOption.equals("payOffline")));
+
+                boolean isPaidByAccount = ((isEaAndHuAppealType && eaHuAppealTypePaymentOption.equals("payNow"))
+                            || (isPaAppealType &&  Arrays.asList("payNow","payLater").contains(paAppealTypePaymentOption)));
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.MANAGE_FEE_UPDATE
+                       && (isPaidByCard || isPaidByAccount)
+                       && maybeFeeUpdateRecorded
+                       && !paymentStatus.equals(Optional.empty())
+                       && paymentStatus.get().equals(PaymentStatus.PAID);
+            }, notificationGenerators
+        );
+    }
+
+    protected boolean isPaAppeal(AsylumCase asylumCase) {
+        return asylumCase
+            .read(APPEAL_TYPE, AppealType.class)
+            .map(type -> type == PA).orElse(false);
+    }
+
+    protected boolean isEaAndHuAppeal(AsylumCase asylumCase) {
+        return asylumCase
+            .read(APPEAL_TYPE, AppealType.class)
+            .map(type -> type == EA || type == HU).orElse(false);
+    }
+
 }
 
 
