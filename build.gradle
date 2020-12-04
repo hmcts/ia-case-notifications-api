@@ -266,7 +266,7 @@ dependencies {
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
 
     testCompile 'pl.pragmatists:JUnitParams:1.1.1'
-    testCompile "org.junit.jupiter:junit-jupiter-params:5.4.2"
+    testCompile "org.junit.jupiter:junit-jupiter-params:5.7.0"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2",
             "org.junit.jupiter:junit-jupiter-params:5.4.2",
