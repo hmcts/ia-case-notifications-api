@@ -603,8 +603,6 @@ govnotify:
       legalRep:
         email: fd709bf4-095c-4734-8f88-9a9feba9fd81
 
-
-
 notificationSender.deduplicateSendsWithinSeconds: 60
 
 iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://manage-case.platform.hmcts.net/}
