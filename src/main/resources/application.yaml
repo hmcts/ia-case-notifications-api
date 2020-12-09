@@ -602,6 +602,11 @@ govnotify:
     requestNewHearingRequirements:
       legalRep:
         email: fd709bf4-095c-4734-8f88-9a9feba9fd81
+    requestFeeRemission:
+      legalRep:
+        email: acb036e5-47a3-454f-a24b-4755bf7e258c
+      adminOfficer:
+        email: 701597ee-27da-42e1-888f-ff8d461174ac
 
 
 
@@ -653,6 +658,7 @@ security:
       - "payAndSubmitAppeal"
       - "paymentAppeal"
       - "makeAnApplication"
+      - "requestFeeRemission"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
