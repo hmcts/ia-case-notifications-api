@@ -9,6 +9,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_APPEAL_DECIDED_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_DECIDED_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
@@ -42,18 +46,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicationDecision;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -155,8 +148,28 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
+                && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeHomeOfficeNotificationFailedNotificationHandler(
+        @Qualifier("appealOutcomeHomeOfficeNotificationFailedNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                final String instructStatus = asylumCase.read(HOME_OFFICE_APPEAL_DECIDED_INSTRUCT_STATUS, String.class)
+                    .orElse("");
+
+                return
+                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
+                    && instructStatus.equals("FAIL");
+            },
+            notificationGenerator
         );
     }
 
@@ -1500,6 +1513,35 @@ public class NotificationHandlerConfiguration {
                     && isGrantedOrPartiallyGrantedOutcome
                     && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaDecisionHomeOfficeNotificationFailedNotificationHandler(
+        @Qualifier("ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                String ftpaApplicantType = asylumCase
+                    .read(FTPA_APPLICANT_TYPE, String.class)
+                    .orElse("");
+
+                final String hoRequestEvidenceInstructStatus =
+                    ftpaApplicantType.equals("appellant")
+                        ? asylumCase.read(HOME_OFFICE_FTPA_APPELLANT_DECIDED_INSTRUCT_STATUS,
+                        String.class).orElse("")
+                        : asylumCase.read(HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS,
+                        String.class).orElse("");
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
+                           || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
+                       && hoRequestEvidenceInstructStatus.equals("FAIL");
             },
             notificationGenerators
         );
