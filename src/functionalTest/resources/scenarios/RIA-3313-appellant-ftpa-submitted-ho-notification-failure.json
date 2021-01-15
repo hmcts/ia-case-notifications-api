@@ -72,7 +72,7 @@
       },
       {
         "reference": "3313_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
-        "recipient": "{$ftpaSubmitted.respondentEmailAddress}",
+        "recipient": "{$homeOfficeFtpaEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
           "PA/12345/2019",
