@@ -307,4 +307,5 @@ public enum AsylumCaseDefinition {
     public TypeReference getTypeReference() {
         return typeReference;
     }
+
 }
