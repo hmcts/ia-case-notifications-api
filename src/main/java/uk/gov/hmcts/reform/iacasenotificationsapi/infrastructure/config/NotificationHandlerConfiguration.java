@@ -570,7 +570,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_BUNDLE,
+                    && callback.getEvent() == Event.UPLOAD_RESPONDENT_BUNDLE,
             notificationGenerators
         );
     }

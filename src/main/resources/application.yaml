@@ -701,7 +701,7 @@ security:
       - "reinstateAppeal"
       - "recordRemissionDecision"
     caseworker-ia-homeofficeapc:
-      - "uploadHomeOfficeBundle"
+      - "uploadRespondentBundle"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
@@ -716,7 +716,7 @@ security:
       - "applyForFTPARespondent"
       - "makeAnApplication"
     caseworker-ia-respondentofficer:
-      - "uploadHomeOfficeBundle"
+      - "uploadRespondentBundle"
       - "addAppealResponse"
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
