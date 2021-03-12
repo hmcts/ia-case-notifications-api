@@ -6,7 +6,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.IdamApi
 
 @SpringBootApplication
 @EnableFeignClients(clients = {
-        IdamApi.class
+    IdamApi.class
 })
 public class IdamApiConsumerApplication {
 }
