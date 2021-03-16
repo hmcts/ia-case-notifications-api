@@ -2183,6 +2183,51 @@ public class NotificationHandlerConfiguration {
             notificationGenerators
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealAppellantSmsNotificationHandler(
+        @Qualifier("submitAppealAppellantSmsNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                    .map(contactPreference ->  ContactPreference.WANTS_SMS == contactPreference)
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && (callback.getEvent() == Event.SUBMIT_APPEAL
+                       || callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL)
+                       && asylumCase.read(MOBILE_NUMBER,String.class).isPresent()
+                       && smsPreferred;
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealAppellantEmailNotificationHandler(
+        @Qualifier("submitAppealAppellantEmailNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean emailPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                    .map(contactPreference ->  ContactPreference.WANTS_EMAIL == contactPreference)
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && (callback.getEvent() == Event.SUBMIT_APPEAL
+                       || callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL)
+                       && asylumCase.read(EMAIL,String.class).isPresent()
+                       && emailPreferred;
+            }, notificationGenerators
+        );
+    }
+
 }
 
 
