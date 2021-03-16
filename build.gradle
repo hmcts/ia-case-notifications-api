@@ -72,7 +72,7 @@ compileTestJava {
 }
 
 tasks.withType(Test) {
-    useJUnitPlatform ()
+    useJUnitPlatform()
 
     testLogging {
         exceptionFormat = 'full'
@@ -205,7 +205,8 @@ pitest {
 project.tasks['pitest'].group = "Verification"
 
 project.ext {
-    pactVersion = getCheckedOutGitCommitHash()
+    pacticipant = 'ia_caseNotificationsApi'
+    pacticipantVersion = getCheckedOutGitCommitHash()
 }
 
 def getCheckedOutGitCommitHash() {
@@ -217,7 +218,6 @@ task runContractTests(type: Test, description: 'Runs contract tests.', group: 'V
         return System.env.SKIP_CONTRACT_TESTS == null || System.env.SKIP_CONTRACT_TESTS == 'false'
     }
     useJUnitPlatform()
-    //include "uk/gov/hmcts/payment/api/controllers/consumer/**"
     testClassesDirs = sourceSets.contractTest.output.classesDirs
     classpath = sourceSets.contractTest.runtimeClasspath
     systemProperty 'pact.rootDir', "pacts"
@@ -231,16 +231,16 @@ task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test 
     classpath = sourceSets.contractTest.runtimeClasspath
 }
 
-runAndPublishConsumerPactTests.dependsOn runContractTests
-
 runAndPublishConsumerPactTests.finalizedBy pactPublish
 
 pact {
+    broker {
+        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
+    }
     publish {
         pactDirectory = 'pacts'
-        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
-        tags = [System.getenv("PACT_BRANCH_NAME") ?:'Dev']
-        version = project.pactVersion
+        tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
+        version = project.pacticipantVersion
     }
 }
 sonarqube {

@@ -10,6 +10,8 @@ properties([
 
 @Library("Infrastructure")
 
+import uk.gov.hmcts.contino.AppPipelineDsl
+
 def type = "java"
 def product = "ia"
 def component = "case-notifications-api"
@@ -135,4 +137,11 @@ withPipeline(type, product, component) {
     }
 
     enableSlackNotifications('#ia-tech')
+
+    onMaster() {
+        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
+    }
+    onPR() {
+        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
+    }
 }
