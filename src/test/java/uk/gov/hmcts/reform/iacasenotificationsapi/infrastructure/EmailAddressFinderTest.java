@@ -6,13 +6,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.BRADFORD;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.COVENTRY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.GLASGOW;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.GLASGOW_TRIBUNAL_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.NEWCASTLE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.NORTH_SHIELDS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.NOTTINGHAM;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -138,16 +132,16 @@ public class EmailAddressFinderTest {
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NOTTINGHAM));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NOTTINGHAM));
-        when(hearingCentreEmailAddresses.get(BRADFORD)).thenReturn("hc-bradford@example.com");
-        when(homeOfficeEmailAddresses.get(BRADFORD)).thenReturn("ho-bradford@example.com");
+        when(hearingCentreEmailAddresses.get(BIRMINGHAM)).thenReturn("hc-bradford@example.com");
+        when(homeOfficeEmailAddresses.get(BIRMINGHAM)).thenReturn("ho-bradford@example.com");
         assertEquals("hc-bradford@example.com", emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
         assertEquals("ho-bradford@example.com", emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
         assertEquals("ho-bradford@example.com", emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(COVENTRY));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(COVENTRY));
-        when(hearingCentreEmailAddresses.get(BRADFORD)).thenReturn("hc-bradford@example.com");
-        when(homeOfficeEmailAddresses.get(BRADFORD)).thenReturn("ho-bradford@example.com");
+        when(hearingCentreEmailAddresses.get(BIRMINGHAM)).thenReturn("hc-bradford@example.com");
+        when(homeOfficeEmailAddresses.get(BIRMINGHAM)).thenReturn("ho-bradford@example.com");
         assertEquals("hc-bradford@example.com", emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
         assertEquals("ho-bradford@example.com", emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
         assertEquals("ho-bradford@example.com", emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
