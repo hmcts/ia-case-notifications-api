@@ -26,12 +26,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit.PostSubmitNotificationHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.NotificationHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
@@ -1885,6 +1888,64 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isRejected;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> applyNocDecisionNotificationHandler(
+        @Qualifier("applyNocDecisionNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                       && callback.getEvent() == Event.APPLY_NOC_DECISION;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationNotificationHandler(
+        @Qualifier("removeRepresentationNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                       && callback.getEvent() == Event.REMOVE_REPRESENTATION;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantEmailNotificationHandler(
+        @Qualifier("removeRepresentationAppellantEmailNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                       && callback.getEvent() == Event.REMOVE_REPRESENTATION
+                       && callback.getCaseDetails().getCaseData().read(EMAIL, String.class).isPresent();
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantSmsNotificationHandler(
+        @Qualifier("removeRepresentationAppellantSmsNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                       && callback.getEvent() == Event.REMOVE_REPRESENTATION
+                       && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent();
             },
             notificationGenerators
         );

@@ -1,0 +1,26 @@
+{
+  "description": "RIA-3731 Send remove representation notification to legal rep, case officer and home office",
+  "request": {
+    "uri": "/asylum/ccdSubmitted",
+    "credentials": "LegalRepresentative",
+    "input": {
+      "id": 3731,
+      "eventId": "removeRepresentation",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "hearingCentre": "manchester"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "confirmation": {
+      "confirmation_header": "anything",
+      "confirmation_body": "anything"
+    }
+  }
+}

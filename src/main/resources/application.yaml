@@ -109,7 +109,6 @@ govnotify:
     pendingPayment:
       legalRep:
         paid:
-
           email: 91cf84fe-55f0-41a4-9d0f-fe13ae45fb8c
         paidAfterAppealSubmitted:
           beforeListing:
@@ -602,8 +601,28 @@ govnotify:
     requestNewHearingRequirements:
       legalRep:
         email: fd709bf4-095c-4734-8f88-9a9feba9fd81
-
-
+    applyNoticeOfChangeDecision:
+      legalRep:
+        email: 4959e6f4-2a40-44a0-af09-b1fbe5bc1be3
+    removeRepresentation:
+      legalRep:
+        beforeListing:
+          email: 54a430cb-d0f0-4170-bd5a-0bd62f06fc76
+        afterListing:
+          email: 31ecd8c7-ee85-4b3b-9805-739d378da597
+      caseOfficer:
+        beforeListing:
+          email: 09a83871-901b-41ed-b3bd-2b72cee73236
+        afterListing:
+          email: 76bad58b-a6ea-4311-ae33-f7e596cc793b
+      homeOffice:
+        beforeListing:
+          email: f924cae0-289a-42f4-bb2e-70164f9c924f
+        afterListing:
+          email: 2199e053-5ff7-46a2-9cf4-58864265d516
+      appellant:
+        email: cfb76737-b805-483f-81ec-9d1365eb3260
+        sms: ffef5cda-ec06-43e4-bd82-5d7fc266a000
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -631,6 +650,9 @@ security:
     - "caseworker-ia"
     - "citizen"
   roleEventAccess:
+    caseworker-approver:
+      - "applyNocDecision"
+      - "removeRepresentation"
     citizen:
       - "startAppeal"
       - "editAppeal"
@@ -653,6 +675,8 @@ security:
       - "payAndSubmitAppeal"
       - "paymentAppeal"
       - "makeAnApplication"
+      - "applyNocDecision"
+      - "removeRepresentation"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -697,6 +721,7 @@ security:
       - "reinstateAppeal"
       - "decideAnApplication"
       - "requestNewHearingRequirements"
+      - "removeRepresentation"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -716,16 +741,19 @@ security:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
+      - "removeRepresentation"
     caseworker-ia-homeofficelart:
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
+      - "removeRepresentation"
     caseworker-ia-homeofficepou:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
+      - "removeRepresentation"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"

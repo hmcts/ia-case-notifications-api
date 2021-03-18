@@ -1638,4 +1638,78 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("applyNocDecisionNotificationGenerator")
+    public List<NotificationGenerator> applyNocDecisionNotificationHandler(
+        LegalRepresentativeApplyNocDecisionPersonalisation legalRepresentativeApplyNocDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeApplyNocDecisionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("removeRepresentationNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentationNotificationHandler(
+        LegalRepresentativeRemoveRepresentationPersonalisation legalRepresentativeRemoveRepresentationPersonalisation,
+        CaseOfficerRemoveRepresentationPersonalisation caseOfficerRemoveRepresentationPersonalisation,
+        HomeOfficeRemoveRepresentationPersonalisation homeOfficeRemoveRepresentationPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeRemoveRepresentationPersonalisation,
+                    caseOfficerRemoveRepresentationPersonalisation,
+                    homeOfficeRemoveRepresentationPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("removeRepresentationAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentationAppellantEmailNotificationHandler(
+        AppellantRemoveRepresentationPersonalisationEmail appellantRemoveRepresentationPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    appellantRemoveRepresentationPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("removeRepresentationAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentationAppellantSmsNotificationHandler(
+        AppellantRemoveRepresentationPersonalisationSms appellantRemoveRepresentationPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new SmsNotificationGenerator(
+                newArrayList(appellantRemoveRepresentationPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
