@@ -50,14 +50,10 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         }
         PostSubmitCallbackResponse postSubmitCallbackResponse = new PostSubmitCallbackResponse();
         try {
-            notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
 
-            if (callback.getEvent() == Event.REMOVE_REPRESENTATION) {
-                setRemoveRepresentationHeaderAndBody(postSubmitCallbackResponse);
-            } else {
-                postSubmitCallbackResponse.setConfirmationHeader("success");
-                postSubmitCallbackResponse.setConfirmationBody("success");
-            }
+            notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
+            setRemoveRepresentationHeaderAndBody(postSubmitCallbackResponse, callback);
+
         } catch (Exception e) {
             if (errorHandling.isPresent()) {
                 errorHandling.get().accept(callback, e);
@@ -68,16 +64,29 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         return postSubmitCallbackResponse;
     }
 
-    void setRemoveRepresentationHeaderAndBody(PostSubmitCallbackResponse postSubmitCallbackResponse) {
-        postSubmitCallbackResponse.setConfirmationHeader(
-            "# You have stopped representing this client"
-        );
+    void setRemoveRepresentationHeaderAndBody(PostSubmitCallbackResponse postSubmitCallbackResponse, Callback<AsylumCase> callback) {
 
-        postSubmitCallbackResponse.setConfirmationBody(
-            "#### What happens next\n\n"
-            + "We've sent you an email confirming you're no longer representing this client.\n"
-            + "You have been removed from this case and no longer have access to it.\n\n"
-            + "[View case list](/cases)"
-        );
+        if (callback.getEvent() == Event.REMOVE_REPRESENTATION) {
+            postSubmitCallbackResponse.setConfirmationHeader(
+                "# You have stopped representing this client"
+            );
+            postSubmitCallbackResponse.setConfirmationBody(
+                "#### What happens next\n\n"
+                + "We've sent you an email confirming you're no longer representing this client.\n"
+                + "You have been removed from this case and no longer have access to it.\n\n"
+                + "[View case list](/cases)"
+            );
+        } else if (callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE) {
+            postSubmitCallbackResponse.setConfirmationHeader(
+                "# You have removed the legal representative from this appeal"
+            );
+            postSubmitCallbackResponse.setConfirmationBody(
+                "#### What happens next\n\n"
+                + "All parties will be notified."
+            );
+        } else {
+            postSubmitCallbackResponse.setConfirmationHeader("success");
+            postSubmitCallbackResponse.setConfirmationBody("success");
+        }
     }
 }

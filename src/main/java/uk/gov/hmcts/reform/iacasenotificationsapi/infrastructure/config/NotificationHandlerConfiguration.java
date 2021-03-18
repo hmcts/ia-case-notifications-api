@@ -1915,7 +1915,8 @@ public class NotificationHandlerConfiguration {
         return new PostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.REMOVE_REPRESENTATION;
+                       && (callback.getEvent() == Event.REMOVE_REPRESENTATION
+                           || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE);
             },
             notificationGenerators
         );
@@ -1929,7 +1930,7 @@ public class NotificationHandlerConfiguration {
         return new PostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.REMOVE_REPRESENTATION
+                       && (callback.getEvent() == Event.REMOVE_REPRESENTATION || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
                        && callback.getCaseDetails().getCaseData().read(EMAIL, String.class).isPresent();
             },
             notificationGenerators
@@ -1944,7 +1945,7 @@ public class NotificationHandlerConfiguration {
         return new PostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.REMOVE_REPRESENTATION
+                       && (callback.getEvent() == Event.REMOVE_REPRESENTATION || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
                        && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent();
             },
             notificationGenerators
