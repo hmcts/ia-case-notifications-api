@@ -80,7 +80,7 @@ class TsvStringProviderTest {
         );
 
         assertEquals(
-            Optional.of("Remote Hearing"),
+            Optional.of("Remote hearing"),
             tsvStringProvider.get("hearingCentre", "remoteHearing")
         );
 
