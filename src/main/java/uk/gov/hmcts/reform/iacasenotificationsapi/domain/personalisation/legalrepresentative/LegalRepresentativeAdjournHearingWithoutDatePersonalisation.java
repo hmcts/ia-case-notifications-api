@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
 @Service
-public class LegalRepresentativeAdjournHearingWithoutDatePersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeAdjournHearingWithoutDatePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String legalRepresentativeAdjournHearingWithoutDateTemplateId;
 
@@ -26,13 +26,6 @@ public class LegalRepresentativeAdjournHearingWithoutDatePersonalisation impleme
     @Override
     public String getTemplateId() {
         return legalRepresentativeAdjournHearingWithoutDateTemplateId;
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(asylumCase
-            .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
-            .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")));
     }
 
     @Override

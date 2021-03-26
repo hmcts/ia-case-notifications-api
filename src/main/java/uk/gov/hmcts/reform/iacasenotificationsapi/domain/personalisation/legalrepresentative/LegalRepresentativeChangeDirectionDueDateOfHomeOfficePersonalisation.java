@@ -19,13 +19,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String afterListingTemplateId;
     private final String beforeListingTempalteId;
     private final String iaExUiFrontendUrl;
     private final PersonalisationProvider personalisationProvider;
-    private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation(
@@ -34,7 +33,6 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
 
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         PersonalisationProvider personalisationProvider,
-        EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider
     ) {
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
@@ -42,7 +40,6 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
         this.beforeListingTempalteId = beforeListingTempalteId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.personalisationProvider = personalisationProvider;
-        this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
 
@@ -66,11 +63,6 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
                 return afterListingTemplateId;
             })
             .orElseThrow(() -> new IllegalStateException("currentCaseStateVisibleToLegalRepresentative flag is not present"));
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
     }
 
     @Override
