@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class LegalRepresentativeRemoveRepresentationPersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeRemoveRepresentationPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String removeRepresentationLegalRepresentativeBeforeListingTemplateId;
     private final String removeRepresentationLegalRepresentativeAfterListingTemplateId;
