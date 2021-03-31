@@ -1973,14 +1973,14 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PostSubmitCallbackHandler<AsylumCase> applyNocDecisionNotificationHandler(
-        @Qualifier("applyNocDecisionNotificationGenerator")
+    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionNotificationHandler(
+        @Qualifier("nocRequestDecisionNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new PostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.APPLY_NOC_DECISION;
+                       && callback.getEvent() == Event.NOC_REQUEST;
             },
             notificationGenerators
         );

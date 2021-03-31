@@ -609,9 +609,6 @@ govnotify:
     requestNewHearingRequirements:
       legalRep:
         email: fd709bf4-095c-4734-8f88-9a9feba9fd81
-    applyNoticeOfChangeDecision:
-      legalRep:
-        email: 4959e6f4-2a40-44a0-af09-b1fbe5bc1be3
 
 
 
@@ -642,7 +639,7 @@ security:
     - "citizen"
   roleEventAccess:
     caseworker-approver:
-      - "applyNocDecision"
+      - "nocRequest"
     citizen:
       - "startAppeal"
       - "editAppeal"
@@ -665,7 +662,6 @@ security:
       - "payAndSubmitAppeal"
       - "paymentAppeal"
       - "makeAnApplication"
-      - "applyNocDecision"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"

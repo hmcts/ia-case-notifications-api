@@ -79,6 +79,7 @@ public class EventTest {
         assertEquals("decideAnApplication", Event.DECIDE_AN_APPLICATION.toString());
         assertEquals("requestNewHearingRequirements", Event.REQUEST_NEW_HEARING_REQUIREMENTS.toString());
         assertEquals("recordRemissionDecision", RECORD_REMISSION_DECISION.toString());
+        assertEquals("nocRequest", NOC_REQUEST.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 

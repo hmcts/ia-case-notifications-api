@@ -1750,18 +1750,15 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("applyNocDecisionNotificationGenerator")
-    public List<NotificationGenerator> applyNocDecisionNotificationHandler(
-        LegalRepresentativeApplyNocDecisionPersonalisation legalRepresentativeApplyNocDecisionPersonalisation,
+    @Bean("nocRequestDecisionNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionNotificationGenerator(
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(
-                    legalRepresentativeApplyNocDecisionPersonalisation
-                ),
+                newArrayList(),
                 notificationSender,
                 notificationIdAppender
 
