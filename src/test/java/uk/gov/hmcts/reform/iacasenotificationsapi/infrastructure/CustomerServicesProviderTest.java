@@ -16,6 +16,7 @@ public class CustomerServicesProviderTest {
 
     private String customerServicesTelephone = "555 555";
     private String customerServicesEmail = "some.email@example.com";
+    private String customerFtpaServicesEmail = "some.ftpaemail@example.com";
 
     private CustomerServicesProvider customerServicesProvider;
 
@@ -24,7 +25,8 @@ public class CustomerServicesProviderTest {
 
         customerServicesProvider = new CustomerServicesProvider(
             customerServicesTelephone,
-            customerServicesEmail
+            customerServicesEmail,
+            customerFtpaServicesEmail
         );
     }
 
@@ -41,12 +43,27 @@ public class CustomerServicesProviderTest {
     }
 
     @Test
+    public void should_return_ftpa_customer_services_personalisation() {
+
+        Map<String, String> customerServicesPersonalisation =
+            customerServicesProvider.getFtpaCustomerServicesPersonalisation();
+
+        assertThat(customerServicesPersonalisation.get("customerServicesTelephone"))
+            .isEqualTo(customerServicesTelephone);
+
+        assertThat(customerServicesPersonalisation.get("customerServicesEmail")).isEqualTo(customerFtpaServicesEmail);
+    }
+
+    @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new CustomerServicesProvider(null, customerServicesEmail))
+        assertThatThrownBy(() -> new CustomerServicesProvider(null, customerServicesEmail, customerFtpaServicesEmail))
             .isExactlyInstanceOf(NullPointerException.class);
 
-        assertThatThrownBy(() -> new CustomerServicesProvider(customerServicesTelephone, null))
+        assertThatThrownBy(() -> new CustomerServicesProvider(customerServicesTelephone, null, customerFtpaServicesEmail))
+            .isExactlyInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> new CustomerServicesProvider(customerServicesTelephone, customerServicesEmail, null))
             .isExactlyInstanceOf(NullPointerException.class);
     }
 

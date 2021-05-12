@@ -920,6 +920,7 @@ ftpaSubmitted:
 
 customerServices:
   emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
+  ftpaEmailAddress: ${IA_FTPA_CUSTOMER_SERVICES_EMAIL:IA-FTPA-Customer-Services@example.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
 
 appellantDaysToWait:
