@@ -1,12 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CASE_FLAG_SET_ASIDE_REHEARD_EXISTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +28,10 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     private String reviewHearingRequirementsTemplateId = "someTemplateId";
     private String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
     private String reviewHearingRequirementsAdminOfficerEmailAddress = "adminofficer-review-hearing-requirements@example.com";
+    private String appealReferenceNumber = "test";
+    private String appellantGivenNames = "test";
+    private String appellantFamilyName = "test";
+    private String linkToOnlineService = "test";
     private AdminOfficerReviewHearingRequirementsPersonalisation adminOfficerReviewHearingRequirementsPersonalisation;
 
     @BeforeEach
@@ -82,20 +85,37 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-
+        when(adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase)).thenReturn((ImmutableMap<String, String>) getPersonalisation());
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
+        when(adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase)).thenReturn((ImmutableMap<String, String>) getPersonalisation());
 
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
+    }
+
+    private Map<String, String> getPersonalisation() {
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("linkToOnlineService", linkToOnlineService)
+            .build();
     }
 }

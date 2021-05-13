@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,7 +33,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeRequestCaseEditPersonalisationTest {
+class LegalRepresentativeRequestCaseEditPersonalisationTest {
 
     private static final String DIRECTION_DUE_DATE = "2020-05-03";
     private static final String TEMPLATE_ID = "someTemplateId";
@@ -63,7 +62,7 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(getExpectedValue(LEGAL_REP_EMAIL_ADDRESS));
 
@@ -75,35 +74,24 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     }
 
     @Test
-    public void getTemplateId() {
+    void getTemplateId() {
         assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
-    public void getRecipientsList() {
+    void getRecipientsList() {
         assertTrue(personalisation.getRecipientsList(asylumCase).contains(LEGAL_REP_EMAIL_ADDRESS));
     }
 
     @Test
-    public void getReferenceId() {
+    void getReferenceId() {
         assertEquals("1234_LEGAL_REPRESENTATIVE_REQUEST_CASE_EDIT",
             personalisation.getReferenceId(1234L));
     }
 
     @ParameterizedTest
     @MethodSource("generateScenarios")
-    public void getPersonalisation(Scenario scenario) {
-
-        ImmutableMap<String, String> expectedPersonalisation = ImmutableMap
-            .<String, String>builder()
-            .put("appealReferenceNumber", scenario.appealReferenceNumber)
-            .put("appellantGivenNames", scenario.appellantGivenNames)
-            .put("appellantFamilyName", scenario.appellantFamilyName)
-            .put("directionExplanation", DIRECTION_EXPLANATION)
-            .put("expectedDirectionDueDate", DIRECTION_DUE_DATE)
-            .put("iaExUiFrontendUrl", IA_EX_UI_FRONTEND_URL)
-            .put("legalRepRefNumber", scenario.legalRepRefNumber)
-            .build();
+    void getPersonalisation(Scenario scenario) {
 
         when((direction.getDateDue())).thenReturn(DIRECTION_DUE_DATE);
         when((direction.getExplanation())).thenReturn(DIRECTION_EXPLANATION);
@@ -124,13 +112,32 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(CUSTOMER_SERVICES_PROVIDER_PHONE);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(CUSTOMER_SERVICES_PROVIDER_EMAIL);
 
+        ImmutableMap<String, String> expectedPersonalisation = getExpectedPersonalisation(scenario);
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 
-
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertEquals(expectedPersonalisation.get("appealReferenceNumber"), actualPersonalisation.get("appealReferenceNumber"));
+        assertEquals(expectedPersonalisation.get("appellantGivenNames"), actualPersonalisation.get("appellantGivenNames"));
+        assertEquals(expectedPersonalisation.get("appellantFamilyName"), actualPersonalisation.get("appellantFamilyName"));
+        assertEquals(expectedPersonalisation.get("iaExUiFrontendUrl"), actualPersonalisation.get("linkToOnlineService"));
+        assertEquals(expectedPersonalisation.get("directionExplanation"), actualPersonalisation.get("explanation"));
+        assertEquals("3 May 2020", actualPersonalisation.get("dueDate"));
         assertEquals(CUSTOMER_SERVICES_PROVIDER_PHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_PROVIDER_EMAIL, customerServicesProvider.getCustomerServicesEmail());
+    }
+
+    private ImmutableMap<String, String> getExpectedPersonalisation(Scenario scenario) {
+        ImmutableMap<String, String> expectedPersonalisation = ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", scenario.appealReferenceNumber)
+            .put("appellantGivenNames", scenario.appellantGivenNames)
+            .put("appellantFamilyName", scenario.appellantFamilyName)
+            .put("directionExplanation", DIRECTION_EXPLANATION)
+            .put("expectedDirectionDueDate", DIRECTION_DUE_DATE)
+            .put("iaExUiFrontendUrl", IA_EX_UI_FRONTEND_URL)
+            .put("legalRepRefNumber", scenario.legalRepRefNumber)
+            .build();
+        return expectedPersonalisation;
     }
 
     @NotNull
@@ -142,7 +149,7 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
+    void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> personalisation.getRecipientsList(asylumCase))
@@ -151,7 +158,7 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
@@ -159,7 +166,7 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_direction_is_empty() {
+    void should_throw_exception_on_personalisation_when_direction_is_empty() {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.CASE_EDIT)).thenReturn(Optional.empty());
 

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -112,7 +111,19 @@ class HomeOfficeEditListingPersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationMapWithGivenValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("homeOfficeReferenceNumber"), personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementVulnerabilities"), personalisation.get("hearingRequirementVulnerabilities"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementMultimedia"), personalisation.get("hearingRequirementMultimedia"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementSingleSexCourt"), personalisation.get("hearingRequirementSingleSexCourt"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementInCameraCourt"), personalisation.get("hearingRequirementInCameraCourt"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementOther"), personalisation.get("hearingRequirementOther"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

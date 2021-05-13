@@ -1,9 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,18 +59,45 @@ class AdminOfficerReListCasePersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
+        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase)).thenReturn((ImmutableMap<String, String>) getPersonalisation());
 
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisation().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisation().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisation().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(getPersonalisation().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
 
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
+        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase)).thenReturn((ImmutableMap<String, String>) getPersonalisation());
 
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisation().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisation().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisation().get("homeOfficeReference"), personalisation.get("homeOfficeReference"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisation().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(getPersonalisation().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
+    }
+
+    private Map<String, String> getPersonalisation() {
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", "PA/12345/001")
+            .put("ariaListingReference", "ariaListingReference")
+            .put("homeOfficeReference", "A1234567")
+            .put("appellantGivenNames", "Talha")
+            .put("appellantFamilyName", "Awan")
+            .build();
     }
 }

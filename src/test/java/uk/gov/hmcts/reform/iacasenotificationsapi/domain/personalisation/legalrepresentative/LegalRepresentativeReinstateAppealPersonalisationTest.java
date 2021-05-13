@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -133,7 +132,15 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals("8 Oct 2020", personalisation.get("reinstateAppealDate"));
+        assertEquals(reinstateAppealReason, personalisation.get("reinstateAppealReason"));
+        assertEquals(reinstatedDecisionMaker, personalisation.get("reinstatedDecisionMaker"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -154,7 +161,14 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
             legalRepresentativeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("ariaListingReference"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals("", personalisation.get("reinstateAppealDate"));
+        assertEquals("", personalisation.get("reinstatedDecisionMaker"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("No reason given", personalisation.get("reinstateAppealReason"));

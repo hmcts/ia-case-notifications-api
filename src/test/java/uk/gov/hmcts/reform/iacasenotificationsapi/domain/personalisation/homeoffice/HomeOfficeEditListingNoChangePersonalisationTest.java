@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -106,8 +105,19 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation = homeOfficeEditListingNoChangePersonalisation.getPersonalisation(callback);
-
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationMapWithGivenValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("homeOfficeReferenceNumber"), personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("Hearing Requirement Vulnerabilities"), personalisation.get("Hearing Requirement Vulnerabilities"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("Hearing Requirement Multimedia"), personalisation.get("Hearing Requirement Multimedia"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("Hearing Requirement Single Sex Court"), personalisation.get("Hearing Requirement Single Sex Court"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("Hearing Requirement In Camera Court"), personalisation.get("Hearing Requirement In Camera Court"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("Hearing Requirement Other"), personalisation.get("Hearing Requirement Other"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

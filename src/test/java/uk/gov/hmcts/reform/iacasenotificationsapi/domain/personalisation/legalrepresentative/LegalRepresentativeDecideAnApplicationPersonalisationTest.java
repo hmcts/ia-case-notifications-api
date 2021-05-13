@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -183,11 +182,22 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        when(makeAnApplication.getDecisionReason()).thenReturn("No Reason Given");
+        when(makeAnApplication.getDecisionMaker()).thenReturn("Judge");
+        when(makeAnApplication.getType()).thenReturn("Other");
 
         Map<String, String> personalisation =
             legalRepresentativeDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals("Other", personalisation.get("applicationType"));
+        assertEquals("No Reason Given", personalisation.get("applicationDecisionReason"));
+        assertEquals("Judge", personalisation.get("decisionMaker"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -210,7 +220,12 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("ariaListingReference"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals("Other", personalisation.get("applicationType"));
         assertEquals("Other", personalisation.get("applicationType"));
         assertEquals("No Reason Given", personalisation.get("applicationDecisionReason"));
         assertEquals("Judge", personalisation.get("decisionMaker"));

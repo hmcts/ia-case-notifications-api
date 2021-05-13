@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,43 +29,32 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
 
     private String adminOfficerEmailAddress = "adminOfficer@example.com";
 
-    private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerdjournHearingWithoutDatePersonalisation;
+    private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerAdjournHearingWithoutDatePersonalisation;
 
     @BeforeEach
     public void setup() {
-        String appealReferenceNumber = "someReferenceNumber";
-        String appellantGivenNames = "someAppellantGivenNames";
-        String appellantFamilyName = "someAppellantFamilyName";
-        String listRef = "LP/12345/2019";
-        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
-            .thenReturn(ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", appealReferenceNumber)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("ariaListingReference", listRef)
-                .build());
 
-        adminOfficerdjournHearingWithoutDatePersonalisation =
+
+        adminOfficerAdjournHearingWithoutDatePersonalisation =
             new AdminOfficerAdjournHearingWithoutDatePersonalisation(templateId, adminOfficerEmailAddress,
                 adminOfficerPersonalisationProvider);
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, adminOfficerdjournHearingWithoutDatePersonalisation.getTemplateId());
+        assertEquals(templateId, adminOfficerAdjournHearingWithoutDatePersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
-            adminOfficerdjournHearingWithoutDatePersonalisation.getReferenceId(caseId));
+            adminOfficerAdjournHearingWithoutDatePersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(adminOfficerdjournHearingWithoutDatePersonalisation.getRecipientsList(asylumCase)
+        assertTrue(adminOfficerAdjournHearingWithoutDatePersonalisation.getRecipientsList(asylumCase)
             .contains(adminOfficerEmailAddress));
     }
 
@@ -74,17 +62,37 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation((AsylumCase) null))
+            () -> adminOfficerAdjournHearingWithoutDatePersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
+            .thenReturn(getPersonalisation());
 
         Map<String, String> personalisation =
-            adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
+            adminOfficerAdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(getPersonalisation().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisation().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
+
     }
+
+    private ImmutableMap<String,String> getPersonalisation() {
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", "PA/12345/001")
+            .put("ariaListingReference", "ariaListingReference")
+            .put("linkToOnlineService", "linkToOnlineService")
+            .put("appellantGivenNames", "Talha")
+            .put("appellantFamilyName", "Awan")
+            .build();
+    }
+
 }

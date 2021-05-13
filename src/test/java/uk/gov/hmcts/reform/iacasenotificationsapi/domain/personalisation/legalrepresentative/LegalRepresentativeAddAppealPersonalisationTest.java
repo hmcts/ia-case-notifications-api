@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeAddAppealPersonalisationTest {
+class LegalRepresentativeAddAppealPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -41,12 +40,13 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String explanation = "someExplanation";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String directionDueDate = "2019-08-27";
     private String directionExplanation = "someExplanation";
     private String legalRepEmailAddress = "legalrep@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
+    private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
@@ -55,7 +55,7 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
     private LegalRepresentativeAddAppealPersonalisation legalRepresentativeAddAppealPersonalisation;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when((direction.getExplanation())).thenReturn(directionExplanation);
@@ -64,7 +64,7 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -79,24 +79,24 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_template_id() {
+    void should_return_given_template_id() {
         assertEquals(templateId, legalRepresentativeAddAppealPersonalisation.getTemplateId());
     }
 
     @Test
-    public void should_return_given_reference_id() {
+    void should_return_given_reference_id() {
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
             legalRepresentativeAddAppealPersonalisation.getReferenceId(caseId));
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
+    void should_return_given_email_address_from_asylum_case() {
         assertTrue(
             legalRepresentativeAddAppealPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
     }
 
     @Test
-    public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
+    void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> legalRepresentativeAddAppealPersonalisation.getRecipientsList(asylumCase))
@@ -105,7 +105,7 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> legalRepresentativeAddAppealPersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
@@ -113,34 +113,41 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
             legalRepresentativeAddAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(explanation, personalisation.get("explanation"));
+        assertEquals("27 Aug 2019", personalisation.get("dueDate"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
-
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+    void should_return_personalisation_when_all_mandatory_information_given() {
 
         Map<String, String> personalisation =
             legalRepresentativeAddAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(explanation, personalisation.get("explanation"));
+        assertEquals("27 Aug 2019", personalisation.get("dueDate"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_direction_is_empty() {
+    void should_throw_exception_on_personalisation_when_direction_is_empty() {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_REVIEW))
             .thenReturn(Optional.empty());

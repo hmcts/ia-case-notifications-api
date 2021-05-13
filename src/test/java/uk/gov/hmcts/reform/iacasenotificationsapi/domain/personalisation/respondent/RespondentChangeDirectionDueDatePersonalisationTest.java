@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -211,7 +210,14 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         Map<String, String> personalisation =
             respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisation().get("hmctsReference"), personalisation.get("hmctsReference"));
+        assertEquals(getPersonalisation().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisation().get("homeOfficeReference"), personalisation.get("homeOfficeReference"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisation().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
     @Test

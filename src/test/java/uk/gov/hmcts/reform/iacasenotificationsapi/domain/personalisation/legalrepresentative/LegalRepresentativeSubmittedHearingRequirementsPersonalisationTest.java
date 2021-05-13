@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,7 +76,13 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
         Map<String, String> personalisation =
             legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        Assertions.assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(getPersonalisation().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisation().get("legalRepReference"), personalisation.get("legalRepReference"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisation().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
     @Test

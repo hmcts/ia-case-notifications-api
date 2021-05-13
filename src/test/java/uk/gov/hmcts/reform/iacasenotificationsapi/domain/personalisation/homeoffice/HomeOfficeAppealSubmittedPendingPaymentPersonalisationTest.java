@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -34,12 +33,14 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
 
     private Long caseId = 12345L;
     private String emailTemplateId = "emailTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
+    private String homeOfficeReferenceNumber = "someReference";
+    private String linkToOnlineService = "http://somefrontendurl";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
     private String homeOfficeEmail = "apchomeoffice@example.com";
+    private String customerServicesTelephone = "11111";
+    private String customerServicesEmail = "email@example.com";
 
     private HomeOfficeAppealSubmittedPendingPaymentPersonalisation
         homeOfficeAppealSubmittedPendingPaymentPersonalisation;
@@ -48,14 +49,17 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
     public void setUp() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+
+        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
+        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
 
         homeOfficeAppealSubmittedPendingPaymentPersonalisation =
             new HomeOfficeAppealSubmittedPendingPaymentPersonalisation(
                 emailTemplateId,
-                iaExUiFrontendUrl,
+                linkToOnlineService,
                 customerServicesProvider,
                 homeOfficeEmail);
     }
@@ -83,7 +87,14 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPendingPaymentPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+
     }
 
 }

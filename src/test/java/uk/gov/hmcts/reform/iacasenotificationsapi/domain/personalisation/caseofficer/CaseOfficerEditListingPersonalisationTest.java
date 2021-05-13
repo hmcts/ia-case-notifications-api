@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -98,7 +97,14 @@ class CaseOfficerEditListingPersonalisationTest {
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationMapWithBlankValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("homeOfficeReference"), personalisation.get("homeOfficeReference"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
     }
 
     @Test
@@ -107,7 +113,14 @@ class CaseOfficerEditListingPersonalisationTest {
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationMapWithGivenValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("linkToOnlineService"), personalisation.get("linkToOnlineService"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingCentreName"), personalisation.get("hearingCentreName"));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

@@ -1,13 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +33,11 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
     private String remissionTemplateId = "someRemissionTemplateId";
     private String changeToHearingRequirementsAdminOfficerEmailAddress = "fees-ao@example.com";
     private String paymentExceptionsAdminOfficerEmailAddress = "payment-exceptions-ao@example.com";
+    private String appealReferenceNumber = "someReferenceNumber";
+    private String appellantGivenNames = "someAppellantGivenNames";
+    private String appellantFamilyName = "someAppellantFamilyName";
+    private String ariaListingReference = "someAriaListingReference";
+    private String linkToOnlineService = "someLinkToOnlineService";
     private AdminOfficerAppealSubmittedPayOfflinePersonalisation adminOfficerAppealSubmittedPayOfflinePersonalisation;
 
     @BeforeEach
@@ -96,20 +101,50 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
+        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase)).thenReturn((ImmutableMap<String, String>) getPersonalisation());
 
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
+        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase)).thenReturn((ImmutableMap<String, String>) getEmptyPersonalisation());
 
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
+    }
+
+    private Map<String, String> getPersonalisation() {
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("linkToOnlineService", linkToOnlineService)
+            .build();
+    }
+
+    private Map<String, String> getEmptyPersonalisation() {
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", "")
+            .put("ariaListingReference", "")
+            .put("appellantGivenNames", "")
+            .put("appellantFamilyName", "")
+            .put("linkToOnlineService", linkToOnlineService)
+            .build();
     }
 }

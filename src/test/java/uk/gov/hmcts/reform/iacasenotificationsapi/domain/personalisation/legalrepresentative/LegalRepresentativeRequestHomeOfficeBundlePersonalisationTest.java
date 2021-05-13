@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -118,14 +117,18 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("legalRepReferenceNumber", legalRepRefNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
-                .put("insertDate", expectedDirectionDueDate)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("insertDate", "10 Sep 2019")
                 .build();
 
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertEquals(expectedPersonalisation.get("appealReferenceNumber"), actualPersonalisation.get("appealReferenceNumber"));
+        assertEquals(expectedPersonalisation.get("legalRepReferenceNumber"), actualPersonalisation.get("legalRepReferenceNumber"));
+        assertEquals(expectedPersonalisation.get("appellantGivenNames"), actualPersonalisation.get("appellantGivenNames"));
+        assertEquals(expectedPersonalisation.get("appellantFamilyName"), actualPersonalisation.get("appellantFamilyName"));
+        assertEquals(expectedPersonalisation.get("insertDate"), actualPersonalisation.get("insertDate"));
     }
 
     @Test

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 
@@ -95,10 +96,17 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
     public void should_return_given_personalisation() {
 
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> personalisation =
             legalRepresentativeRespondentFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertEquals(getPersonalisation().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisation().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisation().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+
     }
 
     @Test

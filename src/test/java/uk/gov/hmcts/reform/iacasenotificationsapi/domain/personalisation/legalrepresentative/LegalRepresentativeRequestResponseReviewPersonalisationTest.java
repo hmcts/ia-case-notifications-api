@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -126,34 +125,29 @@ public class LegalRepresentativeRequestResponseReviewPersonalisationTest {
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("legalRepReferenceNumber", legalRepRefNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
                 .put("iaExUiFrontendUrl", iaExUiFrontendUrl)
                 .put("directionExplanation", directionExplanation)
-                .put("expectedDirectionDueDate", expectedDirectionDueDate)
+                .put("expectedDirectionDueDate", "10 Sep 2019")
                 .build();
 
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestResponseReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+
+        assertEquals(expectedPersonalisation.get("appealReferenceNumber"), actualPersonalisation.get("appealReferenceNumber"));
+        assertEquals(expectedPersonalisation.get("legalRepReferenceNumber"), actualPersonalisation.get("legalRepReferenceNumber"));
+        assertEquals(expectedPersonalisation.get("appellantGivenNames"), actualPersonalisation.get("appellantGivenNames"));
+        assertEquals(expectedPersonalisation.get("appellantFamilyName"), actualPersonalisation.get("appellantFamilyName"));
+        assertEquals(expectedPersonalisation.get("directionExplanation"), actualPersonalisation.get("explanation"));
+        assertEquals(expectedPersonalisation.get("expectedDirectionDueDate"), actualPersonalisation.get("dueDate"));
+        assertEquals(expectedPersonalisation.get("iaExUiFrontendUrl"), actualPersonalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
-
-        final Map<String, String> expectedPersonalisation =
-            ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", "")
-                .put("legalRepReferenceNumber", "")
-                .put("appellantGivenNames", "")
-                .put("appellantFamilyName", "")
-                .put("iaExUiFrontendUrl", "")
-                .put("directionExplanation", "")
-                .put("expectedDirectionDueDate", "")
-                .build();
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -163,7 +157,13 @@ public class LegalRepresentativeRequestResponseReviewPersonalisationTest {
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestResponseReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertEquals("", actualPersonalisation.get("appealReferenceNumber"));
+        assertEquals("", actualPersonalisation.get("legalRepReferenceNumber"));
+        assertEquals("", actualPersonalisation.get("appellantGivenNames"));
+        assertEquals("", actualPersonalisation.get("appellantFamilyName"));
+        assertEquals(directionExplanation, actualPersonalisation.get("explanation"));
+        assertEquals("10 Sep 2019", actualPersonalisation.get("dueDate"));
+        assertEquals(iaExUiFrontendUrl, actualPersonalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -126,7 +125,23 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationMapWithGivenValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("homeOfficeReferenceNumber"), personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("linkToOnlineService"),  personalisation.get("linkToOnlineService"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingCentreName"), personalisation.get("hearingCentreName"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("remoteVideoCallTribunalResponse"), personalisation.get("remoteVideoCallTribunalResponse"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementVulnerabilities"), personalisation.get("hearingRequirementVulnerabilities"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementMultimedia"), personalisation.get("hearingRequirementMultimedia"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementSingleSexCourt"), personalisation.get("hearingRequirementSingleSexCourt"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementInCameraCourt"), personalisation.get("hearingRequirementInCameraCourt"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("hearingRequirementOther"), personalisation.get("hearingRequirementOther"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("oldHearingCentre"), personalisation.get("oldHearingCentre"));
+        assertEquals(getPersonalisationMapWithGivenValues().get(HEARING_CENTRE_ADDRESS), personalisation.get("hearingCentreAddress"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
     }
 
     @Test
@@ -136,7 +151,23 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationMapWithBlankValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("homeOfficeReferenceNumber"), personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("linkToOnlineService"),  personalisation.get("linkToOnlineService"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("hearingCentreName"), personalisation.get("hearingCentreName"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("remoteVideoCallTribunalResponse"), personalisation.get("remoteVideoCallTribunalResponse"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("hearingRequirementVulnerabilities"),  personalisation.get("hearingRequirementVulnerabilities"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("hearingRequirementMultimedia"), personalisation.get("hearingRequirementMultimedia"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("hearingRequirementSingleSexCourt"), personalisation.get("hearingRequirementSingleSexCourt"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("hearingRequirementInCameraCourt"), personalisation.get("hearingRequirementInCameraCourt"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("hearingRequirementOther"), personalisation.get("hearingRequirementOther"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("oldHearingCentre"), personalisation.get("oldHearingCentre"));
+        assertEquals(getPersonalisationMapWithBlankValues().get(HEARING_CENTRE_ADDRESS), personalisation.get("hearingCentreAddress"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationMapWithBlankValues().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

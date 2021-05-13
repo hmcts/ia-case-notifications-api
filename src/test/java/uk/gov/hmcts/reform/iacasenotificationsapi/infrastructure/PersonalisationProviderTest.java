@@ -14,10 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -84,9 +81,6 @@ class PersonalisationProviderTest {
     private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
     private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
 
-    private final String directionExplanation = "someExplanation";
-    private final String directionDueDate = "2019-10-29";
-
     private PersonalisationProvider personalisationProvider;
 
     @BeforeEach
@@ -140,8 +134,8 @@ class PersonalisationProviderTest {
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.NO));
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
-        when(direction.getDateDue()).thenReturn(directionDueDate);
-        when(direction.getExplanation()).thenReturn(directionExplanation);
+        when(direction.getDateDue()).thenReturn(directionEditDateDue);
+        when(direction.getExplanation()).thenReturn(directionEditExplanation);
 
         personalisationProvider = new PersonalisationProvider(
             iaExUiFrontendUrl,
@@ -157,7 +151,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(requirementsVulnerabilities);
         assertThat(personalisation.get("hearingRequirementMultimedia")).contains(requirementsMultimedia);
@@ -173,7 +166,14 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(oldHearingCentreName, personalisation.get("oldHearingCentre"));
+        assertEquals(oldHearingDate, personalisation.get("oldHearingDate"));
+        assertEquals(hearingDate, personalisation.get("hearingDate"));
+        assertEquals(hearingTime, personalisation.get("hearingTime"));
+        assertEquals(hearingCentreName, personalisation.get("hearingCentreName"));
+        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+
         assertThat(personalisation.get("remoteVideoCallTribunalResponse"))
             .contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities"))
@@ -191,7 +191,12 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
     }
 
     @Test
@@ -200,7 +205,9 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(iaExUiFrontendUrl, personalisation.get("iaCaseListHyperLink"));
+        assertEquals(directionEditExplanation, personalisation.get("explanation"));
+        assertEquals("14 Feb 2020", personalisation.get("dueDate"));
     }
 
     @Test
@@ -209,20 +216,27 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation =
             personalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
     }
 
     @Test
     void should_return_change_direction_due_date_personalisation() {
         when(callback.getEvent()).thenReturn(Event.CHANGE_DIRECTION_DUE_DATE);
         when(callback.getCaseDetails().getCaseData()).thenReturn(asylumCase);
+
         when(asylumCase.read(DIRECTION_EDIT_EXPLANATION, String.class))
             .thenReturn(Optional.of(directionEditExplanation));
+
         when(asylumCase.read(DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.of(directionEditDateDue));
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(iaExUiFrontendUrl, personalisation.get("iaCaseListHyperLink"));
+        assertEquals(directionEditExplanation, personalisation.get("explanation"));
+        assertEquals("14 Feb 2020", personalisation.get("dueDate"));
+
     }
 
     @Test
@@ -258,5 +272,6 @@ class PersonalisationProviderTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 }

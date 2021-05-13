@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
+class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -46,7 +45,7 @@ public class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
     private LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -66,24 +65,24 @@ public class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_template_id() {
+    void should_return_given_template_id() {
         assertEquals(templateId, legalRepresentativeAppealSubmittedPaidPersonalisation.getTemplateId());
     }
 
     @Test
-    public void should_return_given_reference_id() {
+    void should_return_given_reference_id() {
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAID_LEGAL_REPRESENTATIVE",
             legalRepresentativeAppealSubmittedPaidPersonalisation.getReferenceId(caseId));
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
+    void should_return_given_email_address_from_asylum_case() {
         assertTrue(legalRepresentativeAppealSubmittedPaidPersonalisation.getRecipientsList(asylumCase)
             .contains(legalRepEmailAddress));
     }
 
     @Test
-    public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
+    void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> legalRepresentativeAppealSubmittedPaidPersonalisation.getRecipientsList(asylumCase))
@@ -92,7 +91,7 @@ public class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
             () -> legalRepresentativeAppealSubmittedPaidPersonalisation.getPersonalisation((AsylumCase) null))
@@ -101,18 +100,22 @@ public class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
             legalRepresentativeAppealSubmittedPaidPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
+    void should_return_personalisation_when_all_mandatory_information_given() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -122,7 +125,11 @@ public class LegalRepresentativeAppealSubmittedPaidPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAppealSubmittedPaidPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

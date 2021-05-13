@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -87,11 +86,17 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationForLegalRep().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationForLegalRep().get("legalRepReference"), personalisation.get("legalRepReference"));
+        assertEquals(getPersonalisationForLegalRep().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationForLegalRep().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationForLegalRep().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationForLegalRep().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisationForLegalRep().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
     }
 
     @Test
-    public void should_throw_exception_on_personalistaion_when_case_is_null() {
+    public void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(() -> legalRepresentativeUploadAdditionalEvidencePersonalisation
             .getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
