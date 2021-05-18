@@ -13,4 +13,4 @@ zap-cli --zap-url http://0.0.0.0 -p 1001 report -o api-report.html -f html
 cp report.json functional-output/
 cp api-report.html functional-output/
 
-zap-cli --zap-url http://0.0.0.0 -p 1001 alerts -l High --exit-code False
+zap-cli --zap-url http://0.0.0.0 -p 1001 alerts -l Informational --exit-code False
