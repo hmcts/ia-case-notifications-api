@@ -670,6 +670,9 @@ govnotify:
           email: 163f3a93-974a-44c1-89fd-9769afdf8ba3
         cannotProceed:
           email: c2118e88-ab65-4e4b-8828-4078b4c1d12b
+    amendRespondentEvidenceDirection:
+      legalRep:
+        email: 66a5e934-5875-4e60-a343-356916a112c7
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
