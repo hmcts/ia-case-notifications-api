@@ -82,6 +82,7 @@ public enum Event {
     MANAGE_FEE_UPDATE("manageFeeUpdate"),
     RECORD_OUT_OF_TIME_DECISION("recordOutOfTimeDecision"),
     EDIT_PAYMENT_METHOD("editPaymentMethod"),
+    PAY_FOR_APPEAL("payForAppeal"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

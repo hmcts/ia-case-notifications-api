@@ -86,11 +86,12 @@ public class EventTest {
         assertEquals("manageFeeUpdate", MANAGE_FEE_UPDATE.toString());
         assertEquals("recordOutOfTimeDecision", RECORD_OUT_OF_TIME_DECISION.toString());
         assertEquals("editPaymentMethod", EDIT_PAYMENT_METHOD.toString());
+        assertEquals("payForAppeal", PAY_FOR_APPEAL.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(79, Event.values().length);
+        assertEquals(80, Event.values().length);
     }
 }

@@ -738,6 +738,7 @@ security:
       - "requestFeeRemission"
       - "nocRequest"
       - "editPaymentMethod"
+      - "payForAppeal"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"

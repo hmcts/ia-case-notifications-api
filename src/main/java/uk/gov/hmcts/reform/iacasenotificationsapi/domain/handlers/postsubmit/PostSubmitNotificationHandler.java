@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 
+
 public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<AsylumCase> {
 
     private final BiPredicate<PostSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction;
@@ -51,18 +52,25 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
         PostSubmitCallbackResponse postSubmitCallbackResponse = new PostSubmitCallbackResponse("success", "success");
 
-
         try {
             notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
 
             if (!notificationGenerators.isEmpty()) {
+
                 int lastNotificationGeneratorIndex = notificationGenerators.size() - 1;
                 Message message = notificationGenerators.get(lastNotificationGeneratorIndex).getSuccessMessage();
+
                 if (message.getMessageHeader() != null) {
                     postSubmitCallbackResponse.setConfirmationHeader(message.getMessageHeader());
                 }
                 if (message.getMessageBody() != null) {
-                    postSubmitCallbackResponse.setConfirmationBody(message.getMessageBody());
+
+                    AsylumCase asylumCase =
+                        callback
+                            .getCaseDetails()
+                            .getCaseData();
+
+                    postSubmitCallbackResponse.setConfirmationBody(asylumCase.toString());
                 }
             }
         } catch (Exception e) {
