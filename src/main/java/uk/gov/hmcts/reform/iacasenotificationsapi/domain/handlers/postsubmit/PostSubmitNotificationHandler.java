@@ -50,16 +50,20 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         }
 
         PostSubmitCallbackResponse postSubmitCallbackResponse = new PostSubmitCallbackResponse("success", "success");
-        final int lastNotificationGeneratorIndex = notificationGenerators.size() - 1;
+
 
         try {
             notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
-            Message message = notificationGenerators.get(lastNotificationGeneratorIndex).getSuccessMessage();
-            if (message.getMessageHeader() != null) {
-                postSubmitCallbackResponse.setConfirmationHeader(message.getMessageHeader());
-            }
-            if (message.getMessageBody() != null) {
-                postSubmitCallbackResponse.setConfirmationBody(message.getMessageBody());
+
+            if (!notificationGenerators.isEmpty()) {
+                int lastNotificationGeneratorIndex = notificationGenerators.size() - 1;
+                Message message = notificationGenerators.get(lastNotificationGeneratorIndex).getSuccessMessage();
+                if (message.getMessageHeader() != null) {
+                    postSubmitCallbackResponse.setConfirmationHeader(message.getMessageHeader());
+                }
+                if (message.getMessageBody() != null) {
+                    postSubmitCallbackResponse.setConfirmationBody(message.getMessageBody());
+                }
             }
         } catch (Exception e) {
             if (errorHandling.isPresent()) {
