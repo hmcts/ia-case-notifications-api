@@ -2396,6 +2396,35 @@ public class NotificationHandlerConfiguration {
             }, notificationGenerators
         );
     }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> payAndSubmitAppealNotificationHandler() {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL,
+            // TODO add generators
+            Collections.emptyList(),
+            (callback, ex) -> log.error(
+                "cannot send notification for payAndSubmit event for caseId: {}",
+                callback.getCaseDetails().getId(),
+                ex
+            )
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editPaymentMethodNotificationHandler(
+        @Qualifier("editPaymentMethodNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.EDIT_PAYMENT_METHOD;
+            }, notificationGenerators
+        );
+    }
 }
 
 
