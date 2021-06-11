@@ -2085,4 +2085,21 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("editPaymentMethodNotificationGenerator")
+    public List<NotificationGenerator> editPaymentMethodNotificationHandler(
+        AdminOfficerEditPaymentMethodPersonalisation adminOfficerEditPaymentMethodPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    adminOfficerEditPaymentMethodPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

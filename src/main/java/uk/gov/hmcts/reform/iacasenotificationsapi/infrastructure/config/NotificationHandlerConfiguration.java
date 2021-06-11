@@ -2411,6 +2411,20 @@ public class NotificationHandlerConfiguration {
             )
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editPaymentMethodNotificationHandler(
+        @Qualifier("editPaymentMethodNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.EDIT_PAYMENT_METHOD;
+            }, notificationGenerators
+        );
+    }
 }
 
 
