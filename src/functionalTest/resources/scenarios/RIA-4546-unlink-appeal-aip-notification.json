@@ -9,7 +9,10 @@
       "state": "appealSubmitted",
       "caseData": {
         "template": "aip-minimal-appeal-submitted.json",
-        "notificationsSent": []
+        "replacements": {
+          "hearingCentre": "taylorHouse",
+          "notificationsSent": []
+        }
       }
     }
   },
@@ -19,6 +22,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
             "id": "4546_UNLINK_APPEAL_HOME_OFFICE",

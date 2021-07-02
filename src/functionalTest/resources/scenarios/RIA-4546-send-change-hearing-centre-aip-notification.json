@@ -8,7 +8,10 @@
       "eventId": "changeHearingCentre",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "aip-minimal-appeal-submitted.json"
+        "template": "aip-minimal-appeal-submitted.json",
+        "replacements": {
+          "hearingCentre": "taylorHouse"
+        }
       }
     }
   },
@@ -18,6 +21,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
             "id": "4546_CHANGE_HEARING_CENTRE_NEW_HEARING_CENTRE",

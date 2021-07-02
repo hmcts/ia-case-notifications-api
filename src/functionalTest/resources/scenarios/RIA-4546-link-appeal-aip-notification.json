@@ -10,6 +10,7 @@
       "caseData": {
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
+          "hearingCentre": "taylorHouse",
           "reasonForLinkAppeal": "Familial",
           "notificationsSent": []
         }
@@ -22,6 +23,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "taylorHouse",
         "reasonForLinkAppeal": "Familial",
         "notificationsSent": [
           {

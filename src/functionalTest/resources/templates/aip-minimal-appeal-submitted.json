@@ -8,7 +8,6 @@
   "appellantFamilyName": "Jimenez",
   "appellantDateOfBirth": "{$TODAY-7300}",
   "submissionOutOfTime": "No",
-  "hearingCentre": "taylorHouse",
   "appellantNationalities": [
     {
       "id": "1",
