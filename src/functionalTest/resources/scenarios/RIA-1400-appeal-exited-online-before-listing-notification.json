@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "endAppealOutcome": "appealTakenOffline",
+          "legalRepReferenceNumber": "REF54321",
           "notificationsSent": []
         }
       }
@@ -23,6 +24,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "endAppealOutcome": "appealTakenOffline",
+        "legalRepReferenceNumber": "REF54321",
         "notificationsSent": [
           {
             "id": "1400456_APPEAL_EXITED_ONLINE_HOME_OFFICE",
