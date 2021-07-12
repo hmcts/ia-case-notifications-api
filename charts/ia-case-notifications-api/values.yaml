@@ -39,6 +39,7 @@ java:
         - ftpa-home-office-taylor-house-email
         - ftpa-home-office-north-shields-email
         - ftpa-home-office-hatton-cross-email
+        - ftpa-customer-services-email
         - respondent-evidence-direction-email
         - respondent-review-direction-email
         - respondent-non-standard-direction-until-listing-email

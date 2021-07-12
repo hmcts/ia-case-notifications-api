@@ -59,7 +59,7 @@ public class RespondentFtpaSubmittedPersonalisation implements EmailNotification
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getFtpaCustomerServicesPersonalisation())
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));
 

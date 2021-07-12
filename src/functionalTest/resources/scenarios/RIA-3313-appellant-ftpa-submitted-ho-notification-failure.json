@@ -56,7 +56,7 @@
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "{$customerServices.ftpaEmailAddress}"
         ]
       },
       {
@@ -81,7 +81,7 @@
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "{$customerServices.ftpaEmailAddress}"
         ]
       },
       {
