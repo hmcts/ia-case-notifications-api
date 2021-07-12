@@ -1,0 +1,55 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: io.rest-assured:rest-assured
+    versions:
+    - "> 3.0.7, < 4"
+  - dependency-name: io.rest-assured:rest-assured
+    versions:
+    - ">= 4.a, < 5"
+  - dependency-name: net.serenity-bdd:serenity-gradle-plugin
+    versions:
+    - "> 2.0.11, < 3"
+  - dependency-name: org.owasp.dependencycheck
+    versions:
+    - 6.1.0
+    - 6.1.1
+    - 6.1.2
+    - 6.1.3
+    - 6.1.4
+  - dependency-name: org.projectlombok:lombok
+    versions:
+    - 1.18.18
+  - dependency-name: com.google.guava:guava
+    versions:
+    - 30.1-jre
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - 2.12.1
+    - 2.12.2
+  - dependency-name: com.nimbusds:nimbus-jose-jwt
+    versions:
+    - 9.4.2
+    - "9.5"
+    - "9.6"
+    - "9.7"
+  - dependency-name: org.junit.jupiter:junit-jupiter-api
+    versions:
+    - 5.7.0
+    - 5.7.1
+  - dependency-name: org.junit.jupiter:junit-jupiter-engine
+    versions:
+    - 5.7.0
+    - 5.7.1
+  - dependency-name: org.junit.jupiter:junit-jupiter-params
+    versions:
+    - 5.7.0
+    - 5.7.1
+  - dependency-name: com.sun.xml.bind:jaxb-osgi
+    versions:
+    - 3.0.0
