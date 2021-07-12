@@ -330,7 +330,7 @@ dependencies {
 
     compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.17.0-RELEASE'
 
-    compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
+    compile group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
