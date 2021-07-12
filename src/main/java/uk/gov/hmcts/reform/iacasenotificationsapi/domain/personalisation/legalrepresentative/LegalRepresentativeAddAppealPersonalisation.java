@@ -39,6 +39,7 @@ public class LegalRepresentativeAddAppealPersonalisation implements LegalReprese
         this.customerServicesProvider = customerServicesProvider;
     }
 
+
     @Override
     public String getTemplateId() {
         return legalRepresentativeReviewDirectionTemplateId;
