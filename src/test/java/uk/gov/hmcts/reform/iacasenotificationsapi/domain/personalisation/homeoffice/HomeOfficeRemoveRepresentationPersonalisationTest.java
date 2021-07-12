@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -44,10 +43,15 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String legalRepresentativeName = "someleLegalRepresentativeName";
     private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
     private String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
     private String homeOfficeEmail = "ho-taylorhouse@example.com";
+    private String legalRepCompanyAddress = "someLegalRepCompanyAddress";
+    private String legalRepresentativeEmailAddress = "someLegalRepresentativeEmailAddress";
+    private String customerServicesTelephone = "someCustomerServicesTelephone";
+    private String customerServicesEmail = "someCustomerServicesEmail";
 
     private final String addressLine1 = "A";
     private final String addressLine2 = "B";
@@ -78,6 +82,11 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_NAME, String.class)).thenReturn(Optional.of(legalRepresentativeName));
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, String.class)).thenReturn(Optional.of(legalRepCompanyAddress));
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepresentativeEmailAddress));
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         when((emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase))).thenReturn(homeOfficeHearingCentreEmail);
         when((emailAddressFinder.getHomeOfficeEmailAddress(asylumCase))).thenReturn(homeOfficeEmail);
@@ -179,7 +188,16 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(legalRepresentativeName, personalisation.get("legalRepresentativeName"));
+        assertEquals(legalRepresentativeEmailAddress, personalisation.get("legalRepresentativeEmailAddress"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

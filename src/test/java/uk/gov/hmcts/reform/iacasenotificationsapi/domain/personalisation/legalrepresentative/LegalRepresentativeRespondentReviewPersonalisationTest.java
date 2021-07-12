@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -118,10 +117,14 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
                 .put("insertDate", expectedDirectionDueDate)
                 .build();
 
-        Map<String, String> actualPersonalisation =
+        Map<String, String> personalisation =
             legalRepresentativeRespondentReviewPersonalisation.getPersonalisation(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals("10 Sep 2019", personalisation.get("insertDate"));
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
     }
 
     @Test

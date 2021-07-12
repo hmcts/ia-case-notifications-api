@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -76,10 +75,17 @@ public class RespondentAppellantFtpaSubmittedPersonalisationTest {
     @Test
     public void should_return_given_personalisation() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> personalisation =
             respondentAppellantFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertEquals(getPersonalisation().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisation().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisation().get("homeOfficeReference"), personalisation.get("homeOfficeReference"));
+        assertEquals(getPersonalisation().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisation().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisation().get("customerServicesTelephone"), personalisation.get("customerServicesTelephone"));
+        assertEquals(getPersonalisation().get("customerServicesEmail"), personalisation.get("customerServicesEmail"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
     @Test
@@ -92,7 +98,7 @@ public class RespondentAppellantFtpaSubmittedPersonalisationTest {
 
     }
 
-    private Map<String, String> getPersonalisation() {
+    private ImmutableMap<String, String> getPersonalisation() {
 
         return ImmutableMap
             .<String, String>builder()

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -104,7 +103,16 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeNonStandardDirectionPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+
+        assertEquals(getPersonalisationMapWithGivenValues().get("legalRepReferenceNumber"), personalisation.get("legalRepReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("homeOfficeReference"), personalisation.get("homeOfficeReference"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("iaExUiFrontendUrl"), personalisation.get("linkToOnlineService"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("explanation"), personalisation.get("explanation"));
+        assertEquals(getPersonalisationMapWithGivenValues().get("dueDate"), personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

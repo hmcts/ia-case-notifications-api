@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -58,6 +57,8 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
     @BeforeEach
     public void setUp() {
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
+        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation =
             new LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation(
@@ -107,11 +108,16 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(hmctsReference, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
-    public void should_throw_exception_on_personalistaion_when_case_is_null() {
+    public void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(() -> legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation
             .getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)

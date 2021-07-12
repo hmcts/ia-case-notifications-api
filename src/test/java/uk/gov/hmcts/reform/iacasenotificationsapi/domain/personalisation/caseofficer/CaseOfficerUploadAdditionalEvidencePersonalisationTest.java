@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -95,7 +94,10 @@ public class CaseOfficerUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(getPersonalisationForCaseOfficer().get("appealReferenceNumber"), personalisation.get("appealReferenceNumber"));
+        assertEquals(getPersonalisationForCaseOfficer().get("ariaListingReference"), personalisation.get("ariaListingReference"));
+        assertEquals(getPersonalisationForCaseOfficer().get("appellantGivenNames"), personalisation.get("appellantGivenNames"));
+        assertEquals(getPersonalisationForCaseOfficer().get("appellantFamilyName"), personalisation.get("appellantFamilyName"));
     }
 
     @Test
