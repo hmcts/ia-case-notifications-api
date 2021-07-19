@@ -309,7 +309,6 @@ dependencies {
     // CVE-2021-27568
     compile group: 'net.minidev', name: 'json-smart', version: '2.3.1'
 
-    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.2'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.0'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
