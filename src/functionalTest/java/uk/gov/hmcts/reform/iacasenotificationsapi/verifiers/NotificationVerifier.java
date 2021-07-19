@@ -79,76 +79,100 @@ public class NotificationVerifier implements Verifier {
 
                 try {
 
-                    Notification notification = notificationClient.getNotificationById(deliveredNotificationId);
-
-                    final String actualReference = notification.getReference().orElse("");
-                    final String actualRecipient =
-                        notification.getEmailAddress().orElse(notification.getPhoneNumber().orElse(""));
-                    final String actualSubject = notification.getSubject().orElse("");
-                    final String actualBody = notification.getBody();
-
-                    assertThat(
-                        description
-                        + ": Notification "
-                        + expectedReference
-                        + " was delivered with correct reference",
-                        actualReference,
-                        equalTo(expectedReference)
+                    fetchAndAssertNotification(
+                        description,
+                        expectedReference,
+                        expectedRecipient,
+                        expectedSubject,
+                        expectedBodyUnknownType,
+                        deliveredNotificationId
                     );
-
-                    assertThat(
-                        description
-                        + ": Notification "
-                        + expectedReference
-                        + " was delivered to correct recipient",
-                        actualRecipient,
-                        equalTo(expectedRecipient)
-                    );
-
-                    assertThat(
-                        description
-                        + ": Notification "
-                        + expectedReference
-                        + " was delivered with correct subject content",
-                        actualSubject,
-                        equalTo(expectedSubject)
-                    );
-
-                    if (expectedBodyUnknownType instanceof String) {
-
-                        assertThat(
-                            description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered with correct body content",
-                            actualBody,
-                            equalTo((String) expectedBodyUnknownType)
-                        );
-
-                    } else {
-
-                        List<String> expectedBodyMatches = (List<String>) expectedBodyUnknownType;
-
-                        expectedBodyMatches.forEach(expectedBodyMatch -> {
-
-                            assertThat(
-                                description
-                                + ": Notification "
-                                + expectedReference
-                                + " was delivered with correct body content match",
-                                actualBody,
-                                containsString(expectedBodyMatch)
-                            );
-                        });
-                    }
 
                 } catch (NotificationClientException e) {
-                    log.error("Notifications assert error for id: {}", deliveredNotificationId, e);
-                    assertFalse(
-                        true,
-                        description + ": Notification " + deliveredNotificationId + " was found on GovNotify"
-                    );
+                    log.warn("Notifications assert failed for id: {}", deliveredNotificationId, e);
+                    // one retry
+                    try {
+                        fetchAndAssertNotification(
+                            description,
+                            expectedReference,
+                            expectedRecipient,
+                            expectedSubject,
+                            expectedBodyUnknownType,
+                            deliveredNotificationId
+                        );
+                    } catch (NotificationClientException ex) {
+                        log.error("Notifications assert failed after retry for id: {}", deliveredNotificationId, ex);
+                        assertFalse(
+                            true,
+                            description + ": Notification " + deliveredNotificationId + " was found on GovNotify"
+                        );
+                    }
                 }
             });
+    }
+
+    private void fetchAndAssertNotification(String description, String expectedReference, String expectedRecipient, String expectedSubject, Object expectedBodyUnknownType, String deliveredNotificationId) throws NotificationClientException {
+        Notification notification = notificationClient.getNotificationById(deliveredNotificationId);
+
+        final String actualReference = notification.getReference().orElse("");
+        final String actualRecipient =
+            notification.getEmailAddress().orElse(notification.getPhoneNumber().orElse(""));
+        final String actualSubject = notification.getSubject().orElse("");
+        final String actualBody = notification.getBody();
+
+        assertThat(
+            description
+            + ": Notification "
+            + expectedReference
+            + " was delivered with correct reference",
+            actualReference,
+            equalTo(expectedReference)
+        );
+
+        assertThat(
+            description
+            + ": Notification "
+            + expectedReference
+            + " was delivered to correct recipient",
+            actualRecipient,
+            equalTo(expectedRecipient)
+        );
+
+        assertThat(
+            description
+            + ": Notification "
+            + expectedReference
+            + " was delivered with correct subject content",
+            actualSubject,
+            equalTo(expectedSubject)
+        );
+
+        if (expectedBodyUnknownType instanceof String) {
+
+            assertThat(
+                description
+                + ": Notification "
+                + expectedReference
+                + " was delivered with correct body content",
+                actualBody,
+                equalTo((String) expectedBodyUnknownType)
+            );
+
+        } else {
+
+            List<String> expectedBodyMatches = (List<String>) expectedBodyUnknownType;
+
+            expectedBodyMatches.forEach(expectedBodyMatch -> {
+
+                assertThat(
+                    description
+                    + ": Notification "
+                    + expectedReference
+                    + " was delivered with correct body content match",
+                    actualBody,
+                    containsString(expectedBodyMatch)
+                );
+            });
+        }
     }
 }
