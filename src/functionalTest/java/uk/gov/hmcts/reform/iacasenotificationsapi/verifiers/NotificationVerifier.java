@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapValueExtractor;
@@ -17,6 +18,7 @@ import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.NotificationClientException;
 
+@Slf4j
 @Component
 @SuppressWarnings("unchecked")
 public class NotificationVerifier implements Verifier {
@@ -71,7 +73,7 @@ public class NotificationVerifier implements Verifier {
                     assertFalse(
                         true,
                         description
-                            + ": Notification " + expectedReference + " was delivered successfully"
+                        + ": Notification " + expectedReference + " was delivered successfully"
                     );
                 }
 
@@ -87,27 +89,27 @@ public class NotificationVerifier implements Verifier {
 
                     assertThat(
                         description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered with correct reference",
+                        + ": Notification "
+                        + expectedReference
+                        + " was delivered with correct reference",
                         actualReference,
                         equalTo(expectedReference)
                     );
 
                     assertThat(
                         description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered to correct recipient",
+                        + ": Notification "
+                        + expectedReference
+                        + " was delivered to correct recipient",
                         actualRecipient,
                         equalTo(expectedRecipient)
                     );
 
                     assertThat(
                         description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered with correct subject content",
+                        + ": Notification "
+                        + expectedReference
+                        + " was delivered with correct subject content",
                         actualSubject,
                         equalTo(expectedSubject)
                     );
@@ -116,9 +118,9 @@ public class NotificationVerifier implements Verifier {
 
                         assertThat(
                             description
-                                + ": Notification "
-                                + expectedReference
-                                + " was delivered with correct body content",
+                            + ": Notification "
+                            + expectedReference
+                            + " was delivered with correct body content",
                             actualBody,
                             equalTo((String) expectedBodyUnknownType)
                         );
@@ -131,9 +133,9 @@ public class NotificationVerifier implements Verifier {
 
                             assertThat(
                                 description
-                                    + ": Notification "
-                                    + expectedReference
-                                    + " was delivered with correct body content match",
+                                + ": Notification "
+                                + expectedReference
+                                + " was delivered with correct body content match",
                                 actualBody,
                                 containsString(expectedBodyMatch)
                             );
@@ -141,6 +143,7 @@ public class NotificationVerifier implements Verifier {
                     }
 
                 } catch (NotificationClientException e) {
+                    log.error("Notifications assert error for id: {}", deliveredNotificationId, e);
                     assertFalse(
                         true,
                         description + ": Notification " + deliveredNotificationId + " was found on GovNotify"
