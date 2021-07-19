@@ -56,11 +56,11 @@
         "notificationsSent": [
           {
             "id": "1003_RESPONDENT_NON_STANDARD_DIRECTION",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/"
           },
           {
             "id": "1003_LEGAL_REP_NON_STANDARD_DIRECTION_OF_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/"
           }
         ],
         "legalRepresentativeEmailAddress": "RIA-1003-test-case-1@example.com"

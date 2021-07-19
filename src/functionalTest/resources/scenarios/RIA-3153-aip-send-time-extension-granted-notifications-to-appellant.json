@@ -79,11 +79,11 @@
         "notificationsSent": [
           {
             "id": "1031_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_EMAIL",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/"
           },
           {
             "id": "1031_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_SMS",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/"
           }
         ]
       }

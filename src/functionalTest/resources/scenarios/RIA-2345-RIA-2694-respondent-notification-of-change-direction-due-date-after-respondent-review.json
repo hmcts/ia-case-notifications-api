@@ -33,11 +33,11 @@
         "notificationsSent": [
           {
             "id": "2345_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/"
           },
           {
             "id": "2345_LEGAL_REP_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/"
           }
         ],
         "listCaseHearingCentre": "birmingham"
