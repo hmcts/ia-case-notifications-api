@@ -12,17 +12,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.NotificationClientApi;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.NotificationClientException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapValueExtractor;
 import uk.gov.service.notify.Notification;
-import uk.gov.service.notify.NotificationClient;
-import uk.gov.service.notify.NotificationClientException;
 
 @Component
 @SuppressWarnings("unchecked")
 public class NotificationVerifier implements Verifier {
 
     @Autowired
-    private NotificationClient notificationClient;
+    private NotificationClientApi notificationClient;
 
     public void verify(
         long testCaseId,
