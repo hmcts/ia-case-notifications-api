@@ -192,7 +192,8 @@ pitest {
     targetClasses = ['uk.gov.hmcts.reform.iacasenotificationsapi.*']
     excludedClasses = [
             'uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.*',
-            'uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.*',
+            'uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.*',
+            'uk.gov.service.notify.*',
             'uk.gov.hmcts.reform.iacasenotificationsapi.Application',
             'uk.gov.hmcts.reform.iacasenotificationsapi.CcdScenarioRunnerTest'
     ]
@@ -252,7 +253,8 @@ sonarqube {
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/config/**," +
-                                     "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/clients/notify/**," +
+                                     "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/clients/**," +
+                                     "src/main/java/uk/gov/service/notify/**," +
                 "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/SystemDateProvider.java," +
                 "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/Application.java"
         property "sonar.cpd.exclusions", "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/domain/entities/AsylumCase.java," +
@@ -329,7 +331,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
 
-    compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.17.0-RELEASE'
+    compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.17.2-RELEASE'
 
     compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
