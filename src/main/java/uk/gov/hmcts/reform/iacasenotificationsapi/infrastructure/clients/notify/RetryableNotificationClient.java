@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify;
 
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
-
-import java.util.Map;
 
 @Slf4j
 public class RetryableNotificationClient implements NotificationClientApi {
@@ -18,52 +18,28 @@ public class RetryableNotificationClient implements NotificationClientApi {
 
     @Override
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, ?> personalisation, String reference) throws NotificationClientException {
-        try {
-            return notificationClient.sendEmail(templateId, emailAddress, personalisation, reference);
-        } catch (NotificationClientException e) {
-            log.warn("retry triggered for sendEmail: {}", e.getMessage());
-            return notificationClient.sendEmail(templateId, emailAddress, personalisation, reference);
-        }
-    }
 
-    @Override
-    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, ?> personalisation, String reference, String emailReplyToId) throws NotificationClientException {
-        try {
-            return notificationClient.sendEmail(templateId, emailAddress, personalisation, emailReplyToId);
-        } catch (NotificationClientException e) {
-            log.warn("retry triggered for sendEmail: {}", e.getMessage());
-            return notificationClient.sendEmail(templateId, emailAddress, personalisation, emailReplyToId);
-        }
-
+        return retryableExecution(() -> notificationClient.sendEmail(templateId, emailAddress, personalisation, reference));
     }
 
     @Override
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, ?> personalisation, String reference) throws NotificationClientException {
-        try {
-            return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference);
-        } catch (NotificationClientException e) {
-            log.warn("retry triggered for sendSms: {}", e.getMessage());
-            return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference);
-        }
-    }
 
-    @Override
-    public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, ?> personalisation, String reference, String smsSenderId) throws NotificationClientException {
-        try {
-            return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference, smsSenderId);
-        } catch (NotificationClientException e) {
-            log.warn("retry triggered for sendSms: {}", e.getMessage());
-            return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference, smsSenderId);
-        }
+        return retryableExecution(() -> notificationClient.sendSms(templateId, phoneNumber, personalisation, reference));
     }
 
     @Override
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
+
+        return retryableExecution(() -> notificationClient.getNotificationById(notificationId));
+    }
+
+    private <T> T retryableExecution(Supplier<T> supplier) {
         try {
-            return notificationClient.getNotificationById(notificationId);
+            return supplier.get();
         } catch (NotificationClientException e) {
-            log.warn("retry triggered for getNotifications: {}", e.getMessage());
-            return notificationClient.getNotificationById(notificationId);
+            log.warn("retry triggered: {}", e.getMessage());
+            return supplier.get();
         }
     }
 }

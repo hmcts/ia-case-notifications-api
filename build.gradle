@@ -141,7 +141,6 @@ checkstyle {
     toolVersion = '8.40'
     // need to set configDir to rootDir otherwise submodule will use submodule/config/checkstyle
     configDir = new File(rootDir, 'config/checkstyle')
-    ignoreFailures = true
 }
 
 pmd {

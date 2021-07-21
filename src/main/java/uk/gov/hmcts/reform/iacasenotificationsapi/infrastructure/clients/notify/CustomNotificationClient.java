@@ -1,36 +1,35 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.URIBuilder;
-import org.json.JSONObject;
-import uk.gov.service.notify.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+import uk.gov.service.notify.Authentication;
+import uk.gov.service.notify.Notification;
+import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendSmsResponse;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-
+@Slf4j
 public class CustomNotificationClient implements NotificationClientApi {
-
-    private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
-    private static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
 
     private final String apiKey;
     private final String serviceId;
     private final String baseUrl;
     private final Proxy proxy;
     private final String version;
+    private final int timeout;
 
     /**
      * This client constructor is used for testing on other environments, used by the GOV.UK Notify team.
@@ -38,69 +37,29 @@ public class CustomNotificationClient implements NotificationClientApi {
      * @param apiKey  Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
      * @param baseUrl base URL, defaults to https://api.notifications.service.gov.uk
      */
-    public CustomNotificationClient(final String apiKey, final String baseUrl) {
-        this(
-            apiKey,
-            baseUrl,
-            null
-        );
-    }
-
-
-    /**
-     * @param apiKey  Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
-     * @param baseUrl base URL, defaults to https://api.notifications.service.gov.uk
-     * @param proxy   Proxy used on the http requests
-     */
-    public CustomNotificationClient(final String apiKey, final String baseUrl, final Proxy proxy) {
-        this(
-            apiKey,
-            baseUrl,
-            proxy,
-            null
-        );
-        try {
-            setDefaultSSLContext();
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-    }
-
-    public CustomNotificationClient(final String apiKey,
-                                    final String baseUrl,
-                                    final Proxy proxy,
-                                    final SSLContext sslContext) {
-
+    public CustomNotificationClient(final String apiKey, final String baseUrl, int timeout) {
         this.apiKey = extractApiKey(apiKey);
         this.serviceId = extractServiceId(apiKey);
         this.baseUrl = baseUrl;
-        this.proxy = proxy;
-        if (sslContext != null) {
-            setCustomSSLContext(sslContext);
-        }
+        this.timeout = timeout;
+        this.proxy = null; // no proxy
         this.version = getVersion();
+        try {
+            setDefaultSslContext();
+        } catch (NoSuchAlgorithmException e) {
+            log.error(e.toString(), e);
+        }
     }
 
     public String getUserAgent() {
         return "NOTIFY-API-JAVA-CLIENT/" + version;
     }
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
     public Proxy getProxy() {
         return proxy;
     }
 
+    @Override
     public SendEmailResponse sendEmail(String templateId,
                                        String emailAddress,
                                        Map<String, ?> personalisation,
@@ -108,7 +67,6 @@ public class CustomNotificationClient implements NotificationClientApi {
         return sendEmail(templateId, emailAddress, personalisation, reference, "");
     }
 
-    @Override
     public SendEmailResponse sendEmail(String templateId,
                                        String emailAddress,
                                        Map<String, ?> personalisation,
@@ -132,6 +90,7 @@ public class CustomNotificationClient implements NotificationClientApi {
         return new SendEmailResponse(response);
     }
 
+    @Override
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, ?> personalisation, String reference) throws NotificationClientException {
         return sendSms(templateId, phoneNumber, personalisation, reference, "");
     }
@@ -158,6 +117,7 @@ public class CustomNotificationClient implements NotificationClientApi {
         return new SendSmsResponse(response);
     }
 
+    @Override
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
         String url = baseUrl + "/v2/notifications/" + notificationId;
         HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
@@ -180,7 +140,7 @@ public class CustomNotificationClient implements NotificationClientApi {
             }
 
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            log.error(e.toString(), e);
             throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
@@ -199,7 +159,7 @@ public class CustomNotificationClient implements NotificationClientApi {
                 throw new NotificationClientException(httpResult, readStream(conn.getErrorStream()));
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            log.error(e.toString(), e);
             throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
@@ -225,7 +185,7 @@ public class CustomNotificationClient implements NotificationClientApi {
             }
             return conn;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            log.error(e.toString(), e);
             throw new NotificationClientException(e);
         }
     }
@@ -238,8 +198,8 @@ public class CustomNotificationClient implements NotificationClientApi {
         } else {
             conn = (HttpURLConnection) url.openConnection();
         }
-        conn.setReadTimeout(5000);
-        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(timeout);
+        conn.setConnectTimeout(timeout);
 
         return conn;
     }
@@ -297,14 +257,9 @@ public class CustomNotificationClient implements NotificationClientApi {
      * <p/>
      * Use case: enterprise proxy requiring HTTPS client authentication
      */
-    private static void setDefaultSSLContext() throws NoSuchAlgorithmException {
+    private static void setDefaultSslContext() throws NoSuchAlgorithmException {
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLContext.getDefault().getSocketFactory());
     }
-
-    private static void setCustomSSLContext(final SSLContext sslContext) {
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-    }
-
 
     private static String extractServiceId(String apiKey) {
         return apiKey.substring(Math.max(0, apiKey.length() - 73), Math.max(0, apiKey.length() - 37));
@@ -313,7 +268,6 @@ public class CustomNotificationClient implements NotificationClientApi {
     private static String extractApiKey(String apiKey) {
         return apiKey.substring(Math.max(0, apiKey.length() - 36));
     }
-
 
     private String getVersion() {
         InputStream input = null;

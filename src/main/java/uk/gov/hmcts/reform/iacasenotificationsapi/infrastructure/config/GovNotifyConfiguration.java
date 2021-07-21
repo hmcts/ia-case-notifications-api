@@ -19,10 +19,11 @@ public class GovNotifyConfiguration {
     @Primary
     public NotificationClientApi notificationClient(
         @Value("${govnotify.key}") String key,
-        @Value("${govnotify.baseUrl}") String goveNotifyBAseUrl
+        @Value("${govnotify.baseUrl}") String goveNotifyBaseUrl,
+        @Value("${govnotify.timeout}") int timeout
     ) {
         requireNonNull(key);
 
-        return new RetryableNotificationClient(new CustomNotificationClient(key, goveNotifyBAseUrl));
+        return new RetryableNotificationClient(new CustomNotificationClient(key, goveNotifyBaseUrl, timeout));
     }
 }
