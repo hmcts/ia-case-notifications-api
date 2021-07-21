@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.service.notify.NotificationClient;
-import uk.gov.service.notify.NotificationClientException;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.NotificationClientApi;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
@@ -30,7 +30,7 @@ public class GovNotifyNotificationSenderTest {
 
     private int deduplicateSendsWithinSeconds = 1;
     @Mock
-    private NotificationClient notificationClient;
+    private NotificationClientApi notificationClient;
 
     private String templateId = "a-b-c-d-e-f";
     private String emailAddress = "recipient@example.com";
