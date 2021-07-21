@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.CustomNotificationClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.NotificationClientApi;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.notify.RetryableNotificationClient;
 
 @Slf4j
 @Configuration
@@ -22,6 +23,6 @@ public class GovNotifyConfiguration {
     ) {
         requireNonNull(key);
 
-        return new CustomNotificationClient(key, goveNotifyBAseUrl);
+        return new RetryableNotificationClient(new CustomNotificationClient(key, goveNotifyBAseUrl));
     }
 }
