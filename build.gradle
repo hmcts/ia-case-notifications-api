@@ -264,7 +264,9 @@ project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
+    mavenLocal()
     jcenter()
+    mavenCentral()
 }
 
 dependencyManagement {
