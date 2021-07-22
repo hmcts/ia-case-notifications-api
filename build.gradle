@@ -264,11 +264,6 @@ project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
-
-    maven {
-        url "https://dl.bintray.com/hmcts/hmcts-maven"
-    }
-
     jcenter()
 }
 
