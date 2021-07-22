@@ -192,8 +192,6 @@ pitest {
     targetClasses = ['uk.gov.hmcts.reform.iacasenotificationsapi.*']
     excludedClasses = [
             'uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.*',
-            'uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.*',
-            'uk.gov.service.notify.*',
             'uk.gov.hmcts.reform.iacasenotificationsapi.Application',
             'uk.gov.hmcts.reform.iacasenotificationsapi.CcdScenarioRunnerTest'
     ]
@@ -253,8 +251,6 @@ sonarqube {
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/config/**," +
-                                     "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/clients/**," +
-                                     "src/main/java/uk/gov/service/notify/**," +
                 "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/infrastructure/SystemDateProvider.java," +
                 "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/Application.java"
         property "sonar.cpd.exclusions", "src/main/java/uk/gov/hmcts/reform/iacasenotificationsapi/domain/entities/AsylumCase.java," +
