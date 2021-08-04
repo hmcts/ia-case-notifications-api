@@ -78,7 +78,7 @@ public class EmailAddressFinder {
     }
 
     public String getListCaseHearingCentreEmailAddress(AsylumCase asylumCase) {
-        if (isRemoteHearing(asylumCase)) {
+        if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
             return getHearingCentreEmailAddress(asylumCase);
         } else {
             return asylumCase
