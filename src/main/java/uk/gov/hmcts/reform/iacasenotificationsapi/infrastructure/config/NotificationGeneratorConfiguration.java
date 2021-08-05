@@ -73,6 +73,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("unlinkAppealAppellantNotificationGenerator")
+    public List<NotificationGenerator> unlinkAppealAppellantNotificationGenerator(
+        HomeOfficeUnlinkAppealPersonalisation homeOfficeUnlinkAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeUnlinkAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("linkAppealNotificationGenerator")
     public List<NotificationGenerator> linkAppealNotificationGenerator(
         LegalRepresentativeLinkAppealPersonalisation legalRepresentativeLinkAppealPersonalisation,
@@ -83,6 +98,21 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeLinkAppealPersonalisation, homeOfficeLinkAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("linkAppealAppellantNotificationGenerator")
+    public List<NotificationGenerator> linkAppealAppellantNotificationGenerator(
+        HomeOfficeLinkAppealPersonalisation homeOfficeLinkAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeLinkAppealPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -128,6 +158,52 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeEndAppealPersonalisation, legalRepresentativeEndAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("endAppealAipEmailRespondentNotificationGenerator")
+    public List<NotificationGenerator> endAppealAipEmailRespondentNotificationGenerator(
+        HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeEndAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("endAppealAipSmsAppellantNotificationGenerator")
+    public List<NotificationGenerator> endAppealAipSmsAppellantNotificationGenerator(
+        AppellantEndAppealPersonalisationSms appellantEndAppealPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new SmsNotificationGenerator(
+                    newArrayList(appellantEndAppealPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
+            )
+
+        );
+    }
+
+    @Bean("endAppealAipEmailAppellantNotificationGenerator")
+    public List<NotificationGenerator> endAppealAipEmailAppellantNotificationGenerator(
+        AppellantEndAppealPersonalisationEmail appellantEndAppealPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantEndAppealPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             )
@@ -946,15 +1022,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("changeHearingCentreNotificationGenerator")
-    public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
-        LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
+    @Bean("appealExitedOnlineAppellantNotificationGenerator")
+    public List<NotificationGenerator> appealExitedOnlineAppellantNotificationGenerator(
+        HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeChangeHearingCentrePersonalisation),
+                newArrayList(homeOfficeAppealExitedOnlinePersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
+    @Bean("changeHearingCentreAppellantNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreAppellantNotificationGenerator(
+        CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(caseOfficerChangeHearingCentrePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -1047,20 +1137,20 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("submitTimeExtensionAipNotificationGenerator")
     public List<NotificationGenerator> submitTimeExtensionAipNotificationGenerator(
-        CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation,
-        AppellantSubmitTimeExtensionPersonalisationEmail appellantSubmitTimeExtensionPersonalisationEmail,
-        AppellantSubmitTimeExtensionPersonalisationSms appellantSubmitTimeExtensionPersonalisationSms,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
+            CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation,
+            AppellantMakeAnApplicationPersonalisationEmail appellantMakeAnApplicationPersonalisationEmail,
+            AppellantMakeAnApplicationPersonalisationSms appellantMakeAnApplicationPersonalisationSms,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(caseOfficerSubmitTimeExtensionPersonalisation, appellantSubmitTimeExtensionPersonalisationEmail),
+                newArrayList(caseOfficerSubmitTimeExtensionPersonalisation, appellantMakeAnApplicationPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                newArrayList(appellantSubmitTimeExtensionPersonalisationSms),
+                newArrayList(appellantMakeAnApplicationPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
@@ -1531,25 +1621,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-
-    @Bean("paymentPaidNotificationGenerator")
-    public List<NotificationGenerator> paymentPaidLegalRepNotificationHandler(
-        LegalRepresentativePaymentPaidPersonalisation legalRepresentativePaymentPaidPersonalisation,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Collections.singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    legalRepresentativePaymentPaidPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("submitAppealPayOfflineNotificationGenerator")
     public List<NotificationGenerator> submitAppealPayOfflineNotificationHandler(
             LegalRepresentativeAppealSubmittedPayOfflinePersonalisation legalRepresentativeAppealSubmittedPayOfflinePersonalisation,
@@ -1766,7 +1837,12 @@ public class NotificationGeneratorConfiguration {
                 ),
                 notificationSender,
                 notificationIdAppender
-            )
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 
@@ -1788,7 +1864,12 @@ public class NotificationGeneratorConfiguration {
                 ),
                 notificationSender,
                 notificationIdAppender
-            )
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 
@@ -1809,7 +1890,7 @@ public class NotificationGeneratorConfiguration {
             ) {
                 @Override
                 public Message getSuccessMessage() {
-                    return new Message("header","body");
+                    return new Message("success","body");
                 }
             }
         );
@@ -1830,7 +1911,7 @@ public class NotificationGeneratorConfiguration {
             ) {
                 @Override
                 public Message getSuccessMessage() {
-                    return new Message("header","body");
+                    return new Message("success","body");
                 }
             }
         );
@@ -1952,7 +2033,7 @@ public class NotificationGeneratorConfiguration {
             ) {
                 @Override
                 public Message getSuccessMessage() {
-                    return new Message("header","body");
+                    return new Message("success","body");
                 }
             }
         );
@@ -2037,6 +2118,241 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCannotProceedAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCannotProceedAppellantEmailNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCannotProceedAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCannotProceedAppellantSmsNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms appellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCanProceedAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedAppellantEmailNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCanProceedAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedAppellantSmsNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSms appellantRecordOutOfTimeDecisionCanProceedPersonalisationSms,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRecordOutOfTimeDecisionCanProceedPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+    @Bean("editPaymentMethodNotificationGenerator")
+    public List<NotificationGenerator> editPaymentMethodNotificationHandler(
+        LegalRepresentativeAppealSubmittedPendingPaymentPersonalisation legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
+        HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
+                    homeOfficeAppealSubmittedPendingPaymentPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("editPaymentMethodAoNotificationGenerator")
+    public List<NotificationGenerator> editPaymentMethodAoNotificationHandler(
+        AdminOfficerEditPaymentMethodPersonalisation adminOfficerEditPaymentMethodPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    adminOfficerEditPaymentMethodPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("payAndSubmitAppealEmailNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealEmailNotificationHandler(
+        LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPaidPersonalisation,
+                    caseOfficerSubmitAppealPersonalisation,
+                    homeOfficeSubmitAppealPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("payAndSubmitAppealFailedEmailNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealFailedEmailNotificationHandler(
+        LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPaidPersonalisation,
+                    homeOfficeSubmitAppealPersonalisation,
+                    caseOfficerSubmitAppealPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("payAndSubmitAppealAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealAppellantEmailNotificationHandler(
+        AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmitAppealPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("payAndSubmitAppealAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealAppellantSmsNotificationHandler(
+        AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmitAppealPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("payForAppealEmailNotificationGenerator")
+    public List<NotificationGenerator> payForAppealAppealEmailNotificationHandler(
+        LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPaidPersonalisation,
+                    caseOfficerSubmitAppealPersonalisation,
+                    homeOfficeSubmitAppealPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("paymentPaidPostSubmitNotificationGenerator")
+    public List<NotificationGenerator> paymentPaidPostSubmitLegalRepNotificationHandler(
+        LegalRepresentativePaymentPaidPersonalisation legalRepresentativePaymentPaidPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativePaymentPaidPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 }

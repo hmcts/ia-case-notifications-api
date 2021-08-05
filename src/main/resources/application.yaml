@@ -47,6 +47,7 @@ featureFlag:
 govnotify:
   baseUrl: "https://api.notifications.service.gov.uk"
   key: ${IA_GOV_NOTIFY_KEY}
+  timeout: 5000
   template:
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
@@ -98,6 +99,9 @@ govnotify:
           email: e819fd09-b350-41b3-a211-18d58936b65d
         partiallyApproved:
           email: 954c2959-e13a-4907-be1e-3eb9831fc68c
+    editPaymentMethod:
+      adminOfficer:
+        email: e986a84b-1ac4-42b1-b581-32fb00f3cb2e
 
     decisionHomeOfficeNotificationFailed:
       caseOfficer:
@@ -109,8 +113,8 @@ govnotify:
 
     appealSubmittedOutOfTime:
       appellant:
-        email: b864d01f-c80c-4d91-947f-9599f0b64163
-        sms: c52f3074-4b5a-47e0-8dec-154ac5fc0513
+        email: 0646da08-5844-436a-b8cc-5cc24b98b2b2
+        sms: 2c2017a6-c751-45f6-abfb-6945dbcc762a
     pendingPayment:
       legalRep:
         paid:
@@ -225,16 +229,23 @@ govnotify:
         email: c59474ab-6074-49ec-b1ec-3ca1f1a45685
       legalRep:
         email: 3f89b2fa-0bbd-419e-b490-89ed27f63512
+    endAppeal:
+      appellant:
+        sms: 9253ab19-1216-4b3c-b735-086ec81d8506
     endAppealBeforeListing:
       legalRep:
         email: 998bebf1-bb6c-44d6-a65b-ae7bb4ab186b
       homeOffice:
         email: 287f890a-47bc-41e1-a4a9-d143f8eecb9b
+      appellant:
+        email: 8569af9d-3a7d-46de-941e-e0cfecce011b
     endAppealAfterListing:
       legalRep:
         email: da6ca0ff-3955-498c-8d27-0eca1fbdf006
       homeOffice:
         email: 97b95f02-4dc3-4282-8c8c-802efb2d21ef
+      appellant:
+        email: c5931928-1c22-4c1a-b70b-7a6268039ea1
     recordRefusedApplicationBeforeListing:
       legalRep:
         email: 8bbb1537-9856-4a3e-b6cd-b862b1e192ff
@@ -533,6 +544,9 @@ govnotify:
           email: 5ba35971-b621-4968-9c5e-ef483101b22e
     makeAnApplication:
       beforeListing:
+        appellant:
+          email: 1163f6cc-b7cd-4c5d-9c3e-3121a7ce897c
+          sms: 5f1533b6-ee8c-448e-99a8-b3e0b6c2de30
         legalRep:
           email: 926e4c68-352f-4aa0-9f7b-37df4af280cf
         homeOffice:
@@ -670,6 +684,13 @@ govnotify:
           email: 163f3a93-974a-44c1-89fd-9769afdf8ba3
         cannotProceed:
           email: c2118e88-ab65-4e4b-8828-4078b4c1d12b
+      appellant:
+        canProceed:
+          email: 45017d4b-e4f3-446d-9941-3af269ce1556
+          sms: 043f64aa-f250-46ce-b546-557a07f4b112
+        cannotProceed:
+          email: d19a384d-0640-4b47-abd2-ae1c038013ca
+          sms: 7a12821a-d9b1-4e93-b64a-ecdc55e78034
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -711,6 +732,7 @@ security:
       - "submitTimeExtension"
       - "submitClarifyingQuestionAnswers"
       - "submitCmaRequirements"
+      - "makeAnApplication"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -724,10 +746,12 @@ security:
       - "applyForFTPAAppellant"
       - "payAndSubmitAppeal"
       - "paymentAppeal"
+      - "payForAppeal"
       - "makeAnApplication"
       - "removeRepresentation"
       - "requestFeeRemission"
       - "nocRequest"
+      - "editPaymentMethod"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -926,6 +950,7 @@ customerServices:
 
 appellantDaysToWait:
   afterSubmission: 28
+  afterOutOfTimeSubmission: 5
   afterReasonsForAppeal: 14
   afterClarifyingQuestionsAnswers: 5
   afterCmaRequirements: 14
