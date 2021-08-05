@@ -133,12 +133,18 @@ withPipeline(type, product, component) {
 
     loadVaultSecrets(secrets)
 
+    enableFortifyScan()
+
     after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
     after('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    }
+
+    after('fortify-scan') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
 
     enableSlackNotifications('#ia-tech')
