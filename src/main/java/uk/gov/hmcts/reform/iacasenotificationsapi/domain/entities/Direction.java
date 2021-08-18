@@ -10,6 +10,8 @@ public class Direction {
 
     private String explanation;
     private Parties parties;
+    private String uniqueId;
+    private String directionType;
     private String dateDue;
     private String dateSent;
     private DirectionTag tag;
@@ -89,4 +91,14 @@ public class Direction {
     public List<IdValue<ClarifyingQuestion>> getClarifyingQuestions() {
         return clarifyingQuestions;
     }
+
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public String getDirectionType() {
+        return directionType;
+    }
+
 }
