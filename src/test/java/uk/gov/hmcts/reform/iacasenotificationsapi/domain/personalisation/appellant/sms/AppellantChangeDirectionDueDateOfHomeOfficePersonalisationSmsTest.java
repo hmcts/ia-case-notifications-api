@@ -31,7 +31,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailSms {
+public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
 
     @Mock
     AsylumCase asylumCase;

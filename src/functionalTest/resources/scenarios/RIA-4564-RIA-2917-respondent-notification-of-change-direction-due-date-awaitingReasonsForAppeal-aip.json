@@ -107,7 +107,6 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "Upload additional evidence",
           "{$TODAY+14|d MMM yyyy}"
         ]
       }
