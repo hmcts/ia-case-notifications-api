@@ -793,6 +793,7 @@ security:
     citizen:
       - "startAppeal"
       - "editAppeal"
+      - "editAppealAfterSubmit"
       - "submitAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
