@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealReviewOutcome;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -58,7 +59,6 @@ class AppellantRequestResponseReviewPersonalisationEmailTest {
                 new AppellantRequestResponseReviewPersonalisationEmail(
                         requestResponseReviewWithdrawnTemplateId,
                         iaAipFrontendUrl, emailAddressFinder, recipientsFinder, customerServicesProvider);
-
     }
 
     @Test
@@ -110,6 +110,24 @@ class AppellantRequestResponseReviewPersonalisationEmailTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         verify(emailAddressFinder).getHearingCentreEmailAddress(asylumCase);
+    }
+
+    @Test
+    public void should_return_given_template_id_for_decision_withdrawn() {
+
+        when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
+                .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));
+
+        assertEquals(requestResponseReviewWithdrawnTemplateId, appellantRequestResponseReviewPersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_empty_template_id_for_decision_withdrawn() {
+
+        when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
+                .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
+
+        assertEquals("", appellantRequestResponseReviewPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test

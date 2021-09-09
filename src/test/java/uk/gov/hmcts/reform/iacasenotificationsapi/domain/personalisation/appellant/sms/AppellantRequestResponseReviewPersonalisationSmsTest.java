@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealReviewOutcome;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -82,6 +83,24 @@ class AppellantRequestResponseReviewPersonalisationSmsTest {
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(designatedHearingCentre, personalisation.get("designated hearing centre"));
         verify(emailAddressFinder).getHearingCentreEmailAddress(asylumCase);
+    }
+
+    @Test
+    public void should_return_given_template_id_for_decision_withdrawn() {
+
+        when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
+                .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));
+
+        assertEquals(requestResponseReviewWithdrawnTemplateId, appellantRequestResponseReviewPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_empty_template_id_for_decision_withdrawn() {
+
+        when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
+                .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
+
+        assertEquals("", appellantRequestResponseReviewPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
