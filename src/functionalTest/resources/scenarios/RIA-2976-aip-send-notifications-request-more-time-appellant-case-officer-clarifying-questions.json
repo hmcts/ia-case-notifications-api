@@ -1,5 +1,6 @@
 {
   "description": "RIA-2976 AIP - [Clarifying questions] Request Time extension notifications (Email and SMS) to appellant and Email to Case Officer",
+  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
@@ -69,31 +70,17 @@
         ],
         "notificationsSent": [
           {
-            "id": "1020_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "1020_MAKE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1020_MAKE_AN_APPLICATION_APPELLANT_AIP_SMS",
+            "id": "1020_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
     },
     "notifications": [
-      {
-        "reference": "1020_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.manchester}",
-        "subject": "Immigration and Asylum appeal: Request for more time submitted",
-        "body": [
-          "PA/12345/2019",
-          "Pablo Jimenez",
-          "{$iaExUiFrontendUrl}"
-        ]
-      },
       {
         "reference": "1020_MAKE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
@@ -107,13 +94,13 @@
         ]
       },
       {
-        "reference": "1020_MAKE_AN_APPLICATION_APPELLANT_AIP_SMS",
-        "recipient": "{$TEST_CITIZEN_MOBILE}",
-        "subject": "",
+        "reference": "1020_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
+        "recipient": "{$hearingCentreEmailAddresses.manchester}",
+        "subject": "Immigration and Asylum appeal: Request for more time submitted",
         "body": [
           "PA/12345/2019",
-          "time extension",
-          "{$iaAipFrontendUrl}"
+          "Pablo Jimenez",
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]

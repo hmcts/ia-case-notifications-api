@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -24,20 +25,23 @@ public class CaseOfficerListCasePersonalisation implements EmailNotificationPers
     private final DateTimeExtractor dateTimeExtractor;
     private final EmailAddressFinder emailAddressFinder;
     private final HearingDetailsFinder hearingDetailsFinder;
+    private final FeatureToggler featureToggler;
+
 
 
     public CaseOfficerListCasePersonalisation(
-        @Value("${govnotify.template.caseListed.caseOfficer.email}") String caseOfficerCaseListedTemplateId,
-        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        DateTimeExtractor dateTimeExtractor,
-        EmailAddressFinder emailAddressFinder,
-        HearingDetailsFinder hearingDetailsFinder
-    ) {
+            @Value("${govnotify.template.caseListed.caseOfficer.email}") String caseOfficerCaseListedTemplateId,
+            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            DateTimeExtractor dateTimeExtractor,
+            EmailAddressFinder emailAddressFinder,
+            HearingDetailsFinder hearingDetailsFinder,
+            FeatureToggler featureToggler) {
         this.caseOfficerCaseListedTemplateId = caseOfficerCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.emailAddressFinder = emailAddressFinder;
         this.hearingDetailsFinder = hearingDetailsFinder;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -47,7 +51,9 @@ public class CaseOfficerListCasePersonalisation implements EmailNotificationPers
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
+        return featureToggler.getValue("tcw-notifications-feature", false)
+            ? Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase))
+            : Collections.emptySet();
     }
 
     @Override

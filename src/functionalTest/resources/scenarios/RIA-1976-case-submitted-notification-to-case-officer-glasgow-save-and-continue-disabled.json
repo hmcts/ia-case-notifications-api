@@ -1,5 +1,6 @@
 {
   "description": "RIA-1976 Send case submitted notification to case officer (IAC Glasgow) (save and continue disabled)",
+  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
@@ -35,6 +36,7 @@
       }
     },
     "notifications": [
+
       {
         "reference": "1006_CASE_SUBMITTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",

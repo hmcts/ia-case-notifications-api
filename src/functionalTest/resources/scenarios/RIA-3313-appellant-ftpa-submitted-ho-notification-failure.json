@@ -6,6 +6,7 @@
     "input": {
       "id": 3313,
       "eventId": "applyForFTPAAppellant",
+
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -35,10 +36,6 @@
           },
           {
             "id": "3313_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "3313_FTPA_SUBMITTED_HO_NOTIFICATION_FAILED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -82,17 +79,6 @@
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
-        ]
-      },
-      {
-        "reference": "3313_FTPA_SUBMITTED_HO_NOTIFICATION_FAILED_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.bradford}",
-        "subject": "Immigration and Asylum appeal: A notification to the respondent has failed",
-        "body": [
-          "PA/12345/2019",
-          "LP/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
         ]
       }
     ]

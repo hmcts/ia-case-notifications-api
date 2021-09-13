@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -35,6 +36,8 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private FeatureToggler featureToggler;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -64,8 +67,8 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
             templateId,
             iaExUiFrontendUrl,
             customerServicesProvider,
-            emailAddressFinder
-        );
+            emailAddressFinder,
+                featureToggler);
     }
 
     @Test
@@ -80,7 +83,14 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_lookup_map() {
+    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
+        assertTrue(
+                caseOfficerHearingBundleFailedPersonalisation.getRecipientsList(asylumCase).isEmpty());
+    }
+
+    @Test
+    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
+        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         assertTrue(
                 caseOfficerHearingBundleFailedPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));

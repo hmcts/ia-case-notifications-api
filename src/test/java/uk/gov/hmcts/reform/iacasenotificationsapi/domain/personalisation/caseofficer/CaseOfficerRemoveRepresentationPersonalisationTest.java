@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -31,6 +32,8 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     AppealService appealService;
     @Mock
     EmailAddressFinder emailAddressFinder;
+    @Mock
+    private FeatureToggler featureToggler;
 
     private final Long caseId = 12345L;
     private final String templateIdBeforeListing = "beforeTemplateId";
@@ -64,8 +67,8 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
             templateIdAfterListing,
             iaExUiFrontendUrl,
             appealService,
-            emailAddressFinder
-        );
+            emailAddressFinder,
+                featureToggler);
     }
 
     @Test
@@ -85,9 +88,16 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     }
 
     @Test
-    void should_return_given_email_address_from_lookup_map() {
+    void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(
-            caseOfficerRemoveRepresentationPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
+                caseOfficerRemoveRepresentationPersonalisation.getRecipientsList(asylumCase).isEmpty());
+    }
+
+    @Test
+    void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
+        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+        assertTrue(
+                caseOfficerRemoveRepresentationPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
     }
 
     @Test

@@ -13,9 +13,10 @@ public class CaseDataVerifier implements Verifier {
         long testCaseId,
         Map<String, Object> scenario,
         Map<String, Object> expectedResponse,
-        Map<String, Object> actualResponse
+        Map<String, Object> actualResponse,
+        boolean featureFlag
     ) {
-        String description = MapValueExtractor.extract(scenario, "description");
+        String description = MapValueExtractor.extract(scenario, "description", featureFlag);
 
         MapFieldAssertor.assertFields(expectedResponse, actualResponse, (description + ": "));
     }

@@ -1,5 +1,6 @@
 {
   "description": "RIA-3951-RIA-4467 Remove legal representative notification to legal rep, case officer and home office - by TCW",
+  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "CaseOfficer",
@@ -21,7 +22,7 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([_REMOVE_REPRESENTATION_CASE_OFFICER,_REMOVE_REPRESENTATION_HOME_OFFICE,_REMOVE_REPRESENTATION_LEGAL_REP])"
+      "body": "contains([_REMOVE_REPRESENTATION_HOME_OFFICE,_REMOVE_REPRESENTATION_LEGAL_REP,_REMOVE_REPRESENTATION_CASE_OFFICER])"
     }
   }
 }

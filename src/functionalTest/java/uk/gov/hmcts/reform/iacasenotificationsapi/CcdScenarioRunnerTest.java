@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import static org.junit.Assert.assertFalse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.AuthorizationHeadersProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.util.LaunchDarklyFunctionalTestClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapMerger;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapSerializer;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapValueExpander;
@@ -52,9 +54,14 @@ public class CcdScenarioRunnerTest {
     @Autowired
     private AuthorizationHeadersProvider authorizationHeadersProvider;
     @Autowired
+    private MapValueExpander mapValueExpander;
+    @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private List<Verifier> verifiers;
+
+    @Autowired
+    private LaunchDarklyFunctionalTestClient launchDarklyFunctionalTestClient;
 
     @Before
     public void setUp() {
@@ -66,12 +73,13 @@ public class CcdScenarioRunnerTest {
     @Test
     public void scenarios_should_behave_as_specified() throws IOException {
 
-        assertFalse(
-            verifiers.isEmpty(),
-            "Verifiers are configured"
-        );
-
+        boolean launchDarklyFeature = false;
         loadPropertiesIntoMapValueExpander();
+
+        assertFalse(
+                "Verifiers are configured",
+                verifiers.isEmpty()
+        );
 
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {
@@ -80,8 +88,7 @@ public class CcdScenarioRunnerTest {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
 
-        Collection<String> scenarioSources =
-            StringResourceLoader
+        Collection<String> scenarioSources = StringResourceLoader
                 .load("/scenarios/" + scenarioPattern)
                 .values();
 
@@ -90,20 +97,31 @@ public class CcdScenarioRunnerTest {
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
 
         for (String scenarioSource : scenarioSources) {
-
             Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource);
+            final Headers authorizationHeaders = getAuthorizationHeaders(scenario);
 
-            String description = MapValueExtractor.extract(scenario, "description");
+            String description = MapValueExtractor.extract(scenario, "description", false);
 
-            Object scenarioEnabled = MapValueExtractor.extract(scenario, "enabled");
+            Object scenarioEnabled = MapValueExtractor.extract(scenario, "enabled", false);
+
+            Object scenarioFeature = MapValueExtractor.extract(scenario, "launchDarklyKey", false);
 
             if (scenarioEnabled == null) {
                 scenarioEnabled = true;
             } else if (scenarioEnabled instanceof String) {
                 scenarioEnabled = Boolean.valueOf((String) scenarioEnabled);
             }
+            if (scenarioFeature != null && scenarioFeature instanceof String) {
+                if (String.valueOf(scenarioFeature).contains("feature")) {
+                    String[] keys = ((String) scenarioFeature).split(":");
+                    launchDarklyFeature = launchDarklyFunctionalTestClient
+                            .getKey(keys[0], authorizationHeaders.getValue("Authorization"))
+                            && Boolean.valueOf(keys[1]);
+                    scenarioEnabled = true;
+                }
+            }
 
-            Object scenarioDisabled = MapValueExtractor.extract(scenario, "disabled");
+            Object scenarioDisabled = MapValueExtractor.extract(scenario, "disabled", false);
 
             if (scenarioDisabled == null) {
                 scenarioDisabled = false;
@@ -120,53 +138,65 @@ public class CcdScenarioRunnerTest {
 
             Map<String, String> templatesByFilename = StringResourceLoader.load("/templates/*.json");
 
-            final long testCaseId = MapValueExtractor.extractOrDefault(
-                scenario,
-                "request.input.id",
-                ThreadLocalRandom.current().nextInt(1, 9999999 + 1)
-
+            final long scenarioTestCaseId = MapValueExtractor.extractOrDefault(
+                    scenario,
+                    "request.input.id",
+                    -1,
+                    launchDarklyFeature
             );
+
+            final long testCaseId = (scenarioTestCaseId == -1)
+                    ? ThreadLocalRandom.current().nextLong(1111111111111111L, 1999999999999999L)
+                    : scenarioTestCaseId;
 
             final String requestBody = buildCallbackBody(
-                testCaseId,
-                MapValueExtractor.extract(scenario, "request.input"),
-                templatesByFilename
+                    testCaseId,
+                    MapValueExtractor.extract(scenario, "request.input", false),
+                    templatesByFilename
             );
 
-            final Headers authorizationHeaders = getAuthorizationHeaders(scenario);
-            final String requestUri = MapValueExtractor.extract(scenario, "request.uri");
-            final int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200);
+            final String requestUri = MapValueExtractor.extract(scenario, "request.uri", false);
+            final int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200, launchDarklyFeature);
 
             String actualResponseBody =
-                SerenityRest
-                    .given()
-                    .headers(authorizationHeaders)
-                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                    .body(requestBody)
-                    .when()
-                    .post(requestUri)
-                    .then()
-                    .statusCode(expectedStatus)
-                    .and()
-                    .extract()
-                    .body()
-                    .asString();
+                    SerenityRest
+                            .given()
+                            .headers(authorizationHeaders)
+                            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                            .body(requestBody)
+                            .when()
+                            .post(requestUri)
+                            .then()
+                            .log().ifError()
+                            .log().ifValidationFails()
+                            .statusCode(expectedStatus)
+                            .and()
+                            .extract()
+                            .body()
+                            .asString();
+
+            System.out.println("ACTUAL RESPONSE: \n" + actualResponseBody);
+
+            System.out.println("EXPECTED RESULT: \n " + MapValueExtractor.extract(scenario, "expectation", launchDarklyFeature));
+
 
             String expectedResponseBody = buildCallbackResponseBody(
-                MapValueExtractor.extract(scenario, "expectation"),
-                templatesByFilename
+                    MapValueExtractor.extract(scenario, "expectation", launchDarklyFeature),
+                    templatesByFilename
             );
 
             Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
             Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
 
+            boolean finalLaunchDarklyFeature = launchDarklyFeature;
             verifiers.forEach(verifier ->
-                verifier.verify(
-                    testCaseId,
-                    scenario,
-                    expectedResponse,
-                    actualResponse
-                )
+                    verifier.verify(
+                            testCaseId,
+                            scenario,
+                            expectedResponse,
+                            actualResponse,
+                            finalLaunchDarklyFeature
+                    )
             );
         }
 
@@ -178,30 +208,30 @@ public class CcdScenarioRunnerTest {
 
         MutablePropertySources propertySources = ((AbstractEnvironment) environment).getPropertySources();
         StreamSupport
-            .stream(propertySources.spliterator(), false)
-            .filter(propertySource -> propertySource instanceof EnumerablePropertySource)
-            .map(ropertySource -> ((EnumerablePropertySource) ropertySource).getPropertyNames())
-            .flatMap(Arrays::stream)
-            .forEach(name -> MapValueExpander.ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
+                .stream(propertySources.spliterator(), false)
+                .filter(propertySource -> propertySource instanceof EnumerablePropertySource)
+                .map(propertySource -> ((EnumerablePropertySource) propertySource).getPropertyNames())
+                .flatMap(Arrays::stream)
+                .forEach(name -> MapValueExpander.ENVIRONMENT_PROPERTIES.setProperty(name, environment.getProperty(name)));
     }
 
     private Map<String, Object> deserializeWithExpandedValues(
-        String source
+            String source
     ) throws IOException {
         Map<String, Object> data = MapSerializer.deserialize(source);
-        MapValueExpander.expandValues(data);
+        mapValueExpander.expandValues(data);
         return data;
     }
 
     private Map<String, Object> buildCaseData(
-        Map<String, Object> caseDataInput,
-        Map<String, String> templatesByFilename
+            Map<String, Object> caseDataInput,
+            Map<String, String> templatesByFilename
     ) throws IOException {
 
-        String templateFilename = MapValueExtractor.extract(caseDataInput, "template");
+        String templateFilename = MapValueExtractor.extract(caseDataInput, "template", false);
 
         Map<String, Object> caseData = deserializeWithExpandedValues(templatesByFilename.get(templateFilename));
-        Map<String, Object> caseDataReplacements = MapValueExtractor.extract(caseDataInput, "replacements");
+        Map<String, Object> caseDataReplacements = MapValueExtractor.extract(caseDataInput, "replacements", false);
         if (caseDataReplacements != null) {
             MapMerger.merge(caseData, caseDataReplacements);
         }
@@ -210,25 +240,27 @@ public class CcdScenarioRunnerTest {
     }
 
     private String buildCallbackBody(
-        long testCaseId,
-        Map<String, Object> input,
-        Map<String, String> templatesByFilename
+            long testCaseId,
+            Map<String, Object> input,
+            Map<String, String> templatesByFilename
     ) throws IOException {
 
         Map<String, Object> caseData = buildCaseData(
-            MapValueExtractor.extract(input, "caseData"),
-            templatesByFilename
+                MapValueExtractor.extract(input, "caseData", false),
+                templatesByFilename
         );
 
         LocalDateTime createdDate =
-            LocalDateTime.parse(
-                MapValueExtractor.extractOrDefault(input, "createdDate", LocalDateTime.now().toString())
-            );
+                LocalDateTime.parse(
+                        MapValueExtractor.extractOrDefault(input, "createdDate", LocalDateTime.now().toString(), false)
+                );
 
         Map<String, Object> caseDetails = new HashMap<>();
         caseDetails.put("id", testCaseId);
-        caseDetails.put("jurisdiction", MapValueExtractor.extractOrDefault(input, "jurisdiction", "IA"));
+        caseDetails.put("jurisdiction", MapValueExtractor.extractOrDefault(input, "jurisdiction", "IA", false));
         caseDetails.put("state", MapValueExtractor.extractOrThrow(input, "state"));
+        caseDetails.put("security_classification",
+                MapValueExtractor.extractOrDefault(input, "securityClassification", "PUBLIC", false));
         caseDetails.put("created_date", createdDate);
         caseDetails.put("case_data", caseData);
 
@@ -238,13 +270,13 @@ public class CcdScenarioRunnerTest {
 
         if (input.containsKey("caseDataBefore")) {
             Map<String, Object> caseDataBefore = buildCaseData(
-                MapValueExtractor.extract(input, "caseDataBefore"),
-                templatesByFilename
+                    MapValueExtractor.extract(input, "caseDataBefore", false),
+                    templatesByFilename
             );
 
             Map<String, Object> caseDetailsBefore = new HashMap<>();
             caseDetailsBefore.put("id", testCaseId);
-            caseDetailsBefore.put("jurisdiction", MapValueExtractor.extractOrDefault(input, "jurisdiction", "IA"));
+            caseDetailsBefore.put("jurisdiction", MapValueExtractor.extractOrDefault(input, "jurisdiction", "IA", false));
             caseDetailsBefore.put("state", MapValueExtractor.extractOrThrow(input, "state"));
             caseDetailsBefore.put("created_date", createdDate);
             caseDetailsBefore.put("case_data", caseDataBefore);
@@ -255,36 +287,35 @@ public class CcdScenarioRunnerTest {
     }
 
     private String buildCallbackResponseBody(
-        Map<String, Object> expectation,
-        Map<String, String> templatesByFilename
+            Map<String, Object> expectation,
+            Map<String, String> templatesByFilename
     ) throws IOException {
-
-        if (MapValueExtractor.extract(expectation, "confirmation") != null) {
+        if (MapValueExtractor.extract(expectation, "confirmation", false) != null) {
 
             final Map<String, Object> callbackResponse = new HashMap<>();
 
-            callbackResponse.put("confirmation_header", MapValueExtractor.extract(expectation, "confirmation.header"));
-            callbackResponse.put("confirmation_body", MapValueExtractor.extract(expectation, "confirmation.body"));
+            callbackResponse.put("confirmation_header", MapValueExtractor.extract(expectation, "confirmation.header", false));
+            callbackResponse.put("confirmation_body", MapValueExtractor.extract(expectation, "confirmation.body", false));
 
             return MapSerializer.serialize(callbackResponse);
 
         } else {
 
             Map<String, Object> caseData = buildCaseData(
-                MapValueExtractor.extract(expectation, "caseData"),
-                templatesByFilename
+                    MapValueExtractor.extract(expectation, "caseData", false),
+                    templatesByFilename
             );
 
             PreSubmitCallbackResponse<AsylumCase> preSubmitCallbackResponse =
-                new PreSubmitCallbackResponse<>(
-                    objectMapper.readValue(
-                        MapSerializer.serialize(caseData),
-                        new TypeReference<AsylumCase>() {
-                        }
-                    )
-                );
+                    new PreSubmitCallbackResponse<>(
+                            objectMapper.readValue(
+                                    MapSerializer.serialize(caseData),
+                                    new TypeReference<AsylumCase>() {
+                                    }
+                            )
+                    );
 
-            preSubmitCallbackResponse.addErrors(MapValueExtractor.extract(expectation, "errors"));
+            preSubmitCallbackResponse.addErrors(MapValueExtractor.extract(expectation, "errors", false));
 
             return objectMapper.writeValueAsString(preSubmitCallbackResponse);
         }
@@ -292,60 +323,65 @@ public class CcdScenarioRunnerTest {
 
     private Headers getAuthorizationHeaders(Map<String, Object> scenario) {
 
-        String credentials = MapValueExtractor.extract(scenario, "request.credentials");
+        String credentials = MapValueExtractor.extract(scenario, "request.credentials", false);
 
         if ("LegalRepresentative".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getLegalRepresentativeAuthorization();
+                    .getLegalRepresentativeAuthorization();
         }
 
         if ("CaseOfficer".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getCaseOfficerAuthorization();
+                    .getCaseOfficerAuthorization();
         }
 
         if ("AdminOfficer".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getAdminOfficerAuthorization();
+                    .getAdminOfficerAuthorization();
         }
 
         if ("HomeOfficeApc".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getHomeOfficeApcAuthorization();
+                    .getHomeOfficeApcAuthorization();
         }
 
         if ("HomeOfficeLart".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getHomeOfficeLartAuthorization();
+                    .getHomeOfficeLartAuthorization();
         }
 
         if ("HomeOfficePou".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getHomeOfficePouAuthorization();
+                    .getHomeOfficePouAuthorization();
         }
 
         if ("HomeOfficeGeneric".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getHomeOfficeGenericAuthorization();
+                    .getHomeOfficeGenericAuthorization();
         }
 
-        if ("Citizen".equalsIgnoreCase(credentials)) {
+        if ("LegalRepresentativeOrgA".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getCitizenAuthorization();
+                    .getLegalRepresentativeOrgAAuthorization();
         }
 
         if ("Judge".equalsIgnoreCase(credentials)) {
 
             return authorizationHeadersProvider
-                .getJudgeAuthorization();
+                    .getJudgeAuthorization();
+        }
+
+        if ("Citizen".equalsIgnoreCase(credentials)) {
+            return authorizationHeadersProvider
+                    .getCitizenAuthorization();
         }
 
         return new Headers();

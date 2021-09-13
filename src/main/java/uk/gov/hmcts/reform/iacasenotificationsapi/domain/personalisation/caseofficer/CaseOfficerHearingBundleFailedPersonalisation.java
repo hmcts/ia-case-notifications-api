@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -22,17 +23,19 @@ public class CaseOfficerHearingBundleFailedPersonalisation implements EmailNotif
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
     private final EmailAddressFinder emailAddressFinder;
+    private final FeatureToggler featureToggler;
 
     public CaseOfficerHearingBundleFailedPersonalisation(
             @Value("${govnotify.template.hearingBundleFailed.caseOfficer.email}") String hearingBundleFailedCaseOfficerTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
-            EmailAddressFinder emailAddressFinder
-    ) {
+            EmailAddressFinder emailAddressFinder,
+            FeatureToggler featureToggler) {
         this.hearingBundleFailedCaseOfficerTemplateId = hearingBundleFailedCaseOfficerTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.emailAddressFinder = emailAddressFinder;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -42,7 +45,9 @@ public class CaseOfficerHearingBundleFailedPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
+        return featureToggler.getValue("tcw-notifications-feature", false)
+                ? Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase))
+                : Collections.emptySet();
 
     }
 

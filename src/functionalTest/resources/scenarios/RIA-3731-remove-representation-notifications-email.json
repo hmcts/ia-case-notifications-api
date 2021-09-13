@@ -1,5 +1,6 @@
 {
   "description": "RIA-3731-RIA-4467 Send remove representation notification to legal rep, case officer and home office and appellant (email)",
+  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
@@ -34,7 +35,7 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([_REMOVE_REPRESENTATION_APPELLANT_EMAIL,_REMOVE_REPRESENTATION_CASE_OFFICER,_REMOVE_REPRESENTATION_HOME_OFFICE,_REMOVE_REPRESENTATION_LEGAL_REP])"
+      "body": "contains([_REMOVE_REPRESENTATION_APPELLANT_EMAIL,_REMOVE_REPRESENTATION_HOME_OFFICE,_REMOVE_REPRESENTATION_LEGAL_REP,_REMOVE_REPRESENTATION_CASE_OFFICER])"
     }
   }
 }

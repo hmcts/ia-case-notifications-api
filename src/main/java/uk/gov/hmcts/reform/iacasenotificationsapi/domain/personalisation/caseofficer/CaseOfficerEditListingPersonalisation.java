@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -22,14 +23,16 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
     private final String caseOfficerCaseEditedTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
+    private final FeatureToggler featureToggler;
 
     public CaseOfficerEditListingPersonalisation(
-        @Value("${govnotify.template.caseEdited.caseOfficer.email}") String caseOfficerCaseEditedTemplateId,
-        EmailAddressFinder emailAddressFinder,
-        PersonalisationProvider personalisationProvider) {
+            @Value("${govnotify.template.caseEdited.caseOfficer.email}") String caseOfficerCaseEditedTemplateId,
+            EmailAddressFinder emailAddressFinder,
+            PersonalisationProvider personalisationProvider, FeatureToggler featureToggler) {
         this.caseOfficerCaseEditedTemplateId = caseOfficerCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -39,10 +42,11 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-
-        return asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).equals(Optional.of(HearingCentre.REMOTE_HEARING))
-            ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
-            : Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
+        return featureToggler.getValue("tcw-notifications-feature", false)
+                ? asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).equals(Optional.of(HearingCentre.REMOTE_HEARING))
+                    ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
+                    : Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase))
+                : Collections.emptySet();
     }
 
     @Override

@@ -1,5 +1,6 @@
 {
   "description": "RIA-2644 RIA-2739 Case Officer changed the designated hearing centre",
+  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

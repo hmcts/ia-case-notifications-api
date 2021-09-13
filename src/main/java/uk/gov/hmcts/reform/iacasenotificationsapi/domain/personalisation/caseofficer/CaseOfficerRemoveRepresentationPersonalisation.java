@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -23,19 +24,21 @@ public class CaseOfficerRemoveRepresentationPersonalisation implements EmailNoti
     private final String iaExUiFrontendUrl;
     private final AppealService appealService;
     private final EmailAddressFinder emailAddressFinder;
+    private final FeatureToggler featureToggler;
 
     public CaseOfficerRemoveRepresentationPersonalisation(
-        @NotNull(message = "removeRepresentationCaseOfficerBeforeListingTemplateId cannot be null") @Value("${govnotify.template.removeRepresentation.caseOfficer.beforeListing.email}") String removeRepresentationCaseOfficerBeforeListingTemplateId,
-        @NotNull(message = "removeRepresentationCaseOfficerAfterListingTemplateId cannot be null") @Value("${govnotify.template.removeRepresentation.caseOfficer.afterListing.email}") String removeRepresentationCaseOfficerAfterListingTemplateId,
-        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        AppealService appealService,
-        EmailAddressFinder emailAddressFinder
-    ) {
+            @NotNull(message = "removeRepresentationCaseOfficerBeforeListingTemplateId cannot be null") @Value("${govnotify.template.removeRepresentation.caseOfficer.beforeListing.email}") String removeRepresentationCaseOfficerBeforeListingTemplateId,
+            @NotNull(message = "removeRepresentationCaseOfficerAfterListingTemplateId cannot be null") @Value("${govnotify.template.removeRepresentation.caseOfficer.afterListing.email}") String removeRepresentationCaseOfficerAfterListingTemplateId,
+            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            AppealService appealService,
+            EmailAddressFinder emailAddressFinder,
+            FeatureToggler featureToggler) {
         this.removeRepresentationCaseOfficerBeforeListingTemplateId = removeRepresentationCaseOfficerBeforeListingTemplateId;
         this.removeRepresentationCaseOfficerAfterListingTemplateId = removeRepresentationCaseOfficerAfterListingTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.appealService = appealService;
         this.emailAddressFinder = emailAddressFinder;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -47,7 +50,9 @@ public class CaseOfficerRemoveRepresentationPersonalisation implements EmailNoti
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
+        return featureToggler.getValue("tcw-notifications-feature", false)
+                ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
+                : Collections.emptySet();
     }
 
     @Override

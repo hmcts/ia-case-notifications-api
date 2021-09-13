@@ -8,6 +8,7 @@ public interface Verifier {
         long testCaseId,
         Map<String, Object> scenario,
         Map<String, Object> expectedResponse,
-        Map<String, Object> actualResponse
+        Map<String, Object> actualResponse,
+        boolean featureFlag
     );
 }

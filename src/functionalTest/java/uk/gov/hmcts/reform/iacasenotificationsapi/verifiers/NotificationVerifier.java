@@ -28,12 +28,13 @@ public class NotificationVerifier implements Verifier {
         long testCaseId,
         Map<String, Object> scenario,
         Map<String, Object> expectedResponse,
-        Map<String, Object> actualResponse
+        Map<String, Object> actualResponse,
+        boolean featureFlag
     ) {
-        String description = MapValueExtractor.extract(scenario, "description");
+        String description = MapValueExtractor.extract(scenario, "description", false);
 
         List<Map<String, Object>> expectedNotifications =
-            MapValueExtractor.extractOrDefault(scenario, "expectation.notifications", Collections.emptyList());
+            MapValueExtractor.extractOrDefault(scenario, "expectation.notifications", Collections.emptyList(), featureFlag);
 
         if (expectedNotifications == null
             || expectedNotifications.size() == 0) {
@@ -41,7 +42,7 @@ public class NotificationVerifier implements Verifier {
         }
 
         List<Map<String, Object>> notificationsSent =
-            MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
+            MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList(), featureFlag);
 
         if (notificationsSent.isEmpty()) {
             assertFalse(
