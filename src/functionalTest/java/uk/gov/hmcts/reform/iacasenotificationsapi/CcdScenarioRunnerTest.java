@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -73,12 +75,14 @@ public class CcdScenarioRunnerTest {
 
         loadPropertiesIntoMapValueExpander();
 
-        String scenarioPattern = System.getProperty("scenario");
-        if (scenarioPattern == null) {
-            scenarioPattern = "*.json";
-        } else {
-            scenarioPattern = "*" + scenarioPattern + "*.json";
-        }
+        //String scenarioPattern = System.getProperty("scenario");
+        //if (scenarioPattern == null) {
+        //    scenarioPattern = "*.json";
+        //} else {
+        //    scenarioPattern = "*" + scenarioPattern + "*.json";
+        //}
+
+        String scenarioPattern = "RIA-1024-case-submitted-notification-to-case-officer-taylor-house-save-and-continue-disabled.json";
 
         Collection<String> scenarioSources =
             StringResourceLoader
@@ -156,6 +160,17 @@ public class CcdScenarioRunnerTest {
                 MapValueExtractor.extract(scenario, "expectation"),
                 templatesByFilename
             );
+
+            System.out.println("expectedResponseBody => " + expectedResponseBody);
+
+            //ObjectMapper objectMapper = new ObjectMapper();
+            //
+            //try {
+            //    System.out.println("expectedResponseBody");
+            //    System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedResponseBody));
+            //} catch (JsonProcessingException e) {
+            //    e.printStackTrace();
+            //}
 
             Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
             Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
