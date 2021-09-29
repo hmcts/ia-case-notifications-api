@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unchecked")
 public final class MapValueExtractor {
@@ -38,6 +40,28 @@ public final class MapValueExtractor {
 
             if (featureFlag == false) {
 
+                if (map1.containsKey("body")) {
+
+                    String body = (String) map1.get("body");
+
+                    if (body.contains("contains([")) {
+
+                        if (body.contains("_CASE_OFFICER")) {
+                            final String sPattern = "(?i)\\b\\w*" + Pattern.quote("_CASE_OFFICER") + "\\w*\\b";
+                            Pattern pattern = Pattern.compile(sPattern);
+                            Matcher matcher = pattern.matcher(body);
+                            String transformedBody = "";
+
+                            while (matcher.find()) {
+                                transformedBody = body.replace(matcher.group(), "");
+                            }
+
+                            ((Map<String, Object>) value).remove("body");
+                            ((Map<String, Object>) value).put("body", transformedBody);
+                        }
+                    }
+                }
+
                 if (map1.containsKey("caseData")) {
                     Map<String, Object> caseData = (Map<String, Object>) map1.get("caseData");
                     Map<String, Object> updateCaseData = new HashMap<>(caseData);
@@ -59,7 +83,6 @@ public final class MapValueExtractor {
                             }
 
                             replacement.remove("notificationsSent");
-                            replacement.put("notificationsSent", updatedNotificationsSent);
 
                             caseData.remove("replacements");
                             caseData.put("replacements", updatedReplacement);
@@ -90,7 +113,6 @@ public final class MapValueExtractor {
 
         return (T) currentMap.get(pathParts[pathParts.length - 1]);
     }
-
 
 
     public static <T> T extractOrDefault(Map<String, Object> map, String path, T defaultValue, Boolean featureFlag) {

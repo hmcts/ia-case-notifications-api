@@ -44,7 +44,7 @@ public class CaseOfficerChangeHearingCentrePersonalisation implements EmailNotif
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CHANGE_HEARING_CENTRE_NEW_HEARING_CENTRE";
+        return caseId + "_CHANGE_HEARING_CENTRE_NEW_HEARING_CENTRE_CASE_OFFICER";
     }
 
     @Override

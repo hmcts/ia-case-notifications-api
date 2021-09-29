@@ -88,6 +88,8 @@ public class CcdScenarioRunnerTest {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
 
+        //String scenarioPattern = "RIA-1283-notification-of-submitted-hearing-requirements.json";
+
         Collection<String> scenarioSources = StringResourceLoader
                 .load("/scenarios/" + scenarioPattern)
                 .values();
