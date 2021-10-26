@@ -19,7 +19,8 @@
                 "document": {
                   "document_url": "http://document-store/AAA",
                   "document_binary_url": "http://document-store/AAA/binary",
-                  "document_filename": "existing-evidence.pdf"
+                  "document_filename": "existing-evidence.pdf",
+                  "document_hash": "0239230ab2039cd234234324ee1234324234324ffff"
                 },
                 "description": "Existing evidence",
                 "dateUploaded": "2018-12-25",

@@ -28,7 +28,8 @@
                 "document": {
                   "document_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65",
                   "document_binary_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65/binary",
-                  "document_filename": "new evidence.pdf"
+                  "document_filename": "new evidence.pdf",
+                  "document_hash": "0239230ab2039cd234234324ee1234324234324ffff"
                 },
                 "description": "some updated description",
                 "dateUploaded": "2018-12-25",
@@ -48,7 +49,8 @@
                 "document": {
                   "document_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65",
                   "document_binary_url": "http://document-store/d209e64c-b8fe-4ffa-8f8b-c7ae922c6b65/binary",
-                  "document_filename": "new evidence.pdf"
+                  "document_filename": "new evidence.pdf",
+                  "document_hash": "0239230ab2039cd234234324ee1234324234324ffff"
                 },
                 "description": "some original description",
                 "dateUploaded": "2018-12-25",
@@ -61,7 +63,8 @@
                 "document": {
                   "document_url": "http://document-store/e1c202b3-099c-452b-a7f0-b1ad7a231a36",
                   "document_binary_url": "http://document-store/e1c202b3-099c-452b-a7f0-b1ad7a231a36/binary",
-                  "document_filename": "new other evidence.pdf"
+                  "document_filename": "new other evidence.pdf",
+                  "document_hash": "0239230ab2039cd234234321122334ee1234324234324ffff"
                 },
                 "description": "some other original description",
                 "dateUploaded": "2018-12-26",

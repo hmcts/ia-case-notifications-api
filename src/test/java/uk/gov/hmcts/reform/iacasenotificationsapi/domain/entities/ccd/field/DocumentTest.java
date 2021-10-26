@@ -4,23 +4,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class DocumentTest {
+class DocumentTest {
 
     private final String documentUrl = "http://doc-store/A";
     private final String documentBinaryUrl = "http://doc-store/A/binary";
     private final String documentFilename = "evidence.pdf";
+    private final String documentHash = "document-hash";
 
-    private Document document = new Document(
+    private final Document document = new Document(
         documentUrl,
         documentBinaryUrl,
-        documentFilename
+        documentFilename,
+        documentHash
     );
 
     @Test
-    public void should_hold_onto_values() {
+    void should_hold_onto_values() {
 
         assertEquals(documentUrl, document.getDocumentUrl());
         assertEquals(documentBinaryUrl, document.getDocumentBinaryUrl());
         assertEquals(documentFilename, document.getDocumentFilename());
+        assertEquals(documentHash, document.getDocumentHash());
     }
 }
