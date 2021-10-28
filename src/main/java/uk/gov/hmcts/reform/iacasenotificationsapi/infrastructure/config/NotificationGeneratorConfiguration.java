@@ -740,6 +740,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("respondentDirectionForAipNotificationGenerator")
+    public List<NotificationGenerator> respondentDirectionForAipNotificationGenerator(
+        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentNonStandardDirectionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("awaitingRespondentDirectionNotificationGenerator")
     public List<NotificationGenerator> awaitingRespondentDirectionNotificationGenerator(
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
