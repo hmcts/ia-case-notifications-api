@@ -66,3 +66,4 @@ java:
         - upper-tribunal-notices-email
         - nbc-email
         - ctsc-email
+        - payment-exceptions-admin-officer-email

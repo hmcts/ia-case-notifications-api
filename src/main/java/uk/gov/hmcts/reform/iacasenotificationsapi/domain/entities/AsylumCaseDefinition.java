@@ -120,6 +120,9 @@ public enum AsylumCaseDefinition {
     LIST_CASE_HEARING_CENTRE(
             "listCaseHearingCentre",  new TypeReference<HearingCentre>(){}),
 
+    APPEAL_REVIEW_OUTCOME(
+        "appealReviewOutcome", new TypeReference<AppealReviewOutcome>(){}),
+
     END_APPEAL_OUTCOME(
         "endAppealOutcome", new TypeReference<String>(){}),
 
@@ -197,8 +200,12 @@ public enum AsylumCaseDefinition {
 
     REASON_FOR_LINK_APPEAL(
         "reasonForLinkAppeal", new TypeReference<ReasonForLinkAppealOptions>() {}),
+
     EDIT_DOCUMENTS_REASON(
         "editDocumentsReason", new TypeReference<String>(){}),
+
+    REMOVE_APPEAL_FROM_ONLINE_REASON(
+        "removeAppealFromOnlineReason", new TypeReference<String>(){}),
 
     CASE_NOTES(
         "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){}),
