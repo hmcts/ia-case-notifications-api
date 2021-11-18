@@ -15,6 +15,4 @@ public interface UserDetails {
     String getForename();
 
     String getSurname();
-
-    String getForenameAndSurname();
 }

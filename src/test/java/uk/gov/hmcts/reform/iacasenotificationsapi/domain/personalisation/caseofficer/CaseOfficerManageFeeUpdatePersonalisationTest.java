@@ -18,7 +18,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -26,8 +25,6 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    private FeatureToggler featureToggler;
     private Long caseId = 12345L;
     private String ctscManageFeeUpdateBeforeListingTemplateId = "ctscBeforeListTemplateId";
     private String ctscManageFeeUpdateAfterListingTemplateId = "ctscAfterListTemplateId";
@@ -59,9 +56,9 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
             nbcManageFeeUpdateAfterListingTemplateId,
             nbcEmailAddress,
             ctscEmailAddress,
-            iaExUiFrontendUrl,
+            iaExUiFrontendUrl
 
-                featureToggler);
+        );
     }
 
     @Test
@@ -172,8 +169,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_nbc_email_address_hu_pay_by_card_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_nbc_email_address_hu_pay_by_card() {
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payOffline"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.HU));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -181,8 +177,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_nbc_email_address_ea_pay_by_card_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_nbc_email_address_ea_pay_by_card() {
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payOffline"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.EA));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -190,8 +185,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_nbc_email_address_pa_pay_by_card_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_nbc_email_address_pa_pay_by_card() {
         when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payOffline"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -199,8 +193,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_ctsc_email_address_hu_pay_by_PBa_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_ctsc_email_address_hu_pay_by_PBa() {
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payNow"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.HU));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -208,8 +201,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_ctsc_email_address_ea_pay_by_PBa_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_ctsc_email_address_ea_pay_by_PBa() {
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payNow"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.EA));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -217,8 +209,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_ctsc_email_address_pa_pay_by_PBa_now_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_ctsc_email_address_pa_pay_by_PBa_now() {
         when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payNow"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -226,8 +217,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_ctsc_email_address_pa_pay_by_PBa_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_ctsc_email_address_pa_pay_by_PBa() {
         when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.of("payLater"));
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
         assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
@@ -235,16 +225,12 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_given_nbc_email_address_when_feature_flag_is_Off() {
-        assertTrue(caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
-    }
-
-    @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_MANAGE_FEE_UPDATE_CASE_OFFICER",
             caseOfficerManageFeeUpdatePersonalisation.getReferenceId(caseId));
     }
+
+
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
@@ -256,7 +242,6 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
 
     @Test
     void should_throw_exception_on_email_when_case_is_null() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
         when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.empty());

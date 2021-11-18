@@ -1,6 +1,5 @@
 {
   "description": "RIA-3855 decision outcome judge home office notification failure",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

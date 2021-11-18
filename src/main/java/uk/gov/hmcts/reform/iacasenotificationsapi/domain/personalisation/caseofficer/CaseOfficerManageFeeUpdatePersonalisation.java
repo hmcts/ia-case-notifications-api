@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 
 @Service
 public class CaseOfficerManageFeeUpdatePersonalisation implements EmailNotificationPersonalisation {
@@ -25,17 +24,16 @@ public class CaseOfficerManageFeeUpdatePersonalisation implements EmailNotificat
     private final String nbcEmailAddress;
     private final String ctscEmailAddress;
     private final String iaExUiFrontendUrl;
-    private final FeatureToggler featureToggler;
 
     public CaseOfficerManageFeeUpdatePersonalisation(
-            @Value("${govnotify.template.manageFeeUpdate.ctsc.beforeListing.email}") String ctscManageFeeUpdateBeforeListingTemplateId,
-            @Value("${govnotify.template.manageFeeUpdate.ctsc.afterListing.email}") String ctscManageFeeUpdateAfterListingTemplateId,
-            @Value("${govnotify.template.manageFeeUpdate.nbc.beforeListing.email}") String nbcManageFeeUpdateBeforeListingTemplateId,
-            @Value("${govnotify.template.manageFeeUpdate.nbc.afterListing.email}") String nbcManageFeeUpdateAfterListingTemplateId,
-            @Value("${nbcEmailAddress}") String nbcEmailAddress,
-            @Value("${ctscEmailAddress}") String ctscEmailAddress,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            FeatureToggler featureToggler) {
+        @Value("${govnotify.template.manageFeeUpdate.ctsc.beforeListing.email}") String ctscManageFeeUpdateBeforeListingTemplateId,
+        @Value("${govnotify.template.manageFeeUpdate.ctsc.afterListing.email}") String ctscManageFeeUpdateAfterListingTemplateId,
+        @Value("${govnotify.template.manageFeeUpdate.nbc.beforeListing.email}") String nbcManageFeeUpdateBeforeListingTemplateId,
+        @Value("${govnotify.template.manageFeeUpdate.nbc.afterListing.email}") String nbcManageFeeUpdateAfterListingTemplateId,
+        @Value("${nbcEmailAddress}") String nbcEmailAddress,
+        @Value("${ctscEmailAddress}") String ctscEmailAddress,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
+    ) {
         this.ctscManageFeeUpdateBeforeListingTemplateId = ctscManageFeeUpdateBeforeListingTemplateId;
         this.ctscManageFeeUpdateAfterListingTemplateId = ctscManageFeeUpdateAfterListingTemplateId;
         this.nbcManageFeeUpdateBeforeListingTemplateId = nbcManageFeeUpdateBeforeListingTemplateId;
@@ -43,19 +41,14 @@ public class CaseOfficerManageFeeUpdatePersonalisation implements EmailNotificat
         this.nbcEmailAddress = nbcEmailAddress;
         this.ctscEmailAddress = ctscEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.featureToggler = featureToggler;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (featureToggler.getValue("tcw-notifications-feature", false)) {
-            if (isPaymentByPBa(asylumCase)) {
-                return Collections.singleton(ctscEmailAddress);
-            } else if (isPaymentByCard(asylumCase)) {
-                return Collections.singleton(nbcEmailAddress);
-            }
-        } else {
-            return Collections.emptySet();
+        if (isPaymentByPBa(asylumCase)) {
+            return Collections.singleton(ctscEmailAddress);
+        } else if (isPaymentByCard(asylumCase)) {
+            return Collections.singleton(nbcEmailAddress);
         }
         throw new IllegalStateException("Email Address cannot be found");
     }

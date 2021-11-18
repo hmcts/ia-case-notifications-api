@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,8 +31,6 @@ public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
-    @Mock
-    private FeatureToggler featureToggler;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -59,8 +56,8 @@ public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
             new CaseOfficerCmaRequirementsSubmittedPersonalisation(
                 templateId,
                 iaExUiFrontendUrl,
-                emailAddressFinder,
-                    featureToggler);
+                emailAddressFinder
+            );
 
     }
 
@@ -76,16 +73,9 @@ public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
+    public void should_return_given_email_address_from_asylum_case() {
         assertTrue(caseOfficerCmaRequirementsSubmittedPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
-    }
-
-    @Test
-    public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
-        assertTrue(caseOfficerCmaRequirementsSubmittedPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
+            .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
     }
 
 

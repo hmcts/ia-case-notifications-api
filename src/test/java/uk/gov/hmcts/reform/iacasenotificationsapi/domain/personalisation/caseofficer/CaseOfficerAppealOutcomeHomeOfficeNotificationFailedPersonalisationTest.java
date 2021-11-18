@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -28,8 +27,6 @@ class CaseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     EmailAddressFinder emailAddressFinder;
-    @Mock
-    FeatureToggler featureToggler;
 
     private String caseOfficerEmailAddress = "caseOfficer@example.com";
     private Long caseId = 12345L;
@@ -49,8 +46,8 @@ class CaseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisationTest {
         homeOfficeNotificationFailedPersonalisation = new CaseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisation(
             asyncStitchingHomeOfficeNotificationFailedTemplateId,
             personalisationProvider,
-            emailAddressFinder,
-                featureToggler);
+            emailAddressFinder
+        );
     }
 
     @Test
@@ -65,17 +62,10 @@ class CaseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisationTest {
     }
 
     @Test
-    void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
-        assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).isEmpty());
-    }
-
-    @Test
-    void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    void should_return_given_email_address_from_lookup_map() {
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
+            homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
     @Test

@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,8 +29,6 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
-    @Mock
-    FeatureToggler featureToggler;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -52,7 +49,7 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
 
         caseOfficerAdjournHearingWithoutDatePersonalisation =
-            new CaseOfficerAdjournHearingWithoutDatePersonalisation(templateId, emailAddressFinder, featureToggler);
+            new CaseOfficerAdjournHearingWithoutDatePersonalisation(templateId, emailAddressFinder);
     }
 
     @Test
@@ -67,16 +64,9 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    public void should_return_given_email_address_from_asylum_case() {
         assertTrue(caseOfficerAdjournHearingWithoutDatePersonalisation.getRecipientsList(asylumCase)
             .contains(caseOfficerEmailAddress));
-    }
-
-    @Test
-    public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
-        assertTrue(caseOfficerAdjournHearingWithoutDatePersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
     }
 
     @Test

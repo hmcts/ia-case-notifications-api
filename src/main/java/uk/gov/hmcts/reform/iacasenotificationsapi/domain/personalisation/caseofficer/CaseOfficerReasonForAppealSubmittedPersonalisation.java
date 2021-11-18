@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
@@ -23,18 +22,16 @@ public class CaseOfficerReasonForAppealSubmittedPersonalisation implements Email
     private final String reasonsForAppealSubmittedCaseOfficerTemplateId;
     private final String iaExUiFrontendUrl;
     private final EmailAddressFinder emailAddressFinder;
-    private final FeatureToggler featureToggler;
 
 
     public CaseOfficerReasonForAppealSubmittedPersonalisation(
-            @NotNull(message = "reasonsForAppealSubmittedCaseOfficerTemplateId cannot be null") @Value("${govnotify.template.submitReasonsForAppeal.caseOfficer.email}") String reasonsForAppealSubmittedCaseOfficerTemplateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            EmailAddressFinder emailAddressFinder,
-            FeatureToggler featureToggler) {
+        @NotNull(message = "reasonsForAppealSubmittedCaseOfficerTemplateId cannot be null") @Value("${govnotify.template.submitReasonsForAppeal.caseOfficer.email}") String reasonsForAppealSubmittedCaseOfficerTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        EmailAddressFinder emailAddressFinder
+    ) {
         this.reasonsForAppealSubmittedCaseOfficerTemplateId = reasonsForAppealSubmittedCaseOfficerTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.emailAddressFinder = emailAddressFinder;
-        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -44,9 +41,7 @@ public class CaseOfficerReasonForAppealSubmittedPersonalisation implements Email
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return featureToggler.getValue("tcw-notifications-feature", false)
-                ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
-                : Collections.emptySet();
+        return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
     }
 
     @Override

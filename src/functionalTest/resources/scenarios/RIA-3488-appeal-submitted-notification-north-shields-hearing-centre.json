@@ -1,7 +1,6 @@
 {
-  "description": "RIA-3488 Send appeal submitted notification (IAC North Shields)",
-  "launchDarklyKey": "tcw-notifications-feature:true",
-  "request": {
+    "description": "RIA-3488 Send appeal submitted notification (IAC North Shields)",
+    "request": {
       "uri": "/asylum/ccdAboutToSubmit",
       "credentials": "LegalRepresentative",
       "input": {

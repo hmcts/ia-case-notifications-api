@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -31,19 +30,18 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
     private final EditDocumentService editDocumentService;
     private final String iaExUiFrontendUrl;
     private final AppealService appealService;
-    private final FeatureToggler featureToggler;
 
     public CaseOfficerEditDocumentsPersonalisation(
-            @NotNull(message = "appealDocumentDeletedCaseOfficerBeforeListingTemplateId cannot be null")
-            @Value("${govnotify.template.appealDocumentDeletedBeforeListing.caseOfficer.email}")
-                    String appealDocumentDeletedCaseOfficerBeforeListingTemplateId,
-            @NotNull(message = "appealDocumentDeletedCaseOfficerAfterListingTemplateId cannot be null")
-            @Value("${govnotify.template.appealDocumentDeletedAfterListing.caseOfficer.email}")
-                    String appealDocumentDeletedCaseOfficerAfterListingTemplateId,
-            EmailAddressFinder emailAddressFinder,
-            EditDocumentService editDocumentService,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            AppealService appealService, FeatureToggler featureToggler) {
+        @NotNull(message = "appealDocumentDeletedCaseOfficerBeforeListingTemplateId cannot be null")
+        @Value("${govnotify.template.appealDocumentDeletedBeforeListing.caseOfficer.email}")
+            String appealDocumentDeletedCaseOfficerBeforeListingTemplateId,
+        @NotNull(message = "appealDocumentDeletedCaseOfficerAfterListingTemplateId cannot be null")
+        @Value("${govnotify.template.appealDocumentDeletedAfterListing.caseOfficer.email}")
+            String appealDocumentDeletedCaseOfficerAfterListingTemplateId,
+        EmailAddressFinder emailAddressFinder,
+        EditDocumentService editDocumentService,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        AppealService appealService) {
 
         this.appealDocumentDeletedCaseOfficerBeforeListingTemplateId = appealDocumentDeletedCaseOfficerBeforeListingTemplateId;
         this.appealDocumentDeletedCaseOfficerAfterListingTemplateId = appealDocumentDeletedCaseOfficerAfterListingTemplateId;
@@ -51,7 +49,6 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
         this.editDocumentService = editDocumentService;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.appealService = appealService;
-        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -67,9 +64,7 @@ public class CaseOfficerEditDocumentsPersonalisation implements EmailNotificatio
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return featureToggler.getValue("tcw-notifications-feature", false)
-            ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
-            : Collections.emptySet();
+        return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
     }
 
     @Override

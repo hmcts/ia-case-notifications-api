@@ -8,9 +8,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
 
-@Component
 @SuppressWarnings("unchecked")
 public final class MapValueExpander {
 

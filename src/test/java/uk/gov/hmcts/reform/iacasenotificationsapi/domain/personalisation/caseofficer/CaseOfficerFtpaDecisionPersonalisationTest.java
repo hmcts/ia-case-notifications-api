@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -31,8 +30,6 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     EmailAddressFinder emailAddressFinder;
-    @Mock
-    private FeatureToggler featureToggler;
 
     private String caseOfficerEmailAddress = "caseOfficer@example.com";
     private Long caseId = 12345L;
@@ -52,8 +49,8 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
             applicantReheardTemplateId,
             applicantReheardEnabledTemplateId,
             personalisationProvider,
-            emailAddressFinder,
-                featureToggler);
+            emailAddressFinder
+        );
     }
 
     @Test
@@ -72,17 +69,10 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
-        assertTrue(
-                caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).isEmpty());
-    }
-
-    @Test
-    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+    public void should_return_given_email_address_from_lookup_map() {
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
-                caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
+            caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
     @Test
