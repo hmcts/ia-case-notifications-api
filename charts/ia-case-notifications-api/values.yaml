@@ -67,3 +67,4 @@ java:
         - nbc-email
         - ctsc-email
         - payment-exceptions-admin-officer-email
+        - launch-darkly-sdk-key
