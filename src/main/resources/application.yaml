@@ -1027,3 +1027,5 @@ launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
   connectionTimeout: 5000
   socketTimeout: 5000
+
+tcwNotificationsFeature: ${TCW_NOTIFICATIONS_FEATURE:true}
