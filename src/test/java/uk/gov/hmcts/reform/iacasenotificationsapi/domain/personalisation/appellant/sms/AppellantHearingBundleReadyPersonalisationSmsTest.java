@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 
@@ -33,6 +34,9 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
+    @Mock
+    private FeatureToggler featureToggler;
+
     private AppellantHearingBundleReadyPersonalisationSms
         appellantHearingBundleReadyPersonalisationSms;
 
@@ -48,7 +52,8 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
             new AppellantHearingBundleReadyPersonalisationSms(
                 smsTemplateId,
                 iaAipFrontendUrl,
-                recipientsFinder
+                recipientsFinder,
+                featureToggler
             );
     }
 
@@ -70,6 +75,7 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
+        when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(true);
 
         assertThatThrownBy(() -> appellantHearingBundleReadyPersonalisationSms.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
@@ -80,11 +86,20 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
     void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
         String mockedAppellantMobilePhone = "07123456789";
+        when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(true);
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantHearingBundleReadyPersonalisationSms.getRecipientsList(asylumCase)
             .contains(mockedAppellantMobilePhone));
+    }
+
+    @Test
+    void should_return_empty_mobile_list_when_featureflag_is_not_enabled() {
+        when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(false);
+
+        assertTrue(appellantHearingBundleReadyPersonalisationSms.getRecipientsList(asylumCase)
+            .isEmpty());
     }
 
     @Test

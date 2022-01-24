@@ -1010,14 +1010,20 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("hearingBundleReadyAipNotificationGenerator")
     public List<NotificationGenerator> hearingBundleReadyAipNotificationGenerator(
+        HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation,
         AppellantHearingBundleReadyPersonalisationEmail appellantHearingBundleReadyPersonalisationEmail,
         AppellantHearingBundleReadyPersonalisationSms appellantHearingBundleReadyPersonalisationSms,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ? newArrayList(homeOfficeHearingBundleReadyPersonalisation, appellantHearingBundleReadyPersonalisationEmail)
+            : newArrayList(appellantHearingBundleReadyPersonalisationEmail);
+
+
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantHearingBundleReadyPersonalisationEmail),
+                personalisations,
                 notificationSender,
                 notificationIdAppender
             ),

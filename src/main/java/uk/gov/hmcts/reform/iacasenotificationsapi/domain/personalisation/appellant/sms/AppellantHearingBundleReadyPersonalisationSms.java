@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
@@ -20,15 +22,19 @@ public class AppellantHearingBundleReadyPersonalisationSms implements SmsNotific
     private final String appellantHearingBundleReadySmsTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
+    private final FeatureToggler featureToggler;
+
 
     public AppellantHearingBundleReadyPersonalisationSms(
         @Value("${govnotify.template.hearingBundleReady.appellant.sms}") String appellantHearingBundleReadySmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        RecipientsFinder recipientsFinder
+        RecipientsFinder recipientsFinder,
+        FeatureToggler featureToggler
     ) {
         this.appellantHearingBundleReadySmsTemplateId = appellantHearingBundleReadySmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -38,7 +44,9 @@ public class AppellantHearingBundleReadyPersonalisationSms implements SmsNotific
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        return featureToggler.getValue("aip-hearing-bundle-feature", false)
+            ? recipientsFinder.findAll(asylumCase, NotificationType.SMS)
+            : Collections.emptySet();
     }
 
     @Override

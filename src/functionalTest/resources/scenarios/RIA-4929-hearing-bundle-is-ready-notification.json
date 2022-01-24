@@ -1,5 +1,6 @@
 {
   "description": "RIA-4929 hearing bundle is ready notification to Citizen",
+  "launchDarklyKey": "aip-hearing-bundle-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
@@ -11,6 +12,7 @@
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "hearingCentre": "taylorHouse",
+          "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "homeOfficeReferenceNumber": "1212-0099-0062-8083",
           "subscriptions": [
@@ -59,6 +61,10 @@
           }
         ],
         "notificationsSent": [
+          {
+            "id": "4929_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "4929_HEARING_BUNDLE_IS_READY_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
