@@ -79,7 +79,10 @@
           "LP/12345/2019",
           "A1234567",
           "Talha Awan",
-          "{$iaAipFrontendUrl}"
+          "{$iaAipFrontendUrl}",
+          "28 days",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       },
       {
