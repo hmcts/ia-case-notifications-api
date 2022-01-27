@@ -1,5 +1,5 @@
 {
-  "description": "RIA-4827 Send payment outstanding notification to HO and CTSC for AIP journey after decision (allowed) - Judge",
+  "description": "RIA-4827 Payment outstanding notification to HO & CTSC (AIP journey) after decision dismissed (payment pending) - Judge",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -12,7 +12,8 @@
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "ariaListingReference": "LP/12345/2019",
-          "isDecisionAllowed": "allowed",
+          "isDecisionAllowed": "dismissed",
+          "paymentStatus": "Payment pending",
           "notificationsSent": []
         }
       }
@@ -24,7 +25,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
-        "isDecisionAllowed": "allowed",
+        "isDecisionAllowed": "dismissed",
         "notificationsSent": [
           {
             "id": "4827_APPEAL_OUTCOME_HOME_OFFICE",
@@ -40,7 +41,7 @@
     "notifications": [
       {
         "reference": "4827_APPEAL_OUTCOME_HOME_OFFICE",
-        "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
+        "recipient": "{$dismissedAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
           "PA/12345/2019",
