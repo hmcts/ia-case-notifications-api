@@ -2997,6 +2997,22 @@ public class NotificationHandlerConfiguration {
 
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                    boolean isAipJourney = isAipJourney(asylumCase);
+
+                    boolean isCorrectAppealTypeForAip = asylumCase
+                        .read(APPEAL_TYPE, AppealType.class)
+                        .map(type -> type == PA).orElse(false);
+
+                    //boolean isPaymentUnpaid =
+                    //    asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                    //        .map(status -> status != PAID).orElse(false);
+
+                    boolean isPaymentStatusPresent =
+                        asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).isPresent();
+
+                    //boolean isAipAppealUnpaid = (isAipJourney && isCorrectAppealTypeForAip && isPaymentUnpaid);
+                    boolean isAipAppealUnpaid = (isAipJourney && isCorrectAppealTypeForAip && !isPaymentStatusPresent);
+
                     boolean isPaymentPending =
                             asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
                                     .map(status -> status == PAYMENT_PENDING).orElse(false);
@@ -3006,7 +3022,7 @@ public class NotificationHandlerConfiguration {
                                     && Arrays.asList(
                                             Event.SEND_DECISION_AND_REASONS,
                                             Event.END_APPEAL).contains(callback.getEvent())
-                                    && isPaymentPending;
+                                    && (isPaymentPending || isAipAppealUnpaid);
                 },
                 notificationGenerators
         );
