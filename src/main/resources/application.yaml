@@ -124,6 +124,8 @@ govnotify:
             email: da72f9c7-5654-40b3-b9e6-c474281b023e
           afterListing:
             email: 933df53d-5700-4ec5-8488-aa33b1541aaa
+      ctsc:
+        email: 291f7557-3857-474a-898e-74570852804e
     pendingPaymentBeforeListing:
       legalRep:
         paid:
@@ -221,12 +223,15 @@ govnotify:
         legalRep:
           email: e79249e2-ecbf-4d2b-8458-006285613402
     caseEdited:
+      homeOffice:
+        email: b4cfdb17-6130-4f52-aec4-f3571e030790
       caseOfficer:
         email: fec967bf-79f6-4683-b908-d1eea3cc591e
       legalRep:
         email: 60adb2b5-7a46-43bb-a03b-218b342e3d77
-      homeOffice:
-        email: b4cfdb17-6130-4f52-aec4-f3571e030790
+      appellant:
+        email: 11254ed3-abfb-4fd2-a2bf-8453f470321a
+        sms: 7d23fda4-9ff7-4642-aa97-1a8a3ccafaba
     caseEditedNoChange:
       legalRep:
         email: 9bdfb1cb-c5a8-45b8-8f6c-b81d3d331db6
@@ -240,11 +245,17 @@ govnotify:
         email: 0e8c3a70-4ba3-442b-8b12-235ee69a8d20
       legalRep:
         email: a5fc7b20-d69c-42ab-bd26-79c7cf9a7fda
+      appellant:
+        email: 202cab17-fce1-4236-82b1-f23ed80034f1
+        sms: 37f77d54-9de5-45a4-940a-b4a4cfb37716
     appealOutcomeDismissed:
       homeOffice:
         email: c59474ab-6074-49ec-b1ec-3ca1f1a45685
       legalRep:
         email: 3f89b2fa-0bbd-419e-b490-89ed27f63512
+      appellant:
+        email: 1d3266fe-ec61-4bd2-a7de-50092ec557ff
+        sms: d27c4839-01f6-4027-aaf6-7f6004f2b27b
     endAppeal:
       appellant:
         sms: 9253ab19-1216-4b3c-b735-086ec81d8506
@@ -283,6 +294,9 @@ govnotify:
         email: 4b8a8e0d-2901-411a-897c-dd2493bc8e03
       homeOffice:
         email: 3bb1f83d-4e4f-449d-a282-0ba2812cf88d
+      appellant:
+        email: fd89835b-4cf7-40e0-ade2-97c51c589431
+        sms: 24e64431-0888-427e-b2e9-9a4cbb0d79d4
     hearingBundleFailed:
       caseOfficer:
         email: c2af5875-f8ab-486d-a766-4a8cba223b36
@@ -311,6 +325,9 @@ govnotify:
         email: 0c6dab6e-5c5d-4070-bccf-c8d490be7c19
       caseOfficer:
         email: 03aa193b-ba2c-4334-bbee-0b8244a91521
+      appellant:
+        email: fe78b847-225f-4fc5-963b-cd5a0b3e671e
+        sms: b43b2fe3-f662-4b25-ad15-af3ddc07ec81
     uploadedAdditionalEvidenceBeforeListing:
       legalRep:
         email: c758ab41-4baa-4909-a6ba-31980395683a
@@ -793,13 +810,16 @@ security:
     citizen:
       - "startAppeal"
       - "editAppeal"
+      - "uploadAdditionalEvidence"
       - "submitAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
       - "submitClarifyingQuestionAnswers"
       - "submitCmaRequirements"
       - "makeAnApplication"
+      - "draftHearingRequirements"
       - "requestHearingRequirementsFeature"
+      - "asyncStitchingComplete"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -1001,6 +1021,7 @@ lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
+ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}
@@ -1023,6 +1044,7 @@ appellantDaysToWait:
   afterReasonsForAppeal: 14
   afterClarifyingQuestionsAnswers: 5
   afterCmaRequirements: 14
+  afterHearingRequirementsSubmitted: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}

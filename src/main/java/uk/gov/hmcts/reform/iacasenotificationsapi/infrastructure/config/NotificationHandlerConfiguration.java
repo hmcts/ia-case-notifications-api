@@ -236,12 +236,48 @@ public class NotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealOutcomeNotificationHandler(
         @Qualifier("appealOutcomeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        // RIA-3361 - sendDecisionAndReasons
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeRepNotificationHandler(
+        @Qualifier("appealOutcomeRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isRepJourney = asylumCase
+                    .read(JOURNEY_TYPE, JourneyType.class)
+                    .map(type -> type == REP).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
+                       && isRepJourney;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeAipNotificationHandler(
+        @Qualifier("appealOutcomeAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isAipJourney = isAipJourney(asylumCase);
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
+                        && isAipJourney);
+            },
             notificationGenerators
         );
     }
@@ -969,14 +1005,28 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editCaseListingNotificationHandler(
-        @Qualifier("editCaseListingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> editCaseListingRepNotificationHandler(
+        @Qualifier("editCaseListingRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         // RIA-3631 - editCaseListing
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.EDIT_CASE_LISTING,
+                && callback.getEvent() == Event.EDIT_CASE_LISTING
+                && isRepJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editCaseListingAipNotificationHandler(
+        @Qualifier("editCaseListingAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.EDIT_CASE_LISTING
+                && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -1021,21 +1071,31 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyNotificationHandler(
-        @Qualifier("hearingBundleReadyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyRepNotificationHandler(
+        @Qualifier("hearingBundleReadyRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
-        // RIA-3316 - generateHearingBundle, customiseHearingBundle
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-
-                final String stitchStatus = getStitchStatus(callback);
-
-                return
-                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
                     && callback.getCaseDetails().getState() != State.FTPA_DECIDED
-                    && stitchStatus.equalsIgnoreCase("DONE");
-            },
+                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyAipNotificationHandler(
+        @Qualifier("hearingBundleReadyAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                        && callback.getCaseDetails().getState() != State.FTPA_DECIDED
+                        && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                        && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -1100,7 +1160,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS,
+                    && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS
+                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submittedHearingRequirementsAipNotificationHandler(
+        @Qualifier("submittedHearingRequirementsAipNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS
+                    && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -1111,6 +1186,7 @@ public class NotificationHandlerConfiguration {
             List<NotificationGenerator> notificationGenerator) {
 
         return new NotificationHandler(
+
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
@@ -1138,7 +1214,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE,
+                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -1567,7 +1644,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT,
+                && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2930,6 +3008,43 @@ public class NotificationHandlerConfiguration {
                     && stitchStatus.equalsIgnoreCase("FAILED");
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealDecidedOrEndedPendingPaymentNotificationHandler(
+            @Qualifier("appealDecidedOrEndedPendingPaymentGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        // RIA-4827 - Ctsc notification of Pending payment on appeal decided or ended.
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isAipCorrectAppealType = asylumCase
+                        .read(APPEAL_TYPE, AppealType.class)
+                        .map(type -> type == PA).orElse(false);
+
+                    boolean isAipPaymentUnpaid =
+                        asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                            .map(status -> status != PAID).orElse(false)
+                        || asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).isEmpty();
+
+                    boolean isAipAppealUnpaid =
+                        (isAipJourney(asylumCase) && isAipCorrectAppealType && isAipPaymentUnpaid);
+
+                    boolean isPaymentPending =
+                            asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                                    .map(status -> status == PAYMENT_PENDING).orElse(false);
+
+                    return
+                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                    && Arrays.asList(
+                                            Event.SEND_DECISION_AND_REASONS,
+                                            Event.END_APPEAL).contains(callback.getEvent())
+                                    && (isPaymentPending || isAipAppealUnpaid);
+                },
+                notificationGenerators
         );
     }
 

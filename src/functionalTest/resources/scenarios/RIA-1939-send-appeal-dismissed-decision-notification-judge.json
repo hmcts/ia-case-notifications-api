@@ -11,8 +11,10 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "journeyType": "rep",
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "dismissed",
+          "paymentStatus": "Payment pending",
           "notificationsSent": []
         }
       }
@@ -32,6 +34,10 @@
           },
           {
             "id": "1003_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1003_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -64,6 +70,16 @@
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "1003_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
+        "recipient": "{$ctscAdminPendingPaymentEmailAddress}",
+        "subject": "Immigration and Asylum appeal: An unpaid appeal has been decided or ended",
+        "body": [
+          "PA/12345/2019",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]
