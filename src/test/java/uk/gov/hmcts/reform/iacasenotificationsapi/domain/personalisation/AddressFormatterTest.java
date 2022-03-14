@@ -75,8 +75,4 @@ class AddressFormatterTest {
 
         assertEquals("", formatCompanyAddress(asylumCase));
     }
-
-
-
-
 }
