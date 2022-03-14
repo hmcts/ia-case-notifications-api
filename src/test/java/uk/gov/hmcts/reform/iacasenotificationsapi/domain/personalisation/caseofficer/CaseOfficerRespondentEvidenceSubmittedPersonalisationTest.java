@@ -47,11 +47,11 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private String legalRepCompany = "";
+    private String legalRepCompany = "someLegalRepCompany";
     private String legalRepCompanyAddress = "";
-    private String legalRepName = "";
-    private String legalRepEmail = "";
-    private String legalRepReference = "";
+    private String legalRepName = "someLegalRepName";
+    private String legalRepEmail = "someLegalRepEmail";
+    private String legalRepReference = "someLegalRepReference";
 
     private CaseOfficerRespondentEvidenceSubmittedPersonalisation caseOfficerRespondentEvidenceSubmittedPersonalisation;
 
@@ -60,9 +60,16 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
 
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class))
-            .thenReturn(Optional.of(appealReferenceNumber));
+                .thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(legalRepCompany));
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, String.class)).thenReturn(Optional.of(legalRepCompanyAddress));
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReference));
+
 
         caseOfficerRespondentEvidenceSubmittedPersonalisation =
             new CaseOfficerRespondentEvidenceSubmittedPersonalisation(
@@ -107,9 +114,8 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-
         final Map<String, String> expectedPersonalisation =
-            ImmutableMap
+             ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)

@@ -182,29 +182,5 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
-    @Test
-    void should_return_correctly_formatted_company_address() {
 
-        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.of(addressUk));
-
-        assertEquals("A, B, C, D, E, F, G", homeOfficeRemoveRepresentationPersonalisation.formatCompanyAddress(asylumCase));
-    }
-
-    @Test
-    void should_return_correctly_formatted_company_address_for_missing_fields() {
-
-        AddressUk addressUk = new AddressUk(
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-        );
-
-        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.of(addressUk));
-
-        assertEquals("", homeOfficeRemoveRepresentationPersonalisation.formatCompanyAddress(asylumCase));
-    }
 }
