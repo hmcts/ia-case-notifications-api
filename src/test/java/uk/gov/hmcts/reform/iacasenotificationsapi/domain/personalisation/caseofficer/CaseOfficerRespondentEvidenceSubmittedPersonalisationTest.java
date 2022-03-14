@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -42,6 +40,11 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String legalRepCompany = "";
+    private String legalRepCompanyAddress = "";
+    private String legalRepName = "";
+    private String legalRepEmail = "";
+    private String legalRepReference = "";
 
     private CaseOfficerRespondentEvidenceSubmittedPersonalisation caseOfficerRespondentEvidenceSubmittedPersonalisation;
 
@@ -105,6 +108,11 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("legalRepCompany", legalRepCompany)
+                .put("legalRepCompanyAddress", legalRepCompanyAddress)
+                .put("legalRepName", legalRepName)
+                .put("legalRepEmail", legalRepEmail)
+                .put("legalRepReference", legalRepReference)
                 .build();
 
         Map<String, String> actualPersonalisation =
@@ -123,11 +131,22 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
                 .put("appellantGivenNames", "")
                 .put("appellantFamilyName", "")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("legalRepCompany", "")
+                .put("legalRepCompanyAddress", "")
+                .put("legalRepName", "")
+                .put("legalRepEmail", "")
+                .put("legalRepReference", "")
                 .build();
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
 
         Map<String, String> actualPersonalisation =
             caseOfficerRespondentEvidenceSubmittedPersonalisation.getPersonalisation(asylumCase);
