@@ -114,8 +114,9 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+
         final Map<String, String> expectedPersonalisation =
-             ImmutableMap
+            ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
