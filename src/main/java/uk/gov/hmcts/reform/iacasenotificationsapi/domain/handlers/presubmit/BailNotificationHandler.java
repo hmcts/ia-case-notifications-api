@@ -5,57 +5,54 @@ import static java.util.Objects.requireNonNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
 
-public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase> {
+public class BailNotificationHandler implements PreSubmitCallbackHandler<BailCase> {
 
-    private final BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction;
-    private final List<? extends NotificationGenerator> notificationGenerators;
-    private final Optional<ErrorHandler<AsylumCase>> errorHandling;
+    private final BiPredicate<PreSubmitCallbackStage, Callback<BailCase>> canHandleFunction;
+    private final List<? extends BailNotificationGenerator> bailNotificationGenerators;
+    private final Optional<ErrorHandler<BailCase>> errorHandling;
 
-    public NotificationHandler(BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction,
-                               List<? extends NotificationGenerator> notificationGenerator
+    public BailNotificationHandler(BiPredicate<PreSubmitCallbackStage, Callback<BailCase>> canHandleFunction,
+                                   List<? extends BailNotificationGenerator> notificationGenerator
     ) {
         this.canHandleFunction = canHandleFunction;
-        this.notificationGenerators = notificationGenerator;
+        this.bailNotificationGenerators = notificationGenerator;
         this.errorHandling = Optional.empty();
     }
 
-    public NotificationHandler(BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction,
-                               List<? extends NotificationGenerator> notificationGenerator,
-                               ErrorHandler<AsylumCase> errorHandling
+    public BailNotificationHandler(BiPredicate<PreSubmitCallbackStage, Callback<BailCase>> canHandleFunction,
+                                   List<? extends BailNotificationGenerator> bailNotificationGenerators,
+                                   ErrorHandler<BailCase> errorHandling
     ) {
         this.canHandleFunction = canHandleFunction;
-        this.notificationGenerators = notificationGenerator;
+        this.bailNotificationGenerators = bailNotificationGenerators;
         this.errorHandling = Optional.ofNullable(errorHandling);
     }
 
     @Override
-    public boolean canHandle(PreSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
+    public boolean canHandle(PreSubmitCallbackStage callbackStage, Callback<BailCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-        if (callback.getEvent() == Event.SUBMIT_APPLICATION) {
-            return false;
-        }
+
         return canHandleFunction.test(callbackStage, callback);
     }
 
     @Override
-    public PreSubmitCallbackResponse<AsylumCase> handle(PreSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
+    public PreSubmitCallbackResponse<BailCase> handle(PreSubmitCallbackStage callbackStage, Callback<BailCase> callback) {
 
         if (!canHandle(callbackStage, callback)) {
             throw new IllegalStateException("Cannot handle callback");
         }
 
         try {
-            notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
+            bailNotificationGenerators.forEach(bailNotificationGenerator -> bailNotificationGenerator.generate(callback));
         } catch (Exception e) {
             if (errorHandling.isPresent()) {
                 errorHandling.get().accept(callback, e);
