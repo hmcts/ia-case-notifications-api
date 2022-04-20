@@ -76,3 +76,4 @@ java:
         - bail-hearing-centre-manchester-email
         - bail-hearing-centre-glasgow-email
         - bail-hearing-centre-yarlswood-email
+        - bail-test-applicant-mobile

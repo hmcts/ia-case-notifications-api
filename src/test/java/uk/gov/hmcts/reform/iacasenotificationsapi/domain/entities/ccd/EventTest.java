@@ -87,6 +87,7 @@ public class EventTest {
         assertEquals("manageFeeUpdate", MANAGE_FEE_UPDATE.toString());
         assertEquals("recordOutOfTimeDecision", RECORD_OUT_OF_TIME_DECISION.toString());
         assertEquals("editPaymentMethod", EDIT_PAYMENT_METHOD.toString());
+        assertEquals("submitApplication", SUBMIT_APPLICATION.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
