@@ -776,6 +776,9 @@ govnotify:
     amendRespondentEvidenceDirection:
       legalRep:
         email: 66a5e934-5875-4e60-a343-356916a112c7
+    bail:
+      submitAplication:
+        email: 041a83e1-bd1a-49e0-9154-7394cd739263
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -841,6 +844,7 @@ security:
       - "requestFeeRemission"
       - "nocRequest"
       - "editPaymentMethod"
+      - "submitApplication"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -905,6 +909,7 @@ security:
       - "removeLegalRepresentative"
       - "manageFeeUpdate"
       - "asyncStitchingComplete"
+      - "submitApplication"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -928,6 +933,7 @@ security:
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
+      - "submitApplication"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -972,6 +978,17 @@ hearingCentreEmailAddresses:
   hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
+
+### Bail Hearing Email addresses
+bailHearingCentreEmailAddresses:
+  yarlswood: ${IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL:hc-bradford@example.com}
+  glasgow: ${IA_BAIL_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
+  manchester: ${IA_BAIL_HEARING_CENTRE_MANCHESTER_EMAIL:hc-manchester@example.com}
+  hattonCross: ${IA_BAIL_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
+  taylorHouse: ${IA_BAIL_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:hc-taylorhouse@example.com}
+  newport: ${IA_BAIL_HEARING_CENTRE_NEWPORT_EMAIL:hc-newport@example.com}
+  birmingham: ${IA_BAIL_HEARING_CENTRE_BIRMINGHAM_EMAIL:hc-birmingham@example.com}
+  bradford: ${IA_BAIL_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
 
 ### POU Email addresses (Case listed)
 homeOfficeEmailAddresses:
