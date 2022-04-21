@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ad
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailSummaryUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailApplicationSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationIdAppender;
@@ -23,13 +25,17 @@ public class BailNotificationGeneratorConfiguration {
     @Bean("submitApplicationNotificationGenerator")
     public List<BailNotificationGenerator> submitApplicationNotificationGenerator(
         HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation,
+        LegalRepresentativeBailApplicationSubmittedPersonalisation legalRepresentativeBailApplicationSubmittedPersonalisation,
+        HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
         ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
         NotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
-                newArrayList(hearingCentreSubmitApplicationPersonalisation),
+                newArrayList(hearingCentreSubmitApplicationPersonalisation,
+                    legalRepresentativeBailApplicationSubmittedPersonalisation,
+                    homeOfficeBailApplicationSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
