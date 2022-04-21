@@ -782,6 +782,8 @@ govnotify:
         sms: 34512e35-9bf4-42eb-af30-5338e22563b2
       submitAplicationWithoutLR:
         email: e30259e0-215c-4c0a-bc0e-c20c6018dd99
+      uploadBailSummary:
+        email: 9c5f2167-ab24-470a-a4b9-4ac8b7206a31
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -928,6 +930,9 @@ security:
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
+    caseworker-ia-homeofficebail:
+      - "submitApplication"
+      - "uploadBailSummary"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"

@@ -8,7 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailSummaryUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationIdAppender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 
 @Configuration
@@ -33,6 +38,23 @@ public class BailNotificationGeneratorConfiguration {
                     notificationSender,
                     notificationIdAppender
             )
+        );
+    }
+
+    @Bean("uploadSummaryNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSummaryNotificationGenerator(
+            LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
+            AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
+            NotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(legalRepresentativeBailSummaryUploadedPersonalisation,
+                                adminOfficerBailSummaryUploadedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 }

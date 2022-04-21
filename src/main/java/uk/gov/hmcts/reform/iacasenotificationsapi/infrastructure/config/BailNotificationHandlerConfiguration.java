@@ -34,6 +34,21 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> uploadSummaryNotificationHandler(
+            @Qualifier("uploadSummaryNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+                (callbackStage, callback) -> {
+                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPLOAD_BAIL_SUMMARY
+                    );
+                },
+                bailNotificationGenerators,
+                getErrorHandler()
+        );
+    }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
