@@ -12,20 +12,21 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
 public class AdminOfficerBailSummaryUploadedPersonalisation implements BailEmailNotificationPersonalisation {
 
     private final String bailSummaryUploadedAdminOfficerTemplateId;
-    private final String uploadSummaryAdminOfficerEmailAddress;
+    private final EmailAddressFinder emailAddressFinder;
 
     public AdminOfficerBailSummaryUploadedPersonalisation(
             @NotNull(message = "bailSummaryUploadedAdminOfficerTemplateId cannot be null")
             @Value("${govnotify.template.bail.uploadBailSummary.email}") String bailSummaryUploadedAdminOfficerTemplateId,
-            @Value("${uploadSummaryAdminOfficerEmailAddress}") String uploadSummaryAdminOfficerEmailAddress
+            EmailAddressFinder emailAddressFinder
     ) {
         this.bailSummaryUploadedAdminOfficerTemplateId = bailSummaryUploadedAdminOfficerTemplateId;
-        this.uploadSummaryAdminOfficerEmailAddress = uploadSummaryAdminOfficerEmailAddress;
+        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class AdminOfficerBailSummaryUploadedPersonalisation implements BailEmail
 
     @Override
     public Set<String> getRecipientsList(BailCase bailCase) {
-        return Collections.singleton(uploadSummaryAdminOfficerEmailAddress);
+        return Collections.singleton(emailAddressFinder.getBailHearingCentreEmailAddress(bailCase));
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -28,13 +29,14 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
-    private String adminOfficeEmailAddress = "admin-officer@example.com";
     private String bailReferenceNumber = "someReferenceNumber";
     private String legalRepReference = "someLegalRepReference";
     private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
 
+    @Mock
+    private EmailAddressFinder emailAddressFinder;
     private AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation;
 
     @BeforeEach
@@ -48,7 +50,7 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
 
         adminOfficerBailSummaryUploadedPersonalisation = new AdminOfficerBailSummaryUploadedPersonalisation(
                 templateId,
-                adminOfficeEmailAddress
+                emailAddressFinder
         );
     }
 
@@ -64,9 +66,11 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_bail_case() {
+    public void should_return_given_email_address_for_hearing_centre() {
+        String hearingCentreEmail = "someHearingCentre@example.com";
+        when(emailAddressFinder.getBailHearingCentreEmailAddress(bailCase)).thenReturn(hearingCentreEmail);
         assertTrue(adminOfficerBailSummaryUploadedPersonalisation.getRecipientsList(bailCase)
-                .contains(adminOfficeEmailAddress));
+                .contains(hearingCentreEmail));
     }
 
     @Test
