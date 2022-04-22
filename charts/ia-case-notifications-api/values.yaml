@@ -68,3 +68,11 @@ java:
         - ctsc-email
         - payment-exceptions-admin-officer-email
         - launch-darkly-sdk-key
+        - bail-hearing-centre-bradford-email
+        - bail-hearing-centre-birmingham-email
+        - bail-hearing-centre-newport-email
+        - bail-hearing-centre-taylor-house-email
+        - bail-hearing-centre-hatton-cross-email
+        - bail-hearing-centre-manchester-email
+        - bail-hearing-centre-glasgow-email
+        - bail-hearing-centre-yarlswood-email
