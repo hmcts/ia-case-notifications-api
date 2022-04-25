@@ -78,4 +78,21 @@ public class BailNotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("submitApplicationWithoutLegalRepNotificationGenerator")
+    public List<BailNotificationGenerator> submitApplicationWithoutLegalRepNotificationGenerator(
+        HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation,
+        HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailEmailNotificationGenerator(
+                newArrayList(hearingCentreSubmitApplicationPersonalisation,
+                    homeOfficeBailApplicationSubmittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -66,7 +66,7 @@ class LegalRepresentativeBailApplicationSubmittedPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
+    public void should_return_given_email_address_from_bail_case() {
         assertTrue(legalRepresentativeBailApplicationSubmittedPersonalisation.getRecipientsList(bailCase)
             .contains(legalRepEmailAddress));
     }

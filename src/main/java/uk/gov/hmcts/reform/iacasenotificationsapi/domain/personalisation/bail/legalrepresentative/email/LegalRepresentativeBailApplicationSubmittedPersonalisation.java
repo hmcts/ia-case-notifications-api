@@ -19,7 +19,7 @@ public class LegalRepresentativeBailApplicationSubmittedPersonalisation implemen
 
     public LegalRepresentativeBailApplicationSubmittedPersonalisation(
         @NotNull(message = "bailApplicationSubmittedLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.template.bail.submitApplication.email}") String bailApplicationSubmittedLegalRepresentativeTemplateId
+        @Value("${govnotify.template.bail.submitApplication.withLegalRep.email}") String bailApplicationSubmittedLegalRepresentativeTemplateId
     ) {
         this.bailApplicationSubmittedLegalRepresentativeTemplateId = bailApplicationSubmittedLegalRepresentativeTemplateId;
     }

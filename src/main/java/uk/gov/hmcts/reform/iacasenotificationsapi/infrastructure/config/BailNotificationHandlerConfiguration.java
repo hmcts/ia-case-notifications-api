@@ -22,17 +22,36 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificatio
 @Configuration
 public class BailNotificationHandlerConfiguration {
     @Bean
+    public PreSubmitCallbackHandler<BailCase> submitApplicationWithLegalRepNotificationHandler(
+        @Qualifier("submitApplicationWithLegalRepNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     public PreSubmitCallbackHandler<BailCase> submitApplicationHearingCentreNotificationHandler(
         @Qualifier("submitApplicationNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
                     return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.SUBMIT_APPLICATION
-                    );
+                        && isLegallyRepresented(bailCase));
                 },
                 bailNotificationGenerators,
                 getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> submitApplicationWithoutLegalRepNotificationHandler(
+        @Qualifier("submitApplicationWithoutLegalRepNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                BailCase bailCase = callback.getCaseDetails().getCaseData();
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPLICATION
+                        && !isLegallyRepresented(bailCase));
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
         );
     }
 

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_LEGALLY_REPRESENTED_FOR_FLAG;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -11,22 +12,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
 
 @Service
 public class HomeOfficeBailApplicationSubmittedPersonalisation implements BailEmailNotificationPersonalisation {
 
-    private final String homeOfficeBailApplicationSubmittedPersonalisationTemplateId;
-    private final String alarAppealsBailTeamHomeOfficeEmailAddress;
+    private final String homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId;
+    private final String homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId;
+    private final String bailHomeOfficeEmailAddress;
 
 
     public HomeOfficeBailApplicationSubmittedPersonalisation(
         @NotNull(message = "homeOfficeBailApplicationSubmittedPersonalisationTemplateId cannot be null")
-        @Value("${govnotify.template.bail.submitApplication.email}") String homeOfficeBailApplicationSubmittedPersonalisationTemplateId,
-        @Value("${alarAppealsBailTeamHomeOfficeEmailAddress}") String alarAppealsBailTeamHomeOfficeEmailAddress
+        @Value("${govnotify.template.bail.submitApplication.withLegalRep.email}") String homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId,
+        @Value("${govnotify.template.bail.submitApplication.withoutLegalRep.email}") String homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId,
+        @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
-        this.homeOfficeBailApplicationSubmittedPersonalisationTemplateId = homeOfficeBailApplicationSubmittedPersonalisationTemplateId;
-        this.alarAppealsBailTeamHomeOfficeEmailAddress = alarAppealsBailTeamHomeOfficeEmailAddress;
+        this.homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId;
+        this.homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId;
+        this.bailHomeOfficeEmailAddress = bailHomeOfficeEmailAddress;
     }
 
     @Override
@@ -35,20 +40,20 @@ public class HomeOfficeBailApplicationSubmittedPersonalisation implements BailEm
     }
 
     @Override
-    public String getTemplateId() {
-        return homeOfficeBailApplicationSubmittedPersonalisationTemplateId;
+    public String getTemplateId(BailCase bailCase) {
+        return  bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES ?
+            homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId : homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId;
     }
-
-
 
     @Override
     public Set<String> getRecipientsList(BailCase bailCase) {
-        return Collections.singleton(alarAppealsBailTeamHomeOfficeEmailAddress);
+        return Collections.singleton(bailHomeOfficeEmailAddress);
     }
 
     @Override
     public Map<String, String> getPersonalisation(BailCase bailCase) {
         requireNonNull(bailCase, "bailCase must not be null");
+
         return ImmutableMap
             .<String, String>builder()
             .put("bailReferenceNumber", bailCase.read(BailCaseFieldDefinition.BAIL_REFERENCE_NUMBER, String.class).orElse(""))
