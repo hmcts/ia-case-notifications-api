@@ -12,6 +12,7 @@
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
           "bailHearingCentre": "newport",
+          "isLegallyRepresentedForFlag": "Yes",
           "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
           "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
           "currentCaseStateVisibleToAdminOfficer": "bailSummaryUploaded",
@@ -27,6 +28,7 @@
       "template": "minimal-bail-application-submitted.json",
       "replacements": {
         "bailHearingCentre": "newport",
+        "isLegallyRepresentedForFlag": "Yes",
         "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
         "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
         "currentCaseStateVisibleToAdminOfficer": "bailSummaryUploaded",

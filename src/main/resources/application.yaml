@@ -784,6 +784,8 @@ govnotify:
         email: e30259e0-215c-4c0a-bc0e-c20c6018dd99
       uploadBailSummary:
         email: 9c5f2167-ab24-470a-a4b9-4ac8b7206a31
+      uploadBailSummaryWithoutLR:
+        email: a27e825f-8c34-45d1-a42a-e9d5a837e7c1
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -1047,7 +1049,6 @@ upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
-uploadSummaryAdminOfficerEmailAddress: ${IA_BAIL_ADMIN_UPLOAD_SUMMARY_EMAIL:ao-upload-summary@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}
