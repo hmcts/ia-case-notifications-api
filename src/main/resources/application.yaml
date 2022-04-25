@@ -779,6 +779,8 @@ govnotify:
     bail:
       submitAplication:
         email: 041a83e1-bd1a-49e0-9154-7394cd739263
+      submitAplicationWithoutLR:
+        email: e30259e0-215c-4c0a-bc0e-c20c6018dd99
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
