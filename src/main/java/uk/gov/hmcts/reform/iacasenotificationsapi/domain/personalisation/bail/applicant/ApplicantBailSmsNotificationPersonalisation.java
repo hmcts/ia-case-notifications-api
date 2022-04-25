@@ -1,13 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.Collections;
 import java.util.Set;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailSmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public interface ApplicantBailSmsNotificationPersonalisation extends BailSmsNotificationPersonalisation {
 
