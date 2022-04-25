@@ -43,15 +43,15 @@ public class BailNotificationGeneratorConfiguration {
 
     @Bean("uploadSummaryNotificationGenerator")
     public List<BailNotificationGenerator> uploadSummaryNotificationGenerator(
-            LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
             AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
+            LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
             NotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new BailEmailNotificationGenerator(
-                        newArrayList(legalRepresentativeBailSummaryUploadedPersonalisation,
-                                adminOfficerBailSummaryUploadedPersonalisation),
+                        newArrayList(adminOfficerBailSummaryUploadedPersonalisation,
+                                legalRepresentativeBailSummaryUploadedPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
