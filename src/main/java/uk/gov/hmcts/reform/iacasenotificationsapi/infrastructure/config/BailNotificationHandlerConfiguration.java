@@ -23,16 +23,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificatio
 public class BailNotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<BailCase> submitApplicationWithLegalRepNotificationHandler(
-        @Qualifier("submitApplicationWithLegalRepNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
-    public PreSubmitCallbackHandler<BailCase> submitApplicationHearingCentreNotificationHandler(
         @Qualifier("submitApplicationNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
-                    BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == Event.SUBMIT_APPLICATION
-                        && isLegallyRepresented(bailCase));
+                    boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                                 && callback.getEvent() == Event.SUBMIT_APPLICATION);
+                    if (isAllowedBailCase) {
+                        BailCase bailCase = callback.getCaseDetails().getCaseData();
+                        return (callback.getEvent() == Event.SUBMIT_APPLICATION
+                                && isLegallyRepresented(bailCase));
+                    } else {
+                        return false;
+                    }
                 },
                 bailNotificationGenerators,
                 getErrorHandler()
@@ -45,10 +48,15 @@ public class BailNotificationHandlerConfiguration {
     ) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
-                BailCase bailCase = callback.getCaseDetails().getCaseData();
-                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == Event.SUBMIT_APPLICATION
-                        && !isLegallyRepresented(bailCase));
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                             && callback.getEvent() == Event.SUBMIT_APPLICATION);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return (callback.getEvent() == Event.SUBMIT_APPLICATION
+                            && !isLegallyRepresented(bailCase));
+                } else {
+                    return false;
+                }
             },
             bailNotificationGenerators,
             getErrorHandler()
