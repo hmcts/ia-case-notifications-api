@@ -782,6 +782,10 @@ govnotify:
         sms: 34512e35-9bf4-42eb-af30-5338e22563b2
       submitAplicationWithoutLR:
         email: e30259e0-215c-4c0a-bc0e-c20c6018dd99
+      uploadBailSummary:
+        email: 9c5f2167-ab24-470a-a4b9-4ac8b7206a31
+      uploadBailSummaryWithoutLR:
+        email: a27e825f-8c34-45d1-a42a-e9d5a837e7c1
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -937,6 +941,7 @@ security:
       - "applyForFTPARespondent"
       - "makeAnApplication"
       - "submitApplication"
+      - "uploadBailSummary"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"

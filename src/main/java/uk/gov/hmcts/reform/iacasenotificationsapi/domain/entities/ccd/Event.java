@@ -84,6 +84,7 @@ public enum Event {
     RECORD_OUT_OF_TIME_DECISION("recordOutOfTimeDecision"),
     EDIT_PAYMENT_METHOD("editPaymentMethod"),
     SUBMIT_APPLICATION("submitApplication"),
+    UPLOAD_BAIL_SUMMARY("uploadBailSummary"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

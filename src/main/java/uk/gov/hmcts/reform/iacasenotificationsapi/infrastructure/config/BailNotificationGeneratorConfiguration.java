@@ -7,9 +7,14 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailSummaryUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationIdAppender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailSmsNotificationGenerator;
 
 @Configuration
 public class BailNotificationGeneratorConfiguration {
@@ -33,6 +38,38 @@ public class BailNotificationGeneratorConfiguration {
                     notificationSender,
                     notificationIdAppender
             )
+        );
+    }
+
+    @Bean("uploadSummaryNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSummaryNotificationGenerator(
+            AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
+            LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
+            NotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(adminOfficerBailSummaryUploadedPersonalisation,
+                                legalRepresentativeBailSummaryUploadedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadSummaryWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSummaryWithoutLrNotificationGenerator(
+            AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
+            NotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(adminOfficerBailSummaryUploadedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 }

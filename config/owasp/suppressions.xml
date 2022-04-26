@@ -33,11 +33,4 @@
         <cve>CVE-2016-1000027</cve>
         <cve>CVE-2022-22968</cve>
     </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-core-5.3.15.jar
-   ]]></notes>
-        <sha1>e813c2311465672d3089fc7be8dbbadb04e64d6b</sha1>
-        <cve>CVE-2022-22968</cve>
-    </suppress>
 </suppressions>
