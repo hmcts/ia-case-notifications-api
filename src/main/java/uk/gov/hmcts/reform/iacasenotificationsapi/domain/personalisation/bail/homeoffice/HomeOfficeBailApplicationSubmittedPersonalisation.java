@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_LEGALLY_REPRESENTED_FOR_FLAG;
@@ -18,19 +18,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEma
 @Service
 public class HomeOfficeBailApplicationSubmittedPersonalisation implements BailEmailNotificationPersonalisation {
 
-    private final String homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId;
-    private final String homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId;
+    private final String homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId;
+    private final String homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId;
     private final String bailHomeOfficeEmailAddress;
 
 
     public HomeOfficeBailApplicationSubmittedPersonalisation(
         @NotNull(message = "homeOfficeBailApplicationSubmittedPersonalisationTemplateId cannot be null")
-        @Value("${govnotify.template.bail.submitApplication.withLegalRep.email}") String homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId,
-        @Value("${govnotify.template.bail.submitApplication.withoutLegalRep.email}") String homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId,
+        @Value("${govnotify.template.bail.submitApplication.email}") String homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.template.bail.submitApplicationWithoutLR.email}") String homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId,
         @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
-        this.homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId;
-        this.homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId;
+        this.homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId;
+        this.homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId;
         this.bailHomeOfficeEmailAddress = bailHomeOfficeEmailAddress;
     }
 
@@ -41,8 +41,8 @@ public class HomeOfficeBailApplicationSubmittedPersonalisation implements BailEm
 
     @Override
     public String getTemplateId(BailCase bailCase) {
-        return  bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES ?
-            homeOfficeBailApplicationSubmittedWithLRPersonalisationTemplateId : homeOfficeBailApplicationSubmittedWithoutLRPersonalisationTemplateId;
+        return  bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+            ? homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId : homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId;
     }
 
     @Override

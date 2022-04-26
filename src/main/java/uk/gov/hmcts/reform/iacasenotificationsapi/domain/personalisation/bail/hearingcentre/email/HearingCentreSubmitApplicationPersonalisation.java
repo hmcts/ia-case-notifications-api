@@ -23,8 +23,8 @@ public class HearingCentreSubmitApplicationPersonalisation implements BailEmailN
     private final EmailAddressFinder emailAddressFinder;
 
     public HearingCentreSubmitApplicationPersonalisation(
-        @Value("${govnotify.template.bail.submitAplication.email}") String hearingCentreTemplateId,
-        @Value("${govnotify.template.bail.submitAplicationWithoutLR.email}") String hearingCentreWithoutLrTemplateId,
+        @Value("${govnotify.template.bail.submitApplication.email}") String hearingCentreTemplateId,
+        @Value("${govnotify.template.bail.submitApplicationWithoutLR.email}") String hearingCentreWithoutLrTemplateId,
         EmailAddressFinder emailAddressFinder) {
         this.hearingCentreTemplateId = hearingCentreTemplateId;
         this.hearingCentreWithoutLrTemplateId = hearingCentreWithoutLrTemplateId;

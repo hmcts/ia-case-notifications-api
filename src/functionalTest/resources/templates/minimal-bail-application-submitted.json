@@ -12,12 +12,6 @@
   "applicantFullName": "John Smith",
   "detentionFacility": "Channings Wood",
   "legalRepReference": "123654LR",
-  "notificationsSent": [
-    {
-      "id": "1650622120615101_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
-      "value": "4497c9cc-426e-4268-97e8-1883b4f4d4f6"
-    }
-  ],
   "applicantHasMobile": "No",
   "applicantFamilyName": "Smith",
   "applicantGivenNames": "John",

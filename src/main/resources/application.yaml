@@ -780,7 +780,7 @@ govnotify:
       submitApplication:
         email: 041a83e1-bd1a-49e0-9154-7394cd739263
         sms: 34512e35-9bf4-42eb-af30-5338e22563b2
-      submitAplicationWithoutLR:
+      submitApplicationWithoutLR:
         email: e30259e0-215c-4c0a-bc0e-c20c6018dd99
       uploadBailSummary:
         email: 9c5f2167-ab24-470a-a4b9-4ac8b7206a31
@@ -1049,7 +1049,7 @@ upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
-alarAppealsBailTeamHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALAR_BAIL_EMAIL:ho-alar-bail@example.com}
+bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}

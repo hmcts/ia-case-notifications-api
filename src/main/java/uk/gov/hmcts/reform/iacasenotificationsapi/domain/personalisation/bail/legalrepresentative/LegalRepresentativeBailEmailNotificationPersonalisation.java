@@ -10,7 +10,7 @@ public interface LegalRepresentativeBailEmailNotificationPersonalisation extends
 
     @Override
     default Set<String> getRecipientsList(BailCase bailCase) {
-            return Collections.singleton(bailCase
+        return Collections.singleton(bailCase
                 .read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)
                 .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")));
     }

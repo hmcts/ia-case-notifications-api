@@ -1,5 +1,5 @@
 {
-  "description": "RIA-5584 send bail application submitted notification to newport hearing centre",
+  "description": "RIA-5584 RIA-5454 send bail application submitted notification to newport hearing centre, HO and LR",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
@@ -27,6 +27,14 @@
           {
             "id": "2001_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2001_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2001_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
@@ -35,6 +43,26 @@
       {
         "reference": "2001_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
         "recipient": "{bailHearingCentreEmailAddresses.newport}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "2001_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+        "recipient": "{bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "2001_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+        "recipient": "ia-law-firm-org-sc@fake.hmcts.net",
         "subject": "Bail application: Application submitted",
         "body": [
           "1650-6221-2061-5101",

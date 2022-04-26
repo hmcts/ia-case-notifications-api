@@ -74,4 +74,5 @@ spring:
         bail-hearing-centre-manchester-email: IA_BAIL_HEARING_CENTRE_MANCHESTER_EMAIL
         bail-hearing-centre-glasgow-email: IA_BAIL_HEARING_CENTRE_GLASGOW_EMAIL
         bail-hearing-centre-yarlswood-email: IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL
+        bail-home-office-email: IA_BAIL_HOME_OFFICE_EMAIL
         bail-test-applicant-mobile: IA_TEST_APPLICANT_MOBILE
