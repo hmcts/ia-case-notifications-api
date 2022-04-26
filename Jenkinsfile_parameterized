@@ -112,7 +112,9 @@ def secrets = [
     secret('bail-hearing-centre-hatton-cross-email', 'IA_BAIL_HEARING_CENTRE_HATTON_CROSS_EMAIL'),
     secret('bail-hearing-centre-manchester-email', 'IA_BAIL_HEARING_CENTRE_MANCHESTER_EMAIL'),
     secret('bail-hearing-centre-glasgow-email', 'IA_BAIL_HEARING_CENTRE_GLASGOW_EMAIL'),
-    secret('bail-hearing-centre-yarlswood-email', 'IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL')
+    secret('bail-hearing-centre-yarlswood-email', 'IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL'),
+
+    secret('bail-test-applicant-mobile', 'IA_TEST_APPLICANT_MOBILE')
     ]
 ]
 

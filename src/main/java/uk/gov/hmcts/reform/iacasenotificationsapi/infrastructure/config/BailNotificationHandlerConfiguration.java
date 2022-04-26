@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificatio
 public class BailNotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<BailCase> submitApplicationHearingCentreNotificationHandler(
-        @Qualifier("submitApplicationHearingCentreNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("submitApplicationNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
