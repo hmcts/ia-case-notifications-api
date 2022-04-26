@@ -83,6 +83,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> submitApplicationWithoutLegalRepNotificationGenerator(
         HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation,
         HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
+        ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
         NotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 

@@ -16,7 +16,7 @@ public class ApplicantBailApplicationSubmittedPersonalisationSms implements Appl
     private final String applicationSubmittedApplicantSmsTemplateId;
 
     public ApplicantBailApplicationSubmittedPersonalisationSms(
-            @Value("${govnotify.template.bail.submitAplication.sms}") String applicationSubmittedApplicantSmsTemplateId) {
+            @Value("${govnotify.template.bail.submitApplication.sms}") String applicationSubmittedApplicantSmsTemplateId) {
         this.applicationSubmittedApplicantSmsTemplateId = applicationSubmittedApplicantSmsTemplateId;
     }
 
