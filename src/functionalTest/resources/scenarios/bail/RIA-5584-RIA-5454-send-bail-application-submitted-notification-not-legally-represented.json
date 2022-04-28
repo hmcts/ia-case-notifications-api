@@ -38,7 +38,7 @@
     "notifications": [
       {
         "reference": "2002_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
-        "recipient": "{bailHearingCentreEmailAddresses.birmingham}",
+        "recipient": "{$bailHearingCentreEmailAddresses.birmingham}",
         "subject": "Bail application: Application submitted",
         "body": [
           "1650-9687-2604-3754",
@@ -48,7 +48,7 @@
       },
       {
         "reference": "2002_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
-        "recipient": "{bailHomeOfficeEmailAddress}",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application submitted",
         "body": [
           "1650-9687-2604-3754",

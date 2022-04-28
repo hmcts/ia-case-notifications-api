@@ -42,7 +42,7 @@
     "notifications": [
       {
         "reference": "2001_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
-        "recipient": "{bailHearingCentreEmailAddresses.newport}",
+        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Application submitted",
         "body": [
           "1650-6221-2061-5101",
@@ -52,7 +52,7 @@
       },
       {
         "reference": "2001_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
-        "recipient": "{bailHomeOfficeEmailAddress}",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application submitted",
         "body": [
           "1650-6221-2061-5101",
@@ -62,7 +62,7 @@
       },
       {
         "reference": "2001_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
-        "recipient": "ia-law-firm-org-sc@fake.hmcts.net",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Application submitted",
         "body": [
           "1650-6221-2061-5101",
