@@ -38,12 +38,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServic
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 
 @Slf4j
 @SuppressWarnings("unchecked")
