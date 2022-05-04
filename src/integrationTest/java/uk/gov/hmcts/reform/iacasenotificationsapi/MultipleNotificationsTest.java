@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyMap;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
@@ -39,6 +40,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.CcdEventAuthorizor;
 
 @Slf4j
@@ -94,7 +96,7 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
         List<IdValue<String>> existingNotifications =
             Lists.newArrayList(new IdValue<>(existingReference, notificationId));
 
-        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString())).thenReturn(notificationId);
+        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(CaseType.class))).thenReturn(notificationId);
 
         Direction direction = createExistingDirection(eventWithSuffixPair.getKey());
 

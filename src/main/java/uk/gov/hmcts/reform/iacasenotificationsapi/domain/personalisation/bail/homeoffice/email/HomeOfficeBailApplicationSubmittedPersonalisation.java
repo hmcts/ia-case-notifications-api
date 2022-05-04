@@ -25,8 +25,8 @@ public class HomeOfficeBailApplicationSubmittedPersonalisation implements BailEm
 
     public HomeOfficeBailApplicationSubmittedPersonalisation(
         @NotNull(message = "homeOfficeBailApplicationSubmittedPersonalisationTemplateId cannot be null")
-        @Value("${govnotify.template.bail.submitApplication.email}") String homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId,
-        @Value("${govnotify.template.bail.submitApplicationWithoutLR.email}") String homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.submitApplication.email}") String homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.submitApplicationWithoutLR.email}") String homeOfficeBailApplicationSubmittedWithoutLegalRepPersonalisationTemplateId,
         @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
         this.homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId = homeOfficeBailApplicationSubmittedWithLegalRepPersonalisationTemplateId;

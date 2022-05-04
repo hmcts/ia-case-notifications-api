@@ -18,7 +18,7 @@ public class LegalRepresentativeBailSummaryUploadedPersonalisation implements Le
 
     public LegalRepresentativeBailSummaryUploadedPersonalisation(
             @NotNull(message = "bailApplicationSubmittedLegalRepresentativeTemplateId cannot be null")
-            @Value("${govnotify.template.bail.uploadBailSummary.email}") String bailSummaryUploadedLegalRepresentativeTemplateId
+            @Value("${govnotify.bail.template.uploadBailSummary.email}") String bailSummaryUploadedLegalRepresentativeTemplateId
     ) {
         this.bailSummaryUploadedLegalRepresentativeTemplateId = bailSummaryUploadedLegalRepresentativeTemplateId;
     }

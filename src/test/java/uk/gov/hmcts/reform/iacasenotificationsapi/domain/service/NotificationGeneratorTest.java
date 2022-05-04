@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 
@@ -76,6 +77,8 @@ public class NotificationGeneratorTest {
     private Map<String, String> personalizationMap1 = emptyMap();
     private Map<String, String> personalizationMap2 = emptyMap();
 
+    private CaseType caseType1 = CaseType.ASYLUM_CASE;
+
     private List<IdValue<String>> notificationsSent = newArrayList();
 
     private String notificationId1 = "notificationId1";
@@ -98,9 +101,9 @@ public class NotificationGeneratorTest {
         when(emailNotificationPersonalisation.getPersonalisation(callback)).thenReturn(personalizationMap1);
         when(emailNotificationPersonalisation1.getPersonalisation(callback)).thenReturn(personalizationMap2);
 
-        when(notificationSender.sendEmail(templateId1, emailAddress1, personalizationMap1, refId1))
+        when(notificationSender.sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1))
             .thenReturn(notificationId1);
-        when(notificationSender.sendEmail(templateId2, emailAddress2, personalizationMap2, refId2))
+        when(notificationSender.sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1))
             .thenReturn(notificationId2);
 
         when(smsNotificationPersonalisation1.getReferenceId(caseId)).thenReturn(refId1);
@@ -112,9 +115,9 @@ public class NotificationGeneratorTest {
         when(smsNotificationPersonalisation1.getPersonalisation(callback)).thenReturn(personalizationMap1);
         when(smsNotificationPersonalisation2.getPersonalisation(callback)).thenReturn(personalizationMap2);
 
-        when(notificationSender.sendSms(templateId1, phoneNumber1, personalizationMap1, refId1))
+        when(notificationSender.sendSms(templateId1, phoneNumber1, personalizationMap1, refId1, caseType1))
             .thenReturn(notificationId1);
-        when(notificationSender.sendSms(templateId2, phoneNumber2, personalizationMap2, refId2))
+        when(notificationSender.sendSms(templateId2, phoneNumber2, personalizationMap2, refId2, caseType1))
             .thenReturn(notificationId2);
 
         when(notificationIdAppender.append(notificationsSent, refId1, notificationId1)).thenReturn(notificationsSent);
@@ -140,8 +143,8 @@ public class NotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
-        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
+        verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1);
+        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1);
 
         verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
@@ -162,8 +165,8 @@ public class NotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
-        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
+        verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1);
+        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1);
 
         verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
@@ -183,8 +186,8 @@ public class NotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1);
-        verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2);
+        verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1, caseType1);
+        verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2, caseType1);
 
         verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);

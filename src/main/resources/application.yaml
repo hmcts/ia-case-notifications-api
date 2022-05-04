@@ -776,16 +776,19 @@ govnotify:
     amendRespondentEvidenceDirection:
       legalRep:
         email: 66a5e934-5875-4e60-a343-356916a112c7
-    bail:
+  bail:
+    key: ${IA_BAIL_GOV_NOTIFY_KEY}
+    timeout: 5000
+    template:
       submitApplication:
-        email: 041a83e1-bd1a-49e0-9154-7394cd739263
-        sms: 34512e35-9bf4-42eb-af30-5338e22563b2
+        email: 5f30774f-00fb-4c03-b010-e5a8afaa5f05
+        sms: 64ac7c79-682f-4bd7-9847-bfd21240e8c6
       submitApplicationWithoutLR:
-        email: e30259e0-215c-4c0a-bc0e-c20c6018dd99
+        email: 4888954b-446a-4e84-95cf-58340a66550b
       uploadBailSummary:
-        email: 9c5f2167-ab24-470a-a4b9-4ac8b7206a31
+        email: 1e852128-33e5-41d8-a788-ee6a3281c337
       uploadBailSummaryWithoutLR:
-        email: a27e825f-8c34-45d1-a42a-e9d5a837e7c1
+        email: 68153bee-1adc-4a78-83bc-c49d42394617
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60

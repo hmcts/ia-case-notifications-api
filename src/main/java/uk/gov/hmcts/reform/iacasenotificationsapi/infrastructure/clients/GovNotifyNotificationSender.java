@@ -6,9 +6,12 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
@@ -21,21 +24,28 @@ public class GovNotifyNotificationSender implements NotificationSender {
     private final int deduplicateSendsWithinSeconds;
     private final RetryableNotificationClient notificationClient;
 
+    @Autowired
+    @Qualifier("BailClient")
+    private final RetryableNotificationClient notificationBailClient;
+
     private Cache<String, String> recentDeliveryReceiptCache;
 
     public GovNotifyNotificationSender(
         @Value("${notificationSender.deduplicateSendsWithinSeconds}") int deduplicateSendsWithinSeconds,
-        RetryableNotificationClient notificationClient
+        RetryableNotificationClient notificationClient,
+        RetryableNotificationClient notificationBailClient
     ) {
         this.deduplicateSendsWithinSeconds = deduplicateSendsWithinSeconds;
         this.notificationClient = notificationClient;
+        this.notificationBailClient = notificationBailClient;
     }
 
     public synchronized String sendEmail(
         String templateId,
         String emailAddress,
         Map<String, String> personalisation,
-        String reference
+        String reference,
+        CaseType caseType
     ) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
         return recentDeliveryReceiptCache.get(
@@ -46,13 +56,18 @@ public class GovNotifyNotificationSender implements NotificationSender {
 
                     LOG.info("Attempting to send email notification to GovNotify: {}", reference);
 
-                    SendEmailResponse response =
-                        notificationClient
-                            .sendEmail(
+                    SendEmailResponse response = CaseType.ASYLUM_CASE == caseType
+                            ?
+                            notificationClient.sendEmail(
                                 templateId,
                                 emailAddress,
                                 personalisation,
                                 reference
+                            ) : notificationBailClient.sendEmail(
+                                    templateId,
+                                    emailAddress,
+                                    personalisation,
+                                    reference
                             );
 
                     String notificationId =
@@ -80,7 +95,8 @@ public class GovNotifyNotificationSender implements NotificationSender {
         final String templateId,
         final String phoneNumber,
         final Map<String, String> personalisation,
-        final String reference) {
+        final String reference,
+        CaseType caseType) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
         return recentDeliveryReceiptCache.get(
             phoneNumber + reference,
@@ -90,13 +106,18 @@ public class GovNotifyNotificationSender implements NotificationSender {
 
                     LOG.info("Attempting to send a text message notification to GovNotify: {}", reference);
 
-                    SendSmsResponse response =
-                        notificationClient
-                            .sendSms(
+                    SendSmsResponse response = CaseType.ASYLUM_CASE == caseType
+                            ?
+                            notificationClient.sendSms(
                                 templateId,
                                 phoneNumber,
                                 personalisation,
                                 reference
+                            ) : notificationBailClient.sendSms(
+                                    templateId,
+                                    phoneNumber,
+                                    personalisation,
+                                    reference
                             );
 
                     String notificationId =
