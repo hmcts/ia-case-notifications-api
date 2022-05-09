@@ -25,8 +25,8 @@ public class AdminOfficerBailSummaryUploadedPersonalisation implements BailEmail
 
     public AdminOfficerBailSummaryUploadedPersonalisation(
             @NotNull(message = "bailSummaryUploadedAdminOfficerTemplateId cannot be null")
-            @Value("${govnotify.template.bail.uploadBailSummary.email}") String bailSummaryUploadedAdminOfficerTemplateId,
-            @Value("${govnotify.template.bail.uploadBailSummaryWithoutLR.email}") String bailSummaryUploadedAdminOfficerWithoutLrTemplateId,
+            @Value("${govnotify.bail.template.uploadBailSummary.email}") String bailSummaryUploadedAdminOfficerTemplateId,
+            @Value("${govnotify.bail.template.uploadBailSummaryWithoutLR.email}") String bailSummaryUploadedAdminOfficerWithoutLrTemplateId,
             EmailAddressFinder emailAddressFinder
     ) {
         this.bailSummaryUploadedAdminOfficerTemplateId = bailSummaryUploadedAdminOfficerTemplateId;

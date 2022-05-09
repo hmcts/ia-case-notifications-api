@@ -19,6 +19,7 @@ java:
       secrets:
         - ia-ccd-frontend-url
         - ia-gov-notify-key
+        - ia-bail-gov-notify-key
         - hearing-centre-bradford-email
         - hearing-centre-manchester-email
         - hearing-centre-newport-email

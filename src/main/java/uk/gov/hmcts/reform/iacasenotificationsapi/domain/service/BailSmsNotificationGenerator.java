@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailSmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
@@ -75,7 +76,8 @@ public class BailSmsNotificationGenerator implements BailNotificationGenerator {
             smsTemplateId,
             mobileNumber,
             personalisation.getPersonalisation(callback),
-            referenceId
+            referenceId,
+            CaseType.BAIL_CASE
         );
     }
 }

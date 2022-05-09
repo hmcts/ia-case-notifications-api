@@ -5,6 +5,7 @@ spring:
       paths: /mnt/secrets/ia
       aliases:
         ia-gov-notify-key: IA_GOV_NOTIFY_KEY
+        ia-bail-gov-notify-key: IA_BAIL_GOV_NOTIFY_KEY
         hearing-centre-bradford-email: IA_HEARING_CENTRE_BRADFORD_EMAIL
         hearing-centre-manchester-email: IA_HEARING_CENTRE_MANCHESTER_EMAIL
         hearing-centre-newport-email: IA_HEARING_CENTRE_NEWPORT_EMAIL

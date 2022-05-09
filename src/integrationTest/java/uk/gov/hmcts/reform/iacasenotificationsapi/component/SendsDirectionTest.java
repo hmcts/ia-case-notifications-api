@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -37,6 +38,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServic
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
@@ -62,7 +64,7 @@ public class SendsDirectionTest extends SpringBootIntegrationTest implements Wit
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
 
-        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString()))
+        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(CaseType.class)))
             .thenReturn(someNotificationId);
 
         PreSubmitCallbackResponseForTest response = aboutToSubmit(callback()

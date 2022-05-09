@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Qualifier;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
@@ -30,6 +32,10 @@ public class GovNotifyNotificationSenderTest {
     private int deduplicateSendsWithinSeconds = 1;
     @Mock
     private RetryableNotificationClient notificationClient;
+
+    @Mock
+    @Qualifier("BailClient")
+    private RetryableNotificationClient notificationBailClient;
 
     private String templateId = "a-b-c-d-e-f";
     private String emailAddress = "recipient@example.com";
@@ -44,12 +50,13 @@ public class GovNotifyNotificationSenderTest {
         govNotifyNotificationSender =
             new GovNotifyNotificationSender(
                 deduplicateSendsWithinSeconds,
-                notificationClient
+                notificationClient,
+                notificationBailClient
             );
     }
 
     @Test
-    public void should_send_email_using_gov_notify() throws NotificationClientException {
+    public void should_send_email_using_appeal_gov_notify() throws NotificationClientException {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
@@ -69,8 +76,65 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
+
+        verify(notificationClient, times(1)).sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference
+        );
+
+        verify(notificationBailClient, times(0)).sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference
+        );
+
+        assertEquals(expectedNotificationId.toString(), actualNotificationId);
+    }
+
+    @Test
+    public void should_send_email_using_bail_gov_notify() throws NotificationClientException {
+
+        final UUID expectedNotificationId = UUID.randomUUID();
+
+        SendEmailResponse sendEmailResponse = mock(SendEmailResponse.class);
+
+        when(notificationBailClient.sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference
+        )).thenReturn(sendEmailResponse);
+
+        when(sendEmailResponse.getNotificationId()).thenReturn(expectedNotificationId);
+
+        String actualNotificationId =
+                govNotifyNotificationSender.sendEmail(
+                        templateId,
+                        emailAddress,
+                        personalisation,
+                        reference,
+                        CaseType.BAIL_CASE
+                );
+
+        verify(notificationClient, times(0)).sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference
+        );
+
+        verify(notificationBailClient, times(1)).sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference
+        );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);
     }
@@ -109,7 +173,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
 
         final String actualNotificationId2 =
@@ -117,7 +182,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
 
         final String actualNotificationIdForOther =
@@ -125,7 +191,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 otherEmailAddress,
                 personalisation,
-                otherReference
+                otherReference,
+                CaseType.ASYLUM_CASE
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -143,7 +210,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -164,7 +232,7 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void wrap_gov_notify_email_exceptions() throws NotificationClientException {
+    public void wrap_appeal_gov_notify_email_exceptions() throws NotificationClientException {
 
         NotificationClientException underlyingException = mock(NotificationClientException.class);
 
@@ -182,7 +250,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
             .hasMessage("Failed to send email using GovNotify")
@@ -190,8 +259,37 @@ public class GovNotifyNotificationSenderTest {
 
     }
 
+
     @Test
-    public void should_send_sms_using_gov_notify() throws NotificationClientException {
+    public void wrap_bail_gov_notify_email_exceptions() throws NotificationClientException {
+
+        NotificationClientException underlyingException = mock(NotificationClientException.class);
+
+        doThrow(underlyingException)
+            .when(notificationBailClient)
+            .sendEmail(
+                    templateId,
+                    emailAddress,
+                    personalisation,
+                    reference
+            );
+
+        assertThatThrownBy(() ->
+                govNotifyNotificationSender.sendEmail(
+                        templateId,
+                        emailAddress,
+                        personalisation,
+                        reference,
+                        CaseType.BAIL_CASE
+                )
+        ).isExactlyInstanceOf(NotificationServiceResponseException.class)
+                .hasMessage("Failed to send email using GovNotify")
+                .hasCause(underlyingException);
+
+    }
+
+    @Test
+    public void should_send_sms_using_appeal_gov_notify() throws NotificationClientException {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
@@ -211,8 +309,65 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
+
+        verify(notificationClient, times(1)).sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference
+        );
+
+        verify(notificationBailClient, times(0)).sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference
+        );
+
+        assertEquals(expectedNotificationId.toString(), actualNotificationId);
+    }
+
+    @Test
+    public void should_send_sms_using_bail_gov_notify() throws NotificationClientException {
+
+        final UUID expectedNotificationId = UUID.randomUUID();
+
+        SendSmsResponse sendSmsResponse = mock(SendSmsResponse.class);
+
+        when(notificationBailClient.sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference
+        )).thenReturn(sendSmsResponse);
+
+        when(sendSmsResponse.getNotificationId()).thenReturn(expectedNotificationId);
+
+        String actualNotificationId =
+                govNotifyNotificationSender.sendSms(
+                        templateId,
+                        phoneNumber,
+                        personalisation,
+                        reference,
+                        CaseType.BAIL_CASE
+                );
+
+        verify(notificationClient, times(0)).sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference
+        );
+
+        verify(notificationBailClient, times(1)).sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference
+        );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);
     }
@@ -251,7 +406,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
 
         final String actualNotificationId2 =
@@ -259,7 +415,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
 
         final String actualNotificationIdForOther =
@@ -267,7 +424,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 otherPhoneNumber,
                 personalisation,
-                otherReference
+                otherReference,
+                CaseType.ASYLUM_CASE
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -285,7 +443,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -306,7 +465,7 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void wrap_gov_notify_sms_exceptions() throws NotificationClientException {
+    public void wrap_appeal_gov_notify_sms_exceptions() throws NotificationClientException {
 
         NotificationClientException underlyingException = mock(NotificationClientException.class);
 
@@ -324,11 +483,40 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference
+                reference,
+                CaseType.ASYLUM_CASE
             )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
             .hasMessage("Failed to send sms using GovNotify")
             .hasCause(underlyingException);
+
+    }
+
+    @Test
+    public void wrap_bail_gov_notify_sms_exceptions() throws NotificationClientException {
+
+        NotificationClientException underlyingException = mock(NotificationClientException.class);
+
+        doThrow(underlyingException)
+            .when(notificationBailClient)
+            .sendSms(
+                    templateId,
+                    phoneNumber,
+                    personalisation,
+                    reference
+            );
+
+        assertThatThrownBy(() ->
+                govNotifyNotificationSender.sendSms(
+                        templateId,
+                        phoneNumber,
+                        personalisation,
+                        reference,
+                        CaseType.BAIL_CASE
+                )
+        ).isExactlyInstanceOf(NotificationServiceResponseException.class)
+                .hasMessage("Failed to send sms using GovNotify")
+                .hasCause(underlyingException);
 
     }
 
