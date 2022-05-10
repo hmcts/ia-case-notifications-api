@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailApplicationSubmittedPersonalisation;
@@ -88,7 +89,7 @@ public class BailNotificationGeneratorConfiguration {
     }
 
     @Bean("uploadSummaryWithoutLrNotificationGenerator")
-    public List<BailNotificationGenerator> uploadSummaryWithoutLrNotificationGenerator(
+    public List<BailNotificationGenerator> uploadSignedDecisionNoticeNotificationGenerator(
             AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
             NotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {
@@ -99,6 +100,36 @@ public class BailNotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("uploadSignedDecisionNoticeBailGrantedNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSignedDecisionNoticeBailGrantedNotificationGenerator(
+        ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailSmsNotificationGenerator(
+                newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("uploadSignedDecisionNoticeBailRefusedNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSignedDecisionNoticeBailRefusedNotificationGenerator(
+        ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailSmsNotificationGenerator(
+                newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }

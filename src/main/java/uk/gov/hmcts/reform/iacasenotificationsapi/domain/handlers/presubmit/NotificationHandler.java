@@ -41,7 +41,9 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
     public boolean canHandle(PreSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-        if (callback.getEvent() == Event.SUBMIT_APPLICATION || callback.getEvent() == Event.UPLOAD_BAIL_SUMMARY) {
+        if (callback.getEvent() == Event.SUBMIT_APPLICATION ||
+            callback.getEvent() == Event.UPLOAD_BAIL_SUMMARY ||
+            callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE) {
             return false;
         }
         return canHandleFunction.test(callbackStage, callback);

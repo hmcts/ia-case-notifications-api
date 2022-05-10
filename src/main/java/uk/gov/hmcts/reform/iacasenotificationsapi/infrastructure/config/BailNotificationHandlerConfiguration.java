@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_LEGALLY_REPRESENTED_FOR_FLAG;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.SUBMIT_NOTIFICATION_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -106,6 +105,48 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> uploadSignedDecisionNoticeBailGrantedNotificationHandler(
+        @Qualifier("uploadSignedDecisionNoticeBailGrantedNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                             && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return (callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE
+                            && isBailGranted(bailCase));
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> uploadSignedDecisionNoticeBailRefusedNotificationHandler(
+        @Qualifier("uploadSignedDecisionNoticeBailRefusedNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                             && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return (callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE
+                            && !isBailGranted(bailCase));
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
@@ -118,6 +159,12 @@ public class BailNotificationHandlerConfiguration {
 
     private boolean isLegallyRepresented(BailCase bailCase) {
         return (bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO)) == YesOrNo.YES;
+    }
+
+    private boolean isBailGranted(BailCase bailCase) {
+        return bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant") ||
+               (bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES &&
+                bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("Granted"));
     }
 
 }
