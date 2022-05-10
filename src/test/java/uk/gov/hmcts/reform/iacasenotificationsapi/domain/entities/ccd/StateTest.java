@@ -36,10 +36,11 @@ public class StateTest {
         assertEquals("cmaAdjustmentsAgreed", State.CMA_ADJUSTMENTS_AGREED.toString());
         assertEquals("cmaListed", State.CMA_LISTED.toString());
         assertEquals("appealTakenOffline", State.APPEAL_TAKEN_OFFLINE.toString());
+        assertEquals("signedDecisionNoticeUploaded", State.SIGNED_DECISION_NOTICE_UPLOADED.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(30, State.values().length);
+        assertEquals(31, State.values().length);
     }
 }
