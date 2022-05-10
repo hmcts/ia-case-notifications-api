@@ -75,7 +75,4 @@ public class HearingCentreSubmitApplicationPersonalisation implements BailEmailN
         return hearingCentreValues.build();
     }
 
-    private boolean isLegallyRepresented(BailCase bailCase) {
-        return (bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO)) == YesOrNo.YES;
-    }
 }

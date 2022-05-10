@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_LEGALLY_REPRESENTED_FOR_FLAG;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -77,9 +75,5 @@ public class AdminOfficerBailSummaryUploadedPersonalisation implements BailEmail
                 .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
 
         return hearingCentreValues.build();
-    }
-
-    private boolean isLegallyRepresented(BailCase bailCase) {
-        return (bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO)) == YesOrNo.YES;
     }
 }
