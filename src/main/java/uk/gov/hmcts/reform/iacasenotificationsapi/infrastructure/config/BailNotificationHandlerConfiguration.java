@@ -203,12 +203,6 @@ public class BailNotificationHandlerConfiguration {
         return (bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO)) == YesOrNo.YES;
     }
 
-    private boolean isBailGranted(BailCase bailCase) {
-        return bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant") ||
-               (bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES &&
-                bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("Granted"));
-    }
-
 }
 
 

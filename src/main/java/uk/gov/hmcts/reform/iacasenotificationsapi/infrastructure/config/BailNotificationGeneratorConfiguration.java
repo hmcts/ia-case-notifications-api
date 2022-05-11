@@ -105,36 +105,6 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    //@Bean("uploadSignedDecisionNoticeBailGrantedNotificationGenerator")
-    //public List<BailNotificationGenerator> uploadSignedDecisionNoticeBailGrantedNotificationGenerator(
-    //    ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
-    //    NotificationSender notificationSender,
-    //    BailNotificationIdAppender notificationIdAppender) {
-    //
-    //    return Arrays.asList(
-    //        new BailSmsNotificationGenerator(
-    //            newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
-    //            notificationSender,
-    //            notificationIdAppender
-    //        )
-    //    );
-    //}
-    //
-    //@Bean("uploadSignedDecisionNoticeBailRefusedNotificationGenerator")
-    //public List<BailNotificationGenerator> uploadSignedDecisionNoticeBailRefusedNotificationGenerator(
-    //    ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
-    //    NotificationSender notificationSender,
-    //    BailNotificationIdAppender notificationIdAppender) {
-    //
-    //    return Arrays.asList(
-    //        new BailSmsNotificationGenerator(
-    //            newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
-    //            notificationSender,
-    //            notificationIdAppender
-    //        )
-    //    );
-    //}
-
     @Bean("uploadSignedDecisionNoticeNotificationGenerator")
     public List<BailNotificationGenerator> uploadSignedDecisionNoticeNotificationGenerator(
         ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,

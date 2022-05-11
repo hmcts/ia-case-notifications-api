@@ -794,6 +794,7 @@ govnotify:
       uploadSignedDecisionNoticeBailRefused:
         sms: c514487b-59fd-452b-a26d-0d13723eeb77
       uploadSignedDecisionNotice:
+        sms: 72389303-1c07-47df-905f-8366b69f3482
         email: 3e4d7195-2e48-4ca0-b88f-ac6969cf8a4b
       uploadSignedDecisionNoticeWithoutLR:
         email: ffaee311-d762-4937-a7c9-17e9f3706873
