@@ -91,7 +91,7 @@ public class BailNotificationGeneratorConfiguration {
     }
 
     @Bean("uploadSummaryWithoutLrNotificationGenerator")
-    public List<BailNotificationGenerator> uploadSignedDecisionNoticeNotificationGenerator(
+    public List<BailNotificationGenerator> uploadSummaryWithoutLrNotificationGenerator(
             AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
             NotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {

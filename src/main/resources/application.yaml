@@ -789,10 +789,6 @@ govnotify:
         email: 1e852128-33e5-41d8-a788-ee6a3281c337
       uploadBailSummaryWithoutLR:
         email: 68153bee-1adc-4a78-83bc-c49d42394617
-      uploadSignedDecisionNoticeBailGranted:
-        sms: 72389303-1c07-47df-905f-8366b69f3482
-      uploadSignedDecisionNoticeBailRefused:
-        sms: c514487b-59fd-452b-a26d-0d13723eeb77
       uploadSignedDecisionNotice:
         sms: 72389303-1c07-47df-905f-8366b69f3482
         email: 3e4d7195-2e48-4ca0-b88f-ac6969cf8a4b
