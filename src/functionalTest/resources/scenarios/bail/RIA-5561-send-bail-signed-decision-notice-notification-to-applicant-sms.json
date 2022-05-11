@@ -1,0 +1,29 @@
+{
+  "description": "RIA-5561 send bail signed decision notice notification SMS to applicant",
+  "launchDarklyKey": "tcw-notifications-feature:true",
+  "request": {
+    "uri": "/bail/ccdAboutToSubmit",
+    "credentials": "LegalRepresentative",
+    "input": {
+      "id": 5561,
+      "eventId": "uploadSignedDecisionNotice",
+      "state": "recordTheDecision",
+      "caseData": {
+        "template": "minimal-bail-record-the-decision.json",
+        "replacements": {
+          "bailHearingCentre": "newport",
+          "applicantHasMobile": "Yes",
+          "applicantMobileNumber": "{$IA_TEST_APPLICANT_MOBILE}"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "confirmation": {
+      "header": "success",
+      "body": "contains([_BAIL_SIGNED_DECISION_NOTICE_UPLOADED_APPLICANT_SMS])"
+    }
+  }
+}
