@@ -36,7 +36,6 @@ public enum State {
     DECISION("decision"),
     ENDED("ended"),
     APPEAL_TAKEN_OFFLINE("appealTakenOffline"),
-    SIGNED_DECISION_NOTICE_UPLOADED("signedDecisionNoticeUploaded"),
 
 
     @JsonEnumDefaultValue
