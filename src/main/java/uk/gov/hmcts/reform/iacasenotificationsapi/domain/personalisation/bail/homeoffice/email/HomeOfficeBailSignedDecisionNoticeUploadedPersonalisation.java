@@ -17,18 +17,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEma
 public class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation implements BailEmailNotificationPersonalisation {
 
     private final String homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId;
-    private final String homeOfficeBailSignedDecisionNoticeUploadedWithoutLRPersonalisationTemplateId;
+    private final String homeOfficeBailSignedDecisionNoticeUploadedWithoutLrPersonalisationTemplateId;
     private final String bailHomeOfficeEmailAddress;
 
 
     public HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation(
         @NotNull(message = "homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId cannot be null")
         @Value("${govnotify.bail.template.uploadSignedDecisionNotice.email}") String homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId,
-        @Value("${govnotify.bail.template.uploadSignedDecisionNoticeWithoutLR.email}") String homeOfficeBailSignedDecisionNoticeUploadedWithoutLRPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.uploadSignedDecisionNoticeWithoutLR.email}") String homeOfficeBailSignedDecisionNoticeUploadedWithoutLrPersonalisationTemplateId,
         @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
         this.homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId = homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId;
-        this.homeOfficeBailSignedDecisionNoticeUploadedWithoutLRPersonalisationTemplateId = homeOfficeBailSignedDecisionNoticeUploadedWithoutLRPersonalisationTemplateId;
+        this.homeOfficeBailSignedDecisionNoticeUploadedWithoutLrPersonalisationTemplateId = homeOfficeBailSignedDecisionNoticeUploadedWithoutLrPersonalisationTemplateId;
         this.bailHomeOfficeEmailAddress = bailHomeOfficeEmailAddress;
     }
 
@@ -39,9 +39,9 @@ public class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation implement
 
     @Override
     public String getTemplateId(BailCase bailCase) {
-        return isLegallyRepresented(bailCase) ?
-            homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId :
-            homeOfficeBailSignedDecisionNoticeUploadedWithoutLRPersonalisationTemplateId;
+        return isLegallyRepresented(bailCase)
+            ? homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId
+            : homeOfficeBailSignedDecisionNoticeUploadedWithoutLrPersonalisationTemplateId;
     }
 
     @Override

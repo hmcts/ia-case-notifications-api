@@ -11,15 +11,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 public interface BailEmailNotificationPersonalisation extends BaseNotificationPersonalisation<BailCase> {
 
     default boolean isBailGranted(BailCase bailCase) {
-        return bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("granted") ||
-               (bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant") &&
-                bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES);
+        return bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("granted")
+               || (bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant")
+                   && bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES);
     }
 
     default boolean isBailRefused(BailCase bailCase) {
-        return bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("refused") ||
-               bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Refused") ||
-               bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.YES) == YesOrNo.NO;
+        return bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("refused")
+               || bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Refused")
+               || bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.YES) == YesOrNo.NO;
     }
 
     default boolean isLegallyRepresented(BailCase bailCase) {

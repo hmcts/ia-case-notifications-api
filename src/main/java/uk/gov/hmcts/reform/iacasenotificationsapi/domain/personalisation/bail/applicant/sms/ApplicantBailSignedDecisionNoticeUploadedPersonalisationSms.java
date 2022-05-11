@@ -49,14 +49,14 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms impleme
     }
 
     private Boolean isBailGranted(BailCase bailCase) {
-        if (bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("granted") ||
-               (bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant") &&
-                bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES)) {
+        if (bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("granted")
+            || (bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant")
+                && bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES)) {
             return true;
         }
-        if (bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("refused") ||
-                bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Refused") ||
-                bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.YES) == YesOrNo.NO) {
+        if (bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("refused")
+            || bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Refused")
+            || bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.YES) == YesOrNo.NO) {
             return false;
         }
         return null;
