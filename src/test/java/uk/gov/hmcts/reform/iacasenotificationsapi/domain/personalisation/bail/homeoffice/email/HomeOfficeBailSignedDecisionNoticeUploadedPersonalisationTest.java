@@ -69,9 +69,8 @@ class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given_ss_not_needed_bail_granted() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.empty());
-        when(bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.of("granted"));
+    public void should_return_personalisation_when_all_information_given_bail_granted() {
+        when(bailCase.read(RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.of("granted"));
 
         Map<String, String> personalisation =
             homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
@@ -85,9 +84,8 @@ class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given_ss_not_needed_bail_refused() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.empty());
-        when(bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.of("refused"));
+    public void should_return_personalisation_when_all_information_given_bail_refused() {
+        when(bailCase.read(RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.of("refused"));
 
         Map<String, String> personalisation =
             homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
@@ -101,9 +99,8 @@ class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given_ss_consented_judge_minded() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(bailCase.read(RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.of("Minded to grant"));
+    public void should_return_personalisation_when_all_information_given_bail_conditionally_granted() {
+        when(bailCase.read(RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.of("conditionalGrant"));
 
         Map<String, String> personalisation =
             homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
@@ -114,61 +111,11 @@ class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisationTest {
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(decisionGranted, personalisation.get("decision"));
-    }
-
-    @Test
-    public void should_return_personalisation_when_all_information_given_ss_consented_judge_refused() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(bailCase.read(RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.of("Refused"));
-
-        Map<String, String> personalisation =
-            homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
-
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(decisionRefused, personalisation.get("decision"));
-    }
-
-    @Test
-    public void should_return_personalisation_when_all_information_given_ss_refused_judge_refused() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(bailCase.read(RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.of("Refused"));
-
-        Map<String, String> personalisation =
-            homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
-
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(decisionRefused, personalisation.get("decision"));
-    }
-
-    @Test
-    public void should_return_personalisation_when_no_LR_all_information_given() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.of("Refused"));
-
-        when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        Map<String, String> personalisation =
-            homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
-
-        assertEquals(templateIdWithoutLegalRep, homeOfficeBailSignedDecisionNoticeUploadedPersonalisation.getTemplateId(bailCase));
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(decisionRefused, personalisation.get("decision"));
     }
 
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
-        when(bailCase.read(SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.empty());
-        when(bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(RECORD_DECISION_TYPE, YesOrNo.class)).thenReturn(Optional.empty());
 
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());

@@ -1,9 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.RECORD_THE_DECISION_LIST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.SS_CONSENT_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -49,14 +47,11 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms impleme
     }
 
     private Boolean isBailGranted(BailCase bailCase) {
-        if (bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("granted")
-            || (bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Minded to grant")
-                && bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES)) {
+        if (bailCase.read(RECORD_DECISION_TYPE, String.class).orElse("").equals("granted")
+            || bailCase.read(RECORD_DECISION_TYPE, String.class).orElse("").equals("conditionalGrant")) {
             return true;
         }
-        if (bailCase.read(DECISION_GRANTED_OR_REFUSED, String.class).orElse("").equals("refused")
-            || bailCase.read(RECORD_THE_DECISION_LIST, String.class).orElse("").equals("Refused")
-            || bailCase.read(SS_CONSENT_DECISION, YesOrNo.class).orElse(YesOrNo.YES) == YesOrNo.NO) {
+        if (bailCase.read(RECORD_DECISION_TYPE, String.class).orElse("").equals("refused")) {
             return false;
         }
         return null;

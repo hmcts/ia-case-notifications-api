@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation;
 
 @ExtendWith(MockitoExtension.class)
@@ -98,10 +97,8 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_with_decision_Granted_when_ss_not_needed_judge_granted() {
-        when(bailCase.read(BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.of("granted"));
-        when(bailCase.read(BailCaseFieldDefinition.RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.empty());
+    public void should_return_personalisation_with_decision_granted() {
+        when(bailCase.read(BailCaseFieldDefinition.RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.of("granted"));
 
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
@@ -110,10 +107,8 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_with_decision_Refused_when_ss_not_needed_judge_refused() {
-        when(bailCase.read(BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.of("refused"));
-        when(bailCase.read(BailCaseFieldDefinition.RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.empty());
+    public void should_return_personalisation_with_decision_Refused() {
+        when(bailCase.read(BailCaseFieldDefinition.RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.of("refused"));
 
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
@@ -122,39 +117,13 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_with_decision_Granted_when_ss_consented_judge_minded() {
-        when(bailCase.read(BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.of("Minded to grant"));
-        when(bailCase.read(BailCaseFieldDefinition.SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+    public void should_return_personalisation_with_decision_conditionally_granted() {
+        when(bailCase.read(BailCaseFieldDefinition.RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.of("conditionalGrant"));
 
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
 
         assertEquals("Granted", personalisation.get("decision"));
-    }
-
-    @Test
-    public void should_return_personalisation_with_decision_Refused_when_ss_consented_judge_refused() {
-        when(bailCase.read(BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.of("Refused"));
-        when(bailCase.read(BailCaseFieldDefinition.SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-
-        Map<String, String> personalisation =
-            legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
-
-        assertEquals("Refused", personalisation.get("decision"));
-    }
-
-    @Test
-    public void should_return_personalisation_with_decision_Refused_when_ss_refused_judge_minded() {
-        when(bailCase.read(BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.of("Minded to grant"));
-        when(bailCase.read(BailCaseFieldDefinition.SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-
-        Map<String, String> personalisation =
-            legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
-
-        assertEquals("Refused", personalisation.get("decision"));
     }
 
     @Test
@@ -165,9 +134,7 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.DECISION_GRANTED_OR_REFUSED, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.RECORD_THE_DECISION_LIST, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.SS_CONSENT_DECISION, YesOrNo.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BailCaseFieldDefinition.RECORD_DECISION_TYPE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
