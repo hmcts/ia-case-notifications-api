@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -138,7 +139,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantHearingBundleReadyPersonalisationEmail.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

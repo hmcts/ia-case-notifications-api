@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,7 +88,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
     }
 
     @Test

@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,7 +99,7 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
     }
 
     @Test

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,7 +116,7 @@ public class AppellantEditListingPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
     }
 
     @Test
@@ -125,7 +126,7 @@ public class AppellantEditListingPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

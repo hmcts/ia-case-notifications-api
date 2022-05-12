@@ -179,7 +179,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
     }
 
     @Test

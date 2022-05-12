@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -157,7 +158,9 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        //assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+
         assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(requirementsVulnerabilities);
         assertThat(personalisation.get("hearingRequirementMultimedia")).contains(requirementsMultimedia);
@@ -173,7 +176,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertThat(personalisation.get("remoteVideoCallTribunalResponse"))
             .contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities"))
@@ -191,7 +194,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+
     }
 
     @Test
@@ -200,7 +204,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+
     }
 
     @Test
@@ -209,7 +214,8 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation =
             personalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+
     }
 
     @Test
@@ -222,7 +228,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+
     }
 
     @Test
