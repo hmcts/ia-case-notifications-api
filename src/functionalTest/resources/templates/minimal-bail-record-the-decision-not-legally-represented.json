@@ -1,11 +1,7 @@
 {
-  "isLegalRep": "Yes",
+  "isAdmin":"Yes",
+  "hasLegalRep":"No",
   "hearingCentre":"bradford",
-  "legalRepName": "Legal Rep",
-  "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
-  "legalRepPhone": "07896541236",
-  "legalRepCompany": "Fake Org Ltd",
-  "legalRepReference": "123654LR",
   "videoHearing1":"Yes",
   "applicantGender":"Female",
   "sentByChecklist": "Applicant",
@@ -71,7 +67,7 @@
       }
     }
   ],
-  "applicationSubmittedBy": "Legal Representative",
+  "applicationSubmittedBy":"Home Office",
   "hasAppealHearingPending":"No",
   "applicantArrivalInUKDate":"5555-05-05",
   "applicantBeenRefusedBail":"No",
