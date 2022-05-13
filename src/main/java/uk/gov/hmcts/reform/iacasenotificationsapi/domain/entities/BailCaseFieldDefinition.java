@@ -246,7 +246,12 @@ public enum BailCaseFieldDefinition {
     SUBMIT_NOTIFICATION_STATUS(
         "submitNotificationStatus", new TypeReference<String>() {}),
     RECORD_DECISION_TYPE(
-        "recordDecisionType", new TypeReference<String>() {});
+        "recordDecisionType", new TypeReference<String>() {}),
+    OUTCOME_OF_APPLICATION(
+        "outcomeOfApplication", new TypeReference<String>() {}),
+    END_APPLICATION_DATE(
+        "endApplicationDate", new TypeReference<String>() {}
+    );
 
     private final String value;
     private final TypeReference typeReference;

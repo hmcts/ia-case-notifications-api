@@ -148,4 +148,49 @@ public class BailNotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("endApplicationNotificationGenerator")
+    public List<BailNotificationGenerator> endApplicationNotificationGenerator(
+        //ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
+        //HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+        //LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+        //    new BailSmsNotificationGenerator(
+        //        newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+        //        notificationSender,
+        //        notificationIdAppender
+        //    ),
+        //    new BailEmailNotificationGenerator(
+        //        newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+        //            legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation),
+        //        notificationSender,
+        //        notificationIdAppender
+        //    )
+        );
+    }
+
+    @Bean("endApplicationWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> endApplicationWithoutLrNotificationGenerator(
+        //ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
+        //HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+        //    new BailSmsNotificationGenerator(
+        //        newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+        //        notificationSender,
+        //        notificationIdAppender
+        //    ),
+        //    new BailEmailNotificationGenerator(
+        //        newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+        //            legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation),
+        //        notificationSender,
+        //        notificationIdAppender
+        //    )
+        );
+    }
 }
