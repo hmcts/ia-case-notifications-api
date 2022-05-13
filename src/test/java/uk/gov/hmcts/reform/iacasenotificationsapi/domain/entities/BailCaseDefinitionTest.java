@@ -29,6 +29,6 @@ public class BailCaseDefinitionTest {
 
     @Test
     public void should_fail_if_new_fields_added_in_class() {
-        assertEquals(121, values().length);
+        assertEquals(119, values().length);
     }
 }
