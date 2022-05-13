@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit;
 
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -41,12 +42,19 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
     public boolean canHandle(PreSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-        if (callback.getEvent() == Event.SUBMIT_APPLICATION
-            || callback.getEvent() == Event.UPLOAD_BAIL_SUMMARY
-            || callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE) {
+        if (getEventsToHandle().contains(callback.getEvent())) {
             return false;
         }
         return canHandleFunction.test(callbackStage, callback);
+    }
+
+    private List<Event> getEventsToHandle() {
+        List<Event> eventsToHandle = Lists.newArrayList(
+            Event.SUBMIT_APPLICATION,
+            Event.UPLOAD_BAIL_SUMMARY,
+            Event.UPLOAD_SIGNED_DECISION_NOTICE
+        );
+        return eventsToHandle;
     }
 
     @Override
