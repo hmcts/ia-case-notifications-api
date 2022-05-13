@@ -30,7 +30,6 @@
       "value":"30434c4b-0cfd-4f1e-b919-02547264addc"
     }
   ],
-  "ssConsentDecision":"No",
   "applicantHasMobile":"Yes",
   "applicantFamilyName":"TheLastName",
   "applicantGivenNames":"TheName",
@@ -45,7 +44,7 @@
   ],
   "applicantMobileNumber":"07555555555",
   "groundsForBailReasons":"tywtywstw",
-  "recordTheDecisionList":"Minded to grant",
+  "recordDecisionType":"granted",
   "uploadBailSummaryDocs":[
     {
       "id":"e94a1298-baae-4774-acb0-e01e44734238",
