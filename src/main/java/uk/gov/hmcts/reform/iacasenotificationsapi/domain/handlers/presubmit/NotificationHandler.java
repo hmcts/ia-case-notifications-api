@@ -42,13 +42,13 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
     public boolean canHandle(PreSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-        if (getEventsToHandle().contains(callback.getEvent())) {
+        if (getEventsToSkip().contains(callback.getEvent())) {
             return false;
         }
         return canHandleFunction.test(callbackStage, callback);
     }
 
-    private List<Event> getEventsToHandle() {
+    private List<Event> getEventsToSkip() {
         List<Event> eventsToHandle = Lists.newArrayList(
             Event.SUBMIT_APPLICATION,
             Event.UPLOAD_BAIL_SUMMARY,
