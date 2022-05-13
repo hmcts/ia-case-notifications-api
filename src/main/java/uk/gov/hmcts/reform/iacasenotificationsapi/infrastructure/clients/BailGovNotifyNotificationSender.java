@@ -6,6 +6,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
@@ -15,21 +17,24 @@ import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
 @Service
-public class GovNotifyNotificationSender implements NotificationSender {
+public class BailGovNotifyNotificationSender implements NotificationSender {
 
-    private static final org.slf4j.Logger LOG = getLogger(GovNotifyNotificationSender.class);
+    private static final org.slf4j.Logger LOG = getLogger(BailGovNotifyNotificationSender.class);
 
     private final int deduplicateSendsWithinSeconds;
-    private final RetryableNotificationClient notificationClient;
+
+    @Autowired
+    @Qualifier("BailClient")
+    private final RetryableNotificationClient notificationBailClient;
 
     private Cache<String, String> recentDeliveryReceiptCache;
 
-    public GovNotifyNotificationSender(
+    public BailGovNotifyNotificationSender(
         @Value("${notificationSender.deduplicateSendsWithinSeconds}") int deduplicateSendsWithinSeconds,
-        RetryableNotificationClient notificationClient
+        RetryableNotificationClient notificationBailClient
     ) {
         this.deduplicateSendsWithinSeconds = deduplicateSendsWithinSeconds;
-        this.notificationClient = notificationClient;
+        this.notificationBailClient = notificationBailClient;
     }
 
     public synchronized String sendEmail(
@@ -49,7 +54,7 @@ public class GovNotifyNotificationSender implements NotificationSender {
                     LOG.info("Attempting to send email notification to GovNotify: {}", reference);
 
                     SendEmailResponse response =
-                            notificationClient.sendEmail(
+                            notificationBailClient.sendEmail(
                                     templateId,
                                     emailAddress,
                                     personalisation,
@@ -93,13 +98,12 @@ public class GovNotifyNotificationSender implements NotificationSender {
                     LOG.info("Attempting to send a text message notification to GovNotify: {}", reference);
 
                     SendSmsResponse response =
-                            notificationClient
-                                    .sendSms(
-                                            templateId,
-                                            phoneNumber,
-                                            personalisation,
-                                            reference
-                                    );
+                            notificationBailClient.sendSms(
+                                    templateId,
+                                    phoneNumber,
+                                    personalisation,
+                                    reference
+                            );
 
                     String notificationId =
                         response

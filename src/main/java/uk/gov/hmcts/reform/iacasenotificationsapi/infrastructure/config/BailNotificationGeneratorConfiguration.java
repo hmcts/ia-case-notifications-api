@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationEndedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
@@ -23,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotifi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationIdAppender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailSmsNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.BailGovNotifyNotificationSender;
 
 @Configuration
 public class BailNotificationGeneratorConfiguration {
@@ -34,7 +34,7 @@ public class BailNotificationGeneratorConfiguration {
         LegalRepresentativeBailApplicationSubmittedPersonalisation legalRepresentativeBailApplicationSubmittedPersonalisation,
         HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
         ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
@@ -58,7 +58,7 @@ public class BailNotificationGeneratorConfiguration {
         HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation,
         HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
         ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
@@ -80,7 +80,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> uploadSummaryNotificationGenerator(
             AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
             LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
-            NotificationSender notificationSender,
+            BailGovNotifyNotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
@@ -96,7 +96,7 @@ public class BailNotificationGeneratorConfiguration {
     @Bean("uploadSummaryWithoutLrNotificationGenerator")
     public List<BailNotificationGenerator> uploadSummaryWithoutLrNotificationGenerator(
             AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
-            NotificationSender notificationSender,
+            BailGovNotifyNotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
@@ -113,7 +113,7 @@ public class BailNotificationGeneratorConfiguration {
         ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
         HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
         LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
@@ -135,7 +135,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> uploadSignedDecisionNoticeWithoutLrNotificationGenerator(
         ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
         HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
