@@ -789,6 +789,11 @@ govnotify:
         email: 1e852128-33e5-41d8-a788-ee6a3281c337
       uploadBailSummaryWithoutLR:
         email: 68153bee-1adc-4a78-83bc-c49d42394617
+      uploadSignedDecisionNotice:
+        sms: 72389303-1c07-47df-905f-8366b69f3482
+        email: 3e4d7195-2e48-4ca0-b88f-ac6969cf8a4b
+      uploadSignedDecisionNoticeWithoutLR:
+        email: ffaee311-d762-4937-a7c9-17e9f3706873
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -920,6 +925,7 @@ security:
       - "manageFeeUpdate"
       - "asyncStitchingComplete"
       - "submitApplication"
+      - "uploadSignedDecisionNotice"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -960,6 +966,7 @@ security:
       - "decideAnApplication"
       - "requestNewHearingRequirements"
       - "asyncStitchingComplete"
+      - "uploadSignedDecisionNotice"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

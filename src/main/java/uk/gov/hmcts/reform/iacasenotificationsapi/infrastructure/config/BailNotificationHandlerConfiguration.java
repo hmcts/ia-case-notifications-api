@@ -106,6 +106,48 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> uploadSignedDecisionNoticeNotificationHandler(
+        @Qualifier("uploadSignedDecisionNoticeNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                             && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return ((callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE)
+                            && isLegallyRepresented(bailCase));
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> uploadSignedDecisionNoticeWithoutLrNotificationHandler(
+        @Qualifier("uploadSignedDecisionNoticeWithoutLrNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                             && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return ((callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE)
+                            && !isLegallyRepresented(bailCase));
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback

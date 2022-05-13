@@ -9,9 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailApplicationSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailSummaryUploadedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
@@ -99,6 +102,50 @@ public class BailNotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("uploadSignedDecisionNoticeNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSignedDecisionNoticeNotificationGenerator(
+        ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
+        HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+        LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailSmsNotificationGenerator(
+                newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new BailEmailNotificationGenerator(
+                newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+                    legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("uploadSignedDecisionNoticeWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> uploadSignedDecisionNoticeWithoutLrNotificationGenerator(
+        ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
+        HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+        NotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailSmsNotificationGenerator(
+                newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new BailEmailNotificationGenerator(
+                newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }
