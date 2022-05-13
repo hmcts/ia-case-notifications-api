@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,8 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
                 .put("ariaListingReference", listRef)
                 .build());
 
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
+
         adminOfficerdjournHearingWithoutDatePersonalisation =
             new AdminOfficerAdjournHearingWithoutDatePersonalisation(templateId, adminOfficerEmailAddress,
                 adminOfficerPersonalisationProvider);
@@ -85,6 +88,6 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 }

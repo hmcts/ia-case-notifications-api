@@ -10,10 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -128,7 +125,7 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey));
         assertEquals(CUSTOMER_SERVICES_PROVIDER_PHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_PROVIDER_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }

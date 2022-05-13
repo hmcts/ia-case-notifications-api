@@ -122,7 +122,7 @@ public class LegalRepresentativeHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class LegalRepresentativeHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

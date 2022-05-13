@@ -15,6 +15,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_REASON;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,7 +134,7 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -154,7 +155,7 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
             legalRepresentativeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("No reason given", personalisation.get("reinstateAppealReason"));

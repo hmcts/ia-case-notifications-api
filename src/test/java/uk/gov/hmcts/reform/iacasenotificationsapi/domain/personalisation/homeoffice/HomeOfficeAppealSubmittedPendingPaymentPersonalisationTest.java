@@ -84,7 +84,7 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPendingPaymentPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
 }

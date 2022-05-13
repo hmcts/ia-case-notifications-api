@@ -118,7 +118,7 @@ public class AppellantEditListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class AppellantEditListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

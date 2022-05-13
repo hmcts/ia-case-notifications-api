@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ public class AdminOfficerFtpaSubmittedPersonalisationTest {
         Map<String, String> expectedPersonalisation =
             adminOfficerFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(expectedPersonalisation::containsKey));
     }
 
     @Test

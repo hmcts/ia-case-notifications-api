@@ -9,6 +9,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,6 +95,6 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerAdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 }

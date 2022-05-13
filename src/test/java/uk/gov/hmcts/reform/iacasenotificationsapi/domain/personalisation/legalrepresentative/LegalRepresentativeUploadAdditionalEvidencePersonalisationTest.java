@@ -88,7 +88,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test

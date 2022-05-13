@@ -101,7 +101,7 @@ public class HomeOfficeHearingBundleReadyPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeHearingBundleReadyPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

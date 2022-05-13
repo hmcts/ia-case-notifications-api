@@ -92,7 +92,7 @@ public class CaseOfficerUploadAddendumEvidencePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test

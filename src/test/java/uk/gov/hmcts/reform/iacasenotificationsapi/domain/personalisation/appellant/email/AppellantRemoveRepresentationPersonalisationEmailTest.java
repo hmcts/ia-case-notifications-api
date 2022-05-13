@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,7 +98,7 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -113,7 +114,7 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

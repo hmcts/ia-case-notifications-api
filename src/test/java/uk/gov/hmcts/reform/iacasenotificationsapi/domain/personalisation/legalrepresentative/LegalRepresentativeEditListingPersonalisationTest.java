@@ -127,7 +127,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

@@ -105,7 +105,7 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeNonStandardDirectionPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

@@ -62,7 +62,7 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
 
     }
 
@@ -72,6 +72,6 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 }

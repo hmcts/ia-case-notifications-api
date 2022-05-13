@@ -113,7 +113,7 @@ class HomeOfficeEditListingPersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

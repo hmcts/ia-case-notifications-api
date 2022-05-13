@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Comparator;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +78,8 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
         Map<String, String> personalisation =
             legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        Assertions.assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        Assertions.assertThat(personalisation).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+
     }
 
     @Test

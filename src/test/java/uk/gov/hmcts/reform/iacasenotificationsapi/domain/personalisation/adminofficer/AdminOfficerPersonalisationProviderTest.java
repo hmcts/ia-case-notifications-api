@@ -33,7 +33,7 @@ public class AdminOfficerPersonalisationProviderTest {
 
         Map<String, String> personalisation = adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class AdminOfficerPersonalisationProviderTest {
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test
@@ -51,6 +51,6 @@ public class AdminOfficerPersonalisationProviderTest {
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 }

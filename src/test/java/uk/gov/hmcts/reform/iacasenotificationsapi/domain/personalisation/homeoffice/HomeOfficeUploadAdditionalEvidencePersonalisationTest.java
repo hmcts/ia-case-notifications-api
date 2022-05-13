@@ -99,7 +99,7 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test

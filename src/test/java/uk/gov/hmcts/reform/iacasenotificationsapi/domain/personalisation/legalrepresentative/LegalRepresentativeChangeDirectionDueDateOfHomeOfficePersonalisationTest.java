@@ -108,7 +108,7 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test

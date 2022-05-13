@@ -1,8 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Comparator;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +30,7 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisationTest {
     @BeforeEach
     public void setup() {
 
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
         adminOfficerChangeToHearingRequirementsPersonalisation =
             new AdminOfficerChangeToHearingRequirementsPersonalisation(
                 templateId,
@@ -58,20 +62,21 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-        // Indu commented
-        //Map<String, String> personalisation =
-          //  adminOfficerChangeToHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        //assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        Map<String, String> personalisation =
+            adminOfficerChangeToHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
+
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
 
     }
 
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
-        //Indu commented
-        //Map<String, String> personalisation =
-           // adminOfficerChangeToHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        //assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        Map<String, String> personalisation =
+            adminOfficerChangeToHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
+
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+
     }
 }

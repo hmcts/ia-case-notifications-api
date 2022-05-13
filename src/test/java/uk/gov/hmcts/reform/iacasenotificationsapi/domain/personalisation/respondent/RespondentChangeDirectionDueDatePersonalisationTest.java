@@ -218,7 +218,7 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         Map<String, String> personalisation =
                 respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::get));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
     }
 
     @Test
