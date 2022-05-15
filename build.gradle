@@ -303,7 +303,7 @@ dependencyManagement {
         }
 
         //CVE-2021-22060
-        dependency group: 'org.springframework', name: 'spring-core', version: '5.3.1'
+        dependency group: 'org.springframework', name: 'spring-core', version: '5.3.20'
 
         //CVE-2021-22119
         dependency group: 'org.springframework.security', name: 'spring-security-core',  version: '5.6.3'
@@ -313,6 +313,8 @@ dependencyManagement {
             entry 'log4j-api'
             entry 'log4j-to-slf4j'
         }
+
+        //dependency group: 'io.github.bonigarcia:webdrivermanager', name: 'gson', version '2.8.9'
 
         imports {
             mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2020.0.4'
@@ -363,7 +365,8 @@ dependencies {
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.2.2'
+    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.8.1'
+    //compile group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
 
     testImplementation libraries.junit5
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
