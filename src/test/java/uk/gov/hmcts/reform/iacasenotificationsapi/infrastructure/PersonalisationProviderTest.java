@@ -158,7 +158,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
         assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(x -> personalisation.containsKey(x))).isEqualTo(asylumCase);
-
+        // Indu commented
         //assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
 
         assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
