@@ -188,7 +188,8 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -211,7 +212,8 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
         assertEquals("Other", personalisation.get("applicationType"));
         assertEquals("No Reason Given", personalisation.get("applicationDecisionReason"));
         assertEquals("Judge", personalisation.get("decisionMaker"));

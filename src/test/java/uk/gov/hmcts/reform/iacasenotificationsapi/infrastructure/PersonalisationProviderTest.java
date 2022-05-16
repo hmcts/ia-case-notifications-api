@@ -157,10 +157,9 @@ class PersonalisationProviderTest {
         when(callback.getEvent()).thenReturn(Event.EDIT_CASE_LISTING);
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(x -> personalisation.containsKey(x))).isEqualTo(asylumCase);
-        // Indu commented
-        //assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
 
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(requirementsVulnerabilities);
         assertThat(personalisation.get("hearingRequirementMultimedia")).contains(requirementsMultimedia);
@@ -176,7 +175,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse"))
             .contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities"))
@@ -194,7 +194,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -204,7 +205,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -214,7 +216,8 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation =
             personalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -228,7 +231,8 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 

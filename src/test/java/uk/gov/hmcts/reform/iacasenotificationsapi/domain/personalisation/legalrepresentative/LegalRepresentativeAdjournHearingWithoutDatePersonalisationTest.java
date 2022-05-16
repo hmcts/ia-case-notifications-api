@@ -101,6 +101,7 @@ public class LegalRepresentativeAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

@@ -88,7 +88,8 @@ class AdminOfficerWithoutHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerWithoutHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -98,6 +99,7 @@ class AdminOfficerWithoutHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerWithoutHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

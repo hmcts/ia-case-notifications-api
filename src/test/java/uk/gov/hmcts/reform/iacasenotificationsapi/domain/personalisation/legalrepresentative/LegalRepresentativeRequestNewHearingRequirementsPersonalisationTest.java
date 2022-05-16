@@ -92,7 +92,7 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
 
         Map<String, String> personalisation = legalRepresentativeRequestNewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        Assertions.assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey)).isEqualTo(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

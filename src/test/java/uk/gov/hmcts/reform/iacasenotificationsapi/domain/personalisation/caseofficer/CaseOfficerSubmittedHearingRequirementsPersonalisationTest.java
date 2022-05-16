@@ -95,7 +95,8 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test

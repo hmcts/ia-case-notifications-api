@@ -105,7 +105,7 @@ public class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey)).isEqualTo(asylumCase);
     }
 
     @Test

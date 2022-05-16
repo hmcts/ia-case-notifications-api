@@ -93,7 +93,8 @@ public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test

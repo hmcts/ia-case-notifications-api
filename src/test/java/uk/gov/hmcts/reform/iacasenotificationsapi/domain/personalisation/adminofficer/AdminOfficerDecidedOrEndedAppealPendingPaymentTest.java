@@ -61,7 +61,8 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test
@@ -70,6 +71,7 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }
