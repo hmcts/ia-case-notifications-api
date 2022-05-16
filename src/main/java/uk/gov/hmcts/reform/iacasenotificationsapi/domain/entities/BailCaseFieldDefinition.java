@@ -250,8 +250,9 @@ public enum BailCaseFieldDefinition {
     OUTCOME_OF_APPLICATION(
         "outcomeOfApplication", new TypeReference<String>() {}),
     END_APPLICATION_DATE(
-        "endApplicationDate", new TypeReference<String>() {}
-    );;
+        "endApplicationDate", new TypeReference<String>() {}),
+    REASONS_OF_OUTCOME(
+        "reasonsOfOutcome", new TypeReference<String>() {});
 
     private final String value;
     private final TypeReference typeReference;
