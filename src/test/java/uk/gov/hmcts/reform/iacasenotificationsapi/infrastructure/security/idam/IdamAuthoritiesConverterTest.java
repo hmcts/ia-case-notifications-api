@@ -70,6 +70,11 @@ public class IdamAuthoritiesConverterTest {
 
         idamAuthoritiesConverter = new IdamAuthoritiesConverter(idamApi);
 
+        when(jwt.hasClaim(TOKEN_NAME)).thenReturn(false);
+        when(jwt.getClaim(TOKEN_NAME)).thenReturn("");
+
+        assertFalse(jwt.hasClaim(TOKEN_NAME));
+        assertNotEquals(jwt.getClaim(TOKEN_NAME).toString(), "access_token");
         assertEquals(Collections.emptyList(), idamAuthoritiesConverter.convert(jwt));
     }
 
