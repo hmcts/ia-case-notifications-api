@@ -12,6 +12,7 @@ import feign.FeignException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -62,6 +63,7 @@ public class IdamAuthoritiesConverterTest {
         verify(idamApi).userInfo("Bearer " + tokenValue);
 
         assertEquals(expectedGrantedAuthorities, grantedAuthorities);
+
     }
 
     @Test
@@ -70,16 +72,6 @@ public class IdamAuthoritiesConverterTest {
         idamAuthoritiesConverter = new IdamAuthoritiesConverter(idamApi);
 
         assertEquals(Collections.emptyList(), idamAuthoritiesConverter.convert(jwt));
-    }
-
-    @Test
-    public void should_return_true() {
-
-        when(jwt.hasClaim(TOKEN_NAME)).thenReturn(true);
-        when(jwt.getClaim(TOKEN_NAME)).thenReturn(ACCESS_TOKEN);
-        assertTrue(jwt.hasClaim(TOKEN_NAME));
-        assertEquals(jwt.getClaim(TOKEN_NAME).toString(), "access_token");
-
     }
 
     @Test
@@ -93,6 +85,7 @@ public class IdamAuthoritiesConverterTest {
         when(jwt.hasClaim(TOKEN_NAME)).thenReturn(true);
         when(jwt.getClaim(TOKEN_NAME)).thenReturn(ACCESS_TOKEN);
         when(jwt.getTokenValue()).thenReturn(tokenValue);
+
         assertTrue(jwt.hasClaim(TOKEN_NAME));
         assertEquals(jwt.getClaim(TOKEN_NAME).toString(), "access_token");
 
