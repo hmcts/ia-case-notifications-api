@@ -68,14 +68,23 @@ public class IdamAuthoritiesConverterTest {
     @Test
     public void should_return_empty_list_when_token_is_missing() {
 
-        idamAuthoritiesConverter = new IdamAuthoritiesConverter(idamApi);
-
         when(jwt.hasClaim(TOKEN_NAME)).thenReturn(false);
         when(jwt.getClaim(TOKEN_NAME)).thenReturn("");
 
         assertFalse(jwt.hasClaim(TOKEN_NAME));
         assertNotEquals(jwt.getClaim(TOKEN_NAME).toString(), "access_token");
-        assertEquals(Collections.emptyList(), idamAuthoritiesConverter.convert(jwt));
+
+        // when(userInfo.getRoles()).thenReturn(Lists.newArrayList());
+        //when(idamApi.userInfo("Bearer " + tokenValue)).thenReturn(userInfo);
+
+        idamAuthoritiesConverter = new IdamAuthoritiesConverter(idamApi);
+
+        Collection<GrantedAuthority> grantedAuthorities = idamAuthoritiesConverter.convert(jwt);
+
+        //verify(idamApi).userInfo("Bearer " + tokenValue);
+
+        assertEquals(Collections.emptyList(), grantedAuthorities);
+
     }
 
     @Test
