@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.idam;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.ACCESS_TOKEN;
@@ -68,6 +68,16 @@ public class IdamAuthoritiesConverterTest {
         idamAuthoritiesConverter = new IdamAuthoritiesConverter(idamApi);
 
         assertEquals(Collections.emptyList(), idamAuthoritiesConverter.convert(jwt));
+    }
+
+    @Test
+    public void should_return_true() {
+
+        when(jwt.hasClaim(TOKEN_NAME)).thenReturn(true);
+        when(jwt.getClaim(TOKEN_NAME)).thenReturn(ACCESS_TOKEN);
+        assertTrue(jwt.hasClaim(TOKEN_NAME));
+        assertEquals(jwt.getClaim(TOKEN_NAME).toString(), "access_token");
+
     }
 
     @Test
