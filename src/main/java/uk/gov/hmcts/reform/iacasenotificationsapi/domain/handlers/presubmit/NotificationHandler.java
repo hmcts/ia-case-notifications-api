@@ -49,12 +49,13 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
     }
 
     private List<Event> getEventsToSkip() {
-        List<Event> eventsToSkip = Lists.newArrayList(
+        return Lists.newArrayList(
             Event.SUBMIT_APPLICATION,
             Event.UPLOAD_BAIL_SUMMARY,
-            Event.UPLOAD_SIGNED_DECISION_NOTICE
+            Event.UPLOAD_SIGNED_DECISION_NOTICE,
+            Event.UPLOAD_SIGNED_DECISION_NOTICE,
+            Event.END_APPLICATION
         );
-        return eventsToSkip;
     }
 
     @Override
