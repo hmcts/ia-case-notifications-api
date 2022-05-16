@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Qualifier;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
@@ -37,12 +36,12 @@ public class BailGovNotifyNotificationSenderTest {
     private Map<String, String> personalisation = mock(Map.class);
     private String reference = "our-reference";
 
-    private GovNotifyNotificationSender govNotifyNotificationSender;
+    private BailGovNotifyNotificationSender bailGovNotifyNotificationSender;
 
     @BeforeEach
     public void setUp() {
-        govNotifyNotificationSender =
-            new GovNotifyNotificationSender(
+        bailGovNotifyNotificationSender =
+            new BailGovNotifyNotificationSender(
                 deduplicateSendsWithinSeconds,
                 notificationBailClient
             );
@@ -65,12 +64,11 @@ public class BailGovNotifyNotificationSenderTest {
         when(sendEmailResponse.getNotificationId()).thenReturn(expectedNotificationId);
 
         String actualNotificationId =
-                govNotifyNotificationSender.sendEmail(
+                bailGovNotifyNotificationSender.sendEmail(
                         templateId,
                         emailAddress,
                         personalisation,
-                        reference,
-                        CaseType.BAIL_CASE
+                        reference
                 );
 
         verify(notificationBailClient, times(1)).sendEmail(
@@ -113,30 +111,27 @@ public class BailGovNotifyNotificationSenderTest {
         when(sendEmailResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
 
         final String actualNotificationId1 =
-            govNotifyNotificationSender.sendEmail(
+            bailGovNotifyNotificationSender.sendEmail(
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.BAIL_CASE
+                reference
             );
 
         final String actualNotificationId2 =
-            govNotifyNotificationSender.sendEmail(
+            bailGovNotifyNotificationSender.sendEmail(
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.BAIL_CASE
+                reference
             );
 
         final String actualNotificationIdForOther =
-            govNotifyNotificationSender.sendEmail(
+            bailGovNotifyNotificationSender.sendEmail(
                 templateId,
                 otherEmailAddress,
                 personalisation,
-                otherReference,
-                CaseType.BAIL_CASE
+                otherReference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -150,12 +145,11 @@ public class BailGovNotifyNotificationSenderTest {
         }
 
         final String actualNotificationId3 =
-            govNotifyNotificationSender.sendEmail(
+            bailGovNotifyNotificationSender.sendEmail(
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.BAIL_CASE
+                reference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -190,15 +184,14 @@ public class BailGovNotifyNotificationSenderTest {
             );
 
         assertThatThrownBy(() ->
-                govNotifyNotificationSender.sendEmail(
+                bailGovNotifyNotificationSender.sendEmail(
                         templateId,
                         emailAddress,
                         personalisation,
-                        reference,
-                        CaseType.BAIL_CASE
+                        reference
                 )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
-                .hasMessage("Failed to send email using GovNotify")
+                .hasMessage("Failed to send email using Bail GovNotify")
                 .hasCause(underlyingException);
 
     }
@@ -220,12 +213,11 @@ public class BailGovNotifyNotificationSenderTest {
         when(sendSmsResponse.getNotificationId()).thenReturn(expectedNotificationId);
 
         String actualNotificationId =
-                govNotifyNotificationSender.sendSms(
+                bailGovNotifyNotificationSender.sendSms(
                         templateId,
                         phoneNumber,
                         personalisation,
-                        reference,
-                        CaseType.BAIL_CASE
+                        reference
                 );
 
         verify(notificationBailClient, times(1)).sendSms(
@@ -268,30 +260,27 @@ public class BailGovNotifyNotificationSenderTest {
         when(sendSmsResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
 
         final String actualNotificationId1 =
-            govNotifyNotificationSender.sendSms(
+            bailGovNotifyNotificationSender.sendSms(
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.BAIL_CASE
+                reference
             );
 
         final String actualNotificationId2 =
-            govNotifyNotificationSender.sendSms(
+            bailGovNotifyNotificationSender.sendSms(
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.BAIL_CASE
+                reference
             );
 
         final String actualNotificationIdForOther =
-            govNotifyNotificationSender.sendSms(
+            bailGovNotifyNotificationSender.sendSms(
                 templateId,
                 otherPhoneNumber,
                 personalisation,
-                otherReference,
-                CaseType.BAIL_CASE
+                otherReference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -305,12 +294,11 @@ public class BailGovNotifyNotificationSenderTest {
         }
 
         final String actualNotificationId3 =
-            govNotifyNotificationSender.sendSms(
+            bailGovNotifyNotificationSender.sendSms(
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.BAIL_CASE
+                reference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -345,15 +333,14 @@ public class BailGovNotifyNotificationSenderTest {
             );
 
         assertThatThrownBy(() ->
-                govNotifyNotificationSender.sendSms(
+                bailGovNotifyNotificationSender.sendSms(
                         templateId,
                         phoneNumber,
                         personalisation,
-                        reference,
-                        CaseType.BAIL_CASE
+                        reference
                 )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
-                .hasMessage("Failed to send sms using GovNotify")
+                .hasMessage("Failed to send sms using Bail GovNotify")
                 .hasCause(underlyingException);
 
     }

@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
@@ -70,8 +69,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         verify(notificationClient, times(1)).sendEmail(
@@ -118,8 +116,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         final String actualNotificationId2 =
@@ -127,8 +124,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         final String actualNotificationIdForOther =
@@ -136,8 +132,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 otherEmailAddress,
                 personalisation,
-                otherReference,
-                CaseType.ASYLUM_CASE
+                otherReference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -155,8 +150,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -195,8 +189,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
             .hasMessage("Failed to send email using GovNotify")
@@ -225,8 +218,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         verify(notificationClient, times(1)).sendSms(
@@ -273,8 +265,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         final String actualNotificationId2 =
@@ -282,8 +273,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         final String actualNotificationIdForOther =
@@ -291,8 +281,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 otherPhoneNumber,
                 personalisation,
-                otherReference,
-                CaseType.ASYLUM_CASE
+                otherReference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -310,8 +299,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -350,8 +338,7 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference,
-                CaseType.ASYLUM_CASE
+                reference
             )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
             .hasMessage("Failed to send sms using GovNotify")

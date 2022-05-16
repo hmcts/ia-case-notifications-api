@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
@@ -36,8 +35,7 @@ public class GovNotifyNotificationSender implements NotificationSender {
         String templateId,
         String emailAddress,
         Map<String, String> personalisation,
-        String reference,
-        CaseType caseType
+        String reference
     ) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
         return recentDeliveryReceiptCache.get(
@@ -81,8 +79,7 @@ public class GovNotifyNotificationSender implements NotificationSender {
         final String templateId,
         final String phoneNumber,
         final Map<String, String> personalisation,
-        final String reference,
-        CaseType caseType) {
+        final String reference) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
         return recentDeliveryReceiptCache.get(
             phoneNumber + reference,
