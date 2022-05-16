@@ -99,7 +99,8 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
         Map<String, String> expectedPersonalisation =
             legalRepresentativeRespondentFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(expectedPersonalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(expectedPersonalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test

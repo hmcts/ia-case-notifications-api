@@ -121,11 +121,10 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(CUSTOMER_SERVICES_PROVIDER_PHONE);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(CUSTOMER_SERVICES_PROVIDER_EMAIL);
 
-
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 
-
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey))
+                .isEqualTo(asylumCase);
         assertEquals(CUSTOMER_SERVICES_PROVIDER_PHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_PROVIDER_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }

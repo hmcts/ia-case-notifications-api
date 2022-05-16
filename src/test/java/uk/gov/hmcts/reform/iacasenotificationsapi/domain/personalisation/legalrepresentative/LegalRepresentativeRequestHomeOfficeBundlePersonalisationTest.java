@@ -126,7 +126,8 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test

@@ -78,7 +78,8 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
         Map<String, String> personalisation =
             legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        Assertions.assertThat(personalisation).usingComparatorForFields(Comparator.comparing(personalisation::containsKey));
+        Assertions.assertThat(personalisation).usingComparatorForFields(Comparator.comparing
+                (personalisation::containsKey)).isEqualTo(asylumCase);
 
     }
 

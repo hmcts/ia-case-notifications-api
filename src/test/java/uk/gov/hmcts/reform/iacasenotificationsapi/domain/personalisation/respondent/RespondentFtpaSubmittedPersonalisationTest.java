@@ -79,7 +79,8 @@ public class RespondentFtpaSubmittedPersonalisationTest {
         Map<String, String> expectedPersonalisation =
             respondentFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).usingComparatorForFields(Comparator.comparing(expectedPersonalisation::containsKey));
+        assertThat(expectedPersonalisation).usingComparatorForFields
+                (Comparator.comparing(expectedPersonalisation::containsKey)).isEqualTo(asylumCase);
 
     }
 
