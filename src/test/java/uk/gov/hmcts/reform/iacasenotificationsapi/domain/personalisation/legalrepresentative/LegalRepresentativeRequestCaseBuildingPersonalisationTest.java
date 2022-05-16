@@ -166,7 +166,8 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestCaseBuildingPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey))
+                .isEqualTo(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

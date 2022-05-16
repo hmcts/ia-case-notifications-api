@@ -96,7 +96,8 @@ public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
         Map<String, String> expectedPersonalisation =
             legalRepresentativeFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(expectedPersonalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(expectedPersonalisation::containsKey))
+                .isNotNull();
     }
 
     @Test

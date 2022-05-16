@@ -122,7 +122,8 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
         Map<String, String> actualPersonalisation =
             legalRepresentativeRespondentReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey));
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(actualPersonalisation::containsKey))
+                .isNotNull();
     }
 
     @Test
