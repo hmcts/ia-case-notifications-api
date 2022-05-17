@@ -2,18 +2,13 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
-import uk.gov.service.notify.NotificationClientException;
-import uk.gov.service.notify.SendEmailResponse;
-import uk.gov.service.notify.SendSmsResponse;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
 
 @Service
 public class BailGovNotifyNotificationSender implements NotificationSender {
@@ -26,14 +21,16 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
     @Qualifier("BailClient")
     private final RetryableNotificationClient notificationBailClient;
 
-    private Cache<String, String> recentDeliveryReceiptCache;
+    private final NotificationSenderHelper senderHelper;
 
     public BailGovNotifyNotificationSender(
         @Value("${notificationSender.deduplicateSendsWithinSeconds}") int deduplicateSendsWithinSeconds,
-        RetryableNotificationClient notificationBailClient
+        RetryableNotificationClient notificationBailClient,
+        NotificationSenderHelper senderHelper
     ) {
         this.deduplicateSendsWithinSeconds = deduplicateSendsWithinSeconds;
         this.notificationBailClient = notificationBailClient;
+        this.senderHelper = senderHelper;
     }
 
     public synchronized String sendEmail(
@@ -42,33 +39,14 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
         Map<String, String> personalisation,
         String reference
     ) {
-        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
-        return recentDeliveryReceiptCache.get(
-            emailAddress + reference,
-            k -> {
-                try {
-                    LOG.info("Attempting to send email notification to Bail GovNotify: {}", reference);
-
-                    SendEmailResponse response = notificationBailClient.sendEmail(
-                                    templateId,
-                                    emailAddress,
-                                    personalisation,
-                                    reference
-                            );
-
-                    String notificationId = response.getNotificationId().toString();
-
-                    LOG.info("Successfully sent email notification to Bail GovNotify: {} ({})",
-                        reference,
-                        notificationId
-                    );
-
-                    return notificationId;
-
-                } catch (NotificationClientException e) {
-                    throw new NotificationServiceResponseException("Failed to send email using Bail GovNotify", e);
-                }
-            }
+        return senderHelper.sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference,
+                notificationBailClient,
+                deduplicateSendsWithinSeconds,
+                LOG
         );
     }
 
@@ -78,45 +56,15 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
         final String phoneNumber,
         final Map<String, String> personalisation,
         final String reference) {
-        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
-        return recentDeliveryReceiptCache.get(
-            phoneNumber + reference,
-            k -> {
-                try {
-                    LOG.info("Attempting to send a text message notification to Bail GovNotify: {}", reference);
 
-                    SendSmsResponse response = notificationBailClient.sendSms(
-                                    templateId,
-                                    phoneNumber,
-                                    personalisation,
-                                    reference
-                            );
-
-                    String notificationId = response.getNotificationId().toString();
-
-                    LOG.info("Successfully sent sms notification to Bail GovNotify: {} ({})",
-                        reference,
-                        notificationId
-                    );
-
-                    return notificationId;
-
-                } catch (NotificationClientException e) {
-                    throw new NotificationServiceResponseException("Failed to send sms using Bail GovNotify", e);
-                }
-            }
+        return senderHelper.sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference,
+                notificationBailClient,
+                deduplicateSendsWithinSeconds,
+                LOG
         );
-    }
-
-    private Cache<String, String> getOrCreateDeliveryReceiptCache() {
-        if (recentDeliveryReceiptCache == null) {
-            recentDeliveryReceiptCache =
-                Caffeine
-                    .newBuilder()
-                    .expireAfterWrite(deduplicateSendsWithinSeconds, TimeUnit.SECONDS)
-                    .build();
-        }
-
-        return recentDeliveryReceiptCache;
     }
 }
