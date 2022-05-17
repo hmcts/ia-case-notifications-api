@@ -11,6 +11,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,7 +96,8 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test
@@ -109,6 +111,7 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

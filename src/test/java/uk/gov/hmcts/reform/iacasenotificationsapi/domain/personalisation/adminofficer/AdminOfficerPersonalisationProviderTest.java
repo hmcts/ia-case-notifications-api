@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,8 @@ public class AdminOfficerPersonalisationProviderTest {
 
         Map<String, String> personalisation = adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test
@@ -41,7 +43,8 @@ public class AdminOfficerPersonalisationProviderTest {
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test
@@ -50,6 +53,7 @@ public class AdminOfficerPersonalisationProviderTest {
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

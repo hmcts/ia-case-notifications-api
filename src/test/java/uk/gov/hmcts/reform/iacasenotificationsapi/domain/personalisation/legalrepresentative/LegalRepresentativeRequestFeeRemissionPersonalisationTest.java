@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,8 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -71,6 +73,7 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

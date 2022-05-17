@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CASE_FLAG_SET_ASIDE_REHEARD_EXISTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,8 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
 
     @BeforeEach
     public void setup() {
+
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
 
         adminOfficerReviewHearingRequirementsPersonalisation = new AdminOfficerReviewHearingRequirementsPersonalisation(
             reviewHearingRequirementsTemplateId,
@@ -86,7 +89,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey)).isEqualTo(asylumCase);
 
     }
 
@@ -96,6 +99,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

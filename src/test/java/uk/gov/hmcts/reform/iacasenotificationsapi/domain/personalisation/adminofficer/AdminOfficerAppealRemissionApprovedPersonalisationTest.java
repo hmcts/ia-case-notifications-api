@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class AdminOfficerAppealRemissionApprovedPersonalisationTest {
 
     @BeforeEach
     void setup() {
+
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
 
         adminOfficerAppealRemissionApprovedPersonalisation = new AdminOfficerAppealRemissionApprovedPersonalisation(
             templateId,
@@ -68,7 +71,8 @@ class AdminOfficerAppealRemissionApprovedPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealRemissionApprovedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -78,7 +82,8 @@ class AdminOfficerAppealRemissionApprovedPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealRemissionApprovedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
 }

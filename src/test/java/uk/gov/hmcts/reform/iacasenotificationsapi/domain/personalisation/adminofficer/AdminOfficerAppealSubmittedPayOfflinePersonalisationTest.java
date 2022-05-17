@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_TYPE;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,8 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
 
     @BeforeEach
     void setup() {
+
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
 
         adminOfficerAppealSubmittedPayOfflinePersonalisation = new AdminOfficerAppealSubmittedPayOfflinePersonalisation(
             templateId,
@@ -100,7 +103,8 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -110,6 +114,7 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,8 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
 
     @BeforeEach
     void setUp() {
+
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
 
         adminOfficerDecidedOrEndedAppealPendingPayment =
                 new AdminOfficerDecidedOrEndedAppealPendingPayment(
@@ -58,7 +61,8 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 
     @Test
@@ -67,6 +71,7 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
     }
 }

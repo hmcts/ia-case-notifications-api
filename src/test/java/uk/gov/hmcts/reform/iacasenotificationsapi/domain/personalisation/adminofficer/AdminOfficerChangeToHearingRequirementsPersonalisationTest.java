@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Comparator;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisationTest {
     @BeforeEach
     public void setup() {
 
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider("");
         adminOfficerChangeToHearingRequirementsPersonalisation =
             new AdminOfficerChangeToHearingRequirementsPersonalisation(
                 templateId,
@@ -64,7 +66,8 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerChangeToHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
 
     }
 
@@ -74,6 +77,8 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerChangeToHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(asylumCase).usingComparatorForFields(Comparator.comparing(personalisation::containsKey))
+                .isEqualTo(asylumCase);
+
     }
 }
