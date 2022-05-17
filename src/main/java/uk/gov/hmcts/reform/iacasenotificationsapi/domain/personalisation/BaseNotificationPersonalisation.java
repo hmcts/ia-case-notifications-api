@@ -27,4 +27,16 @@ public interface BaseNotificationPersonalisation<T extends CaseData> {
     default Map<String, String> getPersonalisation(Callback<T> callback) {
         return getPersonalisation(callback.getCaseDetails().getCaseData());
     }
+
+    default String endApplicationOutcomeFormatter(String endApplicationOutcome) {
+        switch (endApplicationOutcome) {
+            case "bailDismissedWithoutHearing":
+                return "Bail dismissed without a hearing";
+            case "withdrawn":
+                return "Withdrawn";
+            case "notInImmigrationDetention":
+                return "Not in immigration detention";
+        }
+        return "";
+    }
 }

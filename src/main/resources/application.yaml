@@ -931,6 +931,7 @@ security:
       - "asyncStitchingComplete"
       - "submitApplication"
       - "uploadSignedDecisionNotice"
+      - "endApplication"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -972,6 +973,7 @@ security:
       - "requestNewHearingRequirements"
       - "asyncStitchingComplete"
       - "uploadSignedDecisionNotice"
+      - "endApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

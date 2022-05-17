@@ -33,7 +33,7 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-    private final String outcomeOfApplication = "someOutcome";
+    private final String outcomeOfApplication = "withdrawn";
     private final String reasonsOfOutcome = "someReasons";
     private final String endApplicationDate = "2022-05-13";
 
@@ -49,8 +49,8 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
-        when(bailCase.read(BailCaseFieldDefinition.OUTCOME_OF_APPLICATION, String.class)).thenReturn(Optional.of(outcomeOfApplication));
-        when(bailCase.read(BailCaseFieldDefinition.REASONS_OF_OUTCOME, String.class)).thenReturn(Optional.of(reasonsOfOutcome));
+        when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_REASONS, String.class)).thenReturn(Optional.of(reasonsOfOutcome));
+        when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class)).thenReturn(Optional.of(outcomeOfApplication));
         when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class)).thenReturn(Optional.of(endApplicationDate));
 
         legalRepresentativeBailApplicationEndedPersonalisation = new LegalRepresentativeBailApplicationEndedPersonalisation(
@@ -105,8 +105,8 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(outcomeOfApplication, personalisation.get("outcomeOfApplication"));
-        assertEquals(reasonsOfOutcome, personalisation.get("reasonsOfOutcome"));
+        assertEquals("Withdrawn", personalisation.get("endApplicationOutcome"));
+        assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
         assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
     }
 
@@ -118,8 +118,8 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.OUTCOME_OF_APPLICATION, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.REASONS_OF_OUTCOME, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_REASONS, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
@@ -130,8 +130,8 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
         assertEquals("", personalisation.get("applicantGivenNames"));
         assertEquals("", personalisation.get("applicantFamilyName"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("outcomeOfApplication"));
-        assertEquals("No reason given", personalisation.get("reasonsOfOutcome"));
+        assertEquals("", personalisation.get("endApplicationOutcome"));
+        assertEquals("No reason given", personalisation.get("endApplicationReasons"));
         assertEquals("", personalisation.get("endApplicationDate"));
     }
 

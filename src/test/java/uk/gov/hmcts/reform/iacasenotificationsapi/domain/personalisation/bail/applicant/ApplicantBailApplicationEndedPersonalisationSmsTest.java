@@ -25,7 +25,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
     private final String smsTemplateId = "someTemplateId";
     private String mobileNumber = "111 111 111";
     private final String bailReferenceNumber = "someReferenceNumber";
-    private final String outcomeOfApplication = "someOutcome";
+    private final String outcomeOfApplication = "bailDismissedWithoutHearing";
     private final String endApplicationDate = "2022-05-13";
 
     @Mock
@@ -38,7 +38,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
 
         when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mobileNumber));
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
-        when(bailCase.read(OUTCOME_OF_APPLICATION, String.class)).thenReturn(Optional.of(outcomeOfApplication));
+        when(bailCase.read(END_APPLICATION_OUTCOME, String.class)).thenReturn(Optional.of(outcomeOfApplication));
         when(bailCase.read(END_APPLICATION_DATE, String.class)).thenReturn(Optional.of(endApplicationDate));
 
         applicantBailApplicationEndedPersonalisationSms =
@@ -83,7 +83,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
             applicantBailApplicationEndedPersonalisationSms.getPersonalisation(bailCase);
 
         assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(outcomeOfApplication, personalisation.get("outcomeOfApplication"));
+        assertEquals("Bail dismissed without a hearing", personalisation.get("endApplicationOutcome"));
         assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
     }
 
@@ -91,7 +91,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
     public void should_return_personalisation_when_only_mandatory_information_given() {
 
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(OUTCOME_OF_APPLICATION, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(END_APPLICATION_OUTCOME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(END_APPLICATION_DATE, String.class)).thenReturn(Optional.empty());
 
 
@@ -99,7 +99,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
             applicantBailApplicationEndedPersonalisationSms.getPersonalisation(bailCase);
 
         assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("outcomeOfApplication"));
+        assertEquals("", personalisation.get("endApplicationOutcome"));
         assertEquals("", personalisation.get("endApplicationDate"));
     }
 }
