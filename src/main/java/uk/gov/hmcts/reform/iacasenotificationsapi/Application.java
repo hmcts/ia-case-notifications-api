@@ -6,7 +6,6 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableCircuitBreaker
 @EnableFeignClients(basePackages =
     {
     "uk.gov.hmcts.reform.auth",
