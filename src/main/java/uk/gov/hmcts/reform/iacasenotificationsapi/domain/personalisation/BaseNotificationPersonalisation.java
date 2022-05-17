@@ -28,7 +28,7 @@ public interface BaseNotificationPersonalisation<T extends CaseData> {
         return getPersonalisation(callback.getCaseDetails().getCaseData());
     }
 
-    default String endApplicationOutcomeFormatter(String endApplicationOutcome) {
+    default String formatEndApplicationOutcome(String endApplicationOutcome) {
         switch (endApplicationOutcome) {
             case "bailDismissedWithoutHearing":
                 return "Bail dismissed without a hearing";
@@ -36,7 +36,8 @@ public interface BaseNotificationPersonalisation<T extends CaseData> {
                 return "Withdrawn";
             case "notInImmigrationDetention":
                 return "Not in immigration detention";
+            default:
+                return "";
         }
-        return "";
     }
 }

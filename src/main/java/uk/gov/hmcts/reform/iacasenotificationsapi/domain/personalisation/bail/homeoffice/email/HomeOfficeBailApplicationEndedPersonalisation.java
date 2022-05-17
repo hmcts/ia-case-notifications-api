@@ -62,7 +62,7 @@ public class HomeOfficeBailApplicationEndedPersonalisation implements BailEmailN
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("endApplicationReasons", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_REASONS, String.class).orElse("No reason given"))
-            .put("endApplicationOutcome", endApplicationOutcomeFormatter(
+            .put("endApplicationOutcome", formatEndApplicationOutcome(
                 bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class).orElse("")))
             .put("endApplicationDate", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class).orElse(""))
             .build();
