@@ -3,7 +3,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,14 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 
 @ExtendWith(MockitoExtension.class)
 class AdminOfficerReListCasePersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private String templateId = "someTemplateId";
     private AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation;
 
@@ -31,8 +32,9 @@ class AdminOfficerReListCasePersonalisationTest {
         adminOfficerReListCasePersonalisation = new AdminOfficerReListCasePersonalisation(
             templateId,
             changeToHearingRequirementsAdminOfficerEmailAddress,
-            adminOfficerPersonalisationProvider
+            new AdminOfficerPersonalisationProvider("")
         );
+
     }
 
     @Test
@@ -59,17 +61,33 @@ class AdminOfficerReListCasePersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), "")
+                .put(APPELLANT_GIVEN_NAMES.value(), "")
+                .put(APPELLANT_FAMILY_NAME.value(), "")
+                .put("linkToOnlineService", "")
+                .put(ARIA_LISTING_REFERENCE.value(), "")
+                .build();
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
 
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), "")
+                .put(APPELLANT_GIVEN_NAMES.value(), "")
+                .put(APPELLANT_FAMILY_NAME.value(), "")
+                .put("linkToOnlineService", "")
+                .put(ARIA_LISTING_REFERENCE.value(), "")
+                .build();
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 }

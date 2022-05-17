@@ -1,9 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +28,8 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
 
     private String adminOfficerEmailAddress = "adminOfficer@example.com";
 
+    private Map<String, String> mockedPersonalisation;
+
     private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerdjournHearingWithoutDatePersonalisation;
 
     @BeforeEach
@@ -38,13 +38,13 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
         String appellantGivenNames = "someAppellantGivenNames";
         String appellantFamilyName = "someAppellantFamilyName";
         String listRef = "LP/12345/2019";
+        mockedPersonalisation = Map.of("appealReferenceNumber", appealReferenceNumber,
+                "appellantGivenNames", appellantGivenNames, "appellantFamilyName", appellantFamilyName,
+                "ariaListingReference", listRef);
         when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()
-                .put("appealReferenceNumber", appealReferenceNumber)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("ariaListingReference", listRef)
+                .putAll(mockedPersonalisation)
                 .build());
 
         adminOfficerdjournHearingWithoutDatePersonalisation =
@@ -85,6 +85,8 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertNotNull(personalisation);
+        assertTrue(personalisation.keySet().equals(mockedPersonalisation.keySet()));
+
     }
 }

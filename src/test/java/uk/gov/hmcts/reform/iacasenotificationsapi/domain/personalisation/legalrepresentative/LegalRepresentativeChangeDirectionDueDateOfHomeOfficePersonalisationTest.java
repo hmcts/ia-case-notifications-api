@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_LEGAL_REPRESENTATIVE;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,12 +103,15 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
 
     @Test
     public void should_return_given_personalisation_when_all_information_given() {
+        Map<String, String> expPersonalisation = new HashMap<>();
+        expPersonalisation.putAll(getPersonalisationForLegalRep());
+        expPersonalisation.put("linkToOnlineService", iaExUiFrontendUrl);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForLegalRep());
 
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

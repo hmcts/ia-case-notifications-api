@@ -124,16 +124,14 @@ public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTe
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("legalRepReferenceNumber", legalRepRefNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
-                .put("iaExUiFrontendUrl", iaExUiFrontendUrl)
-                .put("directionExplanation", directionExplanation)
-                .put("expectedDirectionDueDate", expectedDirectionDueDate)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("insertDate", "10 Sep 2019")
                 .build();
 
         Map<String, String> actualPersonalisation =
                 legalRepresentativeRequestRespondentAmendDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).usingRecursiveComparison().isEqualTo(expectedPersonalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -148,9 +146,7 @@ public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTe
                 .put("legalRepReferenceNumber", "")
                 .put("appellantGivenNames", "")
                 .put("appellantFamilyName", "")
-                .put("iaExUiFrontendUrl", "")
-                .put("directionExplanation", "")
-                .put("expectedDirectionDueDate", "")
+                .put("insertDate", "10 Sep 2019")
                 .build();
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -161,7 +157,7 @@ public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTe
         Map<String, String> actualPersonalisation =
                 legalRepresentativeRequestRespondentAmendDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).usingRecursiveComparison().isEqualTo(expectedPersonalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

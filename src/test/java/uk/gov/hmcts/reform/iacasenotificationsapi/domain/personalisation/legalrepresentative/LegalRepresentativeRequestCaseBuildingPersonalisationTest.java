@@ -127,17 +127,17 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
                 .<String, String>builder()
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
-                .put("directionExplanation", directionExplanation)
-                .put("expectedDirectionDueDate", expectedDirectionDueDate)
-                .put("iaExUiFrontendUrl", iaExUiFrontendUrl)
-                .put("legalRepRefNumber", legalRepRefNumber)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("explanation", directionExplanation)
+                .put("legalRepReferenceNumber", legalRepRefNumber)
+                .put("dueDate", "10 Sep 2019")
+                .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
 
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestCaseBuildingPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).usingRecursiveComparison().isEqualTo(expectedPersonalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -160,11 +160,21 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-
+        final Map<String, String> expPersonalisation =
+                ImmutableMap
+                        .<String, String>builder()
+                        .put("appealReferenceNumber", "")
+                        .put("appellantGivenNames", "")
+                        .put("appellantFamilyName", "")
+                        .put("explanation", directionExplanation)
+                        .put("legalRepReferenceNumber", "")
+                        .put("dueDate", "10 Sep 2019")
+                        .put("linkToOnlineService", iaExUiFrontendUrl)
+                        .build();
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestCaseBuildingPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(actualPersonalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

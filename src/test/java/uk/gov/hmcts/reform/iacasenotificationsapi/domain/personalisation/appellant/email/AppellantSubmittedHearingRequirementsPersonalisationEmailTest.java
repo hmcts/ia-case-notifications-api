@@ -119,10 +119,13 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
+        Map<String, String> expPersonalisation = Map.of(APPEAL_REFERENCE_NUMBER.value(), "",
+                APPELLANT_FAMILY_NAME.value(), "", APPELLANT_GIVEN_NAMES.value(), "",
+                HOME_OFFICE_REFERENCE_NUMBER.value(), "", "dueDate", "31 May 2022");
         Map<String, String> personalisation =
             appellantSubmittedHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

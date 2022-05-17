@@ -74,10 +74,15 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
     @Test
     public void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "someReferenceNumber",
+                "appellantFamilyName", "someAppellantFamilyName", "appellantGivenNames",
+                "someAppellantGivenNames", "customerServicesEmail", "cust.services@example.com",
+                "customerServicesTelephone", "555 555 555", "legalRepReferenceNumber",
+                "legalRepReferenceNumber", "linkToOnlineService", "http://localhost");
         Map<String, String> personalisation =
             legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        Assertions.assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        Assertions.assertThat(personalisation).usingRecursiveComparison().isEqualTo(expPersonalisation);
     }
 
     @Test

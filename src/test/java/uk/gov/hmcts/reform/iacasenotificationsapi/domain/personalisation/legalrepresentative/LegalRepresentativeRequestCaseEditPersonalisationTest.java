@@ -99,10 +99,10 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
             .put("appealReferenceNumber", scenario.appealReferenceNumber)
             .put("appellantGivenNames", scenario.appellantGivenNames)
             .put("appellantFamilyName", scenario.appellantFamilyName)
-            .put("directionExplanation", DIRECTION_EXPLANATION)
-            .put("expectedDirectionDueDate", DIRECTION_DUE_DATE)
-            .put("iaExUiFrontendUrl", IA_EX_UI_FRONTEND_URL)
-            .put("legalRepRefNumber", scenario.legalRepRefNumber)
+            .put("explanation", DIRECTION_EXPLANATION)
+            .put("dueDate", "3 May 2020")
+            .put("linkToOnlineService", IA_EX_UI_FRONTEND_URL)
+            .put("legalRepReferenceNumber", scenario.legalRepRefNumber)
             .build();
 
         when((direction.getDateDue())).thenReturn(DIRECTION_DUE_DATE);
@@ -128,7 +128,7 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).usingRecursiveComparison().isEqualTo(expectedPersonalisation);
         assertEquals(CUSTOMER_SERVICES_PROVIDER_PHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_PROVIDER_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }

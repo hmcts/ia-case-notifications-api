@@ -49,10 +49,14 @@ public class AdminOfficerFtpaSubmittedPersonalisationTest {
     public void should_return_given_personalisation() {
 
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .putAll(getPersonalisation()).build();
+        Map<String, String> personalisation =
             adminOfficerFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(personalisation).usingRecursiveComparison().isEqualTo(expPersonalisation);
     }
 
     @Test

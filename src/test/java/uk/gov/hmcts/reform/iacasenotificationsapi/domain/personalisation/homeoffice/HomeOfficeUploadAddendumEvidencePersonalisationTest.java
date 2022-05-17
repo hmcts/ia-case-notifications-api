@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,12 +88,15 @@ public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        Map<String, String> expPersonalisation = new HashMap<>();
+        expPersonalisation.putAll(getPersonalisationForHomeOffice());
+        expPersonalisation.put("linkToOnlineService", iaExUiFrontendUrl);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForHomeOffice());
 
         Map<String, String> personalisation =
             homeOfficeUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

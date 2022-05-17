@@ -16,8 +16,6 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
 
     @Mock
     private AsylumCase asylumCase;
-    @Mock
-    private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
     private String ctscAdminPendingPaymentEmailAddress = "pendingPayment@example.com";
@@ -29,7 +27,8 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
 
         adminOfficerDecidedOrEndedAppealPendingPayment =
                 new AdminOfficerDecidedOrEndedAppealPendingPayment(
-                        templateId, ctscAdminPendingPaymentEmailAddress, adminOfficerPersonalisationProvider);
+                        templateId, ctscAdminPendingPaymentEmailAddress,
+                        new AdminOfficerPersonalisationProvider(""));
     }
 
     @Test
@@ -55,18 +54,22 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName",
+                "", "appellantGivenNames", "", "linkToOnlineService", "");
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName",
+                "", "appellantGivenNames", "", "linkToOnlineService", "");
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 }

@@ -104,10 +104,10 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
-
+        Map<String, String> expPersonalisation = getPersonalisationMapWithGivenValues();
         Map<String, String> personalisation = homeOfficeEditListingNoChangePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

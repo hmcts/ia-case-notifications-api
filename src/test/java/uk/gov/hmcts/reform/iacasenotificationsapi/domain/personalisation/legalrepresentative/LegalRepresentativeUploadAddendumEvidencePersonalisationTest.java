@@ -75,10 +75,17 @@ public class LegalRepresentativeUploadAddendumEvidencePersonalisationTest {
     public void should_return_given_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForLegalRep());
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "hmctsReference",
+                "appellantFamilyName", "someAppellantFamilyName", "appellantGivenNames",
+                "someAppellantGivenNames", "ariaListingReference", "someAriaListingReference",
+                "customerServicesEmail", "cust.services@example.com", "customerServicesTelephone",
+                "555 555 555", "legalRepReference", "legalRepresentativeReference",
+                "linkToOnlineService", "http://localhost");
+
         Map<String, String> personalisation =
             legalRepresentativeUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

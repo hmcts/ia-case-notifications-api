@@ -15,6 +15,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_REASON;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -129,11 +131,22 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber)
+                .put(APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), legalRepRefNumber)
+                .put(ARIA_LISTING_REFERENCE.value(), ariaListingReference)
+                .put(REINSTATE_APPEAL_DATE.value(), "8 Oct 2020")
+                .put(REINSTATE_APPEAL_REASON.value(), reinstateAppealReason)
+                .put(REINSTATED_DECISION_MAKER.value(), reinstatedDecisionMaker)
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             legalRepresentativeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -149,12 +162,23 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
         when(asylumCase.read(REINSTATE_APPEAL_DATE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(REINSTATE_APPEAL_REASON, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.empty());
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), "")
+                .put(APPELLANT_GIVEN_NAMES.value(), "")
+                .put(APPELLANT_FAMILY_NAME.value(), "")
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), "")
+                .put(ARIA_LISTING_REFERENCE.value(), "")
+                .put(REINSTATE_APPEAL_DATE.value(), "")
+                .put(REINSTATE_APPEAL_REASON.value(), "No reason given")
+                .put(REINSTATED_DECISION_MAKER.value(), "")
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             legalRepresentativeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("No reason given", personalisation.get("reinstateAppealReason"));
