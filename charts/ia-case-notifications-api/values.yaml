@@ -60,8 +60,8 @@ java:
         - s2s-secret
         - s2s-microservice
         - AppInsightsInstrumentationKey
-        - name:fees-admin-officer-email
-          alias:FEES_ADMIN_OFFICER_EMAIL
+        - name: fees-admin-officer-email
+          alias: FEES_ADMIN_OFFICER_EMAIL
         - home-office-email-apc
         - home-office-email-lart
         - upper-tribunal-notices-email
