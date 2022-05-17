@@ -37,8 +37,7 @@ public class ApplicantBailApplicationEndedPersonalisationSms implements Applican
         return ImmutableMap
             .<String, String>builder()
             .put("bailReferenceNumber", bailCase.read(BailCaseFieldDefinition.BAIL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("endApplicationOutcome", formatEndApplicationOutcome(
-                bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class).orElse("")))
+            .put("endApplicationOutcome", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class).orElse(""))
             .put("endApplicationDate", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class).orElse(""))
             .build();
     }

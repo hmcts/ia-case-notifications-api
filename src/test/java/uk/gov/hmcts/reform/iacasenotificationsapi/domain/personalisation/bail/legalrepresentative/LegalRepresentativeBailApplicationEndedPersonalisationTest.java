@@ -33,7 +33,7 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-    private final String outcomeOfApplication = "withdrawn";
+    private final String outcomeOfApplication = "someOutcome";
     private final String reasonsOfOutcome = "someReasons";
     private final String endApplicationDate = "2022-05-13";
 
@@ -105,7 +105,7 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("Withdrawn", personalisation.get("endApplicationOutcome"));
+        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
         assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
         assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
     }

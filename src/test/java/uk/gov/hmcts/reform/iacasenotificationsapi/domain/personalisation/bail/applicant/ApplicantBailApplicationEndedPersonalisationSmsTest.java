@@ -25,7 +25,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
     private final String smsTemplateId = "someTemplateId";
     private String mobileNumber = "111 111 111";
     private final String bailReferenceNumber = "someReferenceNumber";
-    private final String outcomeOfApplication = "bailDismissedWithoutHearing";
+    private final String outcomeOfApplication = "someOutcome";
     private final String endApplicationDate = "2022-05-13";
 
     @Mock
@@ -83,7 +83,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
             applicantBailApplicationEndedPersonalisationSms.getPersonalisation(bailCase);
 
         assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals("Bail dismissed without a hearing", personalisation.get("endApplicationOutcome"));
+        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
         assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
     }
 

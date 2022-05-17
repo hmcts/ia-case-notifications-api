@@ -31,7 +31,7 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
     private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
-    private String outcomeOfApplication = "notInImmigrationDetention";
+    private String outcomeOfApplication = "someOutcome";
     private String reasonsOfOutcome = "someReason";
     private String endApplicationDate = "2022-05-13";
     @Mock BailCase bailCase;
@@ -84,7 +84,7 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("Not in immigration detention", personalisation.get("endApplicationOutcome"));
+        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
         assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
         assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
     }
@@ -101,7 +101,7 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("Not in immigration detention", personalisation.get("endApplicationOutcome"));
+        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
         assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
         assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
     }
