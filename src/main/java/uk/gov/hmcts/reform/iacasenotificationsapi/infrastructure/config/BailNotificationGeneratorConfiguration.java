@@ -157,7 +157,7 @@ public class BailNotificationGeneratorConfiguration {
         ApplicantBailApplicationEndedPersonalisationSms applicantBailApplicationEndedPersonalisationSms,
         HomeOfficeBailApplicationEndedPersonalisation homeOfficeBailApplicationEndedPersonalisation,
         LegalRepresentativeBailApplicationEndedPersonalisation legalRepresentativeBailApplicationEndedPersonalisation,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
@@ -179,7 +179,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> endApplicationWithoutLrNotificationGenerator(
         ApplicantBailApplicationEndedPersonalisationSms applicantBailApplicationEndedPersonalisationSms,
         HomeOfficeBailApplicationEndedPersonalisation homeOfficeBailApplicationEndedPersonalisation,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
