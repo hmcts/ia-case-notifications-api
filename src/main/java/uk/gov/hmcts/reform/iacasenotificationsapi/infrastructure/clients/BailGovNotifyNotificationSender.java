@@ -3,27 +3,33 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
 
 @Service
-public class GovNotifyNotificationSender implements NotificationSender {
+public class BailGovNotifyNotificationSender implements NotificationSender {
 
-    private static final org.slf4j.Logger LOG = getLogger(GovNotifyNotificationSender.class);
+    private static final org.slf4j.Logger LOG = getLogger(BailGovNotifyNotificationSender.class);
 
     private final int deduplicateSendsWithinSeconds;
-    private final RetryableNotificationClient notificationClient;
+
+    @Autowired
+    @Qualifier("BailClient")
+    private final RetryableNotificationClient notificationBailClient;
+
     private final NotificationSenderHelper senderHelper;
 
-    public GovNotifyNotificationSender(
+    public BailGovNotifyNotificationSender(
         @Value("${notificationSender.deduplicateSendsWithinSeconds}") int deduplicateSendsWithinSeconds,
-        RetryableNotificationClient notificationClient,
+        RetryableNotificationClient notificationBailClient,
         NotificationSenderHelper senderHelper
     ) {
         this.deduplicateSendsWithinSeconds = deduplicateSendsWithinSeconds;
-        this.notificationClient = notificationClient;
+        this.notificationBailClient = notificationBailClient;
         this.senderHelper = senderHelper;
     }
 
@@ -38,7 +44,7 @@ public class GovNotifyNotificationSender implements NotificationSender {
                 emailAddress,
                 personalisation,
                 reference,
-                notificationClient,
+                notificationBailClient,
                 deduplicateSendsWithinSeconds,
                 LOG
         );
@@ -56,7 +62,7 @@ public class GovNotifyNotificationSender implements NotificationSender {
                 phoneNumber,
                 personalisation,
                 reference,
-                notificationClient,
+                notificationBailClient,
                 deduplicateSendsWithinSeconds,
                 LOG
         );

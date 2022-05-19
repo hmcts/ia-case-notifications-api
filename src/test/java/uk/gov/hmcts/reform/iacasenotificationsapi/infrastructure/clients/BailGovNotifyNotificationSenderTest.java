@@ -1,10 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Map;
@@ -14,18 +11,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
 import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
-public class GovNotifyNotificationSenderTest {
+public class BailGovNotifyNotificationSenderTest {
 
-    private static final org.slf4j.Logger LOG = getLogger(GovNotifyNotificationSender.class);
+    private static final org.slf4j.Logger LOG = getLogger(BailGovNotifyNotificationSender.class);
 
     private int deduplicateSendsWithinSeconds = 1;
+
     @Mock
-    private RetryableNotificationClient notificationClient;
+    @Qualifier("BailClient")
+    private RetryableNotificationClient notificationBailClient;
 
     @Mock private NotificationSenderHelper senderHelper;
 
@@ -35,20 +35,20 @@ public class GovNotifyNotificationSenderTest {
     private Map<String, String> personalisation = mock(Map.class);
     private String reference = "our-reference";
 
-    private GovNotifyNotificationSender govNotifyNotificationSender;
+    private BailGovNotifyNotificationSender bailGovNotifyNotificationSender;
 
     @BeforeEach
     public void setUp() {
-        govNotifyNotificationSender =
-            new GovNotifyNotificationSender(
+        bailGovNotifyNotificationSender =
+            new BailGovNotifyNotificationSender(
                 deduplicateSendsWithinSeconds,
-                notificationClient,
+                notificationBailClient,
                 senderHelper
             );
     }
 
     @Test
-    public void should_send_email_using_appeal_gov_notify() throws NotificationClientException {
+    public void should_send_email_using_bail_gov_notify() throws NotificationClientException {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
@@ -57,25 +57,25 @@ public class GovNotifyNotificationSenderTest {
                 emailAddress,
                 personalisation,
                 reference,
-                notificationClient,
+                notificationBailClient,
                 deduplicateSendsWithinSeconds,
                 LOG
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
-            govNotifyNotificationSender.sendEmail(
-                templateId,
-                emailAddress,
-                personalisation,
-                reference
-            );
+                bailGovNotifyNotificationSender.sendEmail(
+                        templateId,
+                        emailAddress,
+                        personalisation,
+                        reference
+                );
 
         verify(senderHelper, times(1)).sendEmail(
                 templateId,
                 emailAddress,
                 personalisation,
                 reference,
-                notificationClient,
+                notificationBailClient,
                 deduplicateSendsWithinSeconds,
                 LOG
         );
@@ -84,7 +84,7 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_sms_using_appeal_gov_notify() throws NotificationClientException {
+    public void should_send_sms_using_bail_gov_notify() throws NotificationClientException {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
@@ -93,30 +93,29 @@ public class GovNotifyNotificationSenderTest {
                 phoneNumber,
                 personalisation,
                 reference,
-                notificationClient,
+                notificationBailClient,
                 deduplicateSendsWithinSeconds,
                 LOG
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
-            govNotifyNotificationSender.sendSms(
-                templateId,
-                phoneNumber,
-                personalisation,
-                reference
-            );
+                bailGovNotifyNotificationSender.sendSms(
+                        templateId,
+                        phoneNumber,
+                        personalisation,
+                        reference
+                );
 
         verify(senderHelper, times(1)).sendSms(
                 templateId,
                 phoneNumber,
                 personalisation,
                 reference,
-                notificationClient,
+                notificationBailClient,
                 deduplicateSendsWithinSeconds,
                 LOG
         );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);
     }
-
 }

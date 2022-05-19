@@ -22,10 +22,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -33,6 +31,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEditListingNoChangePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEditListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -44,7 +43,7 @@ public class EditListingEmailNotificationGeneratorTest {
     LegalRepresentativeEditListingPersonalisation editListingChangeEmailNotificationPersonalisation1;
 
     @Mock
-    NotificationSender notificationSender;
+    GovNotifyNotificationSender notificationSender;
     @Spy
     NotificationIdAppender notificationIdAppender;
     @Mock
@@ -76,8 +75,6 @@ public class EditListingEmailNotificationGeneratorTest {
     private Map<String, String> personalizationMap1 = emptyMap();
     private Map<String, String> personalizationMap2 = emptyMap();
 
-    private CaseType caseType1 = CaseType.ASYLUM_CASE;
-
     private List<IdValue<String>> notificationsSent = newArrayList();
 
     private String notificationId1 = "notificationId1";
@@ -105,9 +102,9 @@ public class EditListingEmailNotificationGeneratorTest {
         when(editListingChangeEmailNotificationPersonalisation1.getPersonalisation(callback))
             .thenReturn(personalizationMap2);
 
-        when(notificationSender.sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1))
+        when(notificationSender.sendEmail(templateId1, emailAddress1, personalizationMap1, refId1))
             .thenReturn(notificationId1);
-        when(notificationSender.sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1))
+        when(notificationSender.sendEmail(templateId2, emailAddress2, personalizationMap2, refId2))
             .thenReturn(notificationId2);
 
         when(notificationIdAppender.append(notificationsSent, refId1, notificationId1)).thenReturn(notificationsSent);
@@ -140,8 +137,8 @@ public class EditListingEmailNotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1);
-        verify(notificationSender, never()).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1);
+        verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
+        verify(notificationSender, never()).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
 
         verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
@@ -174,8 +171,8 @@ public class EditListingEmailNotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender, never()).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1);
-        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1);
+        verify(notificationSender, never()).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
+        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
 
         verify(notificationIdAppender, never())
             .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
@@ -204,8 +201,8 @@ public class EditListingEmailNotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender, never()).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1);
-        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1);
+        verify(notificationSender, never()).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
+        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
 
         verify(notificationIdAppender, never())
             .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
@@ -234,8 +231,8 @@ public class EditListingEmailNotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender, never()).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, caseType1);
-        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, caseType1);
+        verify(notificationSender, never()).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1);
+        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
 
         verify(notificationIdAppender, never())
             .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));

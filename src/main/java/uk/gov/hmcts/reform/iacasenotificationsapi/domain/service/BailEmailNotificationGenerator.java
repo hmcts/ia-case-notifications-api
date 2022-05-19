@@ -3,22 +3,21 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.BailGovNotifyNotificationSender;
 
 public class BailEmailNotificationGenerator implements BailNotificationGenerator {
 
     protected final List<BailEmailNotificationPersonalisation> bailEmailNotificationPersonalisations;
     protected final BailNotificationIdAppender notificationIdAppender;
-    protected final NotificationSender notificationSender;
+    protected final BailGovNotifyNotificationSender notificationSender;
 
     public BailEmailNotificationGenerator(
         List<BailEmailNotificationPersonalisation> bailEmailNotificationPersonalisations,
-        NotificationSender notificationSender,
+        BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         this.bailEmailNotificationPersonalisations = bailEmailNotificationPersonalisations;
@@ -70,8 +69,7 @@ public class BailEmailNotificationGenerator implements BailNotificationGenerator
             emailTemplateId,
             email,
             personalisation.getPersonalisation(callback),
-            referenceId,
-            CaseType.BAIL_CASE
+            referenceId
         );
     }
 

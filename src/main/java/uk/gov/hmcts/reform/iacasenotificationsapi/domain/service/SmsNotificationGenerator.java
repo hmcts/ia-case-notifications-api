@@ -4,22 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.CaseType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 public class SmsNotificationGenerator implements NotificationGenerator {
 
     private final List<SmsNotificationPersonalisation> personalisationList;
     private final NotificationIdAppender notificationIdAppender;
-    private final NotificationSender notificationSender;
+    private final GovNotifyNotificationSender notificationSender;
 
     public SmsNotificationGenerator(
         List<SmsNotificationPersonalisation> aipPersonalisationList,
-        NotificationSender notificationSender,
+        GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         this.personalisationList = aipPersonalisationList;
@@ -76,8 +75,7 @@ public class SmsNotificationGenerator implements NotificationGenerator {
             smsTemplateId,
             mobileNumber,
             personalisation.getPersonalisation(callback),
-            referenceId,
-            CaseType.ASYLUM_CASE
+            referenceId
         );
     }
 }

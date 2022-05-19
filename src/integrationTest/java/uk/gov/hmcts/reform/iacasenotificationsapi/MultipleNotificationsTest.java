@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyMap;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
@@ -32,7 +31,6 @@ import ru.lanwen.wiremock.ext.WiremockResolver;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.StaticPortWiremockFactory;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
@@ -40,6 +38,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.CcdEventAuthorizor;
 
 @Slf4j
@@ -50,7 +49,7 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
     @MockBean
     private CcdEventAuthorizor ccdEventAuthorizor;
     @MockBean
-    private NotificationSender notificationSender;
+    private GovNotifyNotificationSender notificationSender;
     private List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
         Lists.newArrayList(
             new HashMap.SimpleImmutableEntry<>(Event.SUBMIT_APPEAL, "_APPEAL_SUBMITTED_CASE_OFFICER"),
@@ -95,7 +94,7 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
         List<IdValue<String>> existingNotifications =
             Lists.newArrayList(new IdValue<>(existingReference, notificationId));
 
-        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(CaseType.class))).thenReturn(notificationId);
+        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString())).thenReturn(notificationId);
 
         Direction direction = createExistingDirection(eventWithSuffixPair.getKey());
 
