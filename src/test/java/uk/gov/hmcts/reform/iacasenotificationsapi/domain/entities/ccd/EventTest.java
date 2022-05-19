@@ -90,11 +90,12 @@ public class EventTest {
         assertEquals("submitApplication", SUBMIT_APPLICATION.toString());
         assertEquals("uploadBailSummary", UPLOAD_BAIL_SUMMARY.toString());
         assertEquals("uploadSignedDecisionNotice", UPLOAD_SIGNED_DECISION_NOTICE.toString());
+        assertEquals("endApplication", END_APPLICATION.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(83, Event.values().length);
+        assertEquals(84, Event.values().length);
     }
 }

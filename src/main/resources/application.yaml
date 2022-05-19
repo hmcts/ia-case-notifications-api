@@ -794,6 +794,11 @@ govnotify:
         email: 3e4d7195-2e48-4ca0-b88f-ac6969cf8a4b
       uploadSignedDecisionNoticeWithoutLR:
         email: ffaee311-d762-4937-a7c9-17e9f3706873
+      endApplication:
+        sms: fbb7895c-891a-4e7a-89c3-bd822e3c0071
+        email: 52894473-9ded-40f8-9696-e19661fc4f44
+      endApplicationWithoutLR:
+        email: 93beafd6-7e2e-4e45-a4ea-c424ffa54521
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -926,6 +931,7 @@ security:
       - "asyncStitchingComplete"
       - "submitApplication"
       - "uploadSignedDecisionNotice"
+      - "endApplication"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -967,6 +973,7 @@ security:
       - "requestNewHearingRequirements"
       - "asyncStitchingComplete"
       - "uploadSignedDecisionNotice"
+      - "endApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 
