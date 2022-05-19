@@ -799,6 +799,10 @@ govnotify:
         email: 52894473-9ded-40f8-9696-e19661fc4f44
       endApplicationWithoutLR:
         email: 93beafd6-7e2e-4e45-a4ea-c424ffa54521
+      uploadDocument:
+        email: 2b975611-7b5b-4c92-a231-406e6e64e4ba
+      uploadDocumentWithoutLR:
+        email: abf2bc5b-dbf0-43f0-b324-e3a08f2dea13
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -865,6 +869,7 @@ security:
       - "nocRequest"
       - "editPaymentMethod"
       - "submitApplication"
+      - "uploadDocuments"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -932,6 +937,7 @@ security:
       - "submitApplication"
       - "uploadSignedDecisionNotice"
       - "endApplication"
+      - "uploadDocuments"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -957,6 +963,7 @@ security:
       - "makeAnApplication"
       - "submitApplication"
       - "uploadBailSummary"
+      - "uploadDocuments"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -974,6 +981,7 @@ security:
       - "asyncStitchingComplete"
       - "uploadSignedDecisionNotice"
       - "endApplication"
+      - "uploadDocuments"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

@@ -87,6 +87,7 @@ public enum Event {
     UPLOAD_BAIL_SUMMARY("uploadBailSummary"),
     UPLOAD_SIGNED_DECISION_NOTICE("uploadSignedDecisionNotice"),
     END_APPLICATION("endApplication"),
+    UPLOAD_DOCUMENTS("uploadDocuments"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
