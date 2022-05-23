@@ -422,18 +422,21 @@ dependencies {
     contractTestCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     contractTestCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
 
-    contractTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+//    contractTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     contractTestCompile("org.junit.jupiter:junit-jupiter-api:5.7.0")
     contractTestRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
 
-    contractTestRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.8.1'
-    contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
-    contractTestCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+//    contractTestRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.8.1'
+//    contractTestImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+//    contractTestCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+//
+//    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloud
+//    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
 
-    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloud
-    contractTestImplementation group: 'org.springframework.cloud', name: 'spring-cloud-netflix-ribbon', version: '2.2.10.RELEASE'
+    contractTestCompile sourceSets.main.runtimeClasspath
+    contractTestCompile sourceSets.test.runtimeClasspath
 }
 
 dependencyCheck {
