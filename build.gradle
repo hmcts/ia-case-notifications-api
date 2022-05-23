@@ -243,11 +243,9 @@ task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test 
 runAndPublishConsumerPactTests.finalizedBy pactPublish
 
 pact {
-    broker {
-        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
-    }
     publish {
         pactDirectory = 'pacts'
+        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
         tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
         version = project.pacticipantVersion
     }
@@ -372,12 +370,6 @@ dependencies {
 
     compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.8.1'
 
-//    testImplementation libraries.junit5
-//    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-//        exclude group: 'junit', module: 'junit'
-//        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-//    }
-
     testCompile 'com.github.tomakehurst:wiremock:2.23.2'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
@@ -429,6 +421,7 @@ dependencies {
 
     contractTestCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     contractTestCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
+
     contractTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     contractTestCompile("org.junit.jupiter:junit-jupiter-api:5.7.0")
