@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.ResponseEntity.ok;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +32,7 @@ public class PostSubmitCallbackController<T extends CaseData> {
     }
 
     public ResponseEntity<PostSubmitCallbackResponse> ccdSubmitted(
-        @ApiParam(value = "Asylum case data", required = true) @RequestBody Callback<T> callback
+        @Parameter(name = "Asylum case data", required = true) @RequestBody Callback<T> callback
     ) {
         LOG.info(
             "Asylum Case Notifications API `ccdSubmitted` event `{}` received for Case ID `{}`",

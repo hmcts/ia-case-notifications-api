@@ -1,12 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PostSubmitCallbackDispatcher;
 
 @Slf4j
-@Api(
-    value = "/bail",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE
-)
+@Tag(name = "Asylum service")
 @RequestMapping(
     path = "/bail",
     consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -37,45 +34,45 @@ public class BailPostSubmitCallbackController extends PostSubmitCallbackControll
         super(callbackDispatcher);
     }
 
-    @ApiOperation(
-        value = "Handles 'SubmittedEvent' callbacks from CCD",
-        response = PostSubmitCallbackResponse.class,
-        authorizations =
-            {
-            @Authorization(value = "Authorization"),
-            @Authorization(value = "ServiceAuthorization")
-            }
+    @Operation(
+        summary = "Handles 'SubmittedEvent' callbacks from CCD",
+        security =
+        {
+            @SecurityRequirement(name = "Authorization"),
+            @SecurityRequirement(name = "ServiceAuthorization")
+        },
+        responses =
+        {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Transformed Asylum case data, with any identified error or warning messages",
+                    content = @Content(schema = @Schema(implementation = PostSubmitCallbackResponse.class))
+                ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content(schema = @Schema(implementation = PostSubmitCallbackResponse.class))
+                ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content(schema = @Schema(implementation = PostSubmitCallbackResponse.class))
+                ),
+            @ApiResponse(
+                    responseCode = "415",
+                    description = "Unsupported Media Type",
+                    content = @Content(schema = @Schema(implementation = PostSubmitCallbackResponse.class))
+                ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content(schema = @Schema(implementation = PostSubmitCallbackResponse.class))
+                )
+        }
     )
-    @ApiResponses({
-        @ApiResponse(
-            code = 200,
-            message = "Optional confirmation text for CCD UI",
-            response = PostSubmitCallbackResponse.class
-            ),
-        @ApiResponse(
-            code = 400,
-            message = "Bad Request",
-            response = PostSubmitCallbackResponse.class
-            ),
-        @ApiResponse(
-            code = 403,
-            message = "Forbidden",
-            response = PostSubmitCallbackResponse.class
-            ),
-        @ApiResponse(
-            code = 415,
-            message = "Unsupported Media Type",
-            response = PostSubmitCallbackResponse.class
-            ),
-        @ApiResponse(
-            code = 500,
-            message = "Internal Server Error",
-            response = PostSubmitCallbackResponse.class
-            )
-    })
     @PostMapping(path = "/ccdSubmitted")
     public ResponseEntity<PostSubmitCallbackResponse> ccdSubmitted(
-        @ApiParam(value = "Bail case data", required = true) @RequestBody Callback<BailCase> callback
+        @Parameter(name = "Bail case data", required = true) @RequestBody Callback<BailCase> callback
     ) {
         return super.ccdSubmitted(callback);
     }
