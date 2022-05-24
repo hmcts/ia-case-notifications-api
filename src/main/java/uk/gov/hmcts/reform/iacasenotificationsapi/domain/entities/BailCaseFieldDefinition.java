@@ -252,7 +252,13 @@ public enum BailCaseFieldDefinition {
     END_APPLICATION_DATE(
         "endApplicationDate", new TypeReference<String>() {}),
     END_APPLICATION_OUTCOME(
-        "endApplicationOutcome", new TypeReference<String>() {});
+        "endApplicationOutcome", new TypeReference<String>() {}),
+    SEND_DIRECTION_LIST(
+        "sendDirectionList", new TypeReference<String>() {}),
+    SEND_DIRECTION_DESCRIPTION(
+        "sendDirectionDescription", new TypeReference<String>() {}),
+    DATE_OF_COMPLIANCE(
+        "dateOfCompliance", new TypeReference<String>() {});
 
     private final String value;
     private final TypeReference typeReference;
