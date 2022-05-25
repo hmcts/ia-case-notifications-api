@@ -19,7 +19,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisation implements Lega
     private final String legalRepresentativeBailDirectionSentOtherPartiesPersonalisationTemplateId;
 
     public LegalRepresentativeBailDirectionSentPersonalisation(
-        @NotNull(message = "legalRepresentativeBailApplicationSubmittedPersonalisationTemplateId cannot be null")
+        @NotNull(message = "legalRepresentativeBailDirectionSentPersonalisationTemplateId cannot be null")
         @Value("${govnotify.bail.template.sendDirectionDirectRecipient.email}") String legalRepresentativeBailDirectionSentDirectRecipientPersonalisationTemplateId,
         @Value("${govnotify.bail.template.sendDirectionOtherParties.email}") String legalRepresentativeBailDirectionSentOtherPartiesPersonalisationTemplateId
     ) {

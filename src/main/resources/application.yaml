@@ -942,7 +942,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
-      - "sendDirection"
+      - "sendBailDirection"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -987,7 +987,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
-      - "sendDirection"
+      - "sendBailDirection"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

@@ -15,13 +15,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldD
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
 
 @Service
-public class HomeOfficeBailSendDirectionPersonalisation implements BailEmailNotificationPersonalisation {
+public class HomeOfficeBailDirectionSentPersonalisation implements BailEmailNotificationPersonalisation {
 
     private final String homeOfficeBailDirectionSentDirectRecipientPersonalisationTemplateId;
     private final String homeOfficeBailDirectionSentOtherPartiesPersonalisationTemplateId;
     private final String bailHomeOfficeEmailAddress;
 
-    public HomeOfficeBailSendDirectionPersonalisation(
+    public HomeOfficeBailDirectionSentPersonalisation(
         @NotNull(message = "homeOfficeBailApplicationSubmittedPersonalisationTemplateId cannot be null")
         @Value("${govnotify.bail.template.sendDirectionDirectRecipient.email}") String homeOfficeBailDirectionSentDirectRecipientPersonalisationTemplateId,
         @Value("${govnotify.bail.template.sendDirectionOtherParties.email}") String homeOfficeBailDirectionSentOtherPartiesPersonalisationTemplateId,

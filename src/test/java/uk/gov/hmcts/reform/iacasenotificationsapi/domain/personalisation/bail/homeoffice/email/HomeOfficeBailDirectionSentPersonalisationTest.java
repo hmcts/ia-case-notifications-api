@@ -28,7 +28,7 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
     private String dateOfCompliance = "2022-05-24";
     @Mock BailCase bailCase;
 
-    private HomeOfficeBailSendDirectionPersonalisation homeOfficeBailSendDirectionPersonalisation;
+    private HomeOfficeBailDirectionSentPersonalisation homeOfficeBailDirectionSentPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -37,26 +37,26 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
         when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.of(dateOfCompliance));
         when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of("Home Office"));
 
-        homeOfficeBailSendDirectionPersonalisation =
-            new HomeOfficeBailSendDirectionPersonalisation(templateIdForDirectRecipient, templateIdForOtherParties, homeOfficeEmailAddress);
+        homeOfficeBailDirectionSentPersonalisation =
+            new HomeOfficeBailDirectionSentPersonalisation(templateIdForDirectRecipient, templateIdForOtherParties, homeOfficeEmailAddress);
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateIdForDirectRecipient, homeOfficeBailSendDirectionPersonalisation.getTemplateId(bailCase));
+        assertEquals(templateIdForDirectRecipient, homeOfficeBailDirectionSentPersonalisation.getTemplateId(bailCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_BAIL_SENT_DIRECTION_HOME_OFFICE",
-            homeOfficeBailSendDirectionPersonalisation.getReferenceId(caseId));
+            homeOfficeBailDirectionSentPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> homeOfficeBailSendDirectionPersonalisation.getPersonalisation((BailCase) null))
+            () -> homeOfficeBailDirectionSentPersonalisation.getPersonalisation((BailCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("bailCase must not be null");
     }
@@ -65,7 +65,7 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
     public void should_return_personalisation_when_all_information_given_as_direct_recipient() {
 
         Map<String, String> personalisation =
-            homeOfficeBailSendDirectionPersonalisation.getPersonalisation(bailCase);
+            homeOfficeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
         assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
@@ -76,7 +76,7 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
         when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of("Applicant"));
 
         Map<String, String> personalisation =
-            homeOfficeBailSendDirectionPersonalisation.getPersonalisation(bailCase);
+            homeOfficeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
         assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
@@ -91,7 +91,7 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
         when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            homeOfficeBailSendDirectionPersonalisation.getPersonalisation(bailCase);
+            homeOfficeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
         assertEquals("", personalisation.get("sendDirectionDescription"));
         assertEquals("", personalisation.get("dateOfCompliance"));
