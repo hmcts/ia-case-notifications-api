@@ -253,7 +253,10 @@ public enum BailCaseFieldDefinition {
         "endApplicationDate", new TypeReference<String>() {}),
     END_APPLICATION_OUTCOME(
         "endApplicationOutcome", new TypeReference<String>() {});
-
+    /*RIA-5601 Add required CCD definitions
+    ((party)) -- From send direction event
+    ((explanation)) -- From send direction event
+     */
     private final String value;
     private final TypeReference typeReference;
 

@@ -803,6 +803,10 @@ govnotify:
         email: 2b975611-7b5b-4c92-a231-406e6e64e4ba
       uploadDocumentWithoutLR:
         email: abf2bc5b-dbf0-43f0-b324-e3a08f2dea13
+      changeDirectionDueDate:
+        email: 7cef2a13-701f-4425-9685-501236bf1c74
+      changeDirectionDueDateWithoutLR:
+        email: 3ea0376f-c7b7-4d8d-941d-abfacc1ddd96
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -870,6 +874,7 @@ security:
       - "editPaymentMethod"
       - "submitApplication"
       - "uploadDocuments"
+      - "changeDirectionDueDate"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -938,6 +943,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
+      - "changeDirectionDueDate"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -964,6 +970,7 @@ security:
       - "submitApplication"
       - "uploadBailSummary"
       - "uploadDocuments"
+      - "changeDirectionDueDate"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -982,6 +989,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
+      - "changeDirectionDueDate"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

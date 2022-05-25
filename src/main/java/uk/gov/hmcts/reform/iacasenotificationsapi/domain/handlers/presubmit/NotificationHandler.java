@@ -55,6 +55,7 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
             Event.UPLOAD_SIGNED_DECISION_NOTICE,
             Event.END_APPLICATION,
             Event.UPLOAD_DOCUMENTS
+                //RIA-5601 Add Event to skip list
         );
     }
 

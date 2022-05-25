@@ -88,6 +88,7 @@ public enum Event {
     UPLOAD_SIGNED_DECISION_NOTICE("uploadSignedDecisionNotice"),
     END_APPLICATION("endApplication"),
     UPLOAD_DOCUMENTS("uploadDocuments"),
+    //RIA-5601 Add event
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
