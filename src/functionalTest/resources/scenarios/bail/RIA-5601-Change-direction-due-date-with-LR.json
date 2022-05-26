@@ -6,7 +6,7 @@
     "credentials": "AdminOfficer",
     "input": {
       "id": 5601,
-      "eventId": "uploadDocuments", //RIA-5601 change event id
+      "eventId": "changeDirectionDueDateBail",
       "state": "bailSummaryUploaded",
       "caseData": {
         "template": "minimal-bail-application-submitted.json",

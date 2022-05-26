@@ -92,12 +92,12 @@ public class EventTest {
         assertEquals("uploadSignedDecisionNotice", UPLOAD_SIGNED_DECISION_NOTICE.toString());
         assertEquals("endApplication", END_APPLICATION.toString());
         assertEquals("uploadDocuments", UPLOAD_DOCUMENTS.toString());
+        assertEquals("changeDirectionDueDateBail", CHANGE_DIRECTION_DUE_DATE_BAIL.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
-        //RIA-5601 Add event
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(85, Event.values().length); //RIA-5601 Update count
+        assertEquals(86, Event.values().length);
     }
 }

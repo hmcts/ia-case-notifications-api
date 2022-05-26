@@ -49,7 +49,7 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
-        //RIA-5601 Add ((party)) and ((direction_due_date)) CCD fields
+        //RIA-5601 Add ((party)), ((direction due date)) and ((explanation)) fields here
 
         legalRepresentativeChangeDirectionDueDatePersonalisation = new LegalRepresentativeChangeDirectionDueDatePersonalisation(
             templateId

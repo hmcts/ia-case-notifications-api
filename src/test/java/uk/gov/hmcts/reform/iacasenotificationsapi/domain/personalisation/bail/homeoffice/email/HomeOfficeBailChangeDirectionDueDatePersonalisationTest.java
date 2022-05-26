@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
 import java.util.Map;
@@ -31,6 +32,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
     private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
+    private String sendDirectionList = "someSendDirectionList";
+    private String dateOfCompliance = "someDateOfCompliance";
+    private String sendDirectionDescription = "someSendDirectionDescription";
     @Mock BailCase bailCase;
 
     private HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation;
@@ -44,7 +48,10 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        //RIA-5601 Add ((party)) and ((direction_due_date)) CCD fields
+        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of(sendDirectionList));
+        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.of(dateOfCompliance));
+        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
+
         homeOfficeBailChangeDirectionDueDatePersonalisation =
             new HomeOfficeBailChangeDirectionDueDatePersonalisation(templateIdWithLegalRep, templateIdWithoutLegalRep, homeOfficeEmailAddress);
     }
@@ -80,6 +87,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(sendDirectionList, personalisation.get("sendDirectionList"));
+        assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
+        assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
     }
 
     @Test
@@ -94,6 +104,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(sendDirectionList, personalisation.get("sendDirectionList"));
+        assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
+        assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
     }
 
     @Test
@@ -104,6 +117,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             homeOfficeBailChangeDirectionDueDatePersonalisation.getPersonalisation(bailCase);
@@ -113,6 +129,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals("", personalisation.get("applicantGivenNames"));
         assertEquals("", personalisation.get("applicantFamilyName"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("sendDirectionList"));
+        assertEquals("", personalisation.get("dateOfCompliance"));
+        assertEquals("", personalisation.get("sendDirectionDescription"));
     }
 
 }

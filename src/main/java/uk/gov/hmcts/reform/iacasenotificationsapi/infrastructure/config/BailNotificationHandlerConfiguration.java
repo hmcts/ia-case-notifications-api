@@ -240,10 +240,10 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
                     boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.UPLOAD_DOCUMENTS); //RIA-5601 Add event
+                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL);
                     if (isAllowedBailCase) {
                         BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return (callback.getEvent() == Event.UPLOAD_DOCUMENTS //RIA-5601 Add event
+                        return (callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL
                                 && isLegallyRepresented(bailCase));
                     } else {
                         return false;
@@ -261,10 +261,10 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
                     boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.UPLOAD_DOCUMENTS); //RIA-5601 Add event
+                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL);
                     if (isAllowedBailCase) {
                         BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return (callback.getEvent() == Event.UPLOAD_DOCUMENTS //RIA-5601 Add event
+                        return (callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL
                                 && !isLegallyRepresented(bailCase));
                     } else {
                         return false;

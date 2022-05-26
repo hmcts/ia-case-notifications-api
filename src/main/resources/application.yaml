@@ -874,7 +874,6 @@ security:
       - "editPaymentMethod"
       - "submitApplication"
       - "uploadDocuments"
-      - "changeDirectionDueDate"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -943,7 +942,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
-      - "changeDirectionDueDate"
+      - "changeDirectionDueDateBail"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -970,7 +969,6 @@ security:
       - "submitApplication"
       - "uploadBailSummary"
       - "uploadDocuments"
-      - "changeDirectionDueDate"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -989,7 +987,6 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
-      - "changeDirectionDueDate"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

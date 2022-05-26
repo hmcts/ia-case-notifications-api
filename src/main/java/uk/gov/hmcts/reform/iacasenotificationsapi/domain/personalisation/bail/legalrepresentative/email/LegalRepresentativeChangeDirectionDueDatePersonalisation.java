@@ -46,7 +46,9 @@ public class LegalRepresentativeChangeDirectionDueDatePersonalisation implements
             .put("applicantGivenNames", bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class).orElse(""))
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            //RIA-5601 Add ((party)) and ((explanation)) fields here
+            .put("party", bailCase.read(BailCaseFieldDefinition.SEND_DIRECTION_LIST, String.class).orElse(""))
+            .put("directionDueDate", bailCase.read(BailCaseFieldDefinition.DATE_OF_COMPLIANCE, String.class).orElse(""))
+            .put("explanation", bailCase.read(BailCaseFieldDefinition.SEND_DIRECTION_DESCRIPTION, String.class).orElse(""))
             .build();
     }
 

@@ -227,7 +227,6 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    //RIA-5601 Double check below
     @Bean("changeDirectionDueDateNotificationGenerator")
     public List<BailNotificationGenerator> changeDirectionDueDateNotificationGenerator(
             HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
