@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailDirection;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailDirectionSentPersonalisation;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +28,11 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
     private Long caseId = 12345L;
     private String templateIdForDirectRecipient = "someTemplateIdForDirectRecipient";
     private String templateIdForOtherParties = "someTemplateIdForOtherParties";
+    private String bailReferenceNumber = "someReferenceNumber";
+    private String legalRepReference = "someLegalRepReference";
+    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private String applicantGivenNames = "someApplicantGivenNames";
+    private String applicantFamilyName = "someApplicantFamilyName";
     private String sendDirectionDescription = "someDescriptionOfTheDirectionSent";
     private String dateOfCompliance = "2022-05-24";
     @Mock BailCase bailCase;
@@ -38,6 +44,12 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
 
     @BeforeEach
     public void setup() {
+        when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
+        when(bailCase.read(LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.of(legalRepReference));
+        when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(applicantGivenNames));
+        when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
+        when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         when(oldestDirectionIdValue.getId()).thenReturn("1");
         when(newestDirectionIdValue.getId()).thenReturn("2");
@@ -78,6 +90,12 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
+        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
+        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
+        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
+        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("\nLegal representative reference: " + legalRepReference,
+            personalisation.get("legalRepReference"));
         assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
         assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
     }
@@ -89,6 +107,12 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
+        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
+        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
+        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
+        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("\nLegal representative reference: " + legalRepReference,
+            personalisation.get("legalRepReference"));
         assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
         assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
         assertEquals("Applicant", personalisation.get("party"));
@@ -97,11 +121,21 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
 
+        when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(DIRECTIONS)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
+        assertEquals("", personalisation.get("bailReferenceNumber"));
+        assertEquals("", personalisation.get("applicantGivenNames"));
+        assertEquals("", personalisation.get("applicantFamilyName"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("legalRepReference"));
         assertEquals("", personalisation.get("sendDirectionDescription"));
         assertEquals("", personalisation.get("dateOfCompliance"));
         assertEquals("", personalisation.get("party"));
