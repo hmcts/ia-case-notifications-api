@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailDirection;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -27,15 +30,23 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
     private String sendDirectionDescription = "someDescriptionOfTheDirectionSent";
     private String dateOfCompliance = "2022-05-24";
     @Mock BailCase bailCase;
+    @Mock IdValue<BailDirection> oldestDirectionIdValue;
+    @Mock IdValue<BailDirection> newestDirectionIdValue;
+    @Mock BailDirection newestDirection;
 
     private HomeOfficeBailDirectionSentPersonalisation homeOfficeBailDirectionSentPersonalisation;
 
     @BeforeEach
     public void setup() {
 
-        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
-        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.of(dateOfCompliance));
-        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of("Home Office"));
+        when(oldestDirectionIdValue.getId()).thenReturn("1");
+        when(newestDirectionIdValue.getId()).thenReturn("2");
+        when(newestDirectionIdValue.getValue()).thenReturn(newestDirection);
+        when(bailCase.read(DIRECTIONS)).thenReturn(Optional.of(List.of(oldestDirectionIdValue, newestDirectionIdValue)));
+
+        when(newestDirection.getSendDirectionDescription()).thenReturn(sendDirectionDescription);
+        when(newestDirection.getDateOfCompliance()).thenReturn(dateOfCompliance);
+        when(newestDirection.getSendDirectionList()).thenReturn("Home Office");
 
         homeOfficeBailDirectionSentPersonalisation =
             new HomeOfficeBailDirectionSentPersonalisation(templateIdForDirectRecipient, templateIdForOtherParties, homeOfficeEmailAddress);
@@ -73,7 +84,7 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given_as_other_party() {
-        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of("Applicant"));
+        when(newestDirection.getSendDirectionList()).thenReturn("Applicant");
 
         Map<String, String> personalisation =
             homeOfficeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
@@ -86,9 +97,7 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(DIRECTIONS)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             homeOfficeBailDirectionSentPersonalisation.getPersonalisation(bailCase);

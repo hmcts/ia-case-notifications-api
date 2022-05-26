@@ -4,12 +4,15 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.SEND_DIRECTION_LIST;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
+import java.util.*;
 import javax.validation.constraints.NotNull;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailDirection;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
 @Service
@@ -34,7 +37,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisation implements Lega
 
     @Override
     public String getTemplateId(BailCase bailCase) {
-        return isDirectRecipient(bailCase)
+        return isDirectRecipient(findLatestDirection(bailCase))
             ? legalRepresentativeBailDirectionSentDirectRecipientPersonalisationTemplateId
             : legalRepresentativeBailDirectionSentOtherPartiesPersonalisationTemplateId;
     }
@@ -43,21 +46,35 @@ public class LegalRepresentativeBailDirectionSentPersonalisation implements Lega
     public Map<String, String> getPersonalisation(BailCase bailCase) {
         requireNonNull(bailCase, "bailCase must not be null");
 
-        return isDirectRecipient(bailCase)
+        Optional<BailDirection> direction = findLatestDirection(bailCase);
+
+        return isDirectRecipient(direction)
             ? ImmutableMap
             .<String, String>builder()
-            .put("sendDirectionDescription", bailCase.read(BailCaseFieldDefinition.SEND_DIRECTION_DESCRIPTION, String.class).orElse(""))
-            .put("dateOfCompliance", bailCase.read(BailCaseFieldDefinition.DATE_OF_COMPLIANCE, String.class).orElse(""))
+            .put("sendDirectionDescription", direction.map(BailDirection::getSendDirectionDescription).orElse(""))
+            .put("dateOfCompliance", direction.map(BailDirection::getDateOfCompliance).orElse(""))
             .build()
             : ImmutableMap
             .<String, String>builder()
-            .put("sendDirectionDescription", bailCase.read(BailCaseFieldDefinition.SEND_DIRECTION_DESCRIPTION, String.class).orElse(""))
-            .put("dateOfCompliance", bailCase.read(BailCaseFieldDefinition.DATE_OF_COMPLIANCE, String.class).orElse(""))
-            .put("party", bailCase.read(SEND_DIRECTION_LIST, String.class).orElse(""))
+            .put("sendDirectionDescription", direction.map(BailDirection::getSendDirectionDescription).orElse(""))
+            .put("dateOfCompliance", direction.map(BailDirection::getDateOfCompliance).orElse(""))
+            .put("party", direction.map(BailDirection::getSendDirectionList).orElse(""))
             .build();
     }
 
-    private boolean isDirectRecipient(BailCase bailCase) {
-        return bailCase.read(SEND_DIRECTION_LIST, String.class).orElse("").equals("Legal Representative");
+    private boolean isDirectRecipient(Optional<BailDirection> direction) {
+        return direction.map(BailDirection::getSendDirectionList).orElse("").equals("Legal Representative");
+    }
+
+    private Optional<BailDirection> findLatestDirection(BailCase bailCase) {
+        Optional<List<IdValue<BailDirection>>> optionalDirections = bailCase.read(BailCaseFieldDefinition.DIRECTIONS);
+        List<IdValue<BailDirection>> directions = optionalDirections.orElse(Collections.emptyList());
+
+        if (!directions.isEmpty()) {
+            return directions.stream()
+                .max(Comparator.comparing(direction -> Integer.parseInt(direction.getId())))
+                .map(IdValue::getValue);
+        }
+        return Optional.empty();
     }
 }
