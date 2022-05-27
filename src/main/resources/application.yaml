@@ -942,7 +942,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
-      - "changeDirectionDueDateBail"
+      - "changeBailDirectionDueDate"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"

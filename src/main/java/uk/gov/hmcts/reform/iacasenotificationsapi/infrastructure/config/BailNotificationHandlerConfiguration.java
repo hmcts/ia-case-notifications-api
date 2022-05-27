@@ -240,10 +240,10 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
                     boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL);
+                            && callback.getEvent() == Event.CHANGE_BAIL_DIRECTION_DUE_DATE);
                     if (isAllowedBailCase) {
                         BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return (callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL
+                        return (callback.getEvent() == Event.CHANGE_BAIL_DIRECTION_DUE_DATE
                                 && isLegallyRepresented(bailCase));
                     } else {
                         return false;
@@ -261,10 +261,10 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
                     boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL);
+                            && callback.getEvent() == Event.CHANGE_BAIL_DIRECTION_DUE_DATE);
                     if (isAllowedBailCase) {
                         BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return (callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE_BAIL
+                        return (callback.getEvent() == Event.CHANGE_BAIL_DIRECTION_DUE_DATE
                                 && !isLegallyRepresented(bailCase));
                     } else {
                         return false;
