@@ -803,6 +803,10 @@ govnotify:
         email: 2b975611-7b5b-4c92-a231-406e6e64e4ba
       uploadDocumentWithoutLR:
         email: abf2bc5b-dbf0-43f0-b324-e3a08f2dea13
+      sendDirectionDirectRecipient:
+        email: 4e41c2bd-02f2-4843-bfff-dffa5cbcb1f5
+      sendDirectionOtherParties:
+        email: 0d251cb4-b7e3-4dcb-92e3-629b03eec859
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -938,6 +942,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
+      - "sendBailDirection"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -982,6 +987,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
+      - "sendBailDirection"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 

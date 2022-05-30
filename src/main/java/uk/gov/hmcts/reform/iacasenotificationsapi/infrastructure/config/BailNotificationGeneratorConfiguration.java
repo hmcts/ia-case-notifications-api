@@ -11,10 +11,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationEndedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailDocumentUploadedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
@@ -223,6 +220,23 @@ public class BailNotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("sendBailDirectionNotificationGenerator")
+    public List<BailNotificationGenerator> sendBailDirectionNotificationGenerator(
+        HomeOfficeBailDirectionSentPersonalisation homeOfficeBailDirectionSentPersonalisation,
+        LegalRepresentativeBailDirectionSentPersonalisation legalRepresentativeBailDirectionSentPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailEmailNotificationGenerator(
+                newArrayList(homeOfficeBailDirectionSentPersonalisation,
+                    legalRepresentativeBailDirectionSentPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }

@@ -41,7 +41,7 @@ public class HomeOfficeBailDocumentUploadedPersonalisation implements BailEmailN
 
     @Override
     public String getTemplateId(BailCase bailCase) {
-        return  bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+        return bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
             ? homeOfficeBailDocumentUploadedWithLegalRepPersonalisationTemplateId : homeOfficeBailDocumentUploadedWithoutLegalRepPersonalisationTemplateId;
     }
 
