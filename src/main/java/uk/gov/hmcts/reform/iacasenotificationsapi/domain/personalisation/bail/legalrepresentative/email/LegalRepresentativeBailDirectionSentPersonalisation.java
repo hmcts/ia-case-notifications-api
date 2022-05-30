@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.l
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDateTime;
 import java.util.*;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +36,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisation implements Lega
 
     @Override
     public String getTemplateId(BailCase bailCase) {
-        return isDirectRecipient(findLatestDirection(bailCase))
+        return isDirectRecipient(findLatestCreatedDirection(bailCase))
             ? legalRepresentativeBailDirectionSentDirectRecipientPersonalisationTemplateId
             : legalRepresentativeBailDirectionSentOtherPartiesPersonalisationTemplateId;
     }
@@ -44,7 +45,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisation implements Lega
     public Map<String, String> getPersonalisation(BailCase bailCase) {
         requireNonNull(bailCase, "bailCase must not be null");
 
-        Optional<BailDirection> direction = findLatestDirection(bailCase);
+        Optional<BailDirection> direction = findLatestCreatedDirection(bailCase);
 
         return isDirectRecipient(direction)
             ? ImmutableMap
@@ -76,14 +77,14 @@ public class LegalRepresentativeBailDirectionSentPersonalisation implements Lega
         return direction.map(BailDirection::getSendDirectionList).orElse("").equals("Legal Representative");
     }
 
-    private Optional<BailDirection> findLatestDirection(BailCase bailCase) {
+    private Optional<BailDirection> findLatestCreatedDirection(BailCase bailCase) {
         Optional<List<IdValue<BailDirection>>> optionalDirections = bailCase.read(BailCaseFieldDefinition.DIRECTIONS);
         List<IdValue<BailDirection>> directions = optionalDirections.orElse(Collections.emptyList());
 
         if (!directions.isEmpty()) {
             return directions.stream()
-                .max(Comparator.comparing(direction -> Integer.parseInt(direction.getId())))
-                .map(IdValue::getValue);
+                .map(IdValue::getValue)
+                .max(Comparator.comparing(direction -> LocalDateTime.parse(direction.getDateTimeDirectionCreated())));
         }
         return Optional.empty();
     }

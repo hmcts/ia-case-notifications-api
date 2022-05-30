@@ -13,6 +13,8 @@ public class BailDirectionTest {
         TEST_VALUE,
         TEST_VALUE,
         TEST_VALUE,
+        TEST_VALUE,
+        TEST_VALUE,
         TEST_VALUE
     );
 
@@ -23,13 +25,15 @@ public class BailDirectionTest {
         assertEquals(TEST_VALUE, bailDirection.getSendDirectionDescription());
         assertEquals(TEST_VALUE, bailDirection.getDateOfCompliance());
         assertEquals(TEST_VALUE, bailDirection.getDateSent());
+        assertEquals(TEST_VALUE, bailDirection.getDateTimeDirectionCreated());
+        assertEquals(TEST_VALUE, bailDirection.getDateTimeDirectionModified());
 
     }
 
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new CaseNote(null, null, null, null))
+        assertThatThrownBy(() -> new BailDirection(null, null, null, null, null, null))
             .isExactlyInstanceOf(NullPointerException.class);
 
     }

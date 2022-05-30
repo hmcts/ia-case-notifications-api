@@ -35,8 +35,11 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
     private String applicantFamilyName = "someApplicantFamilyName";
     private String sendDirectionDescription = "someDescriptionOfTheDirectionSent";
     private String dateOfCompliance = "2022-05-24";
+    private String dateTimeOldestDirectionCreated = "2022-05-24T15:00:00.000000000";
+    private String dateTimeLatestDirectionCreated = "2022-05-24T16:00:00.000000000";
     @Mock BailCase bailCase;
     @Mock IdValue<BailDirection> oldestDirectionIdValue;
+    @Mock BailDirection oldestDirection;
     @Mock IdValue<BailDirection> newestDirectionIdValue;
     @Mock BailDirection newestDirection;
 
@@ -51,9 +54,10 @@ public class HomeOfficeBailDirectionSentPersonalisationTest {
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        when(oldestDirectionIdValue.getId()).thenReturn("1");
-        when(newestDirectionIdValue.getId()).thenReturn("2");
+        when(oldestDirectionIdValue.getValue()).thenReturn(oldestDirection);
+        when(oldestDirection.getDateTimeDirectionCreated()).thenReturn(dateTimeOldestDirectionCreated);
         when(newestDirectionIdValue.getValue()).thenReturn(newestDirection);
+        when(newestDirection.getDateTimeDirectionCreated()).thenReturn(dateTimeLatestDirectionCreated);
         when(bailCase.read(DIRECTIONS)).thenReturn(Optional.of(List.of(oldestDirectionIdValue, newestDirectionIdValue)));
 
         when(newestDirection.getSendDirectionDescription()).thenReturn(sendDirectionDescription);
