@@ -11,11 +11,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailApplicationSubmittedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationEndedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailApplicationSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailDocumentUploadedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailChangeDirectionDueDatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
@@ -221,38 +217,6 @@ public class BailNotificationGeneratorConfiguration {
         return Arrays.asList(
                 new BailEmailNotificationGenerator(
                         newArrayList(homeOfficeBailDocumentUploadedPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("changeDirectionDueDateNotificationGenerator")
-    public List<BailNotificationGenerator> changeDirectionDueDateNotificationGenerator(
-            HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
-            LegalRepresentativeBailDocumentUploadedPersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-                new BailEmailNotificationGenerator(
-                        newArrayList(homeOfficeBailChangeDirectionDueDatePersonalisation,
-                                legalRepresentativeChangeDirectionDueDatePersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("changeDirectionDueDateWithoutLrNotificationGenerator")
-    public List<BailNotificationGenerator> changeDirectionDueDateWithoutLrNotificationGenerator(
-            HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-                new BailEmailNotificationGenerator(
-                        newArrayList(homeOfficeBailChangeDirectionDueDatePersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )

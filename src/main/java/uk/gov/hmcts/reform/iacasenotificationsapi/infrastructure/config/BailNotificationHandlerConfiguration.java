@@ -234,6 +234,18 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<BailCase> sendBailDirectionNotificationHandler(
+        @Qualifier("sendBailDirectionNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                     && callback.getEvent() == Event.SEND_BAIL_DIRECTION,
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<BailCase> changeDirectionDueDateNotificationHandler(
             @Qualifier("changeDirectionDueDateNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
