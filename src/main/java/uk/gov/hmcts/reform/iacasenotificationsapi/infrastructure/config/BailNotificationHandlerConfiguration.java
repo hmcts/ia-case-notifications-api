@@ -246,8 +246,8 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<BailCase> changeDirectionDueDateNotificationHandler(
-            @Qualifier("changeDirectionDueDateNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    public PreSubmitCallbackHandler<BailCase> changeBailDirectionDueDateNotificationHandler(
+            @Qualifier("changeBailDirectionDueDateNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
@@ -267,8 +267,8 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<BailCase> changeDirectionDueDateWithoutLrNotificationHandler(
-            @Qualifier("changeDirectionDueDateWithoutLrNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    public PreSubmitCallbackHandler<BailCase> changeBailDirectionDueDateWithoutLrNotificationHandler(
+            @Qualifier("changeBailDirectionDueDateWithoutLrNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {

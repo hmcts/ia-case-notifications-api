@@ -87,9 +87,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(sendDirectionList, personalisation.get("sendDirectionList"));
-        assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
-        assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
+        assertEquals(sendDirectionList, personalisation.get("party"));
+        assertEquals(dateOfCompliance, personalisation.get("directionDueDate"));
+        assertEquals(sendDirectionDescription, personalisation.get("explanation"));
     }
 
     @Test
@@ -104,9 +104,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(sendDirectionList, personalisation.get("sendDirectionList"));
-        assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
-        assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
+        assertEquals(sendDirectionList, personalisation.get("party"));
+        assertEquals(dateOfCompliance, personalisation.get("directionDueDate"));
+        assertEquals(sendDirectionDescription, personalisation.get("explanation"));
     }
 
     @Test
@@ -129,9 +129,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals("", personalisation.get("applicantGivenNames"));
         assertEquals("", personalisation.get("applicantFamilyName"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("sendDirectionList"));
-        assertEquals("", personalisation.get("dateOfCompliance"));
-        assertEquals("", personalisation.get("sendDirectionDescription"));
+        assertEquals("", personalisation.get("party"));
+        assertEquals("", personalisation.get("directionDueDate"));
+        assertEquals("", personalisation.get("explanation"));
     }
 
 }

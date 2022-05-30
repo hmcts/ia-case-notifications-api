@@ -807,9 +807,9 @@ govnotify:
         email: 4e41c2bd-02f2-4843-bfff-dffa5cbcb1f5
       sendDirectionOtherParties:
         email: 0d251cb4-b7e3-4dcb-92e3-629b03eec859
-      changeDirectionDueDate:
+      changeBailDirectionDueDate:
         email: 7cef2a13-701f-4425-9685-501236bf1c74
-      changeDirectionDueDateWithoutLR:
+      changeBailDirectionDueDateWithoutLR:
         email: 3ea0376f-c7b7-4d8d-941d-abfacc1ddd96
 
 
@@ -946,6 +946,7 @@ security:
       - "uploadSignedDecisionNotice"
       - "endApplication"
       - "uploadDocuments"
+      - "changeBailDirectionDueDate"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"

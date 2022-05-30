@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -35,6 +36,9 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
     private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
+    private String sendDirectionList = "someSendDirectionList";
+    private String dateOfCompliance = "someDateOfCompliance";
+    private String sendDirectionDescription = "someSendDirectionDescription";
 
     private LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation;
 
@@ -48,8 +52,9 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
-
-        //RIA-5601 Add ((party)), ((direction due date)) and ((explanation)) fields here
+        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of(sendDirectionList));
+        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.of(dateOfCompliance));
+        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
 
         legalRepresentativeChangeDirectionDueDatePersonalisation = new LegalRepresentativeChangeDirectionDueDatePersonalisation(
             templateId
@@ -109,6 +114,9 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation(bailCase);
