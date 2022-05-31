@@ -13,8 +13,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editDocuments.DocumentsEditedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editDocuments.EditBailDocumentService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments.DocumentsEditedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments.EditBailDocumentService;
 
 @Service
 public class HomeOfficeBailDocumentsEditedPersonalisation extends DocumentsEditedPersonalisation implements BailEmailNotificationPersonalisation {

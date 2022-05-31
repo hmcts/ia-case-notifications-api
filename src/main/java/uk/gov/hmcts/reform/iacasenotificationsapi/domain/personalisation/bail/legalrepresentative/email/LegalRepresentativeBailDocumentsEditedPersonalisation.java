@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.l
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
+
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editDocuments.DocumentsEditedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editDocuments.EditBailDocumentService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments.DocumentsEditedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments.EditBailDocumentService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
 @Service

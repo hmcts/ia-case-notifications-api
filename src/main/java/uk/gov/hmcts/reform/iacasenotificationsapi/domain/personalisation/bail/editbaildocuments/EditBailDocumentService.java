@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editDocuments;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments;
 
 import java.util.ArrayList;
 import java.util.Arrays;

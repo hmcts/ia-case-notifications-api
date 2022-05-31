@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editDocuments;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
