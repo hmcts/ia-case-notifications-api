@@ -260,8 +260,19 @@ public enum BailCaseFieldDefinition {
     DATE_OF_COMPLIANCE(
         "dateOfCompliance", new TypeReference<String>() {}),
     DIRECTIONS(
-        "directions", new TypeReference<List<IdValue<BailDirection>>>() {}
-    );
+        "directions", new TypeReference<List<IdValue<BailDirection>>>() {}),
+    LATEST_MODIFIED_DOCUMENTS(
+        "latestModifiedDocuments", new TypeReference<List<String>>() {}),
+    EDIT_DOCUMENTS_REASON(
+        "editDocumentsReason", new TypeReference<String>(){}),
+    TRIBUNAL_DOCUMENTS_WITH_METADATA(
+        "tribunalDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+    HOME_OFFICE_DOCUMENTS_WITH_METADATA(
+        "homeOfficeDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+    APPLICANT_DOCUMENTS_WITH_METADATA(
+        "applicantDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+    CASE_NOTES(
+        "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){});
 
     private final String value;
     private final TypeReference typeReference;
