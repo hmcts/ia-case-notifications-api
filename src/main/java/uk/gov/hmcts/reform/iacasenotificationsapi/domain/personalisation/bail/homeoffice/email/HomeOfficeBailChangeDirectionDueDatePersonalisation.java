@@ -37,7 +37,7 @@ public class HomeOfficeBailChangeDirectionDueDatePersonalisation implements Bail
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CHANGE_DIRECTION_DUE_DATE_HOME_OFFICE";
+        return caseId + "_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE";
     }
 
     @Override

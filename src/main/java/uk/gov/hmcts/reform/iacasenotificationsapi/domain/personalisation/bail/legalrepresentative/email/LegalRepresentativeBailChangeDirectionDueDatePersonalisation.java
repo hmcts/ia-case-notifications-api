@@ -27,7 +27,7 @@ public class LegalRepresentativeBailChangeDirectionDueDatePersonalisation implem
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CHANGE_DIRECTION_DUE_DATE_LEGAL_REPRESENTATIVE";
+        return caseId + "_CHANGE_BAIL_DIRECTION_DUE_DATE_LEGAL_REPRESENTATIVE";
     }
 
     @Override

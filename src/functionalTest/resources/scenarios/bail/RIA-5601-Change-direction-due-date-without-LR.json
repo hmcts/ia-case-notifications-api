@@ -33,7 +33,7 @@
         "currentCaseStateVisibleToLegalRepresentative": "applicationSubmitted",
         "notificationsSent": [
           {
-            "id": "5601_CHANGE_DIRECTION_DUE_DATE_HOME_OFFICE",
+            "id": "5601_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -41,7 +41,7 @@
     },
     "notifications": [
       {
-        "reference": "5601_CHANGE_DIRECTION_DUE_DATE_HOME_OFFICE",
+        "reference": "5601_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: You have a direction",
         "body": [

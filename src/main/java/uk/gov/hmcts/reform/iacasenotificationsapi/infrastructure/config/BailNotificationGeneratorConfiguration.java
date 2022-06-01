@@ -222,4 +222,36 @@ public class BailNotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("changeBailDirectionDueDateNotificationGenerator")
+    public List<BailNotificationGenerator> changeBailDirectionDueDateNotificationGenerator(
+            HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
+            LegalRepresentativeBailChangeDirectionDueDatePersonalisation legalRepresentativeBailChangeDirectionDueDatePersonalisation,
+            BailGovNotifyNotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(homeOfficeBailChangeDirectionDueDatePersonalisation,
+                                legalRepresentativeBailChangeDirectionDueDatePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("changeBailDirectionDueDateWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> changeBailDirectionDueDateWithoutLrNotificationGenerator(
+            HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
+            BailGovNotifyNotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(homeOfficeBailChangeDirectionDueDatePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
