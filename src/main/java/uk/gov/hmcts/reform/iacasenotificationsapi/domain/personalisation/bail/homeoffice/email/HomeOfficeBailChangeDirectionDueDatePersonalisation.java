@@ -26,8 +26,8 @@ public class HomeOfficeBailChangeDirectionDueDatePersonalisation implements Bail
 
     public HomeOfficeBailChangeDirectionDueDatePersonalisation(
         @NotNull(message = "homeOfficeBailChangeDirectionDueDatePersonalisationTemplateId cannot be null")
-        @Value("${govnotify.bail.template.changeDirectionDueDate.email}") String homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId,
-        @Value("${govnotify.bail.template.changeDirectionDueDateWithoutLR.email}") String homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.changeBailDirectionDueDate.email}") String homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.changeBailDirectionDueDateWithoutLR.email}") String homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId,
         @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
         this.homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId = homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId;
@@ -62,9 +62,9 @@ public class HomeOfficeBailChangeDirectionDueDatePersonalisation implements Bail
             .put("applicantGivenNames", bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class).orElse(""))
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("party", bailCase.read(BailCaseFieldDefinition.SEND_DIRECTION_LIST, String.class).orElse(""))
-            .put("directionDueDate", bailCase.read(BailCaseFieldDefinition.DATE_OF_COMPLIANCE, String.class).orElse(""))
-            .put("explanation", bailCase.read(BailCaseFieldDefinition.SEND_DIRECTION_DESCRIPTION, String.class).orElse(""))
+            .put("party", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_PARTIES, String.class).orElse(""))
+            .put("directionDueDate", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_DATE_DUE, String.class).orElse(""))
+            .put("explanation", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_EXPLANATION, String.class).orElse(""))
             .build();
     }
 }

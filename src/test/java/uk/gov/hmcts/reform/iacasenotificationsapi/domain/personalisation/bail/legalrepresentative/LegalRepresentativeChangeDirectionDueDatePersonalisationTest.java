@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeChangeDirectionDueDatePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailChangeDirectionDueDatePersonalisation;
 
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +40,7 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
     private String dateOfCompliance = "someDateOfCompliance";
     private String sendDirectionDescription = "someSendDirectionDescription";
 
-    private LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation;
+    private LegalRepresentativeBailChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -52,11 +52,11 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
-        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of(sendDirectionList));
-        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.of(dateOfCompliance));
-        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_SENT, String.class)).thenReturn(Optional.of(sendDirectionList));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.of(dateOfCompliance));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_EXPLANATION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
 
-        legalRepresentativeChangeDirectionDueDatePersonalisation = new LegalRepresentativeChangeDirectionDueDatePersonalisation(
+        legalRepresentativeChangeDirectionDueDatePersonalisation = new LegalRepresentativeBailChangeDirectionDueDatePersonalisation(
             templateId
         );
     }
@@ -115,8 +115,8 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BAIL_DIRECTION_EDIT_EXPLANATION, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation(bailCase);

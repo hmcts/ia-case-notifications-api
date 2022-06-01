@@ -254,14 +254,26 @@ public enum BailCaseFieldDefinition {
     END_APPLICATION_OUTCOME(
         "endApplicationOutcome", new TypeReference<String>() {}),
     SEND_DIRECTION_LIST(
-        "sendDirectionList", new TypeReference<String>() {}),
+            "sendDirectionList", new TypeReference<String>() {}),
     SEND_DIRECTION_DESCRIPTION(
-        "sendDirectionDescription", new TypeReference<String>() {}),
+            "sendDirectionDescription", new TypeReference<String>() {}),
     DATE_OF_COMPLIANCE(
-        "dateOfCompliance", new TypeReference<String>() {}),
+            "dateOfCompliance", new TypeReference<String>() {}),
     DIRECTIONS(
-        "directions", new TypeReference<List<IdValue<BailDirection>>>() {}
-    );
+        "directions", new TypeReference<List<IdValue<BailDirection>>>() {}),
+    BAIL_DIRECTION_LIST(
+            "bailDirectionList", new TypeReference<DynamicList>(){}),
+    BAIL_DIRECTION_EDIT_EXPLANATION(
+            "bailDirectionEditExplanation", new TypeReference<String>(){}),
+    BAIL_DIRECTION_EDIT_PARTIES(
+            "bailDirectionEditParties", new TypeReference<String>(){}),
+    BAIL_DIRECTION_EDIT_DATE_SENT(
+            "bailDirectionEditDateSent", new TypeReference<String>(){}),
+    BAIL_DIRECTION_EDIT_DATE_DUE(
+            "bailDirectionEditDateDue", new TypeReference<String>(){}),
+    LAST_MODIFIED_DIRECTION(
+            "lastModifiedDirection", new TypeReference<Direction>(){})
+    ;
 
     private final String value;
     private final TypeReference typeReference;

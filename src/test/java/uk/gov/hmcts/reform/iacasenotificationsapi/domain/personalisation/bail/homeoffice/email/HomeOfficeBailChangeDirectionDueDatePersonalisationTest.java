@@ -48,9 +48,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.of(sendDirectionList));
-        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.of(dateOfCompliance));
-        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_PARTIES, String.class)).thenReturn(Optional.of(sendDirectionList));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.of(dateOfCompliance));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_EXPLANATION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
 
         homeOfficeBailChangeDirectionDueDatePersonalisation =
             new HomeOfficeBailChangeDirectionDueDatePersonalisation(templateIdWithLegalRep, templateIdWithoutLegalRep, homeOfficeEmailAddress);
@@ -117,9 +117,9 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(DATE_OF_COMPLIANCE, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(SEND_DIRECTION_DESCRIPTION, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BAIL_DIRECTION_EDIT_PARTIES, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BAIL_DIRECTION_EDIT_EXPLANATION, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             homeOfficeBailChangeDirectionDueDatePersonalisation.getPersonalisation(bailCase);
