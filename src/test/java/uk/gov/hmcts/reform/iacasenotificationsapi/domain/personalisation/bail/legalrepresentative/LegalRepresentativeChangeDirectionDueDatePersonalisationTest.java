@@ -69,7 +69,7 @@ class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_CHANGE_DIRECTION_DUE_DATE_LEGAL_REPRESENTATIVE",
+        assertEquals(caseId + "_CHANGE_BAIL_DIRECTION_DUE_DATE_LEGAL_REPRESENTATIVE",
             legalRepresentativeChangeDirectionDueDatePersonalisation.getReferenceId(caseId));
     }
 
