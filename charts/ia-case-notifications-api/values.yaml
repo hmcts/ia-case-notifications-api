@@ -19,7 +19,8 @@ java:
       secrets:
         - ia-ccd-frontend-url
         - ia-gov-notify-key
-        - ia-bail-gov-notify-key
+        - name: ia-bail-gov-notify-key
+          alias: IA_BAIL_GOV_NOTIFY_KEY
         - hearing-centre-bradford-email
         - hearing-centre-manchester-email
         - hearing-centre-newport-email
