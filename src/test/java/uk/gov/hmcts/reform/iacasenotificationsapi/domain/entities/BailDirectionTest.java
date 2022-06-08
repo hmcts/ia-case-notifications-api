@@ -27,7 +27,6 @@ public class BailDirectionTest {
         assertEquals(TEST_VALUE, bailDirection.getDateSent());
         assertEquals(TEST_VALUE, bailDirection.getDateTimeDirectionCreated());
         assertEquals(TEST_VALUE, bailDirection.getDateTimeDirectionModified());
-
     }
 
     @Test
