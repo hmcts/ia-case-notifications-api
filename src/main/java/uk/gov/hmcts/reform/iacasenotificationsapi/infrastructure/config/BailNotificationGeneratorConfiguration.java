@@ -230,14 +230,14 @@ public class BailNotificationGeneratorConfiguration {
             BailGovNotifyNotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {
 
-            return Arrays.asList(
-                    new BailEmailNotificationGenerator(
-                            newArrayList(homeOfficeBailDirectionSentPersonalisation,
-                                    legalRepresentativeBailDirectionSentPersonalisation),
-                            notificationSender,
-                            notificationIdAppender
-                    )
-            );
+        return Arrays.asList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(homeOfficeBailDirectionSentPersonalisation,
+                                legalRepresentativeBailDirectionSentPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
     }
 
     @Bean("changeBailDirectionDueDateNotificationGenerator")
