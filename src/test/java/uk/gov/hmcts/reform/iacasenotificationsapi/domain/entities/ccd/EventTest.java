@@ -92,6 +92,7 @@ public class EventTest {
         assertEquals("uploadSignedDecisionNotice", UPLOAD_SIGNED_DECISION_NOTICE.toString());
         assertEquals("endApplication", END_APPLICATION.toString());
         assertEquals("uploadDocuments", UPLOAD_DOCUMENTS.toString());
+        assertEquals("editBailDocuments", EDIT_BAIL_DOCUMENTS.toString());
         assertEquals("changeBailDirectionDueDate", CHANGE_BAIL_DIRECTION_DUE_DATE.toString());
         assertEquals("sendBailDirection", SEND_BAIL_DIRECTION.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
@@ -99,6 +100,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(87, Event.values().length);
+        assertEquals(88, Event.values().length);
     }
 }

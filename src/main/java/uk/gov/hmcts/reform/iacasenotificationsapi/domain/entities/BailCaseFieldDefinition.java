@@ -254,13 +254,25 @@ public enum BailCaseFieldDefinition {
     END_APPLICATION_OUTCOME(
         "endApplicationOutcome", new TypeReference<String>() {}),
     SEND_DIRECTION_LIST(
-            "sendDirectionList", new TypeReference<String>() {}),
+        "sendDirectionList", new TypeReference<String>() {}),
     SEND_DIRECTION_DESCRIPTION(
-            "sendDirectionDescription", new TypeReference<String>() {}),
+        "sendDirectionDescription", new TypeReference<String>() {}),
     DATE_OF_COMPLIANCE(
-            "dateOfCompliance", new TypeReference<String>() {}),
+        "dateOfCompliance", new TypeReference<String>() {}),
     DIRECTIONS(
         "directions", new TypeReference<List<IdValue<BailDirection>>>() {}),
+    LATEST_MODIFIED_DOCUMENTS(
+        "latestModifiedDocuments", new TypeReference<List<String>>() {}),
+    EDIT_DOCUMENTS_REASON(
+        "editDocumentsReason", new TypeReference<String>(){}),
+    TRIBUNAL_DOCUMENTS_WITH_METADATA(
+        "tribunalDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+    HOME_OFFICE_DOCUMENTS_WITH_METADATA(
+        "homeOfficeDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+    APPLICANT_DOCUMENTS_WITH_METADATA(
+        "applicantDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
+    CASE_NOTES(
+        "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){}),
     BAIL_DIRECTION_LIST(
             "bailDirectionList", new TypeReference<DynamicList>(){}),
     BAIL_DIRECTION_EDIT_EXPLANATION(
