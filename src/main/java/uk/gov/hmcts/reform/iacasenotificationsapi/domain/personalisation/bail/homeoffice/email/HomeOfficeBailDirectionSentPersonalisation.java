@@ -3,7 +3,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.h
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +57,11 @@ public class HomeOfficeBailDirectionSentPersonalisation implements BailEmailNoti
 
         Optional<BailDirection> direction = findLatestCreatedDirection(bailCase);
 
+        String dateOfCompliance = direction.map(BailDirection::getDateOfCompliance).orElse("");
+        if (!dateOfCompliance.isBlank()) {
+            dateOfCompliance = LocalDate.parse(dateOfCompliance).format(DateTimeFormatter.ofPattern("d MMM uuuu"));
+        }
+
         return isDirectRecipient(direction)
             ? ImmutableMap
             .<String, String>builder()
@@ -65,7 +72,7 @@ public class HomeOfficeBailDirectionSentPersonalisation implements BailEmailNoti
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("sendDirectionDescription", direction.map(BailDirection::getSendDirectionDescription).orElse(""))
-            .put("dateOfCompliance", direction.map(BailDirection::getDateOfCompliance).orElse(""))
+            .put("dateOfCompliance", dateOfCompliance)
             .build()
             : ImmutableMap
             .<String, String>builder()
@@ -76,7 +83,7 @@ public class HomeOfficeBailDirectionSentPersonalisation implements BailEmailNoti
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("sendDirectionDescription", direction.map(BailDirection::getSendDirectionDescription).orElse(""))
-            .put("dateOfCompliance", direction.map(BailDirection::getDateOfCompliance).orElse(""))
+            .put("dateOfCompliance", dateOfCompliance)
             .put("party", direction.map(BailDirection::getSendDirectionList).orElse(""))
             .build();
     }

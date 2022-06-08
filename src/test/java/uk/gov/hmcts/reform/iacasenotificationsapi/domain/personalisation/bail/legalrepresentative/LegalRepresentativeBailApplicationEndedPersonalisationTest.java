@@ -107,7 +107,7 @@ class LegalRepresentativeBailApplicationEndedPersonalisationTest {
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
         assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
-        assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
+        assertEquals("13 May 2022", personalisation.get("endApplicationDate"));
     }
 
     @Test

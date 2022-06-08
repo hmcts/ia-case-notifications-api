@@ -101,7 +101,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         assertEquals("\nLegal representative reference: " + legalRepReference,
             personalisation.get("legalRepReference"));
         assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
-        assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
+        assertEquals("24 May 2022", personalisation.get("dateOfCompliance"));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         assertEquals("\nLegal representative reference: " + legalRepReference,
             personalisation.get("legalRepReference"));
         assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
-        assertEquals(dateOfCompliance, personalisation.get("dateOfCompliance"));
+        assertEquals("24 May 2022", personalisation.get("dateOfCompliance"));
         assertEquals("Applicant", personalisation.get("party"));
     }
 
