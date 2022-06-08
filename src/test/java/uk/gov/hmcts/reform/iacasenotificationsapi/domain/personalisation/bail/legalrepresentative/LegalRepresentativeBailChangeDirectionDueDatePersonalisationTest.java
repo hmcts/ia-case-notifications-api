@@ -36,7 +36,7 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
     private String sendDirectionList = "someSendDirectionList";
-    private String dateOfCompliance = "someDateOfCompliance";
+    private String dateOfCompliance = "2022-05-24";
     private String sendDirectionDescription = "someSendDirectionDescription";
 
     private LegalRepresentativeBailChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation;

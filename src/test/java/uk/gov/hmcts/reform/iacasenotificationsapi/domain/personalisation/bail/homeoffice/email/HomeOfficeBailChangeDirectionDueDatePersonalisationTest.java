@@ -31,7 +31,7 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
     private String sendDirectionList = "someSendDirectionList";
-    private String dateOfCompliance = "someDateOfCompliance";
+    private String dateOfCompliance = "2022-05-24";
     private String sendDirectionDescription = "someSendDirectionDescription";
     @Mock BailCase bailCase;
 
@@ -86,7 +86,7 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(sendDirectionList, personalisation.get("party"));
-        assertEquals(dateOfCompliance, personalisation.get("directionDueDate"));
+        assertEquals("24 May 2022", personalisation.get("directionDueDate"));
         assertEquals(sendDirectionDescription, personalisation.get("explanation"));
     }
 
@@ -103,7 +103,7 @@ class HomeOfficeBailChangeDirectionDueDatePersonalisationTest {
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(sendDirectionList, personalisation.get("party"));
-        assertEquals(dateOfCompliance, personalisation.get("directionDueDate"));
+        assertEquals("24 May 2022", personalisation.get("directionDueDate"));
         assertEquals(sendDirectionDescription, personalisation.get("explanation"));
     }
 
