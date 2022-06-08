@@ -2,10 +2,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
 @EqualsAndHashCode
 @ToString
@@ -17,7 +15,6 @@ public class BailDirection {
     private String dateSent;
     private String dateTimeDirectionCreated;
     private String dateTimeDirectionModified;
-    private List<IdValue<PreviousDates>> previousDates;
 
 
     private BailDirection() {
@@ -29,8 +26,7 @@ public class BailDirection {
         String dateOfCompliance,
         String dateSent,
         String dateTimeDirectionCreated,
-        String dateTimeDirectionModified,
-        List<IdValue<PreviousDates>> previousDates
+        String dateTimeDirectionModified
     ) {
         this.sendDirectionDescription = requireNonNull(sendDirectionDescription);
         this.sendDirectionList = requireNonNull(sendDirectionList);
@@ -38,7 +34,6 @@ public class BailDirection {
         this.dateSent = requireNonNull(dateSent);
         this.dateTimeDirectionCreated = requireNonNull(dateTimeDirectionCreated);
         this.dateTimeDirectionModified = dateTimeDirectionModified;
-        this.previousDates = requireNonNull(previousDates);
     }
 
 
@@ -64,9 +59,5 @@ public class BailDirection {
 
     public String getDateTimeDirectionModified() {
         return dateTimeDirectionModified;
-    }
-
-    public List<IdValue<PreviousDates>> getPreviousDates() {
-        return previousDates;
     }
 }
