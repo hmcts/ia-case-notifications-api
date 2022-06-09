@@ -272,7 +272,20 @@ public enum BailCaseFieldDefinition {
     APPLICANT_DOCUMENTS_WITH_METADATA(
         "applicantDocumentsWithMetadata", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
     CASE_NOTES(
-        "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){});
+        "caseNotes", new TypeReference<List<IdValue<CaseNote>>>(){}),
+    BAIL_DIRECTION_LIST(
+            "bailDirectionList", new TypeReference<DynamicList>(){}),
+    BAIL_DIRECTION_EDIT_EXPLANATION(
+            "bailDirectionEditExplanation", new TypeReference<String>(){}),
+    BAIL_DIRECTION_EDIT_PARTIES(
+            "bailDirectionEditParties", new TypeReference<String>(){}),
+    BAIL_DIRECTION_EDIT_DATE_SENT(
+            "bailDirectionEditDateSent", new TypeReference<String>(){}),
+    BAIL_DIRECTION_EDIT_DATE_DUE(
+            "bailDirectionEditDateDue", new TypeReference<String>(){}),
+    LAST_MODIFIED_DIRECTION(
+            "lastModifiedDirection", new TypeReference<Direction>(){})
+    ;
 
     private final String value;
     private final TypeReference typeReference;

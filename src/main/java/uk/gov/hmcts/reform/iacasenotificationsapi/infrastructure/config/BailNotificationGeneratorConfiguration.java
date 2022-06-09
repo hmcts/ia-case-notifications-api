@@ -34,11 +34,11 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
-                newArrayList(hearingCentreSubmitApplicationPersonalisation,
-                    legalRepresentativeBailApplicationSubmittedPersonalisation,
-                    homeOfficeBailApplicationSubmittedPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(hearingCentreSubmitApplicationPersonalisation,
+                            legalRepresentativeBailApplicationSubmittedPersonalisation,
+                            homeOfficeBailApplicationSubmittedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new BailSmsNotificationGenerator(
                     newArrayList(applicantBailApplicationSubmittedPersonalisationSms),
@@ -58,48 +58,48 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
-                newArrayList(hearingCentreSubmitApplicationPersonalisation,
-                    homeOfficeBailApplicationSubmittedPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(hearingCentreSubmitApplicationPersonalisation,
+                            homeOfficeBailApplicationSubmittedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new BailSmsNotificationGenerator(
-                newArrayList(applicantBailApplicationSubmittedPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(applicantBailApplicationSubmittedPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
 
     @Bean("uploadSummaryNotificationGenerator")
     public List<BailNotificationGenerator> uploadSummaryNotificationGenerator(
-            AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
-            LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+        AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
+        LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-                new BailEmailNotificationGenerator(
-                        newArrayList(adminOfficerBailSummaryUploadedPersonalisation,
-                                legalRepresentativeBailSummaryUploadedPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
+            new BailEmailNotificationGenerator(
+                    newArrayList(adminOfficerBailSummaryUploadedPersonalisation,
+                            legalRepresentativeBailSummaryUploadedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
+    );
     }
 
     @Bean("uploadSummaryWithoutLrNotificationGenerator")
     public List<BailNotificationGenerator> uploadSummaryWithoutLrNotificationGenerator(
-            AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+        AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-                new BailEmailNotificationGenerator(
-                        newArrayList(adminOfficerBailSummaryUploadedPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
+            new BailEmailNotificationGenerator(
+                    newArrayList(adminOfficerBailSummaryUploadedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
         );
     }
 
@@ -113,15 +113,15 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
-                newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new BailEmailNotificationGenerator(
-                newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
-                    legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
+                            legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
@@ -135,14 +135,14 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
-                newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(applicantBailSignedDecisionNoticeUploadedPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new BailEmailNotificationGenerator(
-                newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(homeOfficeBailSignedDecisionNoticeUploadedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
@@ -157,15 +157,15 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
-                newArrayList(applicantBailApplicationEndedPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(applicantBailApplicationEndedPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new BailEmailNotificationGenerator(
-                newArrayList(homeOfficeBailApplicationEndedPersonalisation,
-                    legalRepresentativeBailApplicationEndedPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(homeOfficeBailApplicationEndedPersonalisation,
+                            legalRepresentativeBailApplicationEndedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
@@ -179,47 +179,47 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
-                newArrayList(applicantBailApplicationEndedPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(applicantBailApplicationEndedPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new BailEmailNotificationGenerator(
-                newArrayList(homeOfficeBailApplicationEndedPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(homeOfficeBailApplicationEndedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
 
     @Bean("uploadDocumentNotificationGenerator")
     public List<BailNotificationGenerator> uploadDocumentNotificationGenerator(
-            HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailDocumentUploadedPersonalisation,
-            LegalRepresentativeBailDocumentUploadedPersonalisation legalRepresentativeBailDocumentUploadedPersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+        HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailDocumentUploadedPersonalisation,
+        LegalRepresentativeBailDocumentUploadedPersonalisation legalRepresentativeBailDocumentUploadedPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-                new BailEmailNotificationGenerator(
-                        newArrayList(homeOfficeBailDocumentUploadedPersonalisation,
-                        legalRepresentativeBailDocumentUploadedPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
+            new BailEmailNotificationGenerator(
+                    newArrayList(homeOfficeBailDocumentUploadedPersonalisation,
+                            legalRepresentativeBailDocumentUploadedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
         );
     }
 
     @Bean("uploadDocumentWithoutLrNotificationGenerator")
     public List<BailNotificationGenerator> uploadDocumentWithoutLrNotificationGenerator(
-            HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailDocumentUploadedPersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+        HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailDocumentUploadedPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-                new BailEmailNotificationGenerator(
-                        newArrayList(homeOfficeBailDocumentUploadedPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
+            new BailEmailNotificationGenerator(
+                    newArrayList(homeOfficeBailDocumentUploadedPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
         );
     }
 
@@ -232,10 +232,42 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
-                newArrayList(homeOfficeBailDirectionSentPersonalisation,
-                    legalRepresentativeBailDirectionSentPersonalisation),
-                notificationSender,
-                notificationIdAppender
+                    newArrayList(homeOfficeBailDirectionSentPersonalisation,
+                            legalRepresentativeBailDirectionSentPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("changeBailDirectionDueDateNotificationGenerator")
+    public List<BailNotificationGenerator> changeBailDirectionDueDateNotificationGenerator(
+        HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
+        LegalRepresentativeBailChangeDirectionDueDatePersonalisation legalRepresentativeBailChangeDirectionDueDatePersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailEmailNotificationGenerator(
+                    newArrayList(homeOfficeBailChangeDirectionDueDatePersonalisation,
+                            legalRepresentativeBailChangeDirectionDueDatePersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("changeBailDirectionDueDateWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> changeBailDirectionDueDateWithoutLrNotificationGenerator(
+        HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailEmailNotificationGenerator(
+                    newArrayList(homeOfficeBailChangeDirectionDueDatePersonalisation),
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
