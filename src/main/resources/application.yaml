@@ -1102,6 +1102,7 @@ nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
+bailHomeOfficeEmailAddressForApplicationEditedSubmitted: ${IA_BAIL_HOME_OFFICE_EMAIL_APP_EDITED_SUBMITTED:ALARAppealsBailTeam@homeoffice.gov.uk}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}
