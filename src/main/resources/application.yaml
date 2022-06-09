@@ -999,6 +999,7 @@ security:
       - "uploadDocuments"
       - "sendBailDirection"
       - "editBailDocuments"
+      - "changeBailDirectionDueDate"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
 
