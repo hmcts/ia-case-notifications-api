@@ -95,11 +95,12 @@ public class EventTest {
         assertEquals("editBailDocuments", EDIT_BAIL_DOCUMENTS.toString());
         assertEquals("changeBailDirectionDueDate", CHANGE_BAIL_DIRECTION_DUE_DATE.toString());
         assertEquals("sendBailDirection", SEND_BAIL_DIRECTION.toString());
+        assertEquals("makeNewApplication", MAKE_NEW_APPLICATION.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(88, Event.values().length);
+        assertEquals(89, Event.values().length);
     }
 }
