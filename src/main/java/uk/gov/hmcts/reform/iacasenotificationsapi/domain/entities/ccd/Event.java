@@ -91,6 +91,7 @@ public enum Event {
     SEND_BAIL_DIRECTION("sendBailDirection"),
     EDIT_BAIL_DOCUMENTS("editBailDocuments"),
     CHANGE_BAIL_DIRECTION_DUE_DATE("changeBailDirectionDueDate"),
+    MAKE_NEW_APPLICATION("makeNewApplication"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

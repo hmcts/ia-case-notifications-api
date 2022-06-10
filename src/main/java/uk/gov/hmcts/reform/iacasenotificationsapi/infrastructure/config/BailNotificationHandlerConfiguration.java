@@ -28,10 +28,12 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
                 (callbackStage, callback) -> {
                     boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                                 && callback.getEvent() == Event.SUBMIT_APPLICATION);
+                                                 && (callback.getEvent() == Event.SUBMIT_APPLICATION
+                                                    || callback.getEvent() == Event.MAKE_NEW_APPLICATION));
                     if (isAllowedBailCase) {
                         BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return (callback.getEvent() == Event.SUBMIT_APPLICATION
+                        return ((callback.getEvent() == Event.SUBMIT_APPLICATION
+                                || callback.getEvent() == Event.MAKE_NEW_APPLICATION)
                                 && isLegallyRepresented(bailCase));
                     } else {
                         return false;
@@ -49,10 +51,12 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                             && callback.getEvent() == Event.SUBMIT_APPLICATION);
+                                             && (callback.getEvent() == Event.SUBMIT_APPLICATION
+                                                || callback.getEvent() == Event.MAKE_NEW_APPLICATION));
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return (callback.getEvent() == Event.SUBMIT_APPLICATION
+                    return ((callback.getEvent() == Event.SUBMIT_APPLICATION
+                            || callback.getEvent() == Event.MAKE_NEW_APPLICATION)
                             && !isLegallyRepresented(bailCase));
                 } else {
                     return false;
