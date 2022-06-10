@@ -815,9 +815,9 @@ govnotify:
         email: 7cef2a13-701f-4425-9685-501236bf1c74
       changeBailDirectionDueDateWithoutLR:
         email: 3ea0376f-c7b7-4d8d-941d-abfacc1ddd96
-      submitEditedApplication:
+      editApplicationAfterSubmit:
         email: 84d48a3f-afd6-4759-9219-22cb37bebabb
-      submitEditedApplicationWithoutLr:
+      editApplicationAfterSubmitWithoutLr:
         email: 160386c8-7fc5-4359-8d3d-f99765af00d5
 
 
@@ -887,6 +887,7 @@ security:
       - "submitApplication"
       - "uploadDocuments"
       - "makeNewApplication"
+      - "editBailApplicationAfterSubmit"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -957,7 +958,7 @@ security:
       - "uploadDocuments"
       - "sendBailDirection"
       - "editBailDocuments"
-      - "submitEditedApplication"
+      - "editBailApplicationAfterSubmit"
       - "changeBailDirectionDueDate"
       - "makeNewApplication"
     caseworker-ia-homeofficeapc:
@@ -987,7 +988,7 @@ security:
       - "uploadBailSummary"
       - "uploadDocuments"
       - "makeNewApplication"
-      - "submitEditedApplication"
+      - "editBailApplicationAfterSubmit"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -1102,7 +1103,7 @@ nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
-bailHomeOfficeEmailAddressForApplicationEditedSubmitted: ${IA_BAIL_HOME_OFFICE_EMAIL_APP_EDITED_SUBMITTED:ALARAppealsBailTeam@homeoffice.gov.uk}
+bailHomeOfficeEmailAddressForApplicationSubmittedEdited: ${IA_BAIL_HOME_OFFICE_EMAIL_APP_EDITED_SUBMITTED:ALARAppealsBailTeam@homeoffice.gov.uk}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}

@@ -19,7 +19,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class HomeOfficeBailApplicationEditedSubmittedPersonalisationTest {
+class HomeOfficeBailApplicationEditAfterSubmitPersonalisationTest {
 
     private Long caseId = 12345L;
     private String templateIdWithLegalRep = "someTemplateIdWithLegalRep";
@@ -31,7 +31,7 @@ class HomeOfficeBailApplicationEditedSubmittedPersonalisationTest {
     private String applicantGivenNames = "someApplicantGivenNames";
     private String applicantFamilyName = "someApplicantFamilyName";
     @Mock BailCase bailCase;
-    private HomeOfficeBailApplicationEditedSubmittedPersonalisation homeOfficeBailApplicationEditedSubmittedPersonalisation;
+    private HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -42,26 +42,26 @@ class HomeOfficeBailApplicationEditedSubmittedPersonalisationTest {
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        homeOfficeBailApplicationEditedSubmittedPersonalisation =
-            new HomeOfficeBailApplicationEditedSubmittedPersonalisation(templateIdWithLegalRep, templateIdWithoutLegalRep, homeOfficeEmailAddress);
+        homeOfficeBailApplicationEditAfterSubmitPersonalisation =
+            new HomeOfficeBailApplicationEditAfterSubmitPersonalisation(templateIdWithLegalRep, templateIdWithoutLegalRep, homeOfficeEmailAddress);
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateIdWithLegalRep, homeOfficeBailApplicationEditedSubmittedPersonalisation.getTemplateId(bailCase));
+        assertEquals(templateIdWithLegalRep, homeOfficeBailApplicationEditAfterSubmitPersonalisation.getTemplateId(bailCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
-            homeOfficeBailApplicationEditedSubmittedPersonalisation.getReferenceId(caseId));
+            homeOfficeBailApplicationEditAfterSubmitPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> homeOfficeBailApplicationEditedSubmittedPersonalisation.getPersonalisation((BailCase) null))
+            () -> homeOfficeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation((BailCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("bailCase must not be null");
     }
@@ -70,7 +70,7 @@ class HomeOfficeBailApplicationEditedSubmittedPersonalisationTest {
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-            homeOfficeBailApplicationEditedSubmittedPersonalisation.getPersonalisation(bailCase);
+            homeOfficeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
         assertEquals(legalRepReference, personalisation.get("legalRepReference"));
@@ -84,9 +84,9 @@ class HomeOfficeBailApplicationEditedSubmittedPersonalisationTest {
 
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         Map<String, String> personalisation =
-            homeOfficeBailApplicationEditedSubmittedPersonalisation.getPersonalisation(bailCase);
+            homeOfficeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(templateIdWithoutLegalRep, homeOfficeBailApplicationEditedSubmittedPersonalisation.getTemplateId(bailCase));
+        assertEquals(templateIdWithoutLegalRep, homeOfficeBailApplicationEditAfterSubmitPersonalisation.getTemplateId(bailCase));
         assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
         assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
         assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
@@ -103,7 +103,7 @@ class HomeOfficeBailApplicationEditedSubmittedPersonalisationTest {
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            homeOfficeBailApplicationEditedSubmittedPersonalisation.getPersonalisation(bailCase);
+            homeOfficeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation(bailCase);
 
         assertEquals("", personalisation.get("bailReferenceNumber"));
         assertEquals("", personalisation.get("legalRepReference"));

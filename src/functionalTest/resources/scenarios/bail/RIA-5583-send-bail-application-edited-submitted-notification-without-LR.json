@@ -6,7 +6,7 @@
     "credentials": "AdminOfficer",
     "input": {
       "id": 2002,
-      "eventId": "submitEditApplication",
+      "eventId": "editApplicationAfterSubmit",
       "state": "applicationEditedSubmitted",
       "caseData": {
         "template": "minimal-bail-application-submitted-not-legally-represented.json",

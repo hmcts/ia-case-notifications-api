@@ -12,21 +12,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldD
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
 @Service
-public class LegalRepresentativeBailApplicationEditedSubmittedPersonalisation implements LegalRepresentativeBailEmailNotificationPersonalisation {
+public class LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation implements LegalRepresentativeBailEmailNotificationPersonalisation {
 
-    private final String bailApplicationEditedSubmittedLegalRepresentativeTemplateId;
+    private final String bailApplicationEditAfterSubmitLegalRepresentativeTemplateId;
 
 
-    public LegalRepresentativeBailApplicationEditedSubmittedPersonalisation(
-        @NotNull(message = "bailApplicationEditedSubmittedLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.bail.template.submitEditedApplication.email}") String bailApplicationEditedSubmittedLegalRepresentativeTemplateId
+    public LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation(
+        @NotNull(message = "bailApplicationEditAfterSubmitLegalRepresentativeTemplateId cannot be null")
+        @Value("${govnotify.bail.template.editApplicationAfterSubmit.email}") String bailApplicationEditAfterSubmitLegalRepresentativeTemplateId
     ) {
-        this.bailApplicationEditedSubmittedLegalRepresentativeTemplateId = bailApplicationEditedSubmittedLegalRepresentativeTemplateId;
+        this.bailApplicationEditAfterSubmitLegalRepresentativeTemplateId = bailApplicationEditAfterSubmitLegalRepresentativeTemplateId;
     }
 
     @Override
     public String getTemplateId() {
-        return bailApplicationEditedSubmittedLegalRepresentativeTemplateId;
+        return bailApplicationEditAfterSubmitLegalRepresentativeTemplateId;
     }
 
     @Override

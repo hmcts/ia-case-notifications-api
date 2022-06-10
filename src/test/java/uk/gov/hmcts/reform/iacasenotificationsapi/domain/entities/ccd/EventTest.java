@@ -96,7 +96,7 @@ public class EventTest {
         assertEquals("changeBailDirectionDueDate", CHANGE_BAIL_DIRECTION_DUE_DATE.toString());
         assertEquals("sendBailDirection", SEND_BAIL_DIRECTION.toString());
         assertEquals("makeNewApplication", MAKE_NEW_APPLICATION.toString());
-        assertEquals("submitEditedApplication", SUBMIT_EDITED_APPLICATION.toString());
+        assertEquals("editBailApplicationAfterSubmit", EDIT_BAIL_APPLICATION_AFTER_SUBMIT.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 

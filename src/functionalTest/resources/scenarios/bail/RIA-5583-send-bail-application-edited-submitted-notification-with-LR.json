@@ -6,7 +6,7 @@
     "credentials": "LegalRepresentative",
     "input": {
       "id": 2001,
-      "eventId": "submitEditApplication",
+      "eventId": "editApplicationAfterSubmit",
       "state": "applicationEditedSubmitted",
       "caseData": {
         "template": "minimal-bail-application-submitted.json",

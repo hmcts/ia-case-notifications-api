@@ -16,21 +16,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
 
 @Service
-public class HomeOfficeBailApplicationEditedSubmittedPersonalisation implements BailEmailNotificationPersonalisation {
+public class HomeOfficeBailApplicationEditAfterSubmitPersonalisation implements BailEmailNotificationPersonalisation {
 
-    private final String homeOfficeBailApplicationEditedSubmittedWithLegalRepPersonalisationTemplateId;
-    private final String homeOfficeBailApplicationEditedSubmittedWithoutLegalRepPersonalisationTemplateId;
+    private final String homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId;
+    private final String homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId;
     private final String bailHomeOfficeEmailAddress;
 
 
-    public HomeOfficeBailApplicationEditedSubmittedPersonalisation(
-        @NotNull(message = "homeOfficeBailApplicationEditedSubmittedPersonalisationTemplateId cannot be null")
-        @Value("${govnotify.bail.template.submitEditedApplication.email}") String homeOfficeBailApplicationEditedSubmittedWithLegalRepPersonalisationTemplateId,
-        @Value("${govnotify.bail.template.submitEditedApplicationWithoutLr.email}") String homeOfficeBailApplicationEditedSubmittedWithoutLegalRepPersonalisationTemplateId,
-        @Value("${bailHomeOfficeEmailAddressForApplicationEditedSubmitted}") String bailHomeOfficeEmailAddress
+    public HomeOfficeBailApplicationEditAfterSubmitPersonalisation(
+        @NotNull(message = "homeOfficeBailApplicationEditAfterSubmitPersonalisationTemplateId cannot be null")
+        @Value("${govnotify.bail.template.editApplicationAfterSubmit.email}") String homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.editApplicationAfterSubmitWithoutLr.email}") String homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId,
+        @Value("${bailHomeOfficeEmailAddressForApplicationSubmittedEdited}") String bailHomeOfficeEmailAddress
     ) {
-        this.homeOfficeBailApplicationEditedSubmittedWithLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEditedSubmittedWithLegalRepPersonalisationTemplateId;
-        this.homeOfficeBailApplicationEditedSubmittedWithoutLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEditedSubmittedWithoutLegalRepPersonalisationTemplateId;
+        this.homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId;
+        this.homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId;
         this.bailHomeOfficeEmailAddress = bailHomeOfficeEmailAddress;
     }
 
@@ -42,7 +42,7 @@ public class HomeOfficeBailApplicationEditedSubmittedPersonalisation implements 
     @Override
     public String getTemplateId(BailCase bailCase) {
         return bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-            ? homeOfficeBailApplicationEditedSubmittedWithLegalRepPersonalisationTemplateId : homeOfficeBailApplicationEditedSubmittedWithoutLegalRepPersonalisationTemplateId;
+            ? homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId : homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId;
     }
 
     @Override

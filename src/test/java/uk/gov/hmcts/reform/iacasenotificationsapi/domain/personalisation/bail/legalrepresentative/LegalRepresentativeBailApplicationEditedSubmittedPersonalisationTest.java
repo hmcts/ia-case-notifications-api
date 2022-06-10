@@ -17,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailApplicationEditedSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
+class LegalRepresentativeBailApplicationEditAfterSubmitPersonalisationTest {
 
     @Mock
     BailCase bailCase;
@@ -29,7 +29,7 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalRep@example.com";
 
-    private LegalRepresentativeBailApplicationEditedSubmittedPersonalisation legalRepresentativeBailApplicationEditedSubmittedPersonalisation;
+    private LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation legalRepresentativeBailApplicationEditAfterSubmitPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -48,7 +48,7 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
-        legalRepresentativeBailApplicationEditedSubmittedPersonalisation = new LegalRepresentativeBailApplicationEditedSubmittedPersonalisation(
+        legalRepresentativeBailApplicationEditAfterSubmitPersonalisation = new LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation(
             templateId
         );
     }
@@ -56,19 +56,19 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getTemplateId());
+        assertEquals(templateId, legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_APPLICATION_EDITED_AND_SUBMITTED_LEGAL_REP",
-            legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getReferenceId(caseId));
+            legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_bail_case() {
-        assertTrue(legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getRecipientsList(bailCase)
+        assertTrue(legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getRecipientsList(bailCase)
             .contains(legalRepEmailAddress));
     }
 
@@ -76,7 +76,7 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getRecipientsList(bailCase))
+        assertThatThrownBy(() -> legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getRecipientsList(bailCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("legalRepresentativeEmailAddress is not present");
     }
@@ -85,7 +85,7 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getPersonalisation((BailCase) null))
+            () -> legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation((BailCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("bailCase must not be null");
     }
@@ -94,7 +94,7 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-            legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getPersonalisation(bailCase);
+            legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation(bailCase);
 
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
     }
@@ -109,7 +109,7 @@ class LegalRepresentativeBailApplicationEditedSubmittedPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            legalRepresentativeBailApplicationEditedSubmittedPersonalisation.getPersonalisation(bailCase);
+            legalRepresentativeBailApplicationEditAfterSubmitPersonalisation.getPersonalisation(bailCase);
 
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
     }

@@ -59,7 +59,7 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
             Event.EDIT_BAIL_DOCUMENTS,
             Event.CHANGE_BAIL_DIRECTION_DUE_DATE,
             Event.MAKE_NEW_APPLICATION,
-            Event.SUBMIT_EDITED_APPLICATION
+            Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT
         );
     }
 
@@ -79,7 +79,6 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
                 throw e;
             }
         }
-
         return new PreSubmitCallbackResponse<>(callback.getCaseDetails().getCaseData());
     }
 }

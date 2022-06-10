@@ -304,32 +304,32 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitEditedApplicationNotificationGenerator")
-    public List<BailNotificationGenerator> submitEditedApplicationNotificationGenerator(
-        LegalRepresentativeBailApplicationEditedSubmittedPersonalisation legalRepresentativeBailApplicationEditedSubmittedPersonalisation,
-        HomeOfficeBailApplicationEditedSubmittedPersonalisation homeOfficeBailApplicationEditedSubmittedPersonalisation,
+    @Bean("editApplicationAfterSubmitNotificationGenerator")
+    public List<BailNotificationGenerator> editApplicationAfterSubmitNotificationGenerator(
+        LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation legalRepresentativeBailApplicationEditAfterSubmitPersonalisation,
+        HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
-                newArrayList(legalRepresentativeBailApplicationEditedSubmittedPersonalisation,
-                    homeOfficeBailApplicationEditedSubmittedPersonalisation),
+                newArrayList(legalRepresentativeBailApplicationEditAfterSubmitPersonalisation,
+                    homeOfficeBailApplicationEditAfterSubmitPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
         );
     }
 
-    @Bean("submitEditedApplicationWithoutLegalRepNotificationGenerator")
-    public List<BailNotificationGenerator> submitEditedApplicationWithoutLegalRepNotificationGenerator(
-        HomeOfficeBailApplicationEditedSubmittedPersonalisation homeOfficeBailApplicationEditedSubmittedPersonalisation,
+    @Bean("editApplicationAfterSubmitWithoutLegalRepNotificationGenerator")
+    public List<BailNotificationGenerator> editApplicationAfterSubmitWithoutLegalRepNotificationGenerator(
+        HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
-                newArrayList(homeOfficeBailApplicationEditedSubmittedPersonalisation),
+                newArrayList(homeOfficeBailApplicationEditAfterSubmitPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
