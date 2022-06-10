@@ -1258,6 +1258,33 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("uploadAddendumEvidenceLegalRepForAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceLegalRepForAip(
+        HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+        CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+        AppellantUploadAddendumEvidencePersonalisationEmail appellantUploadAddendumEvidencePersonalisationEmail,
+        AppellantUploadAddendumEvidencePersonalisationSms appellantUploadAddendumEvidencePersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    homeOfficeUploadAddendumEvidencePersonalisation,
+                    caseOfficerUploadAddendumEvidencePersonalisation,
+                    appellantUploadAddendumEvidencePersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantUploadAddendumEvidencePersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
 
     @Bean("uploadAddendumEvidenceAdminOfficer")
     public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficer(

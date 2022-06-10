@@ -351,6 +351,9 @@ govnotify:
         email: 61999628-3fb7-44de-a38c-304d6d765143
       homeOffice:
         email: 6e473679-dfc7-4fa7-96e3-583d0e8ff09f
+      appellant:
+        email: 0b7b84c5-fdde-493f-a431-0979e5085b1d
+        sms: ce6ecd7b-6239-4093-8e39-b8fbf17334da
     changeDirectionDueDate:
       legalRep:
         afterListing:
@@ -822,6 +825,7 @@ security:
       - "draftHearingRequirements"
       - "requestHearingRequirementsFeature"
       - "asyncStitchingComplete"
+      - "uploadAddendumEvidenceLegalRep"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
