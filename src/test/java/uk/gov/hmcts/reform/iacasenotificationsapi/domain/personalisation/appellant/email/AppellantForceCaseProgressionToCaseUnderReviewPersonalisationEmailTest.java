@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -10,6 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -62,14 +59,14 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientList(asylumCase)
+        assertTrue(forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase)
             .contains(appellantEmailAddress));
     }
 
     @Test
     public void should_throw_exception_when_appellant_email_is_not_present() {
         when(asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientList(asylumCase))
+        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantEmailAddress is not present");
     }

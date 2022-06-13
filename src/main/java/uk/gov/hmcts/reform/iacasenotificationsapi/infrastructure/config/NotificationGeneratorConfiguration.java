@@ -36,11 +36,12 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> forceCaseProgressionNotificationGenerator(
         RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
         LegalRepresentativeRequestCaseBuildingPersonalisation legalRepresentativeRequestCaseBuildingPersonalisation,
+        AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(homeOfficePersonalisation, legalRepresentativeRequestCaseBuildingPersonalisation),
+            newArrayList(homeOfficePersonalisation, legalRepresentativeRequestCaseBuildingPersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
             notificationSender,
             notificationIdAppender)
         );
@@ -1555,6 +1556,24 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             )
         );
+    }
+
+    @Bean("appellantForceCaseProgressionToCaseUnderReviewNotificationGenerator")
+    public List<NotificationGenerator> appellantForceCaseProgressionToCaseUnderReviewNotificationGenerator(
+        AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail forceCaseProgressionToCaseUnderReviewPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    forceCaseProgressionToCaseUnderReviewPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+
     }
 
     @Bean("forceCaseToSubmitHearingRequirementsNotificationGenerator")
