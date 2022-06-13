@@ -18,33 +18,33 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
 
 @Service
-public class HomeOfficeBailApplicationEndedPersonalisation implements BailEmailNotificationPersonalisation {
+public class HomeOfficeBailChangeDirectionDueDatePersonalisation implements BailEmailNotificationPersonalisation {
 
-    private final String homeOfficeBailApplicationEndedWithLegalRepPersonalisationTemplateId;
-    private final String homeOfficeBailApplicationEndedWithoutLegalRepPersonalisationTemplateId;
+    private final String homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId;
+    private final String homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId;
     private final String bailHomeOfficeEmailAddress;
 
 
-    public HomeOfficeBailApplicationEndedPersonalisation(
-        @NotNull(message = "homeOfficeBailApplicationEndedPersonalisationTemplateId cannot be null")
-        @Value("${govnotify.bail.template.endApplication.email}") String homeOfficeBailApplicationEndedWithLegalRepPersonalisationTemplateId,
-        @Value("${govnotify.bail.template.endApplicationWithoutLR.email}") String homeOfficeBailApplicationEndedWithoutLegalRepPersonalisationTemplateId,
+    public HomeOfficeBailChangeDirectionDueDatePersonalisation(
+        @NotNull(message = "homeOfficeBailChangeDirectionDueDatePersonalisationTemplateId cannot be null")
+        @Value("${govnotify.bail.template.changeBailDirectionDueDate.email}") String homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.changeBailDirectionDueDateWithoutLR.email}") String homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId,
         @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
-        this.homeOfficeBailApplicationEndedWithLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEndedWithLegalRepPersonalisationTemplateId;
-        this.homeOfficeBailApplicationEndedWithoutLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEndedWithoutLegalRepPersonalisationTemplateId;
+        this.homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId = homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId;
+        this.homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId = homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId;
         this.bailHomeOfficeEmailAddress = bailHomeOfficeEmailAddress;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_BAIL_APPLICATION_ENDED_HOME_OFFICE";
+        return caseId + "_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE";
     }
 
     @Override
     public String getTemplateId(BailCase bailCase) {
-        return bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-            ? homeOfficeBailApplicationEndedWithLegalRepPersonalisationTemplateId : homeOfficeBailApplicationEndedWithoutLegalRepPersonalisationTemplateId;
+        return  bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+            ? homeOfficeBailChangeDirectionDueDateWithLegalRepPersonalisationTemplateId : homeOfficeBailChangeDirectionDueDateWithoutLegalRepPersonalisationTemplateId;
     }
 
     @Override
@@ -56,9 +56,9 @@ public class HomeOfficeBailApplicationEndedPersonalisation implements BailEmailN
     public Map<String, String> getPersonalisation(BailCase bailCase) {
         requireNonNull(bailCase, "bailCase must not be null");
 
-        String endApplicationDate = bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class).orElse("");
-        if (!endApplicationDate.isBlank()) {
-            endApplicationDate = LocalDate.parse(endApplicationDate).format(DateTimeFormatter.ofPattern("d MMM uuuu"));
+        String changeDirectionDueDate = bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_DATE_DUE, String.class).orElse("");
+        if (!changeDirectionDueDate.isBlank()) {
+            changeDirectionDueDate = LocalDate.parse(changeDirectionDueDate).format(DateTimeFormatter.ofPattern("d MMM uuuu"));
         }
 
         return ImmutableMap
@@ -68,9 +68,9 @@ public class HomeOfficeBailApplicationEndedPersonalisation implements BailEmailN
             .put("applicantGivenNames", bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class).orElse(""))
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("endApplicationReasons", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_REASONS, String.class).orElse("No reason given"))
-            .put("endApplicationOutcome", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class).orElse(""))
-            .put("endApplicationDate", endApplicationDate)
+            .put("party", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_PARTIES, String.class).orElse(""))
+            .put("directionDueDate", changeDirectionDueDate)
+            .put("explanation", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_EXPLANATION, String.class).orElse(""))
             .build();
     }
 }

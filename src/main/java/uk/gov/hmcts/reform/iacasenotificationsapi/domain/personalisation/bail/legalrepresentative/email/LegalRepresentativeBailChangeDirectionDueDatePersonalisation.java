@@ -14,35 +14,35 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldD
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
 @Service
-public class LegalRepresentativeBailApplicationEndedPersonalisation implements LegalRepresentativeBailEmailNotificationPersonalisation {
-
-    private final String bailApplicationEndedLegalRepresentativeTemplateId;
+public class LegalRepresentativeBailChangeDirectionDueDatePersonalisation implements LegalRepresentativeBailEmailNotificationPersonalisation {
 
 
-    public LegalRepresentativeBailApplicationEndedPersonalisation(
-        @NotNull(message = "bailApplicationEndedLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.bail.template.endApplication.email}") String bailApplicationEndedLegalRepresentativeTemplateId
+    private final String legalRepresentativeBailChangeDirectionDueDatePersonalisationTemplateId;
+
+    public LegalRepresentativeBailChangeDirectionDueDatePersonalisation(
+        @NotNull(message = "legalRepresentativeBailChangeDirectionDueDatePersonalisationTemplateId cannot be null")
+        @Value("${govnotify.bail.template.changeBailDirectionDueDate.email}") String legalRepresentativeBailChangeDirectionDueDatePersonalisationTemplateId
     ) {
-        this.bailApplicationEndedLegalRepresentativeTemplateId = bailApplicationEndedLegalRepresentativeTemplateId;
-    }
-
-    @Override
-    public String getTemplateId() {
-        return bailApplicationEndedLegalRepresentativeTemplateId;
+        this.legalRepresentativeBailChangeDirectionDueDatePersonalisationTemplateId = legalRepresentativeBailChangeDirectionDueDatePersonalisationTemplateId;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_BAIL_APPLICATION_ENDED_LEGAL_REPRESENTATIVE";
+        return caseId + "_CHANGE_BAIL_DIRECTION_DUE_DATE_LEGAL_REPRESENTATIVE";
+    }
+
+    @Override
+    public String getTemplateId() {
+        return legalRepresentativeBailChangeDirectionDueDatePersonalisationTemplateId;
     }
 
     @Override
     public Map<String, String> getPersonalisation(BailCase bailCase) {
         requireNonNull(bailCase, "bailCase must not be null");
 
-        String endApplicationDate = bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class).orElse("");
-        if (!endApplicationDate.isBlank()) {
-            endApplicationDate = LocalDate.parse(endApplicationDate).format(DateTimeFormatter.ofPattern("d MMM uuuu"));
+        String changeDirectionDueDate = bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_DATE_DUE, String.class).orElse("");
+        if (!changeDirectionDueDate.isBlank()) {
+            changeDirectionDueDate = LocalDate.parse(changeDirectionDueDate).format(DateTimeFormatter.ofPattern("d MMM uuuu"));
         }
 
         return ImmutableMap
@@ -52,9 +52,9 @@ public class LegalRepresentativeBailApplicationEndedPersonalisation implements L
             .put("applicantGivenNames", bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class).orElse(""))
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("endApplicationReasons", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_REASONS, String.class).orElse("No reason given"))
-            .put("endApplicationOutcome", bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class).orElse(""))
-            .put("endApplicationDate", endApplicationDate)
+            .put("party", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_PARTIES, String.class).orElse(""))
+            .put("directionDueDate", changeDirectionDueDate)
+            .put("explanation", bailCase.read(BailCaseFieldDefinition.BAIL_DIRECTION_EDIT_EXPLANATION, String.class).orElse(""))
             .build();
     }
 
