@@ -45,6 +45,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_FAMILY_NAME(
             "appellantFamilyName", new TypeReference<String>(){}),
 
+    APPELLANT_EMAIL_ADDRESS(
+        "appellantEmailAddress", new TypeReference<String>(){}),
+
     LEGAL_REP_REFERENCE_NUMBER(
             "legalRepReferenceNumber", new TypeReference<String>(){}),
 

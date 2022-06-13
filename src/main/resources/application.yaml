@@ -53,6 +53,8 @@ govnotify:
       caseBuilding.to.caseUnderReview:
         legalRep:
           email: e8197293-3db9-4af9-95d2-067e217c03c2
+        appellant:
+          email: 1c0389ce-7ea6-4e3a-a3a8-efe3fcf499e9
       respondentReview.to.submitHearingRequirements:
         respondent:
           email: a0cb0ac3-62e2-473d-a487-7ffd46f80ace
