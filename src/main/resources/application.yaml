@@ -815,6 +815,10 @@ govnotify:
         email: 7cef2a13-701f-4425-9685-501236bf1c74
       changeBailDirectionDueDateWithoutLR:
         email: 3ea0376f-c7b7-4d8d-941d-abfacc1ddd96
+      editApplicationAfterSubmit:
+        email: 84d48a3f-afd6-4759-9219-22cb37bebabb
+      editApplicationAfterSubmitWithoutLr:
+        email: 160386c8-7fc5-4359-8d3d-f99765af00d5
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -953,6 +957,7 @@ security:
       - "uploadDocuments"
       - "sendBailDirection"
       - "editBailDocuments"
+      - "editBailApplicationAfterSubmit"
       - "changeBailDirectionDueDate"
       - "makeNewApplication"
     caseworker-ia-homeofficeapc:
