@@ -27,7 +27,7 @@ public class HomeOfficeBailApplicationEditAfterSubmitPersonalisation implements 
         @NotNull(message = "homeOfficeBailApplicationEditAfterSubmitPersonalisationTemplateId cannot be null")
         @Value("${govnotify.bail.template.editApplicationAfterSubmit.email}") String homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId,
         @Value("${govnotify.bail.template.editApplicationAfterSubmitWithoutLr.email}") String homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId,
-        @Value("${bailHomeOfficeEmailAddressForApplicationSubmittedEdited}") String bailHomeOfficeEmailAddress
+        @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
         this.homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEditAfterSubmitWithLegalRepPersonalisationTemplateId;
         this.homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId = homeOfficeBailApplicationEditAfterSubmitWithoutLegalRepPersonalisationTemplateId;
