@@ -303,4 +303,36 @@ public class BailNotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("editApplicationAfterSubmitNotificationGenerator")
+    public List<BailNotificationGenerator> editApplicationAfterSubmitNotificationGenerator(
+        LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation legalRepresentativeBailApplicationEditAfterSubmitPersonalisation,
+        HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(legalRepresentativeBailApplicationEditAfterSubmitPersonalisation,
+                    homeOfficeBailApplicationEditAfterSubmitPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("editApplicationAfterSubmitWithoutLegalRepNotificationGenerator")
+    public List<BailNotificationGenerator> editApplicationAfterSubmitWithoutLegalRepNotificationGenerator(
+        HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(homeOfficeBailApplicationEditAfterSubmitPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
