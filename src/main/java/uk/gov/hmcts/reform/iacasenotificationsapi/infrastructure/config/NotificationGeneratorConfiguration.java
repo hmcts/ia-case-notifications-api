@@ -1223,6 +1223,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("uploadAddendumEvidenceCaseOfficerAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceCaseOfficerAip(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            AppellantTcwUploadAddendumEvidencePersonalisationEmail appellantTcwUploadAddendumEvidencePersonalisationEmail,
+            AppellantTcwUploadAddendumEvidencePersonalisationSms appellantTcwUploadAddendumEvidencePersonalisationSms,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, appellantTcwUploadAddendumEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantTcwUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                ));
+    }
+
     @Bean("uploadAddendumEvidenceHomeOffice")
     public List<NotificationGenerator> uploadAddendumEvidenceHomeOffice(
         LegalRepresentativeUploadAddendumEvidencePersonalisation legalRepresentativeUploadAddendumEvidencePersonalisation,
@@ -1238,6 +1260,30 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceHomeOfficeAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceHomeOfficeAip(
+            AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail appellantHomeOfficeOrUploadAddendumEvidencePersonalisationEmail,
+            AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms appellantHomeOfficeUploadAddendumEvidencePersonalisationSms,
+            CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantHomeOfficeOrUploadAddendumEvidencePersonalisationEmail, caseOfficerUploadAddendumEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantHomeOfficeUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -1303,6 +1349,27 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             )
         );
+    }
+
+    @Bean("uploadAddendumEvidenceAdminOfficerAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerAip(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            AppellantTcwUploadAddendumEvidencePersonalisationEmail appellantTcwUploadAddendumEvidencePersonalisationEmail,
+            AppellantTcwUploadAddendumEvidencePersonalisationSms appellantTcwUploadAddendumEvidencePersonalisationSms,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, appellantTcwUploadAddendumEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantTcwUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                ));
     }
 
     @Bean("changeToHearingRequirementsNotificationGenerator")
