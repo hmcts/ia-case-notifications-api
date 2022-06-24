@@ -21,7 +21,7 @@ public class LegalRepresentativeBailApplicationEndedPersonalisation implements L
 
     public LegalRepresentativeBailApplicationEndedPersonalisation(
         @NotNull(message = "bailApplicationEndedLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.bail.template.endApplication.email}") String bailApplicationEndedLegalRepresentativeTemplateId
+        @Value("${govnotify.bail.template.endApplicationLR.email}") String bailApplicationEndedLegalRepresentativeTemplateId
     ) {
         this.bailApplicationEndedLegalRepresentativeTemplateId = bailApplicationEndedLegalRepresentativeTemplateId;
     }
