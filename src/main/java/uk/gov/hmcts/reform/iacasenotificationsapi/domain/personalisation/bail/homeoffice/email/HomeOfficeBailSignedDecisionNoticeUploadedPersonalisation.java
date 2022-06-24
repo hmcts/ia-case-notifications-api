@@ -23,7 +23,7 @@ public class HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation implement
 
     public HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation(
         @NotNull(message = "homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId cannot be null")
-        @Value("${govnotify.bail.template.uploadSignedDecisionNotice.email}") String homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId,
+        @Value("${govnotify.bail.template.uploadSignedDecisionNoticeHO.email}") String homeOfficeBailSignedDecisionNoticeUploadedPersonalisationTemplateId,
         @Value("${govnotify.bail.template.uploadSignedDecisionNoticeWithoutLR.email}") String homeOfficeBailSignedDecisionNoticeUploadedWithoutLrPersonalisationTemplateId,
         @Value("${bailHomeOfficeEmailAddress}") String bailHomeOfficeEmailAddress
     ) {
