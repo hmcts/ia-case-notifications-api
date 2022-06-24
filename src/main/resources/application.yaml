@@ -794,6 +794,8 @@ govnotify:
         email: 3e4d7195-2e48-4ca0-b88f-ac6969cf8a4b
       uploadSignedDecisionNoticeWithoutLR:
         email: ffaee311-d762-4937-a7c9-17e9f3706873
+      uploadSignedDecisionNoticeHO:
+        email: 6d7a8f5f-3c29-4f19-bf23-5eced46eb976
       endApplication:
         sms: fbb7895c-891a-4e7a-89c3-bd822e3c0071
         email: e70e45e1-5609-430a-9c29-e0bb539e5efa
