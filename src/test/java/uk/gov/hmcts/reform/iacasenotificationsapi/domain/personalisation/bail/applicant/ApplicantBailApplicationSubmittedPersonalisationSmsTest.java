@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.APPLICANT_MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.APPLICANT_MOBILE_NUMBER_1;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.BAIL_REFERENCE_NUMBER;
 
 import java.util.Map;
@@ -35,7 +35,7 @@ public class ApplicantBailApplicationSubmittedPersonalisationSmsTest {
     @BeforeEach
     public void setup() {
 
-        when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mobileNumber));
+        when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.of(mobileNumber));
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
 
         applicantBailApplicationSubmittedPersonalisationSms =
@@ -59,7 +59,7 @@ public class ApplicantBailApplicationSubmittedPersonalisationSmsTest {
         assertTrue(
                 applicantBailApplicationSubmittedPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
 
-        when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.empty());
 
         assertTrue(applicantBailApplicationSubmittedPersonalisationSms.getRecipientsList(bailCase).isEmpty());
     }

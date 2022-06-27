@@ -13,7 +13,7 @@
         "replacements": {
           "bailHearingCentre": "newport",
           "applicantHasMobile": "Yes",
-          "applicantMobileNumber": "{$IA_TEST_APPLICANT_MOBILE}"
+          "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}"
         }
       }
     }

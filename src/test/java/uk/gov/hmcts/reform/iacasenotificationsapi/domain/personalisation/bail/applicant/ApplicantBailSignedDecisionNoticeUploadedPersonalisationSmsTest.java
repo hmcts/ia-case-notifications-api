@@ -36,7 +36,7 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
     @BeforeEach
     public void setup() {
 
-        when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mobileNumber));
+        when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.of(mobileNumber));
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
 
         applicantBailSignedDecisionNoticeUploadedPersonalisationSms =
@@ -60,7 +60,7 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
         assertTrue(
             applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
 
-        when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.empty());
 
         assertTrue(applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getRecipientsList(bailCase).isEmpty());
     }

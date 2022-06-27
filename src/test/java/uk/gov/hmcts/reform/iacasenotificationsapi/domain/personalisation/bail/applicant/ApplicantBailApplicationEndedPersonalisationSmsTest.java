@@ -36,7 +36,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
     @BeforeEach
     public void setup() {
 
-        when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mobileNumber));
+        when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.of(mobileNumber));
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
         when(bailCase.read(END_APPLICATION_OUTCOME, String.class)).thenReturn(Optional.of(outcomeOfApplication));
         when(bailCase.read(END_APPLICATION_DATE, String.class)).thenReturn(Optional.of(endApplicationDate));
@@ -62,7 +62,7 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
         assertTrue(
             applicantBailApplicationEndedPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
 
-        when(bailCase.read(APPLICANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.empty());
 
         assertTrue(applicantBailApplicationEndedPersonalisationSms.getRecipientsList(bailCase).isEmpty());
     }
