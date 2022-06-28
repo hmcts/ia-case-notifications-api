@@ -47,9 +47,24 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
         @Qualifier("forceCaseProgressionNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
+        System.out.println("forceCaseProgressionNotificationGenerator");
+
         BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
             callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
             && callback.getEvent() == Event.FORCE_REQUEST_CASE_BUILDING;
+        return new NotificationHandler(function, notificationGenerators);
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> forceAppellantCaseProgressionNotificationHandler(
+        @Qualifier("forceAppellantCaseProgressionNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        System.out.println("forceAppellantCaseProgressionNotificationHandler");
+
+        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
+            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW;
         return new NotificationHandler(function, notificationGenerators);
     }
 
