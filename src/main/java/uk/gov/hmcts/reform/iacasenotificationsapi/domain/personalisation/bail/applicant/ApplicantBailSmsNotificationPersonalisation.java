@@ -16,7 +16,7 @@ public interface ApplicantBailSmsNotificationPersonalisation extends BailSmsNoti
     @Override
     default Set<String> getRecipientsList(BailCase bailCase) {
         final String applicantMobileNumber = bailCase
-                .read(BailCaseFieldDefinition.APPLICANT_MOBILE_NUMBER, String.class).orElse(null);
+                .read(BailCaseFieldDefinition.APPLICANT_MOBILE_NUMBER_1, String.class).orElse(null);
 
         if (applicantMobileNumber == null) {
             LOG.info("Applicant does not have a mobile number");
