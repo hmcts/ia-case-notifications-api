@@ -115,7 +115,8 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "You provided new evidence to the Tribunal. Sign in to your account to see the evidence you provided:",
+          "You provided new evidence to the Tribunal.",
+          "Sign in to your account to see the evidence you provided:",
           "{$iaAipFrontendUrl}"
         ]
       }
