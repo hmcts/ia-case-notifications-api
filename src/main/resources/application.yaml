@@ -354,6 +354,10 @@ govnotify:
       appellant:
         email: 0b7b84c5-fdde-493f-a431-0979e5085b1d
         sms: ce6ecd7b-6239-4093-8e39-b8fbf17334da
+    hoOrTcwUploadedAddendumEvidence:
+      appellant:
+        email: 41045d9c-0769-48d7-9da7-0919b80eb29d
+        sms: f38ac04a-af21-447c-afe5-8eca0ab39d38
     changeDirectionDueDate:
       legalRep:
         afterListing:
