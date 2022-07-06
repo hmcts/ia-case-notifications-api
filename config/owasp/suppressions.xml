@@ -69,4 +69,8 @@
         <packageUrl regex="true">^pkg:maven/com\.google\.code\.gson/gson@.*$</packageUrl>
         <cve>CVE-2022-25647</cve>
     </suppress>
+    <suppress>
+        <notes>Temporarily suppress log4j vulneravilities</notes>
+        <cve>CVE-2022-33915</cve>
+    </suppress>
 </suppressions>
