@@ -54,4 +54,8 @@
         <cve>CVE-2022-42003</cve>
         <cve>CVE-2022-42004</cve>
     </suppress>
+    <suppress>
+        <notes>Temporarily suppress log4j vulneravilities</notes>
+        <cve>CVE-2022-33915</cve>
+    </suppress>
 </suppressions>
