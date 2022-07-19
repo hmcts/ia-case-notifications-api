@@ -29,6 +29,7 @@ public enum DocumentTag {
     UPLOAD_DOCUMENT("uploadDocument"),
     BAIL_SUBMISSION("bailSubmission"),
     B1_DOCUMENT("b1Document"),
+    CLARIFYING_QUESTIONS("clarifyingQuestions")
 
     @JsonEnumDefaultValue
     NONE("");
