@@ -33,7 +33,7 @@ public class DocumentTagTest {
         assertEquals("uploadDocument", DocumentTag.UPLOAD_DOCUMENT.toString());
         assertEquals("bailSubmission", DocumentTag.BAIL_SUBMISSION.toString());
         assertEquals("b1Document", DocumentTag.B1_DOCUMENT.toString());
-        assertEquals("clarifyinfQuestions", DocumentTag.CLARIFYING_QUESTIONS.toString());
+        assertEquals("clarifyingQuestions", DocumentTag.CLARIFYING_QUESTIONS.toString());
     }
 
     @Test
