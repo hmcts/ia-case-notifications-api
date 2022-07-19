@@ -21,6 +21,7 @@ public enum DocumentTag {
     HO_DECISION_LETTER("homeOfficeDecisionLetter"),
     END_APPEAL("endAppeal"),
     RECORD_OUT_OF_TIME_DECISION_DOCUMENT("recordOutOfTimeDecisionDocument"),
+    CLARIFYING_QUESTIONS("clarifyingQuestions"),
 
     @JsonEnumDefaultValue
     NONE("");
