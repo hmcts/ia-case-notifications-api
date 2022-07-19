@@ -47,7 +47,6 @@ public class NotificationGeneratorConfiguration {
             notificationIdAppender)
         );
     }
-
     @Bean("forceAppellantCaseProgressionNotificationGenerator")
     public List<NotificationGenerator> forceAppellantCaseProgressionNotificationGenerator(
         AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
@@ -1573,24 +1572,6 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             )
         );
-    }
-
-    @Bean("appellantForceCaseProgressionToCaseUnderReviewNotificationGenerator")
-    public List<NotificationGenerator> appellantForceCaseProgressionToCaseUnderReviewNotificationGenerator(
-        AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail forceCaseProgressionToCaseUnderReviewPersonalisationEmail,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-        return Collections.singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    forceCaseProgressionToCaseUnderReviewPersonalisationEmail
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-
     }
 
     @Bean("forceCaseToSubmitHearingRequirementsNotificationGenerator")
