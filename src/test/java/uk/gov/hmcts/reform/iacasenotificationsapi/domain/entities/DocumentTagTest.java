@@ -24,11 +24,12 @@ public class DocumentTagTest {
         assertEquals("endAppeal", DocumentTag.END_APPEAL.toString());
         assertEquals("homeOfficeDecisionLetter", DocumentTag.HO_DECISION_LETTER.toString());
         assertEquals("recordOutOfTimeDecisionDocument", DocumentTag.RECORD_OUT_OF_TIME_DECISION_DOCUMENT.toString());
+        assertEquals("clarifyingQuestions", DocumentTag.CLARIFYING_QUESTIONS.toString());
         assertEquals("", DocumentTag.NONE.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(17, DocumentTag.values().length);
+        assertEquals(18, DocumentTag.values().length);
     }
 }
