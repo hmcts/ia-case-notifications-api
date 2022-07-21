@@ -67,8 +67,6 @@ public class EventTest {
         assertEquals("submitCmaRequirements", Event.SUBMIT_CMA_REQUIREMENTS.toString());
         assertEquals("listCma", Event.LIST_CMA.toString());
         assertEquals("editAppealAfterSubmit", Event.EDIT_APPEAL_AFTER_SUBMIT.toString());
-        assertEquals("linkAppeal", Event.LINK_APPEAL.toString());
-        assertEquals("unlinkAppeal", Event.UNLINK_APPEAL.toString());
         assertEquals("leadershipJudgeFtpaDecision", Event.LEADERSHIP_JUDGE_FTPA_DECISION.toString());
         assertEquals("residentJudgeFtpaDecision", Event.RESIDENT_JUDGE_FTPA_DECISION.toString());
         assertEquals("editDocuments", Event.EDIT_DOCUMENTS.toString());
@@ -92,6 +90,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(80, Event.values().length);
+        assertEquals(78, Event.values().length);
     }
 }

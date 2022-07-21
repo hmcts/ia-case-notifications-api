@@ -63,66 +63,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> unlinkAppealNotificationHandler(
-        @Qualifier("unlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && Event.UNLINK_APPEAL.equals(callback.getEvent())
-                        && isRepJourney(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> unlinkAppealAppellantNotificationHandler(
-        @Qualifier("unlinkAppealAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && Event.UNLINK_APPEAL.equals(callback.getEvent())
-                        && isAipJourney(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> linkAppealNotificationHandler(
-        @Qualifier("linkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && Event.LINK_APPEAL.equals(callback.getEvent())
-                        && isRepJourney(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> linkAppealAppellantNotificationHandler(
-        @Qualifier("linkAppealAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && Event.LINK_APPEAL.equals(callback.getEvent())
-                        && isAipJourney(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> reListCaseNotificationHandler(
         @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 

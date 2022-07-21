@@ -482,36 +482,6 @@ govnotify:
         email: 9e3d4485-4b36-4f83-aad7-4896e9dfc97b
       respondent:
         email: c4c21317-04a8-457a-a9cc-0f028eaa8e8c
-    linkAppealBeforeListing:
-      legalRep:
-        email: 51d5c671-2edd-4bf9-86b3-ab1d38f00b38
-      homeOffice:
-        email: 3cd6c3c4-6512-4fa8-ad3b-a455cbfda9fa
-      appellant:
-        email: a2c177a2-4441-496b-a9d5-b7253aecb67c
-        sms: 2e3f4bc4-b311-4630-b660-fcaa711378b4
-    linkAppealAfterListing:
-      legalRep:
-        email: 588e2447-b10d-4970-827a-7e4275d0dec2
-      homeOffice:
-        email: eaec4a03-15fe-4d8a-9d74-19a8e6e225ef
-      appellant:
-        email: c8c5bf5d-740b-4b44-9173-d3e4aca5fd46
-    unlinkAppealBeforeListing:
-      legalRep:
-        email: 98eebdab-fcba-4ef7-b4ff-509651c18a6c
-      homeOffice:
-        email: 2dbd0ae9-9fda-4b98-a9a8-0887e05dd3c3
-      appellant:
-        email: 239fc05c-5399-4784-b96d-112f32796ebc
-        sms: f6fc30f5-386e-4d84-85b4-7369b6bc5223
-    unlinkAppealAfterListing:
-      legalRep:
-        email: 50652202-52d0-494e-8e14-1e7093a808d6
-      homeOffice:
-        email: 9d289019-12d4-4815-8461-80cc3b890406
-      appellant:
-        email: 76a248c2-94cb-4c8d-84be-d68806464ce1
     appealDocumentDeletedBeforeListing:
       caseOfficer:
         email: 62513161-34ae-473e-a6cd-e5f38bef9d47
@@ -878,8 +848,6 @@ security:
       - "restoreStateFromAdjourn"
       - "requestCmaRequirements"
       - "editAppealAfterSubmit"
-      - "linkAppeal"
-      - "unlinkAppeal"
       - "editDocuments"
       - "requestResponseAmend"
       - "reinstateAppeal"
@@ -895,8 +863,6 @@ security:
       - "adjournHearingWithoutDate"
       - "restoreStateFromAdjourn"
       - "listCma"
-      - "linkAppeal"
-      - "unlinkAppeal"
       - "uploadAddendumEvidenceAdminOfficer"
       - "endAppeal"
       - "markAppealPaid"
@@ -935,8 +901,6 @@ security:
       - "sendDirection"
       - "leadershipJudgeFtpaDecision"
       - "residentJudgeFtpaDecision"
-      - "linkAppeal"
-      - "unlinkAppeal"
       - "updateHearingAdjustments"
       - "reinstateAppeal"
       - "editAppealAfterSubmit"

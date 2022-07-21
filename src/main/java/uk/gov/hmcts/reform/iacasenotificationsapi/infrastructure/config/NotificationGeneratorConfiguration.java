@@ -18,11 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 
@@ -54,82 +50,6 @@ public class NotificationGeneratorConfiguration {
 
         return Collections.singletonList(
             new EmailNotificationGenerator(newArrayList(personalisation), notificationSender, notificationIdAppender)
-        );
-    }
-
-    @Bean("unlinkAppealNotificationGenerator")
-    public List<NotificationGenerator> unlinkAppealNotificationGenerator(
-        LegalRepresentativeUnlinkAppealPersonalisation legalRepresentativeUnlinkAppealPersonalisation,
-        HomeOfficeUnlinkAppealPersonalisation homeOfficeUnlinkAppealPersonalisation,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Collections.singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeUnlinkAppealPersonalisation, homeOfficeUnlinkAppealPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("unlinkAppealAppellantNotificationGenerator")
-    public List<NotificationGenerator> unlinkAppealAppellantNotificationGenerator(
-        HomeOfficeUnlinkAppealPersonalisation homeOfficeUnlinkAppealPersonalisation,
-        AppellantUnlinkAppealPersonalisationEmail appellantUnlinkAppealPersonalisationEmail,
-        AppellantUnlinkAppealPersonalisationSms appellantUnlinkAppealPersonalisationSms,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-                new EmailNotificationGenerator(
-                        newArrayList(homeOfficeUnlinkAppealPersonalisation, appellantUnlinkAppealPersonalisationEmail),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new SmsNotificationGenerator(
-                        newArrayList(appellantUnlinkAppealPersonalisationSms),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("linkAppealNotificationGenerator")
-    public List<NotificationGenerator> linkAppealNotificationGenerator(
-        LegalRepresentativeLinkAppealPersonalisation legalRepresentativeLinkAppealPersonalisation,
-        HomeOfficeLinkAppealPersonalisation homeOfficeLinkAppealPersonalisation,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Collections.singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeLinkAppealPersonalisation, homeOfficeLinkAppealPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("linkAppealAppellantNotificationGenerator")
-    public List<NotificationGenerator> linkAppealAppellantNotificationGenerator(
-        HomeOfficeLinkAppealPersonalisation homeOfficeLinkAppealPersonalisation,
-        AppellantLinkAppealPersonalisationEmail appellantLinkAppealPersonalisationEmail,
-        AppellantLinkAppealPersonalisationSms appellantLinkAppealPersonalisationSms,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-                new EmailNotificationGenerator(
-                        newArrayList(homeOfficeLinkAppealPersonalisation, appellantLinkAppealPersonalisationEmail),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new SmsNotificationGenerator(
-                        newArrayList(appellantLinkAppealPersonalisationSms),
-                        notificationSender,
-                        notificationIdAppender
-                )
         );
     }
 
