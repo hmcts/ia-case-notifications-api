@@ -180,9 +180,9 @@ public class HomeOfficeDecideAnApplicationPersonalisation implements EmailNotifi
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("applicationType", getMakeAnApplication(asylumCase).map(it -> it.getType()).orElse(""))
-                .put("applicationDecisionReason", getMakeAnApplication(asylumCase).map(it -> it.getDecisionReason()).orElse("No reason given"))
-                .put("decisionMaker", getMakeAnApplication(asylumCase).map(it -> it.getDecisionMaker()).orElse(""))
+                .put("applicationType", getMakeAnApplication(asylumCase).map(MakeAnApplication::getType).orElse(""))
+                .put("applicationDecisionReason", getMakeAnApplication(asylumCase).map(MakeAnApplication::getDecisionReason).orElse("No reason given"))
+                .put("decisionMaker", getMakeAnApplication(asylumCase).map(MakeAnApplication::getDecisionMaker).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }

@@ -77,7 +77,7 @@ public class AppellantDecideAnApplicationPersonalisationSms implements SmsNotifi
             ImmutableMap
                 .<String, String>builder()
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("applicationType", makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase))
+                .put("applicationType", makeAnApplicationService.getMakeAnApplication(asylumCase).map(MakeAnApplication::getType).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }
