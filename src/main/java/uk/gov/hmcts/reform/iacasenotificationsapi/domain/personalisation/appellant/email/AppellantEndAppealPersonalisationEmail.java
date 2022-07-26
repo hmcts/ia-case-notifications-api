@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
 public class AppellantEndAppealPersonalisationEmail implements EmailNotificationPersonalisation {
@@ -26,20 +25,17 @@ public class AppellantEndAppealPersonalisationEmail implements EmailNotification
     private final String endAppealAppellantBeforeListingTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
-    private final EmailAddressFinder emailAddressFinder;
 
     public AppellantEndAppealPersonalisationEmail(
             @Value("${govnotify.template.endAppealBeforeListing.appellant.email}") String endAppealAppellantBeforeListingTemplateId,
             @Value("${govnotify.template.endAppealAfterListing.appellant.email}") String endAppealAppellantAfterListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder,
-            EmailAddressFinder emailAddressFinder
+            RecipientsFinder recipientsFinder
     ) {
         this.endAppealAppellantBeforeListingTemplateId = endAppealAppellantBeforeListingTemplateId;
         this.endAppealAppellantAfterListingTemplateId = endAppealAppellantAfterListingTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
-        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -77,9 +73,7 @@ public class AppellantEndAppealPersonalisationEmail implements EmailNotification
                         .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
                         .put("reasonsOfOutcome", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("designated hearing centre", isAppealListed(asylumCase)
-                                ? emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)
-                                : emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
+                        .put("direct link to judges’ review page", iaAipFrontendUrl + "ask-judge-review")
                         .build();
     }
 
