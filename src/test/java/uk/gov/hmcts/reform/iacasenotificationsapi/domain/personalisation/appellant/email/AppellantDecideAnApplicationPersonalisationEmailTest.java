@@ -71,9 +71,9 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-        when(makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase)).thenReturn(applicationType);
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         when(makeAnApplicationService.getMakeAnApplication(asylumCase)).thenReturn(Optional.ofNullable(makeAnApplication));
+        when(makeAnApplication.getType()).thenReturn(applicationType);
 
         appellantDecideAnApplicationPersonalisationEmail = new AppellantDecideAnApplicationPersonalisationEmail(
                 emailTemplateIdRefusedBeforeListing,
@@ -159,7 +159,7 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase)).thenReturn("");
+        when(makeAnApplication.getType()).thenReturn("");
 
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
@@ -172,7 +172,7 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         assertEquals("", personalisation.get("applicationType"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
-        verify(makeAnApplicationService).getMakeAnApplicationTypeName(asylumCase);
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase);
     }
 
     @Test
@@ -189,6 +189,6 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(applicationType, personalisation.get("applicationType"));
 
-        verify(makeAnApplicationService).getMakeAnApplicationTypeName(asylumCase);
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase);
     }
 }

@@ -61,8 +61,8 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
                 iaAipFrontendUrl,
                 recipientsFinder,
                 makeAnApplicationService);
-        when(makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase)).thenReturn(applicationType);
         when(makeAnApplicationService.getMakeAnApplication(asylumCase)).thenReturn(Optional.ofNullable(makeAnApplication));
+        when(makeAnApplication.getType()).thenReturn(applicationType);
     }
 
 
@@ -129,7 +129,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(applicationType, personalisation.get("applicationType"));
 
-        verify(makeAnApplicationService).getMakeAnApplicationTypeName(asylumCase);
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase);
 
     }
 
@@ -137,7 +137,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
     public void should_return_personalisation_when_only_mandatory_information_given() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase)).thenReturn("");
+        when(makeAnApplication.getType()).thenReturn("");
 
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
@@ -146,6 +146,6 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals("", personalisation.get("applicationType"));
 
-        verify(makeAnApplicationService).getMakeAnApplicationTypeName(asylumCase);
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase);
     }
 }
