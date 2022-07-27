@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
 public class AppellantEndAppealPersonalisationSms implements SmsNotificationPersonalisation {
@@ -24,18 +23,15 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
     private final String endAppealAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
-    private final EmailAddressFinder emailAddressFinder;
 
     public AppellantEndAppealPersonalisationSms(
             @Value("${govnotify.template.endAppeal.appellant.sms}") String endAppealAppellantSmsTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder,
-            EmailAddressFinder emailAddressFinder
+            RecipientsFinder recipientsFinder
     ) {
         this.endAppealAppellantSmsTemplateId = endAppealAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
-        this.emailAddressFinder = emailAddressFinder;
     }
 
 
@@ -69,9 +65,7 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
                         .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
                         .put("reasonsOfOutcome", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("designated hearing centre", isAppealListed(asylumCase)
-                                ? emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)
-                                : emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
+                        .put("direct link to judges’ review page", iaAipFrontendUrl + "ask-judge-review")
                         .build();
     }
 
@@ -81,5 +75,4 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
 
         return appealListed.isPresent();
     }
-
 }
