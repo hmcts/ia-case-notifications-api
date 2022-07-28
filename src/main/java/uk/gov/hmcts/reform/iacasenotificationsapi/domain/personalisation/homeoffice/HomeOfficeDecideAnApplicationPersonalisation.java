@@ -135,6 +135,7 @@ public class HomeOfficeDecideAnApplicationPersonalisation implements EmailNotifi
                                 State.CASE_UNDER_REVIEW,
                                 State.AWAITING_REASONS_FOR_APPEAL,
                                 State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
+                                State.REASONS_FOR_APPEAL_SUBMITTED,
                                 State.ENDED).contains(applicationState))) {
                 return Collections.singleton(apcHomeOfficeEmailAddress);
             } else if (HOME_OFFICE_LART.equals(applicantRole)
