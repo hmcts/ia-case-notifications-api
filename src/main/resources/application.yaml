@@ -776,7 +776,7 @@ govnotify:
     amendRespondentEvidenceDirection:
       legalRep:
         email: 66a5e934-5875-4e60-a343-356916a112c7
-    appealEndedAutomatically:
+    endAppealAutomatically:
       legalRep:
         email: 200ea13a-b583-4471-8d08-650f77eabd8c
       homeOffice:
@@ -950,7 +950,7 @@ security:
       - "asyncStitchingComplete"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
-      - "appealEndedAutomatically"
+      - "endAppealAutomatically"
 
 ### dependency configuration
 core_case_data_api_url: ${CCD_URL:http://127.0.0.1:4452}

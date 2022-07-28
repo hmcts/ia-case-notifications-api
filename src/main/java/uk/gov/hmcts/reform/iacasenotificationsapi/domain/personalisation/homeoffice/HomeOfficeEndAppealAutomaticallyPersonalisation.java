@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.END_APPEAL_DATE;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -18,28 +17,28 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class HomeOfficeAppealEndedAutomaticallyPersonalisation implements EmailNotificationPersonalisation {
+public class HomeOfficeEndAppealAutomaticallyPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String appealEndedAutomaticallyHomeOfficeTemplateId;
+    private final String endAppealAutomaticallyHomeOfficeTemplateId;
     private final String endAppealHomeOfficeEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaExUiFrontendUrl;
 
-    public HomeOfficeAppealEndedAutomaticallyPersonalisation(
+    public HomeOfficeEndAppealAutomaticallyPersonalisation(
         @Value("${endAppealHomeOfficeEmailAddress}") String endAppealHomeOfficeEmailAddress,
-        @NotNull(message = "appealEndedAutomaticallyHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.appealEndedAutomatically.homeOffice.email}") String appealEndedAutomaticallyHomeOfficeTemplateId,
+        @NotNull(message = "appealEndedAutomaticallyHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.endAppealAutomatically.homeOffice.email}") String endAppealAutomaticallyHomeOfficeTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.endAppealHomeOfficeEmailAddress = endAppealHomeOfficeEmailAddress;
-        this.appealEndedAutomaticallyHomeOfficeTemplateId = appealEndedAutomaticallyHomeOfficeTemplateId;
+        this.endAppealAutomaticallyHomeOfficeTemplateId = endAppealAutomaticallyHomeOfficeTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId() {
-        return appealEndedAutomaticallyHomeOfficeTemplateId;
+        return endAppealAutomaticallyHomeOfficeTemplateId;
     }
 
     @Override

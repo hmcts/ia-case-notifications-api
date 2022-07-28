@@ -2773,15 +2773,15 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("appealEndedAutomaticallyNotificationGenerator")
     public List<NotificationGenerator> appealEndedAutomaticallyNotificationGenerator(
-        LegalRepresentativeAppealEndedAutomaticallyPersonalisation legalRepresentativeAppealEndedAutomaticallyPersonalisation,
-        HomeOfficeAppealEndedAutomaticallyPersonalisation homeOfficeAppealEndedAutomaticallyPersonalisation,
+        LegalRepresentativeEndAppealAutomaticallyPersonalisation legalRepresentativeEndAppealAutomaticallyPersonalisation,
+        HomeOfficeEndAppealAutomaticallyPersonalisation homeOfficeEndAppealAutomaticallyPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeAppealEndedAutomaticallyPersonalisation,
-                    homeOfficeAppealEndedAutomaticallyPersonalisation),
+                newArrayList(legalRepresentativeEndAppealAutomaticallyPersonalisation,
+                    homeOfficeEndAppealAutomaticallyPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )

@@ -3068,7 +3068,7 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                 && Objects.equals(Event.APPEAL_ENDED_AUTOMATICALLY, callback.getEvent())
+                                 && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
                                  && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );

@@ -18,29 +18,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class LegalRepresentativeAppealEndedAutomaticallyPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
+public class LegalRepresentativeEndAppealAutomaticallyPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
-    private final String legalRepresentativeAppealEndedAutomaticallyTemplateId;
+    private final String legalRepresentativeEndAppealAutomaticallyTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public LegalRepresentativeAppealEndedAutomaticallyPersonalisation(
+    public LegalRepresentativeEndAppealAutomaticallyPersonalisation(
         @NotNull(message = "legalRepresentativeAppealEndedAutomaticallyTemplateId cannot be null")
-        @Value("${govnotify.template.appealEndedAutomatically.legalRep.email}")
-            String legalRepresentativeAppealEndedAutomaticallyTemplateId,
+        @Value("${govnotify.template.endAppealAutomatically.legalRep.email}")
+            String legalRepresentativeEndAppealAutomaticallyTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
-        this.legalRepresentativeAppealEndedAutomaticallyTemplateId =
-            legalRepresentativeAppealEndedAutomaticallyTemplateId;
+        this.legalRepresentativeEndAppealAutomaticallyTemplateId =
+            legalRepresentativeEndAppealAutomaticallyTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId() {
-        return legalRepresentativeAppealEndedAutomaticallyTemplateId;
+        return legalRepresentativeEndAppealAutomaticallyTemplateId;
     }
 
     @Override
