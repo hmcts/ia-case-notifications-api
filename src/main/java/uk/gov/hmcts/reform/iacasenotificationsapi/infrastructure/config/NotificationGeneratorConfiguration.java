@@ -2770,4 +2770,19 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("appealEndedAutomaticallyNotificationGenerator")
+    public List<NotificationGenerator> appealEndedAutomaticallyNotificationGenerator(
+        LegalRepresentativeAppealEndedAutomaticallyPersonalisation legalRepresentativeAppealEndedAutomaticallyPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeAppealEndedAutomaticallyPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
