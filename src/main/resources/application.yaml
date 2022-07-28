@@ -779,6 +779,8 @@ govnotify:
     appealEndedAutomatically:
       legalRep:
         email: 200ea13a-b583-4471-8d08-650f77eabd8c
+      homeOffice:
+        email: f90edfba-ac37-47fa-ab55-e429ffa9f372
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
