@@ -9,6 +9,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.END_APPEAL_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
@@ -41,9 +42,9 @@ public class LegalRepresentativeAppealEndedAutomaticallyPersonalisationTest {
     private String legalRepRefNumber = "somelegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private String appealEndedDate = "2000-01-01";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private String appealEndedDate = "2022-07-28";
+    private String expectedAppealEndedDate = "28 Jul 2022";
+    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
 
     private LegalRepresentativeAppealEndedAutomaticallyPersonalisation legalRepresentativeAppealEndedAutomaticallyPersonalisation;
 
@@ -57,8 +58,8 @@ public class LegalRepresentativeAppealEndedAutomaticallyPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         when(asylumCase.read(END_APPEAL_DATE, String.class)).thenReturn(Optional.of(appealEndedDate));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
+
 
         legalRepresentativeAppealEndedAutomaticallyPersonalisation = new LegalRepresentativeAppealEndedAutomaticallyPersonalisation(
             templateId,
@@ -110,8 +111,12 @@ public class LegalRepresentativeAppealEndedAutomaticallyPersonalisationTest {
             legalRepresentativeAppealEndedAutomaticallyPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(expectedAppealEndedDate, personalisation.get("endAppealDate"));
     }
 
     @Test
@@ -122,12 +127,16 @@ public class LegalRepresentativeAppealEndedAutomaticallyPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(END_APPEAL_DATE, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeAppealEndedAutomaticallyPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("endAppealDate"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
     }
 }

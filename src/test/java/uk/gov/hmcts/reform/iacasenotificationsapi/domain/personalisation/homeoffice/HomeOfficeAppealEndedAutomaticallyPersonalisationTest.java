@@ -46,8 +46,8 @@ public class HomeOfficeAppealEndedAutomaticallyPersonalisationTest {
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private String endAppealDate = "2019-08-27";
-    private String expectedEndAppealDate = "27 Aug 2019";
+    private String endAppealDate = "2022-07-28";
+    private String expectedEndAppealDate = "28 Jul 2022";
 
     private HomeOfficeAppealEndedAutomaticallyPersonalisation homeOfficeAppealEndedAutomaticallyPersonalisation;
 
