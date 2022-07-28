@@ -36,7 +36,7 @@ public class HomeOfficeAppealEndedAutomaticallyPersonalisation implements EmailN
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
+    public String getTemplateId() {
         return appealEndedAutomaticallyHomeOfficeTemplateId;
     }
 

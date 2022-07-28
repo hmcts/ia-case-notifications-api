@@ -23,9 +23,9 @@ public class LegalRepresentativeAppealEndedAutomaticallyPersonalisation implemen
     private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeAppealEndedAutomaticallyPersonalisation(
+        @NotNull(message = "legalRepresentativeAppealEndedAutomaticallyTemplateId cannot be null")
         @Value("${govnotify.template.appealEndedAutomatically.legalRep.email}")
             String legalRepresentativeAppealEndedAutomaticallyTemplateId,
-        @NotNull(message = "legalRepresentativeAppealEndedAutomaticallyTemplateId cannot be null")
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -37,7 +37,7 @@ public class LegalRepresentativeAppealEndedAutomaticallyPersonalisation implemen
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
+    public String getTemplateId() {
         return legalRepresentativeAppealEndedAutomaticallyTemplateId;
     }
 
