@@ -210,7 +210,8 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
             "awaitingRespondentEvidence",
             "caseBuilding",
             "caseUnderReview",
-            "ended"
+            "ended",
+            "reasonsForAppealSubmitted"
 
 
         );
@@ -277,7 +278,8 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
             "awaitingRespondentEvidence",
             "caseBuilding",
             "caseUnderReview",
-            "ended"
+            "ended",
+            "reasonsForAppealSubmitted"
 
 
         );
