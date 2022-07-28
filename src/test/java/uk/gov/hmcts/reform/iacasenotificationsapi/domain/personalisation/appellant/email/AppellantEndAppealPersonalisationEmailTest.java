@@ -21,6 +21,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
@@ -142,10 +143,12 @@ public class AppellantEndAppealPersonalisationEmailTest {
         String outcomeOfAppeal = "Withdrawn";
         String reasonsOfOutcome = "error in application";
         String endAppealDate = LocalDate.now().toString();
+        String legalRepReferenceNumber = "JAP456790";
         when(asylumCase.read(END_APPEAL_APPROVER_TYPE, String.class)).thenReturn(Optional.of(endAppealApprover));
         when(asylumCase.read(AsylumCaseDefinition.END_APPEAL_DATE, String.class)).thenReturn(Optional.of(endAppealDate));
         when(asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class)).thenReturn(Optional.of(outcomeOfAppeal));
         when(asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class)).thenReturn(Optional.of(reasonsOfOutcome));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
 
         Map<String, String> personalisation =
                 appellantEndAppealPersonalisationEmail.getPersonalisation(asylumCase);
@@ -160,6 +163,7 @@ public class AppellantEndAppealPersonalisationEmailTest {
         assertEquals(LocalDate.parse(endAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("endAppealDate"));
         assertEquals(outcomeOfAppeal, personalisation.get("outcomeOfAppeal"));
         assertEquals(reasonsOfOutcome, personalisation.get("reasonsOfOutcome"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
 
     }
 
@@ -177,7 +181,18 @@ public class AppellantEndAppealPersonalisationEmailTest {
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
+    }
+
+    @Test
+    public void should_return_personalisation_when_journey_type_is_aip() {
+
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        Map<String, String> personalisation =
+                appellantEndAppealPersonalisationEmail.getPersonalisation(asylumCase);
+
+        assertEquals("N/A", personalisation.get("legalRepReferenceNumber"));
     }
 }
