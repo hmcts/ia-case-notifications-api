@@ -19,17 +19,20 @@ public class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail i
 
     private final String appellantRecordOutOfTimeDecisionCannotProceedEmailTemplateId;
     private final String iaAipFrontendUrl;
+    private final String iaAipFrontendPathToJudgeReview;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail(
             @Value("${govnotify.template.recordOutOfTimeDecision.appellant.cannotProceed.email}") String appellantRecordOutOfTimeDecisionCannotProceedEmailTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+            @Value("${iaAipFrontendPathToJudgeReview}") String iaAipFrontendPathToJudgeReview,
             RecipientsFinder recipientsFinder,
             CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantRecordOutOfTimeDecisionCannotProceedEmailTemplateId = appellantRecordOutOfTimeDecisionCannotProceedEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.iaAipFrontendPathToJudgeReview = iaAipFrontendPathToJudgeReview;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
@@ -62,7 +65,7 @@ public class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail i
                         .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                         .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("direct link to judges’ review page", iaAipFrontendUrl + "ask-judge-review")
+                        .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
                         .build();
     }
 }

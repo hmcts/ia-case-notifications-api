@@ -37,6 +37,7 @@ public class AppellantEndAppealPersonalisationEmailTest {
     private String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
     private String afterListingEmailTemplateId = "afterListingEmailTemplateId";
     private String iaAipFrontendUrl = "http://localhost/";
+    private String iaAipFrontendPathToJudgeReview = "ask-judge-review";
     private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -61,6 +62,7 @@ public class AppellantEndAppealPersonalisationEmailTest {
                         beforeListingEmailTemplateId,
                         afterListingEmailTemplateId,
                         iaAipFrontendUrl,
+                        iaAipFrontendPathToJudgeReview,
                         recipientsFinder
                 );
     }
