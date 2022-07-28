@@ -18,15 +18,18 @@ public class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms imp
 
     private final String appellantRecordOutOfTimeDecisionCannotProceedSmsTemplateId;
     private final String iaAipFrontendUrl;
+    private final String iaAipFrontendPathToJudgeReview;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms(
             @Value("${govnotify.template.recordOutOfTimeDecision.appellant.cannotProceed.sms}") String appellantRecordOutOfTimeDecisionCannotProceedSmsTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+            @Value("${iaAipFrontendPathToJudgeReview}") String iaAipFrontendPathToJudgeReview,
             RecipientsFinder recipientsFinder
     ) {
         this.appellantRecordOutOfTimeDecisionCannotProceedSmsTemplateId = appellantRecordOutOfTimeDecisionCannotProceedSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.iaAipFrontendPathToJudgeReview = iaAipFrontendPathToJudgeReview;
         this.recipientsFinder = recipientsFinder;
     }
 
@@ -55,7 +58,7 @@ public class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms imp
                         .<String, String>builder()
                         .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("direct link to judges’ review page", iaAipFrontendUrl + "ask-judge-review")
+                        .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
                         .build();
     }
 }

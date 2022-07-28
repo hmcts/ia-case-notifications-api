@@ -35,6 +35,7 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
 
     private Long caseId = 12345L;
     private String iaAipFrontendUrl = "http://localhost/";
+    private String iaAipFrontendPathToJudgeReview = "ask-judge-review";
     private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private String appealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobileNumber = "1234445556";
@@ -48,7 +49,7 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
         recordOutOfTimeDecisionCannotProceedPersonalisationSms =
                 new AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms(
                         recordOutOfDecisionCannotProceedTemplateId,
-                        iaAipFrontendUrl, recipientsFinder);
+                        iaAipFrontendUrl, iaAipFrontendPathToJudgeReview, recipientsFinder);
 
     }
 

@@ -36,6 +36,7 @@ public class AppellantEndAppealPersonalisationSmsTest {
     private Long caseId = 12345L;
     private String smsTemplateId = "someSmsTemplateId";
     private String iaAipFrontendUrl = "http://localhost/";
+    private String iaAipFrontendPathToJudgeReview = "ask-judge-review";
     private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
@@ -53,6 +54,7 @@ public class AppellantEndAppealPersonalisationSmsTest {
         appellantEndAppealPersonalisationSms = new AppellantEndAppealPersonalisationSms(
                 smsTemplateId,
                 iaAipFrontendUrl,
+                iaAipFrontendPathToJudgeReview,
                 recipientsFinder
         );
     }

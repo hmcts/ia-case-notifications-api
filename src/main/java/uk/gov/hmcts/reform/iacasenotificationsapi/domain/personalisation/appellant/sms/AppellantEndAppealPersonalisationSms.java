@@ -22,15 +22,18 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
 
     private final String endAppealAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
+    private final String iaAipFrontendPathToJudgeReview;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantEndAppealPersonalisationSms(
             @Value("${govnotify.template.endAppeal.appellant.sms}") String endAppealAppellantSmsTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+            @Value("${iaAipFrontendPathToJudgeReview}") String iaAipFrontendPathToJudgeReview,
             RecipientsFinder recipientsFinder
     ) {
         this.endAppealAppellantSmsTemplateId = endAppealAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.iaAipFrontendPathToJudgeReview = iaAipFrontendPathToJudgeReview;
         this.recipientsFinder = recipientsFinder;
     }
 
@@ -65,7 +68,7 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
                         .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
                         .put("reasonsOfOutcome", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("direct link to judges’ review page", iaAipFrontendUrl + "ask-judge-review")
+                        .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
                         .build();
     }
 

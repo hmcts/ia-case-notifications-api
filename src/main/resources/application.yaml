@@ -789,6 +789,7 @@ notificationSender.deduplicateSendsWithinSeconds: 60
 
 iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://manage-case.platform.hmcts.net/}
 iaAipFrontendUrl: ${IA_AIP_FRONTEND_URL:https://localhost:3000/}
+iaAipFrontendPathToJudgeReview: ask-judge-review
 
 tsvStringsFileLocation: strings.tsv
 

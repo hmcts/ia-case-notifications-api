@@ -39,6 +39,7 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private String iaAipFrontendUrl = "http://localhost/";
+    private String iaAipFrontendPathToJudgeReview = "ask-judge-review";
     private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
@@ -58,7 +59,7 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
         appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail =
                 new AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail(
                         recordOutOfDecisionCannotProceedTemplateId,
-                        iaAipFrontendUrl, recipientsFinder, customerServicesProvider);
+                        iaAipFrontendUrl, iaAipFrontendPathToJudgeReview, recipientsFinder, customerServicesProvider);
 
     }
 

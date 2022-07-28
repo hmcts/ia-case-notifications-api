@@ -24,17 +24,20 @@ public class AppellantEndAppealPersonalisationEmail implements EmailNotification
     private final String endAppealAppellantAfterListingTemplateId;
     private final String endAppealAppellantBeforeListingTemplateId;
     private final String iaAipFrontendUrl;
+    private final String iaAipFrontendPathToJudgeReview;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantEndAppealPersonalisationEmail(
             @Value("${govnotify.template.endAppealBeforeListing.appellant.email}") String endAppealAppellantBeforeListingTemplateId,
             @Value("${govnotify.template.endAppealAfterListing.appellant.email}") String endAppealAppellantAfterListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+            @Value("${iaAipFrontendPathToJudgeReview}") String iaAipFrontendPathToJudgeReview,
             RecipientsFinder recipientsFinder
     ) {
         this.endAppealAppellantBeforeListingTemplateId = endAppealAppellantBeforeListingTemplateId;
         this.endAppealAppellantAfterListingTemplateId = endAppealAppellantAfterListingTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.iaAipFrontendPathToJudgeReview = iaAipFrontendPathToJudgeReview;
         this.recipientsFinder = recipientsFinder;
     }
 
@@ -73,7 +76,7 @@ public class AppellantEndAppealPersonalisationEmail implements EmailNotification
                         .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
                         .put("reasonsOfOutcome", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("direct link to judges’ review page", iaAipFrontendUrl + "ask-judge-review")
+                        .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
                         .build();
     }
 
