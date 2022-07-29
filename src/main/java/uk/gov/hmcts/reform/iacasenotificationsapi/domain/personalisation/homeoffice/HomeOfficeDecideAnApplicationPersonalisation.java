@@ -189,7 +189,7 @@ public class HomeOfficeDecideAnApplicationPersonalisation implements EmailNotifi
     }
 
     private Optional<MakeAnApplication> getMakeAnApplication(AsylumCase asylumCase) {
-        return makeAnApplicationService.getMakeAnApplication(asylumCase);
+        return makeAnApplicationService.getMakeAnApplication(asylumCase, true);
     }
 
 }
