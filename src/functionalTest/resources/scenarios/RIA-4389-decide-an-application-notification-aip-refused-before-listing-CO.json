@@ -202,7 +202,7 @@
           "PA/12345/2019",
           "A1234567",
           "Pablo Jimenez,",
-          "The Tribunal has decided to refuse the following request you made:",
+          "A CaseOfficer has decided to refuse the following request you made:",
           "Update appeal details",
           "{$iaAipFrontendUrl}",
           "{$customerServices.telephoneNumber}",
@@ -215,7 +215,7 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "The Tribunal has decided to refuse the following request you made: Update appeal details",
+          "A CaseOfficer has decided to refuse the following request you made: Update appeal details",
           "{$iaAipFrontendUrl}"
         ]
       },

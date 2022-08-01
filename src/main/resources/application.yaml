@@ -694,10 +694,10 @@ govnotify:
                 email: e11411e8-4360-480c-a3f9-0716f7e2e376
             appellant:
               beforeListing:
-                email: af234f67-85fe-426f-8f0a-66c8606dc961
-                sms: 8cac7ac4-c945-4112-90fe-faeda8fad5e4
+                email: 70d786c0-e487-4708-a74e-a96060e9e12a
+                sms: c52c4994-57f6-4a8f-8442-bdaf3ec952d2
               afterListing:
-                email: f03f5c1c-8507-43f9-8f9f-5f9e3cdbd66f
+                email: b56b929e-872c-49eb-81d1-8da3ec1b480b
           otherParty:
             legalRep:
               beforeListing:
