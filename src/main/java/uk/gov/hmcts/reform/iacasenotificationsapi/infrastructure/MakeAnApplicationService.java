@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -25,7 +26,8 @@ public class MakeAnApplicationService {
                     String decideAnApplicationId = decideAnApplicationIdOptional.orElse("");
                     makeApplicationOptional = idValues.stream().filter(idValue -> idValue.getId().equals(decideAnApplicationId)).map(idValue -> idValue.getValue()).findAny();
                 } else {
-                    makeApplicationOptional = Optional.of(idValues.get(0).getValue());
+                    int targetIndex = Collections.max(idValues.stream().map(idValue -> Integer.parseInt(idValue.getId())).collect(Collectors.toList()));
+                    makeApplicationOptional = idValues.stream().filter(idValue -> idValue.getId().equals(String.valueOf(targetIndex))).map(idValue -> idValue.getValue()).findAny();
                 }
             }
         }

@@ -423,9 +423,6 @@ govnotify:
       legalRep:
         email: 8f028c03-60f3-4865-89df-ab6b66c82d74
     submitTimeExtension:
-      appellant:
-        email: eab37735-cba7-4b4b-96de-60ab33d96066
-        sms: 9f0dce67-f8ef-46aa-a2a5-edb7fb19b6fd
       caseOfficer:
         email: 89540f93-a31b-4803-a83e-35cacd0c2415
     reviewTimeExtensionGranted:
@@ -617,10 +614,11 @@ govnotify:
         afterListing:
           email: 248003a9-bb0f-4955-9b55-080ed6ba5856
     makeAnApplication:
+      appellant:
+        sms: 5f1533b6-ee8c-448e-99a8-b3e0b6c2de30
       beforeListing:
         appellant:
           email: 1163f6cc-b7cd-4c5d-9c3e-3121a7ce897c
-          sms: 5f1533b6-ee8c-448e-99a8-b3e0b6c2de30
         legalRep:
           email: 926e4c68-352f-4aa0-9f7b-37df4af280cf
         homeOffice:
@@ -636,6 +634,8 @@ govnotify:
           homeOffice:
             email: be3f8b34-a3a1-4277-a8dc-60c8bcf99159
       afterListing:
+        appellant:
+          email: 43a9cf5d-7aca-41ee-8c70-35660687db20
         caseOfficer:
           judgeReview:
             email: 06453add-192d-47b8-951c-37a7ecba48e2

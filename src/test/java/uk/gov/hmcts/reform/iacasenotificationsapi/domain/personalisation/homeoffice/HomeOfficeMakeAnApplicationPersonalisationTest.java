@@ -83,6 +83,7 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
     private String homeOfficeEmail = "ho-taylorhouse@example.com";
 
     private String legalRepUser = "caseworker-ia-legalrep-solicitor";
+    private String citizenUser = "citizen";
     private String homeOfficeLart = "caseworker-ia-homeofficelart";
     private String homeOfficeApc = "caseworker-ia-homeofficeapc";
     private String homeOfficePou = "caseworker-ia-homeofficepou";
@@ -136,6 +137,9 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
         assertEquals(homeOfficeMakeAnApplicationBeforeListingTemplateId,
             homeOfficeMakeAnApplicationPersonalisation.getTemplateId(asylumCase));
 
+        when(userDetails.getRoles()).thenReturn(
+                Arrays.asList(citizenUser)
+        );
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         assertEquals(homeOfficeMakeAnApplicationAfterListingTemplateId,
             homeOfficeMakeAnApplicationPersonalisation.getTemplateId(asylumCase));
@@ -209,6 +213,9 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
             State.APPEAL_SUBMITTED,
             State.AWAITING_RESPONDENT_EVIDENCE,
             State.CASE_BUILDING,
+            State.REASONS_FOR_APPEAL_SUBMITTED,
+            State.AWAITING_REASONS_FOR_APPEAL,
+            State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
             State.CASE_UNDER_REVIEW,
             State.PENDING_PAYMENT,
             State.ENDED
@@ -271,6 +278,9 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
             State.APPEAL_SUBMITTED,
             State.AWAITING_RESPONDENT_EVIDENCE,
             State.CASE_BUILDING,
+            State.REASONS_FOR_APPEAL_SUBMITTED,
+            State.AWAITING_REASONS_FOR_APPEAL,
+            State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
             State.CASE_UNDER_REVIEW,
             State.PENDING_PAYMENT,
             State.ENDED
