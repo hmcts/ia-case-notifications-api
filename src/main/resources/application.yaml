@@ -951,6 +951,7 @@ security:
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
+      - "updatePaymentStatus"
 
 ### dependency configuration
 core_case_data_api_url: ${CCD_URL:http://127.0.0.1:4452}

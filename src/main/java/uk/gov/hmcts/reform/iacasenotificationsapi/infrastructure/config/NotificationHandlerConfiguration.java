@@ -3115,7 +3115,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cardPaymentSuccessfulLegalRepNotificationHandler(
-        @Qualifier("submitAppealLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("updatePaymentStatusPaidAppealSubmittedLrHoTcwGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
