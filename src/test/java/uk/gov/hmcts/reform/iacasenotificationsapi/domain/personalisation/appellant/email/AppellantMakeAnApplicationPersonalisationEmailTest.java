@@ -5,10 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,8 +20,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,15 +35,21 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
+    AppealService appealService;
+    @Mock
     MakeAnApplicationService makeAnApplicationService;
+    @Mock
+    MakeAnApplication makeAnApplication;
 
     private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
+    private String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
+    private String afterListingEmailTemplateId = "afterListingEmailtemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String applicationType = "someApplicationType";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private String ariaListingReference = "someReferenceNumber";
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
@@ -58,19 +63,26 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-        when(makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase)).thenReturn(applicationType);
+        when(makeAnApplicationService.getMakeAnApplication(asylumCase, false)).thenReturn(Optional.of(makeAnApplication));
+        when(makeAnApplication.getType()).thenReturn(applicationType);
 
         appellantMakeAnApplicationPersonalisationEmail = new AppellantMakeAnApplicationPersonalisationEmail(
-            emailTemplateId,
+            beforeListingEmailTemplateId,
+            afterListingEmailTemplateId,
             iaAipFrontendUrl,
-            recipientsFinder, makeAnApplicationService);
+            recipientsFinder, appealService, makeAnApplicationService);
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId());
+        when(appealService.isAppealListed(asylumCase)).thenReturn(false);
+        assertEquals(beforeListingEmailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId(asylumCase));
+
+        when(appealService.isAppealListed(asylumCase)).thenReturn(true);
+        assertEquals(afterListingEmailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
@@ -112,7 +124,7 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(applicationType, personalisation.get("applicationType"));
 
-        verify(makeAnApplicationService).getMakeAnApplicationTypeName(asylumCase);
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase, false);
     }
 
     @Test
@@ -124,9 +136,10 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(makeAnApplicationService.getMakeAnApplicationTypeName(asylumCase)).thenReturn("");
+        when(makeAnApplication.getType()).thenReturn("");
 
         Map<String, String> personalisation =
             appellantMakeAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
@@ -136,8 +149,9 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
         assertEquals("", personalisation.get("applicationType"));
+        assertEquals("", personalisation.get("ariaListingReference"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
-        verify(makeAnApplicationService).getMakeAnApplicationTypeName(asylumCase);
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase, false);
     }
 }
