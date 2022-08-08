@@ -38,7 +38,7 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
     MakeAnApplication makeAnApplication;
 
     private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
+    private String smsTemplateId = "someSmsTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -54,7 +54,7 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantMakeAnApplicationPersonalisationSms = new AppellantMakeAnApplicationPersonalisationSms(
-            emailTemplateId,
+                smsTemplateId,
             iaAipFrontendUrl,
             recipientsFinder,
                 makeAnApplicationService);
@@ -64,7 +64,7 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantMakeAnApplicationPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantMakeAnApplicationPersonalisationSms.getTemplateId());
     }
 
     @Test

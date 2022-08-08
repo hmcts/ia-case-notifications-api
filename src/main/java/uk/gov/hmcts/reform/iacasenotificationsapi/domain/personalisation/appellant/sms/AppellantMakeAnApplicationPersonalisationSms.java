@@ -25,7 +25,7 @@ public class AppellantMakeAnApplicationPersonalisationSms implements SmsNotifica
 
 
     public AppellantMakeAnApplicationPersonalisationSms(
-            @Value("${govnotify.template.makeAnApplication.beforeListing.appellant.sms}") String makeAnApplicationAppellantSmsTemplateId,
+            @Value("${govnotify.template.makeAnApplication.appellant.sms}") String makeAnApplicationAppellantSmsTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
             MakeAnApplicationService makeAnApplicationService) {

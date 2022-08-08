@@ -1499,25 +1499,16 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitTimeExtensionAipNotificationHandler(
-            @Qualifier("submitTimeExtensionAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> makeAnApplicationAipNotificationHandler(
+            @Qualifier("makeAnApplicationAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isAipJourney = isAipJourney(asylumCase);
-
-                asylumCase.read(MAKE_AN_APPLICATIONS);
-
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && Arrays.asList(
-                                    State.AWAITING_REASONS_FOR_APPEAL,
-                                    State.AWAITING_CMA_REQUIREMENTS,
-                                    State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS
-                                ).contains(callback.getCaseDetails().getState())
-                            && isAipJourney;
+                            && isAipJourney(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -2307,13 +2298,9 @@ public class NotificationHandlerConfiguration {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean isAipJourney = asylumCase
-                            .read(JOURNEY_TYPE, JourneyType.class)
-                            .map(type -> type == AIP).orElse(false);
-
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && !isAipJourney;
+                            && isRepJourney(asylumCase);
                 }, notificationGenerators
         );
     }

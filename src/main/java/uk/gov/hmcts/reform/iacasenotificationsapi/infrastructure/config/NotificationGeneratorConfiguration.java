@@ -1526,17 +1526,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitTimeExtensionAipNotificationGenerator")
-    public List<NotificationGenerator> submitTimeExtensionAipNotificationGenerator(
+    @Bean("makeAnApplicationAipNotificationGenerator")
+    public List<NotificationGenerator> makeAnApplicationAipNotificationGenerator(
             AppellantMakeAnApplicationPersonalisationEmail appellantMakeAnApplicationPersonalisationEmail,
             AppellantMakeAnApplicationPersonalisationSms appellantMakeAnApplicationPersonalisationSms,
-            CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation,
+            HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+            CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation,
             NotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantMakeAnApplicationPersonalisationEmail, caseOfficerSubmitTimeExtensionPersonalisation),
+                newArrayList(
+                        appellantMakeAnApplicationPersonalisationEmail,
+                        caseOfficerMakeAnApplicationPersonalisation,
+                        homeOfficeMakeAnApplicationPersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
