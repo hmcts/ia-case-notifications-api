@@ -616,6 +616,9 @@ govnotify:
     makeAnApplication:
       appellant:
         sms: 5f1533b6-ee8c-448e-99a8-b3e0b6c2de30
+      otherParty:
+        appellant:
+          sms: 10199205-08e4-415a-b33b-e003c3d878e9
       beforeListing:
         appellant:
           email: 1163f6cc-b7cd-4c5d-9c3e-3121a7ce897c
@@ -629,6 +632,8 @@ govnotify:
           other:
             email: 34e69468-be7a-47d8-9606-e1eadaa8746a
         otherParty:
+          appellant:
+            email: 4fd23902-495c-4ac1-af83-f402fcbafb84
           legalRep:
             email: 8605ec44-1b10-4a78-90f8-48bf0ce75d55
           homeOffice:
@@ -646,6 +651,8 @@ govnotify:
         homeOffice:
           email: 4640c711-dba9-4a25-aabe-07b5a952e5f3
         otherParty:
+          appellant:
+            email: 25169850-68b6-4d8d-9089-d7557ad24f54
           legalRep:
             email: e28932bc-9052-47b9-a5a4-b8bc49305302
           homeOffice:

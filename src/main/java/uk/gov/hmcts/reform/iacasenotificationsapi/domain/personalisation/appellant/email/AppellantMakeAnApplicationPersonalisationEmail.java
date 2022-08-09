@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
@@ -20,39 +21,55 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @Service
 public class AppellantMakeAnApplicationPersonalisationEmail implements EmailNotificationPersonalisation {
 
+    private static final String ROLE_CITIZEN = "citizen";
     private final String makeAnApplicationBeforeListingAppellantEmailTemplateId;
     private final String makeAnApplicationAfterListingAppellantEmailTemplateId;
+    private final String otherPartyMakeAnApplicationBeforeListingAppellantEmailTemplateId;
+    private final String otherPartyMakeAnApplicationAfterListingAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final AppealService appealService;
     private final MakeAnApplicationService makeAnApplicationService;
+    private final UserDetailsProvider userDetailsProvider;
 
     public AppellantMakeAnApplicationPersonalisationEmail(
             @Value("${govnotify.template.makeAnApplication.beforeListing.appellant.email}") String makeAnApplicationBeforeListingAppellantEmailTemplateId,
             @Value("${govnotify.template.makeAnApplication.afterListing.appellant.email}") String makeAnApplicationAfterListingAppellantEmailTemplateId,
+            @Value("${govnotify.template.makeAnApplication.beforeListing.otherParty.appellant.email}") String otherPartyMakeAnApplicationBeforeListingAppellantEmailTemplateId,
+            @Value("${govnotify.template.makeAnApplication.afterListing.otherParty.appellant.email}") String otherPartyMakeAnApplicationAfterListingAppellantEmailTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
             AppealService appealService,
-            MakeAnApplicationService makeAnApplicationService) {
+            MakeAnApplicationService makeAnApplicationService,
+            UserDetailsProvider userDetailsProvider) {
         this.makeAnApplicationBeforeListingAppellantEmailTemplateId = makeAnApplicationBeforeListingAppellantEmailTemplateId;
         this.makeAnApplicationAfterListingAppellantEmailTemplateId = makeAnApplicationAfterListingAppellantEmailTemplateId;
+        this.otherPartyMakeAnApplicationBeforeListingAppellantEmailTemplateId = otherPartyMakeAnApplicationBeforeListingAppellantEmailTemplateId;
+        this.otherPartyMakeAnApplicationAfterListingAppellantEmailTemplateId = otherPartyMakeAnApplicationAfterListingAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.appealService = appealService;
         this.makeAnApplicationService = makeAnApplicationService;
+        this.userDetailsProvider = userDetailsProvider;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appealService.isAppealListed(asylumCase)
-                ? makeAnApplicationAfterListingAppellantEmailTemplateId
-                : makeAnApplicationBeforeListingAppellantEmailTemplateId;
+        boolean isCitizenUser = hasRole(ROLE_CITIZEN);
+        if (appealService.isAppealListed(asylumCase)) {
+            return isCitizenUser
+                    ? makeAnApplicationAfterListingAppellantEmailTemplateId
+                    : otherPartyMakeAnApplicationAfterListingAppellantEmailTemplateId;
+        } else {
+            return isCitizenUser
+                    ? makeAnApplicationBeforeListingAppellantEmailTemplateId
+                    : otherPartyMakeAnApplicationBeforeListingAppellantEmailTemplateId;
+        }
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-
     }
 
     @Override
@@ -75,5 +92,12 @@ public class AppellantMakeAnApplicationPersonalisationEmail implements EmailNoti
                 .put("applicationType", makeAnApplicationService.getMakeAnApplication(asylumCase, false).map(MakeAnApplication::getType).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
+    }
+
+    private boolean hasRole(String roleName) {
+        return userDetailsProvider
+                .getUserDetails()
+                .getRoles()
+                .contains(roleName);
     }
 }
