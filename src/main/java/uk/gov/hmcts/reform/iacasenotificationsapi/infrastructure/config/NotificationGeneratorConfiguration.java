@@ -2788,11 +2788,10 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("updatePaymentStatusPaidAppealSubmittedLrHoTcwGenerator")
-    public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedLrHoTcwNotificationGenerator(
+    @Bean("updatePaymentStatusPaidAppealSubmittedLrHoGenerator")
+    public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedLrHoNotificationGenerator(
         LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
         HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
-        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -2801,8 +2800,7 @@ public class NotificationGeneratorConfiguration {
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPersonalisation,
-                    homeOfficeSubmitAppealPersonalisation,
-                    caseOfficerSubmitAppealPersonalisation
+                    homeOfficeSubmitAppealPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
