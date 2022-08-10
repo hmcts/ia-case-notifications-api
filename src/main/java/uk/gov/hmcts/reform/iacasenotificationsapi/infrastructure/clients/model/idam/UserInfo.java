@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserInfo {
 
