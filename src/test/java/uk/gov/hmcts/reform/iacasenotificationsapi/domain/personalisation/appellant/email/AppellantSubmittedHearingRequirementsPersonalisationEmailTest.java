@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -119,13 +121,14 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
+        String expectedDate = LocalDate.now().plusDays(14L).format(DateTimeFormatter.ofPattern("dd LLL yyyy"));
         Map<String, String> expPersonalisation = Map.of(APPEAL_REFERENCE_NUMBER.value(), "",
                 APPELLANT_FAMILY_NAME.value(), "", APPELLANT_GIVEN_NAMES.value(), "",
-                HOME_OFFICE_REFERENCE_NUMBER.value(), "", "dueDate", "31 May 2022");
+                HOME_OFFICE_REFERENCE_NUMBER.value(), "", "dueDate", expectedDate);
         Map<String, String> personalisation =
             appellantSubmittedHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
+        Assertions.assertThat(personalisation).usingRecursiveComparison().isEqualTo(expPersonalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
