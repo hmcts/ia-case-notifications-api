@@ -55,8 +55,9 @@ public class BailCaseTest {
             new DocumentWithDescription(
                 new Document(
                     "some-doc-url",
-                    "some-doc-binary-url",
-                    "some-doc-filename"),
+                        "some-doc-binary-url",
+                        "some-doc-filename",
+                        null),
                 "some-description"));
         bailCase.write(UPLOAD_THE_BAIL_EVIDENCE_DOCS, asList(idValue));
         Optional<List<IdValue<DocumentWithDescription>>> maybeEvidence = bailCase.read(UPLOAD_THE_BAIL_EVIDENCE_DOCS);

@@ -36,4 +36,10 @@
         <cve>CVE-2022-22976</cve>
         <cve>CVE-2022-22978</cve>
     </suppress>
+    <suppress until="2030-01-01">
+        <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.63.jar
+   ]]></notes>
+        <cve>CVE-2022-34305</cve>
+    </suppress>
 </suppressions>

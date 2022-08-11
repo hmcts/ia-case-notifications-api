@@ -812,9 +812,9 @@ govnotify:
       sendDirectionOtherParties:
         email: 0d251cb4-b7e3-4dcb-92e3-629b03eec859
       editBailDocuments:
-        email: dbe0934c-2770-4a26-8eab-b8d9ec522f04
+        email: aecb2827-ad50-4cab-a733-e2d4695a5911
       editBailDocumentsWithoutLr:
-        email: 267cbf89-9d32-45b0-8ded-0f275d042110
+        email: 24f84d5f-af37-437c-847c-17837652276d
       changeBailDirectionDueDate:
         email: 7cef2a13-701f-4425-9685-501236bf1c74
       changeBailDirectionDueDateWithoutLR:
