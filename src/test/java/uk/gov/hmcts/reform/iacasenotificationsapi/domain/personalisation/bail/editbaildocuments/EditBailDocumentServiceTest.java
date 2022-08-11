@@ -68,7 +68,7 @@ public class EditBailDocumentServiceTest {
 
     private static Document buildDocument(String docId, String filename) {
         String documentUrl = "http://dm-store/" + docId;
-        return new Document(documentUrl, documentUrl + "/binary", filename);
+        return new Document(documentUrl, documentUrl + "/binary", filename, null);
     }
 
     @ParameterizedTest
