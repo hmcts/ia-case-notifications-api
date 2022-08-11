@@ -3113,6 +3113,36 @@ public class NotificationHandlerConfiguration {
                 subscriberIdValue.getValue().getEmail()).isPresent();
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cardPaymentSuccessfulLegalRepNotificationHandler(
+        @Qualifier("updatePaymentStatusPaidAppealSubmittedLrHoTcwGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                State currentState = callback.getCaseDetails().getState();
+
+                boolean isCorrectAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == EA || type == HU || type == PA).orElse(false);
+
+                boolean isCorrectAppealTypeAndStateHUorEAorPA =
+                    isCorrectAppealType
+                    && (currentState == State.APPEAL_SUBMITTED);
+
+                Optional<PaymentStatus> paymentStatus = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
+                       && isCorrectAppealTypeAndStateHUorEAorPA
+                       && !paymentStatus.equals(Optional.empty())
+                       && paymentStatus.get().equals(PaymentStatus.PAID);
+            }, notificationGenerators
+        );
+    }
+
 }
 
 
