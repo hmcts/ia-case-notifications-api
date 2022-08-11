@@ -49,16 +49,21 @@ public class NotificationGeneratorConfiguration {
     @Bean("forceAppellantCaseProgressionNotificationGenerator")
     public List<NotificationGenerator> forceAppellantCaseProgressionNotificationGenerator(
         AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
+        AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
         RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        System.out.println("forceAppellantCaseProgressionNotificationGenerator");
-
-        return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(homeOfficePersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
-            notificationSender,
-            notificationIdAppender)
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficePersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
