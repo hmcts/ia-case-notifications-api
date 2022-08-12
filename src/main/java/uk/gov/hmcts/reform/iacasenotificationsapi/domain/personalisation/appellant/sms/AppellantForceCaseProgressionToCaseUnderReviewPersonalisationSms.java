@@ -32,7 +32,7 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms im
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_AIP_EMAIL_SMS";
+        return caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_AIP_SMS";
     }
 
     @Override
