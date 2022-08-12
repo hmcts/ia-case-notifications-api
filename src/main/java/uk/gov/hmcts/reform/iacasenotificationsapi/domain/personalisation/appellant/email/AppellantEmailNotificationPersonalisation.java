@@ -20,16 +20,12 @@ public interface AppellantEmailNotificationPersonalisation extends EmailNotifica
             .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
             .orElse(false)) {
 
-            System.out.println("***** --- APPELLANT --->  JOURNEY TYPE AiP *******");
-
             return Collections.singleton(asylumCase
                 .read(APPELLANT_EMAIL_ADDRESS, String.class)
                 .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
 
 
         } else {
-
-            System.out.println("***** JOURNEY TYPE LR *******");
 
             return Collections.emptySet();
 

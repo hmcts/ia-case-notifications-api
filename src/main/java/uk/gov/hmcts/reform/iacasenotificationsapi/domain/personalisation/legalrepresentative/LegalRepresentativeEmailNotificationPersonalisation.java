@@ -21,8 +21,6 @@ public interface LegalRepresentativeEmailNotificationPersonalisation extends Ema
             .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
             .orElse(false)) {
 
-            System.out.println("***** LR ----> JOURNEY TYPE AIP *******");
-
             return Collections.emptySet();
         }
 
@@ -34,8 +32,6 @@ public interface LegalRepresentativeEmailNotificationPersonalisation extends Ema
 
             return Collections.emptySet();
         } else {
-
-            System.out.println("***** JOURNEY TYPE LR *******");
 
             return Collections.singleton(asylumCase
                 .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
