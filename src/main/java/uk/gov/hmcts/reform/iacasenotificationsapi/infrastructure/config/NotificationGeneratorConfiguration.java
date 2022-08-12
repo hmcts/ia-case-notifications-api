@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
@@ -50,7 +49,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("forceAppellantCaseProgressionEmailNotificationGenerator")
     public List<NotificationGenerator> forceAppellantCaseProgressionEmailNotificationGenerator(
             AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
-            RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
+            RespondentForceCaseToCaseUnderReviewPersonalisation homeOfficePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
