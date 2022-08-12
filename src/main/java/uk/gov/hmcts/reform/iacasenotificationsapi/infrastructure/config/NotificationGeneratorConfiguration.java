@@ -46,19 +46,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("forceAppellantCaseProgressionNotificationGenerator")
-    public List<NotificationGenerator> forceAppellantCaseProgressionNotificationGenerator(
+    @Bean("forceAppellantCaseProgressionEmailNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseProgressionEmailNotificationGenerator(
         AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
-        AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
         RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return List.of(
                 new EmailNotificationGenerator(
                         newArrayList(homeOfficePersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
                         notificationSender,
-                        notificationIdAppender),
+                        notificationIdAppender)
+        );
+    }
+
+    @Bean("forceAppellantCaseProgressionSmsNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseProgressionSmsNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
+            NotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
                 new SmsNotificationGenerator(
                         newArrayList(appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms),
                         notificationSender,
