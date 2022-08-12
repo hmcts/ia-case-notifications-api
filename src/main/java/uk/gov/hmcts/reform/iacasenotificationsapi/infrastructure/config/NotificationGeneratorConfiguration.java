@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
@@ -43,6 +44,36 @@ public class NotificationGeneratorConfiguration {
             newArrayList(homeOfficePersonalisation, legalRepresentativeRequestCaseBuildingPersonalisation),
             notificationSender,
             notificationIdAppender)
+        );
+    }
+
+    @Bean("forceAppellantCaseProgressionEmailNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseProgressionEmailNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
+            RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficePersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender)
+        );
+    }
+
+    @Bean("forceAppellantCaseProgressionSmsNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseProgressionSmsNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
