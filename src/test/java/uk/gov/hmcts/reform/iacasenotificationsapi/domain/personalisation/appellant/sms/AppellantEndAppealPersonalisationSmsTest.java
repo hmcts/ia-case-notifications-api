@@ -115,7 +115,6 @@ public class AppellantEndAppealPersonalisationSmsTest {
         when(asylumCase.read(END_APPEAL_APPROVER_TYPE, String.class)).thenReturn(Optional.of(endAppealApprover));
         when(asylumCase.read(AsylumCaseDefinition.END_APPEAL_DATE, String.class)).thenReturn(Optional.of(endAppealDate));
         when(asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class)).thenReturn(Optional.of(outcomeOfAppeal));
-        when(asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class)).thenReturn(Optional.of(reasonsOfOutcome));
 
         Map<String, String> personalisation =
                 appellantEndAppealPersonalisationSms.getPersonalisation(asylumCase);
@@ -125,7 +124,6 @@ public class AppellantEndAppealPersonalisationSmsTest {
         assertEquals(endAppealApprover, personalisation.get("endAppealApprover"));
         assertEquals(LocalDate.parse(endAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("endAppealDate"));
         assertEquals(outcomeOfAppeal, personalisation.get("outcomeOfAppeal"));
-        assertEquals(reasonsOfOutcome, personalisation.get("reasonsOfOutcome"));
         assertEquals(designatedHearingCentre, personalisation.get("designated hearing centre"));
     }
 
