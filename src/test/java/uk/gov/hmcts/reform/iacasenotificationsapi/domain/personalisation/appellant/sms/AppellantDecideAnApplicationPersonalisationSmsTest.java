@@ -39,14 +39,17 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
     MakeAnApplication makeAnApplication;
 
     private Long caseId = 12345L;
-    private String refusedEmailTemplateId = "someRefusedEmailTemplateId";
-    private String grantedEmailTemplateId = "someGrantedEmailTemplateId";
+    private String refusedSmsTemplateId = "someRefusedSmsTemplateId";
+    private String grantedSmslTemplateId = "someGrantedSmsTemplateId";
+    private String otherPartySmsTemplateId = "otherPartySmsTempateId";
     private String iaAipFrontendUrl = "http://localhost";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
     private String applicationType = "someApplicationType";
     private String decisionMaker = "someDecisionMaker";
+    private String citizenUser = "citizen";
+    private String homeOfficeUser = "caseworker-ia-homeofficelart";
 
     private AppellantDecideAnApplicationPersonalisationSms appellantDecideAnApplicationPersonalisationSms;
 
@@ -57,8 +60,9 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantDecideAnApplicationPersonalisationSms = new AppellantDecideAnApplicationPersonalisationSms(
-                refusedEmailTemplateId,
-                grantedEmailTemplateId,
+                refusedSmsTemplateId,
+                grantedSmslTemplateId,
+                otherPartySmsTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder,
                 makeAnApplicationService);
@@ -71,18 +75,28 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
     @Test
     public void should_return_refused_template_id() {
         when(makeAnApplication.getDecision()).thenReturn("Refused");
+        when(makeAnApplication.getApplicantRole()).thenReturn(citizenUser);
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
 
-        assertEquals(refusedEmailTemplateId,
+        assertEquals(refusedSmsTemplateId,
                 appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_granted_template_id() {
         when(makeAnApplication.getDecision()).thenReturn("Granted");
+        when(makeAnApplication.getApplicantRole()).thenReturn(citizenUser);
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
 
-        assertEquals(grantedEmailTemplateId,
+        assertEquals(grantedSmslTemplateId,
+                appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    public void should_return_other_party_template_id() {
+        when(makeAnApplication.getApplicantRole()).thenReturn(homeOfficeUser);
+        when(makeAnApplication.getState()).thenReturn("appealSubmitted");
+
+        assertEquals(otherPartySmsTemplateId,
                 appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
     }
 
@@ -123,7 +137,8 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given_and_decision_refused() {
-        when(makeAnApplication.getDecision()).thenReturn("Refused");
+        String decision = "Refused";
+        when(makeAnApplication.getDecision()).thenReturn(decision);
 
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
@@ -131,6 +146,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(applicationType, personalisation.get("applicationType"));
+        assertEquals(decision, personalisation.get("decision"));
         assertEquals(decisionMaker, personalisation.get("decision maker role"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
@@ -139,7 +155,8 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given_and_decision_granted() {
-        when(makeAnApplication.getDecision()).thenReturn("Granted");
+        String decision = "Granted";
+        when(makeAnApplication.getDecision()).thenReturn(decision);
 
         Map<String, String> personalisation =
                 appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
@@ -147,6 +164,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(applicationType, personalisation.get("applicationType"));
+        assertEquals(decision, personalisation.get("decision"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
 
@@ -158,7 +176,6 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(makeAnApplication.getType()).thenReturn("");
         when(makeAnApplication.getDecisionMaker()).thenReturn("");
-        when(makeAnApplication.getDecision()).thenReturn("Refused");
 
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
@@ -166,7 +183,6 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals("", personalisation.get("applicationType"));
-        assertEquals("", personalisation.get("decision maker role"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
     }
