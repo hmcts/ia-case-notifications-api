@@ -658,6 +658,13 @@ govnotify:
           homeOffice:
             email: c2cb4dd6-4cc2-4d06-a1eb-5d42e31ad9d2
     decideAnApplication:
+        otherParty:
+          appellant:
+            beforeListing:
+              email: aa4ba30c-6260-4fd0-8a8b-ea19df1cb81b
+            afterListing:
+              email: 3ebcfd3a-1771-4bb5-9988-5f687424fb77
+            sms: 38e8b40b-98b4-45ed-a1c4-45cd5f177dbf
         granted:
           applicant:
             legalRep:

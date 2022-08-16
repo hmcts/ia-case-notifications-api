@@ -25,8 +25,10 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
     private static final String DECISION_REFUSED = "Refused";
     private final String decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId;
     private final String decideAnApplicationRefusedAfterListingAppellantEmailTemplateId;
-    private final String decideAnApplicationAppellantGrantedBeforeListingEmailTemplateId;
-    private final String decideAnApplicationAppellantGrantedAfterListingEmailTemplateId;
+    private final String decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId;
+    private final String decideAnApplicationGrantedAfterListingAppellantEmailTemplateId;
+    private final String decideAnApplicationBeforeListingOtherPartyEmailTemplateId;
+    private final String decideAnApplicationAfterListingOtherPartyEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final MakeAnApplicationService makeAnApplicationService;
@@ -34,15 +36,19 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
     public AppellantDecideAnApplicationPersonalisationEmail(
             @Value("${govnotify.template.decideAnApplication.refused.applicant.appellant.beforeListing.email}") String decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId,
             @Value("${govnotify.template.decideAnApplication.refused.applicant.appellant.afterListing.email}") String decideAnApplicationRefusedAfterListingAppellantEmailTemplateId,
-            @Value("${govnotify.template.decideAnApplication.granted.applicant.appellant.beforeListing.email}") String decideAnApplicationAppellantGrantedBeforeListingEmailTemplateId,
-            @Value("${govnotify.template.decideAnApplication.granted.applicant.appellant.afterListing.email}") String decideAnApplicationAppellantGrantedAfterListingEmailTemplateId,
+            @Value("${govnotify.template.decideAnApplication.granted.applicant.appellant.beforeListing.email}") String decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId,
+            @Value("${govnotify.template.decideAnApplication.granted.applicant.appellant.afterListing.email}") String decideAnApplicationGrantedAfterListingAppellantEmailTemplateId,
+            @Value("${govnotify.template.decideAnApplication.otherParty.appellant.beforeListing.email}") String decideAnApplicationBeforeListingOtherPartyEmailTemplateId,
+            @Value("${govnotify.template.decideAnApplication.otherParty.appellant.afterListing.email}") String decideAnApplicationAfterListingOtherPartyEmailTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
             MakeAnApplicationService makeAnApplicationService) {
         this.decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId = decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId;
         this.decideAnApplicationRefusedAfterListingAppellantEmailTemplateId = decideAnApplicationRefusedAfterListingAppellantEmailTemplateId;
-        this.decideAnApplicationAppellantGrantedBeforeListingEmailTemplateId = decideAnApplicationAppellantGrantedBeforeListingEmailTemplateId;
-        this.decideAnApplicationAppellantGrantedAfterListingEmailTemplateId = decideAnApplicationAppellantGrantedAfterListingEmailTemplateId;
+        this.decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId = decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId;
+        this.decideAnApplicationGrantedAfterListingAppellantEmailTemplateId = decideAnApplicationGrantedAfterListingAppellantEmailTemplateId;
+        this.decideAnApplicationBeforeListingOtherPartyEmailTemplateId = decideAnApplicationBeforeListingOtherPartyEmailTemplateId;
+        this.decideAnApplicationAfterListingOtherPartyEmailTemplateId = decideAnApplicationAfterListingOtherPartyEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.makeAnApplicationService = makeAnApplicationService;
@@ -56,13 +62,27 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
         if (makeAnApplicationOptional.isPresent()) {
             MakeAnApplication makeAnApplication = makeAnApplicationOptional.get();
             String decision = makeAnApplication.getDecision();
+            String applicantRole = makeAnApplication.getApplicantRole();
+            boolean isCitizenRole = applicantRole.equals(ROLE_CITIZEN);
 
             boolean isApplicationListed = makeAnApplicationService.isApplicationListed(State.get(makeAnApplication.getState()));
 
             if (isApplicationListed) {
-                return DECISION_GRANTED.equals(decision) ? decideAnApplicationAppellantGrantedAfterListingEmailTemplateId : decideAnApplicationRefusedAfterListingAppellantEmailTemplateId;
+                if (isCitizenRole) {
+                    return DECISION_GRANTED.equals(decision)
+                            ? decideAnApplicationGrantedAfterListingAppellantEmailTemplateId
+                            : decideAnApplicationRefusedAfterListingAppellantEmailTemplateId;
+                } else {
+                    return decideAnApplicationAfterListingOtherPartyEmailTemplateId;
+                }
             } else {
-                return DECISION_GRANTED.equals(decision) ? decideAnApplicationAppellantGrantedBeforeListingEmailTemplateId : decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId;
+                if (isCitizenRole) {
+                    return DECISION_GRANTED.equals(decision)
+                            ? decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId
+                            : decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId;
+                } else {
+                    return decideAnApplicationBeforeListingOtherPartyEmailTemplateId;
+                }
             }
         } else {
             return "";
@@ -95,6 +115,7 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("applicationType", makeAnApplicationOptional.map(MakeAnApplication::getType).orElse(""))
+                .put("decision", decision)
                 .put("Hyperlink to service", iaAipFrontendUrl);
         if (DECISION_REFUSED.equals(decision)) {
             builder.put("decision maker role", makeAnApplicationOptional.map(MakeAnApplication::getDecisionMaker).orElse(""));
