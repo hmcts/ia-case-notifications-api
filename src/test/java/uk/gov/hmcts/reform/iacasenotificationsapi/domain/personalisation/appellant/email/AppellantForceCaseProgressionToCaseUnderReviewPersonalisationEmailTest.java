@@ -8,6 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,20 +54,20 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_AIP",
+        assertEquals(caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_AIP_EMAIL",
             forceCaseProgressionToCaseUnderReviewPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase)
-            .contains(appellantEmailAddress));
+        Map<String, String> personalisation = forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
+        assertEquals(appellantEmailAddress, personalisation.get(APPELLANT_EMAIL_ADDRESS.value()));
     }
 
     @Test
     public void should_throw_exception_when_appellant_email_is_not_present() {
         when(asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantEmailAddress is not present");
     }
