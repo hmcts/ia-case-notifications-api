@@ -3,14 +3,19 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
 @Service
-public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail implements AppellantEmailNotificationPersonalisation {
+public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String templateId;
 
@@ -21,6 +26,19 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
 
     public String getTemplateId() {
         return templateId;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (asylumCase.read(JOURNEY_TYPE, JourneyType.class)
+                .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
+                .orElse(false)) {
+            return Collections.singleton(asylumCase
+                    .read(APPELLANT_EMAIL_ADDRESS, String.class)
+                    .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
+        } else {
+            throw new IllegalStateException("appellantEmailAddress is not present");
+        }
     }
 
     public String getReferenceId(Long caseId) {
