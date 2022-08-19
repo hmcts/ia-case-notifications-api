@@ -9,6 +9,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -19,9 +20,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
@@ -39,11 +42,17 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
     @Mock
     MakeAnApplicationService makeAnApplicationService;
     @Mock
+    UserDetailsProvider userDetailsProvider;
+    @Mock
+    UserDetails userDetails;
+    @Mock
     MakeAnApplication makeAnApplication;
 
     private Long caseId = 12345L;
     private String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
     private String afterListingEmailTemplateId = "afterListingEmailtemplateId";
+    private String otherBeforeListingEmailTemplateId = "otherBeforeListingEmailTemplateId";
+    private String otherAfterListingEmailTemplateId = "otherAfterListingEmailtemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String applicationType = "someApplicationType";
 
@@ -53,6 +62,8 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
+    private String homeOfficeUser = "caseworker-ia-homeofficelart";
+    private String citizenUser = "citizen";
 
     private AppellantMakeAnApplicationPersonalisationEmail appellantMakeAnApplicationPersonalisationEmail;
 
@@ -68,21 +79,34 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         when(makeAnApplicationService.getMakeAnApplication(asylumCase, false)).thenReturn(Optional.of(makeAnApplication));
         when(makeAnApplication.getType()).thenReturn(applicationType);
+        when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
 
         appellantMakeAnApplicationPersonalisationEmail = new AppellantMakeAnApplicationPersonalisationEmail(
             beforeListingEmailTemplateId,
             afterListingEmailTemplateId,
+            otherBeforeListingEmailTemplateId,
+            otherAfterListingEmailTemplateId,
             iaAipFrontendUrl,
-            recipientsFinder, appealService, makeAnApplicationService);
+            recipientsFinder, appealService, makeAnApplicationService, userDetailsProvider);
     }
 
     @Test
     public void should_return_given_template_id() {
+        when(userDetails.getRoles()).thenReturn(Arrays.asList(citizenUser));
+
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         assertEquals(beforeListingEmailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId(asylumCase));
 
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         assertEquals(afterListingEmailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId(asylumCase));
+
+        when(userDetails.getRoles()).thenReturn(Arrays.asList(homeOfficeUser));
+
+        when(appealService.isAppealListed(asylumCase)).thenReturn(false);
+        assertEquals(otherBeforeListingEmailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId(asylumCase));
+
+        when(appealService.isAppealListed(asylumCase)).thenReturn(true);
+        assertEquals(otherAfterListingEmailTemplateId, appellantMakeAnApplicationPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
