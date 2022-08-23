@@ -2770,4 +2770,41 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("appealEndedAutomaticallyNotificationGenerator")
+    public List<NotificationGenerator> appealEndedAutomaticallyNotificationGenerator(
+        LegalRepresentativeEndAppealAutomaticallyPersonalisation legalRepresentativeEndAppealAutomaticallyPersonalisation,
+        HomeOfficeEndAppealAutomaticallyPersonalisation homeOfficeEndAppealAutomaticallyPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeEndAppealAutomaticallyPersonalisation,
+                    homeOfficeEndAppealAutomaticallyPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("updatePaymentStatusPaidAppealSubmittedLrHoGenerator")
+    public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedLrHoNotificationGenerator(
+        LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealSubmittedPersonalisation,
+                    homeOfficeSubmitAppealPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
