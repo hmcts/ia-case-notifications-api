@@ -35,5 +35,11 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.boot/spring\-boot\-starter\-security@.+$</packageUrl>
         <cve>CVE-2022-22976</cve>
         <cve>CVE-2022-22978</cve>
+    </suppress><suppress until="2030-01-01">
+        <notes><![CDATA[
+            file name: tomcat 9.0.63.jar
+            ]]>
+        </notes>
+        <cve>CVE-2022-34305</cve>
     </suppress>
 </suppressions>
