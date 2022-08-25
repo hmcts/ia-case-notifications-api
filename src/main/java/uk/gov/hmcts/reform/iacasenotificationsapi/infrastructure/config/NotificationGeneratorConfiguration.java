@@ -1542,6 +1542,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
     public List<NotificationGenerator> forceCaseProgressionToCaseUnderReviewNotificationGenerator(
         LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation forceCaseProgressionToCaseUnderReviewPersonalisation,
+        RespondentForceCaseToCaseUnderReviewPersonalisation respondentForceCaseToCaseUnderReviewPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -1549,8 +1550,9 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    forceCaseProgressionToCaseUnderReviewPersonalisation
-                ),
+                    forceCaseProgressionToCaseUnderReviewPersonalisation,
+                    respondentForceCaseToCaseUnderReviewPersonalisation
+                    ),
                 notificationSender,
                 notificationIdAppender
             )
