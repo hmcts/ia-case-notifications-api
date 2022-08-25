@@ -60,6 +60,7 @@ public class NotificationHandlerConfiguration {
 
         BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
             callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && isAipJourney(callback.getCaseDetails().getCaseData())
                 && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW;
         return new NotificationHandler(function, notificationGenerators);
     }

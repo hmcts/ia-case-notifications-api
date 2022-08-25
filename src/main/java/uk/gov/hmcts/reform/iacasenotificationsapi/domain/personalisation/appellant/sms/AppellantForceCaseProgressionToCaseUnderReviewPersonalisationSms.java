@@ -21,7 +21,7 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms im
     private final RecipientsFinder recipientsFinder;
 
     public AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms(
-            @Value("${govnotify.template.forceCaseProgression.caseBuilding.to.caseUnderReview.appellant.sms}") String templateId,
+            @Value("${govnotify.template.forceCaseProgression.caseBuilding.to.caseUnderReviewAiP.appellant.sms}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder) {
         this.templateId = templateId;
@@ -52,8 +52,6 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms im
         return ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("link to timeline", iaAipFrontendUrl)
                 .build();
     }

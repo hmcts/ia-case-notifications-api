@@ -33,6 +33,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private final String iaExUiFrontendUrl = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
 
     private AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail
         forceCaseProgressionToCaseUnderReviewPersonalisation;
@@ -45,7 +46,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         forceCaseProgressionToCaseUnderReviewPersonalisation =
-            new AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail(templateId);
+            new AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail(templateId, iaExUiFrontendUrl);
     }
 
     @Test

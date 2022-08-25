@@ -18,10 +18,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String templateId;
+    private final String iaExUiFrontendUrl;
 
     public AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail(
-        @NotNull(message = "forceCaseProgressionToCaseUnderReviewAiPTemplateId cannot be null") @Value("${govnotify.template.forceCaseProgression.caseBuilding.to.caseUnderReview.appellant.email}") String templateId) {
+        @NotNull(message = "forceCaseProgressionToCaseUnderReviewAiPTemplateId cannot be null")
+        @Value("${govnotify.template.forceCaseProgression.caseBuilding.to.caseUnderReviewAiP.appellant.email}")
+            String templateId,
+        @Value("${iaExUiFrontendUrl}")
+            String iaExUiFrontendUrl) {
         this.templateId = templateId;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     public String getTemplateId() {
@@ -37,7 +43,9 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
                     .read(APPELLANT_EMAIL_ADDRESS, String.class)
                     .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
         } else {
-            throw new IllegalStateException("appellantEmailAddress is not present");
+            return Collections.singleton(asylumCase
+                .read(EMAIL, String.class)
+                .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
         }
     }
 
@@ -47,15 +55,15 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        ImmutableMap<String, String> build = ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("appellantEmailAddress", asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)
+        return ImmutableMap.<String, String>builder()
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("appellantEmailAddress", asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)
                         .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")))
-                .build();
-        return build;
+            .build();
     }
 }
 
