@@ -825,6 +825,11 @@ govnotify:
         email: 84d48a3f-afd6-4759-9219-22cb37bebabb
       editApplicationAfterSubmitWithoutLr:
         email: 160386c8-7fc5-4359-8d3d-f99765af00d5
+      stopLegalRepresenting:
+        sms: 14f55cf1-5442-466c-a1fc-bb4a268bc6d8
+        legalRep: 402192e3-d493-435a-b00c-c016deaee2ea
+        homeOffice: cff0fb03-2808-4625-90d6-a9285d2e875e
+        adminOfficer: 4d3db07e-4000-41f8-9a3d-79b4a785cc12
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -988,10 +993,6 @@ security:
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
-      - "submitApplication"
-      - "uploadBailSummary"
-      - "uploadDocuments"
-      - "makeNewApplication"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -1015,6 +1016,12 @@ security:
       - "changeBailDirectionDueDate"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
+    caseworker-ia-homeofficebail:
+      - "submitApplication"
+      - "uploadBailSummary"
+      - "uploadDocuments"
+      - "makeNewApplication"
+
 
 ### dependency configuration
 core_case_data_api_url: ${CCD_URL:http://127.0.0.1:4452}
