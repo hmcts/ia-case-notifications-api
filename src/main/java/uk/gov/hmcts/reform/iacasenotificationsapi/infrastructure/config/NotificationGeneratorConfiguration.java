@@ -2789,7 +2789,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("updatePaymentStatusPaidAppealSubmittedLrHoGenerator")
-    public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedLrHoNotificationGenerator(
+    public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedNotificationGenerator(
         LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
         HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
         NotificationSender notificationSender,
