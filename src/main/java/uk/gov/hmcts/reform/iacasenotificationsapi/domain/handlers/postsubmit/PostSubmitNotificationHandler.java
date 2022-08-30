@@ -5,8 +5,11 @@ import static java.util.Objects.requireNonNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+
+import com.google.common.collect.Lists;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
@@ -42,8 +45,16 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
     public boolean canHandle(PostSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-
+        if (getEventsToSkip().contains(callback.getEvent())) {
+            return false;
+        }
         return canHandleFunction.test(callbackStage, callback);
+    }
+
+    private List<Event> getEventsToSkip() {
+        return Lists.newArrayList(
+                Event.STOP_LEGAL_REPRESENTING
+        );
     }
 
     @Override

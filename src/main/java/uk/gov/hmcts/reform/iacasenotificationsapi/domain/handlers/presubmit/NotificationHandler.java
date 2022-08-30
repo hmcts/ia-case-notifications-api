@@ -59,8 +59,7 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
             Event.EDIT_BAIL_DOCUMENTS,
             Event.CHANGE_BAIL_DIRECTION_DUE_DATE,
             Event.MAKE_NEW_APPLICATION,
-            Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT,
-            Event.STOP_LEGAL_REPRESENTING
+            Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT
         );
     }
 

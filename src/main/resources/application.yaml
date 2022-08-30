@@ -897,6 +897,7 @@ security:
       - "submitApplication"
       - "uploadDocuments"
       - "makeNewApplication"
+      - "stopLegalRepresenting"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
