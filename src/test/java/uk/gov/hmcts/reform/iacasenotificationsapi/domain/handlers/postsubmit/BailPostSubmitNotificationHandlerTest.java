@@ -1,6 +1,15 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+import java.util.Optional;
+import java.util.function.BiPredicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,17 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
-
-import java.util.Collections;
-import java.util.Optional;
-import java.util.function.BiPredicate;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BailPostSubmitNotificationHandlerTest {

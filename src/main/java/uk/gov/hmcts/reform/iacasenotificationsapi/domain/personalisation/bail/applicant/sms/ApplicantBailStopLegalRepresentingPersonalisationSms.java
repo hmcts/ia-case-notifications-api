@@ -1,17 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.ApplicantBailSmsNotificationPersonalisation;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
 
 @Service
 public class ApplicantBailStopLegalRepresentingPersonalisationSms implements ApplicantBailSmsNotificationPersonalisation {

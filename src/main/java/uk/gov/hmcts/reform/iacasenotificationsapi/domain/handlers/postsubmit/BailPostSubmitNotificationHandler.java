@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiPredicate;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -8,13 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiPredicate;
-
-import static java.util.Objects.requireNonNull;
-
 
 public class BailPostSubmitNotificationHandler implements PostSubmitCallbackHandler<BailCase> {
 

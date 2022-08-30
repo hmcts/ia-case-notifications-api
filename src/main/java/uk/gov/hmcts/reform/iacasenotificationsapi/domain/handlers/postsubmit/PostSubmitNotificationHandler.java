@@ -2,11 +2,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit;
 
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-
-import com.google.common.collect.Lists;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
