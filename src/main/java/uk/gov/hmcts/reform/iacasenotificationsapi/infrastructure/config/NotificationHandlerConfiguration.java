@@ -720,22 +720,19 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean paymentFailed = asylumCase
+                boolean paymentPaid = asylumCase
                     .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                    .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
+                    .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 boolean payLater = asylumCase
                     .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
                     .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
                     .orElse(false);
 
-                boolean paymentFailedChangedToPayLater = paymentFailed && payLater;
-
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && (!paymentFailed || paymentFailedChangedToPayLater)
-                       && !isPaymentPendingForEaOrHuAppeal(callback)
-                       && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isEmpty();
+                       && (paymentPaid || payLater);
+
             }, notificationGenerators,
             (callback, e) -> {
                 callback
@@ -2582,10 +2579,15 @@ public class NotificationHandlerConfiguration {
                     .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
                     .orElse(false);
 
+                boolean payLater = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
-                       && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isEmpty()
+                       && payLater
                        && smsPreferred;
             },
             notificationGenerators,
@@ -2610,10 +2612,16 @@ public class NotificationHandlerConfiguration {
                     .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
                     .orElse(false);
 
+                boolean payLater = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
                        && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
+                       && !payLater
                        && smsPreferred;
             },
             notificationGenerators,
@@ -2638,11 +2646,16 @@ public class NotificationHandlerConfiguration {
                     .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
                     .orElse(false);
 
+                boolean payLater = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && asylumCase.read(EMAIL, String.class).isPresent()
                        && emailPreferred
-                       && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isEmpty();
+                       && payLater;
             },
             notificationGenerators,
             (callback, e) -> log.error(
@@ -2666,10 +2679,16 @@ public class NotificationHandlerConfiguration {
                     .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
                     .orElse(false);
 
+                boolean payLater = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
                        && asylumCase.read(EMAIL, String.class).isPresent()
                        && emailPreferred
+                       && !payLater
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent();
             },
             notificationGenerators,
@@ -3190,6 +3209,11 @@ public class NotificationHandlerConfiguration {
                     isCorrectAppealType
                     && (currentState == State.APPEAL_SUBMITTED);
 
+                boolean payLater = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
+                    .orElse(false);
+
                 Optional<PaymentStatus> paymentStatus = asylumCase
                     .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
 
@@ -3197,6 +3221,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
                        && isCorrectAppealTypeAndStateHUorEAorPA
                        && !paymentStatus.equals(Optional.empty())
+                       && !payLater
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && paymentStatus.get().equals(PaymentStatus.PAID);
             }, notificationGenerators
