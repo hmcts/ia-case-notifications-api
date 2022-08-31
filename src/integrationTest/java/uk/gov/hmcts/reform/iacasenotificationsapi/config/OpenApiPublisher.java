@@ -55,7 +55,7 @@ class OpenApiPublisher {
             .getContentAsByteArray();
 
         String path = System.getProperty("user.dir");
-        try (OutputStream outputStream = Files.newOutputStream(Paths.get(path + "\\build\\tmp\\swagger-specs.json"))) {
+        try (OutputStream outputStream = Files.newOutputStream(Paths.get(path + "/build/swagger-specs.json"))) {
             outputStream.write(specs);
         }
 
