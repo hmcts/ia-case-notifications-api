@@ -87,6 +87,16 @@ public class EventTest {
         assertEquals("manageFeeUpdate", MANAGE_FEE_UPDATE.toString());
         assertEquals("recordOutOfTimeDecision", RECORD_OUT_OF_TIME_DECISION.toString());
         assertEquals("editPaymentMethod", EDIT_PAYMENT_METHOD.toString());
+        assertEquals("submitApplication", SUBMIT_APPLICATION.toString());
+        assertEquals("uploadBailSummary", UPLOAD_BAIL_SUMMARY.toString());
+        assertEquals("uploadSignedDecisionNotice", UPLOAD_SIGNED_DECISION_NOTICE.toString());
+        assertEquals("endApplication", END_APPLICATION.toString());
+        assertEquals("uploadDocuments", UPLOAD_DOCUMENTS.toString());
+        assertEquals("editBailDocuments", EDIT_BAIL_DOCUMENTS.toString());
+        assertEquals("changeBailDirectionDueDate", CHANGE_BAIL_DIRECTION_DUE_DATE.toString());
+        assertEquals("sendBailDirection", SEND_BAIL_DIRECTION.toString());
+        assertEquals("makeNewApplication", MAKE_NEW_APPLICATION.toString());
+        assertEquals("editBailApplicationAfterSubmit", EDIT_BAIL_APPLICATION_AFTER_SUBMIT.toString());
         assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
         assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
@@ -94,6 +104,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(82, Event.values().length);
+        assertEquals(92, Event.values().length);
     }
 }
