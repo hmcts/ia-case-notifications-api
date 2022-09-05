@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
@@ -43,6 +44,9 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
 
+        if (getEventsToSkip().contains(callback.getEvent())) {
+            return false;
+        }
         return canHandleFunction.test(callbackStage, callback);
     }
 
@@ -56,7 +60,6 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
         try {
             notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
-
             if (!notificationGenerators.isEmpty()) {
 
                 int lastNotificationGeneratorIndex = notificationGenerators.size() - 1;
@@ -83,5 +86,11 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
             }
         }
         return postSubmitCallbackResponse;
+    }
+
+    private List<Event> getEventsToSkip() {
+        return List.of(
+            Event.NOC_REQUEST_BAIL
+        );
     }
 }

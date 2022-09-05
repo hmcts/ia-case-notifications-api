@@ -846,6 +846,14 @@ govnotify:
         email: 84d48a3f-afd6-4759-9219-22cb37bebabb
       editApplicationAfterSubmitWithoutLr:
         email: 160386c8-7fc5-4359-8d3d-f99765af00d5
+      nocChangedLRForLR:
+        email: 803cc8e0-1b98-4154-9d91-b1f56cbe85d7
+      nocChangedLRForHO:
+        email: a7d6c3bc-2108-4fba-995c-bb8a407ae58f
+      nocChangedLRForAdmin:
+        email: 8a745ed0-63f0-4a35-8cf0-f2ed4f962daf
+      nocChangedLRForApplicant:
+        sms: 8141263c-c1f1-4f86-a164-ab48df561dbe
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -915,6 +923,7 @@ security:
       - "submitApplication"
       - "uploadDocuments"
       - "makeNewApplication"
+      - "nocRequestBail"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
