@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit;
 
 import static java.util.Objects.requireNonNull;
 
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -51,7 +50,7 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
     }
 
     private List<Event> getEventsToSkip() {
-        return Lists.newArrayList(
+        return List.of(
                 Event.STOP_LEGAL_REPRESENTING
         );
     }
