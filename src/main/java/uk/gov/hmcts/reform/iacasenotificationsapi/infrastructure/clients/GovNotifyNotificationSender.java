@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendLetterResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
 @Service
@@ -114,6 +115,49 @@ public class GovNotifyNotificationSender implements NotificationSender {
 
                 } catch (NotificationClientException e) {
                     throw new NotificationServiceResponseException("Failed to send sms using GovNotify", e);
+                }
+            }
+        );
+    }
+
+    public synchronized String sendLetter(
+        String templateId,
+        String address,
+        Map<String, String> personalisation,
+        String reference
+    ) {
+        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache();
+        return recentDeliveryReceiptCache.get(
+            address + reference,
+            k -> {
+
+                try {
+
+                    LOG.info("Attempting to send letter notification to GovNotify: {}", reference);
+
+                    SendLetterResponse response =
+                        notificationClient
+                            .sendLetter(
+                                templateId,
+                                personalisation,
+                                reference
+                            );
+
+                    String notificationId =
+                        response
+                            .getNotificationId()
+                            .toString();
+
+                    LOG.info(
+                        "Successfully sent letter notification to GovNotify: {} ({})",
+                        reference,
+                        notificationId
+                    );
+
+                    return notificationId;
+
+                } catch (NotificationClientException e) {
+                    throw new NotificationServiceResponseException("Failed to send letter using GovNotify", e);
                 }
             }
         );

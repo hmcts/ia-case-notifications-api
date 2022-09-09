@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendLetterResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +34,7 @@ public class GovNotifyNotificationSenderTest {
 
     private String templateId = "a-b-c-d-e-f";
     private String emailAddress = "recipient@example.com";
+    private String address = "20_realstreet_London";
     private String phoneNumber = "07123456789";
     private Map<String, String> personalisation = mock(Map.class);
     private String reference = "our-reference";
@@ -328,6 +330,58 @@ public class GovNotifyNotificationSenderTest {
             )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
             .hasMessage("Failed to send sms using GovNotify")
+            .hasCause(underlyingException);
+
+    }
+
+    @Test
+    public void should_send_letter_using_gov_notify() throws NotificationClientException {
+
+        final UUID expectedNotificationId = UUID.randomUUID();
+
+        SendLetterResponse sendLetterResponse = mock(SendLetterResponse.class);
+
+        when(notificationClient.sendLetter(
+            templateId,
+            personalisation,
+            reference
+        )).thenReturn(sendLetterResponse);
+
+        when(sendLetterResponse.getNotificationId()).thenReturn(expectedNotificationId);
+
+        String actualNotificationId =
+            govNotifyNotificationSender.sendLetter(
+                templateId,
+                address,
+                personalisation,
+                reference
+            );
+
+        assertEquals(expectedNotificationId.toString(), actualNotificationId);
+    }
+
+    @Test
+    public void wrap_gov_notify_letter_exceptions() throws NotificationClientException {
+
+        NotificationClientException underlyingException = mock(NotificationClientException.class);
+
+        doThrow(underlyingException)
+            .when(notificationClient)
+            .sendLetter(
+                templateId,
+                personalisation,
+                reference
+            );
+
+        assertThatThrownBy(() ->
+            govNotifyNotificationSender.sendLetter(
+                templateId,
+                address,
+                personalisation,
+                reference
+            )
+        ).isExactlyInstanceOf(NotificationServiceResponseException.class)
+            .hasMessage("Failed to send letter using GovNotify")
             .hasCause(underlyingException);
 
     }
