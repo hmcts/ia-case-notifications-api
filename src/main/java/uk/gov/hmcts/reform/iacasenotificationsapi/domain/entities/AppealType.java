@@ -22,11 +22,11 @@ public enum AppealType {
     }
 
     public static Optional<AppealType> from(
-        String value
+            String value
     ) {
         return stream(values())
-            .filter(v -> v.getValue().equals(value))
-            .findFirst();
+                .filter(v -> v.getValue().equals(value))
+                .findFirst();
     }
 
     public String getValue() {
