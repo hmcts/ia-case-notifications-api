@@ -355,7 +355,8 @@ public enum AsylumCaseDefinition {
     OUT_OF_TIME_DECISION_TYPE(
         "outOfTimeDecisionType", new TypeReference<OutOfTimeDecisionType>(){}),
     APPELLANT_PIN_IN_POST(
-        "appellantPinInPost", new TypeReference<PinInPostDetails>(){})
+        "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
+    APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
     ;
 
     private final String value;
