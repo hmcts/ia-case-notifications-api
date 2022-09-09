@@ -56,6 +56,9 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
 
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
         assertEquals(templatePaId, adminOfficerEditPaymentMethodPersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.EU));
+        assertEquals(templateEaHuId, adminOfficerEditPaymentMethodPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
