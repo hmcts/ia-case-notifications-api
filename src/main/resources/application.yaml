@@ -1011,10 +1011,6 @@ security:
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
-      - "submitApplication"
-      - "uploadBailSummary"
-      - "uploadDocuments"
-      - "makeNewApplication"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
