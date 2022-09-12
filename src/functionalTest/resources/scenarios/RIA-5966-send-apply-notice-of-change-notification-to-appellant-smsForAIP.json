@@ -1,5 +1,5 @@
 {
-  "description": "RIA-4084-RIA-4467 Send apply notice of change notification to appellant SMS",
+  "description": "RIA-5966 Send apply notice of change notification to appellant SMS",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",

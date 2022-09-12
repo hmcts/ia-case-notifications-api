@@ -2537,24 +2537,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("nocRequestDecisionAppellantAipEmailNotificationGenerator")
-    public List<NotificationGenerator> nocRequestDecisionAppellantAipEmailNotificationHandler(
-        AppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Collections.singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    appellantNocRequestDecisionPersonalisationEmail
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("nocRequestDecisionAppellantSmsNotificationGenerator")
     public List<NotificationGenerator> nocRequestDecisionAppellantSmsNotificationHandler(
         AppellantNocRequestDecisionPersonalisationSms appellantNocRequestDecisionPersonalisationSms,
