@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
@@ -42,10 +43,10 @@ class AppellantRemoveRepresentationPersonalisationLetterTest {
     private String legalRepRefNumber = "somelegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private String addressLine1 = "addressLine1";
-    private String addressLine2 = "addressLine2";
-    private String addressLine3 = "addressLine3";
-    private String postCode = "postCode";
+    private String addressLine1 = "Flat 230";
+    private String addressLine2 = "No 100";
+    private String addressLine3 = "New road street";
+    private String postCode = "XX1 2YY";
     private String postTown = "postTown";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
@@ -96,6 +97,11 @@ class AppellantRemoveRepresentationPersonalisationLetterTest {
     void should_return_given_reference_id() {
         assertEquals(ccdCaseId + "_REMOVE_REPRESENTATION_APPELLANT_LETTER",
             appellantRemoveRepresentationPersonalisationLetter.getReferenceId(ccdCaseId));
+    }
+
+    @Test
+    void should_return_address_in_correct_format() {
+        assertTrue(appellantRemoveRepresentationPersonalisationLetter.getRecipientsList(asylumCase).contains("Flat230_No100_Newroadstreet_postTown_XX12YY"));
     }
 
     @Test

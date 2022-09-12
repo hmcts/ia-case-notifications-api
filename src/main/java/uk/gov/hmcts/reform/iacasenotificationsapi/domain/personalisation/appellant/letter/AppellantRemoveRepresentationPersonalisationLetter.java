@@ -98,11 +98,13 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
             .orElseThrow(() -> new IllegalStateException("appellantAddress is not present"));
         List<String> appellantAddressAsList = new ArrayList<>();
         appellantAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("appellantAddress 1 is not present")));
-        if (address.getAddressLine2().isPresent()) {
-            appellantAddressAsList.add(address.getAddressLine2().get());
+        String addressLine2 = address.getAddressLine2().orElse(null);
+        String addressLine3 = address.getAddressLine3().orElse(null);
+        if (addressLine2 != null) {
+            appellantAddressAsList.add(addressLine2);
         }
-        if (address.getAddressLine3().isPresent()) {
-            appellantAddressAsList.add(address.getAddressLine3().get());
+        if (addressLine3 != null) {
+            appellantAddressAsList.add(addressLine3);
         }
         appellantAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("appellantAddress postTown is not present")));
         appellantAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("appellantAddress postCode is not present")));
