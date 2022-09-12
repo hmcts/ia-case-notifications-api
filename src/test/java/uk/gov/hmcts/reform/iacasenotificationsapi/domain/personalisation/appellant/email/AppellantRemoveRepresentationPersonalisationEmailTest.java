@@ -124,7 +124,6 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(caseDetails.getId()).thenReturn(ccdCaseId);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
