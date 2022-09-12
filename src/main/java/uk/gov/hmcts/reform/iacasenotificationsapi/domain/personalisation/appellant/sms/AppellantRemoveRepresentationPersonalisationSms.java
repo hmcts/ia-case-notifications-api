@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-
 @Service
 public class AppellantRemoveRepresentationPersonalisationSms implements SmsNotificationPersonalisation {
 
@@ -62,7 +61,7 @@ public class AppellantRemoveRepresentationPersonalisationSms implements SmsNotif
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-        String linkToPiPStartPage = iaAipFrontendUrl+iaAipPathToSelfRepresentation;
+        String linkToPiPStartPage = iaAipFrontendUrl + iaAipPathToSelfRepresentation;
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -75,7 +74,7 @@ public class AppellantRemoveRepresentationPersonalisationSms implements SmsNotif
             .put("linkToPiPStartPage", linkToPiPStartPage);
 
         PinInPostDetails pip = asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
-        if(pip != null){
+        if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
             personalizationBuilder.put("validDate", pip.getExpiryDate());
         } else {

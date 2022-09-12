@@ -1,14 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class LetterNotificationGenerator implements NotificationGenerator {
 

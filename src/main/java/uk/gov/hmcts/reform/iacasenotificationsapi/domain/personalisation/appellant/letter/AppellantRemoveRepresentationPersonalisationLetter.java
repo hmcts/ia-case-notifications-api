@@ -1,6 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -10,11 +18,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.requireNonNull;
 
 @Service
 public class AppellantRemoveRepresentationPersonalisationLetter implements LetterNotificationPersonalisation {
@@ -59,7 +62,7 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String linkToPiPStartPage = iaAipFrontendUrl+iaAipPathToSelfRepresentation;
+        String linkToPiPStartPage = iaAipFrontendUrl + iaAipPathToSelfRepresentation;
 
         List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
 
@@ -73,12 +76,12 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("linkToPiPStartPage", linkToPiPStartPage);
 
-        for(int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_"+(i+1), appellantAddress.get(i));
+        for (int i = 0; i < appellantAddress.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
         }
 
         PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
-        if(pip != null){
+        if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
             personalizationBuilder.put("validDate", pip.getExpiryDate());
         } else {
@@ -95,10 +98,10 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
             .orElseThrow(() -> new IllegalStateException("appellantAddress is not present"));
         List<String> appellantAddressAsList = new ArrayList<>();
         appellantAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("appellantAddress 1 is not present")));
-        if(address.getAddressLine2().isPresent()) {
+        if (address.getAddressLine2().isPresent()) {
             appellantAddressAsList.add(address.getAddressLine2().get());
         }
-        if(address.getAddressLine3().isPresent()) {
+        if (address.getAddressLine3().isPresent()) {
             appellantAddressAsList.add(address.getAddressLine3().get());
         }
         appellantAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("appellantAddress postTown is not present")));

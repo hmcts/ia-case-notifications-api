@@ -59,7 +59,7 @@ public class AppellantRemoveRepresentationPersonalisationEmail implements EmailN
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String linkToPiPStartPage = iaAipFrontendUrl+iaAipPathToSelfRepresentation;
+        String linkToPiPStartPage = iaAipFrontendUrl + iaAipPathToSelfRepresentation;
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -72,7 +72,7 @@ public class AppellantRemoveRepresentationPersonalisationEmail implements EmailN
             .put("linkToPiPStartPage", linkToPiPStartPage);
 
         PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
-        if(pip != null){
+        if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
             personalizationBuilder.put("validDate", pip.getExpiryDate());
         } else {
