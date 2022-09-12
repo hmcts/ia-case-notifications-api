@@ -2321,6 +2321,30 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("nocRequestDecisionAipNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionAipNotificationHandler(
+        LegalRepresentativeNocRequestAipDecisionPersonalisation legalRepresentativeNocRequestAipDecisionPersonalisation,
+        HomeOfficeNocRequestDecisionPersonalisation homeOfficeNocRequestDecisionPersonalisation,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeNocRequestAipDecisionPersonalisation,
+                    homeOfficeNocRequestDecisionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("removeRepresentationNotificationGenerator")
     public List<NotificationGenerator> removeRepresentationNotificationHandler(
         LegalRepresentativeRemoveRepresentationPersonalisation legalRepresentativeRemoveRepresentationPersonalisation,
@@ -2497,6 +2521,24 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("nocRequestDecisionAppellantEmailNotificationGenerator")
     public List<NotificationGenerator> nocRequestDecisionAppellantEmailNotificationHandler(
+        AppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    appellantNocRequestDecisionPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("nocRequestDecisionAppellantAipEmailNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionAppellantAipEmailNotificationHandler(
         AppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender

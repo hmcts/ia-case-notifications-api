@@ -2427,7 +2427,23 @@ public class NotificationHandlerConfiguration {
         return new PostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.NOC_REQUEST;
+                       && callback.getEvent() == Event.NOC_REQUEST
+                    && !isAipJourney(callback.getCaseDetails().getCaseData());
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionAipNotificationHandler(
+        @Qualifier("nocRequestDecisionAipNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                       && callback.getEvent() == Event.NOC_REQUEST
+                    && isAipJourney(callback.getCaseDetails().getCaseData());
 
             },
             notificationGenerators
@@ -3142,6 +3158,7 @@ public class NotificationHandlerConfiguration {
     }
 
     private boolean isAipJourney(AsylumCase asylumCase) {
+
         return asylumCase
                 .read(JOURNEY_TYPE, JourneyType.class)
                 .map(type -> type == AIP).orElse(false);
