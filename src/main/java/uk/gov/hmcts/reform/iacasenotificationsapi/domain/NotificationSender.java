@@ -17,4 +17,11 @@ public interface NotificationSender {
         Map<String, String> personalisation,
         String reference
     );
+
+    String sendLetter(
+        String templateId,
+        String address,
+        Map<String, String> personalisation,
+        String reference
+    );
 }

@@ -729,8 +729,9 @@ govnotify:
         afterListing:
           email: 2199e053-5ff7-46a2-9cf4-58864265d516
       appellant:
-        email: cfb76737-b805-483f-81ec-9d1365eb3260
-        sms: ffef5cda-ec06-43e4-bd82-5d7fc266a000
+        email: bee313b9-dea4-43ce-967a-d012de51a54a
+        sms: 318452c5-230f-4471-aafa-847accf5f20b
+        letter: 498d6faa-f938-49c3-8d99-5062eb8c351e
     requestFeeRemission:
       legalRep:
         email: acb036e5-47a3-454f-a24b-4755bf7e258c
@@ -789,6 +790,7 @@ notificationSender.deduplicateSendsWithinSeconds: 60
 
 iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://manage-case.platform.hmcts.net/}
 iaAipFrontendUrl: ${IA_AIP_FRONTEND_URL:https://localhost:3000/}
+iaAipPathToSelfRepresentation: "start-representing-yourself"
 iaAipFrontendPathToJudgeReview: ask-judge-review
 
 tsvStringsFileLocation: strings.tsv
