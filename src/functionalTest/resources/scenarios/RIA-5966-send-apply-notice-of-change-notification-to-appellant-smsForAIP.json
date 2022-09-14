@@ -1,19 +1,19 @@
 {
-  "description": "RIA-4084-RIA-4467 Send apply notice of change notification before listing",
+  "description": "RIA-5966 Send apply notice of change notification to appellant SMS",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 4084,
+      "id": 5966,
       "eventId": "nocRequest",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "journeyType": "rep",
+          "journeyType": "aip",
           "currentCaseStateVisibleToHomeOfficeAll":"appealSubmitted",
-          "contactPreference": "wantsEmail",
-          "email": "{$TEST_CITIZEN_USERNAME}",
+          "contactPreference": "wantsSms",
+          "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
           "hearingCentre": "manchester"
         }
       }
@@ -24,7 +24,7 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([_NOC_REQUEST_DECISION_APPELLANT_EMAIL,_NOC_REQUEST_DECISION_HOME_OFFICE,_NOC_REQUEST_DECISION_LEGAL_REP])"
+      "body": "contains([_NOC_REQUEST_DECISION_APPELLANT_SMS,_NOC_REQUEST_DECISION_HOME_OFFICE,_NOC_REQUEST_DECISION_LEGAL_REP])"
     }
    }
 }
