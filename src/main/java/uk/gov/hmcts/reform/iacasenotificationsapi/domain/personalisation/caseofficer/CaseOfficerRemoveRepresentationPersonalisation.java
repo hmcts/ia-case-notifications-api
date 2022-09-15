@@ -88,7 +88,7 @@ public class CaseOfficerRemoveRepresentationPersonalisation implements EmailNoti
         PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
         if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
-            personalizationBuilder.put("validDate", pip.getExpiryDate());
+            personalizationBuilder.put("validDate", defaultDateFormat((pip.getExpiryDate())));
         } else {
             personalizationBuilder.put("securityCode", "");
             personalizationBuilder.put("validDate", "");

@@ -55,7 +55,8 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private String securityCode = "securityCode";
-    private String validDate = "31/12/2022";
+    private String validDate = "2022-12-31";
+    private String validDateFormatted = "31 Dec 2022";
     private String iaAipFrontendUrl = "iaAipFrontendUrl/";
     private String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
     private String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
@@ -132,7 +133,7 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDate, personalisation.get("validDate"));
+        assertEquals(validDateFormatted, personalisation.get("validDate"));
     }
 
     @Test
@@ -147,7 +148,7 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDate, personalisation.get("validDate"));
+        assertEquals(validDateFormatted, personalisation.get("validDate"));
     }
 
     @Test

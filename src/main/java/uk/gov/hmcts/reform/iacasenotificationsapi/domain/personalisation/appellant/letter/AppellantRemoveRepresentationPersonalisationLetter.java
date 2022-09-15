@@ -71,7 +71,7 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("appellantDateOfBirth", asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse(""))
+            .put("appellantDateOfBirth", defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
             .put("ccdCaseId", String.valueOf(callback.getCaseDetails().getId()))
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("linkToPiPStartPage", linkToPiPStartPage);
@@ -83,7 +83,7 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
         PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
         if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
-            personalizationBuilder.put("validDate", pip.getExpiryDate());
+            personalizationBuilder.put("validDate", defaultDateFormat(pip.getExpiryDate()));
         } else {
             personalizationBuilder.put("securityCode", "");
             personalizationBuilder.put("validDate", "");
