@@ -863,6 +863,7 @@ security:
   roleEventAccess:
     caseworker-caa:
       - "nocRequest"
+      - "nocRequestBail"
     caseworker-approver:
       - "removeRepresentation"
       - "removeLegalRepresentative"
