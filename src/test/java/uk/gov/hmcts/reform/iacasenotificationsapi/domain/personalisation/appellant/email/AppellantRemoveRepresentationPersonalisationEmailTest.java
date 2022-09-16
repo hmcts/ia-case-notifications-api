@@ -20,7 +20,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRemoveRepresentationPersonalisationEmailTest {
@@ -44,8 +43,10 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private String securityCode = "securityCode";
-    private String validDate = "31/12/2022";
-    private String appellantDateOfBirth = "01/01/2000";
+    private String validDate = "2022-12-31";
+    private String validDateFormatted = "31 Dec 2022";
+    private String appellantDateOfBirth = "2000-01-01";
+    private String appellantDateOfBirthFormatted = "1 Jan 2000";
     private String iaAipFrontendUrl = "iaAipFrontendUrl/";
     private String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
     private String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
@@ -112,11 +113,11 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appellantDateOfBirth, personalisation.get("appellantDateOfBirth"));
+        assertEquals(appellantDateOfBirthFormatted, personalisation.get("appellantDateOfBirth"));
         assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDate, personalisation.get("validDate"));
+        assertEquals(validDateFormatted, personalisation.get("validDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
