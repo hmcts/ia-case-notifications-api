@@ -2420,32 +2420,26 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionNotificationHandler(
-        @Qualifier("nocRequestDecisionNotificationGenerator")
+    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionLrNotificationHandler(
+        @Qualifier("nocRequestDecisionLrNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new PostSubmitNotificationHandler(
-            (callbackStage, callback) -> {
-                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.NOC_REQUEST
-                    && !isAipJourney(callback.getCaseDetails().getCaseData());
-            },
+            (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                && callback.getEvent() == Event.NOC_REQUEST
+                && hasRepEmail(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
 
     @Bean
-    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionAipNotificationHandler(
-        @Qualifier("nocRequestDecisionAipNotificationGenerator")
+    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionHomeOfficeNotificationHandler(
+        @Qualifier("nocRequestDecisionHomeOfficeNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new PostSubmitNotificationHandler(
-            (callbackStage, callback) -> {
-                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.NOC_REQUEST
-                    && isAipJourney(callback.getCaseDetails().getCaseData());
-
-            },
+            (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                && callback.getEvent() == Event.NOC_REQUEST,
             notificationGenerators
         );
     }
@@ -2651,6 +2645,26 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.NOC_REQUEST
                        && emailPreferred
                        && asylumCase.read(EMAIL, String.class).isPresent();
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> aipNocRequestDecisionAppellantNotificationHandler(
+        @Qualifier("aipNocRequestDecisionAppellantNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && callback.getEvent() == Event.NOC_REQUEST
+                    && (isSmsPreferred(asylumCase) || isEmailPreferred(asylumCase));
             },
             notificationGenerators
         );
@@ -3162,6 +3176,11 @@ public class NotificationHandlerConfiguration {
         return asylumCase
                 .read(JOURNEY_TYPE, JourneyType.class)
                 .map(type -> type == AIP).orElse(false);
+    }
+
+    private boolean hasRepEmail(AsylumCase asylumCase) {
+        return asylumCase
+            .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).isPresent();
     }
 
     private boolean isSmsPreferred(AsylumCase asylumCase) {

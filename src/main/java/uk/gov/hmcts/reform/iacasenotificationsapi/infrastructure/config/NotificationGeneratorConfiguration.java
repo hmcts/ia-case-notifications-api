@@ -2296,9 +2296,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("nocRequestDecisionNotificationGenerator")
-    public List<NotificationGenerator> nocRequestDecisionNotificationHandler(
-        LegalRepresentativeNocRequestDecisionPersonalisation legalRepresentativeNocRequestDecisionPersonalisation,
+    @Bean("nocRequestDecisionHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionHomeOfficeNotificationGenerator(
         HomeOfficeNocRequestDecisionPersonalisation homeOfficeNocRequestDecisionPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -2307,7 +2306,6 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeNocRequestDecisionPersonalisation,
                     homeOfficeNocRequestDecisionPersonalisation
                 ),
                 notificationSender,
@@ -2321,18 +2319,16 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("nocRequestDecisionAipNotificationGenerator")
-    public List<NotificationGenerator> nocRequestDecisionAipNotificationHandler(
-        LegalRepresentativeNocRequestAipDecisionPersonalisation legalRepresentativeNocRequestAipDecisionPersonalisation,
-        HomeOfficeNocRequestDecisionPersonalisation homeOfficeNocRequestDecisionPersonalisation,
+    @Bean("nocRequestDecisionLrNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionLrNotificationGenerator(
+        LegalRepresentativeNocRequestDecisionPersonalisation legalRepresentativeNocRequestDecisionPersonalisation,
         NotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeNocRequestAipDecisionPersonalisation,
-                    homeOfficeNocRequestDecisionPersonalisation
+                    legalRepresentativeNocRequestDecisionPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -2558,6 +2554,30 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("aipNocRequestDecisionAppellantNotificationGenerator")
+    public List<NotificationGenerator> aipNocRequestDecisionAppellantNotificationHandler(
+        AipAppellantNocRequestDecisionPersonalisationEmail aipAppellantNocRequestDecisionPersonalisationEmail,
+        AipAppellantNocRequestDecisionPersonalisationSms aipAppellantNocRequestDecisionPersonalisationSms,
+        NotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    aipAppellantNocRequestDecisionPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantNocRequestDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
