@@ -35,10 +35,9 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
+    private final Long ccdCaseId = 1234555577779999L;
+    private final String ccdCaseIdFormatted = "1234-5555-7777-9999";
     private String smsTemplateId = "someSmsTemplateId";
-
-    private long mockedAppealReferenceNumber = 1236;
     private String mockedAppellantMobilePhone = "07123456789";
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
@@ -52,7 +51,7 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(callback.getCaseDetails().getId()).thenReturn(mockedAppealReferenceNumber);
+        when(callback.getCaseDetails().getId()).thenReturn(ccdCaseId);
 
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
@@ -68,8 +67,8 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_NOC_REQUEST_DECISION_APPELLANT_SMS",
-            appellantNocRequestDecisionPersonalisationSms.getReferenceId(caseId));
+        assertEquals(ccdCaseId + "_NOC_REQUEST_DECISION_APPELLANT_SMS",
+            appellantNocRequestDecisionPersonalisationSms.getReferenceId(ccdCaseId));
     }
 
     @Test
@@ -101,10 +100,10 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-        when(caseDetails.getId()).thenReturn(mockedAppealReferenceNumber);
+        when(caseDetails.getId()).thenReturn(ccdCaseId);
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("Ref Number"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
@@ -118,20 +117,20 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
         assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback))
             .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant's birth of date is not present");
+            .hasMessage("Appellant's date of birth is not present");
     }
 
     @Test
     void should_return_personalisation_when_only_mandatory_information_given() {
 
-        when(caseDetails.getId()).thenReturn(mockedAppealReferenceNumber);
+        when(caseDetails.getId()).thenReturn(ccdCaseId);
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
 
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("Ref Number"));
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
         assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));

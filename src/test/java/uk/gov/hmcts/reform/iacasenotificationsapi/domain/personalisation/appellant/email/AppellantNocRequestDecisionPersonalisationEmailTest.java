@@ -38,7 +38,8 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
     private String emailTemplateId = "someEmailTemplateId";
 
 
-    private long mockedAppealReferenceNumber = 1236;
+    private final Long ccdCaseId = 1234555577779999L;
+    private final String ccdCaseIdFormatted = "1234-5555-7777-9999";
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
@@ -55,7 +56,7 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
 
-        when(callback.getCaseDetails().getId()).thenReturn(mockedAppealReferenceNumber);
+        when(callback.getCaseDetails().getId()).thenReturn(ccdCaseId);
 
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
@@ -102,16 +103,15 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
 
         assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback))
             .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant's birth of date is not present");
+            .hasMessage("Appellant's date of birth is not present");
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        when(caseDetails.getId()).thenReturn(mockedAppealReferenceNumber);
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("Ref Number"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
@@ -131,7 +131,7 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("Ref Number"));
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
         assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));

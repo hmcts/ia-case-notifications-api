@@ -36,7 +36,8 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
     @Mock
     PinInPostDetails pinInPostDetails;
 
-    private long ccdCaseId = 12345L;
+    private final Long ccdCaseId = 1234555577779999L;
+    private final String ccdCaseIdFormatted = "1234-5555-7777-9999";
     private String mobileNumber = "555 555 555";
     private String legalRepReferenceNumber = "somelegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
@@ -120,7 +121,7 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appellantDateOfBirthFormatted, personalisation.get("appellantDateOfBirth"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
         assertEquals(validDateFormatted, personalisation.get("validDate"));
@@ -147,7 +148,7 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         assertEquals("", personalisation.get("appellantDateOfBirth"));
         assertEquals("", personalisation.get("securityCode"));
         assertEquals("", personalisation.get("validDate"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetai
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.PersonalisationUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
@@ -71,8 +72,8 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("appellantDateOfBirth", defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
-            .put("ccdCaseId", String.valueOf(callback.getCaseDetails().getId()))
+            .put("appellantDateOfBirth", PersonalisationUtils.defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
+            .put("ccdCaseId", PersonalisationUtils.formatCaseId(callback.getCaseDetails().getId()))
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("linkToPiPStartPage", linkToPiPStartPage);
 
@@ -83,7 +84,7 @@ public class AppellantRemoveRepresentationPersonalisationLetter implements Lette
         PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
         if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
-            personalizationBuilder.put("validDate", defaultDateFormat(pip.getExpiryDate()));
+            personalizationBuilder.put("validDate", PersonalisationUtils.defaultDateFormat(pip.getExpiryDate()));
         } else {
             personalizationBuilder.put("securityCode", "");
             personalizationBuilder.put("validDate", "");

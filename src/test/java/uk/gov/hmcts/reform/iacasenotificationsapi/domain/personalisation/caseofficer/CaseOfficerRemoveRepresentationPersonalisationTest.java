@@ -42,7 +42,8 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     @Mock
     PinInPostDetails pinInPostDetails;
 
-    private Long ccdCaseId = 12345L;
+    private final Long ccdCaseId = 1234555577779999L;
+    private final String ccdCaseIdFormatted = "1234-5555-7777-9999";
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
@@ -130,7 +131,7 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
         assertEquals(validDateFormatted, personalisation.get("validDate"));
@@ -145,7 +146,7 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
         assertEquals(validDateFormatted, personalisation.get("validDate"));
@@ -167,7 +168,7 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals("", personalisation.get("securityCode"));
         assertEquals("", personalisation.get("validDate"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
+        assertEquals(ccdCaseIdFormatted, personalisation.get("ccdCaseId"));
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }

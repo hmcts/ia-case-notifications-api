@@ -37,7 +37,7 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private final Long caseId = 12345L;
+    private final Long caseId = 1234555577779999L;
     private final String templateIdBeforeListing = "beforeTemplateId";
     private final String templateIdAfterListing = "afterTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";

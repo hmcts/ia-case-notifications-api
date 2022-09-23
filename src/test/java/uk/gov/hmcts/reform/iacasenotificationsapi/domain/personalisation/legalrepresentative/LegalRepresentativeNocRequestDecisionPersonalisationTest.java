@@ -35,7 +35,7 @@ class LegalRepresentativeNocRequestDecisionPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
+    private final Long caseId = 1234555577779999L;
     private String templateId = "someTemplateId";
     private String templateAfterListingId = "someTemplateAfterListingId";
     private String iaExUiFrontendUrl = "http://localhost";

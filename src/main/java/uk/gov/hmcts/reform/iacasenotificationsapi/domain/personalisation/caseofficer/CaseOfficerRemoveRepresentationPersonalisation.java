@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.PersonalisationUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -75,7 +76,7 @@ public class CaseOfficerRemoveRepresentationPersonalisation implements EmailNoti
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ccdCaseId", String.valueOf(callback.getCaseDetails().getId()))
+            .put("ccdCaseId", PersonalisationUtils.formatCaseId(callback.getCaseDetails().getId()))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
@@ -88,7 +89,7 @@ public class CaseOfficerRemoveRepresentationPersonalisation implements EmailNoti
         PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
         if (pip != null) {
             personalizationBuilder.put("securityCode", pip.getAccessCode());
-            personalizationBuilder.put("validDate", defaultDateFormat((pip.getExpiryDate())));
+            personalizationBuilder.put("validDate", PersonalisationUtils.defaultDateFormat((pip.getExpiryDate())));
         } else {
             personalizationBuilder.put("securityCode", "");
             personalizationBuilder.put("validDate", "");

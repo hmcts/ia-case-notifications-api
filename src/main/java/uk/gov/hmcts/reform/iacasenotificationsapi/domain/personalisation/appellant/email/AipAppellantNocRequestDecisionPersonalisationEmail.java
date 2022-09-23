@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.PersonalisationUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -59,18 +58,16 @@ public class AipAppellantNocRequestDecisionPersonalisationEmail implements Email
 
         final String dateOfBirth = asylumCase
             .read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH,String.class)
-            .orElseThrow(() -> new IllegalStateException("Appellant's birth of date is not present"));
-
-        final  String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .orElseThrow(() -> new IllegalStateException("Appellant's date of birth is not present"));
 
         return
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("Ref Number", String.valueOf(callback.getCaseDetails().getId()))
+                .put("Ref Number", PersonalisationUtils.formatCaseId(callback.getCaseDetails().getId()))
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Date Of Birth", formattedDateOfBirth)
+                .put("Date Of Birth", PersonalisationUtils.defaultDateFormat(dateOfBirth))
                 .build();
     }
 }
