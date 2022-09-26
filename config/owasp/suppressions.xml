@@ -41,4 +41,11 @@
         <cve>CVE-2022-29885</cve>
         <cve>CVE-2022-34305</cve>
     </suppress>
+    <suppress>
+        <notes>snakeyaml-1.26.jar</notes>
+        <cve>CVE-2022-25857</cve>
+        <cve>CVE-2022-38749</cve>
+        <cve>CVE-2022-38750</cve>
+        <cve>CVE-2022-38751</cve>
+    </suppress>
 </suppressions>
