@@ -2555,10 +2555,15 @@ public class NotificationHandlerConfiguration {
                     .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
                     .orElse(false);
 
+                boolean payNow = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payNow"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
-                       && payLater
+                       && (payLater || payNow)
                        && smsPreferred;
             },
             notificationGenerators,
@@ -2588,11 +2593,17 @@ public class NotificationHandlerConfiguration {
                     .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
                     .orElse(false);
 
+                boolean payNow = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payNow"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
                        && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && !payLater
+                       && !payNow
                        && smsPreferred;
             },
             notificationGenerators,
@@ -2618,11 +2629,16 @@ public class NotificationHandlerConfiguration {
                     .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
                     .orElse(false);
 
+                boolean payNow = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payNow"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && asylumCase.read(EMAIL, String.class).isPresent()
                        && emailPreferred
-                       && payLater;
+                       && (payLater || payNow);
             },
             notificationGenerators,
             (callback, e) -> log.error(
@@ -2651,11 +2667,17 @@ public class NotificationHandlerConfiguration {
                     .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
                     .orElse(false);
 
+                boolean payNow = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payNow"))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
                        && asylumCase.read(EMAIL, String.class).isPresent()
                        && emailPreferred
                        && !payLater
+                       && !payNow
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent();
             },
             notificationGenerators,
@@ -3190,7 +3212,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU || type == PA).orElse(false);
+                    .map(type -> type == EA || type == HU).orElse(false);
 
                 boolean isCorrectAppealTypeAndStateHUorEAorPA =
                     isCorrectAppealType
@@ -3212,6 +3234,33 @@ public class NotificationHandlerConfiguration {
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && paymentStatus.get().equals(PaymentStatus.PAID);
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealLrHoWaysToPayPaPayNowNotificationHandler(
+        @Qualifier("submitAppealLrHoWaysToPayPaPayNowNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isPaAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == PA).orElse(false);
+
+                String paAppealTypePaymentOption = asylumCase
+                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
+                       && (isPaAppealType
+                           && paAppealTypePaymentOption.equals("payNow"));
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 
