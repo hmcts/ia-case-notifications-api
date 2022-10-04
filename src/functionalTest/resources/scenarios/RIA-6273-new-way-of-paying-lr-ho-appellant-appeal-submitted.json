@@ -24,9 +24,6 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealType": "protection",
-        "paAppealTypePaymentOption":"payNow",
-        "hasServiceRequestAlready": "No",
         "notificationsSent": [
           {
             "id": "12344321_APPEAL_SUBMITTED_LEGAL_REP",
@@ -38,28 +35,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "12344321_APPEAL_SUBMITTED_LEGAL_REP",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
-        ]
-      },
-      {
-        "reference": "12344321_APPEAL_SUBMITTED_HOME_OFFICE",
-        "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
-        ]
-      }
-    ]
+    }
   }
 }
