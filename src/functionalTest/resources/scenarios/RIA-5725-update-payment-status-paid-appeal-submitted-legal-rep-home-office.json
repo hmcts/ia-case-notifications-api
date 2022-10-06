@@ -2,13 +2,19 @@
   "description": "RIA-5725 Update payment status paid appeal submitted notifications",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "SystemUser",
     "input": {
       "id": 5725,
       "eventId": "updatePaymentStatus",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "minimal-appeal-submitted.json"
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "appealType": "refusalOfEu",
+          "hasServiceRequestAlready": "No",
+          "paymentStatus": "Paid"
+
+        }
       }
     }
   },
@@ -18,6 +24,9 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appealType": "refusalOfEu",
+        "hasServiceRequestAlready": "No",
+        "paymentStatus": "Paid",
         "notificationsSent": [
           {
             "id": "5725_APPEAL_SUBMITTED_LEGAL_REP",
