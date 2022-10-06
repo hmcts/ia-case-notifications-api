@@ -1,9 +1,8 @@
 {
   "description": "RIA-5777 End appeal automatically",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "SystemUser",
     "input": {
       "id": 5777,
       "eventId": "endAppealAutomatically",
