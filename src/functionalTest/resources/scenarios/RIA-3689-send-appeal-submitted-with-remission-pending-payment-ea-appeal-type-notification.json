@@ -14,7 +14,7 @@
           "isRemissionsEnabled": "Yes",
           "remissionType":"hoWaiverRemission",
           "appealType":"refusalOfEu",
-          "paAppealTypePaymentOption": "payLater"
+          "eaHuAppealTypePaymentOption": "payLater"
         }
       }
     }
@@ -29,7 +29,7 @@
         "isRemissionsEnabled": "Yes",
         "remissionType":"hoWaiverRemission",
         "appealType":"refusalOfEu",
-        "paAppealTypePaymentOption": "payLater",
+        "eaHuAppealTypePaymentOption": "payLater",
         "notificationsSent": [
           {
             "id": "3689_APPEAL_SUBMITTED_PENDING_PAYMENT_LEGAL_REP",
