@@ -31,6 +31,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit.PostSubmitNotificationHandler;
@@ -50,34 +51,6 @@ public class NotificationHandlerConfiguration {
         BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
             callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
             && callback.getEvent() == Event.FORCE_REQUEST_CASE_BUILDING;
-        return new NotificationHandler(function, notificationGenerators);
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> forceAppellantCaseProgressionEmailNotificationHandler(
-        @Qualifier("forceAppellantCaseProgressionEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
-            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && isAipJourney(callback.getCaseDetails().getCaseData())
-                && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW;
-        return new NotificationHandler(function, notificationGenerators);
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> forceAppellantCaseProgressionSmsNotificationHandler(
-            @Qualifier("forceAppellantCaseProgressionSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) -> {
-            AsylumCase caseData = callback.getCaseDetails().getCaseData();
-
-            return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW
-                    && isAipJourney(caseData)
-                    && isSmsPreferred(caseData));
-        };
         return new NotificationHandler(function, notificationGenerators);
     }
 
@@ -714,12 +687,7 @@ public class NotificationHandlerConfiguration {
                            && isRemissionApproved
                            && isEaAndHuAppealType);
             }, notificationGenerators,
-            (callback, e) -> {
-                callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-            }
+            getErrorHandler()
         );
     }
 
@@ -764,12 +732,7 @@ public class NotificationHandlerConfiguration {
                        && (!paymentFailed || paymentFailedChangedToPayLater)
                        && !isPaymentPendingForEaOrHuAppeal(callback);
             }, notificationGenerators,
-            (callback, e) -> {
-                callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-            }
+            getErrorHandler()
         );
     }
 
@@ -1281,8 +1244,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE,
+                        && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE
+                        && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceCaseOfficerAipHandler(
+            @Qualifier("uploadAddendumEvidenceCaseOfficerAip") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE
+                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
         );
     }
 
@@ -1293,7 +1270,21 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
+                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP
+                && isRepJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceLegalRepForAipHandler(
+        @Qualifier("uploadAddendumEvidenceLegalRepForAip") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP
+                && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -1305,8 +1296,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER,
+                        && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
+                        && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceAdminOfficerAipHandler(
+            @Qualifier("uploadAddendumEvidenceAdminOfficerAip") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
+                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
         );
     }
 
@@ -1317,8 +1322,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
+                        && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE
+                        && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceHomeOfficeAipHandler(
+            @Qualifier("uploadAddendumEvidenceHomeOfficeAip") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE
+                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
         );
     }
 
@@ -1471,25 +1490,16 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitTimeExtensionAipNotificationHandler(
-            @Qualifier("submitTimeExtensionAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> makeAnApplicationAipNotificationHandler(
+            @Qualifier("makeAnApplicationAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isAipJourney = isAipJourney(asylumCase);
-
-                asylumCase.read(MAKE_AN_APPLICATIONS);
-
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && Arrays.asList(
-                                    State.AWAITING_REASONS_FOR_APPEAL,
-                                    State.AWAITING_CMA_REQUIREMENTS,
-                                    State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS
-                                ).contains(callback.getCaseDetails().getState())
-                            && isAipJourney;
+                            && isAipJourney(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -1786,12 +1796,7 @@ public class NotificationHandlerConfiguration {
                        && isCorrectAppealType
                        && paymentStatus == PaymentStatus.PAID;
             }, notificationGenerators,
-            (callback, e) -> {
-                callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-            }
+            getErrorHandler()
         );
     }
 
@@ -1852,12 +1857,7 @@ public class NotificationHandlerConfiguration {
                            && paAppealTypePaymentOption.equals("payLater"));
             },
             notificationGenerators,
-            (callback, e) -> {
-                callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-            }
+            getErrorHandler()
         );
     }
 
@@ -1878,12 +1878,7 @@ public class NotificationHandlerConfiguration {
                        && isRpAndDcAppealType;
             },
             notificationGenerators,
-            (callback, e) -> {
-                callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-            }
+            getErrorHandler()
         );
     }
 
@@ -2078,12 +2073,7 @@ public class NotificationHandlerConfiguration {
                 && (isPaymentPendingForEaOrHuAppeal(callback)
                     || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
             notificationGenerators,
-            (callback, e) -> {
-                callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-            }
+            getErrorHandler()
         );
     }
 
@@ -2279,13 +2269,9 @@ public class NotificationHandlerConfiguration {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean isAipJourney = asylumCase
-                            .read(JOURNEY_TYPE, JourneyType.class)
-                            .map(type -> type == AIP).orElse(false);
-
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && !isAipJourney;
+                            && isRepJourney(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -2615,11 +2601,7 @@ public class NotificationHandlerConfiguration {
                        && smsPreferred;
             },
             notificationGenerators,
-            (callback, e) -> log.error(
-                "cannot send sms notification to the appellant on submitAppeal, caseId: {}",
-                callback.getCaseDetails().getId(),
-                e
-            )
+            getSmsErrorHandling()
         );
     }
 
@@ -3127,6 +3109,26 @@ public class NotificationHandlerConfiguration {
 
         return smsPreferred.size() > 0 && smsPreferred.stream().findFirst().map(subscriberIdValue ->
                 subscriberIdValue.getValue().getEmail()).isPresent();
+    }
+
+    private ErrorHandler<AsylumCase> getErrorHandler() {
+        ErrorHandler<AsylumCase> errorHandler = (callback, e) -> {
+            callback
+                .getCaseDetails()
+                .getCaseData()
+                .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+        };
+        return errorHandler;
+    }
+
+    private ErrorHandler<AsylumCase> getSmsErrorHandling() {
+        ErrorHandler<AsylumCase> errorHandler =
+            (callback, e) -> log.error(
+                "cannot send sms notification to the appellant on submitAppeal, caseId: {}",
+                callback.getCaseDetails().getId(),
+                e
+            );
+        return errorHandler;
     }
 
 }
