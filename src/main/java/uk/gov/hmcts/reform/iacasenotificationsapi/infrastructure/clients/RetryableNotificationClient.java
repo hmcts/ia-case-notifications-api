@@ -37,6 +37,7 @@ public class RetryableNotificationClient {
 
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
         try {
+            log.info("test functional tests");
             return notificationClient.getNotificationById(notificationId);
         } catch (NotificationClientException e) {
             log.warn("retry triggered: {}", e.getMessage());
