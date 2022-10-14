@@ -731,7 +731,6 @@ govnotify:
       appellant:
         email: bee313b9-dea4-43ce-967a-d012de51a54a
         sms: 318452c5-230f-4471-aafa-847accf5f20b
-        letter: 498d6faa-f938-49c3-8d99-5062eb8c351e
     requestFeeRemission:
       legalRep:
         email: acb036e5-47a3-454f-a24b-4755bf7e258c
