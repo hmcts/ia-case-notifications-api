@@ -2520,22 +2520,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantLetterNotificationHandler(
-        @Qualifier("removeRepresentationAppellantLetterNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-            (callbackStage, callback) -> {
-                YesOrNo appellantHasFixedAddress = callback.getCaseDetails().getCaseData().read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
-                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                    && (callback.getEvent() == Event.REMOVE_REPRESENTATION || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
-                    && appellantHasFixedAddress == YES;
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestFeeRemissionNotificationHandler(
         @Qualifier("requestFeeRemissionNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {

@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantRemoveRepresentationPersonalisationLetter;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
@@ -2401,29 +2400,6 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new SmsNotificationGenerator(
                 newArrayList(appellantRemoveRepresentationPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
-                }
-            }
-        );
-    }
-
-    @Bean("removeRepresentationAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> removeRepresentationAppellantLetterNotificationHandler(
-        AppellantRemoveRepresentationPersonalisationLetter appellantRemoveRepresentationPersonalisationLetter,
-        NotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Collections.singletonList(
-            new LetterNotificationGenerator(
-                newArrayList(
-                    appellantRemoveRepresentationPersonalisationLetter
-                ),
                 notificationSender,
                 notificationIdAppender
             ) {

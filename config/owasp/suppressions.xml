@@ -81,4 +81,13 @@
         <cve>CVE-2022-38751</cve>
         <cve>CVE-2022-38752</cve>
     </suppress>
+    <suppress>
+        <notes>Temporarily suppress jackson-databind vulnerabilities</notes>
+        <cve>CVE-2022-42003</cve>
+        <cve>CVE-2022-42004</cve>
+    </suppress>
+    <suppress>
+        <notes>Temporarily suppress tomcat-embed vulnerabilities</notes>
+        <cve>CVE-2021-43980</cve>
+    </suppress>
 </suppressions>
