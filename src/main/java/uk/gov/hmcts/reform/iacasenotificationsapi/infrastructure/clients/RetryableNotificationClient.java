@@ -2,7 +2,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.service.notify.*;
+import uk.gov.service.notify.Notification;
+import uk.gov.service.notify.NotificationClientApi;
+import uk.gov.service.notify.NotificationClientException;
+import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendSmsResponse;
 
 @Slf4j
 public class RetryableNotificationClient {
@@ -28,15 +32,6 @@ public class RetryableNotificationClient {
         } catch (NotificationClientException e) {
             log.warn("retry triggered: {}", e.getMessage());
             return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference);
-        }
-    }
-
-    public SendLetterResponse sendLetter(String templateId, Map<String, ?> personalisation, String reference) throws NotificationClientException {
-        try {
-            return notificationClient.sendLetter(templateId, personalisation, reference);
-        } catch (NotificationClientException e) {
-            log.warn("retry triggered: {}", e.getMessage());
-            return notificationClient.sendLetter(templateId, personalisation, reference);
         }
     }
 
