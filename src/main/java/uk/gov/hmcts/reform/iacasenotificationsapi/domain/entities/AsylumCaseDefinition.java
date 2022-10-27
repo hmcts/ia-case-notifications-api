@@ -44,6 +44,7 @@ public enum AsylumCaseDefinition {
 
     APPELLANT_FAMILY_NAME(
             "appellantFamilyName", new TypeReference<String>(){}),
+
     APPELLANT_ADDRESS(
         "appellantAddress", new TypeReference<AddressUk>(){}),
 
@@ -354,6 +355,10 @@ public enum AsylumCaseDefinition {
 
     OUT_OF_TIME_DECISION_TYPE(
         "outOfTimeDecisionType", new TypeReference<OutOfTimeDecisionType>(){}),
+
+    HAS_SERVICE_REQUEST_ALREADY(
+        "hasServiceRequestAlready", new TypeReference<YesOrNo>(){}),
+
     APPELLANT_PIN_IN_POST(
         "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
     APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
