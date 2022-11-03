@@ -102,6 +102,8 @@ public class EventTest {
         assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
         assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
+        assertEquals("createCaseLink", Event.CREATE_CASE_LINK.toString());
+        assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
     }
 
     @Test
