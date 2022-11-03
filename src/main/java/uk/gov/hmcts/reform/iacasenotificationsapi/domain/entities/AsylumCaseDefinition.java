@@ -355,6 +355,9 @@ public enum AsylumCaseDefinition {
 
     OUT_OF_TIME_DECISION_TYPE(
         "outOfTimeDecisionType", new TypeReference<OutOfTimeDecisionType>(){}),
+
+    HAS_SERVICE_REQUEST_ALREADY(
+        "hasServiceRequestAlready", new TypeReference<YesOrNo>(){}),
     ;
 
     private final String value;
