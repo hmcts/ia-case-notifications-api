@@ -78,10 +78,10 @@ public class LegalRepresentativeCaseLinkAppealPersonalisation implements EmailNo
     }
 
     private String getReason(AsylumCase asylumCase) {
-        Optional<ReasonForLinkAppealOptions> reasonOptional = asylumCase.read(
-            REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class);
+        Optional<String> reasonOptional = asylumCase.read(
+            APPEAL_REFERENCE_NUMBER, String.class);
         if (reasonOptional.isPresent()) {
-            return reasonOptional.get().getId();
+            return reasonOptional.get();
         }
         return StringUtils.EMPTY;
     }
