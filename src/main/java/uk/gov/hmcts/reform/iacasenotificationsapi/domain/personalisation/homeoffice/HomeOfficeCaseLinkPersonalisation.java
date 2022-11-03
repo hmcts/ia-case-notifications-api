@@ -79,9 +79,7 @@ public class HomeOfficeCaseLinkPersonalisation implements EmailNotificationPerso
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("homeOfficeReferenceNumber",
                 asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("reason", asylumCase.read(REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class)
-                .map(ReasonForLinkAppealOptions::getId)
-                .orElse(""))
+            .put("reason", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .build();
     }
