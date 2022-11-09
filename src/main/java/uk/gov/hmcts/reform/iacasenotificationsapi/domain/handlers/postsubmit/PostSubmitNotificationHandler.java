@@ -43,11 +43,17 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
     public boolean canHandle(PostSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-
         if (getEventsToSkip().contains(callback.getEvent())) {
             return false;
         }
         return canHandleFunction.test(callbackStage, callback);
+    }
+
+    private List<Event> getEventsToSkip() {
+        return List.of(
+                Event.STOP_LEGAL_REPRESENTING,
+                Event.NOC_REQUEST_BAIL
+        );
     }
 
     @Override
@@ -88,9 +94,4 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         return postSubmitCallbackResponse;
     }
 
-    private List<Event> getEventsToSkip() {
-        return List.of(
-            Event.NOC_REQUEST_BAIL
-        );
-    }
 }

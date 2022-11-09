@@ -55,12 +55,13 @@ public class BailPostSubmitNotificationHandler implements PostSubmitCallbackHand
         PostSubmitCallbackResponse postSubmitCallbackResponse = new PostSubmitCallbackResponse("success", "success");
 
         try {
-            bailNotificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
+
+            bailNotificationGenerators.forEach(bailNotificationGenerator -> bailNotificationGenerator.generate(callback));
 
             if (!bailNotificationGenerators.isEmpty()) {
 
-                int lastNotificationGeneratorIndex = bailNotificationGenerators.size() - 1;
-                Message message = bailNotificationGenerators.get(lastNotificationGeneratorIndex).getSuccessMessage();
+                int lastBailNotificationGeneratorIndex = bailNotificationGenerators.size() - 1;
+                Message message = bailNotificationGenerators.get(lastBailNotificationGeneratorIndex).getSuccessMessage();
 
                 if (message.getMessageHeader() != null) {
                     postSubmitCallbackResponse.setConfirmationHeader(message.getMessageHeader());

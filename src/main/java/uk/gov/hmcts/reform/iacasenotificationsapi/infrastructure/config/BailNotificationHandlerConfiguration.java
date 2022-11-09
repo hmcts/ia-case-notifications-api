@@ -379,6 +379,18 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
+    public PostSubmitCallbackHandler<BailCase> stopLegalRepresentingNotificationHandler(
+            @Qualifier("stopLegalRepresentingNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailPostSubmitNotificationHandler(
+                (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                        && callback.getEvent() == Event.STOP_LEGAL_REPRESENTING,
+                bailNotificationGenerators,
+                getErrorHandler()
+        );
+    }
+                
+    @Bean
     public PostSubmitCallbackHandler<BailCase> nocChangedLegalRepNotificationHandler(
         @Qualifier("nocChangedLegalRepNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {

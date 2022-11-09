@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit;
 
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doThrow;
@@ -35,7 +34,7 @@ class BailPostSubmitNotificationHandlerTest {
     @Mock
     BailCase bailCase;
     @Mock
-    BailNotificationGenerator notificationGenerator;
+    BailNotificationGenerator bailNotificationGenerator;
     @Mock
     BiPredicate<PostSubmitCallbackStage, Callback<BailCase>> canHandle;
     @Mock
@@ -47,7 +46,7 @@ class BailPostSubmitNotificationHandlerTest {
 
     @BeforeEach
     void setUp() {
-        notificationHandler = new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(notificationGenerator));
+        notificationHandler = new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(bailNotificationGenerator));
     }
 
     @Test
@@ -56,26 +55,26 @@ class BailPostSubmitNotificationHandlerTest {
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(bailCase);
-        when(notificationGenerator.getSuccessMessage()).thenReturn(expectedMessage);
+        when(bailNotificationGenerator.getSuccessMessage()).thenReturn(expectedMessage);
         PostSubmitCallbackResponse response = notificationHandler.handle(callbackStage, callback);
 
         assertEquals("success", response.getConfirmationHeader().get());
         assertEquals(bailCase.toString(), response.getConfirmationBody().get());
-        verify(notificationGenerator).generate(callback);
+        verify(bailNotificationGenerator).generate(callback);
     }
 
     @Test
     void should_return_default_confirmation_when_no_custom_message_is_given() {
 
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
-        when(notificationGenerator.getSuccessMessage()).thenReturn(new Message());
+        when(bailNotificationGenerator.getSuccessMessage()).thenReturn(new Message());
         PostSubmitCallbackResponse response = notificationHandler.handle(callbackStage, callback);
 
         assertEquals("success", response.getConfirmationHeader().get());
         assertEquals("success", response.getConfirmationBody().get());
         assertEquals(Optional.ofNullable("success"), response.getConfirmationHeader());
         assertEquals(Optional.ofNullable("success"), response.getConfirmationBody());
-        verify(notificationGenerator).generate(callback);
+        verify(bailNotificationGenerator).generate(callback);
     }
 
     @Test
@@ -86,7 +85,7 @@ class BailPostSubmitNotificationHandlerTest {
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("Cannot handle callback");
 
-        verifyNoInteractions(notificationGenerator);
+        verifyNoInteractions(bailNotificationGenerator);
     }
 
     @Test
@@ -115,10 +114,9 @@ class BailPostSubmitNotificationHandlerTest {
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         String message = "exception happened";
         Throwable exception = new RuntimeException(message);
-        doThrow(exception).when(notificationGenerator).generate(callback);
+        doThrow(exception).when(bailNotificationGenerator).generate(callback);
         notificationHandler =
-            new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(notificationGenerator), errorHandler);
-
+            new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(bailNotificationGenerator), errorHandler);
         notificationHandler.handle(callbackStage, callback);
 
         verify(errorHandler).accept(callback, exception);
@@ -129,8 +127,8 @@ class BailPostSubmitNotificationHandlerTest {
 
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         String message = "exception happened";
-        doThrow(new RuntimeException(message)).when(notificationGenerator).generate(callback);
-        notificationHandler = new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(notificationGenerator));
+        doThrow(new RuntimeException(message)).when(bailNotificationGenerator).generate(callback);
+        notificationHandler = new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(bailNotificationGenerator));
 
         assertThatThrownBy(() -> notificationHandler.handle(callbackStage, callback))
             .isExactlyInstanceOf(RuntimeException.class)
