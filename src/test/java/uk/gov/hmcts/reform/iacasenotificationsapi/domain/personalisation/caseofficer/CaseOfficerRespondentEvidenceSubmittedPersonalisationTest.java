@@ -8,6 +8,11 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_COMPANY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_COMPANY_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -42,6 +47,11 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String legalRepCompany = "someLegalRepCompany";
+    private String legalRepCompanyAddress = "";
+    private String legalRepName = "someLegalRepName";
+    private String legalRepEmail = "someLegalRepEmail";
+    private String legalRepReference = "someLegalRepReference";
 
     private CaseOfficerRespondentEvidenceSubmittedPersonalisation caseOfficerRespondentEvidenceSubmittedPersonalisation;
 
@@ -53,6 +63,13 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
             .thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(legalRepCompany));
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, String.class)).thenReturn(Optional.of(legalRepCompanyAddress));
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReference));
+
 
         caseOfficerRespondentEvidenceSubmittedPersonalisation =
             new CaseOfficerRespondentEvidenceSubmittedPersonalisation(
@@ -105,6 +122,11 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("legalRepCompany", legalRepCompany)
+                .put("legalRepCompanyAddress", legalRepCompanyAddress)
+                .put("legalRepName", legalRepName)
+                .put("legalRepEmail", legalRepEmail)
+                .put("legalRepReference", legalRepReference)
                 .build();
 
         Map<String, String> actualPersonalisation =
@@ -123,11 +145,22 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
                 .put("appellantGivenNames", "")
                 .put("appellantFamilyName", "")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("legalRepCompany", "")
+                .put("legalRepCompanyAddress", "")
+                .put("legalRepName", "")
+                .put("legalRepEmail", "")
+                .put("legalRepReference", "")
                 .build();
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
 
         Map<String, String> actualPersonalisation =
             caseOfficerRespondentEvidenceSubmittedPersonalisation.getPersonalisation(asylumCase);

@@ -3,6 +3,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseof
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_COMPANY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.AddressFormatter.formatCompanyAddress;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -67,6 +72,11 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisation implements Em
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("legalRepCompany",   asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse(""))
+                .put("legalRepCompanyAddress", formatCompanyAddress(asylumCase))
+                .put("legalRepName",   asylumCase.read(LEGAL_REP_NAME, String.class).orElse(""))
+                .put("legalRepEmail",   asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse(""))
+                .put("legalRepReference",   asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .build();
     }
 }
