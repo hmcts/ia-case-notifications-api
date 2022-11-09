@@ -51,7 +51,8 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
     private List<Event> getEventsToSkip() {
         return List.of(
-                Event.STOP_LEGAL_REPRESENTING
+                Event.STOP_LEGAL_REPRESENTING,
+                Event.NOC_REQUEST_BAIL
         );
     }
 
@@ -93,9 +94,4 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         return postSubmitCallbackResponse;
     }
 
-    private List<Event> getEventsToSkip() {
-        return List.of(
-            Event.NOC_REQUEST_BAIL
-        );
-    }
 }
