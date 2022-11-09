@@ -55,10 +55,13 @@
         <cve>CVE-2022-42004</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[
-   file name: snakeyaml-1.26.jar
-   ]]></notes>
+        <notes><![CDATA[file name: snakeyaml-1.26.jar]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
         <cve>CVE-2022-25857</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2022-31690</cve>
+        <cve>CVE-2022-31692</cve>
+        <cve>CVE-2022-42252</cve>
     </suppress>
 </suppressions>
