@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
 
+
 public class BailPostSubmitNotificationHandler implements PostSubmitCallbackHandler<BailCase> {
 
     private final BiPredicate<PostSubmitCallbackStage, Callback<BailCase>> canHandleFunction;
@@ -54,6 +55,7 @@ public class BailPostSubmitNotificationHandler implements PostSubmitCallbackHand
         PostSubmitCallbackResponse postSubmitCallbackResponse = new PostSubmitCallbackResponse("success", "success");
 
         try {
+
             bailNotificationGenerators.forEach(bailNotificationGenerator -> bailNotificationGenerator.generate(callback));
 
             if (!bailNotificationGenerators.isEmpty()) {

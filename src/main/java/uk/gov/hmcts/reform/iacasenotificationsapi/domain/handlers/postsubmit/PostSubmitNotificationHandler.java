@@ -65,7 +65,6 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
         try {
             notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
-
             if (!notificationGenerators.isEmpty()) {
 
                 int lastNotificationGeneratorIndex = notificationGenerators.size() - 1;
@@ -92,5 +91,11 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
             }
         }
         return postSubmitCallbackResponse;
+    }
+
+    private List<Event> getEventsToSkip() {
+        return List.of(
+            Event.NOC_REQUEST_BAIL
+        );
     }
 }

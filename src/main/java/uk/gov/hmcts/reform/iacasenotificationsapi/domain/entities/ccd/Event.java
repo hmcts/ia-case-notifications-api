@@ -94,6 +94,9 @@ public enum Event {
     MAKE_NEW_APPLICATION("makeNewApplication"),
     EDIT_BAIL_APPLICATION_AFTER_SUBMIT("editBailApplicationAfterSubmit"),
     STOP_LEGAL_REPRESENTING("stopLegalRepresenting"),
+    NOC_REQUEST_BAIL("nocRequestBail"),
+    END_APPEAL_AUTOMATICALLY("endAppealAutomatically"),
+    UPDATE_PAYMENT_STATUS("updatePaymentStatus"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

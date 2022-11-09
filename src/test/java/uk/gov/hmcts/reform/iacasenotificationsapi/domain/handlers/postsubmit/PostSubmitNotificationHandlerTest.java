@@ -54,7 +54,7 @@ class PostSubmitNotificationHandlerTest {
 
     @Test
     void should_generate_notification_when_event_can_be_handled() {
-
+        when(callback.getEvent()).thenReturn(Event.EDIT_DOCUMENTS);
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -68,7 +68,7 @@ class PostSubmitNotificationHandlerTest {
 
     @Test
     void should_return_default_confirmation_when_no_custom_message_is_given() {
-
+        when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         when(notificationGenerator.getSuccessMessage()).thenReturn(new Message());
         PostSubmitCallbackResponse response = notificationHandler.handle(callbackStage, callback);
@@ -82,6 +82,7 @@ class PostSubmitNotificationHandlerTest {
 
     @Test
     void should_not_generate_notification_when_cannot_handle_event() {
+        when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(false);
 
         assertThatThrownBy(() -> notificationHandler.handle(callbackStage, callback))
@@ -93,8 +94,15 @@ class PostSubmitNotificationHandlerTest {
 
     @Test
     void should_return_false_when_cannot_handle_event() {
+        when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(false);
 
+        assertEquals(false, notificationHandler.canHandle(callbackStage, callback));
+    }
+
+    @Test
+    void should_return_false_when_skip_event() {
+        when(callback.getEvent()).thenReturn(Event.NOC_REQUEST_BAIL);
         assertEquals(false, notificationHandler.canHandle(callbackStage, callback));
     }
 
@@ -114,6 +122,7 @@ class PostSubmitNotificationHandlerTest {
 
     @Test
     void should_catch_exception_and_invoke_error_handler() {
+        when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         String message = "exception happened";
         Throwable exception = new RuntimeException(message);
@@ -128,7 +137,7 @@ class PostSubmitNotificationHandlerTest {
 
     @Test
     void should_re_throw_exception_from_generator() {
-
+        when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(true);
         String message = "exception happened";
         doThrow(new RuntimeException(message)).when(notificationGenerator).generate(callback);

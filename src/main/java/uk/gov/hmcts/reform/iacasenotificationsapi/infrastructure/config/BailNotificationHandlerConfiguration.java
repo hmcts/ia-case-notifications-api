@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
-
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_LEGALLY_REPRESENTED_FOR_FLAG;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.SUBMIT_NOTIFICATION_STATUS;
 
@@ -388,6 +387,19 @@ public class BailNotificationHandlerConfiguration {
                         && callback.getEvent() == Event.STOP_LEGAL_REPRESENTING,
                 bailNotificationGenerators,
                 getErrorHandler()
+        );
+    }
+                
+    @Bean
+    public PostSubmitCallbackHandler<BailCase> nocChangedLegalRepNotificationHandler(
+        @Qualifier("nocChangedLegalRepNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailPostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && callback.getEvent() == Event.NOC_REQUEST_BAIL;
+            },
+            bailNotificationGenerators
         );
     }
 

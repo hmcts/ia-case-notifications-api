@@ -117,7 +117,6 @@ class BailPostSubmitNotificationHandlerTest {
         doThrow(exception).when(bailNotificationGenerator).generate(callback);
         notificationHandler =
             new BailPostSubmitNotificationHandler(canHandle, Collections.singletonList(bailNotificationGenerator), errorHandler);
-
         notificationHandler.handle(callbackStage, callback);
 
         verify(errorHandler).accept(callback, exception);
