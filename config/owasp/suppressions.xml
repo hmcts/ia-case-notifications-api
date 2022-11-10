@@ -37,7 +37,7 @@
         <cve>CVE-2022-22978</cve>
     </suppress>
     <suppress>
-        <notes>Temporarily suppress tomcat-embed and snakeyaml vulnerabilities</notes>
+        <notes>Temporarily suppress tomcat-embed vulnerabilities</notes>
         <cve>CVE-2022-29885</cve>
         <cve>CVE-2022-34305</cve>
         <cve>CVE-2022-25857</cve>
@@ -61,5 +61,10 @@
     <suppress>
         <notes>Temporarily suppress log4j vulneravilities</notes>
         <cve>CVE-2022-33915</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2022-31690</cve>
+        <cve>CVE-2022-31692</cve>
+        <cve>CVE-2022-42252</cve>
     </suppress>
 </suppressions>
