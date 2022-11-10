@@ -104,10 +104,12 @@ public class EventTest {
         assertEquals("unknown", Event.UNKNOWN.toString());
         assertEquals("createCaseLink", Event.CREATE_CASE_LINK.toString());
         assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
+        assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
+        assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(94, Event.values().length);
+        assertEquals(96, Event.values().length);
     }
 }
