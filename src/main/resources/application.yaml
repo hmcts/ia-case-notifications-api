@@ -873,6 +873,18 @@ govnotify:
         email: 84d48a3f-afd6-4759-9219-22cb37bebabb
       editApplicationAfterSubmitWithoutLr:
         email: 160386c8-7fc5-4359-8d3d-f99765af00d5
+      createBailCaseLinkLR:
+        email: ce2a2627-4351-4ae4-b2ba-0edb649a6f04
+      createBailCaseLinkHO:
+        email: c349d1ef-ecda-47b8-b11e-363ecd8bd5a2
+      createBailCaseLinkHOWithoutLR:
+        email: 0539996b-f7db-47ea-9624-1fb716641a03
+      maintainBailCaseLinksHO:
+        email: 63aa8b96-b7c3-4ef9-ac3b-199631463f51
+      maintainBailCaseLinksHOWithoutLR:
+        email: 8d7817bd-635c-4ee8-b8c3-79cc6847a72b
+      maintainBailCaseLinksLR:
+        email: 83fcb9fb-61b2-46a4-b67e-836bf3f78538
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
@@ -1019,6 +1031,8 @@ security:
       - "makeNewApplication"
       - "createCaseLink"
       - "maintainCaseLinks"
+      - "createBailCaseLink"
+      - "maintainBailCaseLinks"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1065,6 +1079,8 @@ security:
       - "changeBailDirectionDueDate"
       - "createCaseLink"
       - "maintainCaseLinks"
+      - "createBailCaseLink"
+      - "maintainBailCaseLinks"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"

@@ -335,4 +335,68 @@ public class BailNotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("createBailCaseLinkNotificationGenerator")
+    public List<BailNotificationGenerator> createBailCaseLinkNotificationGenerator(
+        LegalRepresentativeCreateBailCaseLinkPersonalisation legalRepresentativeCreateBailCaseLinkPersonalisation,
+        HomeOfficeCreateBailCaseLinkPersonalisation homeOfficeCreateBailCaseLinkPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(legalRepresentativeCreateBailCaseLinkPersonalisation,
+                    homeOfficeCreateBailCaseLinkPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("createBailCaseLinkWithoutLRNotificationGenerator")
+    public List<BailNotificationGenerator> createBailCaseLinkWithoutLRNotificationGenerator(
+        HomeOfficeCreateBailCaseLinkPersonalisation homeOfficeCreateBailCaseLinkPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(homeOfficeCreateBailCaseLinkPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("maintainBailCaseLinksNotificationGenerator")
+    public List<BailNotificationGenerator> maintainBailCaseLinksNotificationGenerator(
+        LegalRepresentativeMaintainBailCaseLinksPersonalisation LegalRepresentativeMaintainBailCaseLinksPersonalisation,
+        HomeOfficeMaintainBailCaseLinksPersonalisation homeOfficeMaintainBailCaseLinksPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(LegalRepresentativeMaintainBailCaseLinksPersonalisation,
+                    homeOfficeMaintainBailCaseLinksPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("maintainBailCaseLinksWithoutLRNotificationGenerator")
+    public List<BailNotificationGenerator> maintainBailCaseLinksWithoutLRNotificationGenerator(
+        HomeOfficeMaintainBailCaseLinksPersonalisation homeOfficeMaintainBailCaseLinksPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(homeOfficeMaintainBailCaseLinksPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
