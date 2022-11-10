@@ -399,7 +399,7 @@ public class BailNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> createBailCaseLinkWithoutLegalRepNotificationHandler(
-        @Qualifier("createBailCaseLinkWithoutLRNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("createBailCaseLinkWithoutLrNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
@@ -441,7 +441,7 @@ public class BailNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> maintainBailCaseLinksWithoutLegalRepNotificationHandler(
-        @Qualifier("maintainBailCaseLinksWithoutLRNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("maintainBailCaseLinksWithoutLrNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {

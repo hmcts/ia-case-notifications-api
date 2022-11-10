@@ -353,8 +353,8 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("createBailCaseLinkWithoutLRNotificationGenerator")
-    public List<BailNotificationGenerator> createBailCaseLinkWithoutLRNotificationGenerator(
+    @Bean("createBailCaseLinkWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> createBailCaseLinkWithoutLrNotificationGenerator(
         HomeOfficeCreateBailCaseLinkPersonalisation homeOfficeCreateBailCaseLinkPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
@@ -370,14 +370,14 @@ public class BailNotificationGeneratorConfiguration {
 
     @Bean("maintainBailCaseLinksNotificationGenerator")
     public List<BailNotificationGenerator> maintainBailCaseLinksNotificationGenerator(
-        LegalRepresentativeMaintainBailCaseLinksPersonalisation LegalRepresentativeMaintainBailCaseLinksPersonalisation,
+        LegalRepresentativeMaintainBailCaseLinksPersonalisation legalRepresentativeMaintainBailCaseLinksPersonalisation,
         HomeOfficeMaintainBailCaseLinksPersonalisation homeOfficeMaintainBailCaseLinksPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
-                newArrayList(LegalRepresentativeMaintainBailCaseLinksPersonalisation,
+                newArrayList(legalRepresentativeMaintainBailCaseLinksPersonalisation,
                     homeOfficeMaintainBailCaseLinksPersonalisation),
                 notificationSender,
                 notificationIdAppender
@@ -385,8 +385,8 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("maintainBailCaseLinksWithoutLRNotificationGenerator")
-    public List<BailNotificationGenerator> maintainBailCaseLinksWithoutLRNotificationGenerator(
+    @Bean("maintainBailCaseLinksWithoutLrNotificationGenerator")
+    public List<BailNotificationGenerator> maintainBailCaseLinksWithoutLrNotificationGenerator(
         HomeOfficeMaintainBailCaseLinksPersonalisation homeOfficeMaintainBailCaseLinksPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
         BailNotificationIdAppender notificationIdAppender) {
