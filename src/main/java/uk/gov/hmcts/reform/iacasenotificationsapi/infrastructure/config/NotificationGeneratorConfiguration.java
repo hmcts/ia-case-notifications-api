@@ -1205,6 +1205,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("uploadAdditionalEvidenceHomeOfficeAip")
+    public List<NotificationGenerator> uploadAdditionalEvidenceHomeOfficeAip(
+        AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail,
+        CaseOfficerUploadAdditionalEvidencePersonalisation caseOfficerUploadAdditionalEvidencePersonalisation,
+        AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms appellantHomeOfficeUploadAddendumEvidencePersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail, caseOfficerUploadAdditionalEvidencePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantHomeOfficeUploadAddendumEvidencePersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("uploadAddendumEvidenceCaseOfficer")
     public List<NotificationGenerator> uploadAddendumEvidenceCaseOfficer(
         HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
