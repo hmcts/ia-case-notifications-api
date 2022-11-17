@@ -1140,6 +1140,7 @@ hearingCentreEmailAddresses:
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
   harmondsworth: ${IA_HEARING_CENTRE_HARMONDSWORTH_EMAIL:hc-harmondsworth@example.com}
+  yarlswood: ${IA_HEARING_CENTRE_YARLSWOOD_EMAIL:hc-yarlswood@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
@@ -1165,6 +1166,8 @@ homeOfficeEmailAddresses:
   glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-harmondsworth@example.com}
+  yarlswood: ${IA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-yarlswood@example.com}
+
 
 homeOfficeFtpaEmailAddresses:
   bradford: ${IA_FTPA_HOME_OFFICE_BRADFORD_EMAIL:ho-ftpa-bradford@example.com}
