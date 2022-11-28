@@ -39,7 +39,7 @@
     <suppress>
         <notes>Temporarily suppress tomcat-embed vulnerabilities</notes>
         <cve>CVE-2022-29885</cve>
-        <cve>CVE-2022-34305</cve>
+        <cve>CVE-2022-34305</cve>        
     </suppress>
     <suppress>
         <notes><![CDATA[file name: snakeyaml-1.26.jar]]></notes>
