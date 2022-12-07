@@ -361,7 +361,12 @@ public enum AsylumCaseDefinition {
 
     APPELLANT_PIN_IN_POST(
         "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
-    APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
+
+    APPELLANT_HAS_FIXED_ADDRESS(
+        "appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
+
+    IS_ACCELERATED_DETAINED_APPEAL(
+        "isAcceleratedDetainedAppeal", new TypeReference<YesOrNo>(){}),
     ;
 
     private final String value;

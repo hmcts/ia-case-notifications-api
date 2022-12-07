@@ -1,23 +1,32 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
@@ -37,10 +46,13 @@ public class LegalRepresentativeListCasePersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
+    @Mock
+    DirectionFinder directionFinder;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
     private String outOfCountryTemplateId = "someOocTemplateId";
+    private String adaTemplateId = "adaTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String legalRepEmailAddress = "legalRepEmailAddress@example.com";
@@ -74,6 +86,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
 
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
+
+    private String directionBody = "direction body";
 
     private LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation;
 
@@ -128,18 +142,24 @@ public class LegalRepresentativeListCasePersonalisationTest {
         legalRepresentativeListCasePersonalisation = new LegalRepresentativeListCasePersonalisation(
             templateId,
             outOfCountryTemplateId,
+            adaTemplateId,
             iaExUiFrontendUrl,
             dateTimeExtractor,
             customerServicesProvider,
-            hearingDetailsFinder
+            hearingDetailsFinder,
+            directionFinder
         );
     }
 
     @Test
     void should_return_given_template_id() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
         assertEquals(templateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
         assertEquals(outOfCountryTemplateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(adaTemplateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -172,7 +192,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given_non_ada() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
 
@@ -192,6 +213,42 @@ public class LegalRepresentativeListCasePersonalisationTest {
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+    }
+
+    @Test
+    void should_return_personalisation_when_all_information_given_ada() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        Direction direction = new Direction("direction body",
+            Parties.LEGAL_REPRESENTATIVE,
+            "2022-12-30",
+            "2022-12-07",
+            DirectionTag.ADA_LIST_CASE,
+            new ArrayList<>(),
+            new ArrayList<>(),
+            "uniqueId",
+            Event.LIST_CASE.toString());
+
+        when(directionFinder.findFirst(asylumCase, DirectionTag.ADA_LIST_CASE)).thenReturn(Optional.of(direction));
+
+        Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(requirementsVulnerabilities, personalisation.get("hearingRequirementVulnerabilities"));
+        assertEquals(requirementsMultimedia, personalisation.get("hearingRequirementMultimedia"));
+        assertEquals(requirementsSingleSexCourt, personalisation.get("hearingRequirementSingleSexCourt"));
+        assertEquals(requirementsInCamera, personalisation.get("hearingRequirementInCameraCourt"));
+        assertEquals(requirementsOther, personalisation.get("hearingRequirementOther"));
+        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(directionBody, personalisation.get("explanation"));
     }
 
     @Test
