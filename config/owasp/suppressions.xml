@@ -69,7 +69,7 @@
         <cve>CVE-2022-31690</cve>
         <cve>CVE-2022-31692</cve>
         <cve>CVE-2022-42252</cve>
-        <cve>CVE-2021-37533</cve>        
+        <cve>CVE-2021-37533</cve>
     </suppress>
     <suppress>
         <notes>Temporarily suppress Apache commons related vulnerabilities</notes>
