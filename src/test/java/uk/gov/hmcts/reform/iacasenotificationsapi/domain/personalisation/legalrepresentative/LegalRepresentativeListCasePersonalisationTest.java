@@ -228,6 +228,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.ADA_LIST_CASE)).thenReturn(Optional.of(direction));
 
+        String expectedNotificationBody = "direction body\n\nYou must complete this direction by: 30 December 2022";
+
         Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
@@ -245,7 +247,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(directionBody, personalisation.get("explanation"));
+        assertEquals(expectedNotificationBody, personalisation.get("explanation"));
     }
 
     @Test
