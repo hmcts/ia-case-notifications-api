@@ -9,6 +9,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 
 public class AsylumCaseUtils {
 
+    private AsylumCaseUtils() {
+        // prevent public constructor for Sonar
+    }
+
     public static boolean isAcceleratedDetainedAppeal(AsylumCase asylumCase) {
         return asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)
             .orElse(NO)
