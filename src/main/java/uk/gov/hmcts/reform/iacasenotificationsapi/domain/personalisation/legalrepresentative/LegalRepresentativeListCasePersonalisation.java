@@ -14,8 +14,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
@@ -53,7 +53,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (isAcceleratedDetainedAppeal(asylumCase)) {
+        if (AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)) {
             return legalRepresentativeAdaCaseListedTemplateId;
         }
 
@@ -77,11 +77,15 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
         Builder<String, String> listCaseFields;
 
-        if (isAcceleratedDetainedAppeal(asylumCase)) {
+        if (AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)) {
             final Direction direction =
                 directionFinder
                     .findFirst(asylumCase, DirectionTag.ADA_LIST_CASE)
                     .orElseThrow(() -> new IllegalStateException("LR List ADA Case direction is not present"));
+
+            String notificationBody = direction.getExplanation()
+                                      + "\n\nYou must complete this direction by: "
+                                      +  LocalDate.parse(direction.getDateDue()).format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) ;
 
             listCaseFields = ImmutableMap
                 .<String, String>builder()
@@ -91,7 +95,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
                 .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("explanation", direction.getExplanation())
+                .put("explanation", notificationBody)
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
         } else {
@@ -113,15 +117,5 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
         return listCaseFields.build();
 
-    }
-
-    private boolean isAcceleratedDetainedAppeal(AsylumCase asylumCase) {
-        return asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)
-            .orElse(YesOrNo.NO)
-            .equals(YesOrNo.YES);
-    }
-
-    private String calculateDueDate(Long days) {
-        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
     }
 }
