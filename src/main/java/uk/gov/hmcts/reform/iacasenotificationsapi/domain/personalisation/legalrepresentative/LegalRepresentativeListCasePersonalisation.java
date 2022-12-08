@@ -85,7 +85,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
             String notificationBody = direction.getExplanation()
                                       + "\n\nYou must complete this direction by: "
-                                      +  LocalDate.parse(direction.getDateDue()).format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) ;
+                                      + LocalDate.parse(direction.getDateDue()).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
             listCaseFields = ImmutableMap
                 .<String, String>builder()
