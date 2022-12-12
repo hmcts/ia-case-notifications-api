@@ -25,6 +25,6 @@ public class AppealTypeTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(6, AppealType.values().length);
+        assertEquals(7, AppealType.values().length);
     }
 }
