@@ -736,17 +736,17 @@ govnotify:
           email: 31ecd8c7-ee85-4b3b-9805-739d378da597
       caseOfficer:
         beforeListing:
-          email: 09a83871-901b-41ed-b3bd-2b72cee73236
+          email: abb94a28-62e3-4aea-9dba-9bdea1f6c9ec
         afterListing:
-          email: 76bad58b-a6ea-4311-ae33-f7e596cc793b
+          email: 00efcbda-7ea2-4853-9382-81458557cc0d
       homeOffice:
         beforeListing:
-          email: f924cae0-289a-42f4-bb2e-70164f9c924f
+          email: 30082d96-3b49-4955-8b93-871fc00756f2
         afterListing:
-          email: 2199e053-5ff7-46a2-9cf4-58864265d516
+          email: d8198bce-f8ba-4ffe-85f3-04986db249e0
       appellant:
-        email: cfb76737-b805-483f-81ec-9d1365eb3260
-        sms: ffef5cda-ec06-43e4-bd82-5d7fc266a000
+        email: bee313b9-dea4-43ce-967a-d012de51a54a
+        sms: 318452c5-230f-4471-aafa-847accf5f20b
     requestFeeRemission:
       legalRep:
         email: acb036e5-47a3-454f-a24b-4755bf7e258c
@@ -873,12 +873,26 @@ govnotify:
         email: 84d48a3f-afd6-4759-9219-22cb37bebabb
       editApplicationAfterSubmitWithoutLr:
         email: 160386c8-7fc5-4359-8d3d-f99765af00d5
+      stopLegalRepresenting:
+        sms: 14f55cf1-5442-466c-a1fc-bb4a268bc6d8
+        legalRep: 402192e3-d493-435a-b00c-c016deaee2ea
+        homeOffice: cff0fb03-2808-4625-90d6-a9285d2e875e
+        adminOfficer: 4d3db07e-4000-41f8-9a3d-79b4a785cc12
+      nocChangedLRForLR:
+        email: 803cc8e0-1b98-4154-9d91-b1f56cbe85d7
+      nocChangedLRForHO:
+        email: a7d6c3bc-2108-4fba-995c-bb8a407ae58f
+      nocChangedLRForAdmin:
+        email: 8a745ed0-63f0-4a35-8cf0-f2ed4f962daf
+      nocChangedLRForApplicant:
+        sms: 8141263c-c1f1-4f86-a164-ab48df561dbe
 
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
 iaExUiFrontendUrl: ${IA_EXUI_FRONTEND_URL:https://manage-case.platform.hmcts.net/}
 iaAipFrontendUrl: ${IA_AIP_FRONTEND_URL:https://localhost:3000/}
+iaAipPathToSelfRepresentation: "start-representing-yourself"
 iaAipFrontendPathToJudgeReview: ask-judge-review
 
 tsvStringsFileLocation: strings.tsv
@@ -903,6 +917,7 @@ security:
   roleEventAccess:
     caseworker-caa:
       - "nocRequest"
+      - "nocRequestBail"
     caseworker-approver:
       - "removeRepresentation"
       - "removeLegalRepresentative"
@@ -942,6 +957,8 @@ security:
       - "submitApplication"
       - "uploadDocuments"
       - "makeNewApplication"
+      - "stopLegalRepresenting"
+      - "nocRequestBail"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"

@@ -46,6 +46,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_FAMILY_NAME(
             "appellantFamilyName", new TypeReference<String>(){}),
 
+    APPELLANT_ADDRESS(
+        "appellantAddress", new TypeReference<AddressUk>(){}),
+
     LEGAL_REP_REFERENCE_NUMBER(
             "legalRepReferenceNumber", new TypeReference<String>(){}),
 
@@ -356,6 +359,11 @@ public enum AsylumCaseDefinition {
 
     HAS_SERVICE_REQUEST_ALREADY(
         "hasServiceRequestAlready", new TypeReference<YesOrNo>(){}),
+
+    APPELLANT_PIN_IN_POST(
+        "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
+
+    APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
 
     CASE_LINKS(
             "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){})
