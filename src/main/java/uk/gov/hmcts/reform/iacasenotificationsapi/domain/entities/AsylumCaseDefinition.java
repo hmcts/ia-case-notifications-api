@@ -361,6 +361,7 @@ public enum AsylumCaseDefinition {
         "hasServiceRequestAlready", new TypeReference<YesOrNo>(){}),
     APPELLANT_PIN_IN_POST(
         "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
+
     APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
 
     CASE_LINKS(
