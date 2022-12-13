@@ -226,7 +226,7 @@ govnotify:
       remoteHearing:
         legalRep:
           email: e79249e2-ecbf-4d2b-8458-006285613402
-    adaCaseListed:
+    adaCaseListedSendDirection:
       legalRep:
         email: a61da7e2-d70f-4d62-89c5-fc54155321c9
     caseEdited:
