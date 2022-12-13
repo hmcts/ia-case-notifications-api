@@ -81,7 +81,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
     void setup() {
 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
-                .thenReturn(Optional.of(legalRepEmailAddress));
+            .thenReturn(Optional.of(legalRepEmailAddress));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
@@ -92,32 +92,32 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_VULNERABILITIES, String.class))
-                .thenReturn(Optional.of(requirementsVulnerabilities));
+            .thenReturn(Optional.of(requirementsVulnerabilities));
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_MULTIMEDIA, String.class))
-                .thenReturn(Optional.of(requirementsMultimedia));
+            .thenReturn(Optional.of(requirementsMultimedia));
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT, String.class))
-                .thenReturn(Optional.of(requirementsSingleSexCourt));
+            .thenReturn(Optional.of(requirementsSingleSexCourt));
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT, String.class))
-                .thenReturn(Optional.of(requirementsInCamera));
+            .thenReturn(Optional.of(requirementsInCamera));
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_OTHER, String.class)).thenReturn(Optional.of(requirementsOther));
 
         when(asylumCase.read(VULNERABILITIES_TRIBUNAL_RESPONSE, String.class))
-                .thenReturn(Optional.of(caseOfficerReviewedVulnerabilities));
+            .thenReturn(Optional.of(caseOfficerReviewedVulnerabilities));
         when(asylumCase.read(MULTIMEDIA_TRIBUNAL_RESPONSE, String.class))
-                .thenReturn(Optional.of(caseOfficerReviewedMultimedia));
+            .thenReturn(Optional.of(caseOfficerReviewedMultimedia));
         when(asylumCase.read(SINGLE_SEX_COURT_TRIBUNAL_RESPONSE, String.class))
-                .thenReturn(Optional.of(caseOfficerReviewedSingleSexCourt));
+            .thenReturn(Optional.of(caseOfficerReviewedSingleSexCourt));
         when(asylumCase.read(IN_CAMERA_COURT_TRIBUNAL_RESPONSE, String.class))
-                .thenReturn(Optional.of(caseOfficerReviewedInCamera));
+            .thenReturn(Optional.of(caseOfficerReviewedInCamera));
         when(asylumCase.read(ADDITIONAL_TRIBUNAL_RESPONSE, String.class))
-                .thenReturn(Optional.of(caseOfficerReviewedOther));
+            .thenReturn(Optional.of(caseOfficerReviewedOther));
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.NO));
 
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
         when(stringProvider.get("hearingCentreAddress", hearingCentre.toString()))
-                .thenReturn(Optional.of(hearingCentreAddress));
+            .thenReturn(Optional.of(hearingCentreAddress));
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
@@ -126,12 +126,12 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         legalRepresentativeListCasePersonalisation = new LegalRepresentativeListCasePersonalisation(
-                templateId,
-                outOfCountryTemplateId,
-                iaExUiFrontendUrl,
-                dateTimeExtractor,
-                customerServicesProvider,
-                hearingDetailsFinder
+            templateId,
+            outOfCountryTemplateId,
+            iaExUiFrontendUrl,
+            dateTimeExtractor,
+            customerServicesProvider,
+            hearingDetailsFinder
         );
     }
 
@@ -145,13 +145,13 @@ public class LegalRepresentativeListCasePersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_CASE_LISTED_LEGAL_REPRESENTATIVE",
-                legalRepresentativeListCasePersonalisation.getReferenceId(caseId));
+            legalRepresentativeListCasePersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
         assertTrue(
-                legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
+            legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
     }
 
     @Test
@@ -159,16 +159,16 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("legalRepresentativeEmailAddress is not present");
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("legalRepresentativeEmailAddress is not present");
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> legalRepresentativeListCasePersonalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+            .isExactlyInstanceOf(NullPointerException.class)
+            .hasMessage("asylumCase must not be null");
     }
 
     @Test
@@ -199,7 +199,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(remoteHearingCentre));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase))
-                .thenReturn(remoteHearingCentreAddress);
+            .thenReturn(remoteHearingCentreAddress);
 
         Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
 
@@ -254,11 +254,11 @@ public class LegalRepresentativeListCasePersonalisationTest {
         assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals("No special adjustments are being made to accommodate vulnerabilities",
-                personalisation.get("hearingRequirementVulnerabilities"));
+            personalisation.get("hearingRequirementVulnerabilities"));
         assertEquals("No multimedia equipment is being provided", personalisation.get("hearingRequirementMultimedia"));
         assertEquals("The court will not be single sex", personalisation.get("hearingRequirementSingleSexCourt"));
         assertEquals("The hearing will be held in public court",
-                personalisation.get("hearingRequirementInCameraCourt"));
+            personalisation.get("hearingRequirementInCameraCourt"));
         assertEquals("No other adjustments are being made", personalisation.get("hearingRequirementOther"));
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));

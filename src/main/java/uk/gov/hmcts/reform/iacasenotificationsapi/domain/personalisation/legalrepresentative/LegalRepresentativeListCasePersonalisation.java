@@ -24,12 +24,12 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
 
     public LegalRepresentativeListCasePersonalisation(
-            @Value("${govnotify.template.caseListed.legalRep.email}") String legalRepresentativeCaseListedTemplateId,
-            @Value("${govnotify.template.caseListed.remoteHearing.legalRep.email}") String legalRepresentativeOutOfCountryCaseListedTemplateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            DateTimeExtractor dateTimeExtractor,
-            CustomerServicesProvider customerServicesProvider,
-            HearingDetailsFinder hearingDetailsFinder
+        @Value("${govnotify.template.caseListed.legalRep.email}") String legalRepresentativeCaseListedTemplateId,
+        @Value("${govnotify.template.caseListed.remoteHearing.legalRep.email}") String legalRepresentativeOutOfCountryCaseListedTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        DateTimeExtractor dateTimeExtractor,
+        CustomerServicesProvider customerServicesProvider,
+        HearingDetailsFinder hearingDetailsFinder
     ) {
         this.legalRepresentativeCaseListedTemplateId = legalRepresentativeCaseListedTemplateId;
         this.legalRepresentativeOutOfCountryCaseListedTemplateId = legalRepresentativeOutOfCountryCaseListedTemplateId;
@@ -42,8 +42,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         if (asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
-                .map(centre -> centre == HearingCentre.REMOTE_HEARING)
-                .orElse(false)) {
+            .map(centre -> centre == HearingCentre.REMOTE_HEARING)
+            .orElse(false)) {
             return legalRepresentativeOutOfCountryCaseListedTemplateId;
         } else {
             return legalRepresentativeCaseListedTemplateId;
@@ -60,17 +60,17 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         final Builder<String, String> listCaseFields = ImmutableMap
-                .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-                .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("linkToOnlineService", iaExUiFrontendUrl)
-                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
+            .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
+            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
+            .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
         PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
 
