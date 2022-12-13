@@ -806,7 +806,7 @@ govnotify:
         email: f90edfba-ac37-47fa-ab55-e429ffa9f372
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
-        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9        
+        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
     createCaseLink:
       legalRep:
         beforeListing:
@@ -828,7 +828,7 @@ govnotify:
         beforeListing:
           email: 63c30831-4dd0-4c0a-b70f-4c439dcc66ea
         afterListing:
-          email: a8cd0fdd-f73b-406d-b3fe-ddda49871598          
+          email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1055,6 +1055,7 @@ security:
       - "maintainCaseLinks"
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
+      - "editAppealAfterSubmit"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
