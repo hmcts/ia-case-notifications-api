@@ -707,7 +707,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isEaAndHuAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                 return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -1820,7 +1820,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == PA || type == HU || type == EA).orElse(false);
+                    .map(type -> type == PA || type == HU || type == EA || type == EU).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
@@ -2125,7 +2125,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealTypeEaHu = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                 boolean isCorrectAppealTypeAndStateHUorEA =
                     isCorrectAppealTypeEaHu
@@ -2156,7 +2156,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                 boolean isCorrectAppealTypeAndStateHUorEA =
                     isCorrectAppealType
@@ -2185,7 +2185,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU || type == PA).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU || type == PA).orElse(false);
 
                 boolean isApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> APPROVED == decision)
@@ -2206,7 +2206,7 @@ public class NotificationHandlerConfiguration {
 
         boolean isEaAndHuAppealType = asylumCase
             .read(APPEAL_TYPE, AppealType.class)
-            .map(type -> type == EA || type == HU).orElse(false);
+            .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
         String eaHuAppealTypePaymentOption = asylumCase
             .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
@@ -2228,7 +2228,7 @@ public class NotificationHandlerConfiguration {
 
         boolean isEaAndHuAppealType = asylumCase
             .read(APPEAL_TYPE, AppealType.class)
-            .map(type -> type == EA || type == HU).orElse(false);
+            .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
         YesOrNo remissionEnabledOption = asylumCase
             .read(IS_REMISSIONS_ENABLED, YesOrNo.class).orElse(NO);
@@ -2250,7 +2250,7 @@ public class NotificationHandlerConfiguration {
 
         boolean isEaHuPaAppealType = asylumCase
             .read(APPEAL_TYPE, AppealType.class)
-            .map(type -> type == EA || type == HU || type == PA).orElse(false);
+            .map(type -> type == EA || type == HU || type == EU || type == PA).orElse(false);
 
         YesOrNo remissionEnabledOption = asylumCase
             .read(IS_REMISSIONS_ENABLED, YesOrNo.class).orElse(NO);
@@ -2572,7 +2572,7 @@ public class NotificationHandlerConfiguration {
     protected boolean isEaAndHuAppeal(AsylumCase asylumCase) {
         return asylumCase
             .read(APPEAL_TYPE, AppealType.class)
-            .map(type -> type == EA || type == HU).orElse(false);
+            .map(type -> type == EA || type == HU || type == EU).orElse(false);
     }
 
     @Bean
@@ -2868,7 +2868,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isEaAndHuAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                 return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                         && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
@@ -2970,7 +2970,7 @@ public class NotificationHandlerConfiguration {
 
                     boolean isEaAndHuAppealType = asylumCase
                             .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
+                            .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                     return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
@@ -3034,7 +3034,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isEaAndHuAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                 return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                         && callback.getEvent() == Event.PAY_FOR_APPEAL
@@ -3324,7 +3324,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == EA || type == HU).orElse(false);
+                    .map(type -> type == EA || type == HU || type == EU).orElse(false);
 
                 boolean isCorrectAppealTypeAndStateHUorEAorPA =
                     isCorrectAppealType
