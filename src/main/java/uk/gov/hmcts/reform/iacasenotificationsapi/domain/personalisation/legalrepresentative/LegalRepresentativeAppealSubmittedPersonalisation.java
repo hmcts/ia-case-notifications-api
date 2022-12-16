@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 public class LegalRepresentativeAppealSubmittedPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String appealSubmittedLegalRepresentativeTemplateId;
+    private final String appealSubmittedLegalRepresentativeAdaOrAaaTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
@@ -23,16 +26,21 @@ public class LegalRepresentativeAppealSubmittedPersonalisation implements LegalR
     public LegalRepresentativeAppealSubmittedPersonalisation(
             @NotNull(message = "appealSubmittedLegalRepresentativePaidTemplateId cannot be null")
             @Value("${govnotify.template.appealSubmitted.legalRep.paid.email}") String appealSubmittedLegalRepresentativeTemplateId,
+            @Value("${govnotify.template.appealSubmitted.legalRep.adaOrAaa.email}") String appealSubmittedLegalRepresentativeAdaOrAaaTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider
     ) {
         this.appealSubmittedLegalRepresentativeTemplateId = appealSubmittedLegalRepresentativeTemplateId;
+        this.appealSubmittedLegalRepresentativeAdaOrAaaTemplateId = appealSubmittedLegalRepresentativeAdaOrAaaTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
-    public String getTemplateId() {
+    public String getTemplateId(AsylumCase asylumCase) {
+        if (isAcceleratedDetainedAppeal(asylumCase) || isAgeAssessmentAppeal(asylumCase)) {
+            return appealSubmittedLegalRepresentativeAdaOrAaaTemplateId;
+        }
         return appealSubmittedLegalRepresentativeTemplateId;
     }
 

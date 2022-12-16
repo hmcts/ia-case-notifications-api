@@ -2991,4 +2991,22 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("submitAppealLegalRepAaaNotificationGenerator")
+    public List<NotificationGenerator> submitAppealLegalRepAaaNotificationHandler(
+            LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
