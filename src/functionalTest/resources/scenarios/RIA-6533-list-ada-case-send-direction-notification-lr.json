@@ -1,0 +1,50 @@
+{
+  "description": "RIA-6533 List Accelerated-Detained-Appeal direction (notification)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 1234,
+      "eventId": "listCase",
+      "state": "awaitingRespondentEvidence",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "ariaListingReference": "LP/12345/2019",
+          "legalRepReferenceNumber": "legalRepReferenceNumber",
+          "listingAvailableForAda": "Yes"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "1234_RE_LIST_CASE_ADMIN_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "1234_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
+        "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
+        "subject": "Immigration and asylum appeal: submit hearing requirements direction",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "Talha Awan",
+          "legalRepReferenceNumber",
+          "{$iaExUiFrontendUrl}",
+          "You have a direction for this case.\nThe accelerated detained appeal has been listed and you should tell the Tribunal if the appellant has any hearing requirements.\n# Next steps\nLog in to the service and select the case from your case list. You’ll be able to submit the hearing requirements by selecting Submit hearing requirements from the Next step dropdown on the overview tab.\nThe Tribunal will review the hearing requirements and any requests for additional adjustments.\nIf you do not submit the hearing requirements by the date indicated below, the Tribunal may not be able to accommodate the appellant’s needs for the hearing.\n\nYou must complete this direction by: {$TODAY+15}"
+        ]
+      }
+    ]
+  }
+}
