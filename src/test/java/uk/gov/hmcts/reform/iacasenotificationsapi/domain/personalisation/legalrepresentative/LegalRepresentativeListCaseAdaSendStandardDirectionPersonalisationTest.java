@@ -198,7 +198,7 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        String expectedNotificationBody = "direction body";
+        String expectedNotificationBody = "direction body\n\nYou must complete this direction by: 30 December 2022";
         assertEquals(expectedNotificationBody, personalisation.get("explanation"));
     }
 

@@ -9,6 +9,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -63,7 +65,9 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisation 
                         .findFirst(asylumCase, DirectionTag.ADA_LIST_CASE)
                         .orElseThrow(() -> new IllegalStateException("LR List ADA Case direction is not present"));
 
-        String notificationBody = direction.getExplanation();
+        String notificationBody = direction.getExplanation()
+                                  + "\n\nYou must complete this direction by: "
+                                  + LocalDate.parse(direction.getDateDue()).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
 
         listCaseFields = ImmutableMap
                 .<String, String>builder()
