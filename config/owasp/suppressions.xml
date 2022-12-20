@@ -40,6 +40,10 @@
         <notes>Temporarily suppress tomcat-embed vulnerabilities</notes>
         <cve>CVE-2022-29885</cve>
         <cve>CVE-2022-34305</cve>
+        <cve>CVE-2022-25857</cve>
+        <cve>CVE-2022-38749</cve>
+        <cve>CVE-2022-38750</cve>
+        <cve>CVE-2022-38751</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[file name: snakeyaml-1.26.jar]]></notes>
@@ -65,6 +69,7 @@
         <cve>CVE-2022-31690</cve>
         <cve>CVE-2022-31692</cve>
         <cve>CVE-2022-42252</cve>
+        <cve>CVE-2021-37533</cve>
         <cve>CVE-2021-37533</cve>
     </suppress>
     <suppress>
