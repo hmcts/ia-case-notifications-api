@@ -12,6 +12,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -468,11 +469,43 @@ public class NotificationHandlerConfiguration {
 
         // RIA-3631 - listCase
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.LIST_CASE
-                && isRepJourney(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> {
+                boolean isAllowedAsylumCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.LIST_CASE);
+
+                if (isAllowedAsylumCase) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return (callback.getEvent() == Event.LIST_CASE
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !isAcceleratedDetainedAppeal(asylumCase));
+                } else {
+                    return false;
+                }
+            },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> listCaseAdaNotificationHandler(
+            @Qualifier("listCaseAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        // ADA listCase
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    boolean isAllowedAsylumCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.LIST_CASE);
+
+                    if (isAllowedAsylumCase) {
+                        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                        return (callback.getEvent() == Event.LIST_CASE
+                                && isRepJourney(callback.getCaseDetails().getCaseData())
+                                && isAcceleratedDetainedAppeal(asylumCase));
+                    } else {
+                        return false;
+                    }
+                },
+                notificationGenerators
         );
     }
 
