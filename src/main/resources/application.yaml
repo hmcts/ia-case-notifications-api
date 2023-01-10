@@ -1018,6 +1018,7 @@ security:
       - "removeLegalRepresentative"
       - "manageFeeUpdate"
       - "recordOutOfTimeDecision"
+      - "markAppealPaid"
       - "createCaseLink"
       - "maintainCaseLinks"
     caseworker-ia-admofficer:
