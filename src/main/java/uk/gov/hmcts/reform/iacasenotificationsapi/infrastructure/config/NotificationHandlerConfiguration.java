@@ -3214,6 +3214,18 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipAppealEndedAutomaticallyNotificationHandler(
+        @Qualifier("aipAppealEndedAutomaticallyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
+                && isAipJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
     private boolean isRepJourney(AsylumCase asylumCase) {
 
         return asylumCase

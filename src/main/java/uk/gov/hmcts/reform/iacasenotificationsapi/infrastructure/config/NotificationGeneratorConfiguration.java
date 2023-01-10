@@ -2930,6 +2930,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipAppealEndedAutomaticallyNotificationGenerator")
+    public List<NotificationGenerator> aipAppealEndedAutomaticallyNotificationGenerator(
+        AppellantEndAppealAutomaticallyPersonalisationEmail appellantEndAppealAutomaticallyPersonalisationEmail,
+        AppellantEndAppealAutomaticallyPersonalisationSms appellantEndAppealAutomaticallyPersonalisationSms,
+        HomeOfficeEndAppealAutomaticallyPersonalisation homeOfficeEndAppealAutomaticallyPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(appellantEndAppealAutomaticallyPersonalisationEmail,
+                    homeOfficeEndAppealAutomaticallyPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantEndAppealAutomaticallyPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("updatePaymentStatusPaidAppealSubmittedLrHoGenerator")
     public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedNotificationGenerator(
         LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
