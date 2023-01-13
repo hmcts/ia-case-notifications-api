@@ -16,24 +16,32 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 
 @Service
 public class LegalRepresentativeRequestHomeOfficeBundlePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
-    private final String legalRepEvidenceDirectionTemplateId;
+    private final String legalRepEvidenceDirectionNonAdaTemplateId;
+    private final String legalRepEvidenceDirectionAdaTemplateId;
     private final DirectionFinder directionFinder;
+    private final AppealService appealService;
 
     public LegalRepresentativeRequestHomeOfficeBundlePersonalisation(
-        @Value("${govnotify.template.requestRespondentEvidenceDirection.legalRep.email}") String legalRepEvidenceDirectionTemplateId,
-        DirectionFinder directionFinder) {
+        @Value("${govnotify.template.requestRespondentEvidenceDirection.legalRep.email.nonAda}") String legalRepEvidenceDirectionNonAdaTemplateId,
+        @Value("${govnotify.template.requestRespondentEvidenceDirection.legalRep.email.ada}") String legalRepEvidenceDirectionAdaTemplateId,
+        DirectionFinder directionFinder, AppealService appealService) {
 
-        this.legalRepEvidenceDirectionTemplateId = legalRepEvidenceDirectionTemplateId;
+        this.legalRepEvidenceDirectionNonAdaTemplateId = legalRepEvidenceDirectionNonAdaTemplateId;
+        this.legalRepEvidenceDirectionAdaTemplateId = legalRepEvidenceDirectionAdaTemplateId;
         this.directionFinder = directionFinder;
+        this.appealService = appealService;
     }
 
     @Override
-    public String getTemplateId() {
-        return legalRepEvidenceDirectionTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return appealService.isAdaAppeal(asylumCase)
+            ? legalRepEvidenceDirectionAdaTemplateId
+            : legalRepEvidenceDirectionNonAdaTemplateId;
     }
 
     @Override

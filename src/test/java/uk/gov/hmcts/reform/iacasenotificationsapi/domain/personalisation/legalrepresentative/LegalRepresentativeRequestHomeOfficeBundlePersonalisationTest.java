@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -25,6 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -35,10 +35,13 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     @Mock
     DirectionFinder directionFinder;
     @Mock
+    AppealService appealService;
+    @Mock
     Direction direction;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private String adaTemplateId = "adaTemplateId";
+    private String nonAdaTemplateId = "nonAdaTemplateId";
     private String directionDueDate = "2019-09-10";
     private String expectedDirectionDueDate = "10 Oct 2019";
 
@@ -68,14 +71,20 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
 
         legalRepresentativeRequestHomeOfficeBundlePersonalisation =
             new LegalRepresentativeRequestHomeOfficeBundlePersonalisation(
-                templateId,
-                directionFinder
+                nonAdaTemplateId,
+                adaTemplateId,
+                directionFinder,
+                appealService
             );
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeRequestHomeOfficeBundlePersonalisation.getTemplateId());
+        when(appealService.isAdaAppeal(asylumCase)).thenReturn(false);
+        assertEquals(nonAdaTemplateId, legalRepresentativeRequestHomeOfficeBundlePersonalisation.getTemplateId(asylumCase));
+
+        when(appealService.isAdaAppeal(asylumCase)).thenReturn(true);
+        assertEquals(adaTemplateId, legalRepresentativeRequestHomeOfficeBundlePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

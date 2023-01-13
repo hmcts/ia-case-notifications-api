@@ -12,8 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
 @ExtendWith(MockitoExtension.class)
 class AppealServiceTest {
@@ -41,6 +43,16 @@ class AppealServiceTest {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class))
             .thenReturn(Optional.of(journeyType));
         assertTrue(appealService.isAppellantInPersonJourney(asylumCase));
+    }
+
+    @Test
+    void isAdaAppeal() {
+        AppealService appealService = new AppealService();
+        assertFalse(appealService.isAdaAppeal(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class))
+            .thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(appealService.isAdaAppeal(asylumCase));
     }
 
 }
