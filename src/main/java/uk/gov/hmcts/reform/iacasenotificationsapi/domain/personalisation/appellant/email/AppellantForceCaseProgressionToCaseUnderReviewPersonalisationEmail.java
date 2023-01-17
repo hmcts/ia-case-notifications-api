@@ -40,7 +40,7 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
                 .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
                 .orElse(false)) {
             return Collections.singleton(asylumCase
-                    .read(APPELLANT_EMAIL_ADDRESS, String.class)
+                    .read(EMAIL, String.class)
                     .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
         } else {
             return Collections.singleton(asylumCase
@@ -61,7 +61,7 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("appellantEmailAddress", asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)
+            .put("appellantEmailAddress", asylumCase.read(EMAIL, String.class)
                         .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")))
             .build();
     }
