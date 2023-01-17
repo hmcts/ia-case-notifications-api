@@ -46,7 +46,7 @@ class RespondentForceCaseToCaseUnderReviewPersonalisationTest {
     @BeforeEach
     void setUp() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(respondentEmail));
+        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(respondentEmail));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
