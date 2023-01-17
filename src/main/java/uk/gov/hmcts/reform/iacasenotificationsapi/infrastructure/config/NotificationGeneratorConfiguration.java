@@ -1,3346 +1,2972 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType.IN_TIME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType.UNKNOWN;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.BUILD_CASE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.emptyList;
 
-import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit.PostSubmitNotificationHandler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.NotificationHandler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicationRespondentFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
-@Slf4j
 @Configuration
-public class NotificationHandlerConfiguration {
+public class NotificationGeneratorConfiguration {
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
-            @Qualifier("forceCaseProgressionNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Value("${featureFlag.homeOfficeGovNotifyEnabled}")
+    private boolean isHomeOfficeGovNotifyEnabled;
 
-        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == Event.FORCE_REQUEST_CASE_BUILDING;
-        return new NotificationHandler(function, notificationGenerators);
-    }
+    @Bean("forceCaseProgressionNotificationGenerator")
+    public List<NotificationGenerator> forceCaseProgressionNotificationGenerator(
+            RespondentForceCaseProgressionPersonalisation homeOfficePersonalisation,
+            LegalRepresentativeRequestCaseBuildingPersonalisation legalRepresentativeRequestCaseBuildingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editDocumentsNotificationHandler(
-            @Qualifier("editDocumentsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT && callback.getEvent() == Event.EDIT_DOCUMENTS;
-        return new NotificationHandler(function, notificationGenerators);
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> unlinkAppealNotificationHandler(
-            @Qualifier("unlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && Event.UNLINK_APPEAL.equals(callback.getEvent())
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+        return Collections.singletonList(new EmailNotificationGenerator(
+                newArrayList(homeOfficePersonalisation, legalRepresentativeRequestCaseBuildingPersonalisation),
+                notificationSender,
+                notificationIdAppender)
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> unlinkAppealAppellantNotificationHandler(
-            @Qualifier("unlinkAppealAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("editDocumentsNotificationGenerator")
+    public List<NotificationGenerator> editDocumentsNotificationGenerator(
+            CaseOfficerEditDocumentsPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && Event.UNLINK_APPEAL.equals(callback.getEvent())
-                            && isAipJourney(asylumCase);
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(newArrayList(personalisation), notificationSender, notificationIdAppender)
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> linkAppealNotificationHandler(
-            @Qualifier("linkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("unlinkAppealNotificationGenerator")
+    public List<NotificationGenerator> unlinkAppealNotificationGenerator(
+            LegalRepresentativeUnlinkAppealPersonalisation legalRepresentativeUnlinkAppealPersonalisation,
+            HomeOfficeUnlinkAppealPersonalisation homeOfficeUnlinkAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && Event.LINK_APPEAL.equals(callback.getEvent())
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeUnlinkAppealPersonalisation, homeOfficeUnlinkAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> linkAppealAppellantNotificationHandler(
-            @Qualifier("linkAppealAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && Event.LINK_APPEAL.equals(callback.getEvent())
-                            && isAipJourney(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reListCaseNotificationHandler(
-            @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestCaseEditNotificationHandler(
-            @Qualifier("requestCaseEditNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_CASE_EDIT,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> endAppealNotificationHandler(
-            @Qualifier("endAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.END_APPEAL
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
-
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> endAppealAipSmsAppellantNotificationHandler(
-            @Qualifier("endAppealAipSmsAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
-
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.END_APPEAL
-                            && isAipJourney(asylumCase)
-                            && isSmsPreferred(asylumCase));
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> endAppealAipEmailAppellantNotificationHandler(
-            @Qualifier("endAppealAipEmailAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
-
-                    Set<IdValue<Subscriber>> emailPreferred = maybeSubscribers
-                            .orElse(Collections.emptyList()).stream()
-                            .filter(subscriber -> YES.equals(subscriber.getValue().getWantsEmail()))
-                            .collect(Collectors.toSet());
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.END_APPEAL
-                            && isAipJourney
-                            && emailPreferred.size() > 0
-                            && emailPreferred.stream().findFirst().map(subscriberIdValue ->
-                            subscriberIdValue.getValue().getEmail()).isPresent());
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> endAppealAipEmailRespondentNotificationHandler(
-            @Qualifier("endAppealAipEmailRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.END_APPEAL
-                            && isAipJourney);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeNotificationHandler(
-            @Qualifier("appealOutcomeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeRepNotificationHandler(
-            @Qualifier("appealOutcomeRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeAipNotificationHandler(
-            @Qualifier("appealOutcomeAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
-                            && isAipJourney);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealOutcomeHomeOfficeNotificationFailedNotificationHandler(
-            @Qualifier("appealOutcomeHomeOfficeNotificationFailedNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final String instructStatus = asylumCase.read(HOME_OFFICE_APPEAL_DECIDED_INSTRUCT_STATUS, String.class)
-                            .orElse("");
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
-                                    && instructStatus.equals("FAIL");
-                },
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentChangeDirectionDueDateNotificationHandler(
-            @Qualifier("respondentChangeDirectionDueDateNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                            .map(Parties -> Parties.equals(Parties.RESPONDENT))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                            && isRespondent
-                            && !isOneOfHomeOfficeApiNotifications(callback)
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentChangeDirectionDueDateAipNotificationHandler(
-            @Qualifier("respondentChangeDirectionDueDateAipNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                            .map(Parties -> Parties.equals(Parties.RESPONDENT))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                            && isRespondent
-                            && !isOneOfHomeOfficeApiNotifications(callback)
-                            && isAipJourney(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
-    private boolean isOneOfHomeOfficeApiNotifications(Callback<AsylumCase> callback) {
+    @Bean("unlinkAppealAppellantNotificationGenerator")
+    public List<NotificationGenerator> unlinkAppealAppellantNotificationGenerator(
+            HomeOfficeUnlinkAppealPersonalisation homeOfficeUnlinkAppealPersonalisation,
+            AppellantUnlinkAppealPersonalisationEmail appellantUnlinkAppealPersonalisationEmail,
+            AppellantUnlinkAppealPersonalisationSms appellantUnlinkAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-                State.RESPONDENT_REVIEW,
-                State.AWAITING_RESPONDENT_EVIDENCE
-        ).contains(
-                callback.getCaseDetails().getState()
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUnlinkAppealPersonalisation, appellantUnlinkAppealPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUnlinkAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationHandler(
-            @Qualifier("respondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("linkAppealNotificationGenerator")
+    public List<NotificationGenerator> linkAppealNotificationGenerator(
+            LegalRepresentativeLinkAppealPersonalisation legalRepresentativeLinkAppealPersonalisation,
+            HomeOfficeLinkAppealPersonalisation homeOfficeLinkAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                            .map(Parties -> Parties.equals(Parties.RESPONDENT))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                            && isRespondent
-                            && isOneOfHomeOfficeApiNotifications(callback)
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeLinkAppealPersonalisation, homeOfficeLinkAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentChangeDirectionDueDateForHomeOfficeApiEventsAipNotificationHandler(
-            @Qualifier("respondentChangeDirectionDueDateForHomeOfficeApiEventsAipNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("linkAppealAppellantNotificationGenerator")
+    public List<NotificationGenerator> linkAppealAppellantNotificationGenerator(
+            HomeOfficeLinkAppealPersonalisation homeOfficeLinkAppealPersonalisation,
+            AppellantLinkAppealPersonalisationEmail appellantLinkAppealPersonalisationEmail,
+            AppellantLinkAppealPersonalisationSms appellantLinkAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                            .map(Parties -> Parties.equals(Parties.RESPONDENT))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                            && isRespondent
-                            && isOneOfHomeOfficeApiNotifications(callback)
-                            && isAipJourney(asylumCase);
-                },
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeLinkAppealPersonalisation, appellantLinkAppealPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantLinkAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> legalRepChangeDirectionDueDateNotificationHandler(
-            @Qualifier("legalRepChangeDirectionDueDateNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("reListCaseNotificationGenerator")
+    public List<NotificationGenerator> reListCaseNotificationGenerator(
+            AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isLegalRepresentative = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                            .map(Parties -> Parties.equals(Parties.LEGAL_REPRESENTATIVE))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                            && isLegalRepresentative
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerReListCasePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> bothPartiesChangeDirectionDueDateNotificationHandler(
-            @Qualifier("bothPartiesChangeDirectionDueDateNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("requestCaseEditNotificationGenerator")
+    public List<NotificationGenerator> requestCaseEditNotificationGenerator(
+            LegalRepresentativeRequestCaseEditPersonalisation legalRepresentativeRequestCaseEditPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                            .map(Parties -> Parties.equals(Parties.BOTH))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
-                            && isRespondent
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        Collections.singletonList(legalRepresentativeRequestCaseEditPersonalisation),
+                        notificationSender,
+                        notificationIdAppender)
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
-            @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("endAppealNotificationGenerator")
+    public List<NotificationGenerator> endAppealNotificationGenerator(
+            HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
+            LegalRepresentativeEndAppealPersonalisation legalRepresentativeEndAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        // RIA-3631 - listCase
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.LIST_CASE
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeEndAppealPersonalisation, legalRepresentativeEndAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> listCaseAipNotificationHandler(
-            @Qualifier("listCaseAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("endAppealAipEmailRespondentNotificationGenerator")
+    public List<NotificationGenerator> endAppealAipEmailRespondentNotificationGenerator(
+            HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        // RIA-3631 - listCase
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.LIST_CASE
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeEndAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> addAppealNotificationHandler(
-            @Qualifier("addAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("endAppealAipSmsAppellantNotificationGenerator")
+    public List<NotificationGenerator> endAppealAipSmsAppellantNotificationGenerator(
+            AppellantEndAppealPersonalisationSms appellantEndAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.ADD_APPEAL_RESPONSE,
-                notificationGenerators
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantEndAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsNotificationHandler(
-            @Qualifier("hearingRequirementsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("endAppealAipEmailAppellantNotificationGenerator")
+    public List<NotificationGenerator> endAppealAipEmailAppellantNotificationGenerator(
+            AppellantEndAppealPersonalisationEmail appellantEndAppealPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS,
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantEndAppealPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestHearingRequirementsNotificationHandler(
-            @Qualifier("requestHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("appealOutcomeNotificationGenerator")
+    public List<NotificationGenerator> appealOutcomeNotificationGenerator(
+            HomeOfficeAppealOutcomePersonalisation homeOfficeAppealOutcomePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeAppealOutcomePersonalisation)
+                : newArrayList();
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestHearingRequirementsAipNotificationHandler(
-            @Qualifier("requestHearingRequirementsAipNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("appealOutcomeRepNotificationGenerator")
+    public List<NotificationGenerator> appealOutcomeRepNotificationGenerator(
+            LegalRepresentativeAppealOutcomePersonalisation legalRepresentativeAppealOutcomePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeAppealOutcomePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestNewHearingRequirementsNotificationHandler(
-            @Qualifier("requestNewHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("appealOutcomeAipNotificationGenerator")
+    public List<NotificationGenerator> appealOutcomeAipNotificationGenerator(
+            AppellantAppealOutcomePersonalisationEmail appellantAppealOutcomePersonalisationEmail,
+            AppellantAppealOutcomePersonalisationSms appellantAppealOutcomePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isReheardAppealEnabled = asylumCase
-                            .read(IS_REHEARD_APPEAL_ENABLED, YesOrNo.class)
-                            .equals(Optional.of(YES));
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REQUEST_NEW_HEARING_REQUIREMENTS
-                            && isReheardAppealEnabled;
-                }, notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantAppealOutcomePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantAppealOutcomePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentEvidenceAipNotificationHandler(
-            @Qualifier("respondentEvidenceAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("appealDecidedOrEndedPendingPaymentGenerator")
+    public List<NotificationGenerator> appealDecidedOrEndedPendingPaymentGenerator(
+            AdminOfficerDecidedOrEndedAppealPendingPayment adminOfficerDecidedOrEndedAppealPendingPayment,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
-                            && isAipJourney;
-                }, notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerDecidedOrEndedAppealPendingPayment),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentEvidenceRepNotificationHandler(
-            @Qualifier("respondentEvidenceRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("legalRepChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> legalRepChangeDirectionDueDateNotificationGenerator(
+            LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeChangeDirectionDueDatePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("appealOutcomeHomeOfficeNotificationFailedNotificationGenerator")
+    public List<NotificationGenerator> appealOutcomeHomeOfficeNotificationFailedNotificationGenerator(
+            CaseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisation caseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> respondentChangeDirectionDueDateNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentChangeDirectionDueDatePersonalisation, legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    // An Appellant notification to be sent similar to LR once the templates are ready in future
+    @Bean("respondentChangeDirectionDueDateAipNotificationGenerator")
+    public List<NotificationGenerator> respondentChangeDirectionDueDateAipNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail,
+            AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentChangeDirectionDueDatePersonalisation, appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator")
+    public List<NotificationGenerator> respondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3116 - changeDirectionDueDate (requestEvidenceBundle, amendRequestBundle, requestRespondentReview, awaitingRespondentEvidence)
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentChangeDirectionDueDatePersonalisation, legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation)
+                : newArrayList(legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    // An Appellant notification to be sent similar to LR once the templates are ready in future
+    @Bean("respondentChangeDirectionDueDateForHomeOfficeApiEventsAipNotificationGenerator")
+    public List<NotificationGenerator> respondentChangeDirectionDueDateForHomeOfficeApiEventsAipNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail,
+            AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3116 - changeDirectionDueDate (requestEvidenceBundle, amendRequestBundle, requestRespondentReview, awaitingRespondentEvidence)
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentChangeDirectionDueDatePersonalisation, appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail)
+                : newArrayList(appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("bothPartiesChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> bothPartiesChangeDirectionDueDateNotificationGenerator(
+            LegalRepresentativeChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation,
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeChangeDirectionDueDatePersonalisation,
+                                respondentChangeDirectionDueDatePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("listCaseNotificationGenerator")
+    public List<NotificationGenerator> listCaseNotificationGenerator(
+            LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation,
+            HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
+            CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3361 - listCase
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(legalRepresentativeListCasePersonalisation, homeOfficeListCasePersonalisation, caseOfficerListCasePersonalisation)
+                : newArrayList(legalRepresentativeListCasePersonalisation, caseOfficerListCasePersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("listCaseAipNotificationGenerator")
+    public List<NotificationGenerator> listCaseAipNotificationGenerator(
+            CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
+            AppellantListCasePersonalisationEmail appellantListCasePersonalisationEmail,
+            AppellantListCasePersonalisationSms appellantListCasePersonalisationSms,
+            HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3361 - listCase
+        List<EmailNotificationPersonalisation> emailPersonalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(caseOfficerListCasePersonalisation, appellantListCasePersonalisationEmail, homeOfficeListCasePersonalisation)
+                : newArrayList(caseOfficerListCasePersonalisation, appellantListCasePersonalisationEmail);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        emailPersonalisations,
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantListCasePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitAppealAipNotificationGenerator")
+    public List<NotificationGenerator> submitAppealAipNotificationGenerator(
+            AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitAppealPersonalisationEmail, caseOfficerSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitAppealRepNotificationGenerator")
+    public List<NotificationGenerator> submitAppealRepNotificationGenerator(
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitAppealHoNotificationGenerator")
+    public List<NotificationGenerator> submitAppealHoNotificationGenerator(
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3631 - submitAppeal
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        isHomeOfficeGovNotifyEnabled ? newArrayList(homeOfficeSubmitAppealPersonalisation) : emptyList(),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitCaseRepSubmitToRepNotificationGenerator")
+    public List<NotificationGenerator> submitCaseRepSubmitToRepNotificationGenerator(
+            LegalRepresentativeSubmitCasePersonalisation legalRepresentativeSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitAppealOutOfTimeAipNotificationGenerator")
+    public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
+            AppellantSubmitAppealOutOfTimePersonalisationSms appellantSubmitAppealOutOfTimePersonalisationSms,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            AppellantSubmitAppealOutOfTimePersonalisationEmail appellantSubmitAppealOutOfTimePersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitAppealOutOfTimePersonalisationEmail, caseOfficerSubmitAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitAppealOutOfTimePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitCaseNotificationGenerator")
+    public List<NotificationGenerator> submitCaseNotificationGenerator(
+            CaseOfficerSubmitCasePersonalisation caseOfficerSubmitCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerSubmitCasePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadRespondentNotificationGenerator")
+    public List<NotificationGenerator> uploadRespondentNotificationGenerator(
+            LegalRepresentativeUploadRespondentEvidencePersonalisation legalRepresentativeUploadRespondentEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeUploadRespondentEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("requestReasonsForAppealAipNotificationGenerator")
+    public List<NotificationGenerator> requestReasonsForAppealAipNotificationGenerator(
+            AppellantRequestReasonsForAppealPersonalisationEmail appellantRequestReasonsForAppealPersonalisationEmail,
+            AppellantRequestReasonsForAppealPersonalisationSms appellantRequestReasonsForAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantRequestReasonsForAppealPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestReasonsForAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitReasonsForAppealAipNotificationGenerator")
+    public List<NotificationGenerator> submitReasonsForAppealAipNotificationGenerator(
+            AppellantSubmitReasonsForAppealPersonalisationEmail appellantSubmitReasonsForAppealPersonalisationEmail,
+            AppellantSubmitReasonsForAppealPersonalisationSms appellantSubmitReasonsForAppealPersonalisationSms,
+            CaseOfficerReasonForAppealSubmittedPersonalisation caseOfficerReasonForAppealSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitReasonsForAppealPersonalisationEmail, caseOfficerReasonForAppealSubmittedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitReasonsForAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("hearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> hearingRequirementsNotificationGenerator(
+            LegalRepresentativeHearingRequirementsPersonalisation legalRepresentativeHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("requestHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> requestHearingRequirementsNotificationGenerator(
+            LegalRepresentativeRequestHearingRequirementsPersonalisation legalRepresentativeRequestHearingRequirementsPersonalisation,
+            CaseOfficerRequestHearingRequirementsPersonalisation caseOfficerRequestHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeRequestHearingRequirementsPersonalisation, caseOfficerRequestHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("requestNewHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> requestNewHearingRequirementsNotificationGenerator(
+            LegalRepresentativeRequestNewHearingRequirementsPersonalisation legalRepresentativeRequestNewHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeRequestNewHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("addAppealNotificationGenerator")
+    public List<NotificationGenerator> addAppealNotificationGenerator(
+            LegalRepresentativeAddAppealPersonalisation legalRepresentativeAddAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeAddAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentReviewNotificationGenerator")
+    public List<NotificationGenerator> respondentReviewNotificationGenerator(
+            RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+            LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3631 - requestRespondentReview
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentDirectionPersonalisation, legalRepresentativeRespondentReviewPersonalisation)
+                : newArrayList(legalRepresentativeRespondentReviewPersonalisation);
+
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentReviewAipNotificationGenerator")
+    public List<NotificationGenerator> respondentReviewAipNotificationGenerator(
+            RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+            AppellantRespondentReviewPersonalisationEmail appellantRespondentReviewPersonalisationEmail,
+            AppellantRespondentReviewPersonalisationSms appellantRespondentReviewPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3631 - requestRespondentReview
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentDirectionPersonalisation, appellantRespondentReviewPersonalisationEmail)
+                : newArrayList(appellantRespondentReviewPersonalisationEmail);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRespondentReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+    @Bean("respondentEvidenceAipNotificationGenerator")
+    public List<NotificationGenerator> respondentEvidenceAipNotificationGenerator(
+            RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation,
+            AppellantRequestRespondentEvidencePersonalisationEmail appellantRequestRespondentEvidencePersonalisationEmail,
+            AppellantRequestRespondentEvidencePersonalisationSms appellantRequestRespondentEvidencePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentEvidenceDirectionPersonalisation, appellantRequestRespondentEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestRespondentEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentEvidenceRepNotificationGenerator")
+    public List<NotificationGenerator> respondentEvidenceRepNotificationGenerator(
+            RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation,
+            LegalRepresentativeRequestHomeOfficeBundlePersonalisation legalRepresentativeRequestHomeOfficeBundlePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
         // RIA-3631 - requestRespondentEvidence
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentEvidenceDirectionPersonalisation, legalRepresentativeRequestHomeOfficeBundlePersonalisation)
+                : newArrayList(legalRepresentativeRequestHomeOfficeBundlePersonalisation);
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
-                            && isRepJourney(asylumCase);
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentReviewNotificationHandler(
-            @Qualifier("respondentReviewNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("respondentDirectionNotificationGenerator")
+    public List<NotificationGenerator> respondentDirectionNotificationGenerator(
+            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+            LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        // RIA-3631 - requestRespondentReview
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentReviewAipNotificationHandler(
-            @Qualifier("respondentReviewAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        // RIA-3631 - requestRespondentReview
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealAipNotificationHandler(
-            @Qualifier("submitAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    boolean isAppealOnTime = asylumCase
-                            .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
-                            .map(outOfTime -> outOfTime == NO).orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isAipJourney
-                            && isAppealOnTime
-                            && !isPaymentPendingForEaOrHuAppeal(callback);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealRepNotificationHandler(
-            @Qualifier("submitAppealRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean paymentFailed = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    boolean paymentFailedChangedToPayLater = paymentFailed && payLater;
-
-                    boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> APPROVED == decision)
-                            .orElse(false);
-
-                    boolean isEaAndHuAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && callback.getCaseDetails().getCaseData()
-                            .read(JOURNEY_TYPE, JourneyType.class)
-                            .map(type -> type == REP).orElse(true)
-                            && (!paymentFailed || paymentFailedChangedToPayLater)
-                            && !isPaymentPendingForEaOrHuAppeal(callback))
-                            || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isRemissionApproved
-                            && isEaAndHuAppealType);
-                }, notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitCaseRepSubmitToRepNotificationHandler(
-            @Qualifier("submitCaseRepSubmitToRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    List<Event> validEvent = Arrays.asList(Event.SUBMIT_CASE, BUILD_CASE);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && validEvent.contains(callback.getEvent())
-                            && callback.getCaseDetails().getCaseData()
-                            .read(JOURNEY_TYPE, JourneyType.class)
-                            .map(type -> type == REP).orElse(true);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealHoNotificationHandler(
-            @Qualifier("submitAppealHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        // RIA-3631 - submitAppeal
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean paymentPaid = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && (paymentPaid || payLater);
-
-                }, notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealOutOfTimeAipNotificationHandler(
-            @Qualifier("submitAppealOutOfTimeAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    boolean isOutOfTimeAppeal = asylumCase
-                            .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
-                            .map(outOfTime -> outOfTime == YES).orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isAipJourney
-                            && isOutOfTimeAppeal
-                            && !isPaymentPendingForEaOrHuAppeal(callback);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitCaseNotificationHandler(
-            @Qualifier("submitCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    List<Event> validEvent = Arrays.asList(Event.SUBMIT_CASE, BUILD_CASE);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && validEvent.contains(callback.getEvent());
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadRespondentNotificationHandler(
-            @Qualifier("uploadRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_RESPONDENT_EVIDENCE,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestReasonForAppealUploadAipNotificationHandler(
-            @Qualifier("requestReasonsForAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_REASONS_FOR_APPEAL
-                                && callback.getCaseDetails().getCaseData()
-                                .read(JOURNEY_TYPE, JourneyType.class)
-                                .map(type -> type == AIP).orElse(false),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitReasonsForAppealAipNotificationHandler(
-            @Qualifier("submitReasonsForAppealAipNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.SUBMIT_REASONS_FOR_APPEAL
-                                && callback.getCaseDetails().getCaseData()
-                                .read(JOURNEY_TYPE, JourneyType.class)
-                                .map(type -> type == AIP).orElse(false),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentEvidenceSubmittedHandler(
-            @Qualifier("respondentEvidenceSubmitted") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_BUNDLE,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestResponseAmendDirectionhandler(
-            @Qualifier("requestResponseAmendDirectionGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        // RIA-3631 - requestResponseAmend
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_RESPONSE_AMEND
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestResponseAmendAipDirectionhandler(
-            @Qualifier("requestResponseAmendAipDirectionGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        // RIA-3631 - requestResponseAmend
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_RESPONSE_AMEND
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestCaseBuildingNotificationHandler(
-            @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_CASE_BUILDING,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentDirectionNotificationHandler(
-            @Qualifier("respondentDirectionNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("awaitingRespondentDirectionNotificationGenerator")
+    public List<NotificationGenerator> awaitingRespondentDirectionNotificationGenerator(
+            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+            LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
         // RIA-3631 sendDirection (awaitingRespondentEvidence only)
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation)
+                : newArrayList(legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation);
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
-                            && callback.getCaseDetails().getState() != State.AWAITING_RESPONDENT_EVIDENCE;
-                },
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> awaitingRespondentDirectionNotificationHandler(
-            @Qualifier("awaitingRespondentDirectionNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("awaitingRespondentDirectionAipNotificationGenerator")
+    public List<NotificationGenerator> awaitingRespondentDirectionAipNotificationGenerator(
+            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        // RIA-3631 sendDirection (awaitingRespondentEvidence only)
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentNonStandardDirectionPersonalisation)
+                : Collections.emptyList();
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
-                            && callback.getCaseDetails().getState() == State.AWAITING_RESPONDENT_EVIDENCE
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> awaitingRespondentDirectionAipNotificationHandler(
-            @Qualifier("awaitingRespondentDirectionAipNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("legalRepDirectionNotificationGenerator")
+    public List<NotificationGenerator> legalRepDirectionNotificationGenerator(
+            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+            LegalRepresentativeNonStandardDirectionPersonalisation legalRepresentativeNonStandardDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
-                            && callback.getCaseDetails().getState() == State.AWAITING_RESPONDENT_EVIDENCE
-                            && isAipJourney(asylumCase)
-                            && !notificationGenerators.isEmpty();
-                },
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> legalRepDirectionNotificationHandler(
-            @Qualifier("legalRepDirectionNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    @Bean("recordApplicationNotificationGenerator")
+    public List<NotificationGenerator> recordApplicationNotificationGenerator(
+            HomeOfficeRecordApplicationPersonalisation homeOfficeRecordApplicationPersonalisation,
+            LegalRepresentativeRecordApplicationPersonalisation legalRepresentativeRecordApplicationPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            &&
-                            isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.LEGAL_REPRESENTATIVE);
-                },
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeRecordApplicationPersonalisation, legalRepresentativeRecordApplicationPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> bothPartiesNonStandardDirectionHandler(
-            @Qualifier("bothPartiesNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            && directionFinder
-                            .findFirst(asylumCase, DirectionTag.NONE)
-                            .map(direction -> direction.getParties().equals(Parties.BOTH))
-                            .orElse(false);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordApplicationNotificationHandler(
-            @Qualifier("recordApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-            RecordApplicationRespondentFinder recordApplicationRespondentFinder) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isApplicationRefused = asylumCase
-                            .read(AsylumCaseDefinition.APPLICATION_DECISION, String.class)
-                            .map(decision -> decision.equals(ApplicationDecision.REFUSED.toString()))
-                            .orElse(false);
-
-                    boolean requiresEmail = recordApplicationRespondentFinder.requiresEmail(asylumCase);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_APPLICATION
-                            && isApplicationRefused
-                            && requiresEmail;
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editCaseListingRepNotificationHandler(
-            @Qualifier("editCaseListingRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("editCaseListingRepNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingRepNotificationGenerator(
+            HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
+            LegalRepresentativeEditListingPersonalisation legalRepresentativeEditListingPersonalisation,
+            LegalRepresentativeEditListingNoChangePersonalisation legalRepresentativeEditListingNoChangePersonalisation,
+            HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation,
+            CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
         // RIA-3631 - editCaseListing
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.EDIT_CASE_LISTING
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation)
+                : newArrayList(legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation);
+
+        return Arrays.asList(
+                new EditListingEmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editCaseListingAipNotificationHandler(
-            @Qualifier("editCaseListingAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("editCaseListingAipNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingAipNotificationGenerator(
+            HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
+            AppellantEditListingPersonalisationEmail appellantEditListingPersonalisationEmail,
+            AppellantEditListingPersonalisationSms appellantEditListingPersonalisationSms,
+            HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation,
+            CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.EDIT_CASE_LISTING
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeEditListingPersonalisation, appellantEditListingPersonalisationEmail, homeOfficeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation)
+                : newArrayList(appellantEditListingPersonalisationEmail, caseOfficerEditListingPersonalisation);
+
+        return Arrays.asList(
+                new EditListingEmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantEditListingPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadHomeOfficeAppealResponseNotificationHandler(
-            @Qualifier("uploadHomeOfficeAppealResponseNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("uploadHomeOfficeAppealResponseNotificationGenerator")
+    public List<NotificationGenerator> uploadHomeOfficeAppealResponseNotificationGenerator(
+            CaseOfficerHomeOfficeResponseUploadedPersonalisation caseOfficerHomeOfficeResponseUploadedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE,
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerHomeOfficeResponseUploadedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestResponseReviewNotificationHandler(
-            @Qualifier("requestResponseReviewNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("requestCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> requestCaseBuildingNotificationGenerator(
+            LegalRepresentativeRequestCaseBuildingPersonalisation legalRepresentativeRequestCaseBuildingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeRequestCaseBuildingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestResponseReviewAipNotificationHandler(
-            @Qualifier("requestResponseReviewAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("requestResponseReviewNotificationGenerator")
+    public List<NotificationGenerator> requestResponseReviewNotificationGenerator(
+            LegalRepresentativeRequestResponseReviewPersonalisation legalRepresentativeRequestResponseReviewPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeRequestResponseReviewPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyRepNotificationHandler(
-            @Qualifier("hearingBundleReadyRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("requestResponseReviewAipNotificationGenerator")
+    public List<NotificationGenerator> requestResponseReviewAipNotificationGenerator(
+            AppellantRequestResponseReviewPersonalisationEmail appellantRequestResponseReviewPersonalisationEmail,
+            AppellantRequestResponseReviewPersonalisationSms appellantRequestResponseReviewPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                && callback.getCaseDetails().getState() != State.FTPA_DECIDED
-                                && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantRequestResponseReviewPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestResponseReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyAipNotificationHandler(
-            @Qualifier("hearingBundleReadyAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                && callback.getCaseDetails().getState() != State.FTPA_DECIDED
-                                && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleFailedNotificationHandler(
-            @Qualifier("hearingBundleFailedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    final String stitchStatus = getStitchStatus(callback);
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
-                                    && stitchStatus.equalsIgnoreCase("FAILED");
-                },
-                notificationGenerators
-        );
-    }
-
-    private String getStitchStatus(Callback<AsylumCase> callback) {
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        Optional<List<IdValue<Bundle>>> maybeCaseBundles = asylumCase.read(AsylumCaseDefinition.CASE_BUNDLES);
-
-        final List<Bundle> caseBundles = maybeCaseBundles.isPresent() ? maybeCaseBundles.get()
-                .stream()
-                .map(IdValue::getValue)
-                .collect(Collectors.toList()) : Collections.emptyList();
-
-        return caseBundles.isEmpty() ? "" : caseBundles.get(0).getStitchStatus().orElse("");
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> stitchingCompleteHomeOfficeNotificationFailedNotificationHandler(
-            @Qualifier("asyncStitchingCompleteHomeOfficeNotificationFailedNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final String instructStatus = asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_HEARING_BUNDLE_READY_INSTRUCT_STATUS, String.class)
-                            .orElse("");
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                    && instructStatus.equals("FAIL");
-                },
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submittedHearingRequirementsNotificationHandler(
-            @Qualifier("submittedHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submittedHearingRequirementsAipNotificationHandler(
-            @Qualifier("submittedHearingRequirementsAipNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.DRAFT_HEARING_REQUIREMENTS
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> adjustedHearingRequirementsNotificationHandler(
-            @Qualifier("adjustedHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> withoutHearingRequirementsNotificationHandler(
-            @Qualifier("withoutHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.LIST_CASE_WITHOUT_HEARING_REQUIREMENTS,
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceHandler(
-            @Qualifier("uploadAdditionalEvidence") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceHomeOfficeHandler(
-            @Qualifier("uploadAdditionalEvidenceHomeOffice") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceCaseOfficerHandler(
-            @Qualifier("uploadAddendumEvidenceCaseOfficer") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceCaseOfficerAipHandler(
-            @Qualifier("uploadAddendumEvidenceCaseOfficerAip") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceLegalRepHandler(
-            @Qualifier("uploadAddendumEvidenceLegalRep") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceLegalRepForAipHandler(
-            @Qualifier("uploadAddendumEvidenceLegalRepForAip") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceAdminOfficerHandler(
-            @Qualifier("uploadAddendumEvidenceAdminOfficer") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceAdminOfficerAipHandler(
-            @Qualifier("uploadAddendumEvidenceAdminOfficerAip") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceHomeOfficeHandler(
-            @Qualifier("uploadAddendumEvidenceHomeOffice") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceHomeOfficeAipHandler(
-            @Qualifier("uploadAddendumEvidenceHomeOfficeAip") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    private boolean isValidUserDirection(
-            DirectionFinder directionFinder, AsylumCase asylumCase,
-            DirectionTag directionTag, Parties parties
+    @Bean("respondentEvidenceSubmitted")
+    public List<NotificationGenerator> respondentEvidenceSubmitted(
+            CaseOfficerRespondentEvidenceSubmittedPersonalisation caseOfficerRespondentEvidenceSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
-        return directionFinder
-                .findFirst(asylumCase, directionTag)
-                .map(direction -> direction.getParties().equals(parties))
-                .orElse(false);
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> changeToHearingRequirementsNotificationHandler(
-            @Qualifier("changeToHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.UPDATE_HEARING_ADJUSTMENTS,
-                notificationGenerator
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerRespondentEvidenceSubmittedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealExitedOnlineNotificationHandler(
-            @Qualifier("appealExitedOnlineNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerators
+    @Bean("hearingBundleReadyRepNotificationGenerator")
+    public List<NotificationGenerator> hearingBundleReadyRepNotificationGenerator(
+            HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation,
+            LegalRepresentativeHearingBundleReadyPersonalisation legalRepresentativeHearingBundleReadyPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        //RIA-3316 - Hearing Bundle Ready (generateHearingBundle, customiseHearingBundle)
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeHearingBundleReadyPersonalisation, legalRepresentativeHearingBundleReadyPersonalisation)
+                : newArrayList(legalRepresentativeHearingBundleReadyPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealExitedOnlineAppellantNotificationHandler(
-            @Qualifier("appealExitedOnlineAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE
-                            && isAipJourney(asylumCase);
-                },
-                notificationGenerators
+    @Bean("hearingBundleReadyAipNotificationGenerator")
+    public List<NotificationGenerator> hearingBundleReadyAipNotificationGenerator(
+            HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation,
+            AppellantHearingBundleReadyPersonalisationEmail appellantHearingBundleReadyPersonalisationEmail,
+            AppellantHearingBundleReadyPersonalisationSms appellantHearingBundleReadyPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ? newArrayList(homeOfficeHearingBundleReadyPersonalisation, appellantHearingBundleReadyPersonalisationEmail)
+                : newArrayList(appellantHearingBundleReadyPersonalisationEmail);
+
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantHearingBundleReadyPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> changeHearingCentreNotificationHandler(
-            @Qualifier("changeHearingCentreNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+    @Bean("hearingBundleFailedNotificationGenerator")
+    public List<NotificationGenerator> hearingBundleFailedNotificationGenerator(
+            CaseOfficerHearingBundleFailedPersonalisation caseOfficerHearingBundleFailedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
-                            && isRepJourney(asylumCase);
-                },
-                notificationGenerator
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerHearingBundleFailedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> changeHearingCentreAppellantNotificationHandler(
-            @Qualifier("changeHearingCentreAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+    @Bean("asyncStitchingCompleteHomeOfficeNotificationFailedNotificationGenerator")
+    public List<NotificationGenerator> asyncStitchingCompleteHomeOfficeNotificationFailed(
+            CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisation caseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
-                            && isAipJourney(asylumCase);
-                },
-                notificationGenerator
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedLegalRepNotificationHandler(
-            @Qualifier("ftpaSubmittedLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+    @Bean("submittedHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> submittedHearingRequirementsNotificationGenerator(
+            LegalRepresentativeSubmittedHearingRequirementsPersonalisation legalRepresentativeSubmittedHearingRequirementsPersonalisation,
+            CaseOfficerSubmittedHearingRequirementsPersonalisation caseOfficerSubmittedHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeSubmittedHearingRequirementsPersonalisation, caseOfficerSubmittedHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+    @Bean("submittedHearingRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> submittedHearingRequirementsAipNotificationGenerator(
+            AppellantSubmittedHearingRequirementsPersonalisation appellantSubmittedHearingRequirementsPersonalisation,
+            AppellantSubmittedHearingRequirementsPersonalisationSms appellantSubmittedHearingRequirementsPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmittedHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmittedHearingRequirementsPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("adjustedHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> adjustedHearingRequirementsNotificationGenerator(
+            AdminOfficerReviewHearingRequirementsPersonalisation adminOfficerReviewHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerReviewHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("withoutHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> withoutHearingRequirementsNotificationGenerator(
+            AdminOfficerWithoutHearingRequirementsPersonalisation adminOfficerWithoutHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerWithoutHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAdditionalEvidence")
+    public List<NotificationGenerator> uploadAdditionalEvidence(
+            HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation,
+            CaseOfficerUploadAdditionalEvidencePersonalisation caseOfficerUploadAdditionalEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation, caseOfficerUploadAdditionalEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAdditionalEvidenceHomeOffice")
+    public List<NotificationGenerator> uploadAdditionalEvidenceHomeOffice(
+            LegalRepresentativeUploadAdditionalEvidencePersonalisation legalRepresentativeUploadAdditionalEvidencePersonalisation,
+            CaseOfficerUploadAdditionalEvidencePersonalisation caseOfficerUploadAdditionalEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeUploadAdditionalEvidencePersonalisation, caseOfficerUploadAdditionalEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceCaseOfficer")
+    public List<NotificationGenerator> uploadAddendumEvidenceCaseOfficer(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            LegalRepresentativeUploadAddendumEvidencePersonalisation legalRepresentativeUploadAddendumEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, legalRepresentativeUploadAddendumEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceCaseOfficerAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceCaseOfficerAip(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            AppellantTcwUploadAddendumEvidencePersonalisationEmail appellantTcwUploadAddendumEvidencePersonalisationEmail,
+            AppellantTcwUploadAddendumEvidencePersonalisationSms appellantTcwUploadAddendumEvidencePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, appellantTcwUploadAddendumEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantTcwUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                ));
+    }
+
+    @Bean("uploadAddendumEvidenceHomeOffice")
+    public List<NotificationGenerator> uploadAddendumEvidenceHomeOffice(
+            LegalRepresentativeUploadAddendumEvidencePersonalisation legalRepresentativeUploadAddendumEvidencePersonalisation,
+            CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeUploadAddendumEvidencePersonalisation, caseOfficerUploadAddendumEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceHomeOfficeAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceHomeOfficeAip(
+            AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail appellantHomeOfficeOrUploadAddendumEvidencePersonalisationEmail,
+            AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms appellantHomeOfficeUploadAddendumEvidencePersonalisationSms,
+            CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantHomeOfficeOrUploadAddendumEvidencePersonalisationEmail, caseOfficerUploadAddendumEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantHomeOfficeUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceLegalRep")
+    public List<NotificationGenerator> uploadAddendumEvidenceLegalRep(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, caseOfficerUploadAddendumEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceLegalRepForAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceLegalRepForAip(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+            AppellantUploadAddendumEvidencePersonalisationEmail appellantUploadAddendumEvidencePersonalisationEmail,
+            AppellantUploadAddendumEvidencePersonalisationSms appellantUploadAddendumEvidencePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeUploadAddendumEvidencePersonalisation,
+                                caseOfficerUploadAddendumEvidencePersonalisation,
+                                appellantUploadAddendumEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+    @Bean("uploadAddendumEvidenceAdminOfficer")
+    public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficer(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            LegalRepresentativeUploadAddendumEvidencePersonalisation legalRepresentativeUploadAddendumEvidencePersonalisation,
+            CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, legalRepresentativeUploadAddendumEvidencePersonalisation, caseOfficerUploadAddendumEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("uploadAddendumEvidenceAdminOfficerAip")
+    public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerAip(
+            HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+            AppellantTcwUploadAddendumEvidencePersonalisationEmail appellantTcwUploadAddendumEvidencePersonalisationEmail,
+            AppellantTcwUploadAddendumEvidencePersonalisationSms appellantTcwUploadAddendumEvidencePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAddendumEvidencePersonalisation, appellantTcwUploadAddendumEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantTcwUploadAddendumEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                ));
+    }
+
+    @Bean("changeToHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> changeToHearingRequirementsNotificationGenerator(
+            AdminOfficerChangeToHearingRequirementsPersonalisation adminOfficerChangeToHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerChangeToHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("appealExitedOnlineNotificationGenerator")
+    public List<NotificationGenerator> appealExitedOnlineNotificationGenerator(
+            HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
+            LegalRepresentativeAppealExitedOnlinePersonalisation legalRepresentativeAppealExitedOnlinePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeAppealExitedOnlinePersonalisation, legalRepresentativeAppealExitedOnlinePersonalisation),
+                        notificationSender,
+                        notificationIdAppender)
+        );
+    }
+
+    @Bean("appealExitedOnlineAppellantNotificationGenerator")
+    public List<NotificationGenerator> appealExitedOnlineAppellantNotificationGenerator(
+            HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
+            AppellantAppealExitedOnlinePersonalisationEmail appellantAppealExitedOnlinePersonalisationEmail,
+            AppellantAppealExitedOnlinePersonalisationSms appellantAppealExitedOnlinePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeAppealExitedOnlinePersonalisation, appellantAppealExitedOnlinePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantAppealExitedOnlinePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("changeHearingCentreAppellantNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreAppellantNotificationGenerator(
+            CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
+            AppellantChangeHearingCentrePersonalisationEmail appellantChangeHearingCentrePersonalisationEmail,
+            AppellantChangeHearingCentrePersonalisationSms appellantChangeHearingCentrePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerChangeHearingCentrePersonalisation, appellantChangeHearingCentrePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantChangeHearingCentrePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("changeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
+            LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
+            CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeChangeHearingCentrePersonalisation, caseOfficerChangeHearingCentrePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("ftpaSubmittedLegalRepNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedLegalRep(
+            LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation,
+            AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+            RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
         // RIA-3316 - applyForFTPAAppellant
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT,
-                notificationGenerator
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(legalRepresentativeFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
+                : newArrayList(legalRepresentativeFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation);
+
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaAppellantSubmittedHomeOfficeNotificationFailedNotificationHandler(
-            @Qualifier("ftpaSubmittedHomeOfficeNotificationFailedCaseOfficerNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+    @Bean("ftpaSubmittedHomeOfficeNotificationFailedCaseOfficerNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedHomeOfficeNotificationFailed(
+            CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisation ftpaSubmittedHomeOfficeNotificationFailedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final String instructStatus = asylumCase.read(HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS, String.class)
-                            .orElse("");
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                                    && instructStatus.equals("FAIL")
-                            ;
-                },
-                notificationGenerator
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                ftpaSubmittedHomeOfficeNotificationFailedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaRespondentSubmittedHomeOfficeNotificationFailedNotificationHandler(
-            @Qualifier("ftpaSubmittedHomeOfficeNotificationFailedCaseOfficerNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final String instructStatus = asylumCase.read(HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS, String.class)
-                            .orElse("");
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
-                                    && instructStatus.equals("FAIL");
-                },
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedLegNotificationHandler(
-            @Qualifier("ftpaSubmittedRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+    @Bean("ftpaSubmittedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedRespondent(
+            RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
+            AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+            LegalRepresentativeRespondentFtpaSubmittedPersonalisation legalRepresentativeRespondentFtpaSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
         // RIA-3316 - applyForFTPARespondent
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT,
-                notificationGenerator
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation)
+                : newArrayList(adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> makeAnApplicationAipNotificationHandler(
-            @Qualifier("makeAnApplicationAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("makeAnApplicationAipNotificationGenerator")
+    public List<NotificationGenerator> makeAnApplicationAipNotificationGenerator(
+            AppellantMakeAnApplicationPersonalisationEmail appellantMakeAnApplicationPersonalisationEmail,
+            AppellantMakeAnApplicationPersonalisationSms appellantMakeAnApplicationPersonalisationSms,
+            HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+            CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && isAipJourney(asylumCase);
-                }, notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantMakeAnApplicationPersonalisationEmail,
+                                caseOfficerMakeAnApplicationPersonalisation,
+                                homeOfficeMakeAnApplicationPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantMakeAnApplicationPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reviewTimeExtensionGrantedHandler(
-            @Qualifier("reviewTimeExtensionGrantedGenerator") List<NotificationGenerator> notificationGenerators
+    @Bean("reviewTimeExtensionGrantedGenerator")
+    public List<NotificationGenerator> reviewTimeExtensionGrantedGenerator(
+            AppellantReviewTimeExtensionGrantedPersonalisationEmail appellantReviewTimeExtensionGrantedPersonalisationEmail,
+            AppellantReviewTimeExtensionGrantedPersonalisationSms appellantReviewTimeExtensionGrantedPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantReviewTimeExtensionGrantedPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantReviewTimeExtensionGrantedPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("reviewTimeExtensionRefusedGenerator")
+    public List<NotificationGenerator> reviewTimeExtensionRefusedGenerator(
+            AppellantReviewTimeExtensionRefusedPersonalisationEmail appellantReviewTimeExtensionRefusedPersonalisationEmail,
+            AppellantReviewTimeExtensionRefusedPersonalisationSms appellantReviewTimeExtensionRefusedPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantReviewTimeExtensionRefusedPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantReviewTimeExtensionRefusedPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("requestClarifyingQuestionsAipNotificationGenerator")
+    public List<NotificationGenerator> requestClarifyingQuestionsAipNotificationGenerator(
+            AppellantRequestClarifyingQuestionsPersonalisationEmail appellantRequestClarifyingQuestionsPersonalisationEmail,
+            AppellantRequestClarifyingQuestionsPersonalisationSms appellantRequestClarifyingQuestionsPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantRequestClarifyingQuestionsPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestClarifyingQuestionsPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitClarifyingQuestionAnswersNotificationGenerator")
+    public List<NotificationGenerator> submitClarifyingQuestionAnswersNotificationGenerator(
+            AppellantSubmitClarifyingQuestionAnswersPersonalisationSms appellantSubmitClarifyingQuestionAnswersPersonalisationSms,
+            AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail appellantSubmitClarifyingQuestionAnswersPersonalisationEmail,
+            CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationEmail, caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitClarifyingQuestionAnswersPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
+    public List<NotificationGenerator> forceCaseProgressionToCaseUnderReviewNotificationGenerator(
+            LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation forceCaseProgressionToCaseUnderReviewPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    State currentState = callback.getCaseDetails().getState();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions =
-                            asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
-
-                    final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
-                            .orElse(Collections.emptyList()).stream()
-                            .filter(timeExtensionIdValue ->
-                                    currentState == timeExtensionIdValue.getValue().getState()
-                                            && String.valueOf(maybeTimeExtensions.get().size()).equals(timeExtensionIdValue.getId())
-                                            && TimeExtensionStatus.GRANTED == timeExtensionIdValue.getValue().getStatus())
-                            .findFirst();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
-                            && isAipJourney
-                            && maybeTargetTimeExtension.isPresent();
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                forceCaseProgressionToCaseUnderReviewPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reviewTimeExtensionRefusedHandler(
-            @Qualifier("reviewTimeExtensionRefusedGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    State currentState = callback.getCaseDetails().getState();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions =
-                            asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
-
-                    final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
-                            .orElse(Collections.emptyList()).stream()
-                            .filter(timeExtensionIdValue ->
-                                    currentState == timeExtensionIdValue.getValue().getState()
-                                            && String.valueOf(maybeTimeExtensions.get().size()).equals(timeExtensionIdValue.getId())
-                                            && TimeExtensionStatus.REFUSED == timeExtensionIdValue.getValue().getStatus())
-                            .findFirst();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REVIEW_TIME_EXTENSION
-                            && isAipJourney
-                            && maybeTargetTimeExtension.isPresent();
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestClarifyingQuestionsAipNotificationHandler(
-            @Qualifier("requestClarifyingQuestionsAipNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
+    @Bean("forceCaseToSubmitHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> forceCaseToSubmitHearingRequirementsNotificationGenerator(
+            RespondentForceCaseToSubmitHearingRequirementsPersonalisation respondentForceCaseToSubmitHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION_WITH_QUESTIONS
-                            && isAipJourney;
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentForceCaseToSubmitHearingRequirementsPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitClarifyingQuestionAnswersNotificationHandler(
-            @Qualifier("submitClarifyingQuestionAnswersNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipJourney = isAipJourney(asylumCase);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS
-                            && isAipJourney;
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionToCaseUnderReviewHandler(
-            @Qualifier("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
-            List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW,
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> forceCaseToSubmitHearingRequirementsNotificationHandler(
-            @Qualifier("forceCaseToSubmitHearingRequirementsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS,
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateHandler(
-            @Qualifier("adjournHearingWithoutDateNotificationGenerator")
-            List<NotificationGenerator> notificationGenerator) {
+    @Bean("adjournHearingWithoutDateNotificationGenerator")
+    public List<NotificationGenerator> adjournHearingWithoutDateNotificationGenerator(
+            LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
+            RespondentAdjournHearingWithoutDatePersonalisation respondentAdjournHearingWithoutDatePersonalisation,
+            AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerAdjournHearingWithoutDatePersonalisation,
+            CaseOfficerAdjournHearingWithoutDatePersonalisation caseOfficerAdjournHearingWithoutDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
         // RIA-3631 adjournHearingWithoutDate
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE,
-                notificationGenerator
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, respondentAdjournHearingWithoutDatePersonalisation, adminOfficerAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation)
+                : newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, adminOfficerAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation);
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestCmaRequirementsAipNotificationHandler(
-            @Qualifier("requestCmaRequirementsAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    @Bean("requestCmaRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
+            AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
+            AppellantRequestCmaRequirementsPersonalisationSms appellantRequestCmaRequirementsPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantRequestCmaRequirementsPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestCmaRequirementsPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitCmaRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> submitCmaRequirementsAipNotificationGenerator(
+            AppellantSubmitCmaRequirementsPersonalisationEmail appellantSubmitCmaRequirementsPersonalisationEmail,
+            AppellantSubmitCmaRequirementsPersonalisationSms appellantSubmitCmaRequirementsPersonalisationSms,
+            CaseOfficerCmaRequirementsSubmittedPersonalisation caseOfficerCmaRequirementsSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitCmaRequirementsPersonalisationEmail, caseOfficerCmaRequirementsSubmittedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitCmaRequirementsPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("bothPartiesNonStandardDirectionGenerator")
+    public List<NotificationGenerator> bothPartiesNonStandardDirectionGenerator(
+            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+            LegalRepresentativeNonStandardDirectionPersonalisation legalRepresentativeNonStandardDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("requestResponseAmendDirectionGenerator")
+    public List<NotificationGenerator> requestResponseAmendDirectionGenerator(
+            RespondentRequestResponseAmendPersonalisation respondentRequestResponseAmendPersonalisation,
+            LegalRepresentativeRequestRespondentAmendDirectionPersonalisation legalRepresentativeRequestRespondentAmendDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3631 requestResponseAmend
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        isHomeOfficeGovNotifyEnabled ? newArrayList(respondentRequestResponseAmendPersonalisation, legalRepresentativeRequestRespondentAmendDirectionPersonalisation) : emptyList(),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("requestResponseAmendAipDirectionGenerator")
+    public List<NotificationGenerator> requestResponseAmendAipDirectionGenerator(
+            RespondentRequestResponseAmendPersonalisation respondentRequestResponseAmendPersonalisation,
+            AppellantRequestResponseAmendPersonalisationEmail appellantRequestResponseAmendPersonalisationEmail,
+            AppellantRequestResponseAmendPersonalisationSms appellantRequestResponseAmendPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3631 requestResponseAmend
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        isHomeOfficeGovNotifyEnabled
+                                ? newArrayList(
+                                respondentRequestResponseAmendPersonalisation,
+                                appellantRequestResponseAmendPersonalisationEmail
+                        )
+                                : newArrayList(appellantRequestResponseAmendPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestResponseAmendPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("listCmaAipNotificationGenerator")
+    public List<NotificationGenerator> listCmaAipNotificationGenerator(
+            AppellantListCmaPersonalisationEmail appellantListCmaPersonalisationEmail,
+            AppellantListCmaPersonalisationSms appellantListCmaPersonalisationSms,
+            HomeOfficeListCmaPersonalisation homeOfficeListCmaPersonalisation,
+            CaseOfficerListCmaPersonalisation caseOfficerListCmaPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantListCmaPersonalisationEmail, homeOfficeListCmaPersonalisation, caseOfficerListCmaPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantListCmaPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("editAppealAfterSubmitNotificationGenerator")
+    public List<NotificationGenerator> editAppealAfterSubmitNotificationGenerator(
+            LegalRepresentativeEditAppealAfterSubmitPersonalisation legalRepresentativeEditAppealAfterSubmitPersonalisation,
+            RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeEditAppealAfterSubmitPersonalisation,
+                                respondentEditAppealAfterSubmitPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+            LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        //RIA-3116 leadership/resident judge decision
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation)
+                : newArrayList(legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyAppellantGrantedNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+            LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation,
+            AdminOfficerFtpaDecisionAppellantPersonalisation adminOfficerFtpaDecisionAppellantPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        //RIA-3116 leadership/resident judge decision
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation, adminOfficerFtpaDecisionAppellantPersonalisation)
+                : newArrayList(legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation, adminOfficerFtpaDecisionAppellantPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+            LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3361 leadershipJudgeFtpaDecision
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation)
+                : newArrayList(legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+            LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation,
+            AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3361 leadershipJudgeFtpaDecision
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation)
+                : newArrayList(legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator")
+    public List<NotificationGenerator> ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator(
+            CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation caseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REQUEST_CMA_REQUIREMENTS
-                                && callback.getCaseDetails().getCaseData()
-                                .read(JOURNEY_TYPE, JourneyType.class)
-                                .map(type -> type == AIP).orElse(false),
-                notificationGenerators
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitCmaRequirementsAipNotificationHandler(
-            @Qualifier("submitCmaRequirementsAipNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("ftpaApplicationDecisionReheardAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionReheardAppellantNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+            LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation,
+            CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.SUBMIT_CMA_REQUIREMENTS
-                                && callback.getCaseDetails().getCaseData()
-                                .read(JOURNEY_TYPE, JourneyType.class)
-                                .map(type -> type == AIP).orElse(false),
-                notificationGenerators
+        // RIA-3116 reheard FTPA application (resident Judge)
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation, caseOfficerFtpaDecisionPersonalisation)
+                : newArrayList(legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation, caseOfficerFtpaDecisionPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> listCmaAipNotificationHandler(
-            @Qualifier("listCmaAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("ftpaApplicationDecisionReheardRespondentNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionReheardRespondentNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+            LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation,
+            CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.LIST_CMA
-                                && callback.getCaseDetails().getCaseData()
-                                .read(JOURNEY_TYPE, JourneyType.class)
-                                .map(type -> type == AIP).orElse(false),
-                notificationGenerators
+        // RIA-3361 residentJudgeFtpaDecision
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation, caseOfficerFtpaDecisionPersonalisation)
+                : newArrayList(legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation, caseOfficerFtpaDecisionPersonalisation);
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editAppealAfterSubmitNotificationHandler(
-            @Qualifier("editAppealAfterSubmitNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
+    @Bean("submitAppealPaidNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPaidLegalRepNotificationHandler(
+            LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationHandler(
-            @Qualifier("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("submitAppealLegalRepPayLaterNotificationGenerator")
+    public List<NotificationGenerator> submitAppealLegalRepPayLaterNotificationHandler(
+            LegalRepresentativeAppealSubmittedPayLaterPersonalisation legalRepresentativeAppealSubmittedPayLaterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        //RIA-3631 leadership/resident judge decision
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
-                            .orElse(false);
-                    if (!isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome) {
-                        isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(
-                                        decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
-                                .orElse(false);
-                    }
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                            && isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome
-                            && !hasThisNotificationSentBefore(asylumCase, callback,
-                            "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPayLaterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationHandler(
-            @Qualifier("ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("submitAppealLegalRepNotificationGenerator")
+    public List<NotificationGenerator> submitAppealLegalRepNotificationHandler(
+            LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        // RIA-3631
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isGrantedOrPartiallyGrantedOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                            .orElse(false);
-
-                    if (!isGrantedOrPartiallyGrantedOutcome) {
-                        isGrantedOrPartiallyGrantedOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                        || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                                .orElse(false);
-                    }
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                            && isGrantedOrPartiallyGrantedOutcome
-                            && !hasThisNotificationSentBefore(asylumCase, callback,
-                            "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
-                },
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealPaidLegalRepNotificationHandler(
-            @Qualifier("submitAppealPaidNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("submitAppealPayOfflineNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPayOfflineNotificationHandler(
+            LegalRepresentativeAppealSubmittedPayOfflinePersonalisation legalRepresentativeAppealSubmittedPayOfflinePersonalisation,
+            AdminOfficerAppealSubmittedPayOfflinePersonalisation adminOfficerAppealSubmittedPayOfflinePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    PaymentStatus paymentStatus = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class).orElse(PAYMENT_PENDING);
-
-                    boolean isCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA || type == HU || type == EA).orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
-                            && isCorrectAppealType
-                            && paymentStatus == PaymentStatus.PAID;
-                }, notificationGenerators,
-                getErrorHandler()
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPayOfflinePersonalisation,
+                                adminOfficerAppealSubmittedPayOfflinePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionReheardAppellantNotificationHandler(
-            @Qualifier("ftpaApplicationDecisionReheardAppellantNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        // RIA-3631 reheard FTPA application (resident Judge)
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isReheardDecisionOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
-                            .orElse(false);
-
-                    if (!isReheardDecisionOutcome) {
-                        isReheardDecisionOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                        || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
-                                .orElse(false);
-                    }
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
-                            && isReheardDecisionOutcome
-                            && !hasThisNotificationSentBefore(asylumCase, callback,
-                            "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealLegalRepPayLaterNotificationHandler(
-            @Qualifier("submitAppealLegalRepPayLaterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isPaAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    String paAppealTypePaymentOption = asylumCase
-                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && (isPaAppealType
-                            && paAppealTypePaymentOption.equals("payLater"));
-                },
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealLegalRepNotificationHandler(
-            @Qualifier("submitAppealLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isRpAndDcAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == RP || type == DC).orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isRpAndDcAppealType;
-                },
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationHandler(
-            @Qualifier("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        // RIA-3631
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
-                            .orElse(false);
-
-                    if (!isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome) {
-                        isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(
-                                        decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
-                                .orElse(false);
-                    }
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                            && isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome
-                            && !hasThisNotificationSentBefore(asylumCase, callback,
-                            "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationHandler(
-            @Qualifier("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        // RIA-3631
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isGrantedOrPartiallyGrantedOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                            .orElse(false);
-
-                    if (!isGrantedOrPartiallyGrantedOutcome) {
-                        isGrantedOrPartiallyGrantedOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                        || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                                .orElse(false);
-                    }
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                            && isGrantedOrPartiallyGrantedOutcome
-                            && !hasThisNotificationSentBefore(asylumCase, callback,
-                            "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaDecisionHomeOfficeNotificationFailedNotificationHandler(
-            @Qualifier("ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    String ftpaApplicantType = asylumCase
-                            .read(FTPA_APPLICANT_TYPE, String.class)
-                            .orElse("");
-
-                    final String hoRequestEvidenceInstructStatus =
-                            ftpaApplicantType.equals("appellant")
-                                    ? asylumCase.read(HOME_OFFICE_FTPA_APPELLANT_DECIDED_INSTRUCT_STATUS,
-                                    String.class).orElse("")
-                                    : asylumCase.read(HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS,
-                                    String.class).orElse("");
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                            && hoRequestEvidenceInstructStatus.equals("FAIL");
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionReheardRespondentNotificationHandler(
-            @Qualifier("ftpaApplicationDecisionReheardRespondentNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        //RIA-3631 - ftpsResidentJudgeDecision
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isReheardDecisionOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
-                            .orElse(false);
-                    if (!isReheardDecisionOutcome) {
-                        isReheardDecisionOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                        || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
-                                .orElse(false);
-                    }
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
-                            && isReheardDecisionOutcome
-                            && !hasThisNotificationSentBefore(asylumCase, callback,
-                            "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
-                },
-                notificationGenerators
-        );
-    }
-
-    private boolean hasThisNotificationSentBefore(AsylumCase asylumCase, Callback callback,
-                                                  String notificationReference) {
-        Optional<List<IdValue<String>>> maybeNotificationSent =
-                asylumCase.read(NOTIFICATIONS_SENT);
-
-        List<IdValue<String>> notificationsSent =
-                maybeNotificationSent
-                        .orElseGet(ArrayList::new);
-
-        return notificationsSent
-                .stream()
-                .filter(
-                        notification -> notification.getId().equals(callback.getCaseDetails().getId() + notificationReference))
-                .count() > 0 ? true : false;
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineNotificationHandler(
-            @Qualifier("submitAppealPayOfflineNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    String paymentOption = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-
-                    boolean isCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isCorrectAppealType
-                            && (paymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealPendingPaymentNotificationHandler(
-            @Qualifier("submitAppealPendingPaymentNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("submitAppealPendingPaymentNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPendingPaymentNotificationHandler(
+            LegalRepresentativeAppealSubmittedPendingPaymentPersonalisation legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
+            HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
+            AdminOfficerAppealSubmittedPendingPaymentPersonalisation adminOfficerAppealSubmittedPendingPaymentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.SUBMIT_APPEAL
-                                && (isPaymentPendingForEaOrHuAppeal(callback)
-                                || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> paymentPendingPaidLegalRepNotificationHandler(
-            @Qualifier("paymentPendingPaidLegalRepNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    State currentState = callback.getCaseDetails().getState();
-
-                    boolean isCorrectAppealTypePA = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    boolean isCorrectAppealTypeEaHu = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    boolean isCorrectAppealTypeAndStateHUorEA =
-                            isCorrectAppealTypeEaHu
-                                    && (currentState == State.APPEAL_SUBMITTED);
-
-                    Optional<PaymentStatus> paymentStatus = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MARK_APPEAL_PAID
-                            && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
-                            && !paymentStatus.equals(Optional.empty())
-                            && paymentStatus.get().equals(PaymentStatus.PAID);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> paymentPendingPaidCaseOfficerNotificationHandler(
-            @Qualifier("paymentPendingPaidCaseOfficerNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    State currentState = callback.getCaseDetails().getState();
-
-                    boolean isCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    boolean isCorrectAppealTypeAndStateHUorEA =
-                            isCorrectAppealType
-                                    && (currentState == State.APPEAL_SUBMITTED);
-
-                    Optional<PaymentStatus> paymentStatus = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MARK_APPEAL_PAID
-                            && isCorrectAppealTypeAndStateHUorEA
-                            && !paymentStatus.equals(Optional.empty())
-                            && paymentStatus.get().equals(PaymentStatus.PAID);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionApprovedNotificationHandler(
-            @Qualifier("remissionDecisionApprovedNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU || type == PA).orElse(false);
-
-                    boolean isApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> APPROVED == decision)
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isCorrectAppealType
-                            && isApproved;
-
-                }, notificationGenerators
-        );
-    }
-
-
-    private boolean isPaymentPendingForEaOrHuAppeal(Callback<AsylumCase> callback) {
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        boolean isEaAndHuAppealType = asylumCase
-                .read(APPEAL_TYPE, AppealType.class)
-                .map(type -> type == EA || type == HU).orElse(false);
-
-        String eaHuAppealTypePaymentOption = asylumCase
-                .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-
-        State asylumCaseState = callback.getCaseDetails().getState();
-        RemissionType remissionType = asylumCase.read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-        if (Arrays.asList(
-                HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)) {
-            return asylumCaseState == State.PENDING_PAYMENT
-                    && isEaAndHuAppealType;
-        }
-        return asylumCaseState == State.PENDING_PAYMENT
-                && isEaAndHuAppealType
-                && eaHuAppealTypePaymentOption.equals("payOffline");
-    }
-
-    private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        boolean isEaAndHuAppealType = asylumCase
-                .read(APPEAL_TYPE, AppealType.class)
-                .map(type -> type == EA || type == HU).orElse(false);
-
-        YesOrNo remissionEnabledOption = asylumCase
-                .read(IS_REMISSIONS_ENABLED, YesOrNo.class).orElse(NO);
-
-        RemissionType remissionType = asylumCase
-                .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-        boolean isRemissionTypeValid = Arrays.asList(
-                HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType);
-
-        State asylumCaseState = callback.getCaseDetails().getState();
-        return asylumCaseState == State.PENDING_PAYMENT
-                && isEaAndHuAppealType
-                && remissionEnabledOption.equals(YES)
-                && isRemissionTypeValid;
-    }
-
-    private boolean isRemissionOptedForEaOrHuOrPaAppeal(Callback<AsylumCase> callback) {
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        boolean isEaHuPaAppealType = asylumCase
-                .read(APPEAL_TYPE, AppealType.class)
-                .map(type -> type == EA || type == HU || type == PA).orElse(false);
-
-        YesOrNo remissionEnabledOption = asylumCase
-                .read(IS_REMISSIONS_ENABLED, YesOrNo.class).orElse(NO);
-
-        RemissionType remissionType = asylumCase
-                .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-        boolean isRemissionTypeValid = Arrays.asList(
-                HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType);
-
-        return isEaHuPaAppealType
-                && remissionEnabledOption.equals(YES)
-                && isRemissionTypeValid;
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reinstateAppealNotificationHandler(
-            @Qualifier("reinstateAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REINSTATE_APPEAL
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reinstateAppealAipNotificationHandler(
-            @Qualifier("reinstateAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.REINSTATE_APPEAL
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> makeAnApplicationNotificationHandler(
-            @Qualifier("makeAnApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && isRepJourney(asylumCase);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationHomeOfficeNotificationHandler(
-            @Qualifier("decideAnApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                                && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationAipNotificationHandler(
-            @Qualifier("decideAnApplicationAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionPartiallyApprovedNotificationHandler(
-            @Qualifier("remissionDecisionPartiallyApprovedNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isPartiallyApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> PARTIALLY_APPROVED == decision)
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isPartiallyApproved;
-                },
-                notificationGenerators
-        );
-    }
-
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionRejectedNotificationHandler(
-            @Qualifier("remissionDecisionRejectedNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> REJECTED == decision)
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isRejected;
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> manageFeeUpdateRefundInstructedNotificationHandler(
-            @Qualifier("manageFeeUpdateRefundInstructedNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    Optional<List<String>> completedStages = asylumCase.read(FEE_UPDATE_COMPLETED_STAGES);
-                    boolean isRefundInstructed = completedStages.isPresent()
-                            && completedStages.get().get(completedStages.get().size() - 1)
-                            .equals("feeUpdateRefundInstructed");
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MANAGE_FEE_UPDATE
-                            && isRefundInstructed;
-                },
-                notificationGenerators
-        );
-
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionLrNotificationHandler(
-            @Qualifier("nocRequestDecisionLrNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                        && callback.getEvent() == Event.NOC_REQUEST
-                        && hasRepEmail(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionHomeOfficeNotificationHandler(
-            @Qualifier("nocRequestDecisionHomeOfficeNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                        && callback.getEvent() == Event.NOC_REQUEST,
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationNotificationHandler(
-            @Qualifier("removeRepresentationNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && (callback.getEvent() == Event.REMOVE_REPRESENTATION
-                            || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantEmailNotificationHandler(
-            @Qualifier("removeRepresentationAppellantEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.REMOVE_REPRESENTATION
-                            && callback.getCaseDetails().getCaseData().read(EMAIL, String.class).isPresent();
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantSmsNotificationHandler(
-            @Qualifier("removeRepresentationAppellantSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.REMOVE_REPRESENTATION
-                            && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent();
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentativeAppellantEmailNotificationHandler(
-            @Qualifier("removeRepresentativeAppellantEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE
-                            && callback.getCaseDetails().getCaseData().read(EMAIL, String.class).isPresent();
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentativeAppellantSmsNotificationHandler(
-            @Qualifier("removeRepresentativeAppellantSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE
-                            && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent();
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestFeeRemissionNotificationHandler(
-            @Qualifier("requestFeeRemissionNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.REQUEST_FEE_REMISSION;
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> manageFeeUpdateCaseOfficerNotificationHandler(
-            @Qualifier("caseOfficerManageFeeUpdateGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isEaAndHuAppealType = isEaAndHuAppeal(asylumCase);
-
-                    boolean isPaAppealType = isPaAppeal(asylumCase);
-
-                    String eaHuAppealTypePaymentOption = asylumCase
-                            .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-                    String paAppealTypePaymentOption = asylumCase
-                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-
-                    Optional<PaymentStatus> paymentStatus = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
-
-                    boolean maybeFeeUpdateRecorded = asylumCase
-                            .read(FEE_UPDATE_RECORDED, CheckValues.class)
-                            .map(value -> value.getValues().contains("feeUpdateRecorded")).orElse(false);
-
-                    boolean isPaidByCard = ((isEaAndHuAppealType && eaHuAppealTypePaymentOption.equals("payOffline"))
-                            || (isPaAppealType && paAppealTypePaymentOption.equals("payOffline")));
-
-                    boolean isPaidByAccount = ((isEaAndHuAppealType && eaHuAppealTypePaymentOption.equals("payNow"))
-                            || (isPaAppealType && Arrays.asList("payNow", "payLater").contains(paAppealTypePaymentOption)));
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MANAGE_FEE_UPDATE
-                            && (isPaidByCard || isPaidByAccount)
-                            && maybeFeeUpdateRecorded
-                            && !paymentStatus.equals(Optional.empty())
-                            && paymentStatus.get().equals(PaymentStatus.PAID);
-                }, notificationGenerators
-        );
-    }
-
-    protected boolean isPaAppeal(AsylumCase asylumCase) {
-        return asylumCase
-                .read(APPEAL_TYPE, AppealType.class)
-                .map(type -> type == PA).orElse(false);
-    }
-
-    protected boolean isEaAndHuAppeal(AsylumCase asylumCase) {
-        return asylumCase
-                .read(APPEAL_TYPE, AppealType.class)
-                .map(type -> type == EA || type == HU).orElse(false);
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionAppellantSmsNotificationHandler(
-            @Qualifier("nocRequestDecisionAppellantSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
-                            .orElse(false);
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.NOC_REQUEST
-                            && smsPreferred
-                            && asylumCase.read(MOBILE_NUMBER, String.class).isPresent();
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionAppellantEmailNotificationHandler(
-            @Qualifier("nocRequestDecisionAppellantEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    boolean emailPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
-                            .orElse(false);
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.NOC_REQUEST
-                            && emailPreferred
-                            && asylumCase.read(EMAIL, String.class).isPresent();
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> aipNocRequestDecisionAppellantNotificationHandler(
-            @Qualifier("aipNocRequestDecisionAppellantNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.NOC_REQUEST
-                            && (isSmsPreferred(asylumCase) || isEmailPreferred(asylumCase));
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealAppellantSmsNotificationHandler(
-            @Qualifier("submitAppealAppellantSmsNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
-                            .orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    boolean payNow = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payNow"))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
-                            && (payLater || payNow)
-                            && smsPreferred;
-                },
-                notificationGenerators,
-                (callback, e) -> log.error(
-                        "cannot send sms notification to the appellant on submitAppeal, caseId: {}",
-                        callback.getCaseDetails().getId(),
-                        e
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, homeOfficeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation)
+                : newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation);
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
                 )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> updatePaymentStatusAppellantSmsNotificationHandler(
-            @Qualifier("submitAppealAppellantSmsNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
+    public List<NotificationGenerator> paymentPendingPaidNotificationHandler(
+            LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
-                            .orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    boolean payNow = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payNow"))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
-                            && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
-                            && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                            && !payLater
-                            && !payNow
-                            && smsPreferred;
-                },
-                notificationGenerators,
-                getSmsErrorHandling()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealAppellantEmailNotificationHandler(
-            @Qualifier("submitAppealAppellantEmailNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean emailPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
-                            .orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    boolean payNow = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payNow"))
-                            .orElse(false);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && asylumCase.read(EMAIL, String.class).isPresent()
-                            && emailPreferred
-                            && (payLater || payNow);
-                },
-                notificationGenerators,
-                (callback, e) -> log.error(
-                        "cannot send email notification to the appellant on submitAppeal, caseId: {}",
-                        callback.getCaseDetails().getId(),
-                        e
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativePendingPaymentPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
                 )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> updatePaymentStatusAppellantEmailNotificationHandler(
-            @Qualifier("submitAppealAppellantEmailNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    @Bean("paymentPendingPaidCaseOfficerNotificationGenerator")
+    public List<NotificationGenerator> paymentPendingPaidCaseOfficerNotificationHandler(
+            CaseOfficerPendingPaymentPaidPersonalisation caseOfficerPendingPaymentPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerPendingPaymentPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
-                    boolean emailPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
-                            .orElse(false);
+    @Bean("reinstateAppealNotificationGenerator")
+    public List<NotificationGenerator> reinstateAppealNotificationHandler(
+            LegalRepresentativeReinstateAppealPersonalisation legalRepresentativeReinstateAppealPersonalisation,
+            HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeReinstateAppealPersonalisation,
+                                homeOfficeReinstateAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
-                    boolean payNow = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payNow"))
-                            .orElse(false);
+    @Bean("reinstateAppealAipNotificationGenerator")
+    public List<NotificationGenerator> reinstateAppealAipNotificationHandler(
+            AppellantReinstateAppealPersonalisationEmail appellantReinstateAppealPersonalisationEmail,
+            AppellantReinstateAppealPersonalisationSms appellantReinstateAppealPersonalisationSms,
+            HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
-                            && asylumCase.read(EMAIL, String.class).isPresent()
-                            && emailPreferred
-                            && !payLater
-                            && !payNow
-                            && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent();
-                },
-                notificationGenerators,
-                (callback, e) -> log.error(
-                        "cannot send email notification to the appellant on submitAppeal, caseId: {}",
-                        callback.getCaseDetails().getId(),
-                        e
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantReinstateAppealPersonalisationEmail,
+                                homeOfficeReinstateAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                appellantReinstateAppealPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("makeAnApplicationNotificationGenerator")
+    public List<NotificationGenerator> makeAnApplicationNotificationHandler(
+            LegalRepresentativeMakeAnApplicationPersonalisation legalRepresentativeMakeApplicationPersonalisation,
+            HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+            CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeMakeApplicationPersonalisation,
+                                homeOfficeMakeAnApplicationPersonalisation,
+                                caseOfficerMakeAnApplicationPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("decideAnApplicationNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationNotificationHandler(
+            LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation,
+            HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeDecideAnApplicationPersonalisation,
+                                homeOfficeDecideAnApplicationPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("decideAnApplicationAipNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationAipNotificationHandler(
+            HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+            AppellantDecideAnApplicationPersonalisationEmail appellantDecideAnApplicationPersonalisationEmail,
+            AppellantDecideAnApplicationPersonalisationSms appellantDecideAnApplicationPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeDecideAnApplicationPersonalisation,
+                                appellantDecideAnApplicationPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantDecideAnApplicationPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("remissionDecisionApprovedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionApprovedNotificationHandler(
+            AdminOfficerAppealRemissionApprovedPersonalisation adminOfficerAppealRemissionApprovedPersonalisation,
+            LegalRepresentativeRemissionDecisionApprovedPersonalisation legalRepresentativeRemissionDecisionApprovedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                adminOfficerAppealRemissionApprovedPersonalisation,
+                                legalRepresentativeRemissionDecisionApprovedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("remissionDecisionPartiallyApprovedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionPartiallyApprovedNotificationHandler(
+            AdminOfficerRemissionDecisionPartiallyApprovedPersonalisation adminOfficerRemissionDecisionPartiallyApprovedPersonalisation,
+            LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                adminOfficerRemissionDecisionPartiallyApprovedPersonalisation,
+                                legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("remissionDecisionRejectedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionRejectedNotificationHandler(
+            LegalRepresentativeRemissionDecisionRejectedPersonalisation legalRepresentativeRemissionDecisionRejectedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRemissionDecisionRejectedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("nocRequestDecisionHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionHomeOfficeNotificationGenerator(
+            HomeOfficeNocRequestDecisionPersonalisation homeOfficeNocRequestDecisionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeNocRequestDecisionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("nocRequestDecisionLrNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionLrNotificationGenerator(
+            LegalRepresentativeNocRequestDecisionPersonalisation legalRepresentativeNocRequestDecisionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeNocRequestDecisionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("removeRepresentationNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentationNotificationHandler(
+            LegalRepresentativeRemoveRepresentationPersonalisation legalRepresentativeRemoveRepresentationPersonalisation,
+            HomeOfficeRemoveRepresentationPersonalisation homeOfficeRemoveRepresentationPersonalisation,
+            CaseOfficerRemoveRepresentationPersonalisation caseOfficerRemoveRepresentationPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRemoveRepresentationPersonalisation,
+                                homeOfficeRemoveRepresentationPersonalisation,
+                                caseOfficerRemoveRepresentationPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("removeRepresentationAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentationAppellantEmailNotificationHandler(
+            AppellantRemoveRepresentationPersonalisationEmail appellantRemoveRepresentationPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveRepresentationPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("removeRepresentationAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentationAppellantSmsNotificationHandler(
+            AppellantRemoveRepresentationPersonalisationSms appellantRemoveRepresentationPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRemoveRepresentationPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("removeRepresentativeAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentativeAppellantEmailNotificationHandler(
+            AppellantRemoveRepresentationPersonalisationEmail appellantRemoveRepresentationPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveRepresentationPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("header","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("removeRepresentativeAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> removeRepresentativeAppellantSmsNotificationHandler(
+            AppellantRemoveRepresentationPersonalisationSms appellantRemoveRepresentationPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRemoveRepresentationPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("header","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("requestFeeRemissionNotificationGenerator")
+    public List<NotificationGenerator> requestFeeRemissionNotificationHandler(
+            LegalRepresentativeRequestFeeRemissionPersonalisation legalRepresentativeRequestFeeRemissionPersonalisation,
+            AdminOfficerRequestFeeRemissionPersonalisation adminOfficerRequestFeeRemissionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRequestFeeRemissionPersonalisation,
+                                adminOfficerRequestFeeRemissionPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("caseOfficerManageFeeUpdateGenerator")
+    public List<NotificationGenerator> manageFeeUpdateNotificationHandler(
+            CaseOfficerManageFeeUpdatePersonalisation caseOfficerManageFeeUpdatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerManageFeeUpdatePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
                 )
         );
     }
 
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCanProceedEmailNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCanProceedEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && Arrays.asList(IN_TIME, OutOfTimeDecisionType.APPROVED)
-                            .contains(outOfTimeDecisionType)
-                            && isRepJourney(asylumCase);
-
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && outOfTimeDecisionType == OutOfTimeDecisionType.REJECTED
-                            && isRepJourney(asylumCase);
-
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> payAndSubmitAppealEmailNotificationHandler(
-            @Qualifier("payAndSubmitAppealEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean paymentFailed = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    boolean paymentFailedChangedToPayLater = paymentFailed && payLater;
-
-                    boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> APPROVED == decision)
-                            .orElse(false);
-
-                    boolean isEaAndHuAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
-                            && callback.getCaseDetails().getCaseData()
-                            .read(JOURNEY_TYPE, JourneyType.class)
-                            .map(type -> type == REP).orElse(true)
-                            && (!paymentFailed || paymentFailedChangedToPayLater)
-                            && !isPaymentPendingForEaOrHuAppeal(callback))
-                            || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isRemissionApproved
-                            && isEaAndHuAppealType);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> payAndSubmitAppealFailedEmailNotificationHandler(
-            @Qualifier("payAndSubmitAppealFailedEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
+    @Bean("nocRequestDecisionAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionAppellantEmailNotificationHandler(
+            AppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean paymentFailed = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
-
-                    boolean isPaAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
-                            && paymentFailed
-                            && isPaAppealType;
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantNocRequestDecisionPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> payAndSubmitAppealAppellantEmailNotificationHandler(
-            @Qualifier("payAndSubmitAppealAppellantEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
+    @Bean("nocRequestDecisionAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> nocRequestDecisionAppellantSmsNotificationHandler(
+            AppellantNocRequestDecisionPersonalisationSms appellantNocRequestDecisionPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
+        return Collections.singletonList(
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                appellantNocRequestDecisionPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
 
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean emailPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
-                            .orElse(false);
-
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
-                            && asylumCase.read(EMAIL, String.class).isPresent()
-                            && emailPreferred;
-                }, notificationGenerators
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> payAndSubmitAppealAppellantSmsNotificationHandler(
-            @Qualifier("payAndSubmitAppealAppellantSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
+    @Bean("aipNocRequestDecisionAppellantNotificationGenerator")
+    public List<NotificationGenerator> aipNocRequestDecisionAppellantNotificationHandler(
+            AipAppellantNocRequestDecisionPersonalisationEmail aipAppellantNocRequestDecisionPersonalisationEmail,
+            AipAppellantNocRequestDecisionPersonalisationSms aipAppellantNocRequestDecisionPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-                            .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
-                            .orElse(false);
-
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
-                            && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()
-                            && smsPreferred;
-                }, notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                aipAppellantNocRequestDecisionPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(aipAppellantNocRequestDecisionPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editPaymentMethodNotificationHandler(
-            @Qualifier("editPaymentMethodNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    @Bean("submitAppealAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> submitAppealAppellantEmailNotificationGenerator(
+            AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitAppealPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("submitAppealAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> submitAppealAppellantSmsNotificationGenerator(
+            AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("manageFeeUpdateRefundInstructedNotificationGenerator")
+    public List<NotificationGenerator> manageFeeUpdateRefundInstructedNotificationHandler(
+            LegalRepresentativeManageFeeUpdatePersonalisation legalRepresentativeManageFeeUpdatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final State state = callback.getCaseDetails().getState();
-
-                    boolean isEaAndHuAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
-                            && state != State.APPEAL_STARTED
-                            && isEaAndHuAppealType
-                            && !isRemissionRejectedAndPaymentChangedToCard(asylumCase)
-                    );
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeManageFeeUpdatePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    private boolean isRemissionRejectedAndPaymentChangedToCard(AsylumCase asylumCase) {
+    @Bean("recordOfTimeDecisionCanProceedEmailNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedEmailNotificationHandler(
+            LegalRepresentativeRecordOutOfTimeDecisionCanProceed legalRepresentativeRecordOutOfTimeDecisionCanProceed,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        Optional<RemissionDecision> optionalRemissionDecision =
-                asylumCase.read(REMISSION_DECISION, RemissionDecision.class);
-
-        return optionalRemissionDecision.isPresent() && optionalRemissionDecision.get() == REJECTED;
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRecordOutOfTimeDecisionCanProceed
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> editPaymentMethodAoNotificationHandler(
-            @Qualifier("editPaymentMethodAoNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
+            LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRecordOutOfTimeDecisionCannotProceed
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCannotProceedAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCannotProceedAppellantEmailNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCannotProceedAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCannotProceedAppellantSmsNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms appellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCanProceedAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedAppellantEmailNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("recordOfTimeDecisionCanProceedAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedAppellantSmsNotificationGenerator(
+            AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSms appellantRecordOutOfTimeDecisionCanProceedPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRecordOutOfTimeDecisionCanProceedPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("editPaymentMethodNotificationGenerator")
+    public List<NotificationGenerator> editPaymentMethodNotificationHandler(
+            LegalRepresentativeAppealSubmittedPendingPaymentPersonalisation legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
+            HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
+                                homeOfficeAppealSubmittedPendingPaymentPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("editPaymentMethodAoNotificationGenerator")
+    public List<NotificationGenerator> editPaymentMethodAoNotificationHandler(
+            AdminOfficerEditPaymentMethodPersonalisation adminOfficerEditPaymentMethodPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                adminOfficerEditPaymentMethodPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("payAndSubmitAppealEmailNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealEmailNotificationHandler(
+            LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    final State state = callback.getCaseDetails().getState();
-
-                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
-                            && state != State.APPEAL_STARTED);
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPaidPersonalisation,
+                                homeOfficeSubmitAppealPersonalisation,
+                                caseOfficerSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> payForAppealAppealEmailNotificationHandler(
-            @Qualifier("payForAppealEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("payAndSubmitAppealFailedEmailNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealFailedEmailNotificationHandler(
+            LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean paymentFailed = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    boolean paymentFailedChangedToPayLater = paymentFailed && payLater;
-
-                    boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> APPROVED == decision)
-                            .orElse(false);
-
-                    boolean isEaAndHuAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.PAY_FOR_APPEAL
-                            && callback.getCaseDetails().getCaseData()
-                            .read(JOURNEY_TYPE, JourneyType.class)
-                            .map(type -> type == REP).orElse(true)
-                            && (!paymentFailed || paymentFailedChangedToPayLater)
-                            && !isPaymentPendingForEaOrHuAppeal(callback))
-                            || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isRemissionApproved
-                            && isEaAndHuAppealType);
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPaidPersonalisation,
+                                homeOfficeSubmitAppealPersonalisation,
+                                caseOfficerSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> paymentPaidPostSubmitLegalRepNotificationHandler(
-            @Qualifier("paymentPaidPostSubmitNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("payAndSubmitAppealAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealAppellantEmailNotificationHandler(
+            AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new PostSubmitNotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    State currentState = callback.getCaseDetails().getState();
-
-                    boolean isCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    boolean isCorrectAppealTypeAndState =
-                            isCorrectAppealType
-                                    && (currentState != State.APPEAL_STARTED
-                                    || currentState != State.APPEAL_SUBMITTED
-                            );
-
-                    Optional<PaymentStatus> paymentStatus = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
-
-                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                            && callback.getEvent() == Event.PAYMENT_APPEAL
-                            && isCorrectAppealTypeAndState
-                            && !paymentStatus.equals(Optional.empty())
-                            && paymentStatus.get().equals(PaymentStatus.PAID);
-                }, notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantSubmitAppealPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedAppellantEmailNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCannotProceedAppellantEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("payAndSubmitAppealAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealAppellantSmsNotificationHandler(
+            AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && outOfTimeDecisionType == OutOfTimeDecisionType.REJECTED
-                            && isAipJourney(asylumCase)
-                            && isEmailPreferred(asylumCase);
-
-                }, notificationGenerators
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantSubmitAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedAppellantSmsNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCannotProceedAppellantSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("payForAppealEmailNotificationGenerator")
+    public List<NotificationGenerator> payForAppealAppealEmailNotificationHandler(
+            LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && outOfTimeDecisionType == OutOfTimeDecisionType.REJECTED
-                            && isAipJourney(asylumCase)
-                            && isSmsPreferred(asylumCase);
-
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPaidPersonalisation,
+                                homeOfficeSubmitAppealPersonalisation,
+                                caseOfficerSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCanProceedAppellantEmailNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCanProceedAppellantEmailNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("paymentPaidPostSubmitNotificationGenerator")
+    public List<NotificationGenerator> paymentPaidPostSubmitLegalRepNotificationHandler(
+            LegalRepresentativePaymentPaidPersonalisation legalRepresentativePaymentPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && Arrays.asList(IN_TIME, OutOfTimeDecisionType.APPROVED)
-                            .contains(outOfTimeDecisionType)
-                            && isAipJourney(asylumCase)
-                            && isEmailPreferred(asylumCase);
-
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativePaymentPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCanProceedAppellantSmsNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCanProceedAppellantSmsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+    @Bean("upperTribunalBundleFailedNotificationGenerator")
+    public List<NotificationGenerator> upperTribunalBundleFailedNotificationGenerator(
+            AdminOfficerUpperTribunalBundleFailedPersonalisation adminOfficerUpperTribunalBundleFailedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && Arrays.asList(IN_TIME, OutOfTimeDecisionType.APPROVED)
-                            .contains(outOfTimeDecisionType)
-                            && isAipJourney(asylumCase)
-                            && isSmsPreferred(asylumCase);
-
-                }, notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerUpperTribunalBundleFailedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> upperTribinalBundleFailedNotificationHandler(
-            @Qualifier("upperTribunalBundleFailedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("requestHearingRequirementsAipNotificationGenerator")
+    public List<NotificationGenerator> requestHearingRequirementsAipNotificationGenerator(
+            AppellantRequestHearingRequirementsPersonalisationEmail appellantRequestHearingRequirementsPersonalisationEmail,
+            AppellantRequestHearingRequirementsPersonalisationSms appellantRequestHearingRequirementsPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    final String stitchStatus = getStitchStatus(callback);
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                    && callback.getCaseDetails().getState() == State.FTPA_DECIDED
-                                    && stitchStatus.equalsIgnoreCase("FAILED");
-                },
-                notificationGenerators
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantRequestHearingRequirementsPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRequestHearingRequirementsPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealDecidedOrEndedPendingPaymentNotificationHandler(
-            @Qualifier("appealDecidedOrEndedPendingPaymentGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("appealEndedAutomaticallyNotificationGenerator")
+    public List<NotificationGenerator> appealEndedAutomaticallyNotificationGenerator(
+            LegalRepresentativeEndAppealAutomaticallyPersonalisation legalRepresentativeEndAppealAutomaticallyPersonalisation,
+            HomeOfficeEndAppealAutomaticallyPersonalisation homeOfficeEndAppealAutomaticallyPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
-        // RIA-4827 - Ctsc notification of Pending payment on appeal decided or ended.
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isAipCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    boolean isAipPaymentUnpaid =
-                            asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
-                                    .map(status -> status != PAID).orElse(false)
-                                    || asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).isEmpty();
-
-                    boolean isAipAppealUnpaid =
-                            (isAipJourney(asylumCase) && isAipCorrectAppealType && isAipPaymentUnpaid);
-
-                    boolean isPaymentPending =
-                            asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
-                                    .map(status -> status == PAYMENT_PENDING).orElse(false);
-
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && Arrays.asList(
-                                    Event.SEND_DECISION_AND_REASONS,
-                                    Event.END_APPEAL).contains(callback.getEvent())
-                                    && (isPaymentPending || isAipAppealUnpaid);
-                },
-                notificationGenerators
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeEndAppealAutomaticallyPersonalisation,
+                                homeOfficeEndAppealAutomaticallyPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealEndedAutomaticallyNotificationHandler(
-            @Qualifier("appealEndedAutomaticallyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    @Bean("updatePaymentStatusPaidAppealSubmittedLrHoGenerator")
+    public List<NotificationGenerator> updatePaymentStatusPaidAppealSubmittedNotificationGenerator(
+            LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return new NotificationHandler(
-                (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
-                        && isRepJourney(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPersonalisation,
+                                homeOfficeSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
-    private boolean isRepJourney(AsylumCase asylumCase) {
+    @Bean("submitAppealLrHoWaysToPayPaPayNowNotificationGenerator")
+    public List<NotificationGenerator> submitAppealLrHoWaysToPayPaPayNowNotificationGenerator(
+            LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
 
-        return asylumCase
-                .read(JOURNEY_TYPE, JourneyType.class)
-                .map(type -> type == REP).orElse(true);
-    }
-
-    private boolean isAipJourney(AsylumCase asylumCase) {
-
-        return asylumCase
-                .read(JOURNEY_TYPE, JourneyType.class)
-                .map(type -> type == AIP).orElse(false);
-    }
-
-    private boolean hasRepEmail(AsylumCase asylumCase) {
-        return asylumCase
-                .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).isPresent();
-    }
-
-    private boolean isSmsPreferred(AsylumCase asylumCase) {
-
-        final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
-
-        Set<IdValue<Subscriber>> smsPreferred = maybeSubscribers
-                .orElse(Collections.emptyList()).stream()
-                .filter(subscriber -> YES.equals(subscriber.getValue().getWantsSms()))
-                .collect(Collectors.toSet());
-
-        return smsPreferred.size() > 0 && smsPreferred.stream().findFirst().map(subscriberIdValue ->
-                subscriberIdValue.getValue().getMobileNumber()).isPresent();
-    }
-
-    private boolean isEmailPreferred(AsylumCase asylumCase) {
-
-        final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
-
-        Set<IdValue<Subscriber>> smsPreferred = maybeSubscribers
-                .orElse(Collections.emptyList()).stream()
-                .filter(subscriber -> YES.equals(subscriber.getValue().getWantsEmail()))
-                .collect(Collectors.toSet());
-
-        return smsPreferred.size() > 0 && smsPreferred.stream().findFirst().map(subscriberIdValue ->
-                subscriberIdValue.getValue().getEmail()).isPresent();
-    }
-
-    private ErrorHandler<AsylumCase> getErrorHandler() {
-        ErrorHandler<AsylumCase> errorHandler = (callback, e) -> {
-            callback
-                    .getCaseDetails()
-                    .getCaseData()
-                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
-        };
-        return errorHandler;
-    }
-
-    private ErrorHandler<AsylumCase> getSmsErrorHandling() {
-        ErrorHandler<AsylumCase> errorHandler =
-                (callback, e) -> log.error(
-                        "cannot send sms notification to the appellant on submitAppeal, caseId: {}",
-                        callback.getCaseDetails().getId(),
-                        e
-                );
-        return errorHandler;
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> updatePaymentStatusSuccessLrHoNotificationHandler(
-            @Qualifier("updatePaymentStatusPaidAppealSubmittedLrHoGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    State currentState = callback.getCaseDetails().getState();
-
-                    boolean isCorrectAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == EA || type == HU).orElse(false);
-
-                    boolean isCorrectAppealTypeAndStateHUorEAorPA =
-                            isCorrectAppealType
-                                    && (currentState == State.APPEAL_SUBMITTED);
-
-                    boolean payLater = asylumCase
-                            .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                            .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                            .orElse(false);
-
-                    Optional<PaymentStatus> paymentStatus = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
-                            && isCorrectAppealTypeAndStateHUorEAorPA
-                            && !paymentStatus.equals(Optional.empty())
-                            && !payLater
-                            && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                            && paymentStatus.get().equals(PaymentStatus.PAID);
-                }, notificationGenerators
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPersonalisation,
+                                homeOfficeSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealLrHoWaysToPayPaPayNowNotificationHandler(
-            @Qualifier("submitAppealLrHoWaysToPayPaPayNowNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isPaAppealType = asylumCase
-                            .read(APPEAL_TYPE, AppealType.class)
-                            .map(type -> type == PA).orElse(false);
-
-                    String paAppealTypePaymentOption = asylumCase
-                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                            && (isPaAppealType
-                            && paAppealTypePaymentOption.equals("payNow"));
-                },
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
 }
