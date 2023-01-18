@@ -907,6 +907,7 @@ security:
       - "editAppeal"
       - "uploadAdditionalEvidence"
       - "submitAppeal"
+      - "paymentAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
       - "submitClarifyingQuestionAnswers"
