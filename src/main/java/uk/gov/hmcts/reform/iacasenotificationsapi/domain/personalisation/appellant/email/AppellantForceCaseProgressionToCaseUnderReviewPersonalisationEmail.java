@@ -36,17 +36,9 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (asylumCase.read(JOURNEY_TYPE, JourneyType.class)
-                .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
-                .orElse(false)) {
-            return Collections.singleton(asylumCase
-                    .read(EMAIL, String.class)
-                    .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
-        } else {
-            return Collections.singleton(asylumCase
+        return Collections.singleton(asylumCase
                 .read(EMAIL, String.class)
                 .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
-        }
     }
 
     public String getReferenceId(Long caseId) {
