@@ -1907,7 +1907,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isRpAndDcAppealType;
+                       && isRpAndDcAppealType
+                       && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -3345,7 +3346,8 @@ public class NotificationHandlerConfiguration {
                        && !paymentStatus.equals(Optional.empty())
                        && !payLater
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                       && paymentStatus.get().equals(PaymentStatus.PAID);
+                       && paymentStatus.get().equals(PaymentStatus.PAID)
+                       && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
         );
     }
@@ -3370,7 +3372,8 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && (isPaAppealType
-                           && paAppealTypePaymentOption.equals("payNow"));
+                           && paAppealTypePaymentOption.equals("payNow"))
+                       && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -3387,7 +3390,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isAgeAssessmentAppeal(asylumCase);
+                            && (isAgeAssessmentAppeal(asylumCase) || isAcceleratedDetainedAppeal(asylumCase));
                 },
                 notificationGenerators,
                 getErrorHandler()
