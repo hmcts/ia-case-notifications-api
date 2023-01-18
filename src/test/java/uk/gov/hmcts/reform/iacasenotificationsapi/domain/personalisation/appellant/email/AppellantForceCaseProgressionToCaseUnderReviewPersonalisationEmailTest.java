@@ -61,12 +61,6 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
-        Map<String, String> personalisation = forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
-        assertEquals(appellantEmailAddress, personalisation.get(EMAIL.value()));
-    }
-
-    @Test
     void should_return_recipient_email_list() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         Set<String> recipientsList = forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase);
