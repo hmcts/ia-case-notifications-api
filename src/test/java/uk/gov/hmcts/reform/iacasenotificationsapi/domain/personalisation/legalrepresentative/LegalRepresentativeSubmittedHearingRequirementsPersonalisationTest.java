@@ -3,9 +3,13 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -35,6 +40,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String adaTemplateId = "someAdaTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String legalRepEmailAddress = "legalrep@something.com";
     private String appealReferenceNumber = "someReferenceNumber";
@@ -54,6 +60,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
         legalRepresentativeSubmittedHearingRequirementsPersonalisation =
             new LegalRepresentativeSubmittedHearingRequirementsPersonalisation(
                 templateId,
+                adaTemplateId,
                 iaExUiFrontendUrl,
                 personalisationProvider,
                 customerServicesProvider
@@ -62,7 +69,9 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeSubmittedHearingRequirementsPersonalisation.getTemplateId());
+        assertEquals(templateId, legalRepresentativeSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertEquals(adaTemplateId, legalRepresentativeSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
