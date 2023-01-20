@@ -13,6 +13,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -1953,7 +1954,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isRpAndDcAppealType;
+                       && isRpAndDcAppealType
+                       && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -3372,7 +3374,8 @@ public class NotificationHandlerConfiguration {
                        && !paymentStatus.equals(Optional.empty())
                        && !payLater
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                       && paymentStatus.get().equals(PaymentStatus.PAID);
+                       && paymentStatus.get().equals(PaymentStatus.PAID)
+                       && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
         );
     }
@@ -3397,10 +3400,28 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && (isPaAppealType
-                           && paAppealTypePaymentOption.equals("payNow"));
+                           && paAppealTypePaymentOption.equals("payNow"))
+                       && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealLegalRepAaaNotificationHandler(
+        @Qualifier("submitAppealLegalRepAaaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SUBMIT_APPEAL
+                            && (isAgeAssessmentAppeal(asylumCase) || isAcceleratedDetainedAppeal(asylumCase));
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
