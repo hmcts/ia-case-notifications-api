@@ -334,6 +334,8 @@ govnotify:
     submittedHearingRequirements:
       legalRep:
         email: 0c6dab6e-5c5d-4070-bccf-c8d490be7c19
+        ada:
+          email: c68173ec-1300-43c7-ae82-0371560a5559
       caseOfficer:
         email: 03aa193b-ba2c-4334-bbee-0b8244a91521
       appellant:
