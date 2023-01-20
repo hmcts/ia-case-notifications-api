@@ -9,7 +9,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
