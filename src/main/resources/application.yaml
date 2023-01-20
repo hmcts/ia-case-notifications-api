@@ -69,6 +69,8 @@ govnotify:
           email: ad63843e-7633-4410-bf4c-b7dbbfae1759
         remission:
           email: f6086415-bd32-471d-afef-c393c554b5e6
+        adaOrAaa:
+          email: d4b09101-5e59-4d17-bdcf-5829f9f73995
       appellant:
         email: 4625616a-178b-45fb-aebf-8cb945369ae0
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b

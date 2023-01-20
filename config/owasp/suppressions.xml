@@ -75,4 +75,10 @@
         <notes>Temporarily suppress Apache commons related vulnerabilities</notes>
         <cve>CVE-2021-37533</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2021-4277</cve>
+        <cve>CVE-2021-4235</cve>
+        <cve>CVE-2022-3064</cve>
+        <cve>CVE-2022-45143</cve>
+    </suppress>
 </suppressions>
