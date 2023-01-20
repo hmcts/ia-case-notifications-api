@@ -76,7 +76,6 @@
           "LP/12345/2019",
           "A1234567",
           "Talha Awan",
-          "{$iaExUiFrontendUrl}",
           "3 May 2019",
           "14:25",
           "Coventry Magistrates Court, Little Park Street, Coventry, West Midlands, CV1 2SQ",
@@ -85,8 +84,8 @@
           "The court will not be single sex",
           "The hearing will be held in public court",
           "No other adjustments are being made",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "0300 123 1711",
+          "customer.service@justice.gov.uk"
         ]
       },
       {
