@@ -10,12 +10,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
 public class LegalRepresentativeListCasePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
-    private final String legalRepresentativeCaseListedTemplateId;
+    private final String legalRepresentativeCaseListedNonAdaTemplateId;
+    private final String legalRepresentativeCaseListedAdaTemplateId;
     private final String legalRepresentativeOutOfCountryCaseListedTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
@@ -24,14 +26,16 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
 
     public LegalRepresentativeListCasePersonalisation(
-        @Value("${govnotify.template.caseListed.legalRep.email}") String legalRepresentativeCaseListedTemplateId,
+        @Value("${govnotify.template.caseListed.legalRep.email.nonAda}") String legalRepresentativeCaseListedNonAdaTemplateId,
+        @Value("${govnotify.template.caseListed.legalRep.email.ada}") String legalRepresentativeCaseListedAdaTemplateId,
         @Value("${govnotify.template.caseListed.remoteHearing.legalRep.email}") String legalRepresentativeOutOfCountryCaseListedTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.legalRepresentativeCaseListedTemplateId = legalRepresentativeCaseListedTemplateId;
+        this.legalRepresentativeCaseListedNonAdaTemplateId = legalRepresentativeCaseListedNonAdaTemplateId;
+        this.legalRepresentativeCaseListedAdaTemplateId = legalRepresentativeCaseListedAdaTemplateId;
         this.legalRepresentativeOutOfCountryCaseListedTemplateId = legalRepresentativeOutOfCountryCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
@@ -46,7 +50,9 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
             .orElse(false)) {
             return legalRepresentativeOutOfCountryCaseListedTemplateId;
         } else {
-            return legalRepresentativeCaseListedTemplateId;
+            return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
+                ? legalRepresentativeCaseListedAdaTemplateId
+                : legalRepresentativeCaseListedNonAdaTemplateId;
         }
     }
 
