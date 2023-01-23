@@ -75,8 +75,7 @@
           "PA/12345/2019",
           "LP/12345/2019",
           "A1234567",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
+          "Talha Awan", ,
           "3 May 2019",
           "14:25",
           "Nottingham Justice Centre, Carrington Street, Nottingham, NG2 1EE",
@@ -85,8 +84,8 @@
           "The court will not be single sex",
           "The hearing will be held in public court",
           "No other adjustments are being made",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "0300 123 1711",
+          "customer.service@justice.gov.uk"
         ]
       },
       {
