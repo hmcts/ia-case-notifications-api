@@ -39,7 +39,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
     HearingDetailsFinder hearingDetailsFinder;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private String nonAdaTemplateId = "nonAdaTemplateId";
+    private String adaTemplateId = "adaTemplateId";
     private String outOfCountryTemplateId = "someOocTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -126,7 +127,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         legalRepresentativeListCasePersonalisation = new LegalRepresentativeListCasePersonalisation(
-            templateId,
+            nonAdaTemplateId,
+            adaTemplateId,
             outOfCountryTemplateId,
             iaExUiFrontendUrl,
             dateTimeExtractor,
@@ -137,7 +139,11 @@ public class LegalRepresentativeListCasePersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(adaTemplateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertEquals(nonAdaTemplateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
         assertEquals(outOfCountryTemplateId, legalRepresentativeListCasePersonalisation.getTemplateId(asylumCase));
     }

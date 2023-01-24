@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 @Service
 public class LegalRepresentativeRequestHomeOfficeBundlePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
@@ -24,22 +24,20 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisation implement
     private final String legalRepEvidenceDirectionNonAdaTemplateId;
     private final String legalRepEvidenceDirectionAdaTemplateId;
     private final DirectionFinder directionFinder;
-    private final AppealService appealService;
 
     public LegalRepresentativeRequestHomeOfficeBundlePersonalisation(
         @Value("${govnotify.template.requestRespondentEvidenceDirection.legalRep.email.nonAda}") String legalRepEvidenceDirectionNonAdaTemplateId,
         @Value("${govnotify.template.requestRespondentEvidenceDirection.legalRep.email.ada}") String legalRepEvidenceDirectionAdaTemplateId,
-        DirectionFinder directionFinder, AppealService appealService) {
+        DirectionFinder directionFinder) {
 
         this.legalRepEvidenceDirectionNonAdaTemplateId = legalRepEvidenceDirectionNonAdaTemplateId;
         this.legalRepEvidenceDirectionAdaTemplateId = legalRepEvidenceDirectionAdaTemplateId;
         this.directionFinder = directionFinder;
-        this.appealService = appealService;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appealService.isAdaAppeal(asylumCase)
+        return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
             ? legalRepEvidenceDirectionAdaTemplateId
             : legalRepEvidenceDirectionNonAdaTemplateId;
     }

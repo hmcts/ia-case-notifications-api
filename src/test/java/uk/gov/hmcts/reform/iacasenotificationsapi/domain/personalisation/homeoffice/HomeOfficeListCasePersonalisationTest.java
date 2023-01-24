@@ -38,7 +38,8 @@ public class HomeOfficeListCasePersonalisationTest {
     HearingDetailsFinder hearingDetailsFinder;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private String adaTemplateId = "adaTemplateId";
+    private String nonAdaTemplateId = "nonAdaTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String homeOfficeEmailAddress = "homeoffice@example.com";
@@ -122,7 +123,8 @@ public class HomeOfficeListCasePersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         homeOfficeListCasePersonalisation = new HomeOfficeListCasePersonalisation(
-            templateId,
+            nonAdaTemplateId,
+            adaTemplateId,
             iaExUiFrontendUrl,
             dateTimeExtractor,
             emailAddressFinder,
@@ -133,7 +135,11 @@ public class HomeOfficeListCasePersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, homeOfficeListCasePersonalisation.getTemplateId());
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(adaTemplateId, homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertEquals(nonAdaTemplateId, homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

@@ -492,15 +492,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("listCaseAdaNotificationGenerator")
     public List<NotificationGenerator> listCaseAdaNotificationGenerator(
             LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisation legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation,
+            LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation,
             HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
-            CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         // RIA-3361 - listCase
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-                ?  newArrayList(legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation, homeOfficeListCasePersonalisation, caseOfficerListCasePersonalisation)
-                : newArrayList(legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation, caseOfficerListCasePersonalisation);
+                ?  newArrayList(legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation, legalRepresentativeListCasePersonalisation, homeOfficeListCasePersonalisation)
+                : newArrayList(legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation);
 
         return Arrays.asList(
                 new EmailNotificationGenerator(

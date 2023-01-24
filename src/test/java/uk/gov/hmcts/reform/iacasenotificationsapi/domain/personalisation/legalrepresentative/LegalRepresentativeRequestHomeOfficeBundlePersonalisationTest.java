@@ -4,11 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -23,8 +19,8 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -34,8 +30,6 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     DirectionFinder directionFinder;
-    @Mock
-    AppealService appealService;
     @Mock
     Direction direction;
 
@@ -73,17 +67,16 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
             new LegalRepresentativeRequestHomeOfficeBundlePersonalisation(
                 nonAdaTemplateId,
                 adaTemplateId,
-                directionFinder,
-                appealService
+                directionFinder
             );
     }
 
     @Test
     public void should_return_given_template_id() {
-        when(appealService.isAdaAppeal(asylumCase)).thenReturn(false);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         assertEquals(nonAdaTemplateId, legalRepresentativeRequestHomeOfficeBundlePersonalisation.getTemplateId(asylumCase));
 
-        when(appealService.isAdaAppeal(asylumCase)).thenReturn(true);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertEquals(adaTemplateId, legalRepresentativeRequestHomeOfficeBundlePersonalisation.getTemplateId(asylumCase));
     }
 
