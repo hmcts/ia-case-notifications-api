@@ -1181,13 +1181,14 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("reviewedAdaHearingRequirementsNotificationGenerator")
     public List<NotificationGenerator> reviewedAdaHearingRequirementsNotificationGenerator(
-            AdminOfficerReviewHearingRequirementsPersonalisation adminOfficerReviewHearingRequirementsPersonalisation,
+            LegalRepresentativeAdaReviewHearingRequirementsPersonalisation legalRepresentativeAdaReviewHearingRequirementsPersonalisation,
+            HomeOfficeAdaReviewHearingRequirementsPersonalisation homeOfficeAdaReviewHearingRequirementsPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(adminOfficerReviewHearingRequirementsPersonalisation),
+                        newArrayList(legalRepresentativeAdaReviewHearingRequirementsPersonalisation, homeOfficeAdaReviewHearingRequirementsPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
