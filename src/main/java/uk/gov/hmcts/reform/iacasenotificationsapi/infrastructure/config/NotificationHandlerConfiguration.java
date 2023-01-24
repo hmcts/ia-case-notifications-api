@@ -633,17 +633,38 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isAipJourney = isAipJourney(asylumCase);
-
                 boolean isAppealOnTime = asylumCase
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == NO).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isAipJourney
+                       && isAipJourney(asylumCase)
                        && isAppealOnTime
-                       && !isPaymentPendingForEaOrHuAppeal(callback);
+                       && !isEaHuEuAppeal(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> paymentPaidPostSubmitAipNotificationHandler(
+        @Qualifier("paymentAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        // This applies only to EA/HU/EUSS appeals
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean paymentPaid = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.PAYMENT_APPEAL
+                    && paymentPaid
+                    && isAipJourney(asylumCase);
             }, notificationGenerators
         );
     }
@@ -743,17 +764,15 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isAipJourney = isAipJourney(asylumCase);
-
                 boolean isOutOfTimeAppeal = asylumCase
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isAipJourney
+                       && isAipJourney(asylumCase)
                        && isOutOfTimeAppeal
-                       && !isPaymentPendingForEaOrHuAppeal(callback);
+                       && !isEaHuEuAppeal(asylumCase);
             }, notificationGenerators
         );
     }
@@ -2498,7 +2517,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isEaAndHuAppealType = isEaAndHuAppeal(asylumCase);
+                boolean isEaAndHuAppealType = isEaHuEuAppeal(asylumCase);
 
                 boolean isPaAppealType = isPaAppeal(asylumCase);
 
@@ -2536,7 +2555,7 @@ public class NotificationHandlerConfiguration {
             .map(type -> type == PA).orElse(false);
     }
 
-    protected boolean isEaAndHuAppeal(AsylumCase asylumCase) {
+    protected boolean isEaHuEuAppeal(AsylumCase asylumCase) {
         return asylumCase
             .read(APPEAL_TYPE, AppealType.class)
             .map(type -> type == EA || type == HU || type == EU).orElse(false);
