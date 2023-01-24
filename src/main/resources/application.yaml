@@ -329,6 +329,12 @@ govnotify:
     reviewHearingRequirements:
       adminOfficer:
         email: 62719354-7a95-4a5a-b42f-ae2223bd35ee
+      legalRep:
+        ada:
+          email: f48c6943-5719-4410-beb6-ecc1407fcf36
+      homeOffice:
+        ada:
+          email: 78086792-ced6-4940-b227-bc95967101cc
     reviewReheardHearingRequirements:
       adminOfficer:
         email: 9b7c30f4-d30f-48ab-a473-83b8cae9d29f

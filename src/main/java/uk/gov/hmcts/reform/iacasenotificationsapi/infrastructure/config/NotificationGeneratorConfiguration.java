@@ -1234,6 +1234,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("reviewedAdaHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> reviewedAdaHearingRequirementsNotificationGenerator(
+            LegalRepresentativeAdaReviewHearingRequirementsPersonalisation legalRepresentativeAdaReviewHearingRequirementsPersonalisation,
+            HomeOfficeAdaReviewHearingRequirementsPersonalisation homeOfficeAdaReviewHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeAdaReviewHearingRequirementsPersonalisation, homeOfficeAdaReviewHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("withoutHearingRequirementsNotificationGenerator")
     public List<NotificationGenerator> withoutHearingRequirementsNotificationGenerator(
         AdminOfficerWithoutHearingRequirementsPersonalisation adminOfficerWithoutHearingRequirementsPersonalisation,

@@ -1273,8 +1273,24 @@ public class NotificationHandlerConfiguration {
 
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS,
+                && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS
+                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> reviewedAdaHearingRequirementsNotificationHandler(
+            @Qualifier("reviewedAdaHearingRequirementsNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+
+                (callbackStage, callback) ->
+                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS
+                    && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
         );
     }
 
