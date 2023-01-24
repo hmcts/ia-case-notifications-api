@@ -6,7 +6,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
 
 @Service
@@ -24,11 +23,5 @@ public class AppealService {
         return  asylumCase
             .read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)
             .map(type -> type == JourneyType.AIP).orElse(false);
-    }
-
-    public boolean isAdaAppeal(AsylumCase asylumCase) {
-        return asylumCase
-            .read(AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)
-            .map(yesOrNo -> yesOrNo == YesOrNo.YES).orElse(false);
     }
 }

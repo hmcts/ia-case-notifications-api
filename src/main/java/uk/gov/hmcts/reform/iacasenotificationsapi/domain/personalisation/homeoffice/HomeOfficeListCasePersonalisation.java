@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
 public class HomeOfficeListCasePersonalisation implements EmailNotificationPersonalisation {
 
-    private final String homeOfficeCaseListedTemplateId;
+    private final String homeOfficeCaseListedNonAdaTemplateId;
+    private final String homeOfficeCaseListedAdaTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final EmailAddressFinder emailAddressFinder;
@@ -25,14 +27,16 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
     private final HearingDetailsFinder hearingDetailsFinder;
 
     public HomeOfficeListCasePersonalisation(
-        @Value("${govnotify.template.caseListed.homeOffice.email}") String homeOfficeCaseListedTemplateId,
+        @Value("${govnotify.template.caseListed.homeOffice.email.nonAda}") String homeOfficeCaseListedNonAdaTemplateId,
+        @Value("${govnotify.template.caseListed.homeOffice.email.ada}") String homeOfficeCaseListedAdaTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.homeOfficeCaseListedTemplateId = homeOfficeCaseListedTemplateId;
+        this.homeOfficeCaseListedNonAdaTemplateId = homeOfficeCaseListedNonAdaTemplateId;
+        this.homeOfficeCaseListedAdaTemplateId = homeOfficeCaseListedAdaTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.emailAddressFinder = emailAddressFinder;
@@ -41,8 +45,10 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
     }
 
     @Override
-    public String getTemplateId() {
-        return homeOfficeCaseListedTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
+            ? homeOfficeCaseListedAdaTemplateId
+            : homeOfficeCaseListedNonAdaTemplateId;
     }
 
     @Override
