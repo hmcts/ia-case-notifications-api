@@ -1179,6 +1179,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("reviewedAdaHearingRequirementsNotificationGenerator")
+    public List<NotificationGenerator> reviewedAdaHearingRequirementsNotificationGenerator(
+            AdminOfficerReviewHearingRequirementsPersonalisation adminOfficerReviewHearingRequirementsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerReviewHearingRequirementsPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("withoutHearingRequirementsNotificationGenerator")
     public List<NotificationGenerator> withoutHearingRequirementsNotificationGenerator(
         AdminOfficerWithoutHearingRequirementsPersonalisation adminOfficerWithoutHearingRequirementsPersonalisation,
