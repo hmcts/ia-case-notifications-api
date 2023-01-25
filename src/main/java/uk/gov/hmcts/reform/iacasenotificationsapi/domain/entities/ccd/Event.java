@@ -97,6 +97,7 @@ public enum Event {
     NOC_REQUEST_BAIL("nocRequestBail"),
     END_APPEAL_AUTOMATICALLY("endAppealAutomatically"),
     UPDATE_PAYMENT_STATUS("updatePaymentStatus"),
+    ADA_SUITABILITY_REVIEW("adaSuitabilityReview"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

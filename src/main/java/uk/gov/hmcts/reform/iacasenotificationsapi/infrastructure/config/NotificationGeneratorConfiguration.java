@@ -3045,4 +3045,24 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("adaSuitabilityNotificationGenerator")
+    public List<NotificationGenerator> adaSuitabilityNotificationGenerator(
+            LegalRepresentativeAdaSuitabilityPersonalisation legalRepresentativeAdaSuitabilityPersonalisation,
+            HomeOfficeAdaSuitabilityPersonalisation homeOfficeAdaSuitabilityPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                            legalRepresentativeAdaSuitabilityPersonalisation,
+                            homeOfficeAdaSuitabilityPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
