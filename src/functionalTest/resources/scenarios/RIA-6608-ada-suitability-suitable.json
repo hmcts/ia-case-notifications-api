@@ -1,11 +1,11 @@
 {
-  "description": "RIA-6609 Send ada suitability notification to legal rep and home office for ADA appeal (Suitable)",
+  "description": "RIA-6608 Send ada suitability notification to legal rep and home office for ADA appeal (Suitable)",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 6609,
+      "id": 6608,
       "eventId": "adaSuitabilityReview",
       "state": "respondentReview",
       "caseData": {
@@ -34,11 +34,11 @@
         "suitabilityReviewDecision": "suitable",
         "notificationsSent": [
           {
-            "id": "6609_ADA_SUITABILITY_DETERMINED_LEGAL_REP",
+            "id": "6608_ADA_SUITABILITY_DETERMINED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6609_ADA_SUITABILITY_DETERMINED_HOME_OFFICE",
+            "id": "6608_ADA_SUITABILITY_DETERMINED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
