@@ -3428,6 +3428,18 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> adaSuitabilityNotificationHandler(
+            @Qualifier("adaSuitabilityNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ADA_SUITABILITY_REVIEW,
+                notificationGenerators
+        );
+    }
+
 }
 
 

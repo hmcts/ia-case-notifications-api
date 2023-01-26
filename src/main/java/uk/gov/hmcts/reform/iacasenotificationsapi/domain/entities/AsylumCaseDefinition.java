@@ -367,7 +367,9 @@ public enum AsylumCaseDefinition {
 
     IS_ACCELERATED_DETAINED_APPEAL(
         "isAcceleratedDetainedAppeal", new TypeReference<YesOrNo>(){}),
-    ;
+
+    SUITABILITY_REVIEW_DECISION(
+        "suitabilityReviewDecision", new TypeReference<AdaSuitabilityReviewDecision>(){});
 
     private final String value;
     private final TypeReference typeReference;

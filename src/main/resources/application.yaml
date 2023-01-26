@@ -827,6 +827,17 @@ govnotify:
         email: 200ea13a-b583-4471-8d08-650f77eabd8c
       homeOffice:
         email: f90edfba-ac37-47fa-ab55-e429ffa9f372
+    adaSuitabilityReview:
+      legalRep:
+        unsuitable:
+          email: 6734ec0f-1818-4f2d-88da-8ac89fc4dfff
+        suitable:
+          email: 45efcaae-72b0-49e0-9b07-802d1a65bd6e
+      homeOffice:
+        unsuitable:
+          email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
+        suitable:
+          email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1078,6 +1089,7 @@ security:
       - "sendBailDirection"
       - "editBailDocuments"
       - "changeBailDirectionDueDate"
+      - "adaSuitabilityReview"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
