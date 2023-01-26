@@ -827,6 +827,17 @@ govnotify:
         email: 200ea13a-b583-4471-8d08-650f77eabd8c
       homeOffice:
         email: f90edfba-ac37-47fa-ab55-e429ffa9f372
+    adaSuitabilityReview:
+      legalRep:
+        unsuitable:
+          email: 6734ec0f-1818-4f2d-88da-8ac89fc4dfff
+        suitable:
+          email: 45efcaae-72b0-49e0-9b07-802d1a65bd6e
+      homeOffice:
+        unsuitable:
+          email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
+        suitable:
+          email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
         sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
@@ -1127,6 +1138,7 @@ security:
       - "maintainCaseLinks"
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
+      - "adaSuitabilityReview"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
