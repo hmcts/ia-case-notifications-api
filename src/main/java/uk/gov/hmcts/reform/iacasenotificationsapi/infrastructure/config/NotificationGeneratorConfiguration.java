@@ -935,6 +935,26 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editCaseListingAdaRepNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingAdaRepNotificationGenerator(
+        HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
+        LegalRepresentativeEditListingPersonalisation legalRepresentativeEditListingPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation)
+            : newArrayList(legalRepresentativeEditListingPersonalisation);
+
+        return Arrays.asList(
+            new EditListingEmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("editCaseListingAipNotificationGenerator")
     public List<NotificationGenerator> editCaseListingAipNotificationGenerator(
         HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
