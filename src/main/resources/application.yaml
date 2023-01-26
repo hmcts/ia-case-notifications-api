@@ -239,11 +239,15 @@ govnotify:
         email: a61da7e2-d70f-4d62-89c5-fc54155321c9
     caseEdited:
       homeOffice:
-        email: 0006932c-4a3f-4609-bb5e-0ed2c455caf8
+        email:
+          ada: 6786d68c-df1c-4196-965b-3c9fd6cc290a
+          nonAda: 0006932c-4a3f-4609-bb5e-0ed2c455caf8
       caseOfficer:
         email: fec967bf-79f6-4683-b908-d1eea3cc591e
       legalRep:
-        email: 6b301851-6395-4e47-ba08-b208d30396e5
+        email:
+          ada: 29e7830e-0c7d-40c1-a6d6-2fddeb64cef4
+          nonAda: 6b301851-6395-4e47-ba08-b208d30396e5
       appellant:
         email: 11254ed3-abfb-4fd2-a2bf-8453f470321a
         sms: 7d23fda4-9ff7-4642-aa97-1a8a3ccafaba

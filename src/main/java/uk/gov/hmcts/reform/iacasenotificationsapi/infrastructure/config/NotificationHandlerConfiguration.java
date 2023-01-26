@@ -1097,7 +1097,22 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.EDIT_CASE_LISTING
-                && isRepJourney(callback.getCaseDetails().getCaseData()),
+                && isRepJourney(callback.getCaseDetails().getCaseData())
+            && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editCaseListingAdaRepNotificationHandler(
+        @Qualifier("editCaseListingAdaRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.EDIT_CASE_LISTING
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+            && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }

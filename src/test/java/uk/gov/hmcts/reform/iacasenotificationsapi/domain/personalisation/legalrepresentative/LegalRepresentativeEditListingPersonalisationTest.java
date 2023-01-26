@@ -20,6 +20,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -37,7 +38,8 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private String adaTemplateId = "adaTemplateId";
+    private String nonAdaTemplateId = "nonAdaTemplateId";
     private String templateIdRemoteHearing = "remoteTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String legalRepEmailAddress = "legalRep@example.com";
@@ -70,7 +72,8 @@ public class LegalRepresentativeEditListingPersonalisationTest {
             .thenReturn(Optional.of(legalRepEmailAddress));
 
         legalRepresentativeEditListingPersonalisation = new LegalRepresentativeEditListingPersonalisation(
-            templateId,
+            nonAdaTemplateId,
+            adaTemplateId,
             templateIdRemoteHearing,
             personalisationProvider,
             customerServicesProvider
@@ -82,11 +85,15 @@ public class LegalRepresentativeEditListingPersonalisationTest {
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
-        assertEquals(templateId, legalRepresentativeEditListingPersonalisation.getTemplateId(asylumCase));
+        assertEquals(nonAdaTemplateId, legalRepresentativeEditListingPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
 
         assertEquals(templateIdRemoteHearing, legalRepresentativeEditListingPersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(adaTemplateId, legalRepresentativeEditListingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
