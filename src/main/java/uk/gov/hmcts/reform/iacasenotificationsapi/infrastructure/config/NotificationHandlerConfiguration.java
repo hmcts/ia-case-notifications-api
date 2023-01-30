@@ -2743,7 +2743,8 @@ public class NotificationHandlerConfiguration {
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && !payLater
                        && !payNow
-                       && smsPreferred;
+                       && smsPreferred
+                       && !isAgeAssessmentAppeal(asylumCase);
             },
             notificationGenerators,
             getSmsErrorHandling()
@@ -2817,7 +2818,8 @@ public class NotificationHandlerConfiguration {
                        && emailPreferred
                        && !payLater
                        && !payNow
-                       && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent();
+                       && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
+                       && !isAgeAssessmentAppeal(asylumCase);
             },
             notificationGenerators,
             (callback, e) -> log.error(
