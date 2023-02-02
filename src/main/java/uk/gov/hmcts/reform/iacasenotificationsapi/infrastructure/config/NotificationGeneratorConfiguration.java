@@ -510,12 +510,13 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> paymentAppealAipNotificationGenerator(
         AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
         AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantSubmitAppealPersonalisationEmail),
+                newArrayList(appellantSubmitAppealPersonalisationEmail, homeOfficeSubmitAppealPersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
