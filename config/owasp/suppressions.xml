@@ -83,4 +83,9 @@
         <notes>Temporarily suppress tomcat-embed vulnerabilities</notes>
         <cve>CVE-2022-45143</cve>
     </suppress>
+    <suppress>
+        <notes>Temporarily suppress json related vulnerability</notes>
+        <packageUrl regex="true">^pkg:maven/org\.json/json@.*$</packageUrl>
+        <vulnerabilityName>CVE-2022-45688</vulnerabilityName>
+    </suppress>
 </suppressions>
