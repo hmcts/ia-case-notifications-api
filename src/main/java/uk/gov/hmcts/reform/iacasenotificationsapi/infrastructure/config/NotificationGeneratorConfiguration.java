@@ -2049,18 +2049,20 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> submitAppealPayOfflineNotificationHandler(
             LegalRepresentativeAppealSubmittedPayOfflinePersonalisation legalRepresentativeAppealSubmittedPayOfflinePersonalisation,
             AdminOfficerAppealSubmittedPayOfflinePersonalisation adminOfficerAppealSubmittedPayOfflinePersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
+        //RIA-6682
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(legalRepresentativeAppealSubmittedPayOfflinePersonalisation, homeOfficeSubmitAppealPersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation)
+                : newArrayList(legalRepresentativeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
 
         return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(
-                        legalRepresentativeAppealSubmittedPayOfflinePersonalisation,
-                        adminOfficerAppealSubmittedPayOfflinePersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
+                    personalisations,
+                    notificationSender,
+                    notificationIdAppender
             )
         );
     }
