@@ -1230,8 +1230,15 @@ appellantDaysToWait:
   afterClarifyingQuestionsAnswers: 5
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
+  ftpaDecided:
+    inCountry: 14
+    outOfCountry: 28
+    ada: 5
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
   connectionTimeout: 5000
   socketTimeout: 5000
+
+govUkHolidays:
+  url: https://www.gov.uk/

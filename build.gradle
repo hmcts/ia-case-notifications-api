@@ -400,6 +400,7 @@ dependencies {
     testCompile 'com.github.hmcts:fortify-client:1.2.1:all'
 
     testCompile 'pl.pragmatists:JUnitParams:1.1.1'
+    testImplementation group: 'pl.pojo', name: 'pojo-tester', version: '0.7.6'
 
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.26') {
         force = true
