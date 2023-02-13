@@ -16,11 +16,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DueDateService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implements EmailNotificationPersonalisation {
 
     private final DueDateService dueDateService;
+    private final PersonalisationProvider personalisationProvider;
     private final String upperTribunalNoticesEmailAddress;
     private final String applicationGrantedApplicantHomeOfficeTemplateId;
     private final String applicationPartiallyGrantedApplicantHomeOfficeTemplateId;
@@ -45,6 +47,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
         @Value("${ftpaApplicationDecidedDaysToWait.outOfCountry}") int calendarDaysToWaitOutOfCountry,
         @Value("${ftpaApplicationDecidedDaysToWait.ada}") int workingDaysaysToWaitAda,
         DueDateService dueDateService,
+        PersonalisationProvider personalisationProvider,
         @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress
     ) {
         this.applicationGrantedApplicantHomeOfficeTemplateId = applicationGrantedApplicantHomeOfficeTemplateId;
@@ -58,6 +61,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
         this.calendarDaysToWaitOutOfCountry = calendarDaysToWaitOutOfCountry;
         this.workingDaysaysToWaitAda = workingDaysaysToWaitAda;
         this.dueDateService = dueDateService;
+        this.personalisationProvider = personalisationProvider;
         this.upperTribunalNoticesEmailAddress = upperTribunalNoticesEmailAddress;
     }
 
@@ -119,11 +123,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-            .put("respondentReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
+            .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase));
 
         boolean setDynamicDate = Arrays.asList(
             applicationPartiallyGrantedApplicantHomeOfficeTemplateId,
@@ -144,6 +144,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
             }
         }
 
+        personalisationBuilder = personalisationBuilder.put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
         return personalisationBuilder.build();
     }
 

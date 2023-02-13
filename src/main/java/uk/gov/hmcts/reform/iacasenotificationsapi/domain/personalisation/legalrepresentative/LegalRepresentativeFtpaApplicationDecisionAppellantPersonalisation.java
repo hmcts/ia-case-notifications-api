@@ -11,16 +11,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DueDateService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final DueDateService dueDateService;
+    private final PersonalisationProvider personalisationProvider;
     private final String applicationGrantedApplicantLegalRepTemplateId;
     private final String applicationPartiallyGrantedApplicantLegalRepTemplateId;
     private final String applicationNotAdmittedApplicantLegalRepTemplateId;
@@ -44,7 +45,8 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
         @Value("${ftpaApplicationDecidedDaysToWait.inCountry}") int calendarDaysToWaitInCountry,
         @Value("${ftpaApplicationDecidedDaysToWait.outOfCountry}") int calendarDaysToWaitOutOfCountry,
         @Value("${ftpaApplicationDecidedDaysToWait.ada}") int workingDaysaysToWaitAda,
-        DueDateService dueDateService) {
+        DueDateService dueDateService,
+        PersonalisationProvider personalisationProvider) {
         this.applicationGrantedApplicantLegalRepTemplateId = applicationGrantedApplicantLegalRepTemplateId;
         this.applicationPartiallyGrantedApplicantLegalRepTemplateId = applicationPartiallyGrantedApplicantLegalRepTemplateId;
         this.applicationNotAdmittedApplicantLegalRepTemplateId = applicationNotAdmittedApplicantLegalRepTemplateId;
@@ -56,6 +58,7 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
         this.calendarDaysToWaitOutOfCountry = calendarDaysToWaitOutOfCountry;
         this.workingDaysaysToWaitAda = workingDaysaysToWaitAda;
         this.dueDateService = dueDateService;
+        this.personalisationProvider = personalisationProvider;
     }
 
     @Override
@@ -101,11 +104,7 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-            .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
+            .putAll(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase));
 
         boolean setDynamicDate = Arrays.asList(
             applicationPartiallyGrantedApplicantLegalRepTemplateId,
