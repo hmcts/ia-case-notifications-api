@@ -1020,6 +1020,7 @@ security:
       - "recordOutOfTimeDecision"
     caseworker-ia-admofficer:
       - "listCase"
+      - "submitAppeal"
       - "editCaseListing"
       - "sendDecisionAndReasons"
       - "adjournHearingWithoutDate"
