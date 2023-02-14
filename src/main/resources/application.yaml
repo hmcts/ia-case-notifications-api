@@ -863,6 +863,17 @@ govnotify:
           email: 63c30831-4dd0-4c0a-b70f-4c439dcc66ea
         afterListing:
           email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
+    transferOutOfAda:
+      homeOffice:
+        beforeListing:
+          email: 9c5130fe-c389-4e90-aa26-b8a6f6cc3f71
+        afterListing:
+          email: 554c969a-27e0-441d-b188-42216e00b097
+      legalRep:
+        beforeListing:
+          email: 814064a8-18c2-4d8c-8ed0-c8366e6ce60b
+        afterListing:
+          email: f1d0d9c6-ae3a-443e-b262-c002e570b3e0
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1059,6 +1070,7 @@ security:
       - "markAppealPaid"
       - "createCaseLink"
       - "maintainCaseLinks"
+      - "transferOutOfAda"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -1139,6 +1151,7 @@ security:
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
       - "adaSuitabilityReview"
+      - "transferOutOfAda"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"

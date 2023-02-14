@@ -3143,4 +3143,24 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("transferOutOfAdaNotificationGenerator")
+    public List<NotificationGenerator> transferOutOfAdaNotificationGenerator(
+            LegalRepresentativeTransferOutOfAdaPersonalisation legalRepresentativeTransferOutOfAdaPersonalisation,
+            HomeOfficeTransferOutOfAdaPersonalisation homeOfficeTransferOutOfAdaPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeTransferOutOfAdaPersonalisation,
+                                homeOfficeTransferOutOfAdaPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

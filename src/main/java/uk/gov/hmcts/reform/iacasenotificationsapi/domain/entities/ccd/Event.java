@@ -99,6 +99,8 @@ public enum Event {
     UPDATE_PAYMENT_STATUS("updatePaymentStatus"),
     ADA_SUITABILITY_REVIEW("adaSuitabilityReview"),
 
+    TRANSFER_OUT_OF_ADA("transferOutOfAda"),
+
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 
