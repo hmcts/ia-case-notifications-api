@@ -255,6 +255,19 @@ public class PersonalisationProvider {
             .build();
     }
 
+    public Map<String, String> getRespondentHeaderPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, ASYLUM_NOT_NULL_MESSAGE);
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
+            .put("respondentReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .build();
+    }
+
     public Map<String, String> getLegalRepHeaderPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, ASYLUM_NOT_NULL_MESSAGE);
 
