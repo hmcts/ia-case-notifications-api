@@ -3442,6 +3442,18 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> transferOutOfAdaNotificationHandler(
+            @Qualifier("transferOutOfAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.TRANSFER_OUT_OF_ADA,
+                notificationGenerators
+        );
+    }
+
 }
 
 
