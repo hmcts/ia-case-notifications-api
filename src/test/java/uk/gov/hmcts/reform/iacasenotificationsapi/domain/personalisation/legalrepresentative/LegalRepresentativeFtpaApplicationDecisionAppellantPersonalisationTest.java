@@ -2,11 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DueDateService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,6 +29,8 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
 
     @Mock
     AsylumCase asylumCase;
+    @Mock
+    DueDateService dueDateService;
     @Mock
     PersonalisationProvider personalisationProvider;
 
@@ -43,6 +48,10 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
     private String applicantReheardTemplateId = "otherPartyReheardTemplateId";
     private String allowedTemplateId = "allowedTemplateId";
     private String dismissedTemplateId = "dismissedTemplateId";
+
+    private int calendarDaysToWaitInCountry = 14;
+    private int calendarDaysToWaitOutOfCountry = 28;
+    private int workingDaysaysToWaitAda = 5;
 
 
     private FtpaDecisionOutcomeType granted = FtpaDecisionOutcomeType.FTPA_GRANTED;
@@ -68,6 +77,10 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
                 applicantReheardTemplateId,
                 allowedTemplateId,
                 dismissedTemplateId,
+                calendarDaysToWaitInCountry,
+                calendarDaysToWaitOutOfCountry,
+                workingDaysaysToWaitAda,
+                dueDateService,
                 personalisationProvider
             );
     }
@@ -131,9 +144,12 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
     }
 
     @Test
-    public void should_return_personalisation_of_all_information_given() {
-        when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase))
-            .thenReturn(getPersonalisationMapWithGivenValues());
+    public void should_return_personalisation_of_all_information_given_decision_partially_granted_ada() {
+        when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforLegalRep());
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(partiallyGranted));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(dueDateService.calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class))).thenReturn(ZonedDateTime.now());
         Map<String, String> personalisation =
             legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
 
@@ -142,16 +158,73 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+
+        verify(dueDateService, times(1)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
 
-    private Map<String, String> getPersonalisationMapWithGivenValues() {
+    @Test
+    public void should_return_personalisation_of_all_information_given_decision_refused_in_country() {
+        when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforLegalRep());
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(refused));
+        when(dueDateService.calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class))).thenReturn(ZonedDateTime.now());
+        Map<String, String> personalisation =
+            legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+
+        verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
+    }
+
+    @Test
+    public void should_return_personalisation_of_all_information_given_decision_not_admitted_out_of_country() {
+        when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforLegalRep());
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(notAdmitted));
+        when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(dueDateService.calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class))).thenReturn(ZonedDateTime.now());
+        Map<String, String> personalisation =
+            legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+
+        verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
+    }
+
+    @Test
+    public void should_return_personalisation_of_all_information_given_others() {
+        when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforLegalRep());
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(granted));
+        Map<String, String> personalisation =
+            legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+
+        verify(dueDateService, times(0)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
+        verify(dueDateService, times(0)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
+    }
+
+    private Map<String, String> getPersonalisationforLegalRep() {
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)
+            .put("legalRepReferenceNumber", legalRepReferenceNumber)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyName)
             .put("ariaListingReference", ariaListingReference)
-            .put("legalRepReferenceNumber", legalRepReferenceNumber)
             .build();
     }
 

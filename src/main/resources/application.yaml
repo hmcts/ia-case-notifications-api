@@ -565,9 +565,9 @@ govnotify:
         email: 5ed2b159-98e3-4878-a75f-f365370cba4d
       applicant:
         legalRep:
-          email: 91a8351f-8c6f-425f-9ca6-f41e4055cd71
-        homeOffice:
-          email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
+          email: 2f690d1e-2862-4a25-8867-beff73743474
+        respondent:
+          email: 369e4efe-d5d1-48eb-8525-9fc3cef16b41
       otherParty:
         legalRep:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
@@ -576,9 +576,9 @@ govnotify:
     applicationNotAdmitted:
       applicant:
         legalRep:
-          email: f22b0a18-9487-4f86-9bf5-45ebfa6c882c
-        homeOffice:
-          email: 9cd8317c-3c89-43cc-b106-5c44041e9298
+          email: 5af7321e-9038-4e1d-bad2-724061dca4f1
+        respondent:
+          email: c0177456-2cb6-4865-bd63-067abee8c206
       otherParty:
         legalRep:
           email: 755da55a-85ec-40b9-9f1c-7e382bdf7c9e
@@ -587,9 +587,9 @@ govnotify:
     applicationRefused:
       applicant:
         legalRep:
-          email: 5e031048-eeed-4754-98c1-b6cff789d407
-        homeOffice:
-          email: fcbe9da1-628b-4661-9128-4e57f1f5e21d
+          email: 2e798bcb-25fb-4a8a-8674-3ed3bace8e64
+        respondent:
+          email: 6126715d-1177-4fd1-95c4-8275ed85c7cd
       otherParty:
         legalRep:
           email: ce7523f4-9244-4b14-b4aa-aa91457e02ce
@@ -838,6 +838,17 @@ govnotify:
           email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
         suitable:
           email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
+    transferOutOfAda:
+      homeOffice:
+        beforeListing:
+          email: 9c5130fe-c389-4e90-aa26-b8a6f6cc3f71
+        afterListing:
+          email: 554c969a-27e0-441d-b188-42216e00b097
+      legalRep:
+        beforeListing:
+          email: 814064a8-18c2-4d8c-8ed0-c8366e6ce60b
+        afterListing:
+          email: f1d0d9c6-ae3a-443e-b262-c002e570b3e0
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1018,6 +1029,7 @@ security:
       - "removeLegalRepresentative"
       - "manageFeeUpdate"
       - "recordOutOfTimeDecision"
+      - "transferOutOfAda"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1091,6 +1103,7 @@ security:
       - "editBailDocuments"
       - "changeBailDirectionDueDate"
       - "adaSuitabilityReview"
+      - "transferOutOfAda"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
@@ -1219,7 +1232,15 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
 
+ftpaApplicationDecidedDaysToWait:
+  inCountry: 14
+  outOfCountry: 28
+  ada: 5
+
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
   connectionTimeout: 5000
   socketTimeout: 5000
+
+govUkHolidays:
+  url: https://www.gov.uk/

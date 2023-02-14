@@ -102,11 +102,12 @@ public class EventTest {
         assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
         assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
         assertEquals("adaSuitabilityReview", ADA_SUITABILITY_REVIEW.toString());
+        assertEquals("transferOutOfAda", TRANSFER_OUT_OF_ADA.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(95, Event.values().length);
+        assertEquals(96, Event.values().length);
     }
 }
