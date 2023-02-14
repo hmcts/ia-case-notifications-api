@@ -1247,7 +1247,6 @@ allowedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL:ho-al
 dismissedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL:ho-dismissed-appeal@example.com}
 apcPrivateHomeOfficeEmailAddress: ${IA_HOME_OFFICE_APC_EMAIL}
 reviewHearingRequirementsAdminOfficerEmailAddress: ${IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL:ao-review@example.com}
-listCaseCaseOfficerEmailAddress: ${IA_CASE_OFFICER_LIST_CASE_EMAIL:co-list-case@example.com}
 ctscAdminFtpaDecisionEmailAddress: ${IA_CTSC_ADMIN_FTPA_DECISION:ctscFtpaDecision@example.gov.uk}
 feesAdminOfficerEmailAddress: ${FEES_ADMIN_OFFICER_EMAIL}
 paymentExceptionsAdminOfficerEmailAddress: ${PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL:payment-exceptions-ao@example.com}
@@ -1281,9 +1280,17 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
 
+ftpaApplicationDecidedDaysToWait:
+  inCountry: 14
+  outOfCountry: 28
+  ada: 5
+
 appellantDaysToAskReinstate: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
   connectionTimeout: 5000
   socketTimeout: 5000
+
+govUkHolidays:
+  url: https://www.gov.uk/

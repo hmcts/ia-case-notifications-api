@@ -2,18 +2,26 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DueDateService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implements EmailNotificationPersonalisation {
 
+    private final DueDateService dueDateService;
     private final PersonalisationProvider personalisationProvider;
     private final String upperTribunalNoticesEmailAddress;
     private final String applicationGrantedApplicantHomeOfficeTemplateId;
@@ -23,15 +31,22 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
     private final String applicationReheardApplicantHomeHomeOfficeTemplateId;
     private final String applicationAllowedHomeOfficeTemplateId;
     private final String applicationDismissedHomeOfficeTemplateId;
+    private final int calendarDaysToWaitInCountry;
+    private final int calendarDaysToWaitOutOfCountry;
+    private final int workingDaysaysToWaitAda;
 
     public HomeOfficeFtpaApplicationDecisionRespondentPersonalisation(
         @Value("${govnotify.template.applicationGranted.applicant.homeOffice.email}") String applicationGrantedApplicantHomeOfficeTemplateId,
-        @Value("${govnotify.template.applicationPartiallyGranted.applicant.homeOffice.email}") String applicationPartiallyGrantedApplicantHomeOfficeTemplateId,
-        @Value("${govnotify.template.applicationNotAdmitted.applicant.homeOffice.email}") String applicationNotAdmittedApplicantHomeOfficeTemplateId,
-        @Value("${govnotify.template.applicationRefused.applicant.homeOffice.email}") String applicationRefusedGrantedApplicantHomeOfficeTemplateId,
+        @Value("${govnotify.template.applicationPartiallyGranted.applicant.respondent.email}") String applicationPartiallyGrantedApplicantHomeOfficeTemplateId,
+        @Value("${govnotify.template.applicationNotAdmitted.applicant.respondent.email}") String applicationNotAdmittedApplicantHomeOfficeTemplateId,
+        @Value("${govnotify.template.applicationRefused.applicant.respondent.email}") String applicationRefusedGrantedApplicantHomeOfficeTemplateId,
         @Value("${govnotify.template.applicationReheard.applicant.homeOffice.email}") String applicationReheardApplicantHomeHomeOfficeTemplateId,
         @Value("${govnotify.template.applicationAllowed.homeOffice.email}") String applicationAllowedHomeOfficeTemplateId,
         @Value("${govnotify.template.applicationDismissed.homeOffice.email}") String applicationDismissedHomeOfficeTemplateId,
+        @Value("${ftpaApplicationDecidedDaysToWait.inCountry}") int calendarDaysToWaitInCountry,
+        @Value("${ftpaApplicationDecidedDaysToWait.outOfCountry}") int calendarDaysToWaitOutOfCountry,
+        @Value("${ftpaApplicationDecidedDaysToWait.ada}") int workingDaysaysToWaitAda,
+        DueDateService dueDateService,
         PersonalisationProvider personalisationProvider,
         @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress
     ) {
@@ -42,6 +57,10 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
         this.applicationReheardApplicantHomeHomeOfficeTemplateId = applicationReheardApplicantHomeHomeOfficeTemplateId;
         this.applicationAllowedHomeOfficeTemplateId = applicationAllowedHomeOfficeTemplateId;
         this.applicationDismissedHomeOfficeTemplateId = applicationDismissedHomeOfficeTemplateId;
+        this.calendarDaysToWaitInCountry = calendarDaysToWaitInCountry;
+        this.calendarDaysToWaitOutOfCountry = calendarDaysToWaitOutOfCountry;
+        this.workingDaysaysToWaitAda = workingDaysaysToWaitAda;
+        this.dueDateService = dueDateService;
         this.personalisationProvider = personalisationProvider;
         this.upperTribunalNoticesEmailAddress = upperTribunalNoticesEmailAddress;
     }
@@ -102,7 +121,31 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return this.personalisationProvider.getHomeOfficeHeaderPersonalisation(asylumCase);
+        ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
+            .<String, String>builder()
+            .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase));
+
+        boolean setDynamicDate = Arrays.asList(
+            applicationPartiallyGrantedApplicantHomeOfficeTemplateId,
+            applicationNotAdmittedApplicantHomeOfficeTemplateId,
+            applicationRefusedGrantedApplicantHomeOfficeTemplateId).contains(getTemplateId(asylumCase));
+
+        if (setDynamicDate) {
+            boolean inCountryAppeal = asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(true);
+            if (AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)) {
+                return personalisationBuilder.put("due date", dueDateService.calculateWorkingDaysDueDate(ZonedDateTime.now(), workingDaysaysToWaitAda)
+                    .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
+            } else if (inCountryAppeal) {
+                return personalisationBuilder.put("due date", dueDateService.calculateCalendarDaysDueDate(ZonedDateTime.now(), calendarDaysToWaitInCountry)
+                    .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
+            } else {
+                return personalisationBuilder.put("due date", dueDateService.calculateCalendarDaysDueDate(ZonedDateTime.now(), calendarDaysToWaitOutOfCountry)
+                    .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
+            }
+        }
+
+        personalisationBuilder = personalisationBuilder.put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
+        return personalisationBuilder.build();
     }
 
 }
