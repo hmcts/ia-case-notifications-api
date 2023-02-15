@@ -664,7 +664,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.PAYMENT_APPEAL
                     && paymentPaid
-                    && isAipJourney(asylumCase);
+                    && isAipJourney(asylumCase)
+                    && isEaHuEuAppeal(asylumCase);
             }, notificationGenerators
         );
     }
@@ -748,6 +749,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && isRepJourney(asylumCase)
                        && (paymentPaid || payLater);
 
             }, notificationGenerators,

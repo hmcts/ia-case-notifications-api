@@ -487,14 +487,14 @@ public class NotificationGeneratorConfiguration {
     @Bean("submitAppealAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealAipNotificationGenerator(
         AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
-        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
         AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantSubmitAppealPersonalisationEmail, caseOfficerSubmitAppealPersonalisation),
+                newArrayList(homeOfficeSubmitAppealPersonalisation, appellantSubmitAppealPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
@@ -577,14 +577,14 @@ public class NotificationGeneratorConfiguration {
     @Bean("submitAppealOutOfTimeAipNotificationGenerator")
     public List<NotificationGenerator> submitAppealOutOfTimeAipNotificationGenerator(
         AppellantSubmitAppealOutOfTimePersonalisationSms appellantSubmitAppealOutOfTimePersonalisationSms,
-        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
         AppellantSubmitAppealOutOfTimePersonalisationEmail appellantSubmitAppealOutOfTimePersonalisationEmail,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(appellantSubmitAppealOutOfTimePersonalisationEmail, caseOfficerSubmitAppealPersonalisation),
+                newArrayList(homeOfficeSubmitAppealPersonalisation, appellantSubmitAppealOutOfTimePersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
