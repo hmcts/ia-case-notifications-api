@@ -163,7 +163,7 @@ public class CcdScenarioRunnerTest {
             }
             String actualResponseBody =
                     SerenityRest
-                            .given()
+                             .given()
                             .headers(authorizationHeaders)
                             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                             .body(requestBody)
