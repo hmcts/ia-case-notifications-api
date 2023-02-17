@@ -2043,9 +2043,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                String paymentOption = asylumCase
-                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
-
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
                     .map(type -> type == PA).orElse(false);
@@ -2053,7 +2050,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isCorrectAppealType
-                       && (paymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                       && isRemissionOptedForEaOrHuOrPaAppeal(callback);
             }, notificationGenerators
         );
     }
