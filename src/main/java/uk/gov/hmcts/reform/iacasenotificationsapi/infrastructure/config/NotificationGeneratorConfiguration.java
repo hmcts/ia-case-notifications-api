@@ -2055,7 +2055,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
         //RIA-6682
-        List<EmailNotificationPersonalisation> personalisations = newArrayList(legalRepresentativeAppealSubmittedPayOfflinePersonalisation, homeOfficeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
+        List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation, legalRepresentativeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
 
         return Collections.singletonList(
             new EmailNotificationGenerator(
