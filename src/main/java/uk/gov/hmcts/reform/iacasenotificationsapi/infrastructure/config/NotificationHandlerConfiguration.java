@@ -2047,10 +2047,13 @@ public class NotificationHandlerConfiguration {
                     .read(APPEAL_TYPE, AppealType.class)
                     .map(type -> type == PA).orElse(false);
 
+                String paPaymentOption = asylumCase
+                        .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isCorrectAppealType
-                       && isRemissionOptedForEaOrHuOrPaAppeal(callback);
+                       && (paPaymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
             }, notificationGenerators
         );
     }
