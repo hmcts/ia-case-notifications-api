@@ -87,7 +87,7 @@
       },
       {
         "reference": "3220_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
-        "recipient": "{$FEES_ADMIN_OFFICER_EMAIL}",
+        "recipient": "payment-exceptions-ao-aat-test@example.com",
         "subject": "Immigration and Asylum appeal: appeal submitted pending payment",
         "body": [
           "PA/12345/2019",
