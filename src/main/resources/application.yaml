@@ -1030,6 +1030,7 @@ security:
       - "manageFeeUpdate"
       - "recordOutOfTimeDecision"
       - "transferOutOfAda"
+      - "markAppealPaid"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
