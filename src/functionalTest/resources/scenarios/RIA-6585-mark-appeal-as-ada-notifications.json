@@ -1,5 +1,6 @@
 {
   "description": "RIA-6587 Send mark appeal as ada notifications to LR and HO",
+  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
