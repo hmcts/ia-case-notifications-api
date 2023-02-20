@@ -1036,6 +1036,7 @@ security:
       - "recordOutOfTimeDecision"
       - "transferOutOfAda"
       - "markAppealAsAda"
+      - "markAppealPaid"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
