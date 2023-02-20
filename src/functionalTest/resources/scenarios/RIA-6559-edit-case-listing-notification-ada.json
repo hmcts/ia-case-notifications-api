@@ -1,5 +1,6 @@
 {
   "description": "RIA-6559 Send case re-listed notification to Home Office and legal rep (ADA)",
+  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
