@@ -1039,6 +1039,7 @@ security:
       - "markAppealPaid"
     caseworker-ia-admofficer:
       - "listCase"
+      - "submitAppeal"
       - "editCaseListing"
       - "sendDecisionAndReasons"
       - "adjournHearingWithoutDate"
