@@ -27,6 +27,7 @@ def secrets = [
     secret('hearing-centre-birmingham-email', 'IA_HEARING_CENTRE_BIRMINGHAM_EMAIL'),
     secret('hearing-centre-hatton-cross-email', 'IA_HEARING_CENTRE_HATTON_CROSS_EMAIL'),
     secret('hearing-centre-glasgow-email', 'IA_HEARING_CENTRE_GLASGOW_EMAIL'),
+    secret('hearing-centre-harmondsworth-email', 'IA_HEARING_CENTRE_HARMONDSWORTH_EMAIL'),
 
     secret('home-office-bradford-email', 'IA_HOME_OFFICE_BRADFORD_EMAIL'),
     secret('home-office-manchester-email', 'IA_HOME_OFFICE_MANCHESTER_EMAIL'),
@@ -37,11 +38,13 @@ def secrets = [
     secret('home-office-hatton-cross-email', 'IA_HOME_OFFICE_HATTON_CROSS_EMAIL'),
     secret('home-office-glasgow-email', 'IA_HOME_OFFICE_GLASGOW_EMAIL'),
     secret('home-office-apc-email', 'IA_HOME_OFFICE_APC_EMAIL'),
+    secret('home-office-harmondsworth-email', 'IA_HOME_OFFICE_HARMONDSWORTH_EMAIL'),
 
     secret('ftpa-home-office-bradford-email', 'IA_FTPA_HOME_OFFICE_BRADFORD_EMAIL'),
     secret('ftpa-home-office-taylor-house-email', 'IA_FTPA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL'),
     secret('ftpa-home-office-north-shields-email', 'IA_FTPA_HOME_OFFICE_NEWCASTLE_EMAIL'),
     secret('ftpa-home-office-hatton-cross-email', 'IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL'),
+    secret('ftpa-home-office-harmondsworth-email', 'IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL'),
 
     secret('hearing-centre-bradford-telephone', 'IA_HEARING_CENTRE_BRADFORD_TELEPHONE'),
     secret('hearing-centre-manchester-telephone', 'IA_HEARING_CENTRE_MANCHESTER_TELEPHONE'),
