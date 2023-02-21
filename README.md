@@ -34,6 +34,7 @@ The following environment variables are required when running the api without it
 | IA_HEARING_CENTRE_BIRMINGHAM_EMAIL |  some-email |
 | IA_HEARING_CENTRE_HATTON_CROSS_EMAIL |  some-email |
 | IA_HEARING_CENTRE_GLASGOW_EMAIL |  some-email |
+| IA_HEARING_CENTRE_HARMONDSWORTH_EMAIL |  some-email |
 | IA_HOME_OFFICE_BRADFORD_EMAIL |  some-email |
 | IA_HOME_OFFICE_MANCHESTER_EMAIL |  some-email |
 | IA_HOME_OFFICE_NEWPORT_EMAIL |  some-email |
@@ -42,11 +43,13 @@ The following environment variables are required when running the api without it
 | IA_HOME_OFFICE_BIRMINGHAM_EMAIL |  some-email |
 | IA_HOME_OFFICE_HATTON_CROSS_EMAIL |  some-email |
 | IA_HOME_OFFICE_GLASGOW_EMAIL |  some-email |
+| IA_HOME_OFFICE_HARMONDSWORTH_EMAIL |  some-email |
 | IA_FTPA_HOME_OFFICE_BRADFORD_EMAIL |  some-email |
 | IA_FTPA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL |  some-email |
 | IA_FTPA_HOME_OFFICE_NEWCASTLE_EMAIL |  some-email |
 | IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL |  some-email |
 | IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL |  some-email |
+| IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL |  some-email |
 | IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL |  some-email |
 | IA_RESPONDENT_REVIEW_DIRECTION_EMAIL |  some-email |
 | IA_HOME_OFFICE_GOV_NOTIFY_ENABLED |  true/false |
