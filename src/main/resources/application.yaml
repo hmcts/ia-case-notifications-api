@@ -565,9 +565,9 @@ govnotify:
         email: 5ed2b159-98e3-4878-a75f-f365370cba4d
       applicant:
         legalRep:
-          email: 91a8351f-8c6f-425f-9ca6-f41e4055cd71
-        homeOffice:
-          email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
+          email: 2f690d1e-2862-4a25-8867-beff73743474
+        respondent:
+          email: 369e4efe-d5d1-48eb-8525-9fc3cef16b41
       otherParty:
         legalRep:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
@@ -576,9 +576,9 @@ govnotify:
     applicationNotAdmitted:
       applicant:
         legalRep:
-          email: f22b0a18-9487-4f86-9bf5-45ebfa6c882c
-        homeOffice:
-          email: 9cd8317c-3c89-43cc-b106-5c44041e9298
+          email: 5af7321e-9038-4e1d-bad2-724061dca4f1
+        respondent:
+          email: c0177456-2cb6-4865-bd63-067abee8c206
       otherParty:
         legalRep:
           email: 755da55a-85ec-40b9-9f1c-7e382bdf7c9e
@@ -587,9 +587,9 @@ govnotify:
     applicationRefused:
       applicant:
         legalRep:
-          email: 5e031048-eeed-4754-98c1-b6cff789d407
-        homeOffice:
-          email: fcbe9da1-628b-4661-9128-4e57f1f5e21d
+          email: 2e798bcb-25fb-4a8a-8674-3ed3bace8e64
+        respondent:
+          email: 6126715d-1177-4fd1-95c4-8275ed85c7cd
       otherParty:
         legalRep:
           email: ce7523f4-9244-4b14-b4aa-aa91457e02ce
@@ -838,31 +838,6 @@ govnotify:
           email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
         suitable:
           email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
-      appellant:
-        email: 9dce71ff-5985-4bea-8958-b1dc155132dd
-        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
-    createCaseLink:
-      legalRep:
-        beforeListing:
-          email: d5532c41-ea35-4e65-8149-be5858591f1d
-        afterListing:
-          email: 18b58394-000f-4b32-ab14-0fafa5b4b319
-      homeOffice:
-        beforeListing:
-          email: dc4a8d3b-1a51-412c-8bfa-b666a9034e0f
-        afterListing:
-          email: e11f6e7b-1757-4e6c-abff-37d02b97d49b
-    maintainCaseLinks:
-      legalRep:
-        beforeListing:
-          email: 417aa9a1-e7bd-412b-ab84-20fc853e277d
-        afterListing:
-          email: f5ef69fd-9a6b-48d7-8f13-7add6e37defe
-      homeOffice:
-        beforeListing:
-          email: 63c30831-4dd0-4c0a-b70f-4c439dcc66ea
-        afterListing:
-          email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
     transferOutOfAda:
       homeOffice:
         beforeListing:
@@ -874,6 +849,11 @@ govnotify:
           email: 814064a8-18c2-4d8c-8ed0-c8366e6ce60b
         afterListing:
           email: f1d0d9c6-ae3a-443e-b262-c002e570b3e0
+    markAppealAsAda:
+      homeOffice:
+        email: 671af79b-6c0d-4d49-8b9d-3a29efa0758d
+      legalRep:
+        email: 427d6a0f-4f67-41b7-8814-1fe44fec4ee0
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -921,18 +901,6 @@ govnotify:
         email: 84d48a3f-afd6-4759-9219-22cb37bebabb
       editApplicationAfterSubmitWithoutLr:
         email: 160386c8-7fc5-4359-8d3d-f99765af00d5
-      createBailCaseLinkLR:
-        email: ce2a2627-4351-4ae4-b2ba-0edb649a6f04
-      createBailCaseLinkHO:
-        email: c349d1ef-ecda-47b8-b11e-363ecd8bd5a2
-      createBailCaseLinkHOWithoutLR:
-        email: 0539996b-f7db-47ea-9624-1fb716641a03
-      maintainBailCaseLinksHO:
-        email: 63aa8b96-b7c3-4ef9-ac3b-199631463f51
-      maintainBailCaseLinksHOWithoutLR:
-        email: 8d7817bd-635c-4ee8-b8c3-79cc6847a72b
-      maintainBailCaseLinksLR:
-        email: 83fcb9fb-61b2-46a4-b67e-836bf3f78538
       stopLegalRepresenting:
         sms: 14f55cf1-5442-466c-a1fc-bb4a268bc6d8
         legalRep: 402192e3-d493-435a-b00c-c016deaee2ea
@@ -986,7 +954,6 @@ security:
       - "editAppeal"
       - "uploadAdditionalEvidence"
       - "submitAppeal"
-      - "paymentAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
       - "submitClarifyingQuestionAnswers"
@@ -1067,10 +1034,9 @@ security:
       - "removeLegalRepresentative"
       - "manageFeeUpdate"
       - "recordOutOfTimeDecision"
-      - "markAppealPaid"
-      - "createCaseLink"
-      - "maintainCaseLinks"
       - "transferOutOfAda"
+      - "markAppealAsAda"
+      - "markAppealPaid"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -1097,11 +1063,8 @@ security:
       - "editBailApplicationAfterSubmit"
       - "changeBailDirectionDueDate"
       - "makeNewApplication"
-      - "createCaseLink"
-      - "maintainCaseLinks"
-      - "createBailCaseLink"
-      - "maintainBailCaseLinks"
       - "editAppealAfterSubmit"
+      - "markAppealAsAda"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1146,10 +1109,6 @@ security:
       - "sendBailDirection"
       - "editBailDocuments"
       - "changeBailDirectionDueDate"
-      - "createCaseLink"
-      - "maintainCaseLinks"
-      - "createBailCaseLink"
-      - "maintainBailCaseLinks"
       - "adaSuitabilityReview"
       - "transferOutOfAda"
     caseworker-ia-system:
@@ -1284,8 +1243,6 @@ ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28
   ada: 5
-
-appellantDaysToAskReinstate: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}

@@ -3163,4 +3163,24 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("markAppealAsAdaNotificationGenerator")
+    public List<NotificationGenerator> markAppealAsAdaNotificationGenerator(
+            LegalRepresentativeMarkAppealAsAdaPersonalisation legalRepresentativeMarkAppealAsAdaPersonalisation,
+            HomeOfficeMarkAppealAsAdaPersonalisation homeOfficeMarkAppealAsAdaPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeMarkAppealAsAdaPersonalisation,
+                                homeOfficeMarkAppealAsAdaPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
