@@ -1,5 +1,6 @@
 {
   "description": "RIA-6556 Send case listed notification to case officer, legal rep and home office for ADA appeal",
+  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
