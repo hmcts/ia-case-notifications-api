@@ -1,5 +1,6 @@
 {
   "description": "RIA-6558 Send hearing requirements agreed notification to legal rep and home office (Bradford hearing centre) with LO reviewed hearing requirements",
+  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",

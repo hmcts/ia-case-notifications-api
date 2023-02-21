@@ -98,8 +98,8 @@ public enum Event {
     END_APPEAL_AUTOMATICALLY("endAppealAutomatically"),
     UPDATE_PAYMENT_STATUS("updatePaymentStatus"),
     ADA_SUITABILITY_REVIEW("adaSuitabilityReview"),
-
     TRANSFER_OUT_OF_ADA("transferOutOfAda"),
+    MARK_APPEAL_AS_ADA("markAppealAsAda"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
