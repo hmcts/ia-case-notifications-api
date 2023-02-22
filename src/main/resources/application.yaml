@@ -750,7 +750,7 @@ govnotify:
               beforeListing:
                 email: 4e079f0c-38e2-4a02-a057-7cca421ee421
               afterListing:
-                ema il: 53693fc5-31bf-478b-95dc-afe875291a03
+                email: 53693fc5-31bf-478b-95dc-afe875291a03
     requestNewHearingRequirements:
       legalRep:
         email: afe66f48-e967-49f8-ba57-323e8711dd4d

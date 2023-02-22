@@ -25,9 +25,9 @@ public class AipAppellantNocRequestDecisionPersonalisationEmail implements Email
     private final RecipientsFinder recipientsFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
+    String adaPrefix;
     @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    String nonAdaPrefix;
 
     public AipAppellantNocRequestDecisionPersonalisationEmail(
         @Value("${govnotify.template.nocRequestDecision.appellant.email}") String nocRequestDecisionAppellantEmailTemplateId,
