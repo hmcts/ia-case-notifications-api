@@ -1956,6 +1956,23 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editAppealAfterSubmitInternalCaseNotificationGenerator")
+    public List<NotificationGenerator> editAppealAfterSubmitInternalCaseNotificationGenerator(
+        RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    respondentEditAppealAfterSubmitPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator")
     public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,

@@ -41,6 +41,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.Noti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicationRespondentFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 @Slf4j
 @Configuration
@@ -1804,10 +1805,29 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> editAppealAfterSubmitNotificationHandler(
         @Qualifier("editAppealAfterSubmitNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
-                && isRepJourney(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && isRepJourney(asylumCase)
+                    && !AsylumCaseUtils.isInternalCase(asylumCase);
+            },
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editAppealAfterSubmitInternalCaseNotificationHandler(
+        @Qualifier("editAppealAfterSubmitInternalCaseNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && AsylumCaseUtils.isInternalCase(asylumCase);
+            },
             notificationGenerator
         );
     }
