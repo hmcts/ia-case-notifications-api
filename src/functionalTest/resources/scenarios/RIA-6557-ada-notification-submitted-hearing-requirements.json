@@ -1,6 +1,5 @@
 {
   "description": "RIA-6557 ADA Notification for submit hearing requirements (to LR)",
-  "disabled": "true",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -41,7 +40,7 @@
       {
         "reference": "1283_LEGAL_REP_OF_SUBMITTED_HEARING_REQUIREMENTS",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: hearing requirements submitted",
+        "subject": "Accelerated detained appeal: hearing requirements submitted",
         "body": [
           "PA/12345/2019",
           "CASE001",

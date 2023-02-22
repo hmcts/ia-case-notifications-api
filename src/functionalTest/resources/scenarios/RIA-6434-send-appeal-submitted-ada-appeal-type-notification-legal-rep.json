@@ -39,7 +39,7 @@
       {
         "reference": "6434_APPEAL_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
+        "subject": "Accelerated detained appeal: Your appeal has been submitted",
         "body": [
           "PA/12345/2019",
           "REF54321",
