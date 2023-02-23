@@ -371,7 +371,9 @@ public enum AsylumCaseDefinition {
     SUITABILITY_REVIEW_DECISION(
         "suitabilityReviewDecision", new TypeReference<AdaSuitabilityReviewDecision>(){}),
     TRANSFER_OUT_OF_ADA_REASON(
-            "transferOutOfAdaReason", new TypeReference<String>(){})
+            "transferOutOfAdaReason", new TypeReference<String>(){}),
+    IS_ADMIN(
+        "isAdmin", new TypeReference<YesOrNo>() {}),
     ;
 
     private final String value;
