@@ -64,7 +64,7 @@
       {
         "reference": "6555_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
-        "subject": "Immigration and Asylum appeal: submit bundle direction",
+        "subject": "Accelerated detained appeal: submit bundle direction",
         "body": [
           "PA/12345/2019",
           "Talha Awan",

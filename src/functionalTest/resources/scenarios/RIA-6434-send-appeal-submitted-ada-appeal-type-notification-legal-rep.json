@@ -1,5 +1,6 @@
 {
   "description": "RIA-6434 Send appeal submitted ADA DC appeal type notification",
+  "disabled": true,
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -12,8 +13,8 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "legalRepReferenceNumber": "REF54321",
-          "appealType":"deprivation",
-          "isAcceleratedDetainedAppeal":"Yes"
+          "appealType": "deprivation",
+          "isAcceleratedDetainedAppeal": "Yes"
         }
       }
     }
@@ -25,8 +26,8 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "legalRepReferenceNumber": "REF54321",
-        "appealType":"deprivation",
-        "isAcceleratedDetainedAppeal":"Yes",
+        "appealType": "deprivation",
+        "isAcceleratedDetainedAppeal": "Yes",
         "notificationsSent": [
           {
             "id": "6434_APPEAL_SUBMITTED_LEGAL_REP",
