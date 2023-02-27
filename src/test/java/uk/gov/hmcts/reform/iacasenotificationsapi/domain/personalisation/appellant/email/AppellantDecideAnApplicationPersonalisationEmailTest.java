@@ -5,7 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Collections;
 import java.util.Map;
@@ -13,6 +19,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -21,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
@@ -182,9 +191,12 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
             .hasMessage("asylumCase must not be null");
     }
 
-    @Test
-    public void should_return_personalisation_when_only_mandatory_information_given() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(appellantDecideAnApplicationPersonalisationEmail);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
@@ -205,12 +217,19 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         assertEquals("", personalisation.get("applicationType"));
         assertEquals("", personalisation.get("decision maker role"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
     }
 
-    @Test
-   public void should_return_personalisation_when_all_information_given_and_decision_granted() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_information_given_and_decision_granted(YesOrNo isAda) {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(appellantDecideAnApplicationPersonalisationEmail);
+
         String decision = "Granted";
         when(makeAnApplication.getDecision()).thenReturn(decision);
 
@@ -225,12 +244,19 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(applicationType, personalisation.get("applicationType"));
         assertEquals(decision, personalisation.get("decision"));
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
     }
 
-    @Test
-    public void should_return_personalisation_when_all_information_given_and_decision_refused() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_information_given_and_decision_refused(YesOrNo isAda) {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(appellantDecideAnApplicationPersonalisationEmail);
+
         String decision = "Refused";
         when(makeAnApplication.getDecision()).thenReturn(decision);
 
@@ -246,6 +272,9 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         assertEquals(applicationType, personalisation.get("applicationType"));
         assertEquals(decision, personalisation.get("decision"));
         assertEquals(decisionMaker, personalisation.get("decision maker role"));
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
     }

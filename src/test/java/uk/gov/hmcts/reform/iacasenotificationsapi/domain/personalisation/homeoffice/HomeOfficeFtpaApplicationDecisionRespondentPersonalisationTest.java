@@ -4,8 +4,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_JUDGE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_REMADE_RULE_32;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
@@ -15,6 +22,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -182,6 +191,8 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
 
     @Test
     public void should_return_personalisation_of_all_information_given_decision_partially_granted_ada() {
+        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(partiallyGranted));
@@ -195,12 +206,15 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
         assertEquals(homeOfficeRefNumber, personalisation.get("respondentReferenceNumber"));
+        assertEquals("Accelerated detained appeal", personalisation.get("subjectPrefix"));
 
         verify(dueDateService, times(1)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
 
     @Test
     public void should_return_personalisation_of_all_information_given_decision_refused_in_country() {
+        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(refused));
@@ -213,12 +227,15 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
         assertEquals(homeOfficeRefNumber, personalisation.get("respondentReferenceNumber"));
+        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
 
     @Test
     public void should_return_personalisation_of_all_information_given_decision_not_admitted_out_of_country() {
+        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(notAdmitted));
@@ -232,12 +249,16 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
         assertEquals(homeOfficeRefNumber, personalisation.get("respondentReferenceNumber"));
+        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
 
-    @Test
-    public void should_return_personalisation_of_all_information_given_others() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_of_all_information_given_others(YesOrNo isAda) {
+        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
@@ -250,6 +271,9 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(dueDateService, times(0)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
         verify(dueDateService, times(0)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));

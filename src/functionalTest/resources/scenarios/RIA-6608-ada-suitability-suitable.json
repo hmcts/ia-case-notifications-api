@@ -1,6 +1,5 @@
 {
   "description": "RIA-6608 Send ada suitability notification to legal rep and home office for ADA appeal (Suitable)",
-  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",

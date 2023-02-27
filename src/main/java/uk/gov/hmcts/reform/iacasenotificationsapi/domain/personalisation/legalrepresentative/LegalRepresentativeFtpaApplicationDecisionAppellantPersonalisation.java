@@ -1,6 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
@@ -14,7 +18,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DueDateService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
@@ -32,6 +35,11 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
     private final int calendarDaysToWaitInCountry;
     private final int calendarDaysToWaitOutOfCountry;
     private final int workingDaysaysToWaitAda;
+
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
 
     public LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation(
@@ -104,6 +112,7 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .putAll(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase));
 
         boolean setDynamicDate = Arrays.asList(
@@ -113,7 +122,7 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
 
         if (setDynamicDate) {
             boolean inCountryAppeal = asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(true);
-            if (AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)) {
+            if (isAcceleratedDetainedAppeal(asylumCase)) {
                 return personalisationBuilder.put("due date", dueDateService.calculateWorkingDaysDueDate(ZonedDateTime.now(), workingDaysaysToWaitAda)
                     .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
             } else if (inCountryAppeal) {

@@ -1,6 +1,5 @@
 {
   "description": "RIA-6559 Send case re-listed notification to Home Office and legal rep (ADA)",
-  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -57,7 +56,7 @@
       {
         "reference": "6559_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.bradford}",
-        "subject": "Immigration and Asylum appeal: case re-listed",
+        "subject": "Accelerated detained appeal: case re-listed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
@@ -76,7 +75,7 @@
       {
         "reference": "6559_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: case re-listed",
+        "subject": "Accelerated detained appeal: case re-listed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",

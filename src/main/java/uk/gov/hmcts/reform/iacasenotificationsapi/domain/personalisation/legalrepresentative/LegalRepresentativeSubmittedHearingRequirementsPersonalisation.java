@@ -21,6 +21,11 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisation impl
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
+
     public LegalRepresentativeSubmittedHearingRequirementsPersonalisation(
         @Value("${govnotify.template.submittedHearingRequirements.legalRep.email}") String submittedHearingRequirementsLegalRepTemplateId,
         @Value("${govnotify.template.submittedHearingRequirements.legalRep.ada.email}") String submittedHearingRequirementsAdaLegalRepTemplateId,
@@ -55,6 +60,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisation impl
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()) ? adaPrefix : nonAdaPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));
 
