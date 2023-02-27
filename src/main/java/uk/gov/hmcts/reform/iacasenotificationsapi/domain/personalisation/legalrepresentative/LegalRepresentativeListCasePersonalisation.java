@@ -1,7 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -10,8 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class LegalRepresentativeListCasePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
@@ -24,6 +32,10 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     private final CustomerServicesProvider customerServicesProvider;
     private final HearingDetailsFinder hearingDetailsFinder;
 
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public LegalRepresentativeListCasePersonalisation(
         @Value("${govnotify.template.caseListed.legalRep.email.nonAda}") String legalRepresentativeCaseListedNonAdaTemplateId,
@@ -50,7 +62,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
             .orElse(false)) {
             return legalRepresentativeOutOfCountryCaseListedTemplateId;
         } else {
-            return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
+            return isAcceleratedDetainedAppeal(asylumCase)
                 ? legalRepresentativeCaseListedAdaTemplateId
                 : legalRepresentativeCaseListedNonAdaTemplateId;
         }
@@ -68,6 +80,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
         final Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))

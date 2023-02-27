@@ -1,6 +1,5 @@
 {
   "description": "RIA-6533 ADA case listed direction notification",
-  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -68,7 +67,7 @@
       {
         "reference": "1003_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and asylum appeal: submit hearing requirements direction",
+        "subject": "Accelerated detained appeal: submit hearing requirements direction",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
