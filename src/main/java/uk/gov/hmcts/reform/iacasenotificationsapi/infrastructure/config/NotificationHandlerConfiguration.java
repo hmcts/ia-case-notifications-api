@@ -2208,7 +2208,8 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.MARK_APPEAL_PAID
                        && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
                        && !paymentStatus.equals(Optional.empty())
-                       && paymentStatus.get().equals(PaymentStatus.PAID);
+                       && paymentStatus.get().equals(PaymentStatus.PAID)
+                       && !AsylumCaseUtils.isInternalCase(asylumCase);
             }, notificationGenerators
         );
     }
