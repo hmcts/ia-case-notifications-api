@@ -1119,10 +1119,31 @@ public class NotificationHandlerConfiguration {
         @Qualifier("requestResponseReviewNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
-                && isRepJourney(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
+                    && isRepJourney(asylumCase)
+                    && !AsylumCaseUtils.isInternalCase(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> requestResponseReviewInternalAdaNotificationHandler(
+        @Qualifier("requestResponseReviewInternalAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
+                    && AsylumCaseUtils.isInternalCase(asylumCase)
+                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase);
+            },
             notificationGenerators
         );
     }
