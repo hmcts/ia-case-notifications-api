@@ -2400,7 +2400,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                && isInternalCase(callback.getCaseDetails().getCaseData()),
+                && isInternalCase(callback.getCaseDetails().getCaseData())
+                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
