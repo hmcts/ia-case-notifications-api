@@ -751,6 +751,8 @@ govnotify:
                 email: 4e079f0c-38e2-4a02-a057-7cca421ee421
               afterListing:
                 email: 53693fc5-31bf-478b-95dc-afe875291a03
+        det:
+          email: 51135c0f-4dc1-4a6b-bcc5-a27db656cb41
     requestNewHearingRequirements:
       legalRep:
         email: afe66f48-e967-49f8-ba57-323e8711dd4d
@@ -1242,8 +1244,15 @@ ftpaSubmitted:
   ctscAdminEmailAddress: ${IA_CTSC_ADMIN_FTPA_SUBMITTED:ctscFtpaSubmitted@example.gov.uk}
   respondentEmailAddress: ${IA_RESPONDENT_FTPA_SUBMITTED:homeOfficeFtpaSubmitted@example.gov.uk}
 
+detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
+
+judgesReviewDeadlineDateDelay: ${JUDGES_REVIEW_DEADLINE_DATE_DELAY:14}
+
+makeAnApplicationFormLink: ${MAKE_AN_APPLICATION_FORM_LINK:https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaftada4}
+
 customerServices:
   emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
+  internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
 
 appellantDaysToWait:
