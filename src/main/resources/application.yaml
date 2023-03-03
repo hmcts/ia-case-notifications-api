@@ -68,6 +68,7 @@ govnotify:
       legalRep:
         paid:
           email: b14216a7-30b4-4d50-aa0f-290d6c3a0d1b
+          emailWithLink: 48694d53-53c5-41a9-9053-86c1de3115c5
         pendingPayment:
           email: 96324137-f63b-4f86-b143-1e086fab7dd6
         remission:

@@ -26,7 +26,7 @@ public interface BaseNotificationPersonalisation<T extends CaseData> {
     default Map<String, String> getPersonalisation(T asylumCase) {
         return Collections.emptyMap();
     }
-
+    
     default Map<String, String> getPersonalisation(Callback<T> callback) {
         return getPersonalisation(callback.getCaseDetails().getCaseData());
     }

@@ -3504,6 +3504,17 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealPaidWithLinkHandler(
+            @Qualifier("submitAppealPaidwithLinkNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.SUBMIT_APPEAL,
+                notificationGenerators
+        );
+    }
 }
 
 

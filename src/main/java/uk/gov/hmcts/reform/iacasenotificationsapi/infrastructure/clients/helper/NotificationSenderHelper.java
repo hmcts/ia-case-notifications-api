@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,45 @@ public class NotificationSenderHelper {
             String templateId,
             String emailAddress,
             Map<String, String> personalisation,
+            String reference,
+            RetryableNotificationClient notificationClient,
+            Integer deduplicateSendsWithinSeconds,
+            Logger logger
+    ) {
+        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
+        return recentDeliveryReceiptCache.get(
+                emailAddress + reference,
+                k -> {
+                    try {
+                        logger.info("Attempting to send email notification to GovNotify: {}", reference);
+
+                        SendEmailResponse response = notificationClient.sendEmail(
+                                templateId,
+                                emailAddress,
+                                personalisation,
+                                reference
+                        );
+
+                        String notificationId = response.getNotificationId().toString();
+
+                        logger.info("Successfully sent email notification to GovNotify: {} ({})",
+                                reference,
+                                notificationId
+                        );
+
+                        return notificationId;
+
+                    } catch (NotificationClientException e) {
+                        throw new NotificationServiceResponseException("Failed to send email using GovNotify", e);
+                    }
+                }
+        );
+    }
+
+    public String sendEmailWithLink(
+            String templateId,
+            String emailAddress,
+            Map<String, Object> personalisation,
             String reference,
             RetryableNotificationClient notificationClient,
             Integer deduplicateSendsWithinSeconds,

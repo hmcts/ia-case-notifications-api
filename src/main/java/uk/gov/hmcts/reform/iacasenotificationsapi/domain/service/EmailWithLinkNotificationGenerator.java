@@ -1,22 +1,26 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
+import uk.gov.service.notify.NotificationClientException;
 
-public class EmailNotificationGenerator implements NotificationGenerator {
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-    protected final List<EmailNotificationPersonalisation> personalisationList;
+public class EmailWithLinkNotificationGenerator implements NotificationGenerator {
+
+    protected final List<EmailWithLinkNotificationPersonalisation> personalisationList;
     protected final NotificationIdAppender notificationIdAppender;
     protected final GovNotifyNotificationSender notificationSender;
 
-    public EmailNotificationGenerator(
-        List<EmailNotificationPersonalisation> repPersonalisationList,
+    public EmailWithLinkNotificationGenerator(
+        List<EmailWithLinkNotificationPersonalisation> repPersonalisationList,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
@@ -38,12 +42,12 @@ public class EmailNotificationGenerator implements NotificationGenerator {
     }
 
     protected List<String> createEmail(
-        final BaseNotificationPersonalisation personalisation,
+        final EmailWithLinkNotificationPersonalisation personalisation,
         final AsylumCase asylumCase,
         final String referenceId,
         final Callback<AsylumCase> callback) {
 
-        EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
+        EmailWithLinkNotificationPersonalisation emailNotificationPersonalisation = (EmailWithLinkNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
         return subscriberEmails.stream()
@@ -57,19 +61,22 @@ public class EmailNotificationGenerator implements NotificationGenerator {
 
     protected String sendEmail(
         final String email,
-        final EmailNotificationPersonalisation personalisation,
+        final EmailWithLinkNotificationPersonalisation personalisation,
         final String referenceId,
         final Callback<AsylumCase> callback) {
 
         String emailTemplateId = personalisation.getTemplateId() == null
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
-        return notificationSender.sendEmail(
-            emailTemplateId,
-            email,
-            personalisation.getPersonalisation(callback),
-            referenceId
-        );
+
+
+
+        return notificationSender.sendEmailWithLink(
+                        emailTemplateId,
+                        email,
+                        personalisation.getPersonalisationForLink(callback),
+                        referenceId
+                );
     }
 
 }

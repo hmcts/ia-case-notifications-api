@@ -3137,4 +3137,22 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("submitAppealPaidwithLinkNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPaidWithLinkLegalRepNotificationHandler(
+            LegalRepresentativeAppealSubmittedWithLinkPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeAppealSubmittedPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
