@@ -3503,7 +3503,6 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
-
 }
 
 
