@@ -32,7 +32,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     private final CustomerServicesProvider customerServicesProvider;
     private final String detentionEngagementTeamDecideAnApplicationTemplateId;
     private final String makeAnApplicationFormLink;
-    private final String judgesReviewDeadlineDateDelay;
+    private final int judgesReviewDeadlineDateDelay;
     private final String detentionEngagementTeamEmail;
     private final MakeAnApplicationService makeAnApplicationService;
     private final DateProvider dateProvider;
@@ -46,7 +46,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         @Value("${govnotify.template.decideAnApplication.det.email}") String detentionEngagementTeamDecideAnApplicationTemplateId,
         @Value("${detentionEngagementTeamEmailAddress}") String detentionEngagementTeamEmail,
         @Value("${makeAnApplicationFormLink}") String makeAnApplicationFormLink,
-        @Value("${judgesReviewDeadlineDateDelay}") String judgesReviewDeadlineDateDelay,
+        @Value("${judgesReviewDeadlineDateDelay}") int judgesReviewDeadlineDateDelay,
         CustomerServicesProvider customerServicesProvider,
         MakeAnApplicationService makeAnApplicationService,
         DateProvider dateProvider
@@ -61,7 +61,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
+    public String getTemplateId() {
         return detentionEngagementTeamDecideAnApplicationTemplateId;
     }
 
@@ -89,14 +89,18 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         // If the decision maker is a TCW then change "Tribunal Caseworker" into "Legal Officer"
         String decisionMaker = adaptDecisionMakerName(optionalMakeAnApplication);
 
-        String judgesReviewDeadlineDate = dateProvider.dueDate(Integer.parseInt(judgesReviewDeadlineDateDelay));
+        String judgesReviewDeadlineDate = dateProvider.dueDate(judgesReviewDeadlineDateDelay);
+
+        String ariaListingReferenceIfPresent = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
+            .map(ariaListingReference -> "\nListing reference: " + ariaListingReference)
+            .orElse("");
 
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReferenceIfPresent", "\nListing reference: " + asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
+            .put("ariaListingReferenceIfPresent", ariaListingReferenceIfPresent)
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
@@ -153,7 +157,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             case ADJOURN:
             case EXPEDITE:
             case TRANSFER:
-                action =  "The details of your hearing will be updated. The Tribunal will contact you when this happens.";
+                action = "The details of your hearing will be updated. The Tribunal will contact you when this happens.";
                 break;
             case JUDGE_REVIEW:
                 action = "The decision on your original request will be overturned. The Tribunal will contact you if there is something you need to do next.";
