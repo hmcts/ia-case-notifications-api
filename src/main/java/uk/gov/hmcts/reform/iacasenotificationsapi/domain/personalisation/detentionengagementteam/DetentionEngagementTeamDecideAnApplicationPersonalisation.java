@@ -174,6 +174,8 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             case OTHER:
                 action = "The Tribunal will contact you when it makes the changes you requested.";
                 break;
+            default:
+                break;
         }
         return action;
     }

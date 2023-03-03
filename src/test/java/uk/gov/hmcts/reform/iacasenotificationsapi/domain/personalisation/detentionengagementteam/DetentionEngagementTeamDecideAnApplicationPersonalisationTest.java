@@ -158,7 +158,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
             case ADJOURN:
             case EXPEDITE:
             case TRANSFER:
-                assertEquals( "The details of your hearing will be updated. The Tribunal "
+                assertEquals("The details of your hearing will be updated. The Tribunal "
                               + "will contact you when this happens.", expectedAction);
                 break;
             case JUDGE_REVIEW:
@@ -181,6 +181,8 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
             case OTHER:
                 assertEquals("The Tribunal will contact you when it makes the changes you "
                              + "requested.", expectedAction);
+                break;
+            default:
                 break;
         }
     }
