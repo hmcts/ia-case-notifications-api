@@ -1,0 +1,84 @@
+{
+  "description": "RIA-6811: internal ada case decideAnApplication event",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 68111,
+      "eventId": "decideAnApplication",
+      "state": "caseBuilding",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "appellantGivenNames": "Test",
+          "appellantFamilyName": "User",
+          "appealType": "refusalOfEu",
+          "isAdmin": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "makeAnApplicationDecision": "Granted",
+          "makeAnApplicationDecisionReason": "A reason for the decision",
+          "decideAnApplicationId": "1",
+          "makeAnApplicationsList": {
+            "value": {
+              "code": "1",
+              "label": "Admin Officer : Application 1"
+            },
+            "list_items": [
+              {
+                "code": "1",
+                "label": "Admin Officer : Application 1"
+              }
+            ]
+          },
+          "makeAnApplications": [
+            {
+              "id": "1",
+              "value": {
+                "date": "2023-03-03",
+                "type": "Time extension",
+                "state": "caseBuilding",
+                "details": "A reason for extending the timeframe",
+                "decisionMaker": "Tribunal Caseworker",
+                "decision": "Pending",
+                "evidence": [
+                  {
+                    "id": "1",
+                    "value": {
+                      "document_url": "http://document-store/AAA",
+                      "document_filename": "Annexure-E.pdf",
+                      "document_binary_url": "http://document-store/AAA/binary"
+                    }
+                  }
+                ],
+                "applicant": "Admin Officer",
+                "applicantRole": "caseworker-ia-admofficer"
+              }
+            }
+          ],
+          "hasApplicationsToDecide": "Yes"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appellantGivenNames": "Test",
+        "appellantFamilyName": "User",
+        "appealType": "refusalOfEu",
+        "isAdmin": "Yes",
+        "isAcceleratedDetainedAppeal": "Yes",
+        "decideAnApplicationId": "1",
+        "notificationsSent":[
+          {
+            "id":"68111_DECIDE_AN_APPLICATION_DET",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }]
+      }
+    }
+  }
+}
+
