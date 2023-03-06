@@ -2379,14 +2379,14 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationHomeOfficeNotificationHandler(
-        @Qualifier("decideAnApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationLegalRepNotificationHandler(
+        @Qualifier("decideAnApplicationLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                && !isAipJourney(callback.getCaseDetails().getCaseData())
+                && isRepJourney(callback.getCaseDetails().getCaseData())
                 && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );

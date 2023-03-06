@@ -2,14 +2,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationType.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,8 +14,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.DateProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
 
@@ -36,6 +33,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     private final String detentionEngagementTeamEmail;
     private final MakeAnApplicationService makeAnApplicationService;
     private final DateProvider dateProvider;
+    private final DetEmailService detEmailService;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -43,13 +41,14 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     private String nonAdaPrefix;
 
     public DetentionEngagementTeamDecideAnApplicationPersonalisation(
-        @Value("${govnotify.template.decideAnApplication.det.email}") String detentionEngagementTeamDecideAnApplicationTemplateId,
+        @Value("${govnotify.template.decideAnApplication.applicant.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationTemplateId,
         @Value("${detentionEngagementTeamEmailAddress}") String detentionEngagementTeamEmail,
         @Value("${makeAnApplicationFormLink}") String makeAnApplicationFormLink,
         @Value("${judgesReviewDeadlineDateDelay}") int judgesReviewDeadlineDateDelay,
         CustomerServicesProvider customerServicesProvider,
         MakeAnApplicationService makeAnApplicationService,
-        DateProvider dateProvider
+        DateProvider dateProvider,
+        DetEmailService detEmailService
     ) {
         this.detentionEngagementTeamDecideAnApplicationTemplateId = detentionEngagementTeamDecideAnApplicationTemplateId;
         this.detentionEngagementTeamEmail = detentionEngagementTeamEmail;
@@ -58,6 +57,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         this.customerServicesProvider = customerServicesProvider;
         this.makeAnApplicationService = makeAnApplicationService;
         this.dateProvider = dateProvider;
+        this.detEmailService = detEmailService;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detentionEngagementTeamEmail);
+        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
     }
 
     @Override
@@ -81,10 +81,22 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
         Optional<MakeAnApplication> optionalMakeAnApplication = getMakeAnApplication(asylumCase);
 
-        // Turn the decision term into the verb to be used in the notification
-        String applicationDecision = getApplicationDecisionVerb(optionalMakeAnApplication);
+        String decision = "";
+        String applicationType = "";
+        String applicationDecisionReason = "No reason given";
+        if (optionalMakeAnApplication.isPresent()) {
+            MakeAnApplication makeAnApplication = optionalMakeAnApplication.get();
+            decision = makeAnApplication.getDecision();
+            applicationType = makeAnApplication.getType();
+            applicationDecisionReason = makeAnApplication.getDecisionReason();
+        }
 
-        String actionToTake = getActionToTakeBasedOnDecision(optionalMakeAnApplication);
+        boolean applicationGranted = DECISION_GRANTED.equals(decision);
+        boolean adjournExpediteOrTransfer = Arrays.asList(
+            ADJOURN.toString(),
+            EXPEDITE.toString(),
+            TRANSFER.toString()
+        ).contains(applicationType);
 
         // If the decision maker is a TCW then change "Tribunal Caseworker" into "Legal Officer"
         String decisionMaker = adaptDecisionMakerName(optionalMakeAnApplication);
@@ -105,10 +117,17 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("decisionMaker", decisionMaker)
-            .put("applicationDecision", applicationDecision)
-            .put("applicationType", optionalMakeAnApplication.map(MakeAnApplication::getType).orElse(""))
-            .put("applicationDecisionReason", getMakeAnApplication(asylumCase).map(MakeAnApplication::getDecisionReason).orElse("No reason given"))
-            .put("action", actionToTake)
+            .put("applicationDecision", transformDecision(decision))
+            .put("applicationType", applicationType)
+            .put("applicationDecisionReason", applicationDecisionReason)
+            .put("granted", applicationGranted ? "yes" : "no")
+            .put("grantedAndTimeExtension", applicationGranted && (Objects.equals(TIME_EXTENSION.toString(), applicationType)) ? "yes" : "no")
+            .put("grantedAdjournExpediteOrTransfer", applicationGranted && adjournExpediteOrTransfer ? "yes" : "no")
+            .put("grantedJudgesReview", applicationGranted && (Objects.equals(JUDGE_REVIEW.toString(), applicationType)) ? "yes" : "no")
+            .put("grantedLinkOrUnlik", applicationGranted && (Objects.equals(LINK_OR_UNLINK.toString(), applicationType)) ? "yes" : "no")
+            .put("grantedReinstate", applicationGranted && (Objects.equals(REINSTATE.toString(), applicationType)) ? "yes" : "no")
+            .put("grantedWithdraw", applicationGranted && (Objects.equals(WITHDRAW.toString(), applicationType)) ? "yes" : "no")
+            .put("grantedOther", applicationGranted && (Objects.equals(OTHER.toString(), applicationType)) ? "yes" : "no")
             .put("judgesReviewDeadlineDate", judgesReviewDeadlineDate)
             .put("makeAnApplicationLink", makeAnApplicationFormLink)
             .build();
@@ -123,64 +142,17 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .orElse("");
     }
 
-    private String getActionToTakeBasedOnDecision(Optional<MakeAnApplication> optionalMakeAnApplication) {
-        return optionalMakeAnApplication
-            .map(makeAnApplication -> {
-                String type = makeAnApplication.getType();
-                MakeAnApplicationType makeAnApplicationType = MakeAnApplicationType.from(type)
-                    .orElseThrow(() -> new IllegalStateException("Unrecognized makeAnApplicationType"));
-                return actionToTakeAfterGrant(makeAnApplicationType);
-            })
-            .orElse("");
-    }
-
-    private String getApplicationDecisionVerb(Optional<MakeAnApplication> optionalMakeAnApplication) {
-        return optionalMakeAnApplication
-            .map(makeAnApplication -> Objects.equals(makeAnApplication.getDecision(), DECISION_GRANTED)
-                ? "grant"
-                : Objects.equals(makeAnApplication.getDecision(), DECISION_REFUSED)
-                ? "refuse"
-                : "")
-            .orElse("");
+    private String transformDecision(String decision) {
+        if (DECISION_GRANTED.equals(decision)) {
+            return "grant";
+        } else if (DECISION_REFUSED.equals(decision)) {
+            return "refuse";
+        }
+        return "";
     }
 
     private Optional<MakeAnApplication> getMakeAnApplication(AsylumCase asylumCase) {
         return makeAnApplicationService.getMakeAnApplication(asylumCase, true);
     }
-
-    private String actionToTakeAfterGrant(MakeAnApplicationType makeAnApplicationTypes) {
-        String action = "";
-        switch (makeAnApplicationTypes) {
-            case TIME_EXTENSION:
-                action = "The Tribunal will give you more time to complete your next task. You will get a notification with the new date soon.";
-                break;
-            case ADJOURN:
-            case EXPEDITE:
-            case TRANSFER:
-                action = "The details of your hearing will be updated. The Tribunal will contact you when this happens.";
-                break;
-            case JUDGE_REVIEW:
-                action = "The decision on your original request will be overturned. The Tribunal will contact you if there is something you need to do next.";
-                break;
-            case LINK_OR_UNLINK:
-                action = "This appeal will be linked or unlinked. The Tribunal will contact you when this happens.";
-                break;
-            case REINSTATE:
-                action = "This appeal will be reinstated and will continue from the point where it was ended. The Tribunal will contact you when this happens.";
-                break;
-            case WITHDRAW:
-                action = "The Tribunal will end the appeal. The Tribunal will contact you when this happens.";
-                break;
-            case OTHER:
-                action = "The Tribunal will contact you when it makes the changes you requested.";
-                break;
-            default:
-                break;
-        }
-        return action;
-    }
-
-
-
 }
 

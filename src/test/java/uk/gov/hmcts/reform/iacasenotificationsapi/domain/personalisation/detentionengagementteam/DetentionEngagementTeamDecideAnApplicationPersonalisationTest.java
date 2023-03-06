@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
 
@@ -46,6 +47,8 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     private DateProvider dateProvider;
     @Mock
     private MakeAnApplication makeAnApplication;
+    @Mock
+    private DetEmailService detEmailService;
 
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -72,7 +75,8 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
             judgesReviewDeadlineDateDelay,
             customerServicesProvider,
             makeAnApplicationService,
-            dateProvider
+            dateProvider,
+            detEmailService
         );
     }
 
@@ -89,6 +93,8 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
 
     @Test
     void should_return_given_det_email_address() {
+        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detentionEngagementTeamEmail);
+
         assertTrue(
             detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
@@ -148,39 +154,71 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         assertEquals(calculatedDeadline, personalisation.get("judgesReviewDeadlineDate"));
         assertEquals(makeAnApplicationFormLink, personalisation.get("makeAnApplicationLink"));
 
-        String expectedAction = personalisation.get("action");
-
         switch (makeAnApplicationType) {
             case TIME_EXTENSION:
-                assertEquals("The Tribunal will give you more time to complete your next task. "
-                             + "You will get a notification with the new date soon.", expectedAction);
+                assertEquals("yes", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
+                assertEquals("no", personalisation.get("grantedOther"));
                 break;
             case ADJOURN:
             case EXPEDITE:
             case TRANSFER:
-                assertEquals("The details of your hearing will be updated. The Tribunal "
-                              + "will contact you when this happens.", expectedAction);
+                assertEquals("yes", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
+                assertEquals("no", personalisation.get("grantedOther"));
                 break;
             case JUDGE_REVIEW:
-                assertEquals("The decision on your original request will be overturned. "
-                             + "The Tribunal will contact you if there is something you need to do next.",
-                    expectedAction);
+                assertEquals("yes", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
+                assertEquals("no", personalisation.get("grantedOther"));
                 break;
             case LINK_OR_UNLINK:
-                assertEquals("This appeal will be linked or unlinked. The Tribunal will contact you "
-                             + "when this happens.", expectedAction);
+                assertEquals("yes", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
+                assertEquals("no", personalisation.get("grantedOther"));
                 break;
             case REINSTATE:
-                assertEquals("This appeal will be reinstated and will continue from the point "
-                             + "where it was ended. The Tribunal will contact you when this happens.", expectedAction);
+                assertEquals("yes", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
+                assertEquals("no", personalisation.get("grantedOther"));
                 break;
             case WITHDRAW:
-                assertEquals("The Tribunal will end the appeal. The Tribunal will contact you "
-                             + "when this happens.", expectedAction);
+                assertEquals("yes", personalisation.get("grantedWithdraw"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedOther"));
                 break;
             case OTHER:
-                assertEquals("The Tribunal will contact you when it makes the changes you "
-                             + "requested.", expectedAction);
+                assertEquals("yes", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
                 break;
             default:
                 break;

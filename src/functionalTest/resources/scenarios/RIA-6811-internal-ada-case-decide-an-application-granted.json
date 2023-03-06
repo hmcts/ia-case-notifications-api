@@ -1,5 +1,5 @@
 {
-  "description": "RIA-6811: internal ada case decideAnApplication event",
+  "description": "RIA-6811: internal ada case decideAnApplication event (Granted)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -15,32 +15,14 @@
           "appealType": "refusalOfEu",
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
-          "makeAnApplicationDecision": "Granted",
-          "makeAnApplicationDecisionReason": "A reason for the decision",
           "decideAnApplicationId": "1",
-          "makeAnApplicationsList": {
-            "value": {
-              "code": "1",
-              "label": "Admin Officer : Application 1"
-            },
-            "list_items": [
-              {
-                "code": "1",
-                "label": "Admin Officer : Application 1"
-              }
-            ]
-          },
           "makeAnApplications": [
             {
               "id": "1",
               "value": {
-                "date": "2023-03-03",
-                "type": "Time extension",
-                "state": "caseBuilding",
-                "details": "A reason for extending the timeframe",
-                "decisionMaker": "Tribunal Caseworker",
-                "decision": "Pending",
-                "evidence": [
+                "type":"Other",
+                "details":"",
+                "evidence":[
                   {
                     "id": "1",
                     "value": {
@@ -50,12 +32,17 @@
                     }
                   }
                 ],
-                "applicant": "Admin Officer",
-                "applicantRole": "caseworker-ia-admofficer"
+                "applicant":"",
+                "date":"",
+                "decision":"Granted",
+                "state":"caseBuilding",
+                "applicantRole":"caseworker-ia-admofficer",
+                "decisionReason":"A reason for the decision",
+                "decisionDate":"{$TODAY}",
+                "decisionMaker": "Tribunal Caseworker"
               }
             }
-          ],
-          "hasApplicationsToDecide": "Yes"
+          ]
         }
       }
     }

@@ -2314,8 +2314,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("decideAnApplicationNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationNotificationHandler(
+    @Bean("decideAnApplicationLegalRepNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationLegalRepNotificationGenerator(
         LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation,
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
 
@@ -2336,7 +2336,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("decideAnApplicationDetNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationDetNotificationHandler(
+    public List<NotificationGenerator> decideAnApplicationDetNotificationGenerator(
         DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
 
         GovNotifyNotificationSender notificationSender,
@@ -2355,7 +2355,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("decideAnApplicationAipNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationAipNotificationHandler(
+    public List<NotificationGenerator> decideAnApplicationAipNotificationGenerator(
             HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
             AppellantDecideAnApplicationPersonalisationEmail appellantDecideAnApplicationPersonalisationEmail,
             AppellantDecideAnApplicationPersonalisationSms appellantDecideAnApplicationPersonalisationSms,
