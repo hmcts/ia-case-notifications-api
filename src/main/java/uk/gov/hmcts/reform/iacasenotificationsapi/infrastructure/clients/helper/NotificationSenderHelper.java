@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;

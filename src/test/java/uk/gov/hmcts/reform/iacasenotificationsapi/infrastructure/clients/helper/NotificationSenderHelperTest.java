@@ -415,8 +415,7 @@ public class NotificationSenderHelperTest {
                         templateId,
                         emailAddress,
                         personalisationWithLink,
-                        reference
-                );
+                        reference);
 
         assertThatThrownBy(() ->
                 senderHelper.sendEmailWithLink(

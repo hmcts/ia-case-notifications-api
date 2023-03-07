@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,12 +17,6 @@ import uk.gov.hmcts.reform.document.DocumentDownloadClientApi;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.AccessTokenProvider;
-
-
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DocumentDownloadClientTest {
