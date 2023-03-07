@@ -1230,7 +1230,7 @@ nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
-detUnrepresentedEmailAddress: ${IA_DET_EMAIL:det-unrepresented@example.com}
+adaDetUnrepresentedEmailAddress: ${IA_UNREPRESENTED_ADA_DET_EMAIL:det-unrepresented@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}

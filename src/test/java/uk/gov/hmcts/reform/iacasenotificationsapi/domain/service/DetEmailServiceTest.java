@@ -6,18 +6,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class DetEmailServiceTest {
-    private final String DET_DUMMY_EMAIL = "example@email.com";
+    private final String dummyAdaDetEmailAddress = "example@email.com";
     private DetEmailService detEmailService;
 
     @BeforeEach
     void setUp() {
-        detEmailService = new DetEmailService(DET_DUMMY_EMAIL);
+        detEmailService = new DetEmailService(dummyAdaDetEmailAddress);
     }
 
     @Test
     void should_return_det_email_address_for_unrepresented_cases() {
-        String email = detEmailService.getEmail();
-        assertEquals(email, DET_DUMMY_EMAIL);
+        final String adaDetUnrepresentedEmailAddress = detEmailService.getAdaDetEmailAddress();
+        assertEquals(dummyAdaDetEmailAddress, adaDetUnrepresentedEmailAddress);
     }
 
 }
