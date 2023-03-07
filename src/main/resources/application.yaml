@@ -686,6 +686,9 @@ govnotify:
           homeOffice:
             email: 48ed7f47-00c6-462b-8acc-c9b7f38ba1ae
     decideAnApplication:
+        applicant:
+          detentionEngagementTeam:
+            email: 51135c0f-4dc1-4a6b-bcc5-a27db656cb41
         otherParty:
           appellant:
             beforeListing:
@@ -1230,6 +1233,7 @@ nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
+adaDetUnrepresentedEmailAddress: ${IA_UNREPRESENTED_ADA_DET_EMAIL:det-unrepresented@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}
@@ -1241,8 +1245,15 @@ ftpaSubmitted:
   ctscAdminEmailAddress: ${IA_CTSC_ADMIN_FTPA_SUBMITTED:ctscFtpaSubmitted@example.gov.uk}
   respondentEmailAddress: ${IA_RESPONDENT_FTPA_SUBMITTED:homeOfficeFtpaSubmitted@example.gov.uk}
 
+detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
+
+judgesReviewDeadlineDateDelay: ${JUDGES_REVIEW_DEADLINE_DATE_DELAY:14}
+
+makeAnApplicationFormLink: ${MAKE_AN_APPLICATION_FORM_LINK:https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaftada4}
+
 customerServices:
   emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
+  internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
 
 appellantDaysToWait:
