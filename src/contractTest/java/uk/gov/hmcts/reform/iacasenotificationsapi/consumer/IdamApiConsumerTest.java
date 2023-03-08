@@ -40,7 +40,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.RestTemp
         properties = {"idam.baseUrl=localhost:5000"}
 )
 @Import(RestTemplateConfiguration.class)
-@TestPropertySource(locations = {"classpath:application.properties"}, properties = {"idam.baseUrl=http://localhost:8892"})
+@TestPropertySource(locations = {"classpath:application.properties"})
 public class IdamApiConsumerTest {
     @Autowired
     IdamApi idamApi;
