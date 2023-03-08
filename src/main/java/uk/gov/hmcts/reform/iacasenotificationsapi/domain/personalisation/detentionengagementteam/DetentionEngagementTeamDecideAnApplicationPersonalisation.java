@@ -25,9 +25,11 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
     private static final String DECISION_GRANTED = "Granted";
     private static final String DECISION_REFUSED = "Refused";
+    private static final String ADMIN_OFFICER_ROLE = "caseworker-ia-admofficer";
 
     private final CustomerServicesProvider customerServicesProvider;
-    private final String detentionEngagementTeamDecideAnApplicationTemplateId;
+    private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId;
+    private final String detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId;
     private final String makeAnApplicationFormLink;
     private final int judgesReviewDeadlineDateDelay;
     private final String detentionEngagementTeamEmail;
@@ -41,7 +43,8 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     private String nonAdaPrefix;
 
     public DetentionEngagementTeamDecideAnApplicationPersonalisation(
-        @Value("${govnotify.template.decideAnApplication.applicant.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationTemplateId,
+        @Value("${govnotify.template.decideAnApplication.applicant.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
+        @Value("${govnotify.template.decideAnApplication.otherParty.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId,
         @Value("${detentionEngagementTeamEmailAddress}") String detentionEngagementTeamEmail,
         @Value("${makeAnApplicationFormLink}") String makeAnApplicationFormLink,
         @Value("${judgesReviewDeadlineDateDelay}") int judgesReviewDeadlineDateDelay,
@@ -50,7 +53,8 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         DateProvider dateProvider,
         DetEmailService detEmailService
     ) {
-        this.detentionEngagementTeamDecideAnApplicationTemplateId = detentionEngagementTeamDecideAnApplicationTemplateId;
+        this.detentionEngagementTeamDecideAnApplicationApplicantTemplateId = detentionEngagementTeamDecideAnApplicationApplicantTemplateId;
+        this.detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId = detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId;
         this.detentionEngagementTeamEmail = detentionEngagementTeamEmail;
         this.makeAnApplicationFormLink = makeAnApplicationFormLink;
         this.judgesReviewDeadlineDateDelay = judgesReviewDeadlineDateDelay;
@@ -61,8 +65,11 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     }
 
     @Override
-    public String getTemplateId() {
-        return detentionEngagementTeamDecideAnApplicationTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        Optional<MakeAnApplication> optionalMakeAnApplication = getMakeAnApplication(asylumCase);
+        return isApplicant(optionalMakeAnApplication)
+            ? detentionEngagementTeamDecideAnApplicationApplicantTemplateId
+            : detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId;
     }
 
     @Override
@@ -98,16 +105,12 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             TRANSFER.toString()
         ).contains(applicationType);
 
-        // If the decision maker is a TCW then change "Tribunal Caseworker" into "Legal Officer"
-        String decisionMaker = adaptDecisionMakerName(optionalMakeAnApplication);
-
-        String judgesReviewDeadlineDate = dateProvider.dueDate(judgesReviewDeadlineDateDelay);
 
         String ariaListingReferenceIfPresent = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
             .map(ariaListingReference -> "\nListing reference: " + ariaListingReference)
             .orElse("");
 
-        return ImmutableMap
+        ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
@@ -116,8 +119,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("decisionMaker", decisionMaker)
-            .put("applicationDecision", transformDecision(decision))
+            .put("applicationDecision", transformDecision(optionalMakeAnApplication))
             .put("applicationType", applicationType)
             .put("applicationDecisionReason", applicationDecisionReason)
             .put("granted", applicationGranted ? "yes" : "no")
@@ -127,10 +129,21 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .put("grantedLinkOrUnlik", applicationGranted && (Objects.equals(LINK_OR_UNLINK.toString(), applicationType)) ? "yes" : "no")
             .put("grantedReinstate", applicationGranted && (Objects.equals(REINSTATE.toString(), applicationType)) ? "yes" : "no")
             .put("grantedWithdraw", applicationGranted && (Objects.equals(WITHDRAW.toString(), applicationType)) ? "yes" : "no")
-            .put("grantedOther", applicationGranted && (Objects.equals(OTHER.toString(), applicationType)) ? "yes" : "no")
-            .put("judgesReviewDeadlineDate", judgesReviewDeadlineDate)
-            .put("makeAnApplicationLink", makeAnApplicationFormLink)
-            .build();
+            .put("grantedOther", applicationGranted && (Objects.equals(OTHER.toString(), applicationType)) ? "yes" : "no");
+
+        if (isApplicant(optionalMakeAnApplication)) {
+            // If the decision maker is a TCW then change "Tribunal Caseworker" into "Legal Officer"
+            String decisionMaker = adaptDecisionMakerName(optionalMakeAnApplication);
+
+            String judgesReviewDeadlineDate = dateProvider.dueDate(judgesReviewDeadlineDateDelay);
+
+            personalizationBuilder = personalizationBuilder
+                .put("decisionMaker", decisionMaker)
+                .put("judgesReviewDeadlineDate", judgesReviewDeadlineDate)
+                .put("makeAnApplicationLink", makeAnApplicationFormLink);
+        }
+
+        return personalizationBuilder.build();
     }
 
     private String adaptDecisionMakerName(Optional<MakeAnApplication> optionalMakeAnApplication) {
@@ -142,17 +155,27 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .orElse("");
     }
 
-    private String transformDecision(String decision) {
-        if (DECISION_GRANTED.equals(decision)) {
-            return "grant";
-        } else if (DECISION_REFUSED.equals(decision)) {
-            return "refuse";
-        }
-        return "";
+    private String transformDecision(Optional<MakeAnApplication> makeAnApplication) {
+        return makeAnApplication.map(app -> {
+            String decision = app.getDecision();
+            if (DECISION_GRANTED.equals(decision)) {
+                decision =  isApplicant(makeAnApplication) ? "grant" : "granted";
+            } else if (DECISION_REFUSED.equals(decision)) {
+                decision = isApplicant(makeAnApplication) ? "refuse" : "refused";
+            } else {
+                decision = "";
+            }
+            return decision;
+        }).orElse("");
     }
 
     private Optional<MakeAnApplication> getMakeAnApplication(AsylumCase asylumCase) {
         return makeAnApplicationService.getMakeAnApplication(asylumCase, true);
+    }
+
+    private boolean isApplicant(Optional<MakeAnApplication> makeAnApplication) {
+        return makeAnApplication.map(app -> Objects.equals(ADMIN_OFFICER_ROLE, app.getApplicantRole())
+        ).orElse(false);
     }
 }
 
