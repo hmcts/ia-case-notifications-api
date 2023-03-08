@@ -1,0 +1,46 @@
+{
+  "description": "RIA-6779: internal ada case request respondent evidence (DET)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 68111,
+      "eventId": "requestRespondentReview",
+      "state": "caseUnderReview",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "appealReferenceNumber": "Test",
+          "homeOfficeReferenceNumber": "Test",
+          "ariaListingReference": "Test",
+          "appellantGivenNames": "Test",
+          "appellantFamilyName": "User",
+          "isAdmin": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appealReferenceNumber": "Test",
+        "homeOfficeReferenceNumber": "Test",
+        "ariaListingReference": "Test",
+        "appellantGivenNames": "Test",
+        "appellantFamilyName": "User",
+        "isAdmin": "Yes",
+        "isAcceleratedDetainedAppeal": "Yes",
+        "notificationsSent":[
+          {
+            "id":"68111_DENTENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }]
+      }
+    }
+  }
+}
+
