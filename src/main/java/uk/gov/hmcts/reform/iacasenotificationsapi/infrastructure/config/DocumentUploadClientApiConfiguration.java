@@ -14,7 +14,7 @@ public class DocumentUploadClientApiConfiguration {
     @Bean
     @Primary
     public DocumentUploadClientApi documentUploadClientApi(
-        @Value("${document_management.url}") final String ccdGatewayUrl
+        @Value("${ccdGatewayUrl}") final String ccdGatewayUrl
     ) {
         return new DocumentUploadClientApi(
             ccdGatewayUrl,
