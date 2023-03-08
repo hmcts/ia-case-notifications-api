@@ -120,9 +120,6 @@ public enum AsylumCaseDefinition {
     ARIA_LISTING_REFERENCE(
             "ariaListingReference",  new TypeReference<String>(){}),
 
-    SEND_DIRECTION_DATE_DUE(
-            "sendDirectionDateDue",  new TypeReference<String>(){}),
-
     LIST_CASE_HEARING_CENTRE(
             "listCaseHearingCentre",  new TypeReference<HearingCentre>(){}),
 
