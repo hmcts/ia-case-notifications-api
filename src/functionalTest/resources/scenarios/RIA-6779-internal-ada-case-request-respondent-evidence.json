@@ -10,6 +10,18 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "explanation": "Review the built case",
+                "parties": "respondent",
+                "dateDue": "{$TODAY+14}",
+                "dateSent": "{$TODAY}",
+                "tag": "respondentReview"
+              }
+            }
+          ],
           "appealReferenceNumber": "Test",
           "homeOfficeReferenceNumber": "Test",
           "ariaListingReference": "Test",
@@ -27,6 +39,18 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "directions": [
+          {
+            "id": "1",
+            "value": {
+              "explanation": "Review the built case",
+              "parties": "respondent",
+              "dateDue": "{$TODAY+14}",
+              "dateSent": "{$TODAY}",
+              "tag": "respondentReview"
+            }
+          }
+        ],
         "appealReferenceNumber": "Test",
         "homeOfficeReferenceNumber": "Test",
         "ariaListingReference": "Test",
