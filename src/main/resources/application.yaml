@@ -690,6 +690,8 @@ govnotify:
           detentionEngagementTeam:
             email: 51135c0f-4dc1-4a6b-bcc5-a27db656cb41
         otherParty:
+          detentionEngagementTeam:
+            email: 47289033-479f-45e2-aa17-2c785378733a
           appellant:
             beforeListing:
               email: 22cee197-d6a9-4a9f-bdc9-a8aec8ab36f8
