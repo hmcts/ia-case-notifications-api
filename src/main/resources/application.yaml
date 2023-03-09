@@ -20,6 +20,9 @@ management:
     notificationService:
       uri: "https://status.notifications.service.gov.uk"
       response: '"status":"UP"'
+    documentManagement:
+      uri: ${DM_URL:http://localhost:4506}/health
+      response: '"status":"UP"'
 
 spring:
   application:

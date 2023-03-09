@@ -56,6 +56,45 @@ public class NotificationSenderHelper {
         );
     }
 
+    public String sendEmailWithLink(
+            String templateId,
+            String emailAddress,
+            Map<String, Object> personalisation,
+            String reference,
+            RetryableNotificationClient notificationClient,
+            Integer deduplicateSendsWithinSeconds,
+            Logger logger
+    ) {
+        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
+        return recentDeliveryReceiptCache.get(
+                emailAddress + reference,
+                k -> {
+                    try {
+                        logger.info("Attempting to send email notification to GovNotify: {}", reference);
+
+                        SendEmailResponse response = notificationClient.sendEmail(
+                                templateId,
+                                emailAddress,
+                                personalisation,
+                                reference
+                        );
+
+                        String notificationId = response.getNotificationId().toString();
+
+                        logger.info("Successfully sent email notification to GovNotify: {} ({})",
+                                reference,
+                                notificationId
+                        );
+
+                        return notificationId;
+
+                    } catch (NotificationClientException e) {
+                        throw new NotificationServiceResponseException("Failed to send email using GovNotify", e);
+                    }
+                }
+        );
+    }
+
     public String sendSms(
             String templateId,
             String phoneNumber,
