@@ -1281,5 +1281,3 @@ launchDarkly:
 
 govUkHolidays:
   url: https://www.gov.uk/
-
-ccdGatewayUrl: ${CCD_GW_URL:http://localhost:3453}
