@@ -1150,7 +1150,8 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
                     && callback.getCaseDetails().getState() != State.FTPA_DECIDED
                     && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -1167,6 +1168,24 @@ public class NotificationHandlerConfiguration {
                         && "DONE".equalsIgnoreCase(getStitchStatus(callback))
                         && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyAdaDetNotificationHandler(
+            @Qualifier("HearingBundleReadyDetAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    return
+                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
+                                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                                    && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData())
+                                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData());
+                },
+                notificationGenerators
         );
     }
 

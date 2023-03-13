@@ -1,0 +1,90 @@
+{
+  "description": "RIA-6782 Hearing bundle is ready notification to DET Email (For ADA)",
+  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 6782,
+      "eventId": "asyncStitchingComplete",
+      "state": "preHearing",
+      "caseData": {
+        "template": "minimal-internal-appeal-submitted.json",
+        "replacements": {
+          "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "listCaseHearingCentre": "harmondsworth",
+          "ariaListingReference": "LP/12345/2019",
+          "hearingDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "document": {
+                  "document_url": "http://document-store/BBB",
+                  "document_binary_url": "http://document-store/BBB/binary",
+                  "document_filename": "Talha-Awan-hearing-bundle.pdf"
+                },
+                "description": "",
+                "dateUploaded": "{$TODAY}",
+                "tag": "hearingBundle"
+              }
+            }],
+          "caseBundles": [{
+            "id": "1",
+            "value": {
+              "stitchStatus": "DONE"
+            }
+          }]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "listCaseHearingCentre": "harmondsworth",
+        "ariaListingReference": "LP/12345/2019",
+        "notificationsSent": [
+          {
+            "id": "6782_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": " 6782_HEARING_BUNDLE_IS_READY_DET_ADA_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "6782_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+        "recipient": "{$homeOfficeEmailAddresses.northShields}",
+        "subject": "Immigration and Asylum appeal: hearing bundle is ready",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "A1234567",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "6782_HEARING_BUNDLE_IS_READY_DET_ADA_EMAIL",
+        "recipient": "{$IA_UNREPRESENTED_ADA_DET_EMAIL}",
+        "subject": "Accelerated detained appeal: The hearing bundle is ready",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "A1234567",
+          "Talha Awan"
+        ]
+      }
+    ]
+  }
+}
