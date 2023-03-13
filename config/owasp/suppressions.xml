@@ -87,4 +87,8 @@
         <notes>Temporarily suppress json and jackson-core related vulnerability</notes>
         <cve>CVE-2022-45688</cve>
     </suppress>
+    <suppress>
+        <notes>Temporarily suppress commons-fileupload related vulnerability</notes>
+        <cve>CVE-2023-24998</cve>
+    </suppress>
 </suppressions>
