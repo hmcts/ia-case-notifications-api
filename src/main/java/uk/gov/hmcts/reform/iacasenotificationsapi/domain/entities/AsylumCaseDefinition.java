@@ -176,6 +176,9 @@ public enum AsylumCaseDefinition {
     ADDITIONAL_TRIBUNAL_RESPONSE(
         "additionalTribunalResponse", new TypeReference<String>(){}),
 
+    PAST_EXPERIENCES_TRIBUNAL_RESPONSE(
+            "pastExperiencesTribunalResponse", new TypeReference<String>(){}),
+
     CASE_BUNDLES(
         "caseBundles", new TypeReference<List<IdValue<Bundle>>>(){}),
 
