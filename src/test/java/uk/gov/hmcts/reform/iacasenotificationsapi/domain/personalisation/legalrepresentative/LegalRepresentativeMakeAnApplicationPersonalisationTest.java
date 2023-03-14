@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
@@ -104,6 +105,19 @@ public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
             userDetailsProvider,
             makeAnApplicationService
         );
+    }
+
+    @Test
+    public void should_return_empty_recipients_list_if_internal_case() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(legalRepresentativeMakeAnApplicationPersonalisation.getRecipientsList(asylumCase).isEmpty());
+    }
+
+    @Test
+    public void should_return_appropriate_recipients_list_if_not_internal_case() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.empty());
+        assertTrue(legalRepresentativeMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
+            .contains(legalRepEmailAddress));
     }
 
     @Test
