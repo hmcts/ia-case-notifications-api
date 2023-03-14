@@ -193,6 +193,8 @@ govnotify:
     reviewDirection:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
+      detentionTeam:
+        email: 8d8d9927-5711-4177-82bb-278e825755bf
       respondent:
         email: 8841913e-02c7-4565-8166-963e8a3a973d
       appellant:

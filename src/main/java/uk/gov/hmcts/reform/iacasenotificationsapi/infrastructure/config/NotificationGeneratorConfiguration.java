@@ -34,6 +34,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamDecideAnApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamHearingBundleReadyPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamRequestResponseReviewPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamRespondentReviewPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
@@ -856,6 +857,22 @@ public class NotificationGeneratorConfiguration {
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(appellantRespondentReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentReviewInternalNotificationGenerator")
+    public List<NotificationGenerator> respondentReviewInternalNotificationGenerator(
+            RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+            DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentDirectionPersonalisation, detentionEngagementTeamRespondentReviewPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
