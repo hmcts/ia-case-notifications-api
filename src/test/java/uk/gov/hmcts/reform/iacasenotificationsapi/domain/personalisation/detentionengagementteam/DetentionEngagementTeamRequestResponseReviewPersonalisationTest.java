@@ -73,7 +73,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));
 
-        List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadata("docId", "filename", "description", DocumentTag.APPEAL_RESPONSE);
+        List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.APPEAL_RESPONSE);
         appealResponseJsonDocument =  new JSONObject("{\"title\": \"Home Office Response JsonDocument\"}");
         when(asylumCase.read(RESPONDENT_DOCUMENTS)).thenReturn(Optional.of(appealResponseDocuments));
 
