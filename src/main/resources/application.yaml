@@ -317,6 +317,8 @@ govnotify:
       caseOfficer:
         email: 0df260d7-fd82-430b-86bb-047083a8172a
     hearingBundleReady:
+      detentionEngagementTeam:
+        email: 734a1474-aa91-40bf-b227-96be926d846c
       legalRep:
         email: 33f23316-8283-4968-90a0-aac4a1faebce
       homeOffice:

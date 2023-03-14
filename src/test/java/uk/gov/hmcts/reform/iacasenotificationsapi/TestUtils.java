@@ -14,12 +14,16 @@ public class TestUtils {
 
     }
 
-    public static List<IdValue<DocumentWithMetadata>> getDocumentWithMetadata(String docId, String filename,
-                                                                               String description, DocumentTag tag) {
+    public static List<IdValue<DocumentWithMetadata>> getDocumentWithMetadataList(String docId, String filename,
+                                                                                  String description, DocumentTag tag) {
+        return Arrays.asList(new IdValue<>(docId, getDocumentWithMetadata(docId, filename, description, tag)));
+    }
+
+    public static DocumentWithMetadata getDocumentWithMetadata(String docId, String filename,
+                                                                                  String description, DocumentTag tag) {
         String documentUrl = "http://dm-store/" + docId;
         Document document = new Document(documentUrl, documentUrl + "/binary", filename);
 
-        return Arrays.asList(new IdValue<>(docId, new DocumentWithMetadata(document, description,
-            LocalDate.now().toString(), tag)));
+        return new DocumentWithMetadata(document, description, LocalDate.now().toString(), tag);
     }
 }
