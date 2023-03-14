@@ -60,7 +60,6 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     private final String detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId = "detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId";
     private final String makeAnApplicationFormLink = "someLink";
     private final int judgesReviewDeadlineDateDelay = 14;
-    private final String detentionEngagementTeamEmail = "det@email.com";
     private final String customerServiceTelephone = "0123456789";
     private final String customerServiceEmail = "hm@email.com";
     private final String calculatedDeadline = "03 March 2023";
@@ -73,7 +72,6 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         detentionEngagementTeamDecideAnApplicationPersonalisation = new DetentionEngagementTeamDecideAnApplicationPersonalisation(
             detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
             detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId,
-            detentionEngagementTeamEmail,
             makeAnApplicationFormLink,
             judgesReviewDeadlineDateDelay,
             customerServicesProvider,
@@ -102,6 +100,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
 
     @Test
     void should_return_given_det_email_address() {
+        String detentionEngagementTeamEmail = "det@email.com";
         when(detEmailService.getAdaDetEmailAddress()).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(

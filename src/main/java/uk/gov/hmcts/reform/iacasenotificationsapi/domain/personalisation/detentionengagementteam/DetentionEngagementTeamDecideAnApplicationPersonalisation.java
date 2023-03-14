@@ -32,7 +32,6 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     private final String detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId;
     private final String makeAnApplicationFormLink;
     private final int judgesReviewDeadlineDateDelay;
-    private final String detentionEngagementTeamEmail;
     private final MakeAnApplicationService makeAnApplicationService;
     private final DateProvider dateProvider;
     private final DetEmailService detEmailService;
@@ -45,7 +44,6 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     public DetentionEngagementTeamDecideAnApplicationPersonalisation(
         @Value("${govnotify.template.decideAnApplication.applicant.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
         @Value("${govnotify.template.decideAnApplication.otherParty.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId,
-        @Value("${detentionEngagementTeamEmailAddress}") String detentionEngagementTeamEmail,
         @Value("${makeAnApplicationFormLink}") String makeAnApplicationFormLink,
         @Value("${judgesReviewDeadlineDateDelay}") int judgesReviewDeadlineDateDelay,
         CustomerServicesProvider customerServicesProvider,
@@ -55,7 +53,6 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     ) {
         this.detentionEngagementTeamDecideAnApplicationApplicantTemplateId = detentionEngagementTeamDecideAnApplicationApplicantTemplateId;
         this.detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId = detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId;
-        this.detentionEngagementTeamEmail = detentionEngagementTeamEmail;
         this.makeAnApplicationFormLink = makeAnApplicationFormLink;
         this.judgesReviewDeadlineDateDelay = judgesReviewDeadlineDateDelay;
         this.customerServicesProvider = customerServicesProvider;
@@ -107,7 +104,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
 
         String ariaListingReferenceIfPresent = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-            .map(ariaListingReference -> "\nListing reference: " + ariaListingReference)
+            .map(ariaListingReference -> "Listing reference: " + ariaListingReference)
             .orElse("");
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap

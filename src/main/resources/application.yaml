@@ -178,6 +178,8 @@ govnotify:
     responseReviewDirection:
       legalRep:
         email: f9995d9f-cdf9-4bd6-845e-984ecc89f4f8
+      detentionEngagementTeam:
+        email: c15c1d5d-aa44-4725-b953-14bd506cf7ce
       appellant:
         withdrawn:
           email: 46977d5a-ce01-443d-8c55-af037a7dfb40
