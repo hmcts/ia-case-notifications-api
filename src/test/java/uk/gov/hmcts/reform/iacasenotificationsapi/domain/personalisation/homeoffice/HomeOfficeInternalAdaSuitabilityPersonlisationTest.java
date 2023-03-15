@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,23 +26,23 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
+class HomeOfficeInternalAdaSuitabilityPersonlisationTest {
 
     @Mock
     AsylumCase asylumCase;
     @Mock
-    CustomerServicesProvider customerServicesProvider;
+    EmailAddressFinder emailAddressFinder;
     @Mock
-    DetEmailService detEmailService;
+    CustomerServicesProvider customerServicesProvider;
     @Mock
     DocumentDownloadClient documentDownloadClient;
     @Mock
@@ -50,19 +50,24 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
 
-    private final String templateId = "someTemplateId";
+    private Long caseId = 12345L;
+    private String templateId = "adaSuitableTemplateId";
+    private String appealReferenceNumber = "someReferenceNumber";
+    private String ariaListingReference = "someAriaListingReference";
+    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private String appellantGivenNames = "someAppellantGivenNames";
+    private String appellantFamilyName = "someAppellantFamilyName";
+
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "cust.services@example.com";
+
     private final String adaPrefix = "Accelerated detained appeal";
     private final String hearingDateTime = "2019-08-27T14:25:15.000";
     private String hearingDate = "2019-08-27";
     private String hearingTime = "14:25";
-    private final String detEmailAddress = "legalrep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
     private final String listingReference = "listingReference";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "customer.services@example.com";
+    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private String hearingEmailAddress = "hearinge@example.com";
     private final String hearingRequirementVulnerabilities = "No special adjustments are being made to accommodate vulnerabilities";
     private final String hearingRequirementMultimedia = "No multimedia equipment is being provided";
     private final String hearingRequirementSingleSexCourt = "The court will not be single sex";
@@ -75,21 +80,21 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
             "id", "ada_suitability", "some other desc", DocumentTag.ADA_SUITABILITY);
     IdValue<DocumentWithMetadata> adaSuitabilityDocId = new IdValue<>("1", adaSuitabilityDoc);
 
-    private DetentionEngagementTeamAdaSuitabilityReviewPersonalisation
-            detentionEngagementTeamAdaSuitabilityReviewPersonalisation;
+    private HomeOfficeInternalAdaSuitabilityPersonalisation
+            homeOfficeInternalAdaSuitabilityPersonalisation;
 
-    DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest() {
+    HomeOfficeInternalAdaSuitabilityPersonlisationTest() {
     }
 
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
 
-        detentionEngagementTeamAdaSuitabilityReviewPersonalisation =
-                new DetentionEngagementTeamAdaSuitabilityReviewPersonalisation(
+        homeOfficeInternalAdaSuitabilityPersonalisation =
+                new HomeOfficeInternalAdaSuitabilityPersonalisation(
                         templateId,
                         adaPrefix,
+                        emailAddressFinder,
                         customerServicesProvider,
-                        detEmailService,
                         documentDownloadClient,
                         dateTimeExtractor,
                         hearingDetailsFinder
@@ -98,7 +103,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
 
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class)).thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
 
@@ -119,27 +124,27 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
 
         when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
         when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_ADA_SUITABILITY_DETERMINED_DET",
-                detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_INTERNAL_ADA_SUITABILITY_DETERMINED_HOME_OFFICE",
+                homeOfficeInternalAdaSuitabilityPersonalisation.getReferenceId(caseId));
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getRecipientsList(asylumCase)
-                .contains(detEmailAddress));
+    public void should_return_given_email_address() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(hearingEmailAddress);
+        assertTrue(homeOfficeInternalAdaSuitabilityPersonalisation.getRecipientsList(asylumCase).contains(hearingEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-                () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
+                () -> homeOfficeInternalAdaSuitabilityPersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
@@ -148,7 +153,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_suitability_review_is_missing() {
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class)).thenReturn(Optional.empty());
         assertThatThrownBy(
-                () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase))
+                () -> homeOfficeInternalAdaSuitabilityPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(RequiredFieldMissingException.class)
                 .hasMessage("ADA suitability decision missing");
     }
@@ -167,7 +172,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
         when(asylumCase.read(asylumCaseDefinition, String.class)).thenReturn(Optional.empty());
 
         Map<String, Object> personalisation =
-                detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase);
+                homeOfficeInternalAdaSuitabilityPersonalisation.getPersonalisationForLink(asylumCase);
         if (asylumCaseDefinition.equals(VULNERABILITIES_TRIBUNAL_RESPONSE)) {
             assertEquals(hearingRequirementVulnerabilities, personalisation.get("hearingRequirementVulnerabilities"));
         } else if (asylumCaseDefinition.equals(MULTIMEDIA_TRIBUNAL_RESPONSE)) {
@@ -197,7 +202,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
 
 
         assertThatThrownBy(
-                () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase))
+                () -> homeOfficeInternalAdaSuitabilityPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("ADA suitability document not available");
     }
@@ -212,7 +217,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
                         .put("subjectPrefix", adaPrefix)
                         .put("appealReferenceNumber", appealReferenceNumber)
                         .put("ariaListingReferenceIfPresent", listingReference)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                        .put("homeOfficeReferenceNumber", homeOfficeRefNumber)
                         .put("appellantGivenNames", appellantGivenNames)
                         .put("appellantFamilyName", appellantFamilyName)
                         .put("hearingDate", hearingDateTime)
@@ -229,7 +234,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
                         .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase);
+                homeOfficeInternalAdaSuitabilityPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());

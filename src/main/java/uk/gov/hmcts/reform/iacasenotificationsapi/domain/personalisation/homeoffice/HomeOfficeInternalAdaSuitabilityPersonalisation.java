@@ -1,5 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
-
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -16,42 +15,42 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingExc
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class HomeOfficeInternalAdaSuitabilityPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String documentDownloadTitle = "Accelerated Detained Appeal Suitability Decision document";
-    private final String detentionEngagementTeamAdaSuitabilityReviewTemplateId;
-    private final CustomerServicesProvider customerServicesProvider;
+    private final String documentDownloadTitle = "Internal Accelerated Detained Appeal Suitability Decision document";
+    private final String internalAdaSuitabilityHomeOfficeTemplateId;
     private final String adaPrefix;
-    private final DetEmailService detEmailService;
+
+    private final EmailAddressFinder emailAddressFinder;
+    private final CustomerServicesProvider customerServicesProvider;
     private final DocumentDownloadClient documentDownloadClient;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
 
-
-    public DetentionEngagementTeamAdaSuitabilityReviewPersonalisation(
-            @NotNull(message = "adaSuitabilityUnsuitableLegalRepresentativeTemplateId cannot be null")
-            @Value("${govnotify.template.adaSuitabilityReview.detentionEngagementTeam.email}") String detentionEngagementTeamAdaSuitabilityReviewTemplateId,
+    public HomeOfficeInternalAdaSuitabilityPersonalisation(
+            @NotNull(message = "internalAdaSuitabilityHomeOfficeTemplateId cannot be null")
+            @Value("${govnotify.template.adaSuitabilityReview.homeOffice.internal.email}") String internalAdaSuitabilityHomeOfficeTemplateId,
             @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
+            EmailAddressFinder emailAddressFinder,
             CustomerServicesProvider customerServicesProvider,
-            DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient,
             DateTimeExtractor dateTimeExtractor,
             HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.detentionEngagementTeamAdaSuitabilityReviewTemplateId = detentionEngagementTeamAdaSuitabilityReviewTemplateId;
-        this.customerServicesProvider = customerServicesProvider;
+        this.internalAdaSuitabilityHomeOfficeTemplateId = internalAdaSuitabilityHomeOfficeTemplateId;
         this.adaPrefix = adaPrefix;
-        this.detEmailService = detEmailService;
+        this.emailAddressFinder = emailAddressFinder;
+        this.customerServicesProvider = customerServicesProvider;
         this.documentDownloadClient = documentDownloadClient;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -59,17 +58,17 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return detentionEngagementTeamAdaSuitabilityReviewTemplateId;
+        return internalAdaSuitabilityHomeOfficeTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
+        return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_ADA_SUITABILITY_DETERMINED_DET";
+        return caseId + "_INTERNAL_ADA_SUITABILITY_DETERMINED_HOME_OFFICE";
     }
 
     @Override
@@ -110,7 +109,6 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
                 .put("documentDownloadTitle", documentDownloadTitle)
                 .put("linkToDownloadDocument", getAdaSuitabilityDocument(asylumCase))
                 .build();
-
     }
 
     private AdaSuitabilityReviewDecision getAdaSuitabilityDecision(AsylumCase asylumCase) {
