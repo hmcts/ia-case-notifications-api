@@ -452,6 +452,8 @@ govnotify:
         email: 351bcf88-a741-44e9-84ef-8ed1e2ddeb18
       caseOfficer:
         email: 09d9305f-dc5d-4fb0-b89d-3998c7b609bb
+      detentionEngagementTeam:
+        email: 2c655c3d-651d-4a72-8cb7-7ae3a00e2c31
       otherLegalRep:
         email: 3219c9a3-afc7-4439-bb2e-90de798f98a8
       otherHomeOffice:

@@ -1570,7 +1570,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT,
+                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                && !AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedDetentionEngagementTeamNotificationHandler(
+        @Qualifier("ftpaSubmittedDetentionEngagementTeamNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
