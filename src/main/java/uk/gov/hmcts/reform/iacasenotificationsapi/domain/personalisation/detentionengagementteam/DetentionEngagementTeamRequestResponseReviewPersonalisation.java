@@ -5,8 +5,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -17,6 +15,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -35,6 +35,8 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
     private final String adaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
+    private final DateTimeExtractor dateTimeExtractor;
+    private final HearingDetailsFinder hearingDetailsFinder;
 
     public DetentionEngagementTeamRequestResponseReviewPersonalisation(
         @Value("${govnotify.template.responseReviewDirection.detentionEngagementTeam.email}") String detentionEngagementTeamRequestResponseReviewTemplateId,
@@ -42,7 +44,9 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
         @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
         DetEmailService detEmailService,
-        DocumentDownloadClient documentDownloadClient
+        DocumentDownloadClient documentDownloadClient,
+        DateTimeExtractor dateTimeExtractor,
+        HearingDetailsFinder hearingDetailsFinder
     ) {
         this.detentionEngagementTeamRequestResponseReviewTemplateId = detentionEngagementTeamRequestResponseReviewTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
@@ -50,6 +54,8 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
         this.customerServicesProvider = customerServicesProvider;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
+        this.dateTimeExtractor = dateTimeExtractor;
+        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -71,10 +77,6 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String hearingDate = LocalDate.parse(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)
-                .orElseThrow(() -> new IllegalStateException("Hearing date is not present")))
-            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
         String ariaListingReferenceIfPresent = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
             .map(ariaListingReference -> "Listing reference: " + ariaListingReference)
             .orElse("");
@@ -92,7 +94,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("appealReviewOutcome", appealReviewOutcome)
-            .put("hearingDate", hearingDate)
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("documentDownloadTitle", documentDownloadTitle)
             .put("linkToDownloadDocument", getAppealResponseDocument(asylumCase))
             .put("linkToOnlineService", iaExUiFrontendUrl)
