@@ -3549,7 +3549,26 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) ->
                     callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.ADA_SUITABILITY_REVIEW,
+                    && callback.getEvent() == Event.ADA_SUITABILITY_REVIEW
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> adaSuitabilityInternalAdaNotificationHandler(
+            @Qualifier("adaSuitabilityInternalAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.ADA_SUITABILITY_REVIEW
+                            && AsylumCaseUtils.isInternalCase(asylumCase)
+                            && AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase);
+                },
                 notificationGenerators
         );
     }
