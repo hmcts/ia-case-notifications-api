@@ -29,6 +29,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMe
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -44,11 +46,16 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
     DetEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
+    @Mock
+    DateTimeExtractor dateTimeExtractor;
+    @Mock
+    HearingDetailsFinder hearingDetailsFinder;
 
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String adaPrefix = "Accelerated detained appeal";
-    private final String hearingDate = "2019-09-10";
+    private final String hearingDate = "2023-03-15T10:13:38.410992";
+    private final String hearingDateFormatted = "15 March 2023";
     private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String listingReference = "listingReference";
@@ -81,6 +88,8 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
         when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
+        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDate);
+        when(dateTimeExtractor.extractHearingDate(hearingDate)).thenReturn(hearingDateFormatted);
 
         detentionEngagementTeamRequestResponseReviewPersonalisation =
             new DetentionEngagementTeamRequestResponseReviewPersonalisation(
@@ -89,7 +98,9 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 adaPrefix,
                 customerServicesProvider,
                 detEmailService,
-                documentDownloadClient
+                documentDownloadClient,
+                dateTimeExtractor,
+                hearingDetailsFinder
             );
     }
 
@@ -118,16 +129,6 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
             () -> detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
-    }
-
-    @Test
-    public void should_throw_exception_on_personalisation_when_hearing_date_is_missing() {
-        when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.empty());
-
-        assertThatThrownBy(
-            () -> detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Hearing date is not present");
     }
 
     @Test
@@ -170,7 +171,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("appealReviewOutcome", "maintain")
-                .put("hearingDate", hearingDate)
+                .put("hearingDate", hearingDateFormatted)
                 .put("documentDownloadTitle", "Home Office Response")
                 .put("linkToDownloadDocument", appealResponseJsonDocument)
                 .put("linkToOnlineService", iaExUiFrontendUrl)
@@ -204,7 +205,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("appealReviewOutcome", "withdraw")
-                .put("hearingDate", hearingDate)
+                .put("hearingDate", hearingDateFormatted)
                 .put("documentDownloadTitle", "Withdrawal Letter")
                 .put("linkToDownloadDocument", appealResponseJsonDocument)
                 .put("linkToOnlineService", iaExUiFrontendUrl)
