@@ -2388,6 +2388,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("decideAnApplicationDetNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationDetNotificationGenerator(
         DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
+        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
 
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -2396,7 +2397,8 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    detentionEngagementTeamDecideAnApplicationPersonalisation
+                    detentionEngagementTeamDecideAnApplicationPersonalisation,
+                    homeOfficeDecideAnApplicationPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

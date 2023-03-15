@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -46,6 +47,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeMakeAnApplicationPersonalisationTest {
+
+    private static final String ADMIN_OFFICER = "caseworker-ia-admofficer";
+    private static final String LEGAL_REP_USER = "caseworker-ia-legalrep-solicitor";
+    private static final String CITIZEN_USER = "citizen";
+    private static final String HOME_OFFICE_LART = "caseworker-ia-homeofficelart";
+    private static final String HOME_OFFICE_APC = "caseworker-ia-homeofficeapc";
+    private static final String HOME_OFFICE_POU = "caseworker-ia-homeofficepou";
+    private static final String HOME_OFFICE_RESPONDENT = "caseworker-ia-respondentofficer";
 
     @Mock
     AsylumCase asylumCase;
@@ -86,13 +95,6 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
     private String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
     private String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
     private String homeOfficeEmail = "ho-taylorhouse@example.com";
-
-    private String legalRepUser = "caseworker-ia-legalrep-solicitor";
-    private String citizenUser = "citizen";
-    private String homeOfficeLart = "caseworker-ia-homeofficelart";
-    private String homeOfficeApc = "caseworker-ia-homeofficeapc";
-    private String homeOfficePou = "caseworker-ia-homeofficepou";
-    private String homeOfficeRespondent = "caseworker-ia-respondentofficer";
 
 
     private HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation;
@@ -136,21 +138,21 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
     @Test
     public void should_return_given_template_id() {
         when(userDetails.getRoles()).thenReturn(
-            Arrays.asList(legalRepUser)
+            Arrays.asList(LEGAL_REP_USER)
         );
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         assertEquals(homeOfficeMakeAnApplicationBeforeListingTemplateId,
             homeOfficeMakeAnApplicationPersonalisation.getTemplateId(asylumCase));
 
         when(userDetails.getRoles()).thenReturn(
-                Arrays.asList(citizenUser)
+                Arrays.asList(CITIZEN_USER)
         );
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         assertEquals(homeOfficeMakeAnApplicationAfterListingTemplateId,
             homeOfficeMakeAnApplicationPersonalisation.getTemplateId(asylumCase));
 
 
-        List<String> roles = Arrays.asList(homeOfficeApc, homeOfficeLart, homeOfficeRespondent, homeOfficePou);
+        List<String> roles = Arrays.asList(HOME_OFFICE_APC, HOME_OFFICE_LART, HOME_OFFICE_RESPONDENT, HOME_OFFICE_POU);
         for (String role : roles) {
             when(userDetails.getRoles()).thenReturn(
                 Arrays.asList(role)
@@ -184,19 +186,19 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
             .thenReturn(Optional.of(State.APPEAL_SUBMITTED));
 
         when(userDetails.getRoles()).thenReturn(
-            Arrays.asList(homeOfficeApc)
+            Arrays.asList(HOME_OFFICE_APC)
         );
         assertTrue(homeOfficeMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
             .contains(apcPrivateBetaInboxHomeOfficeEmailAddress));
 
         when(userDetails.getRoles()).thenReturn(
-            Arrays.asList(homeOfficeLart)
+            Arrays.asList(HOME_OFFICE_LART)
         );
         assertTrue(homeOfficeMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
             .contains(respondentReviewDirectionEmail));
 
         when(userDetails.getRoles()).thenReturn(
-            Arrays.asList(homeOfficePou)
+            Arrays.asList(HOME_OFFICE_POU)
         );
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         assertTrue(homeOfficeMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
@@ -207,11 +209,12 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
 
     }
 
-    @Test
-    public void test_email_address_for_home_office_when_legal_rep_applied() {
+    @ParameterizedTest
+    @ValueSource(strings = { LEGAL_REP_USER, ADMIN_OFFICER })
+    public void test_email_address_for_home_office_when_legal_rep_or_admin_applied(String role) {
 
         when(userDetails.getRoles()).thenReturn(
-            Arrays.asList(legalRepUser)
+            Arrays.asList(role)
         );
 
         List<State> apcEmail = newArrayList(
@@ -276,7 +279,7 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
     public void test_email_address_for_home_office_when_generic_ho_applied() {
 
         when(userDetails.getRoles()).thenReturn(
-            Arrays.asList(homeOfficeRespondent)
+            Arrays.asList(HOME_OFFICE_RESPONDENT)
         );
 
         List<State> apcEmail = newArrayList(

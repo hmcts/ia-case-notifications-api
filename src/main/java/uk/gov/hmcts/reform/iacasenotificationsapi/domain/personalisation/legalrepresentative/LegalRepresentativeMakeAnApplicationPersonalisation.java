@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -56,6 +57,13 @@ public class LegalRepresentativeMakeAnApplicationPersonalisation implements Lega
         this.appealService = appealService;
         this.userDetailsProvider = userDetailsProvider;
         this.makeAnApplicationService = makeAnApplicationService;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return isInternalCase(asylumCase)
+            ? Collections.emptySet()
+            : LegalRepresentativeEmailNotificationPersonalisation.super.getRecipientsList(asylumCase);
     }
 
     @Override
