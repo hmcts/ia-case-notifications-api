@@ -35,6 +35,7 @@ public class HomeOfficeMakeAnApplicationPersonalisation implements EmailNotifica
     private static final String HOME_OFFICE_LART = "caseworker-ia-homeofficelart";
     private static final String HOME_OFFICE_APC = "caseworker-ia-homeofficeapc";
     private static final String HOME_OFFICE_POU = "caseworker-ia-homeofficepou";
+    private static final String ADMIN_OFFICER = "caseworker-ia-admofficer";
     private static final String CITIZEN = "citizen";
 
 
@@ -109,7 +110,11 @@ public class HomeOfficeMakeAnApplicationPersonalisation implements EmailNotifica
             return Collections.emptySet();
         }
 
-        boolean hasValidRoles = hasRoles(Arrays.asList(ROLE_LEGAL_REP, CITIZEN, HOME_OFFICE_RESPONDENT_OFFICER));
+        boolean hasValidRoles = hasRoles(Arrays.asList(
+            ROLE_LEGAL_REP,
+            CITIZEN,
+            HOME_OFFICE_RESPONDENT_OFFICER,
+            ADMIN_OFFICER));
 
         if (hasRoles(Arrays.asList(HOME_OFFICE_APC))
                 || (hasValidRoles && isValidStateForHomeOfficeApc(currentState))) {
