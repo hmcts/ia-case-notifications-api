@@ -3203,12 +3203,16 @@ public class NotificationGeneratorConfiguration {
     @Bean("adaSuitabilityInternalAdaNotificationGenerator")
     public List<NotificationGenerator> adaSuitabilityInternalAdaNotificationGenerator(
             DetentionEngagementTeamAdaSuitabilityReviewPersonalisation detentionEngagementTeamAdaSuitabilityReviewPersonalisation,
+            HomeOfficeInternalAdaSuitabilityPersonalisation homeOfficeInternalAdaSuitabilityPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamAdaSuitabilityReviewPersonalisation)),
+                        newArrayList(
+                                detentionEngagementTeamAdaSuitabilityReviewPersonalisation,
+                                homeOfficeInternalAdaSuitabilityPersonalisation
+                        ),
                         notificationSender,
                         notificationIdAppender
                 )
