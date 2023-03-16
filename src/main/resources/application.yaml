@@ -855,6 +855,8 @@ govnotify:
           email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
         suitable:
           email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
+        internal:
+          email: b7019a3f-ad5e-4e03-bdee-01098920b856
       detentionEngagementTeam:
         email: b7019a3f-ad5e-4e03-bdee-01098920b856
     transferOutOfAda:
