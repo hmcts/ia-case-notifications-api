@@ -1275,6 +1275,11 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
 
+adaCaseListed:
+  deadlines:
+    appellantProvidingAppealArgumentDelay: 13
+    respondentResponseToAppealArgumentDelay: 15
+
 ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28

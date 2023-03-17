@@ -2,11 +2,14 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +82,9 @@ public class LegalRepresentativeListCasePersonalisationTest {
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
 
+    private int appellantProvidingAppealArgumentDeadline = 13;
+    private int respondentResponseToAppealArgumentDeadline = 15;
+
     private LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation;
 
     @BeforeEach
@@ -134,6 +140,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
             adaTemplateId,
             outOfCountryTemplateId,
             iaExUiFrontendUrl,
+            appellantProvidingAppealArgumentDeadline,
+            respondentResponseToAppealArgumentDeadline,
             dateTimeExtractor,
             customerServicesProvider,
             hearingDetailsFinder
@@ -255,6 +263,19 @@ public class LegalRepresentativeListCasePersonalisationTest {
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+
+        if (isAda.equals(YesOrNo.YES)) {
+            String appealArgumentDeadlineDate = LocalDate.now().plusDays(appellantProvidingAppealArgumentDeadline)
+                .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+            assertEquals(appealArgumentDeadlineDate, personalisation.get("appellantProvidingAppealArgumentDeadline"));
+
+            String respondentResponseDeadlineDate = LocalDate.now().plusDays(respondentResponseToAppealArgumentDeadline)
+                .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+            assertEquals(respondentResponseDeadlineDate, personalisation.get("respondentResponseToAppealArgumentDeadline"));
+        } else {
+            assertFalse(personalisation.containsKey("appellantProvidingAppealArgumentDeadline"));
+            assertFalse(personalisation.containsKey("respondentResponseToAppealArgumentDeadline"));
+        }
     }
 
     @ParameterizedTest
