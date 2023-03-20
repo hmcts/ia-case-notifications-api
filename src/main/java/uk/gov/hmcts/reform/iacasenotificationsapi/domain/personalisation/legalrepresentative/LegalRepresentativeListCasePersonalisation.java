@@ -11,6 +11,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     private final String legalRepresentativeCaseListedAdaTemplateId;
     private final String legalRepresentativeOutOfCountryCaseListedTemplateId;
     private final String iaExUiFrontendUrl;
+    private final int appellantProvidingAppealArgumentDeadlineDelay;
+    private final int respondentResponseToAppealArgumentDeadlineDelay;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
     private final HearingDetailsFinder hearingDetailsFinder;
@@ -42,6 +46,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
         @Value("${govnotify.template.caseListed.legalRep.email.ada}") String legalRepresentativeCaseListedAdaTemplateId,
         @Value("${govnotify.template.caseListed.remoteHearing.legalRep.email}") String legalRepresentativeOutOfCountryCaseListedTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        @Value("${adaCaseListed.deadlines.appellantProvidingAppealArgumentDelay}") int appellantProvidingAppealArgumentDeadlineDelay,
+        @Value("${adaCaseListed.deadlines.respondentResponseToAppealArgumentDelay}") int respondentResponseToAppealArgumentDeadlineDelay,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder
@@ -50,6 +56,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
         this.legalRepresentativeCaseListedAdaTemplateId = legalRepresentativeCaseListedAdaTemplateId;
         this.legalRepresentativeOutOfCountryCaseListedTemplateId = legalRepresentativeOutOfCountryCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.appellantProvidingAppealArgumentDeadlineDelay = appellantProvidingAppealArgumentDeadlineDelay;
+        this.respondentResponseToAppealArgumentDeadlineDelay = respondentResponseToAppealArgumentDeadlineDelay;
         this.dateTimeExtractor = dateTimeExtractor;
         this.customerServicesProvider = customerServicesProvider;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -90,6 +98,16 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+
+        if (isAcceleratedDetainedAppeal(asylumCase)) {
+            listCaseFields
+                .put("appellantProvidingAppealArgumentDeadline",
+                    LocalDate.now().plusDays(appellantProvidingAppealArgumentDeadlineDelay)
+                        .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")))
+                .put("respondentResponseToAppealArgumentDeadline",
+                    LocalDate.now().plusDays(respondentResponseToAppealArgumentDeadlineDelay)
+                        .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+        }
 
         PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
 
