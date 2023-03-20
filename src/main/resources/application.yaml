@@ -452,10 +452,14 @@ govnotify:
         email: 351bcf88-a741-44e9-84ef-8ed1e2ddeb18
       caseOfficer:
         email: 09d9305f-dc5d-4fb0-b89d-3998c7b609bb
+      detentionEngagementTeam:
+        email: 2c655c3d-651d-4a72-8cb7-7ae3a00e2c31
       otherLegalRep:
         email: 3219c9a3-afc7-4439-bb2e-90de798f98a8
       otherHomeOffice:
         email: 690d236e-60bf-4dee-b9e5-37b885555278
+      otherDetentionEngagementTeam:
+        email: c314e1a7-e4dc-4e77-93d1-8d70d07bd9e8
     respondentReview:
       legalRep:
         email: ed2d12f7-c5d0-40c1-a603-3a9f3dd1a95b
@@ -855,6 +859,8 @@ govnotify:
           email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
         suitable:
           email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
+      detentionEngagementTeam:
+        email: b7019a3f-ad5e-4e03-bdee-01098920b856
     transferOutOfAda:
       homeOffice:
         beforeListing:

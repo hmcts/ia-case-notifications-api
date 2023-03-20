@@ -31,10 +31,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamDecideAnApplicationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamHearingBundleReadyPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamRequestResponseReviewPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamRespondentReviewPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
@@ -1638,6 +1635,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("ftpaSubmittedDetentionEngagementTeamNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedDetentionEngagementTeamNotificationGenerator(
+        DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
+            : newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation);
+
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("ftpaSubmittedHomeOfficeNotificationFailedCaseOfficerNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedHomeOfficeNotificationFailed(
         CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisation ftpaSubmittedHomeOfficeNotificationFailedPersonalisation,
@@ -1656,8 +1676,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("ftpaSubmittedRespondentNotificationGenerator")
-    public List<NotificationGenerator> ftpaSubmittedRespondent(
+    @Bean("respondentFtpaSubmittedNotificationGeneratorLegalRep")
+    public List<NotificationGenerator> respondentFtpaSubmittedNotificationGeneratorLegalRep(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
         AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         LegalRepresentativeRespondentFtpaSubmittedPersonalisation legalRepresentativeRespondentFtpaSubmittedPersonalisation,
@@ -1669,6 +1689,29 @@ public class NotificationGeneratorConfiguration {
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
             ?  newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation)
             : newArrayList(adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation);
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam")
+    public List<NotificationGenerator> respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam(
+        RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        OtherDetentionEngagementTeamFtpaSubmittedPersonalisation otherDetentionEngagementTeamFtpaSubmittedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        // RIA-3316 - applyForFTPARespondent
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, otherDetentionEngagementTeamFtpaSubmittedPersonalisation)
+            : newArrayList(adminOfficerFtpaSubmittedPersonalisation, otherDetentionEngagementTeamFtpaSubmittedPersonalisation);
 
         return Arrays.asList(
             new EmailNotificationGenerator(
@@ -3192,6 +3235,31 @@ public class NotificationGeneratorConfiguration {
                         newArrayList(
                             legalRepresentativeAdaSuitabilityPersonalisation,
                             homeOfficeAdaSuitabilityPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("adaSuitabilityInternalAdaNotificationGenerator")
+    public List<NotificationGenerator> adaSuitabilityInternalAdaNotificationGenerator(
+            DetentionEngagementTeamAdaSuitabilityReviewPersonalisation detentionEngagementTeamAdaSuitabilityReviewPersonalisation,
+            HomeOfficeAdaSuitabilityPersonalisation homeOfficeAdaSuitabilityPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamAdaSuitabilityReviewPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeAdaSuitabilityPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
