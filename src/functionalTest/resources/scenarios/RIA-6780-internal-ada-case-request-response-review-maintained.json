@@ -1,12 +1,12 @@
 {
-  "description": "RIA-6780: Send response review direction to DET (Internal ADA) - Decision maintained",
+  "description": "RIA-6780: Send notification to DET when Home Office uploads appeal response (Internal ADA) - Decision maintained",
   "enabled": false,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "CaseOfficer",
+    "credentials": "HomeOfficeGeneric",
     "input": {
       "id": 67802,
-      "eventId": "requestResponseReview",
+      "eventId": "uploadHomeOfficeAppealResponse",
       "state": "respondentReview",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -55,9 +55,14 @@
         "listCaseHearingDate": "{$TODAY}",
         "notificationsSent":[
           {
-            "id":"67802_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONSE_REVIEW",
+            "id":"67802_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }]
+          },
+          {
+            "id": "67802_UPLOADED_HO_RESPONSE_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
       }
     }
   }

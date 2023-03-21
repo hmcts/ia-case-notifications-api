@@ -22,7 +22,7 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamRequestResponseReviewPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamUploadAppealResponsePersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private static final String HOME_OFFICE_RESPONSE = "Home Office Response";
     private static final String WITHDRAWAL_LETTER = "Withdrawal Letter";
@@ -30,7 +30,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
     private static final String WITHDRAW = "withdraw";
 
     private final CustomerServicesProvider customerServicesProvider;
-    private final String detentionEngagementTeamRequestResponseReviewTemplateId;
+    private final String detentionEngagementTeamUploadAppealResponseTemplateId;
     private final String iaExUiFrontendUrl;
     private final String adaPrefix;
     private final DetEmailService detEmailService;
@@ -38,8 +38,8 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
-    public DetentionEngagementTeamRequestResponseReviewPersonalisation(
-        @Value("${govnotify.template.responseReviewDirection.detentionEngagementTeam.email}") String detentionEngagementTeamRequestResponseReviewTemplateId,
+    public DetentionEngagementTeamUploadAppealResponsePersonalisation(
+        @Value("${govnotify.template.homeOfficeResponseUploaded.detentionEngagementTeam.email}") String detentionEngagementTeamUploadAppealResponseTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
@@ -48,7 +48,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.detentionEngagementTeamRequestResponseReviewTemplateId = detentionEngagementTeamRequestResponseReviewTemplateId;
+        this.detentionEngagementTeamUploadAppealResponseTemplateId = detentionEngagementTeamUploadAppealResponseTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.adaPrefix = adaPrefix;
         this.customerServicesProvider = customerServicesProvider;
@@ -60,7 +60,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
 
     @Override
     public String getTemplateId() {
-        return detentionEngagementTeamRequestResponseReviewTemplateId;
+        return detentionEngagementTeamUploadAppealResponseTemplateId;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisation impleme
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONSE_REVIEW";
+        return caseId + "_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM";
     }
 
     @Override
