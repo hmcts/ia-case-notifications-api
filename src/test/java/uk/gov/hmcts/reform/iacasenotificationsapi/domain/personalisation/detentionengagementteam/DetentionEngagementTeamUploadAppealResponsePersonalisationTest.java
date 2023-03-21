@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.compareStringsAndJsonObjects;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -36,7 +36,7 @@ import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
+public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -54,45 +54,48 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String adaPrefix = "Accelerated detained appeal";
-    private final String hearingDate = "2023-03-15T10:13:38.410992";
     private final String hearingDateFormatted = "15 March 2023";
     private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String listingReference = "listingReference";
+    private final String listingReferenceIfPresent = "Listing reference: " + listingReference;
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "customer.services@example.com";
     private JSONObject appealResponseJsonDocument;
 
-    private DetentionEngagementTeamRequestResponseReviewPersonalisation
-        detentionEngagementTeamRequestResponseReviewPersonalisation;
+    private DetentionEngagementTeamUploadAppealResponsePersonalisation
+        detentionEngagementTeamUploadAppealResponsePersonalisation;
 
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
 
+        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
+        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDate));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(listingReference));
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));
+
+        String customerServicesTelephone = "555 555 555";
+        String customerServicesEmail = "customer.services@example.com";
+        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
+        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
+
+        String hearingDate = "2023-03-15T10:13:38.410992";
+        when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDate));
+        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDate);
+        when(dateTimeExtractor.extractHearingDate(hearingDate)).thenReturn(hearingDateFormatted);
 
         List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.APPEAL_RESPONSE);
         appealResponseJsonDocument =  new JSONObject("{\"title\": \"Home Office Response JsonDocument\"}");
         when(asylumCase.read(RESPONDENT_DOCUMENTS)).thenReturn(Optional.of(appealResponseDocuments));
 
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
-        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
-        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDate);
-        when(dateTimeExtractor.extractHearingDate(hearingDate)).thenReturn(hearingDateFormatted);
-
-        detentionEngagementTeamRequestResponseReviewPersonalisation =
-            new DetentionEngagementTeamRequestResponseReviewPersonalisation(
+        detentionEngagementTeamUploadAppealResponsePersonalisation =
+            new DetentionEngagementTeamUploadAppealResponsePersonalisation(
                 templateId,
                 iaExUiFrontendUrl,
                 adaPrefix,
@@ -106,19 +109,19 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, detentionEngagementTeamRequestResponseReviewPersonalisation.getTemplateId());
+        assertEquals(templateId, detentionEngagementTeamUploadAppealResponsePersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONSE_REVIEW",
-            detentionEngagementTeamRequestResponseReviewPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM",
+            detentionEngagementTeamUploadAppealResponsePersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(detentionEngagementTeamRequestResponseReviewPersonalisation.getRecipientsList(asylumCase)
+        assertTrue(detentionEngagementTeamUploadAppealResponsePersonalisation.getRecipientsList(asylumCase)
             .contains(detEmailAddress));
     }
 
@@ -126,7 +129,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
+            () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -136,7 +139,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
-            () -> detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink(asylumCase))
+            () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("Appeal review outcome is not present");
     }
@@ -146,7 +149,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
         when(asylumCase.read(RESPONDENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
-            () -> detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink(asylumCase))
+            () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("Home Office response document not available");
     }
@@ -166,7 +169,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReferenceIfPresent", listingReference)
+                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
@@ -178,11 +181,9 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 .build();
 
         Map<String, Object> actualPersonalisation =
-            detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
 
     @Test
@@ -200,7 +201,7 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReferenceIfPresent", listingReference)
+                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
@@ -212,10 +213,8 @@ public class DetentionEngagementTeamRequestResponseReviewPersonalisationTest {
                 .build();
 
         Map<String, Object> actualPersonalisation =
-            detentionEngagementTeamRequestResponseReviewPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
 }
