@@ -353,6 +353,7 @@ dependencies {
     compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDoc
 
     compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
+    compile group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
 
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
@@ -363,7 +364,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
 
-    compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.17.2-RELEASE'
+    compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.19.0-RELEASE'
 
     compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'

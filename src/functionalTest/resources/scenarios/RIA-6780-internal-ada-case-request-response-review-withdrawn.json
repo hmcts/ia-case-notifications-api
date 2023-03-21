@@ -1,0 +1,70 @@
+{
+  "description": "RIA-6780: Send notification to DET when Home Office uploads appeal response (Internal ADA) - Decision withdrawn",
+  "enabled": false,
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "HomeOfficeLart",
+    "input": {
+      "id": 67801,
+      "eventId": "uploadHomeOfficeAppealResponse",
+      "state": "respondentReview",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "ariaListingReference": "LR/1234/2345",
+          "appellantGivenNames": "Test",
+          "appellantFamilyName": "User",
+          "appealType": "refusalOfEu",
+          "isAdmin": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "appealReviewOutcome": "decisionWithdrawn",
+          "listCaseHearingDate": "{$TODAY}",
+          "respondentDocuments": [
+            {
+              "id": "docId",
+              "value": {
+                "document": {
+                  "document_url": "http://dm-store/docId",
+                  "document_binary_url": "http://dm-store/docId/binary",
+                  "document_filename": "filename"
+                },
+                "description": "description",
+                "dateUploaded": "{$TODAY}",
+                "tag": "appealResponse",
+                "suppliedBy": "suppliedBy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "ariaListingReference": "LR/1234/2345",
+        "appellantGivenNames": "Test",
+        "appellantFamilyName": "User",
+        "appealType": "refusalOfEu",
+        "isAdmin": "Yes",
+        "isAcceleratedDetainedAppeal": "Yes",
+        "appealReviewOutcome": "decisionWithdrawn",
+        "listCaseHearingDate": "{$TODAY}",
+        "notificationsSent":[
+          {
+            "id":"67801_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "67801_UPLOADED_HO_RESPONSE_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}
+

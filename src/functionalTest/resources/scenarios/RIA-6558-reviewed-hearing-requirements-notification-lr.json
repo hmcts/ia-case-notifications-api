@@ -1,6 +1,5 @@
 {
   "description": "RIA-6558 Send hearing requirements agreed notification to legal rep and home office (Bradford hearing centre) with LO reviewed hearing requirements",
-  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -57,7 +56,7 @@
       {
         "reference": "1333_HEARING_REQUIREMENTS_AGREED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: hearing requirements agreed",
+        "subject": "Accelerated detained appeal: hearing requirements agreed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
@@ -75,7 +74,7 @@
       {
         "reference": "1333_HEARING_REQUIREMENTS_AGREED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.bradford}",
-        "subject": "Immigration and Asylum appeal: hearing requirements agreed",
+        "subject": "Accelerated detained appeal: hearing requirements agreed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
