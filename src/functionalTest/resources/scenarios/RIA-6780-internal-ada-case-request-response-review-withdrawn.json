@@ -17,7 +17,7 @@
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "appealReviewOutcome": "decisionWithdrawn",
-          "listCaseHearingDate": "{$TODAY}",
+          "listCaseHearingDate": "2024-05-03T14:25:15.000",
           "respondentDocuments": [
             {
               "id": "docId",
@@ -51,7 +51,7 @@
         "isAdmin": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
         "appealReviewOutcome": "decisionWithdrawn",
-        "listCaseHearingDate": "{$TODAY}",
+        "listCaseHearingDate": "2024-05-03T14:25:15.000",
         "notificationsSent":[
           {
             "id":"67801_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM",
