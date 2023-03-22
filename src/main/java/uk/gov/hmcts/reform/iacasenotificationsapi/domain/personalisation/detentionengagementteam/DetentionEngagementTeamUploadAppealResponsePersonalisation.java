@@ -31,7 +31,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
 
     private final CustomerServicesProvider customerServicesProvider;
     private final String detentionEngagementTeamUploadAppealResponseTemplateId;
-    private final String iaExUiFrontendUrl;
     private final String adaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
@@ -40,7 +39,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
 
     public DetentionEngagementTeamUploadAppealResponsePersonalisation(
         @Value("${govnotify.template.homeOfficeResponseUploaded.detentionEngagementTeam.email}") String detentionEngagementTeamUploadAppealResponseTemplateId,
-        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
         DetEmailService detEmailService,
@@ -49,7 +47,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
         HearingDetailsFinder hearingDetailsFinder
     ) {
         this.detentionEngagementTeamUploadAppealResponseTemplateId = detentionEngagementTeamUploadAppealResponseTemplateId;
-        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.adaPrefix = adaPrefix;
         this.customerServicesProvider = customerServicesProvider;
         this.detEmailService = detEmailService;
@@ -97,7 +94,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("documentDownloadTitle", documentDownloadTitle)
             .put("linkToDownloadDocument", getAppealResponseDocument(asylumCase))
-            .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
     }
 

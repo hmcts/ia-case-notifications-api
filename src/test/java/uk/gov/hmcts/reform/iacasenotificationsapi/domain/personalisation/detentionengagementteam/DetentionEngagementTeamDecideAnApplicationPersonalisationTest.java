@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -184,7 +183,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
                 assertEquals("no", personalisation.get("grantedWithdraw"));
                 assertEquals("no", personalisation.get("grantedOther"));
                 break;
-            case JUDGE_REVIEW:
+            case JUDGE_REVIEW_LO:
                 assertEquals("yes", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
                 assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
@@ -282,9 +281,9 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         assertEquals("granted", personalisation.get("applicationDecision"));
         assertEquals(makeAnApplicationType.getValue(), personalisation.get("applicationType"));
         assertEquals(decisionReason, personalisation.get("applicationDecisionReason"));
-        assertEquals(null, personalisation.get("decisionMaker"));
-        assertEquals(null, personalisation.get("judgesReviewDeadlineDate"));
-        assertEquals(null, personalisation.get("makeAnApplicationLink"));
+        assertNull(personalisation.get("decisionMaker"));
+        assertNull(personalisation.get("judgesReviewDeadlineDate"));
+        assertNull(personalisation.get("makeAnApplicationLink"));
 
         switch (makeAnApplicationType) {
             case TIME_EXTENSION:
@@ -307,7 +306,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
                 assertEquals("no", personalisation.get("grantedWithdraw"));
                 assertEquals("no", personalisation.get("grantedOther"));
                 break;
-            case JUDGE_REVIEW:
+            case JUDGE_REVIEW_LO:
                 assertEquals("yes", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
                 assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
