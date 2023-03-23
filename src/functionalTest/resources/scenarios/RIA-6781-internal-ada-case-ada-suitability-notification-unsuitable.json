@@ -17,6 +17,7 @@
           "appellantFamilyName": "User",
           "suitabilityReviewDecision": "unsuitable",
           "listCaseHearingDate": "2023-05-01T13:30:15.000",
+          "listCaseHearingCentre": "harmondsworth",
           "tribunalDocuments": [
             {
               "id": "docId",
