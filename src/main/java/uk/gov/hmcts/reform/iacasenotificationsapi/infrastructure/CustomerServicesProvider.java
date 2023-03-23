@@ -35,7 +35,7 @@ public class CustomerServicesProvider {
         this.customerServicesEmail = standardCustomerServicesEmail;
     }
 
-    public void setCorrectEmail(AsylumCase asylumCase) {
+    public synchronized void setCorrectEmail(AsylumCase asylumCase) {
         this.customerServicesEmail = isInternalCase(asylumCase)
             ? internalCaseCustomerServicesEmail
             : standardCustomerServicesEmail;
