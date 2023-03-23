@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -24,18 +25,25 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
 
     private final CustomerServicesProvider customerServicesProvider;
     private final String detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
+    private final String detRespondentFtpaAppliationGrantedPartiallyGrantedTemplateId;
     private final String adaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation(
-        @Value("${govnotify.template.applicationRefusedOrNotAdmitted.otherParty.detentionEngagementTeam.email}") String detRespondentFtpaAppliationRefusedNotAdmittedTemplateId,
+        @Value("${govnotify.template.applicationRefusedOrNotAdmitted.otherParty.detentionEngagementTeam.email}")
+        String detRespondentFtpaAppliationRefusedNotAdmittedTemplateId,
+        @Value("${govnotify.template.applicationGrantedOrPartiallyGranted.otherParty.detentionEngagementTeam.email}")
+        String detRespondentFtpaAppliationGrantedPartiallyGrantedTemplateId,
         @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
         DetEmailService detEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
-        this.detRespondentFtpaAppliationRefusedNotAdmittedTemplateId = detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
+        this.detRespondentFtpaAppliationRefusedNotAdmittedTemplateId
+            = detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
+        this.detRespondentFtpaAppliationGrantedPartiallyGrantedTemplateId
+            = detRespondentFtpaAppliationGrantedPartiallyGrantedTemplateId;
         this.adaPrefix = adaPrefix;
         this.customerServicesProvider = customerServicesProvider;
         this.detEmailService = detEmailService;
@@ -44,12 +52,16 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        FtpaDecisionOutcomeType decision = getFtpaDecisionOutcomeType(asylumCase);
+        FtpaDecisionOutcomeType decision = getFtpaDecisionOutcomeType(asylumCase)
+            .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present"));
 
         switch (decision) {
             case FTPA_REFUSED:
             case FTPA_NOT_ADMITTED:
                 return detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
+            case FTPA_GRANTED:
+            case FTPA_PARTIALLY_GRANTED:
+                return detRespondentFtpaAppliationGrantedPartiallyGrantedTemplateId;
             default:
                 throw new IllegalStateException("Unsupported ftpa application decision type");
         }
@@ -111,17 +123,9 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
         }
     }
 
-    private FtpaDecisionOutcomeType getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
-        Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
-            .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
-        return ftpaDecisionOutcomeType
-            .orElseGet(() -> asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present")));
-
-    }
-
     private String getApplicationDecision(AsylumCase asylumCase) {
-        FtpaDecisionOutcomeType decision = getFtpaDecisionOutcomeType(asylumCase);
+        FtpaDecisionOutcomeType decision = getFtpaDecisionOutcomeType(asylumCase)
+            .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present"));
 
         switch (decision) {
             case FTPA_REFUSED:
