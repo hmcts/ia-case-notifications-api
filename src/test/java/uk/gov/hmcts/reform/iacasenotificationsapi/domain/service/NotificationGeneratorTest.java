@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +58,7 @@ public class NotificationGeneratorTest {
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
+    MockedStatic<ApplicationContextProvider> mocked;
     @Mock
     static ApplicationContext applicationContext;
     @Mock
@@ -90,14 +92,12 @@ public class NotificationGeneratorTest {
     private String notificationId1 = "notificationId1";
     private String notificationId2 = "notificationId2";
 
-    public void setupApplicationContext() {
-        MockedStatic<ApplicationContextProvider> mocked = mockStatic(ApplicationContextProvider.class);
-        mocked.when(ApplicationContextProvider::getApplicationContext).thenReturn(applicationContext);
-        when(applicationContext.getBean(CustomerServicesProvider.class)).thenReturn(customerServicesProvider);
-    }
-
     @BeforeEach
     public void setup() {
+        mocked = mockStatic(ApplicationContextProvider.class);
+        mocked.when(ApplicationContextProvider::getApplicationContext).thenReturn(applicationContext);
+        when(applicationContext.getBean(CustomerServicesProvider.class)).thenReturn(customerServicesProvider);
+
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(caseDetails.getId()).thenReturn(caseId);
@@ -142,6 +142,11 @@ public class NotificationGeneratorTest {
         aipSmsNotificationPersonalisationList =
             newArrayList(smsNotificationPersonalisation1, smsNotificationPersonalisation2);
 
+    }
+
+    @AfterEach
+    public void cleanup() {
+        mocked.close();
     }
 
     @Test
@@ -189,9 +194,6 @@ public class NotificationGeneratorTest {
 
     @Test
     public void should_send_Aip_notification_Sms_for_each_personalisation_using_the_subscriber_mode() {
-        MockedStatic<ApplicationContextProvider> mocked = mockStatic(ApplicationContextProvider.class);
-        mocked.when(ApplicationContextProvider::getApplicationContext).thenReturn(applicationContext);
-        when(applicationContext.getBean(CustomerServicesProvider.class)).thenReturn(customerServicesProvider);
 
         notificationGenerator = new SmsNotificationGenerator(aipSmsNotificationPersonalisationList, notificationSender,
             notificationIdAppender);
