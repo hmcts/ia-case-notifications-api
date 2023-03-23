@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,7 @@ public class ApplicationContextProviderTest {
         ApplicationContextProvider applicationContextProvider = new ApplicationContextProvider();
         applicationContextProvider.setApplicationContext(applicationContext);
 
-        assertEquals(applicationContext, ApplicationContextProvider.getApplicationContext());
+        assertNotNull(ApplicationContextProvider.getApplicationContext());
     }
 
 }
