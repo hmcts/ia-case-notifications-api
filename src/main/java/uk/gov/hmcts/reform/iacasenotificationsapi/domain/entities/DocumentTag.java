@@ -31,6 +31,9 @@ public enum DocumentTag {
     B1_DOCUMENT("b1Document"),
     ADA_SUITABILITY("adaSuitability"),
     APPEAL_FORM("appealForm"),
+    FTPA_DECISION_AND_REASONS("ftpaDecisionAndReasons"),
+    FTPA_APPELLANT("ftpaAppellant"),
+    FTPA_RESPONDENT("ftpaRespondent"),
 
     @JsonEnumDefaultValue
     NONE("");
