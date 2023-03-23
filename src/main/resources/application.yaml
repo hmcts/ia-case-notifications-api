@@ -611,6 +611,14 @@ govnotify:
           email: 70ad102c-0665-4e8f-8844-0c06f0760a34
         homeOffice:
           email: d6eb9928-ff8c-4b62-8a8b-f30c81201a8a
+    applicationRefusedOrNotAdmitted:
+      otherParty:
+        detentionEngagementTeam:
+          email: a75a4356-da57-4eaf-b986-e1417b8dce81
+    applicationGrantedOrPartiallyGranted:
+      otherParty:
+        detentionEngagementTeam:
+          email: f655d716-7c04-4c6b-b64c-80d6e7f2b4b7
     applicationReheardEnabled:
       caseOfficer:
         email: 9698e02a-1e45-4a25-8741-85a260c359c4
@@ -1154,6 +1162,7 @@ security:
       - "makeNewApplication"
 
 ### dependency configuration
+ccdGatewayUrl: ${CCD_GW_URL:http://localhost:3453}
 core_case_data_api_url: ${CCD_URL:http://127.0.0.1:4452}
 document_management.url: ${DM_URL:http://127.0.0.1:4506}
 
@@ -1289,7 +1298,7 @@ adaCaseListed:
 ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28
-  ada: 5
+  ada: 7
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
