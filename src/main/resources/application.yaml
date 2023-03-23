@@ -1293,7 +1293,7 @@ adaCaseListed:
 ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28
-  ada: 5
+  ada: 7
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
