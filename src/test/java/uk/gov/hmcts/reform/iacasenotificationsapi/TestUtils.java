@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.json.JSONObject;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithDescription;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -28,6 +29,14 @@ public class TestUtils {
         Document document = new Document(documentUrl, documentUrl + "/binary", filename);
 
         return new DocumentWithMetadata(document, description, LocalDate.now().toString(), tag);
+    }
+
+    public static DocumentWithDescription getDocumentWithDescription(String docId, String filename,
+                                                               String description) {
+        String documentUrl = "http://dm-store/" + docId;
+        Document document = new Document(documentUrl, documentUrl + "/binary", filename);
+
+        return new DocumentWithDescription(document, description);
     }
 
     public static boolean compareStringsAndJsonObjects(Map<String, Object> expected, Map<String, Object> actual) {
