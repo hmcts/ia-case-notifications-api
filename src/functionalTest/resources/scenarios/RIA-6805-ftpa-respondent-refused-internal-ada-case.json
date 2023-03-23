@@ -1,0 +1,79 @@
+{
+  "description": "RIA-6805  Respondent FTPA Application is refused for internal ADA case",
+  "enabled": false,
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Judge",
+    "input": {
+      "id": 68052,
+      "eventId": "leadershipJudgeFtpaDecision",
+      "state": "ftpaSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "currentCaseStateVisibleToJudge": "ftpaSubmitted",
+          "listCaseHearingCentre": "birmingham",
+          "ariaListingReference": "LR/1234/2345",
+          "appealType": "refusalOfEu",
+          "isAdmin": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "ftpaRespondentRjDecisionOutcomeType": "refused",
+          "ftpaApplicantType": "respondent",
+          "ftpaRespondentDecisionDocument": [
+            {
+              "id": "docId",
+              "value": {
+                "document": {
+                  "document_url": "http://dm-store/docId",
+                  "document_binary_url": "http://dm-store/docId/binary",
+                  "document_filename": "filename"
+                },
+                "description": "description"
+              }
+            }
+          ],
+          "ftpaRespondentGroundsDocuments": [
+            {
+              "id": "docId",
+              "value": {
+                "document": {
+                  "document_url": "http://dm-store/docId",
+                  "document_binary_url": "http://dm-store/docId/binary",
+                  "document_filename": "filename"
+                },
+                "description": "description"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "currentCaseStateVisibleToJudge": "ftpaSubmitted",
+        "listCaseHearingCentre": "birmingham",
+        "ariaListingReference": "LR/1234/2345",
+        "appealType": "refusalOfEu",
+        "isAdmin": "Yes",
+        "isAcceleratedDetainedAppeal": "Yes",
+        "ftpaRespondentRjDecisionOutcomeType": "refused",
+        "ftpaApplicantType": "respondent",
+        "notificationsSent": [
+          {
+            "id": "68052_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "68052_RESPONDENT_FTPA_APPLICATION_DECISION_DETENTION_ENGAGEMENT_TEAM",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}
