@@ -7,11 +7,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 
 
 @Service
+@Scope("prototype")
 public class CustomerServicesProvider {
 
     private final String customerServicesTelephone;
@@ -35,13 +37,13 @@ public class CustomerServicesProvider {
         this.customerServicesEmail = standardCustomerServicesEmail;
     }
 
-    public synchronized void setCorrectEmail(AsylumCase asylumCase) {
+    public void setCorrectEmail(AsylumCase asylumCase) {
         this.customerServicesEmail = isInternalCase(asylumCase)
             ? internalCaseCustomerServicesEmail
             : standardCustomerServicesEmail;
     }
 
-    public Map<String, String> getCustomerServicesPersonalisation() {
+    public synchronized Map<String, String> getCustomerServicesPersonalisation() {
 
         final Builder<String, String> customerServicesValues = ImmutableMap
             .<String, String>builder()
