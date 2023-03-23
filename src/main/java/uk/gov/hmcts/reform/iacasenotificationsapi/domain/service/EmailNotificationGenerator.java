@@ -3,10 +3,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.ApplicationContextProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 public class EmailNotificationGenerator implements NotificationGenerator {
@@ -31,6 +33,9 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         personalisationList.forEach(personalisation -> {
+            ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
+                .setCorrectEmail(asylumCase);
+
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
             notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
