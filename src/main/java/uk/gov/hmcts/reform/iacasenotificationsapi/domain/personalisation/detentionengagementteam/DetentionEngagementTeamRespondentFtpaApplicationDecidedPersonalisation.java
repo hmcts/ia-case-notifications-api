@@ -15,49 +15,44 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamUploadAppealResponsePersonalisation implements EmailWithLinkNotificationPersonalisation {
-
-    private static final String HOME_OFFICE_RESPONSE = "Home Office Response";
-    private static final String WITHDRAWAL_LETTER = "Withdrawal Letter";
-    private static final String MAINTAIN = "maintain";
-    private static final String WITHDRAW = "withdraw";
+public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final CustomerServicesProvider customerServicesProvider;
-    private final String detentionEngagementTeamUploadAppealResponseTemplateId;
+    private final String detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
     private final String adaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
-    private final DateTimeExtractor dateTimeExtractor;
-    private final HearingDetailsFinder hearingDetailsFinder;
 
-    public DetentionEngagementTeamUploadAppealResponsePersonalisation(
-        @Value("${govnotify.template.homeOfficeResponseUploaded.detentionEngagementTeam.email}") String detentionEngagementTeamUploadAppealResponseTemplateId,
+    public DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation(
+        @Value("${govnotify.template.applicationRefusedOrNotAdmitted.otherParty.detentionEngagementTeam.email}") String detRespondentFtpaAppliationRefusedNotAdmittedTemplateId,
         @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
         DetEmailService detEmailService,
-        DocumentDownloadClient documentDownloadClient,
-        DateTimeExtractor dateTimeExtractor,
-        HearingDetailsFinder hearingDetailsFinder
+        DocumentDownloadClient documentDownloadClient
     ) {
-        this.detentionEngagementTeamUploadAppealResponseTemplateId = detentionEngagementTeamUploadAppealResponseTemplateId;
+        this.detRespondentFtpaAppliationRefusedNotAdmittedTemplateId = detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
         this.adaPrefix = adaPrefix;
         this.customerServicesProvider = customerServicesProvider;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
-        this.dateTimeExtractor = dateTimeExtractor;
-        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
-    public String getTemplateId() {
-        return detentionEngagementTeamUploadAppealResponseTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        FtpaDecisionOutcomeType decision = getFtpaDecisionOutcomeType(asylumCase);
+
+        switch (decision) {
+            case FTPA_REFUSED:
+            case FTPA_NOT_ADMITTED:
+                return detRespondentFtpaAppliationRefusedNotAdmittedTemplateId;
+            default:
+                throw new IllegalStateException("Unsupported ftpa application decision type");
+        }
     }
 
     @Override
@@ -67,7 +62,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM";
+        return caseId + "_RESPONDENT_FTPA_APPLICATION_DECISION_DETENTION_ENGAGEMENT_TEAM";
     }
 
     @Override
@@ -78,9 +73,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
             .map(ariaListingReference -> "Listing reference: " + ariaListingReference)
             .orElse("");
 
-        String appealReviewOutcome = getAppealReviewOutcome(asylumCase);
-        String documentDownloadTitle = appealReviewOutcome.equals(WITHDRAW) ? WITHDRAWAL_LETTER : HOME_OFFICE_RESPONSE;
-
         return ImmutableMap
             .<String, Object>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -90,34 +82,58 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("appealReviewOutcome", appealReviewOutcome)
-            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("documentDownloadTitle", documentDownloadTitle)
-            .put("linkToDownloadDocument", getAppealResponseDocument(asylumCase))
+            .put("applicationDecision", getApplicationDecision(asylumCase))
+            .put("ftpaDecisionAndReasonsDocumentDownloadLink", getDocument(asylumCase, FTPA_RESPONDENT_DECISION_DOCUMENT))
+            .put("homeOfficeFtpaApplicationDownloadLink", getDocument(asylumCase, FTPA_RESPONDENT_GROUNDS_DOCUMENTS))
             .build();
     }
 
-    private String getAppealReviewOutcome(AsylumCase asylumCase) {
-        AppealReviewOutcome appealReviewOutcome = asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
-            .orElseThrow(() -> new IllegalStateException("Appeal review outcome is not present"));
+    private JSONObject getDocument(AsylumCase asylumCase, AsylumCaseDefinition caseDefinition) {
 
-        return appealReviewOutcome == AppealReviewOutcome.DECISION_MAINTAINED ? MAINTAIN : WITHDRAW;
-    }
-
-    private JSONObject getAppealResponseDocument(AsylumCase asylumCase) {
-        Optional<List<IdValue<DocumentWithMetadata>>> optionalRespondentDocuments = asylumCase.read(RESPONDENT_DOCUMENTS);
+        Optional<List<IdValue<DocumentWithDescription>>> optionalRespondentDocuments = asylumCase
+            .read(caseDefinition);
         DocumentWithMetadata document = optionalRespondentDocuments
             .orElse(Collections.emptyList())
             .stream()
             .map(IdValue::getValue)
-            .filter(d -> d.getTag() == DocumentTag.APPEAL_RESPONSE)
-            .findFirst().orElseThrow(() -> new IllegalStateException("Home Office response document not available"));
+            .filter(d -> d.getDocument().isPresent())
+            .map(d -> new DocumentWithMetadata(
+                d.getDocument().get(), d.getDescription().orElse(""), null, null
+            ))
+            .findFirst().orElseThrow(() -> new IllegalStateException(String.format("%s is not present", caseDefinition.value())));
 
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Home Office response document in compatible format", e);
-            throw new IllegalStateException("Failed to get Home Office response document in compatible format");
+            String errorMsg = String.format("Failed to get %s in compatible format", caseDefinition.value());
+            log.error(errorMsg, e);
+            throw new IllegalStateException(errorMsg);
+        }
+    }
+
+    private FtpaDecisionOutcomeType getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
+        Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
+            .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+        return ftpaDecisionOutcomeType
+            .orElseGet(() -> asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present")));
+
+    }
+
+    private String getApplicationDecision(AsylumCase asylumCase) {
+        FtpaDecisionOutcomeType decision = getFtpaDecisionOutcomeType(asylumCase);
+
+        switch (decision) {
+            case FTPA_REFUSED:
+                return "been refused";
+            case FTPA_NOT_ADMITTED:
+                return "not been admitted";
+            case FTPA_GRANTED:
+                return "granted";
+            case FTPA_PARTIALLY_GRANTED:
+                return "partially granted";
+            default:
+                throw new IllegalStateException("Unsupported ftpa application decision type");
         }
     }
 }

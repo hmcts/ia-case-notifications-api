@@ -52,7 +52,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     HearingDetailsFinder hearingDetailsFinder;
 
     private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String adaPrefix = "Accelerated detained appeal";
     private final String hearingDateFormatted = "15 March 2023";
     private final String detEmailAddress = "legalrep@example.com";
@@ -97,7 +96,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
         detentionEngagementTeamUploadAppealResponsePersonalisation =
             new DetentionEngagementTeamUploadAppealResponsePersonalisation(
                 templateId,
-                iaExUiFrontendUrl,
                 adaPrefix,
                 customerServicesProvider,
                 detEmailService,
@@ -177,7 +175,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 .put("hearingDate", hearingDateFormatted)
                 .put("documentDownloadTitle", "Home Office Response")
                 .put("linkToDownloadDocument", appealResponseJsonDocument)
-                .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
 
         Map<String, Object> actualPersonalisation =
@@ -209,7 +206,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 .put("hearingDate", hearingDateFormatted)
                 .put("documentDownloadTitle", "Withdrawal Letter")
                 .put("linkToDownloadDocument", appealResponseJsonDocument)
-                .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
 
         Map<String, Object> actualPersonalisation =

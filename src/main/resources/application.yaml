@@ -611,6 +611,10 @@ govnotify:
           email: 70ad102c-0665-4e8f-8844-0c06f0760a34
         homeOffice:
           email: d6eb9928-ff8c-4b62-8a8b-f30c81201a8a
+    applicationRefusedOrNotAdmitted:
+      otherParty:
+        detentionEngagementTeam:
+          email: a75a4356-da57-4eaf-b986-e1417b8dce81
     applicationReheardEnabled:
       caseOfficer:
         email: 9698e02a-1e45-4a25-8741-85a260c359c4
