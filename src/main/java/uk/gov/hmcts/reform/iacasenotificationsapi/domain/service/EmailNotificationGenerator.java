@@ -32,9 +32,10 @@ public class EmailNotificationGenerator implements NotificationGenerator {
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+        ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
+            .setCorrectEmail(asylumCase);
+
         personalisationList.forEach(personalisation -> {
-            ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
-                .setCorrectEmail(asylumCase);
 
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
