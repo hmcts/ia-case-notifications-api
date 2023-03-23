@@ -122,7 +122,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .put("granted", applicationGranted ? "yes" : "no")
             .put("grantedAndTimeExtension", applicationGranted && (Objects.equals(TIME_EXTENSION.toString(), applicationType)) ? "yes" : "no")
             .put("grantedAdjournExpediteOrTransfer", applicationGranted && adjournExpediteOrTransfer ? "yes" : "no")
-            .put("grantedJudgesReview", applicationGranted && (Objects.equals(JUDGE_REVIEW.toString(), applicationType)) ? "yes" : "no")
+            .put("grantedJudgesReview", applicationGranted && (Objects.equals(JUDGE_REVIEW_LO.toString(), applicationType)) ? "yes" : "no")
             .put("grantedLinkOrUnlik", applicationGranted && (Objects.equals(LINK_OR_UNLINK.toString(), applicationType)) ? "yes" : "no")
             .put("grantedReinstate", applicationGranted && (Objects.equals(REINSTATE.toString(), applicationType)) ? "yes" : "no")
             .put("grantedWithdraw", applicationGranted && (Objects.equals(WITHDRAW.toString(), applicationType)) ? "yes" : "no")

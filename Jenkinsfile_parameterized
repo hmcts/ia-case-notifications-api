@@ -133,6 +133,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
 
     env.IA_IDAM_REDIRECT_URI = "https://ia-case-api-aat.service.core-compute-aat.internal/oauth2/callback"
+    env.CCD_GW_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.CCD_URL = "http://ccd-data-store-api-aat.service.core-compute-aat.internal"
     env.DM_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
