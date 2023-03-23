@@ -2162,8 +2162,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalAdaRespondentFtpaApplicationRefusedOrNotAdmittedNotificationHandler(
-        @Qualifier("internalAdaRespondentFtpaApplicationRefusedOrNotAdmittedNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalAdaRespondentFtpaApplicationNotificationHandler(
+        @Qualifier("internalAdaRespondentFtpaApplicationNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -2172,11 +2172,20 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isRespondentApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
                     .map(applicantType -> RESPONDENT == applicantType).orElse(false);
+                FtpaDecisionOutcomeType decisionOutcomeType = AsylumCaseUtils.getFtpaDecisionOutcomeType(asylumCase)
+                    .orElse(null);
+                Set<FtpaDecisionOutcomeType> validDecisionOutcomeTypes = Set.of(
+                    FTPA_REFUSED,
+                    FTPA_GRANTED,
+                    FTPA_NOT_ADMITTED,
+                    FTPA_PARTIALLY_GRANTED
+                );
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                     || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
                     && isRespondentApplication
+                    && validDecisionOutcomeTypes.contains(decisionOutcomeType)
                     && AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
                     && AsylumCaseUtils.isInternalCase(asylumCase);
             },
