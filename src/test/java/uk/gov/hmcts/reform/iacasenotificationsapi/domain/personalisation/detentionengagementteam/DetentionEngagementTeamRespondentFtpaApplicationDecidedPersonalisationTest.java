@@ -7,8 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -45,6 +44,7 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
     DocumentDownloadClient documentDownloadClient;
 
     private final String applicationRefusedOrNotAdmittedTemplateId = "someTemplateId";
+    private final String applicationGrantedOrPartiallyGrantedTemplateId = "someTemplateId";
     private final String adaPrefix = "Accelerated detained appeal";
     private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -88,6 +88,7 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
         detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation =
             new DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation(
                 applicationRefusedOrNotAdmittedTemplateId,
+                applicationGrantedOrPartiallyGrantedTemplateId,
                 adaPrefix,
                 customerServicesProvider,
                 detEmailService,
@@ -97,9 +98,27 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
 
     @Test
     public void should_return_given_template_id() {
-        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FTPA_REFUSED));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_REFUSED));
+        assertEquals(
+            applicationRefusedOrNotAdmittedTemplateId,
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_NOT_ADMITTED));
+        assertEquals(
+            applicationRefusedOrNotAdmittedTemplateId,
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getTemplateId(asylumCase));
 
-        assertEquals(applicationRefusedOrNotAdmittedTemplateId, detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_GRANTED));
+        assertEquals(
+            applicationGrantedOrPartiallyGrantedTemplateId,
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_PARTIALLY_GRANTED));
+        assertEquals(
+            applicationRefusedOrNotAdmittedTemplateId,
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -204,6 +223,64 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("applicationDecision", "not been admitted")
+                .put("ftpaDecisionAndReasonsDocumentDownloadLink", jsonDocument)
+                .put("homeOfficeFtpaApplicationDownloadLink", jsonDocument)
+                .build();
+
+        Map<String, Object> actualPersonalisation =
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase);
+
+        assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
+    }
+
+    @Test
+    public void should_return_personalisation_when_all_information_given_granted() {
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_GRANTED));
+        when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.empty());
+
+        final Map<String, Object> expectedPersonalisation =
+            ImmutableMap
+                .<String, Object>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("subjectPrefix", adaPrefix)
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("applicationDecision", "granted")
+                .put("ftpaDecisionAndReasonsDocumentDownloadLink", jsonDocument)
+                .put("homeOfficeFtpaApplicationDownloadLink", jsonDocument)
+                .build();
+
+        Map<String, Object> actualPersonalisation =
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase);
+
+        assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
+    }
+
+    @Test
+    public void should_return_personalisation_when_all_information_given_partially_granted() {
+
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.empty());
+        when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_PARTIALLY_GRANTED));
+
+        final Map<String, Object> expectedPersonalisation =
+            ImmutableMap
+                .<String, Object>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("subjectPrefix", adaPrefix)
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("applicationDecision", "partially granted")
                 .put("ftpaDecisionAndReasonsDocumentDownloadLink", jsonDocument)
                 .put("homeOfficeFtpaApplicationDownloadLink", jsonDocument)
                 .build();
