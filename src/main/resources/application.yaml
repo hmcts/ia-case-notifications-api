@@ -1151,6 +1151,7 @@ security:
       - "changeBailDirectionDueDate"
       - "adaSuitabilityReview"
       - "transferOutOfAda"
+      - "reviewHearingRequirements"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
