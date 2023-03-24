@@ -1,6 +1,5 @@
 {
   "description": "RIA-6805  Respondent FTPA Application is refused for internal ADA case",
-  "enabled": false,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -24,9 +23,9 @@
               "id": "docId",
               "value": {
                 "document": {
-                  "document_url": "http://dm-store/docId",
-                  "document_binary_url": "http://dm-store/docId/binary",
-                  "document_filename": "filename"
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
                 },
                 "description": "description"
               }
@@ -37,9 +36,9 @@
               "id": "docId",
               "value": {
                 "document": {
-                  "document_url": "http://dm-store/docId",
-                  "document_binary_url": "http://dm-store/docId/binary",
-                  "document_filename": "filename"
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
                 },
                 "description": "description"
               }
