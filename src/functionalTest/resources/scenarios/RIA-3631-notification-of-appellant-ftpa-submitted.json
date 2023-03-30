@@ -45,7 +45,7 @@
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
-      },
+      }
     ]
   }
 }
