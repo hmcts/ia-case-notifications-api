@@ -313,8 +313,18 @@ dependencyManagement {
             entry 'spring-web'
         }
 
-        //CVE-2021-22119
-        dependency group: 'org.springframework.security', name: 'spring-security-core',  version: versions.springSecurity
+        dependencySet(group: 'org.springframework.security', version: '5.7.5') {
+            entry 'spring-security-crypto'
+            entry 'spring-security-core'
+            entry 'spring-security-config'
+            entry 'spring-security-web'
+            entry 'spring-security-test'
+            entry 'spring-security-oauth2-client'
+            entry 'spring-security-oauth2-core'
+            entry 'spring-security-oauth2-jose'
+            entry 'spring-security-oauth2-resource-server'
+        }
+
 
         //CVE-2021-44228, CVE-2021-44832, CVE-2021-45046
         dependencySet(group: 'org.apache.logging.log4j', version: '2.17.1') {
