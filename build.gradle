@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.yaml:snakeyaml:1.31")
+
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
     }
 }
@@ -39,7 +39,7 @@ def versions = [
         reformHealthStarter: '0.0.5',
         serenity           : '3.1.20',
         sonarPitest        : '0.5',
-        springBoot         : '2.7.0',
+        springBoot         : '2.6.3',
         springHystrix      : '2.2.10.RELEASE',
         springDoc          : '1.6.8',
         springSecurity     : '5.7.1',
@@ -302,8 +302,12 @@ dependencyManagement {
             entry 'logback-core'
         }
 
+        dependencySet(group: 'commons-fileupload', version: '1.5') {
+            entry 'commons-fileupload'
+        }
+
         //CVE-2021-22060
-        dependencySet(group: 'org.springframework', version: '5.3.20') {
+       /* dependencySet(group: 'org.springframework', version: '5.3.20') {
             entry 'spring-core'
             entry 'spring-aop'
             entry 'spring-beans'
@@ -311,7 +315,7 @@ dependencyManagement {
             entry 'spring-expression'
             entry 'spring-jcl'
             entry 'spring-web'
-        }
+        }*/
 
         dependencySet(group: 'org.springframework.security', version: '5.7.5') {
             entry 'spring-security-crypto'
@@ -341,14 +345,14 @@ dependencyManagement {
 
 dependencies {
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-json'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloud
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: versions.springCloud
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
 
     compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: versions.springSecurity
