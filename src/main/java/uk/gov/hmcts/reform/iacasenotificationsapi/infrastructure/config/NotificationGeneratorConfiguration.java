@@ -1614,7 +1614,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("ftpaSubmittedLegalRepNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedLegalRep(
         LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -1622,8 +1621,8 @@ public class NotificationGeneratorConfiguration {
 
         // RIA-3316 - applyForFTPAAppellant
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ?  newArrayList(legalRepresentativeFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
-            : newArrayList(legalRepresentativeFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation);
+            ?  newArrayList(legalRepresentativeFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
+            : newArrayList(legalRepresentativeFtpaSubmittedPersonalisation);
 
 
         return Arrays.asList(
@@ -1638,15 +1637,14 @@ public class NotificationGeneratorConfiguration {
     @Bean("ftpaSubmittedDetentionEngagementTeamNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedDetentionEngagementTeamNotificationGenerator(
         DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ?  newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
-            : newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation);
+            ?  newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
+            : newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation);
 
 
         return Arrays.asList(
@@ -1679,7 +1677,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentFtpaSubmittedNotificationGeneratorLegalRep")
     public List<NotificationGenerator> respondentFtpaSubmittedNotificationGeneratorLegalRep(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         LegalRepresentativeRespondentFtpaSubmittedPersonalisation legalRepresentativeRespondentFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -1687,8 +1684,8 @@ public class NotificationGeneratorConfiguration {
 
         // RIA-3316 - applyForFTPARespondent
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ?  newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation)
-            : newArrayList(adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation);
+            ?  newArrayList(respondentFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation)
+            : newArrayList(legalRepresentativeRespondentFtpaSubmittedPersonalisation);
 
         return Arrays.asList(
             new EmailNotificationGenerator(
@@ -1702,7 +1699,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam")
     public List<NotificationGenerator> respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         OtherDetentionEngagementTeamFtpaSubmittedPersonalisation otherDetentionEngagementTeamFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -1710,8 +1706,8 @@ public class NotificationGeneratorConfiguration {
 
         // RIA-3316 - applyForFTPARespondent
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ?  newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, otherDetentionEngagementTeamFtpaSubmittedPersonalisation)
-            : newArrayList(adminOfficerFtpaSubmittedPersonalisation, otherDetentionEngagementTeamFtpaSubmittedPersonalisation);
+            ?  newArrayList(respondentFtpaSubmittedPersonalisation, otherDetentionEngagementTeamFtpaSubmittedPersonalisation)
+            : newArrayList(otherDetentionEngagementTeamFtpaSubmittedPersonalisation);
 
         return Arrays.asList(
             new EmailNotificationGenerator(
