@@ -1,0 +1,60 @@
+{
+  "description": "RIA-6112 Notification for FTPA submission by appellant in person",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Citizen",
+    "input": {
+      "id": 6112,
+      "eventId": "applyForFTPAAppellant",
+      "state": "ftpaSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "journeyType": "aip",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED",
+        "recipient": "{$TEST_CITIZEN_USERNAME}",
+        "subject": "Immigration and Asylum appeal: You have applied for permission to appeal to the Upper Tribunal",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Talha Awan",
+          "{$iaAipFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      }
+    ]
+  }
+}
