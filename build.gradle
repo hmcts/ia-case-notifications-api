@@ -43,8 +43,7 @@ def versions = [
         springHystrix      : '2.2.10.RELEASE',
         springDoc          : '1.6.8',
         springSecurity     : '5.7.5',
-        springCloud        : '3.1.1',
-        jackson            : '2.13.3'
+        springCloud        : '3.1.1'
 ]
 
 ext.libraries = [
@@ -368,11 +367,11 @@ dependencies {
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.2'
 
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv'
 
     compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDoc
 
@@ -392,7 +391,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compileOnly 'org.projectlombok:lombok:1.18.12'
-    compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
+    compile group: 'org.yaml', name: 'snakeyaml'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
     compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.0.5'
@@ -425,21 +424,15 @@ dependencies {
 
     testCompile 'pl.pragmatists:JUnitParams:1.1.1'
 
-    testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.26') {
-        force = true
-    }
+
 
     testImplementation(group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.6') {
         exclude group: "com.github.tomakehurst", module: "wiremock-standalone"
     }
 
-    integrationTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.26') {
-        force = true
-    }
 
-    functionalTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.26') {
-        force = true
-    }
+
+
 
     integrationTestCompile sourceSets.main.runtimeClasspath
     integrationTestCompile sourceSets.test.runtimeClasspath
