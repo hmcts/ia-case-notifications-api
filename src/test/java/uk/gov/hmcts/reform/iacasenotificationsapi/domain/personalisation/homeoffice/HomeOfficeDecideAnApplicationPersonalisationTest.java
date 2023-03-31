@@ -135,7 +135,7 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getApplicantRole()).thenReturn(HOME_OFFICE_APC);
         when(makeAnApplication.getDecision()).thenReturn("Granted");
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
-        assertEquals(homeOfficeDecideAnApplicationGrantedBeforeListingTemplateId,
+        assertEquals(homeOfficeDecideAnApplicationGrantedAfterListingTemplateId,
             homeOfficeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
 
 
@@ -146,7 +146,7 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getApplicantRole()).thenReturn(LEGAL_REP_USER);
         when(makeAnApplication.getState()).thenReturn("listing");
         when(makeAnApplicationService.isApplicationListed(any(State.class))).thenReturn(false);
-        assertEquals(homeOfficeDecideAnApplicationGrantedOtherPartyBeforeListingTemplateId,
+        assertEquals(homeOfficeDecideAnApplicationGrantedOtherPartyAfterListingTemplateId,
             homeOfficeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
 
 
@@ -158,7 +158,7 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getApplicantRole()).thenReturn(HOME_OFFICE_APC);
         when(makeAnApplication.getDecision()).thenReturn("Refused");
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
-        assertEquals(homeOfficeDecideAnApplicationRefusedBeforeListingTemplateId,
+        assertEquals(homeOfficeDecideAnApplicationRefusedAfterListingTemplateId,
             homeOfficeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
 
 
@@ -169,7 +169,7 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getApplicantRole()).thenReturn(LEGAL_REP_USER);
         when(makeAnApplication.getState()).thenReturn("listing");
         when(makeAnApplicationService.isApplicationListed(any(State.class))).thenReturn(false);
-        assertEquals(homeOfficeDecideAnApplicationRefusedOtherPartyBeforeListingTemplateId,
+        assertEquals(homeOfficeDecideAnApplicationRefusedOtherPartyAfterListingTemplateId,
             homeOfficeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
 
 
