@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "aip",
+          "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "subscriptions": [
             {

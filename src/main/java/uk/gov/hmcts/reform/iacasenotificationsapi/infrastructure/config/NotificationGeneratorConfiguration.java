@@ -1540,13 +1540,17 @@ public class NotificationGeneratorConfiguration {
     @Bean("ftpaSubmittedAipNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedAip(
         AppellantFtpaSubmittedPersonalisationEmail appellantFtpaSubmittedPersonalisationEmail,
+        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
+        RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return List.of(
             new EmailNotificationGenerator(
-                newArrayList(appellantFtpaSubmittedPersonalisationEmail),
+                List.of(appellantFtpaSubmittedPersonalisationEmail,
+                    adminOfficerFtpaSubmittedPersonalisation,
+                    respondentAppellantFtpaSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
