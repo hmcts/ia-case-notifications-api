@@ -113,7 +113,7 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getDecision()).thenReturn("Granted");
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
 
-        assertEquals(legalRepresentativeDecideAnApplicationGrantedBeforeListingTemplateId,
+        assertEquals(legalRepresentativeDecideAnApplicationGrantedAfterListingTemplateId,
             legalRepresentativeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
         when(makeAnApplication.getState()).thenReturn("listing");
         when(makeAnApplicationService.isApplicationListed(any(State.class))).thenReturn(true);
@@ -136,7 +136,7 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getApplicantRole()).thenReturn(homeOfficeUser);
         when(makeAnApplication.getDecision()).thenReturn("Granted");
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
-        assertEquals(legalRepresentativeDecideAnApplicationGrantedOtherPartyBeforeListingTemplateId,
+        assertEquals(legalRepresentativeDecideAnApplicationGrantedOtherPartyAfterListingTemplateId,
             legalRepresentativeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
 
         when(makeAnApplicationService.isApplicationListed(any(State.class))).thenReturn(true);
@@ -147,7 +147,7 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         when(makeAnApplicationService.isApplicationListed(any(State.class))).thenReturn(false);
         when(makeAnApplication.getDecision()).thenReturn("Refused");
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
-        assertEquals(legalRepresentativeDecideAnApplicationRefusedOtherPartyBeforeListingTemplateId,
+        assertEquals(legalRepresentativeDecideAnApplicationRefusedOtherPartyAfterListingTemplateId,
             legalRepresentativeDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
 
         when(makeAnApplicationService.isApplicationListed(any(State.class))).thenReturn(true);
