@@ -1969,6 +1969,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
+                       && !AsylumCaseUtils.isInternalCase(asylumCase)
                        && isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
@@ -2005,6 +2006,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
+                       && !AsylumCaseUtils.isInternalCase(asylumCase)
                        && isGrantedOrPartiallyGrantedOutcome
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
@@ -2064,6 +2066,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                       && !AsylumCaseUtils.isInternalCase(asylumCase)
                        && isReheardDecisionOutcome
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
