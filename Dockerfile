@@ -1,5 +1,5 @@
 ARG APP_INSIGHTS_AGENT_VERSION=2.5.1-BETA
-FROM hmctspublic.azurecr.io/base/java:17-distroless
+FROM hmctspublic.azurecr.io/base/java:11-distroless
 
 # Mandatory!
 ENV APP ia-case-notifications-api.jar
