@@ -856,6 +856,9 @@ govnotify:
         email: 7afe65bd-65ff-4f6b-b9ba-0ffc20623903
       homeOffice:
         email: 82aa4d65-9202-4568-ae7c-cbfeba9e1520
+      appellant:
+        email: 9dce71ff-5985-4bea-8958-b1dc155132dd
+        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
     adaSuitabilityReview:
       legalRep:
         unsuitable:
@@ -985,6 +988,7 @@ security:
       - "editAppeal"
       - "uploadAdditionalEvidence"
       - "submitAppeal"
+      - "paymentAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
       - "submitClarifyingQuestionAnswers"
@@ -1300,6 +1304,8 @@ ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28
   ada: 7
+
+appellantDaysToAskReinstate: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}

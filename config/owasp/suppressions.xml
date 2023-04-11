@@ -53,8 +53,6 @@
         <cve>CVE-2022-38751</cve>
         <cve>CVE-2022-38752</cve>
         <cve>CVE-2022-41854</cve>
-        <cve>CVE-2022-25857</cve>
-        <cve>CVE-2022-1471</cve>
     </suppress>
     <suppress>
         <notes>jackson-databind-2.13.3.jar</notes>
@@ -62,34 +60,31 @@
         <cve>CVE-2022-42004</cve>
     </suppress>
     <suppress>
-        <notes>Temporarily suppress log4j vulneravilities</notes>
+        <notes>Temporarily suppress log4j vulnerabilities</notes>
         <cve>CVE-2022-33915</cve>
     </suppress>
     <suppress>
         <cve>CVE-2022-31690</cve>
         <cve>CVE-2022-31692</cve>
         <cve>CVE-2022-42252</cve>
-        <cve>CVE-2021-37533</cve>
+        <cve>CVE-2021-37533</cve>        
     </suppress>
     <suppress>
-        <notes>Temporarily suppress Apache commons related vulnerabilities</notes>
-        <cve>CVE-2021-37533</cve>
-    </suppress>
-    <suppress>
+        <notes>Temporarily suppress LatencyUtils vulnerabilities</notes>
         <cve>CVE-2021-4277</cve>
+    </suppress>
+    <suppress>
+        <notes>Temporarily suppress Snakeyaml vulnerabilities</notes>
         <cve>CVE-2021-4235</cve>
+        <cve>CVE-2022-1471</cve>
         <cve>CVE-2022-3064</cve>
+    </suppress>
+    <suppress>
+        <notes>Temporarily suppress tomcat-embed vulnerabilities</notes>
         <cve>CVE-2022-45143</cve>
     </suppress>
     <suppress>
-        <cve>CVE-2021-4277</cve>
-        <cve>CVE-2021-4235</cve>
-        <cve>CVE-2022-3064</cve>
-        <cve>CVE-2022-45143</cve>
+        <notes>Temporarily suppress json and jackson-core related vulnerability</notes>
         <cve>CVE-2022-45688</cve>
-        <cve>CVE-2023-24998</cve>
-        <cve>CVE-2023-20861</cve>
-        <cve>CVE-2023-28708</cve>
-        <cve>CVE-2023-20860</cve>
     </suppress>
 </suppressions>
