@@ -96,10 +96,16 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         }
 
         boolean applicationGranted = DECISION_GRANTED.equals(decision);
-        boolean adjournExpediteOrTransfer = Arrays.asList(
+        boolean adjournExpediteTransferOrUpdateHearingReqs = Arrays.asList(
             ADJOURN.toString(),
             EXPEDITE.toString(),
-            TRANSFER.toString()
+            TRANSFER.toString(),
+            UPDATE_HEARING_REQUIREMENTS.toString()
+        ).contains(applicationType);
+
+        boolean updateHearingDetailsOrOther = Arrays.asList(
+                UPDATE_APPEAL_DETAILS.toString(),
+                OTHER.toString()
         ).contains(applicationType);
 
 
@@ -121,12 +127,14 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             .put("applicationDecisionReason", applicationDecisionReason)
             .put("granted", applicationGranted ? "yes" : "no")
             .put("grantedAndTimeExtension", applicationGranted && (Objects.equals(TIME_EXTENSION.toString(), applicationType)) ? "yes" : "no")
-            .put("grantedAdjournExpediteOrTransfer", applicationGranted && adjournExpediteOrTransfer ? "yes" : "no")
+            .put("grantedAdjournExpediteTransferOrUpdateHearingReqs", applicationGranted && adjournExpediteTransferOrUpdateHearingReqs ? "yes" : "no")
             .put("grantedJudgesReview", applicationGranted && (Objects.equals(JUDGE_REVIEW_LO.toString(), applicationType)) ? "yes" : "no")
             .put("grantedLinkOrUnlik", applicationGranted && (Objects.equals(LINK_OR_UNLINK.toString(), applicationType)) ? "yes" : "no")
             .put("grantedReinstate", applicationGranted && (Objects.equals(REINSTATE.toString(), applicationType)) ? "yes" : "no")
             .put("grantedWithdraw", applicationGranted && (Objects.equals(WITHDRAW.toString(), applicationType)) ? "yes" : "no")
-            .put("grantedOther", applicationGranted && (Objects.equals(OTHER.toString(), applicationType)) ? "yes" : "no");
+            .put("grantedUpdateAppealDetailsOrOther", applicationGranted && updateHearingDetailsOrOther ? "yes" : "no")
+            .put("grantedTransferOutOfAda", applicationGranted && (Objects.equals(TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS.toString(), applicationType)) ? "yes" : "no");
+
 
         if (isApplicant(optionalMakeAnApplication)) {
             // If the decision maker is a TCW then change "Tribunal Caseworker" into "Legal Officer"
