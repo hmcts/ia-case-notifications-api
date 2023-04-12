@@ -2031,6 +2031,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentAipJourneyNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedAipJourneyNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+        AppellantRespondentFtpaApplicationDecisionPersonalisation appellantRespondentFtpaApplicationDecisionPersonalisation,
+        AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        // RIA-6116
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, appellantRespondentFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation)
+            : newArrayList(appellantRespondentFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation);
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator")
     public List<NotificationGenerator> ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator(
         CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation caseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation,

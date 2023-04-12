@@ -529,6 +529,9 @@ govnotify:
     appealDocumentDeletedAfterListing:
       caseOfficer:
         email: aef0bfa4-03ed-431b-87d0-c77124bd5f68
+    ftpaRespondentDecisionGrantedPartiallyGranted:
+      applicant:
+        email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
     applicationGranted:
       admin:
         email: 9b62eeb8-54ce-47ab-a9fc-f25bc0bab70a
