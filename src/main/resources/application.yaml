@@ -411,6 +411,7 @@ govnotify:
     applyForFtpa:
       respondent:
         email: 317498af-4da1-44c7-935e-d70009bc687f
+        appellant: 01a0aedf-28d8-4c45-b41f-a12ec090d3b5
       appellant:
         email: 28ea778a-f2fb-4447-9144-a3815c92edbc
       aip:
