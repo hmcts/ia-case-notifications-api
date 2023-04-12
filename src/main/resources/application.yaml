@@ -888,6 +888,16 @@ govnotify:
         email: 671af79b-6c0d-4d49-8b9d-3a29efa0758d
       legalRep:
         email: 427d6a0f-4f67-41b7-8814-1fe44fec4ee0
+    markAppealAsDetained:
+      legalRep:
+        email: 1baf79a7-1a7f-4a2c-9a03-eb5ec6ff7a49
+      homeOffice:
+        email: 7b972a67-7665-4b3b-a64c-ed74d1ca8d55
+    removeDetentionStatus:
+      legalRep:
+        email: 23669485-ffb0-4ae2-9d36-26c437a57e92
+      homeOffice:
+        email: 3891dcd8-a9d1-47e8-8b87-3da77789a913
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1072,6 +1082,8 @@ security:
       - "transferOutOfAda"
       - "markAppealAsAda"
       - "markAppealPaid"
+      - "removeDetainedStatus"
+      - "markAppealAsDetained"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1109,6 +1121,8 @@ security:
       - "makeNewApplication"
       - "editAppealAfterSubmit"
       - "markAppealAsAda"
+      - "removeDetainedStatus"
+      - "markAppealAsDetained"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"

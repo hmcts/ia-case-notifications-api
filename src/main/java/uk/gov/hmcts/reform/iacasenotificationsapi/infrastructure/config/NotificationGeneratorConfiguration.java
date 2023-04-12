@@ -3368,4 +3368,62 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("removeDetentionStatusNotificationGenerator")
+    public List<NotificationGenerator> removeDetentionStatusNotificationGenerator(
+            LegalRepresentativeRemoveDetentionStatusPersonalisation legalRepresentativeRemoveDetentionStatusPersonalisation,
+            HomeOfficeRemoveDetentionStatusPersonalisation homeOfficeRemoveDetentionStatusPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRemoveDetentionStatusPersonalisation,
+                                homeOfficeRemoveDetentionStatusPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("removeDetentionStatusInternalNotificationGenerator")
+    public List<NotificationGenerator> removeDetentionStatusInternalNotificationGenerator(
+            HomeOfficeRemoveDetentionStatusPersonalisation homeOfficeRemoveDetentionStatusPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeRemoveDetentionStatusPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("markAsDetainedNotificationGenerator")
+    public List<NotificationGenerator> markAppealAsDetainedNotificationGenerator(
+            LegalRepresentativeMarkAppealAsDetainedPersonalisation legalRepresentativeMarkAppealAsDetainedPersonalisation,
+            HomeOfficeMarkAppealAsDetainedPersonalisation homeOfficeMarkAppealAsDetainedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeMarkAppealAsDetainedPersonalisation,
+                                homeOfficeMarkAppealAsDetainedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
