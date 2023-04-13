@@ -2034,15 +2034,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentAipJourneyNotificationGenerator")
     public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedAipJourneyNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
-        AppellantRespondentFtpaApplicationDecisionPersonalisation appellantRespondentFtpaApplicationDecisionPersonalisation,
+        AppellantRespondentFtpaApplicationDecisionPersonalisationEmail appellantRespondentFtpaApplicationDecisionPersonalisationEmail,
         AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         // RIA-6116
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, appellantRespondentFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation)
-            : newArrayList(appellantRespondentFtpaApplicationDecisionPersonalisation, adminOfficerFtpaDecisionRespondentPersonalisation);
+            ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, appellantRespondentFtpaApplicationDecisionPersonalisationEmail, adminOfficerFtpaDecisionRespondentPersonalisation)
+            : newArrayList(appellantRespondentFtpaApplicationDecisionPersonalisationEmail, adminOfficerFtpaDecisionRespondentPersonalisation);
 
         return Arrays.asList(
             new EmailNotificationGenerator(

@@ -23,14 +23,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantRespondentFtpaApplicationDecisionPersonalisation implements EmailNotificationPersonalisation {
+public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String appellantFtpaRespondentDecisionEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public AppellantRespondentFtpaApplicationDecisionPersonalisation(
+    public AppellantRespondentFtpaApplicationDecisionPersonalisationEmail(
         @Value("${govnotify.template.ftpaRespondentDecisionGrantedPartiallyGranted.applicant.email}") String appellantFtpaRespondentDecisionEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
@@ -43,7 +43,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisation implement
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
+    public String getTemplateId() {
         return appellantFtpaRespondentDecisionEmailTemplateId;
     }
 
