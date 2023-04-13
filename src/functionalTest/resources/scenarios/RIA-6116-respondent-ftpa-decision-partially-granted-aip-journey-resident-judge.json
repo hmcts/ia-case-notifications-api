@@ -12,6 +12,18 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "aip",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ],
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaRespondentDecisionOutcomeType": "partiallyGranted",
           "ftpaApplicantType": "respondent",
@@ -61,8 +73,7 @@
         "subject": "Immigration and Asylum: The Home Office application was partially granted",
         "body": [
           "PA/12345/2019",
-          "CASE001",
-          "987654321",
+          "A1234567",
           "Talha Awan",
           "The Home Office application for permission to appeal to the Upper Tribunal has been partially granted."
         ]
