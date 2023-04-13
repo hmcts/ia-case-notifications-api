@@ -1445,7 +1445,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT,
+                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                && !isAipJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedAipNotificationHandler(
+        @Qualifier("ftpaSubmittedAipNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        // RIA-6112
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -1465,7 +1480,7 @@ public class NotificationHandlerConfiguration {
                     callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
                     && instructStatus.equals("FAIL")
-                    ;
+                    && !isAipJourney(callback.getCaseDetails().getCaseData());
             },
             notificationGenerator
         );

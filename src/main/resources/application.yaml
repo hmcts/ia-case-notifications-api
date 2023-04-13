@@ -413,6 +413,8 @@ govnotify:
         email: 317498af-4da1-44c7-935e-d70009bc687f
       appellant:
         email: 28ea778a-f2fb-4447-9144-a3815c92edbc
+      aip:
+        email: e88352c7-7e70-40ef-b18b-55e9acdd603d
       adminOfficer:
         email: aa44dab0-a9cd-4129-99bd-9ba2d4c8a57b
       caseOfficer:
@@ -917,6 +919,7 @@ security:
       - "requestHearingRequirementsFeature"
       - "asyncStitchingComplete"
       - "uploadAddendumEvidenceLegalRep"
+      - "applyForFTPAAppellant"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
