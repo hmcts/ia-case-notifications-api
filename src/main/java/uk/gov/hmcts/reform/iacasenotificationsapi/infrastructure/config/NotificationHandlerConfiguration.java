@@ -2034,7 +2034,8 @@ public class NotificationHandlerConfiguration {
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
                        && isGrantedOrPartiallyGrantedOutcome(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
+                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
+                       && !isAipJourney(asylumCase);
             },
             notificationGenerators
         );
@@ -2056,7 +2057,8 @@ public class NotificationHandlerConfiguration {
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
                        && isGrantedOrPartiallyGrantedOutcome(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT");
+                    "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT")
+                       && isAipJourney(asylumCase);
             },
             notificationGenerators
         );
