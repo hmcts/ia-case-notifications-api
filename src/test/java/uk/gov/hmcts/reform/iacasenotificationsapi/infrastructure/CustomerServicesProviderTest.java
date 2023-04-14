@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -14,13 +15,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class CustomerServicesProviderTest {
 
     private String customerServicesTelephone = "555 555";
@@ -82,14 +86,14 @@ public class CustomerServicesProviderTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    public void should_set_correct_email_based_on_asylum_case(YesOrNo isAdmin) {
+    @CsvSource({ "YES, YES", "NO, YES", "YES, NO", "NO, NO" })
+    public void should_set_correct_email_based_on_asylum_case(YesOrNo isAdmin, YesOrNo isAda) {
         AsylumCase asylumCase = mock(AsylumCase.class);
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
-
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         customerServicesProvider.setCorrectEmail(asylumCase);
 
-        if (isAdmin.equals(YES)) {
+        if (isAdmin.equals(YES) && isAda.equals(YES)) {
             assertEquals(internalCaseCustomerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         } else {
             assertEquals(standardCustomerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
