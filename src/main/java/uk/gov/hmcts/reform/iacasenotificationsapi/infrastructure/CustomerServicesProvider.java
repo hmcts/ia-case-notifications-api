@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
 import com.google.common.collect.ImmutableMap;
@@ -36,7 +37,7 @@ public class CustomerServicesProvider {
     }
 
     public void setCorrectEmail(AsylumCase asylumCase) {
-        this.customerServicesEmail = isInternalCase(asylumCase)
+        this.customerServicesEmail = isInternalCase(asylumCase) && isAcceleratedDetainedAppeal(asylumCase)
             ? internalCaseCustomerServicesEmail
             : standardCustomerServicesEmail;
     }
