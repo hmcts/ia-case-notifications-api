@@ -115,14 +115,13 @@
         <cve>CVE-2021-37533</cve>
     </suppress>
     <suppress>
-        <cve>CVE-2021-4277</cve>
-        <cve>CVE-2021-4235</cve>
-        <cve>CVE-2022-3064</cve>
-        <cve>CVE-2022-45143</cve>
+        <notes>Temporarily suppress json and jackson-core related vulnerability</notes>
         <cve>CVE-2022-45688</cve>
+    </suppress>
+    <suppress>
         <cve>CVE-2023-24998</cve>
-        <cve>CVE-2023-20861</cve>
         <cve>CVE-2023-28708</cve>
+        <cve>CVE-2023-20861</cve>
         <cve>CVE-2023-20860</cve>
     </suppress>
 </suppressions>
