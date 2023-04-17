@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "aip",
+          "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "subscriptions": [
             {
@@ -38,6 +39,14 @@
           {
             "id": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "6112_FTPA_SUBMITTED_ADMIN_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "6112_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
@@ -53,6 +62,31 @@
           "LP/12345/2019",
           "Talha Awan",
           "{$iaAipFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "6112_FTPA_SUBMITTED_ADMIN_OFFICER",
+        "recipient": "{$ftpaSubmitted.ctscAdminEmailAddress}",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "6112_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+        "recipient": "{$homeOfficeFtpaEmailAddresses.taylorHouse}",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "A1234567",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
