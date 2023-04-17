@@ -26,7 +26,7 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmail implements Ema
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantRespondentFtpaSubmittedPersonalisationEmail(
-        @Value("${govnotify.template.applyForFtpa.respondent.appellant}") String respondentFtpaToAppellantEmailTemplateId,
+        @Value("${govnotify.template.applyForFtpa.respondent.toAppellant.email}") String respondentFtpaToAppellantEmailTemplateId,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider) {
 
@@ -42,7 +42,7 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmail implements Ema
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT";
+        return caseId + "_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL";
     }
 
     @Override

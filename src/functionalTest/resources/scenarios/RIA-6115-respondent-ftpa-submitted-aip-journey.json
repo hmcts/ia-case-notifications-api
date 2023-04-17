@@ -46,7 +46,11 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT",
+            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -79,7 +83,7 @@
         ]
       },
       {
-        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT",
+        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Home Office has applied for permission to appeal to the Upper Tribunal",
         "body": [
@@ -89,6 +93,15 @@
           "Talha Awan",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "The Home Office has applied for permission to appeal to the Upper Tribunal"
         ]
       }
     ]
