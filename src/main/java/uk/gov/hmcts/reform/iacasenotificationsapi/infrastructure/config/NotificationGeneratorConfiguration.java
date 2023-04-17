@@ -3426,4 +3426,28 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("aipRemoveDetentionStatusNotificationGenerator")
+    public List<NotificationGenerator> AipRemoveDetentionStatusNotificationGenerator(
+            AppellantRemoveDetainedStatusPersonalisationEmail appellantRemoveDetentionStatusPersonalisationEmail,
+            AppellantRemoveDetainedStatusPersonalisationSms appellantRemoveDetentionStatusPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveDetentionStatusPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRemoveDetentionStatusPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
