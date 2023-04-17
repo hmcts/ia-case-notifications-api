@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "aip",
+          "ariaListingReference": "LP/12345/2019",
           "subscriptions": [
             {
               "id": "1",
@@ -49,6 +50,7 @@
         "body": [
           "PA/12345/2019",
           "A1234567",
+          "LP/12345/2019",
           "Talha Awan",
           "{$iaAipFrontendUrl}",
           "{$customerServices.telephoneNumber}",
