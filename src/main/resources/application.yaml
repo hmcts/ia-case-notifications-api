@@ -898,6 +898,11 @@ govnotify:
         email: 23669485-ffb0-4ae2-9d36-26c437a57e92
       homeOffice:
         email: 3891dcd8-a9d1-47e8-8b87-3da77789a913
+      appellant:
+        email:
+          beforeListing: 5bc75d7e-37ac-4382-a43a-0d27038c81de
+          afterListing: c2487cec-7ca4-450f-a5ae-b6d93ce99b6e
+        sms: e2dcdeee-c61e-4f56-836a-53116011bb20
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
