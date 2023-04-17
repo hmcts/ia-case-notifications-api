@@ -130,13 +130,22 @@ public final class MapValueExpander {
             if (matcher.groupCount() == 1
                 && !matcher.group(1).isEmpty()) {
 
-                String variableName = matcher.group(1);
                 String token = matcher.group(0);
-                if (documentManagementFilesFixture.getProperties().containsKey(variableName)) {
-                    expandedValue = documentManagementFilesFixture.getProperties().get(variableName);
+                String propertyName = matcher.group(1);
+
+                if (documentManagementFilesFixture.getProperties().containsKey(propertyName)) {
+
+                    expandedValue = documentManagementFilesFixture.getProperties().get(propertyName);
 
                 } else {
-                    expandedValue = expandedValue.replace(token, ENVIRONMENT_PROPERTIES.getProperty(variableName));
+
+                    String property = ENVIRONMENT_PROPERTIES.getProperty(propertyName);
+
+                    if (property == null) {
+                        expandedValue = expandedValue.replace(token, "");
+                    } else {
+                        expandedValue = expandedValue.replace(token, property);
+                    }
                 }
             }
         }
