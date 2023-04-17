@@ -12,7 +12,20 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019"
+          "ariaListingReference": "LP/12345/2019",
+          "journeyType": "aip",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ]
         }
       }
     }
@@ -72,7 +85,7 @@
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
-          "CASE001",
+          "A1234567",
           "Talha Awan",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
