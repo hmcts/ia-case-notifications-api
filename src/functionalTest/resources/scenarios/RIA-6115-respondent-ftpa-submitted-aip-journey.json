@@ -1,18 +1,19 @@
 {
-  "description": "RIA-6112 Notification for FTPA submission by appellant in person",
+  "description": "RIA-6115 Notification of respondent ftpa application submitted for AIP journey",
+  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "Citizen",
+    "credentials": "HomeOfficePOU",
     "input": {
-      "id": 6112,
-      "eventId": "applyForFTPAAppellant",
+      "id": 6115,
+      "eventId": "applyForFTPARespondent",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "journeyType": "aip",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
+          "journeyType": "aip",
           "subscriptions": [
             {
               "id": "1",
@@ -37,15 +38,19 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED",
+            "id": "6115_FTPA_SUBMITTED_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6112_FTPA_SUBMITTED_ADMIN_OFFICER",
+            "id": "6115_FTPA_SUBMITTED_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6112_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -53,32 +58,7 @@
     },
     "notifications": [
       {
-        "reference": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED",
-        "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum appeal: You have applied for permission to appeal to the Upper Tribunal",
-        "body": [
-          "PA/12345/2019",
-          "A1234567",
-          "LP/12345/2019",
-          "Talha Awan",
-          "{$iaAipFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      },
-      {
-        "reference": "6112_FTPA_SUBMITTED_ADMIN_OFFICER",
-        "recipient": "{$ftpaSubmitted.ctscAdminEmailAddress}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
-        "body": [
-          "PA/12345/2019",
-          "LP/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
-        ]
-      },
-      {
-        "reference": "6112_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+        "reference": "6115_FTPA_SUBMITTED_RESPONDENT",
         "recipient": "{$homeOfficeFtpaEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -89,6 +69,39 @@
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "6115_FTPA_SUBMITTED_ADMIN_OFFICER",
+        "recipient": "{$ftpaSubmitted.ctscAdminEmailAddress}",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
+        "recipient": "{$TEST_CITIZEN_USERNAME}",
+        "subject": "Immigration and Asylum appeal: The Home Office has applied for permission to appeal to the Upper Tribunal",
+        "body": [
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "A1234567",
+          "Talha Awan",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "The Home Office has applied for permission to appeal to the Upper Tribunal"
         ]
       }
     ]
