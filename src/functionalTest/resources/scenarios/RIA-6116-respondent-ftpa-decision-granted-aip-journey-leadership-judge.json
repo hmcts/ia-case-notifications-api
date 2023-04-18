@@ -45,11 +45,15 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61161_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT",
+            "id": "61161_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
             "id": "61161_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "61161_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -68,7 +72,7 @@
         ]
       },
       {
-        "reference": "61161_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT",
+        "reference": "61161_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum: The Home Office application was granted",
         "body": [
@@ -87,6 +91,16 @@
           "987654321",
           "Talha Awan",
           "You must create a bundle for the Upper Tribunal. Follow these steps to do this:"
+        ]
+      },
+      {
+        "reference": "61161_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "The Home Office application for permission to appeal to the Upper Tribunal has been granted",
+          "{$iaAipFrontendUrl}"
         ]
       }
     ]
