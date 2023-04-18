@@ -2035,18 +2035,24 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedAipJourneyNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
         AppellantRespondentFtpaApplicationDecisionPersonalisationEmail appellantRespondentFtpaApplicationDecisionPersonalisationEmail,
+        AppellantRespondentFtpaApplicationDecisionPersonalisationSms appellantRespondentFtpaApplicationDecisionPersonalisationSms,
         AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         // RIA-6116
-        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+        List<EmailNotificationPersonalisation> emailPersonalisations = isHomeOfficeGovNotifyEnabled
             ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, appellantRespondentFtpaApplicationDecisionPersonalisationEmail, adminOfficerFtpaDecisionRespondentPersonalisation)
             : newArrayList(appellantRespondentFtpaApplicationDecisionPersonalisationEmail, adminOfficerFtpaDecisionRespondentPersonalisation);
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                personalisations,
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                List.of(appellantRespondentFtpaApplicationDecisionPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )

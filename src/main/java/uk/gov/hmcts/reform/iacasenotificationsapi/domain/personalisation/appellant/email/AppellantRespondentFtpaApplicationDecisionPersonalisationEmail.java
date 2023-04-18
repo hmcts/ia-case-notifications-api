@@ -4,11 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_GRANTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.PersonalisationUtil.ftpaRespondentDecisionVerbalization;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -16,7 +13,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -54,7 +50,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT";
+        return caseId + "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL";
     }
 
     @Override
@@ -70,19 +66,8 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
-                .put("applicationDecision", ftpaRespondentDecision(asylumCase))
+                .put("applicationDecision", ftpaRespondentDecisionVerbalization(asylumCase))
                 .build();
     }
 
-    private String ftpaRespondentDecision(AsylumCase asylumCase) {
-        return asylumCase
-            .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-            .or(() -> asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
-            .map(decision -> decision.equals(FTPA_GRANTED)
-                ? "granted"
-                : decision.equals(FTPA_PARTIALLY_GRANTED)
-                ? "partially granted"
-                : "")
-            .orElse("");
-    }
 }

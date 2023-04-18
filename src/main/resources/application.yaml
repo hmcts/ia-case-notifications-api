@@ -532,6 +532,7 @@ govnotify:
     ftpaRespondentDecisionGrantedPartiallyGranted:
       applicant:
         email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
+        sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationGranted:
       admin:
         email: 9b62eeb8-54ce-47ab-a9fc-f25bc0bab70a
