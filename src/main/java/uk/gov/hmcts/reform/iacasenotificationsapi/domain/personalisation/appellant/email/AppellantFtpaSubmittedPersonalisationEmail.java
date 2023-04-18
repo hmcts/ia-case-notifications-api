@@ -49,7 +49,7 @@ public class AppellantFtpaSubmittedPersonalisationEmail implements EmailNotifica
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPELLANT_IN_PERSON_FTPA_SUBMITTED";
+        return caseId + "_APPELLANT_IN_PERSON_FTPA_SUBMITTED_EMAIL";
     }
 
     @Override
