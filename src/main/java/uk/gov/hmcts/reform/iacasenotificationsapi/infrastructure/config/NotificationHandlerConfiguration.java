@@ -1960,7 +1960,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationHandler(
         @Qualifier("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator")
@@ -2000,6 +1999,25 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    private boolean isGrantedOrPartiallyGrantedOutcome(AsylumCase asylumCase) {
+        boolean isGrantedOrPartiallyGrantedOutcome = asylumCase
+            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
+                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
+            .orElse(false);
+
+        if (!isGrantedOrPartiallyGrantedOutcome) {
+            isGrantedOrPartiallyGrantedOutcome = asylumCase
+                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
+                    FtpaDecisionOutcomeType.class)
+                .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
+                                 || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
+                .orElse(false);
+        }
+
+        return isGrantedOrPartiallyGrantedOutcome;
+    }
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationHandler(
         @Qualifier("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
@@ -2010,27 +2028,37 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                boolean isGrantedOrPartiallyGrantedOutcome = asylumCase
-                    .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                    .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                    .orElse(false);
-
-                if (!isGrantedOrPartiallyGrantedOutcome) {
-                    isGrantedOrPartiallyGrantedOutcome = asylumCase
-                        .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
-                            FtpaDecisionOutcomeType.class)
-                        .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                        .orElse(false);
-                }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                       && isGrantedOrPartiallyGrantedOutcome
+                       && isGrantedOrPartiallyGrantedOutcome(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
+                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
+                       && !isAipJourney(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentAipJourneyNotificationHandler(
+        @Qualifier("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentAipJourneyNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        // RIA-6116
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
+                           || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
+                       && isGrantedOrPartiallyGrantedOutcome(asylumCase)
+                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
+                       && isAipJourney(asylumCase);
             },
             notificationGenerators
         );

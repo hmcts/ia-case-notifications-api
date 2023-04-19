@@ -2037,6 +2037,34 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentAipJourneyNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedAipJourneyNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+        AppellantRespondentFtpaApplicationDecisionPersonalisationEmail appellantRespondentFtpaApplicationDecisionPersonalisationEmail,
+        AppellantRespondentFtpaApplicationDecisionPersonalisationSms appellantRespondentFtpaApplicationDecisionPersonalisationSms,
+        AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        // RIA-6116
+        List<EmailNotificationPersonalisation> emailPersonalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, appellantRespondentFtpaApplicationDecisionPersonalisationEmail, adminOfficerFtpaDecisionRespondentPersonalisation)
+            : newArrayList(appellantRespondentFtpaApplicationDecisionPersonalisationEmail, adminOfficerFtpaDecisionRespondentPersonalisation);
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                List.of(appellantRespondentFtpaApplicationDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator")
     public List<NotificationGenerator> ftpaDecisionHomeOfficeNotificationFailedNotificationGenerator(
         CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation caseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation,
