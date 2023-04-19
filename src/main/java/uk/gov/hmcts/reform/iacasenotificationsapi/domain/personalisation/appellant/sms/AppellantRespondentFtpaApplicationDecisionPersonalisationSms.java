@@ -21,7 +21,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationSms implem
     private final RecipientsFinder recipientsFinder;
 
     public AppellantRespondentFtpaApplicationDecisionPersonalisationSms(
-        @Value("${govnotify.template.ftpaRespondentDecisionGrantedPartiallyGranted.applicant.sms}") String appellantFtpaRespondentDecisionSmsTemplateId,
+        @Value("${govnotify.template.applicationGranted.otherParty.citizen.sms}") String appellantFtpaRespondentDecisionSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder
     ) {

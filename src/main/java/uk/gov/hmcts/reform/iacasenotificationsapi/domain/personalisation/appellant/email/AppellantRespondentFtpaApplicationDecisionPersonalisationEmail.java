@@ -27,7 +27,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantRespondentFtpaApplicationDecisionPersonalisationEmail(
-        @Value("${govnotify.template.ftpaRespondentDecisionGrantedPartiallyGranted.applicant.email}") String appellantFtpaRespondentDecisionEmailTemplateId,
+        @Value("${govnotify.template.applicationGranted.otherParty.citizen.email}") String appellantFtpaRespondentDecisionEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider

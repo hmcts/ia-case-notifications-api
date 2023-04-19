@@ -530,10 +530,6 @@ govnotify:
     appealDocumentDeletedAfterListing:
       caseOfficer:
         email: aef0bfa4-03ed-431b-87d0-c77124bd5f68
-    ftpaRespondentDecisionGrantedPartiallyGranted:
-      applicant:
-        email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
-        sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationGranted:
       admin:
         email: 9b62eeb8-54ce-47ab-a9fc-f25bc0bab70a
@@ -542,11 +538,17 @@ govnotify:
           email: ff724fb9-2daa-4ed1-9405-5ed389c4df7a
         homeOffice:
           email: d97f959e-7d5f-462a-9b71-2f20086ab44f
+#        citizen: TODO in RIA-6113
+#          email:
+#          sms:
       otherParty:
         legalRep:
           email: bd848684-72e9-4c85-a845-dac52de75bf4
         homeOffice:
           email: bf8caa99-b3b7-4fae-bb0c-2c25f919fb65
+        citizen:
+          email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
+          sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationPartiallyGranted:
       admin:
         email: 5ed2b159-98e3-4878-a75f-f365370cba4d
@@ -555,11 +557,15 @@ govnotify:
           email: 91a8351f-8c6f-425f-9ca6-f41e4055cd71
         homeOffice:
           email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
+#       citizen: TODO in RIA-6113
+#         email:
+#         sms:
       otherParty:
         legalRep:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
         homeOffice:
           email: f6ff1df5-c6b5-4f77-b500-5c461e35dc43
+#       citizen: Same template as for 'granted'
     applicationNotAdmitted:
       applicant:
         legalRep:
