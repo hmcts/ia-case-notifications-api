@@ -538,9 +538,6 @@ govnotify:
           email: ff724fb9-2daa-4ed1-9405-5ed389c4df7a
         homeOffice:
           email: d97f959e-7d5f-462a-9b71-2f20086ab44f
-#        citizen: TODO in RIA-6113
-#          email:
-#          sms:
       otherParty:
         legalRep:
           email: bd848684-72e9-4c85-a845-dac52de75bf4
@@ -557,9 +554,6 @@ govnotify:
           email: 91a8351f-8c6f-425f-9ca6-f41e4055cd71
         homeOffice:
           email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
-#       citizen: TODO in RIA-6113
-#         email:
-#         sms:
       otherParty:
         legalRep:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
@@ -577,6 +571,9 @@ govnotify:
           email: 755da55a-85ec-40b9-9f1c-7e382bdf7c9e
         homeOffice:
           email: 9c70eced-4423-4426-b550-7f858771417d
+        citizen:
+          email: 49a68f8a-8fa6-4803-92fe-aa8fd8287132
+          sms: da5a342b-0d52-4e97-841f-523476d02f42
     applicationRefused:
       applicant:
         legalRep:
@@ -588,6 +585,9 @@ govnotify:
           email: ce7523f4-9244-4b14-b4aa-aa91457e02ce
         homeOffice:
           email: 14d4a6cc-cca3-4718-b1a1-c222b4043ddf
+        citizen:
+          email: 6cdffe24-757f-4d9b-8787-52048325748e
+          sms: 141c8405-d1f6-477a-92cd-0093eb2d32e6
     applicationReheardEnabled:
       caseOfficer:
         email: f273c1cd-ffcd-40a4-a562-9fe12cfe4a33
