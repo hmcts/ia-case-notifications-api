@@ -530,10 +530,6 @@ govnotify:
     appealDocumentDeletedAfterListing:
       caseOfficer:
         email: aef0bfa4-03ed-431b-87d0-c77124bd5f68
-    ftpaRespondentDecisionGrantedPartiallyGranted:
-      applicant:
-        email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
-        sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationGranted:
       admin:
         email: 9b62eeb8-54ce-47ab-a9fc-f25bc0bab70a
@@ -547,6 +543,9 @@ govnotify:
           email: bd848684-72e9-4c85-a845-dac52de75bf4
         homeOffice:
           email: bf8caa99-b3b7-4fae-bb0c-2c25f919fb65
+        citizen:
+          email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
+          sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationPartiallyGranted:
       admin:
         email: 5ed2b159-98e3-4878-a75f-f365370cba4d
@@ -560,6 +559,7 @@ govnotify:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
         homeOffice:
           email: f6ff1df5-c6b5-4f77-b500-5c461e35dc43
+#       citizen: Same template as for 'granted'
     applicationNotAdmitted:
       applicant:
         legalRep:
@@ -571,6 +571,9 @@ govnotify:
           email: 755da55a-85ec-40b9-9f1c-7e382bdf7c9e
         homeOffice:
           email: 9c70eced-4423-4426-b550-7f858771417d
+        citizen:
+          email: 49a68f8a-8fa6-4803-92fe-aa8fd8287132
+          sms: da5a342b-0d52-4e97-841f-523476d02f42
     applicationRefused:
       applicant:
         legalRep:
@@ -582,6 +585,9 @@ govnotify:
           email: ce7523f4-9244-4b14-b4aa-aa91457e02ce
         homeOffice:
           email: 14d4a6cc-cca3-4718-b1a1-c222b4043ddf
+        citizen:
+          email: 6cdffe24-757f-4d9b-8787-52048325748e
+          sms: 141c8405-d1f6-477a-92cd-0093eb2d32e6
     applicationReheardEnabled:
       caseOfficer:
         email: f273c1cd-ffcd-40a4-a562-9fe12cfe4a33
