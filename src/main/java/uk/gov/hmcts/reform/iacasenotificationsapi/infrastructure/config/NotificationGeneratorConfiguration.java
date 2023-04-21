@@ -3391,16 +3391,24 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("removeDetentionStatusInternalNotificationGenerator")
     public List<NotificationGenerator> removeDetentionStatusInternalNotificationGenerator(
+            AppellantRemoveDetainedStatusPersonalisationEmail appellantRemoveDetainedStatusPersonalisationEmail,
+            AppellantRemoveDetainedStatusPersonalisationSms appellantRemoveDetainedStatusPersonalisationSms,
             HomeOfficeRemoveDetentionStatusPersonalisation homeOfficeRemoveDetentionStatusPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
+                                appellantRemoveDetainedStatusPersonalisationEmail,
                                 homeOfficeRemoveDetentionStatusPersonalisation
                         ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantRemoveDetainedStatusPersonalisationSms),
                         notificationSender,
                         notificationIdAppender
                 )

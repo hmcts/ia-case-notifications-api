@@ -351,6 +351,9 @@ public enum AsylumCaseDefinition {
     CONTACT_PREFERENCE(
         "contactPreference", new TypeReference<ContactPreference>(){}),
 
+    CONTACT_PREFERENCE_UN_REP(
+            "contactPreferenceUnRep", new TypeReference<List<String>>(){}),
+
     FEE_UPDATE_RECORDED(
         "feeUpdateRecorded", new TypeReference<CheckValues<String>>(){}),
 
