@@ -1726,7 +1726,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> decisionWithoutHearingHandler(
             @Qualifier("decisionWithoutHearingNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
 
-
         // RIA-6980
         return new NotificationHandler(
                 (callbackStage, callback) ->
