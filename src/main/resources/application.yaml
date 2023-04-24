@@ -1210,8 +1210,8 @@ appellantDaysToWait:
 
 appellantDaysToAskReinstate: 14
 
-ftpaAppellantDaysOoc: 28
-ftpaAppellantDaysUk: 14
+ftpaOutOfCountryDays: 28
+ftpaInCountryDays: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
