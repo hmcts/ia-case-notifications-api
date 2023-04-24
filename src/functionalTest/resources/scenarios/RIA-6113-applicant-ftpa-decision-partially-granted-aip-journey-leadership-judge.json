@@ -1,12 +1,12 @@
 {
-  "description": "RIA-61162 Respondent FTPA application decision granted (AIP journey) - Resident judge",
+  "description": "RIA-61132 Applicant FTPA application decision partially granted (AIP journey) - Leadership judge",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 61162,
-      "eventId": "residentJudgeFtpaDecision",
+      "id": 61132,
+      "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -25,8 +25,8 @@
             }
           ],
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
-          "ftpaRespondentRjDecisionOutcomeType": "granted",
-          "ftpaApplicantType": "respondent",
+          "ftpaAppellantDecisionOutcomeType": "partiallyGranted",
+          "ftpaApplicantType": "appellant",
           "ariaListingReference": "987654321",
           "notificationsSent": []
         }
@@ -41,19 +41,19 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "61162_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "61132_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61162_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+            "id": "61132_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61162_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+            "id": "61132_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61162_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
+            "id": "61132_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -61,9 +61,9 @@
     },
     "notifications": [
       {
-        "reference": "61162_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "61132_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [
           "PA/12345/2019",
           "A1234567",
@@ -72,20 +72,20 @@
         ]
       },
       {
-        "reference": "61162_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+        "reference": "61132_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum: The Home Office application was granted",
+        "subject": "Immigration and Asylum: The Home Office application was partially granted",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "Talha Awan",
-          "The Home Office application for permission to appeal to the Upper Tribunal has been granted."
+          "Your application for permission to appeal to the Upper Tribunal has been partially granted."
         ]
       },
       {
-        "reference": "61162_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+        "reference": "61132_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
         "recipient": "{$ctscAdminFtpaDecisionEmailAddress}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [
           "PA/12345/2019",
           "987654321",
@@ -94,12 +94,12 @@
         ]
       },
       {
-        "reference": "61162_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
+        "reference": "61132_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "The Home Office application for permission to appeal to the Upper Tribunal has been granted",
+          "Your application for permission to appeal to the Upper Tribunal has been partially granted",
           "{$iaAipFrontendUrl}"
         ]
       }
