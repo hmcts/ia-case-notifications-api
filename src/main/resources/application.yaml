@@ -648,14 +648,14 @@ govnotify:
     reinstateAppeal:
       legalRep:
         beforeListing:
-          email: 64a6c31c-5c7b-486d-8fdd-d51e72d2aec0
+          email: 28f1eb01-16e0-4ec8-a783-05c5754cdbe8
         afterListing:
-          email: 10d1ab62-f521-4cdc-8778-ca9202299776
+          email: 222e5fcd-b6a5-41ac-a3be-f1d849b96dac
       homeOffice:
         beforeListing:
-          email: e91c46b7-5cd1-4a58-a22a-76d3986c47fa
+          email: 18deee1b-635a-4821-8119-34c146e14c03
         afterListing:
-          email: 50f69e87-5e12-45ca-bdce-d4620ec1d511
+          email: 15242842-2a21-4ac2-921c-1b125efe0dba
       appellant:
         beforeListing:
           email: cdae7658-29d9-48ce-a477-1e542b7d3c8b
