@@ -12,6 +12,7 @@
         "replacements": {
           "journeyType": "aip",
           "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
           "subscriptions": [
             {
               "id": "1",
@@ -45,8 +46,8 @@
     "notifications": [
       {
         "reference": "6980_DECISION_WITHOUT_HEARING_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.hattonCross}",
-        "subject": "Immigration and Asylum appeal: This appeal will be decided without a hearing\n",
+        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
+        "subject": "Immigration and Asylum appeal: This appeal will be decided without a hearing",
         "body": [
           "PA/12345/2019",
           "A1234567",

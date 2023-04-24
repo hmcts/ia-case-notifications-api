@@ -1009,6 +1009,7 @@ security:
       - "manageFeeUpdate"
       - "recordOutOfTimeDecision"
       - "markAppealPaid"
+      - "decisionWithoutHearing"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
