@@ -1828,25 +1828,12 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                boolean isGrantedOrPartiallyGrantedOutcome = asylumCase
-                    .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                    .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                    .orElse(false);
-
-                if (!isGrantedOrPartiallyGrantedOutcome) {
-                    isGrantedOrPartiallyGrantedOutcome = asylumCase
-                        .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
-                            FtpaDecisionOutcomeType.class)
-                        .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
-                        .orElse(false);
-                }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                       && isGrantedOrPartiallyGrantedOutcome
+                       && isGrantedOrPartiallyGrantedOutcome(asylumCase,
+                    FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT")
                        && !isAipJourney(asylumCase);
@@ -1872,7 +1859,7 @@ public class NotificationHandlerConfiguration {
                        && isGrantedOrPartiallyGrantedOutcome(asylumCase,
                     FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL")
+                    "_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL")
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS")
                        && isAipJourney(asylumCase);

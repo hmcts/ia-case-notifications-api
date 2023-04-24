@@ -210,7 +210,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+        assertEquals(caseId + "_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
             appellantFtpaApplicationDecisionPersonalisationEmail.getReferenceId(caseId));
     }
 

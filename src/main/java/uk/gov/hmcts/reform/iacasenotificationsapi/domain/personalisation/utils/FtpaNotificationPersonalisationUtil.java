@@ -12,8 +12,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOu
 
 public interface FtpaNotificationPersonalisationUtil {
 
-    final static String APPELLANT_APPLICANT = "appellant";
-    final static String APPELLANT_RESPONDENT = "respondent";
+    String APPELLANT_APPLICANT = "appellant";
+    String APPELLANT_RESPONDENT = "respondent";
 
     default Optional<FtpaDecisionOutcomeType> ftpaRespondentLjRjDecision(AsylumCase asylumCase) {
         return asylumCase
@@ -55,7 +55,7 @@ public interface FtpaNotificationPersonalisationUtil {
         if (applicantType.equals(APPELLANT_APPLICANT)) {
             decisionOutcomeType = ftpaAppellantLjRjDecision(asylumCase)
                 .orElseThrow(() -> new IllegalStateException("ftpaAppellantDecisionOutcomeType is not present"));
-        } else if (applicantType.equals(APPELLANT_RESPONDENT)){
+        } else if (applicantType.equals(APPELLANT_RESPONDENT)) {
             decisionOutcomeType = ftpaRespondentLjRjDecision(asylumCase)
                 .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present"));
         } else {

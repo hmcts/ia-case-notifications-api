@@ -45,7 +45,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61162_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+            "id": "61162_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
@@ -72,7 +72,7 @@
         ]
       },
       {
-        "reference": "61162_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+        "reference": "61162_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum: The Home Office application was granted",
         "body": [
