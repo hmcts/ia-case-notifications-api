@@ -1972,6 +1972,33 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantAipJourneyNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantAipJourneyNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+        AppellantFtpaApplicationDecisionPersonalisationEmail appellantFtpaApplicationDecisionPersonalisationEmail,
+        AppellantFtpaApplicationDecisionPersonalisationSms appellantFtpaApplicationDecisionPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        //RIA-3116 leadership/resident judge decision
+        List<EmailNotificationPersonalisation> emailPersonalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation, appellantFtpaApplicationDecisionPersonalisationEmail)
+            : newArrayList(appellantFtpaApplicationDecisionPersonalisationEmail);
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                List.of(appellantFtpaApplicationDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedAppellantNotificationGenerator")
     public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyAppellantGrantedNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,

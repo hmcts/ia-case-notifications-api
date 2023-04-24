@@ -1,7 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.FtpaNotificationPersonalisationUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -18,25 +21,37 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNotificationPersonalisation, FtpaNotificationPersonalisationUtil {
 
     private final String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
-    private final String ftpaRespondentDecisionGrantedNotAdmittedToAppellantSmsTemplateId;
-    private final String ftpaRespondentDecisionGrantedRefusedToAppellantSmsTemplateId;
+    private final String ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId;
+    private final String ftpaRespondentDecisionRefusedToAppellantSmsTemplateId;
     private final String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
+    private final String ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId;
+    private final String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
+    private final String oocDays;
+    private final String inCountryDays;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantFtpaApplicationDecisionPersonalisationSms(
         @Value("${govnotify.template.applicationGranted.otherParty.citizen.sms}") String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId,
-        @Value("${govnotify.template.applicationNotAdmitted.otherParty.citizen.sms}") String ftpaRespondentDecisionGrantedNotAdmittedToAppellantSmsTemplateId,
-        @Value("${govnotify.template.applicationRefused.otherParty.citizen.sms}") String ftpaRespondentDecisionGrantedRefusedToAppellantSmsTemplateId,
+        @Value("${govnotify.template.applicationNotAdmitted.otherParty.citizen.sms}") String ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId,
+        @Value("${govnotify.template.applicationRefused.otherParty.citizen.sms}") String ftpaRespondentDecisionRefusedToAppellantSmsTemplateId,
         @Value("${govnotify.template.applicationGranted.applicant.citizen.sms}") String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId,
+        @Value("${govnotify.template.applicationNotAdmitted.applicant.citizen.sms}") String ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId,
+        @Value("${govnotify.template.applicationRefused.applicant.citizen.sms}") String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        @Value("${ftpaOutOfCountryDays}") int oocDays,
+        @Value("${ftpaInCountryDays}") int inCountryDays,
         RecipientsFinder recipientsFinder
     ) {
         this.ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId = ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
-        this.ftpaRespondentDecisionGrantedNotAdmittedToAppellantSmsTemplateId = ftpaRespondentDecisionGrantedNotAdmittedToAppellantSmsTemplateId;
-        this.ftpaRespondentDecisionGrantedRefusedToAppellantSmsTemplateId = ftpaRespondentDecisionGrantedRefusedToAppellantSmsTemplateId;
+        this.ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId = ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId;
+        this.ftpaRespondentDecisionRefusedToAppellantSmsTemplateId = ftpaRespondentDecisionRefusedToAppellantSmsTemplateId;
         this.ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId = ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
+        this.ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId = ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId;
+        this.ftpaAppellantDecisionRefusedToAppellantSmsTemplateId = ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.oocDays = String.valueOf(oocDays);
+        this.inCountryDays = String.valueOf(inCountryDays);
         this.recipientsFinder = recipientsFinder;
     }
 
@@ -52,9 +67,13 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
                     ? ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
             case FTPA_REFUSED:
-                return ftpaRespondentDecisionGrantedRefusedToAppellantSmsTemplateId;
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionRefusedToAppellantSmsTemplateId
+                    : ftpaRespondentDecisionRefusedToAppellantSmsTemplateId;
             default:
-                return ftpaRespondentDecisionGrantedNotAdmittedToAppellantSmsTemplateId;
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId
+                    : ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId;
         }
     }
 
@@ -76,6 +95,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("applicationDecision", ftpaDecisionVerbalization(getDecisionOutcomeType(asylumCase)))
             .put("linkToService", iaAipFrontendUrl)
+            .put("dueDate", asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)
+                .map(inUk -> inUk.equals(YES) ? inCountryDays : oocDays).orElse(""))
             .build();
     }
 }

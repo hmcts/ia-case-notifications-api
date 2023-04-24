@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
@@ -15,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDec
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.util.Collections;
 import java.util.Map;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -58,7 +61,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     private String respondentNotAdmittedEmailTemplateId = "respondentNotAdmittedEmailTemplateId";
     private String respondentRefusedEmailTemplateId = "respondentRefusedEmailTemplateId";
     private String appellantGrantedPartiallyGrantedEmailTemplateId = "appellantGrantedPartiallyGrantedEmailTemplateId";
+    private String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
+    private String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
     private String mockedAppellantMobilePhone = "07123456789";
+    private int oocDays = 28;
+    private int inCountryDays = 14;
 
     private AppellantFtpaApplicationDecisionPersonalisationSms appellantFtpaApplicationDecisionPersonalisationSms;
 
@@ -69,7 +76,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
             respondentNotAdmittedEmailTemplateId,
             respondentRefusedEmailTemplateId,
             appellantGrantedPartiallyGrantedEmailTemplateId,
+            appellantNotAdmittedEmailTemplateId,
+            appellantRefusedEmailTemplateId,
             iaAipFrontendUrl,
+            oocDays,
+            inCountryDays,
             recipientsFinder);
     }
 
@@ -132,13 +143,13 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
         if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
 
-            assertEquals(respondentNotAdmittedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+            assertEquals(appellantNotAdmittedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
         }
 
         if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
 
-            assertEquals(respondentRefusedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+            assertEquals(appellantRefusedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
         }
     }
 
@@ -184,7 +195,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
             "", //email
             YesOrNo.NO, // wants email
             mockedAppellantMobilePhone, //mobileNumber
-            YesOrNo.YES // wants sms
+            YES // wants sms
         );
 
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS)).thenCallRealMethod();
@@ -251,7 +262,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     }
 
     @Test
-    public void should_return_personalisation() {
+    public void should_return_personalisation_for_respondent_ftpa_decision() {
         when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("respondent"));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FTPA_GRANTED));
 
@@ -261,5 +272,21 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
 
         assertEquals(referenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_for_appellant_ftpa_decision(YesOrNo appellantInUk) {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("appellant"));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FTPA_REFUSED));
+        when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(appellantInUk));
+
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(referenceNumber));
+        Map<String, String> personalisation =
+            appellantFtpaApplicationDecisionPersonalisationSms.getPersonalisation(asylumCase);
+
+        assertEquals(referenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        assertEquals(appellantInUk.equals(YES) ? "14" : "28", personalisation.get("dueDate"));
     }
 }
