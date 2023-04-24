@@ -2031,6 +2031,33 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentAipJourneyNotificationGenerator")
+    public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentAipJourneyNotificationGenerator(
+        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+        AppellantRespondentFtpaApplicationDecisionPersonalisationEmail appellantRespondentFtpaApplicationDecisionPersonalisationEmail,
+        AppellantRespondentFtpaApplicationDecisionPersonalisationSms appellantRespondentFtpaApplicationDecisionPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        // RIA-6135
+        List<EmailNotificationPersonalisation> emailPersonalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation, appellantRespondentFtpaApplicationDecisionPersonalisationEmail)
+            : newArrayList(appellantRespondentFtpaApplicationDecisionPersonalisationEmail);
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                List.of(appellantRespondentFtpaApplicationDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
     public List<NotificationGenerator> ftpaApplicationDecisionGrantedOrPartiallyRespondentGrantedNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
