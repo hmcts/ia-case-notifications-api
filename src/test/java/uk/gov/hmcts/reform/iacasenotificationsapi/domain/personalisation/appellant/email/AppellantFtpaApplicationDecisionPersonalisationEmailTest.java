@@ -9,6 +9,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
@@ -21,6 +24,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDec
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +49,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @SuppressWarnings("unchecked")
-public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest {
+public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -54,9 +58,10 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
     CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
-    private String grantedPartiallyGrantedEmailTemplateId = "grantedPartiallyGrantedEmailTemplateId";
-    private String notAdmittedEmailTemplateId = "notAdmittedEmailTemplateId";
-    private String refusedEmailTemplateId = "refusedEmailTemplateId";
+    private String respondentGrantedPartiallyGrantedEmailTemplateId = "grantedPartiallyGrantedEmailTemplateId";
+    private String respondentNotAdmittedEmailTemplateId = "notAdmittedEmailTemplateId";
+    private String respondentRefusedEmailTemplateId = "refusedEmailTemplateId";
+    private String appellantGrantedPartiallyGrantedEmailTemplateId = "grantedPartiallyGrantedEmailTemplateId";
 
     private String iaAipFrontendUrl = "http://localhost";
 
@@ -72,8 +77,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
 
-
-    private AppellantRespondentFtpaApplicationDecisionPersonalisationEmail appellantRespondentFtpaApplicationDecisionPersonalisationEmail;
+    private AppellantFtpaApplicationDecisionPersonalisationEmail appellantFtpaApplicationDecisionPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
@@ -89,10 +93,11 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
                 "customerServicesEmail", customerServicesEmail
             ));
 
-        appellantRespondentFtpaApplicationDecisionPersonalisationEmail = new AppellantRespondentFtpaApplicationDecisionPersonalisationEmail(
-            grantedPartiallyGrantedEmailTemplateId,
-            notAdmittedEmailTemplateId,
-            refusedEmailTemplateId,
+        appellantFtpaApplicationDecisionPersonalisationEmail = new AppellantFtpaApplicationDecisionPersonalisationEmail(
+            respondentGrantedPartiallyGrantedEmailTemplateId,
+            respondentNotAdmittedEmailTemplateId,
+            respondentRefusedEmailTemplateId,
+            appellantGrantedPartiallyGrantedEmailTemplateId,
             iaAipFrontendUrl,
             recipientsFinder,
             customerServicesProvider);
@@ -113,7 +118,8 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
 
     @ParameterizedTest
     @MethodSource("decisionScenarios")
-    public void should_return_given_template_id(Optional<FtpaDecisionOutcomeType> ljDecision, Optional<FtpaDecisionOutcomeType> rjDecision) {
+    public void should_return_given_template_id_for_respondent_ftpa_decision(Optional<FtpaDecisionOutcomeType> ljDecision, Optional<FtpaDecisionOutcomeType> rjDecision) {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("respondent"));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(ljDecision);
         when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(rjDecision);
 
@@ -122,26 +128,90 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
             || ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
 
-            assertEquals(grantedPartiallyGrantedEmailTemplateId, appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            assertEquals(respondentGrantedPartiallyGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
         }
 
         if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
 
-            assertEquals(notAdmittedEmailTemplateId, appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            assertEquals(respondentNotAdmittedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
         }
 
         if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
 
-            assertEquals(refusedEmailTemplateId, appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            assertEquals(respondentRefusedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("decisionScenarios")
+    public void should_return_given_template_id_for_appellant_ftpa_decision(Optional<FtpaDecisionOutcomeType> ljDecision, Optional<FtpaDecisionOutcomeType> rjDecision) {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("appellant"));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(ljDecision);
+        when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(rjDecision);
+
+        if (ljDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
+            || rjDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
+            || ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
+            || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
+
+            assertEquals(respondentGrantedPartiallyGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        }
+
+        if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
+            || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
+
+            assertEquals(respondentNotAdmittedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        }
+
+        if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
+            || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
+
+            assertEquals(respondentRefusedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        }
+    }
+
+    @Test
+    public void should_throw_error_if_ftpa_applicant_type_missing() {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("ftpaApplicantType is not present");
+    }
+
+    @Test
+    public void should_throw_error_if_applicant_type_appellant_and_ftpa_appellant_decision_missing() {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("appellant"));
+        when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("ftpaAppellantDecisionOutcomeType is not present");
+    }
+
+    @Test
+    public void should_throw_error_if_applicant_type_respondent_and_ftpa_respondent_decision_missing() {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("respondent"));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("ftpaRespondentDecisionOutcomeType is not present");
+    }
+
+    @Test
+    public void should_throw_error_if_applicant_type_is_neither_respondent_nor_appellant() {
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("thirdOption")); //not allowed applicant type
+        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("applicantType not of type appellant or respondent");
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
-            appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getReferenceId(caseId));
+            appellantFtpaApplicationDecisionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -159,7 +229,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
         when(asylumCase.read(SUBSCRIPTIONS))
             .thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
 
-        assertTrue(appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getRecipientsList(asylumCase)
+        assertTrue(appellantFtpaApplicationDecisionPersonalisationEmail.getRecipientsList(asylumCase)
             .contains(mockedAppellantEmail));
     }
 
@@ -168,7 +238,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getRecipientsList(null))
+        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -176,10 +246,12 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE)).thenReturn(Optional.of(FTPA_GRANTED));
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("respondent"));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_GRANTED));
 
         Map<String, String> personalisation =
-            appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
@@ -195,35 +267,46 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
     @ParameterizedTest
     @MethodSource("decisionScenarios")
     public void should_correctly_provide_appropriate_phrasing_when_decision_made(Optional<FtpaDecisionOutcomeType> ljDecision, Optional<FtpaDecisionOutcomeType> rjDecision) {
-        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(ljDecision);
-        when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(rjDecision);
+        Set.of("respondent", "appellant")
+            .forEach(applicantType -> {
 
-        Map<String, String> personalisation =
-            appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
+                when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of(applicantType));
 
-        if (ljDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
-            || rjDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)) {
+                if (applicantType.equals("respondent")) {
+                    when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(ljDecision);
+                    when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(rjDecision);
+                } else if (applicantType.equals("appellant")) {
+                    when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(ljDecision);
+                    when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(rjDecision);
+                }
 
-            assertEquals("granted", personalisation.get("applicationDecision"));
-        }
+                Map<String, String> personalisation =
+                    appellantFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
-        if (ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
-            || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
+                if (ljDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
+                    || rjDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)) {
 
-            assertEquals("partially granted", personalisation.get("applicationDecision"));
-        }
+                    assertEquals("granted", personalisation.get("applicationDecision"));
+                }
 
-        if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
-            || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
+                if (ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
+                    || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
 
-            assertEquals("not admitted", personalisation.get("applicationDecision"));
-        }
+                    assertEquals("partially granted", personalisation.get("applicationDecision"));
+                }
 
-        if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
-            || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
+                if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
+                    || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
 
-            assertEquals("refused", personalisation.get("applicationDecision"));
-        }
+                    assertEquals("not admitted", personalisation.get("applicationDecision"));
+                }
+
+                if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
+                    || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
+
+                    assertEquals("refused", personalisation.get("applicationDecision"));
+                }
+            });
     }
 
     @Test
@@ -233,15 +316,18 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmailTest 
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("respondent"));
+        when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
+            .thenReturn(Optional.of(FTPA_GRANTED));
 
         Map<String, String> personalisation =
-            appellantRespondentFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("appealReferenceNumber"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals("", personalisation.get("applicationDecision"));
+        assertEquals("granted", personalisation.get("applicationDecision"));
     }
 }

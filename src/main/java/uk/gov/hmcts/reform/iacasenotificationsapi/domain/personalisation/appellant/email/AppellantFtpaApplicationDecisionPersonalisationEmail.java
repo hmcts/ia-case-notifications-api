@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
@@ -13,7 +14,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.FtpaNotificationPersonalisationUtil;
@@ -21,19 +21,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail implements EmailNotificationPersonalisation, FtpaNotificationPersonalisationUtil {
+public class AppellantFtpaApplicationDecisionPersonalisationEmail implements EmailNotificationPersonalisation, FtpaNotificationPersonalisationUtil {
 
     private final String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
     private final String ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
     private final String ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
+    private final String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public AppellantRespondentFtpaApplicationDecisionPersonalisationEmail(
+    public AppellantFtpaApplicationDecisionPersonalisationEmail(
         @Value("${govnotify.template.applicationGranted.otherParty.citizen.email}") String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationNotAdmitted.otherParty.citizen.email}") String ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationRefused.otherParty.citizen.email}") String ftpaRespondentDecisionRefusedToAppellantEmailTemplateId,
+        @Value("${govnotify.template.applicationGranted.applicant.citizen.email}") String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider
@@ -41,6 +43,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
         this.ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId = ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
         this.ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId = ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
         this.ftpaRespondentDecisionRefusedToAppellantEmailTemplateId = ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
+        this.ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId = ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -48,13 +51,16 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        FtpaDecisionOutcomeType decisionOutcomeType = ftpaRespondentLjRjDecision(asylumCase)
-            .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present"));
 
-        switch (decisionOutcomeType) {
+        String applicantType = asylumCase.read(FTPA_APPLICANT_TYPE, String.class)
+            .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"));
+
+        switch (getDecisionOutcomeType(asylumCase)) {
             case FTPA_GRANTED:
             case FTPA_PARTIALLY_GRANTED:
-                return ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId
+                    : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
             case FTPA_REFUSED:
                 return ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
             default:
@@ -69,7 +75,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_RESPONDENT_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL";
+        return caseId + "_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL";
     }
 
     @Override
@@ -90,7 +96,7 @@ public class AppellantRespondentFtpaApplicationDecisionPersonalisationEmail impl
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
-                .put("applicationDecision", ftpaDecisionVerbalization(asylumCase))
+                .put("applicationDecision", ftpaDecisionVerbalization(getDecisionOutcomeType(asylumCase)))
                 .build();
     }
 
