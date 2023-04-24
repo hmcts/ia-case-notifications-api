@@ -817,6 +817,9 @@ govnotify:
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
         sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
+    decisionWithoutHearing:
+      homeOffice:
+        email: e973baa6-71fa-47f7-8991-4a554b4490ba
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1031,16 +1034,19 @@ security:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
+      - "decisionWithoutHearing"
     caseworker-ia-homeofficelart:
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
+      - "decisionWithoutHearing"
     caseworker-ia-homeofficepou:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
+      - "decisionWithoutHearing"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"
