@@ -359,7 +359,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
 //    compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: versions.reformHealthStarter
-
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
 
