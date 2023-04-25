@@ -27,8 +27,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
     private final String ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId;
     private final String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
-    private final String oocDays;
-    private final String inCountryDays;
+    private final long oocDays;
+    private final long inCountryDays;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantFtpaApplicationDecisionPersonalisationSms(
@@ -39,8 +39,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
         @Value("${govnotify.template.applicationNotAdmitted.applicant.citizen.sms}") String ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId,
         @Value("${govnotify.template.applicationRefused.applicant.citizen.sms}") String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        @Value("${ftpaOutOfCountryDays}") int oocDays,
-        @Value("${ftpaInCountryDays}") int inCountryDays,
+        @Value("${ftpaOutOfCountryDays}") long oocDays,
+        @Value("${ftpaInCountryDays}") long inCountryDays,
         RecipientsFinder recipientsFinder
     ) {
         this.ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId = ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
@@ -50,8 +50,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
         this.ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId = ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId;
         this.ftpaAppellantDecisionRefusedToAppellantSmsTemplateId = ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
-        this.oocDays = String.valueOf(oocDays);
-        this.inCountryDays = String.valueOf(inCountryDays);
+        this.oocDays = oocDays;
+        this.inCountryDays = inCountryDays;
         this.recipientsFinder = recipientsFinder;
     }
 
@@ -96,7 +96,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
             .put("applicationDecision", ftpaDecisionVerbalization(getDecisionOutcomeType(asylumCase)))
             .put("linkToService", iaAipFrontendUrl)
             .put("dueDate", asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)
-                .map(inUk -> inUk.equals(YES) ? inCountryDays : oocDays).orElse(""))
+                .map(inUk -> inUk.equals(YES) ? dueDate(inCountryDays) : dueDate(oocDays)).orElse(""))
             .build();
     }
 }
