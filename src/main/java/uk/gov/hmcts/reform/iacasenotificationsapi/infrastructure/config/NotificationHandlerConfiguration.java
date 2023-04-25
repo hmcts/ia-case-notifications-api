@@ -2475,7 +2475,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                  callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                          && callback.getEvent() == Event.REINSTATE_APPEAL
-                         && isRepJourney(callback.getCaseDetails().getCaseData()),
+                         && isRepJourney(callback.getCaseDetails().getCaseData())
+                         && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -2489,6 +2490,19 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.REINSTATE_APPEAL
                                 && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> reinstateAppealInternalNotificationHandler(
+            @Qualifier("reinstateAppealInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.REINSTATE_APPEAL
+                                && isInternalCase(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
     }
