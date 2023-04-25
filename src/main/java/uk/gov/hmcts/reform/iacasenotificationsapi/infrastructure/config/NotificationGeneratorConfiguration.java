@@ -2456,6 +2456,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("reinstateAppealInternalNotificationGenerator")
+    public List<NotificationGenerator> reinstateAppealInternalNotificationHandler(
+            HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeReinstateAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("makeAnApplicationNotificationGenerator")
     public List<NotificationGenerator> makeAnApplicationNotificationHandler(
             LegalRepresentativeMakeAnApplicationPersonalisation legalRepresentativeMakeApplicationPersonalisation,
