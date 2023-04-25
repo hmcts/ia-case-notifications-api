@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
@@ -20,6 +21,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDec
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.*;
 
 import java.util.Collections;
 import java.util.Map;
@@ -31,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -58,10 +61,13 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
 
     private Long caseId = 12345L;
-    private String respondentGrantedPartiallyGrantedEmailTemplateId = "grantedPartiallyGrantedEmailTemplateId";
-    private String respondentNotAdmittedEmailTemplateId = "notAdmittedEmailTemplateId";
-    private String respondentRefusedEmailTemplateId = "refusedEmailTemplateId";
-    private String appellantGrantedPartiallyGrantedEmailTemplateId = "grantedPartiallyGrantedEmailTemplateId";
+    private String respondentGrantedPartiallyGrantedEmailTemplateId = "respondentGrantedPartiallyGrantedEmailTemplateId";
+    private String respondentNotAdmittedEmailTemplateId = "respondentNotAdmittedEmailTemplateId";
+    private String respondentRefusedEmailTemplateId = "respondentRefusedEmailTemplateId";
+    private String appellantGrantedPartiallyGrantedEmailTemplateId = "appellantGrantedPartiallyGrantedEmailTemplateId";
+    private String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
+    private String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
+
 
     private String iaAipFrontendUrl = "http://localhost";
 
@@ -76,6 +82,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     private String appellantFamilyName = "someAppellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
+    private int oocDays = 28;
+    private int inCountryDays = 14;
 
     private AppellantFtpaApplicationDecisionPersonalisationEmail appellantFtpaApplicationDecisionPersonalisationEmail;
 
@@ -98,7 +106,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
             respondentNotAdmittedEmailTemplateId,
             respondentRefusedEmailTemplateId,
             appellantGrantedPartiallyGrantedEmailTemplateId,
+            appellantNotAdmittedEmailTemplateId,
+            appellantRefusedEmailTemplateId,
             iaAipFrontendUrl,
+            oocDays,
+            inCountryDays,
             recipientsFinder,
             customerServicesProvider);
     }
@@ -156,19 +168,19 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
             || ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
 
-            assertEquals(respondentGrantedPartiallyGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            assertEquals(appellantGrantedPartiallyGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
         }
 
         if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
 
-            assertEquals(respondentNotAdmittedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            assertEquals(appellantNotAdmittedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
         }
 
         if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
 
-            assertEquals(respondentRefusedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            assertEquals(appellantRefusedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
         }
     }
 
@@ -220,9 +232,9 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             mockedAppellantEmail, //email
-            YesOrNo.YES, // wants email
+            YES, // wants email
             mockedAppellantMobilePhone, //mobileNumber
-            YesOrNo.YES // wants sms
+            YES // wants sms
         );
 
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenCallRealMethod();
@@ -244,11 +256,13 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     }
 
 
-    @Test
-    public void should_return_personalisation_when_all_information_given() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_information_given(YesOrNo appellantInUk) {
         when(asylumCase.read(FTPA_APPLICANT_TYPE, String.class)).thenReturn(Optional.of("respondent"));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(FTPA_GRANTED));
+        when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(appellantInUk));
 
         Map<String, String> personalisation =
             appellantFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
@@ -261,6 +275,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         assertEquals("\nListing reference: " + mockedAriaListingReferenceNumber,
             personalisation.get("listingReferenceLine"));
         assertNotNull(personalisation.get("applicationDecision"));
+        assertEquals(appellantInUk.equals(YES) ? "14" : "28", personalisation.get("dueDate"));
 
     }
 
@@ -329,5 +344,6 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
         assertEquals("granted", personalisation.get("applicationDecision"));
+        assertEquals("", personalisation.get("dueDate"));
     }
 }

@@ -4,9 +4,11 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.FtpaNotificationPersonalisationUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -27,7 +30,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
     private final String ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
     private final String ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
     private final String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
+    private final String ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId;
+    private final String ftpaAppellantDecisionRefusedToAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
+    private final String oocDays;
+    private final String inCountryDays;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
@@ -36,7 +43,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         @Value("${govnotify.template.applicationNotAdmitted.otherParty.citizen.email}") String ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationRefused.otherParty.citizen.email}") String ftpaRespondentDecisionRefusedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationGranted.applicant.citizen.email}") String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId,
+        @Value("${govnotify.template.applicationNotAdmitted.applicant.citizen.email}") String ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId,
+        @Value("${govnotify.template.applicationRefused.applicant.citizen.email}") String ftpaAppellantDecisionRefusedToAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        @Value("${ftpaOutOfCountryDays}") int oocDays,
+        @Value("${ftpaInCountryDays}") int inCountryDays,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -44,7 +55,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         this.ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId = ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
         this.ftpaRespondentDecisionRefusedToAppellantEmailTemplateId = ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
         this.ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId = ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
+        this.ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId = ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId;
+        this.ftpaAppellantDecisionRefusedToAppellantEmailTemplateId = ftpaAppellantDecisionRefusedToAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.oocDays = String.valueOf(oocDays);
+        this.inCountryDays = String.valueOf(inCountryDays);
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
@@ -62,9 +77,13 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
                     ? ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
             case FTPA_REFUSED:
-                return ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionRefusedToAppellantEmailTemplateId
+                    : ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
             default:
-                return ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId
+                    : ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
         }
     }
 
@@ -97,6 +116,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
                 .put("applicationDecision", ftpaDecisionVerbalization(getDecisionOutcomeType(asylumCase)))
+                .put("dueDate", asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)
+                    .map(inUk -> inUk.equals(YES) ? inCountryDays : oocDays).orElse(""))
                 .build();
     }
 
