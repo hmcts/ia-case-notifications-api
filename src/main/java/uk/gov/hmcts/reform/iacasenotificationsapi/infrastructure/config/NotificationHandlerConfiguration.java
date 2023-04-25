@@ -1805,29 +1805,41 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                boolean isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                    .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                    .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
-                    .orElse(false);
-                if (!isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome) {
-                    isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                        .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
-                            FtpaDecisionOutcomeType.class)
-                        .map(
-                            decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                        || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                        || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
-                        .orElse(false);
-                }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                       && isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome
+                       && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
+                    FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
+                    "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT")
+                       && !isAipJourney(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantAipJourneyNotificationHandler(
+        @Qualifier("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantAipJourneyNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        //RIA-3631 leadership/resident judge decision
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
+                           || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
+                       && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
+                    FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
+                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                    "_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL")
+                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                    "_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS")
+                       && isAipJourney(asylumCase);
             },
             notificationGenerators
         );
@@ -2003,7 +2015,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                       && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase)
+                       && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
+                    FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && !isAipJourney(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
@@ -2026,7 +2039,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                       && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase)
+                       && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
+                    FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && isAipJourney(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
@@ -2035,9 +2049,23 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    private boolean isNotAdmittedOrRefusesOrRemade32Outcome(AsylumCase asylumCase) {
+    /**
+     * To find if the decision outcome was not admitted or refused or remade-32. It checks the leadership judge outcome,
+     * if not present, it checks the resident judge outcome. The parameters should be both of type appellant or both
+     * of type respondent.
+     * @param asylumCase The asylum case
+     * @param ftpaByWhoLjDecisionOutcomeType leadership judge decision on ftpa application by appellant or respondent,
+     *                                       FTPA_APPELLANT_DECISION_OUTCOME_TYPE or FTPA_RESPONDENT_DECISION_OUTCOME_TYPE
+     * @param ftpaByWhoRjDecisionOutcomeType resident judge decision on ftpa application by appellant or respondent,
+     *                                       FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE or FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE
+     * @return true if either the first (or if missing then the second) parameter is FTPA_NOT_ADMITTED or FTPA_REFUSED or FTPA_REMADE32
+     */
+    private boolean isNotAdmittedOrRefusesOrRemade32Outcome(AsylumCase asylumCase,
+                                                            AsylumCaseDefinition ftpaByWhoLjDecisionOutcomeType,
+                                                            AsylumCaseDefinition ftpaByWhoRjDecisionOutcomeType) {
+
         boolean isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+            .read(ftpaByWhoLjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
             .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
                              || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
                              || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
@@ -2045,8 +2073,7 @@ public class NotificationHandlerConfiguration {
 
         if (!isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome) {
             isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
-                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
-                    FtpaDecisionOutcomeType.class)
+                .read(ftpaByWhoRjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
                 .map(
                     decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
                                 || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
@@ -2057,6 +2084,17 @@ public class NotificationHandlerConfiguration {
         return isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome;
     }
 
+    /**
+     * To find if the decision outcome was granted or partially granted. It checks the leadership judge outcome,
+     * if not present, it checks the resident judge outcome. The parameters should be both of type appellant or both
+     * of type respondent.
+     * @param asylumCase The asylum case
+     * @param ftpaByWhoLjDecisionOutcomeType leadership judge decision on ftpa application by appellant or respondent,
+     *                                       FTPA_APPELLANT_DECISION_OUTCOME_TYPE or FTPA_RESPONDENT_DECISION_OUTCOME_TYPE
+     * @param ftpaByWhoRjDecisionOutcomeType resident judge decision on ftpa application by appellant or respondent,
+     *                                       FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE or FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE
+     * @return true if either the first (or if missing then the second) parameter is FTPA_GRANTED or FTPA_PARTIALLY_GRANTED
+     */
     private boolean isGrantedOrPartiallyGrantedOutcome(AsylumCase asylumCase,
                                                        AsylumCaseDefinition ftpaByWhoLjDecisionOutcomeType,
                                                        AsylumCaseDefinition ftpaByWhoRjDecisionOutcomeType) {

@@ -569,6 +569,9 @@ govnotify:
           email: f22b0a18-9487-4f86-9bf5-45ebfa6c882c
         homeOffice:
           email: 9cd8317c-3c89-43cc-b106-5c44041e9298
+        citizen:
+          email: bff3142f-c738-4625-8fae-911405a8c076
+          sms: 21f40d4c-4157-4e00-8cb3-01ad09cced0a
       otherParty:
         legalRep:
           email: 755da55a-85ec-40b9-9f1c-7e382bdf7c9e
@@ -583,6 +586,9 @@ govnotify:
           email: 5e031048-eeed-4754-98c1-b6cff789d407
         homeOffice:
           email: fcbe9da1-628b-4661-9128-4e57f1f5e21d
+        citizen:
+          email: 0809b13f-86ac-40eb-be80-ada12aaaa811
+          sms: e54d5a6a-7986-49fb-88e6-27f52baa9ed6
       otherParty:
         legalRep:
           email: ce7523f4-9244-4b14-b4aa-aa91457e02ce
@@ -1207,6 +1213,9 @@ appellantDaysToWait:
   afterHearingRequirementsSubmitted: 14
 
 appellantDaysToAskReinstate: 14
+
+ftpaOutOfCountryDays: 28
+ftpaInCountryDays: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
