@@ -41,7 +41,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "61341_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "61341_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
