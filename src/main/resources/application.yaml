@@ -1041,19 +1041,16 @@ security:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
-      - "decisionWithoutHearing"
     caseworker-ia-homeofficelart:
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
-      - "decisionWithoutHearing"
     caseworker-ia-homeofficepou:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
-      - "decisionWithoutHearing"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"
