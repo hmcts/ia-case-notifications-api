@@ -1,5 +1,5 @@
 {
-  "description": "RIA-61343 Respondent FTPA application decision refused (AIP journey) - Leadership judge",
+  "description": "RIA-61343 Appellant FTPA application decision refused (AIP journey) - Leadership judge",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -70,7 +70,7 @@
       {
         "reference": "61343_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum: Your application was refused",
+        "subject": "Immigration and Asylum appeal: Your application was refused",
         "body": [
           "PA/12345/2019",
           "A1234567",

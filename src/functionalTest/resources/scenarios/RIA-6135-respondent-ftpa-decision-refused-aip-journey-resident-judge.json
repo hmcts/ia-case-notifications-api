@@ -71,7 +71,7 @@
       {
         "reference": "61353_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum: The Home Office application has been refused",
+        "subject": "Immigration and Asylum appeal: The Home Office application has been refused",
         "body": [
           "PA/12345/2019",
           "A1234567",

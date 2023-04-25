@@ -70,7 +70,7 @@
       {
         "reference": "61341_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum: Your application was not admitted",
+        "subject": "Immigration and Asylum appeal: Your application was not admitted",
         "body": [
           "PA/12345/2019",
           "A1234567",
