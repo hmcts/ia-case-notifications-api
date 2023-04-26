@@ -18,6 +18,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDec
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -64,8 +66,11 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     private String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
     private String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
     private String mockedAppellantMobilePhone = "07123456789";
-    private int oocDays = 28;
-    private int inCountryDays = 14;
+    private long oocDays = 28;
+    private long inCountryDays = 14;
+    private LocalDate today = LocalDate.now();
+    private String expectedDueDateOoc = today.plusDays(oocDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+    private String expectedDueDateInCountry = today.plusDays(inCountryDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
     private AppellantFtpaApplicationDecisionPersonalisationSms appellantFtpaApplicationDecisionPersonalisationSms;
 
@@ -287,6 +292,9 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
 
         assertEquals(referenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(appellantInUk.equals(YES) ? "14" : "28", personalisation.get("dueDate"));
+        assertEquals(appellantInUk.equals(YES)
+            ? expectedDueDateInCountry
+            : expectedDueDateOoc,
+            personalisation.get("dueDate"));
     }
 }
