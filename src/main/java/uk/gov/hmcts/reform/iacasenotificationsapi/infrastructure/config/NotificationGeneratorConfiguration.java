@@ -1808,16 +1808,25 @@ public class NotificationGeneratorConfiguration {
     @Bean("decisionWithoutHearingNotificationGenerator")
     public List<NotificationGenerator> decisionWithoutHearingNotificationGenerator(
             HomeOfficeDecisionWithoutHearingPersonalisation homeOfficeDecisionWithoutHearingPersonalisation,
+            AppellantAppealDecisionWithoutHearingPersonalisationEmail appellantAppealDecisionWithoutHearingPersonalisationEmail,
+            AppellantAppealDecisionWithoutHearingPersonalisationSms appellantAppealDecisionWithoutHearingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
-                new EmailNotificationGenerator(
-                        newArrayList(homeOfficeDecisionWithoutHearingPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                    newArrayList(
+                        homeOfficeDecisionWithoutHearingPersonalisation,
+                        appellantAppealDecisionWithoutHearingPersonalisationEmail),
+                    notificationSender,
+                    notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantAppealDecisionWithoutHearingPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
