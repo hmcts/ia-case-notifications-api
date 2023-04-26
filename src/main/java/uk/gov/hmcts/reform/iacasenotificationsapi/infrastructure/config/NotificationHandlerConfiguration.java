@@ -1723,6 +1723,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> decisionWithoutHearingHandler(
+            @Qualifier("decisionWithoutHearingNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        // RIA-6980
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.DECISION_WITHOUT_HEARING
+                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
+        );
+    }
+
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCmaRequirementsAipNotificationHandler(
         @Qualifier("requestCmaRequirementsAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
