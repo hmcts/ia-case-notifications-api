@@ -100,7 +100,7 @@ public class MakeAnApplicationServiceTest {
     @ParameterizedTest
     @EnumSource(value = MakeAnApplicationTypes.class)
     public void shouldMapApplicationTypeToPhrase(MakeAnApplicationTypes makeAnApplicationTypes) {
-        when(makeAnApplication.getType()).thenReturn(makeAnApplicationTypes.name());
+        when(makeAnApplication.getType()).thenReturn(makeAnApplicationTypes.toString());
 
         String expectedPhrase = makeAnApplicationService.mapApplicationTypeToPhrase(makeAnApplication);
 
