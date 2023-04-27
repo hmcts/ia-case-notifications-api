@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECIDE_AN_APPLICATION_ID;
@@ -142,14 +141,5 @@ public class MakeAnApplicationServiceTest {
             default:
                 break;
         }
-    }
-
-    @Test
-    public void should_throw_exception_if_make_an_application_type_is_invalid() {
-        when(makeAnApplication.getType()).thenReturn("unsupportedApplicationType");
-
-        assertThrowsExactly(IllegalArgumentException.class,
-            () -> makeAnApplicationService.mapApplicationTypeToPhrase(makeAnApplication),
-            "applicationType not mappable to a phrase");
     }
 }

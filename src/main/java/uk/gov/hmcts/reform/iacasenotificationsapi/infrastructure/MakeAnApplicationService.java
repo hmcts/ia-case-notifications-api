@@ -30,18 +30,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 @Service
 public class MakeAnApplicationService {
 
-    private final static Map<String,String> APPLICATION_PHRASE = Map.ofEntries(
-        Map.entry(ADJOURN.toString(), "change the hearing date"),
-        Map.entry(EXPEDITE.toString(), "have the hearing sooner"),
-        Map.entry(JUDGE_REVIEW.toString(), "ask a judge to review the decision"),
-        Map.entry(LINK_OR_UNLINK.toString(), "link or unlink the appeal"),
-        Map.entry(TIME_EXTENSION.toString(), "ask for more time"),
-        Map.entry(TRANSFER.toString(), "move the hearing to a different location"),
-        Map.entry(WITHDRAW.toString(), "withdraw from the appeal"),
-        Map.entry(UPDATE_HEARING_REQUIREMENTS.toString(), "change some of the hearing requirements"),
-        Map.entry(UPDATE_APPEAL_DETAILS.toString(), "change some of the appeal details"),
-        Map.entry(REINSTATE.toString(), "reinstate the appeal"),
-        Map.entry(OTHER.toString(), "change something about the appeal")
+    private static final Map<String,String> APPLICATION_PHRASE = Map.ofEntries(
+        Map.entry(ADJOURN.name(), "change the hearing date"),
+        Map.entry(EXPEDITE.name(), "have the hearing sooner"),
+        Map.entry(JUDGE_REVIEW.name(), "ask a judge to review the decision"),
+        Map.entry(LINK_OR_UNLINK.name(), "link or unlink the appeal"),
+        Map.entry(TIME_EXTENSION.name(), "ask for more time"),
+        Map.entry(TRANSFER.name(), "move the hearing to a different location"),
+        Map.entry(WITHDRAW.name(), "withdraw from the appeal"),
+        Map.entry(UPDATE_HEARING_REQUIREMENTS.name(), "change some of the hearing requirements"),
+        Map.entry(UPDATE_APPEAL_DETAILS.name(), "change some of the appeal details"),
+        Map.entry(REINSTATE.name(), "reinstate the appeal"),
+        Map.entry(OTHER.name(), "change something about the appeal")
     );
 
     public Optional<MakeAnApplication> getMakeAnApplication(AsylumCase asylumCase, boolean decided) {
