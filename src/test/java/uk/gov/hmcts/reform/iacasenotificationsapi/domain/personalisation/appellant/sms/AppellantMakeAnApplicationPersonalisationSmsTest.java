@@ -50,7 +50,7 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
-    private String applicationType = "someApplicationType";
+    private String applicationTypePhrase = "some application type";
     private String homeOfficeUser = "caseworker-ia-homeofficelart";
     private String citizenUser = "citizen";
 
@@ -70,7 +70,6 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
                 makeAnApplicationService,
                 userDetailsProvider);
         when(makeAnApplicationService.getMakeAnApplication(asylumCase, false)).thenReturn(Optional.of(makeAnApplication));
-        when(makeAnApplication.getType()).thenReturn(applicationType);
         when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
     }
 
@@ -120,13 +119,15 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        when(makeAnApplicationService.mapApplicationTypeToPhrase(makeAnApplication))
+            .thenReturn(applicationTypePhrase);
 
         Map<String, String> personalisation =
             appellantMakeAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(applicationType, personalisation.get("applicationType"));
+        assertEquals(applicationTypePhrase, personalisation.get("applicationType"));
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, false);
 
