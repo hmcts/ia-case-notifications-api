@@ -64,7 +64,9 @@ public class AppellantMakeAnApplicationPersonalisationSms implements SmsNotifica
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         String applicationType = makeAnApplicationService.getMakeAnApplication(asylumCase, false)
-            .map(makeAnApplicationService::mapApplicationTypeToPhrase)
+            .map(application -> !hasRole(ROLE_CITIZEN)
+                ? makeAnApplicationService.mapApplicationTypeToPhrase(application)
+                : application.getType())
             .orElse("");
 
         return
