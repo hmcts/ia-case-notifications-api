@@ -113,6 +113,7 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
 
         String applicationType = makeAnApplicationOptional
             .map(application -> !hasRole(ROLE_CITIZEN)
+                                && !ROLE_CITIZEN.equals(application.getApplicantRole())
                 ? makeAnApplicationService.mapApplicationTypeToPhrase(application)
                 : application.getType())
             .orElse("");
