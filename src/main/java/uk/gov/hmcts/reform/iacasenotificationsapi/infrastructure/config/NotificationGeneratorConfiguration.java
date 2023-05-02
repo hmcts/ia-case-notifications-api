@@ -2332,6 +2332,25 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitAppealPayOfflineInternalNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPayOfflineInternalNotificationGenerator(
+            AdminOfficerAppealSubmittedPayOfflinePersonalisation adminOfficerAppealSubmittedPayOfflinePersonalisation,
+            HomeOfficeAppealSubmittedPayOfflinePersonalisation homeOfficeAppealSubmittedPayOfflinePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        //RIA-6682
+        List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("submitAppealPendingPaymentNotificationGenerator")
     public List<NotificationGenerator> submitAppealPendingPaymentNotificationHandler(
             LegalRepresentativeAppealSubmittedPendingPaymentPersonalisation legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
@@ -2352,6 +2371,28 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("submitAppealPendingPaymentInternalNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPendingPaymentInternalNotificationGenerator(
+            HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
+            AdminOfficerAppealSubmittedPendingPaymentPersonalisation adminOfficerAppealSubmittedPendingPaymentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        // RIA-3631 - submitAppeal This needs to be changed as per ACs
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(homeOfficeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation)
+                : newArrayList(adminOfficerAppealSubmittedPendingPaymentPersonalisation);
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -3076,6 +3117,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("payAndSubmitAppealEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealEmailInternalNotificationGenerator(
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeSubmitAppealPersonalisation,
+                                caseOfficerSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("payAndSubmitAppealFailedEmailNotificationGenerator")
     public List<NotificationGenerator> payAndSubmitAppealFailedEmailNotificationHandler(
         LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
@@ -3100,6 +3166,31 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("payAndSubmitAppealFailedEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> payAndSubmitAppealFailedEmailInternalNotificationGenerator(
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeSubmitAppealPersonalisation,
+                                caseOfficerSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
@@ -3296,6 +3387,24 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("submitAppealLrHoWaysToPayPaPayNowInternalNotificationGenerator")
+    public List<NotificationGenerator> submitAppealLrHoWaysToPayPaPayNowInternalNotificationGenerator(
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeSubmitAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
