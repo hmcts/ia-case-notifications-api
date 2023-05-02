@@ -29,6 +29,8 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String mockedListingReferenceNumber = "someListingReferenceNumber";
     private String mockedAppellantEmailAddress = "appellant@example.net";
+    private String mockedAppellantGivenNames = "Talha";
+    private String mockedAppellantFamilyName = "Awan";
     private AppellantRemoveDetainedStatusPersonalisationEmail appellantRemoveDetainedStatusPersonalisationEmail;
 
     @BeforeEach
@@ -38,6 +40,11 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
                 .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
+                .thenReturn(Optional.of(mockedAppellantGivenNames));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
+                .thenReturn(Optional.of(mockedAppellantFamilyName));
+
 
         appellantRemoveDetainedStatusPersonalisationEmail = new AppellantRemoveDetainedStatusPersonalisationEmail(
                 beforeListingEmailTemplateId,
@@ -99,6 +106,8 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals("", personalisation.get("ariaListingReference"));
 
     }
@@ -114,5 +123,7 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(mockedListingReferenceNumber, personalisation.get("ariaListingReference"));
+        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
     }
 }
