@@ -204,6 +204,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("endAppealInternalNotificationGenerator")
+    public List<NotificationGenerator> endAppealInternalNotificationGenerator(
+            HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeEndAppealPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("endAppealAipEmailRespondentNotificationGenerator")
     public List<NotificationGenerator> endAppealAipEmailRespondentNotificationGenerator(
         HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
