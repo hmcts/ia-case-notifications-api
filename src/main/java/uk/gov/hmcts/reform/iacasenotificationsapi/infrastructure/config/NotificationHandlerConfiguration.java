@@ -190,11 +190,30 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.END_APPEAL
-                       && isRepJourney(asylumCase);
+                        && callback.getEvent() == Event.END_APPEAL
+                        && isRepJourney(asylumCase)
+                        && !isInternalCase(asylumCase);
             },
             notificationGenerators
 
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> endAppealInternalNotificationHandler(
+        @Qualifier("endAppealInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.END_APPEAL
+                            && isRepJourney(asylumCase)
+                            && isInternalCase(asylumCase);
+                },
+                notificationGenerators
         );
     }
 
