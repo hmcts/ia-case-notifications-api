@@ -29,7 +29,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
     private final String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
     private final String ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
     private final String ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
-    private final String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
+    private final String ftpaAppellantDecisionGrantedToAppellantEmailTemplateId;
+    private final String ftpaAppellantDecisionPartiallyGrantedToAppellantEmailTemplateId;
     private final String ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId;
     private final String ftpaAppellantDecisionRefusedToAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
@@ -42,7 +43,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         @Value("${govnotify.template.applicationGranted.otherParty.citizen.email}") String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationNotAdmitted.otherParty.citizen.email}") String ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationRefused.otherParty.citizen.email}") String ftpaRespondentDecisionRefusedToAppellantEmailTemplateId,
-        @Value("${govnotify.template.applicationGranted.applicant.citizen.email}") String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId,
+        @Value("${govnotify.template.applicationGranted.applicant.citizen.email}") String ftpaAppellantDecisionGrantedToAppellantEmailTemplateId,
+        @Value("${govnotify.template.applicationPartiallyGranted.applicant.citizen.email}") String ftpaAppellantDecisionPartiallyGrantedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationNotAdmitted.applicant.citizen.email}") String ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationRefused.applicant.citizen.email}") String ftpaAppellantDecisionRefusedToAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
@@ -54,7 +56,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         this.ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId = ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
         this.ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId = ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
         this.ftpaRespondentDecisionRefusedToAppellantEmailTemplateId = ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
-        this.ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId = ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
+        this.ftpaAppellantDecisionGrantedToAppellantEmailTemplateId = ftpaAppellantDecisionGrantedToAppellantEmailTemplateId;
+        this.ftpaAppellantDecisionPartiallyGrantedToAppellantEmailTemplateId = ftpaAppellantDecisionPartiallyGrantedToAppellantEmailTemplateId;
         this.ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId = ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId;
         this.ftpaAppellantDecisionRefusedToAppellantEmailTemplateId = ftpaAppellantDecisionRefusedToAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
@@ -72,9 +75,12 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
 
         switch (getDecisionOutcomeType(asylumCase)) {
             case FTPA_GRANTED:
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionGrantedToAppellantEmailTemplateId
+                    : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
             case FTPA_PARTIALLY_GRANTED:
                 return applicantType.equals(APPELLANT_APPLICANT)
-                    ? ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId
+                    ? ftpaAppellantDecisionPartiallyGrantedToAppellantEmailTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
             case FTPA_REFUSED:
                 return applicantType.equals(APPELLANT_APPLICANT)

@@ -62,7 +62,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     private String respondentGrantedPartiallyGrantedEmailTemplateId = "respondentGrantedPartiallyGrantedEmailTemplateId";
     private String respondentNotAdmittedEmailTemplateId = "respondentNotAdmittedEmailTemplateId";
     private String respondentRefusedEmailTemplateId = "respondentRefusedEmailTemplateId";
-    private String appellantGrantedPartiallyGrantedEmailTemplateId = "appellantGrantedPartiallyGrantedEmailTemplateId";
+    private String appellantGrantedEmailTemplateId = "appellantGrantedEmailTemplateId";
+    private String appellantPartiallyGrantedEmailTemplateId = "appellantPartiallyGrantedEmailTemplateId";
     private String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
     private String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
     private String mockedAppellantMobilePhone = "07123456789";
@@ -80,7 +81,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
             respondentGrantedPartiallyGrantedEmailTemplateId,
             respondentNotAdmittedEmailTemplateId,
             respondentRefusedEmailTemplateId,
-            appellantGrantedPartiallyGrantedEmailTemplateId,
+            appellantGrantedEmailTemplateId,
+            appellantPartiallyGrantedEmailTemplateId,
             appellantNotAdmittedEmailTemplateId,
             appellantRefusedEmailTemplateId,
             iaAipFrontendUrl,
@@ -138,11 +140,15 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
         when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(rjDecision);
 
         if (ljDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
-            || rjDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
-            || ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
+            || rjDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)) {
+
+            assertEquals(appellantGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+        }
+
+        if (ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
             || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
 
-            assertEquals(appellantGrantedPartiallyGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+            assertEquals(appellantPartiallyGrantedEmailTemplateId, appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
         }
 
         if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
