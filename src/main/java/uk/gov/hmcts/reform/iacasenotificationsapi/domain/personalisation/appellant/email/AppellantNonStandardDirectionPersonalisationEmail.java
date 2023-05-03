@@ -24,11 +24,13 @@ public class AppellantNonStandardDirectionPersonalisationEmail implements EmailN
     private final String iaExUiFrontendUrl;
     private final PersonalisationProvider personalisationProvider;
     private final String appellantNonStandardDirectionBeforeListingTemplateId;
+    private final String appellantNonStandardDirectionAfterListingTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantNonStandardDirectionPersonalisationEmail(
             @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeBeforeListing.appellant.email}") String appellantNonStandardDirectionBeforeListingTemplateId,
+            @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeAfterListing.appellant.email}") String appellantNonStandardDirectionAfterListingTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             PersonalisationProvider personalisationProvider,
             CustomerServicesProvider customerServicesProvider,
@@ -36,6 +38,7 @@ public class AppellantNonStandardDirectionPersonalisationEmail implements EmailN
     ) {
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.appellantNonStandardDirectionBeforeListingTemplateId = appellantNonStandardDirectionBeforeListingTemplateId;
+        this.appellantNonStandardDirectionAfterListingTemplateId = appellantNonStandardDirectionAfterListingTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
         this.recipientsFinder = recipientsFinder;
@@ -43,7 +46,8 @@ public class AppellantNonStandardDirectionPersonalisationEmail implements EmailN
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appellantNonStandardDirectionBeforeListingTemplateId;
+        return isAppealListed(asylumCase)
+                ? appellantNonStandardDirectionAfterListingTemplateId : appellantNonStandardDirectionBeforeListingTemplateId;
     }
 
     @Override
