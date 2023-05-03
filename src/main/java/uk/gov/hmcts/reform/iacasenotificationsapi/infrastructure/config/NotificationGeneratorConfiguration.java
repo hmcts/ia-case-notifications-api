@@ -2573,6 +2573,25 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("decideAnApplicationInternalNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
+            HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeDecideAnApplicationPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("decideAnApplicationDetNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationDetNotificationGenerator(
         DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
