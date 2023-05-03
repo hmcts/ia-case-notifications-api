@@ -118,6 +118,18 @@ public class EmailAddressFinder {
     private String getEmailAddress(Map<HearingCentre, String> emailAddressesMap, HearingCentre hearingCentre) {
         switch (hearingCentre) {
             case GLASGOW_TRIBUNAL_CENTRE:
+                return emailAddressesMap.get(HearingCentre.GLASGOW);
+            case NOTTINGHAM:
+            case COVENTRY:
+                return emailAddressesMap.get(HearingCentre.BIRMINGHAM);
+            default:
+                return emailAddressesMap.get(hearingCentre);
+        }
+    }
+
+    private String getAdminHearingCentreAddress(Map<HearingCentre, String> emailAddressesMap, HearingCentre hearingCentre) {
+        switch (hearingCentre) {
+            case GLASGOW_TRIBUNAL_CENTRE:
             case BELFAST:
                 return emailAddressesMap.get(HearingCentre.GLASGOW);
             case NOTTINGHAM:
@@ -129,12 +141,10 @@ public class EmailAddressFinder {
                 return emailAddressesMap.get(hearingCentre);
         }
     }
-
     public String getAdminEmailAddress(AsylumCase asylumCase){
-
         return asylumCase
                 .read(HEARING_CENTRE, HearingCentre.class)
-                .map(it -> Optional.ofNullable(getEmailAddress(adminEmailAddresses, it))
+                .map(it -> Optional.ofNullable(getAdminHearingCentreAddress(adminEmailAddresses, it))
                         .orElseThrow(() -> new IllegalStateException("Hearing centre email address not found: " + it.toString()))
                 )
                 .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));

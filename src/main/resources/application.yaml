@@ -1098,7 +1098,6 @@ adminEmailAddresses:
   bradford: ${IA_ADMIN_BRADFORD_EMAIL:bradfordedets@example.com}
   birmingham: ${IA_ADMIN_BIRMINGHAM_EMAIL:birminghamedets@example.com}
 
-
 hearingCentreEmailAddresses:
   bradford: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
   manchester: ${IA_HEARING_CENTRE_MANCHESTER_EMAIL:hc-manchester@example.com}
@@ -1110,7 +1109,6 @@ hearingCentreEmailAddresses:
   hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
-
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:

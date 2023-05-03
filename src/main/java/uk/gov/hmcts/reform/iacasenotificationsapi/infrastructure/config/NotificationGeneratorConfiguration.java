@@ -246,14 +246,14 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("appealOutcomeAdminNotificationGenerator")
     public List<NotificationGenerator> appealOutcomeAdminNotificationGenerator(
-            AdminOfficerDecisionAndReasonsUploaded adminOfficerDecisionAndReasonsUploaded,
+            AdminOfficerAppealOutcomePersonalisation adminOfficerAppealOutcomePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(adminOfficerDecisionAndReasonsUploaded),
+                        newArrayList(adminOfficerAppealOutcomePersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
