@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 import static java.util.Arrays.stream;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.aspectj.apache.bcel.classfile.Unknown;
+
 import java.util.Optional;
 
 public enum HearingCentre {
@@ -21,7 +23,9 @@ public enum HearingCentre {
     TAYLOR_HOUSE("taylorHouse"),
     NEWCASTLE("newcastle"),
     REMOTE_HEARING("remoteHearing"),
-    DECISION_WITHOUT_HEARING("decisionWithoutHearing");
+    DECISION_WITHOUT_HEARING("decisionWithoutHearing"),
+
+    UNKNOWN("unknown");
 
     @JsonValue
     private final String value;

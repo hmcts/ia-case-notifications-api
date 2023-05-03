@@ -244,6 +244,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appealOutcomeAdminNotificationGenerator")
+    public List<NotificationGenerator> appealOutcomeAdminNotificationGenerator(
+            AdminOfficerDecisionAndReasonsUploaded adminOfficerDecisionAndReasonsUploaded,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(adminOfficerDecisionAndReasonsUploaded),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
     @Bean("appealOutcomeRepNotificationGenerator")
     public List<NotificationGenerator> appealOutcomeRepNotificationGenerator(
         LegalRepresentativeAppealOutcomePersonalisation legalRepresentativeAppealOutcomePersonalisation,
