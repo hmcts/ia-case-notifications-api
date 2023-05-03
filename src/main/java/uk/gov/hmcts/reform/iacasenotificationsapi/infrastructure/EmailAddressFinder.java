@@ -123,6 +123,8 @@ public class EmailAddressFinder {
             case NOTTINGHAM:
             case COVENTRY:
                 return emailAddressesMap.get(HearingCentre.BIRMINGHAM);
+            case NEWCASTLE:
+                return emailAddressesMap.get(HearingCentre.BRADFORD);
             default:
                 return emailAddressesMap.get(hearingCentre);
         }
