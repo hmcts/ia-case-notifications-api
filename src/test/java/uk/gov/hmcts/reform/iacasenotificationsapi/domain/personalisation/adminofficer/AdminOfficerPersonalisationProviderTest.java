@@ -36,6 +36,13 @@ public class AdminOfficerPersonalisationProviderTest {
     }
 
     @Test
+    public void should_return_admin_personalisation() {
+
+        Map<String, String> personalisation = adminOfficerPersonalisationProvider.getAdminPersonalisation(asylumCase);
+
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+    }
+    @Test
     public void should_return_reviewed_hearing_requirements_personalisation() {
 
         Map<String, String> personalisation =

@@ -17,11 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -32,6 +28,8 @@ public class EmailAddressFinderTest {
     @Mock Map<HearingCentre, String> hearingCentreEmailAddresses;
     @Mock Map<HearingCentre, String> homeOfficeEmailAddresses;
     @Mock Map<HearingCentre, String> homeOfficeFtpaEmailAddresses;
+
+    @Mock Map<HearingCentre, String> adminEmailAddresses;
     @Mock Map<BailHearingCentre, String> bailHearingCentreEmailAddresses;
 
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -39,6 +37,8 @@ public class EmailAddressFinderTest {
     private final HearingCentre listCaseHearingCentre = HearingCentre.BRADFORD;
     private final String listCaseHearingCenterEmailAddress = "listCaseHearingCentre@example.com";
     private final String legalRepEmailAddress = "legalRep@example.com";
+
+    private final String adminEmailAddress = "adminDets@example.com";
 
     private EmailAddressFinder emailAddressFinder;
 
@@ -53,12 +53,15 @@ public class EmailAddressFinderTest {
         when(hearingCentreEmailAddresses.get(hearingCentre)).thenReturn(hearingCentreEmailAddress);
         when(homeOfficeEmailAddresses.get(listCaseHearingCentre)).thenReturn(listCaseHearingCenterEmailAddress);
         when(homeOfficeFtpaEmailAddresses.get(listCaseHearingCentre)).thenReturn(listCaseHearingCenterEmailAddress);
+        when(adminEmailAddresses.get(listCaseHearingCentre)).thenReturn(listCaseHearingCenterEmailAddress);
 
         emailAddressFinder = new EmailAddressFinder(
             hearingCentreEmailAddresses,
             homeOfficeEmailAddresses,
             homeOfficeFtpaEmailAddresses,
-            bailHearingCentreEmailAddresses
+            bailHearingCentreEmailAddresses,
+            adminEmailAddresses
+
         );
     }
 
@@ -131,6 +134,18 @@ public class EmailAddressFinderTest {
                 .hasMessage("Hearing centre email address not found: taylorHouse");
     }
 
+    @Test
+    public void should_throw_exception_on_admin_email_when_is_empty() {
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> emailAddressFinder.getAdminEmailAddress(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("hearingCentre is not present");
+    }
+    @Test
+    public void should_return_given_admin_email_address_from_lookup_map() {
+        assertEquals(adminEmailAddress, emailAddressFinder.getAdminEmailAddress(asylumCase));
+    }
     @Test
     public void should_return_given_legal_rep_email_address_from_lookup_map() {
         assertEquals(legalRepEmailAddress, emailAddressFinder.getLegalRepEmailAddress(asylumCase));

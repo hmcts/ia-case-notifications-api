@@ -35,12 +35,11 @@ public class AdminOfficerPersonalisationProvider {
 
     public ImmutableMap<String, String> getAdminPersonalisation(AsylumCase asylumCase) {
 
-        final HearingCentre hearingCentre = asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
-                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
-        final AppealDecision appealOutcomeDecision = asylumCase
-                .read(AsylumCaseDefinition.IS_DECISION_ALLOWED, AppealDecision.class)
-                .orElseThrow(() -> new IllegalStateException("appealOutcomeDecision is not present"));
-
+//        final HearingCentre hearingCentre = asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+//                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+//        final AppealDecision appealOutcomeDecision = asylumCase
+//                .read(AsylumCaseDefinition.IS_DECISION_ALLOWED, AppealDecision.class)
+//                .orElseThrow(() -> new IllegalStateException("appealOutcomeDecision is not present"));
 
         return ImmutableMap
                 .<String, String>builder()
@@ -48,21 +47,10 @@ public class AdminOfficerPersonalisationProvider {
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
-                .put("hearingCentre", String.valueOf(hearingCentre))
-                .put("applicationDecision", String.valueOf(appealOutcomeDecision))
-//                .put("linkToOnlineService", iaExUiFrontendUrl)
+//                .put("hearingCentre", String.valueOf(hearingCentre).toUpperCase())
+//                .put("applicationDecision", String.valueOf(appealOutcomeDecision).toUpperCase())
                 .build();
     }
-
-
-//    public String getAppealDecision(AsylumCase asylumCase) {
-//
-//        final AppealDecision appealOutcomeDecision = asylumCase
-//                .read(AsylumCaseDefinition.IS_DECISION_ALLOWED, AppealDecision.class)
-//                .orElseThrow(() -> new IllegalStateException("appealOutcomeDecision is not present"));
-//
-//        return appealOutcomeDecision.getValue();
-//    }
 
     public ImmutableMap<String, String> getReviewedHearingRequirementsPersonalisation(AsylumCase asylumCase) {
         return getDefaultPersonalisation(asylumCase);

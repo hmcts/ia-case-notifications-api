@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 import javax.validation.constraints.NotNull;
@@ -27,11 +26,9 @@ public class AdminOfficerAppealOutcomePersonalisation implements EmailNotificati
             @NotNull(message = "decisionAndReasonUploadedTemplateId cannot be null")
             @Value("${govnotify.template.decisionAndReasonsTemplateUploaded.admin.email}") String decisionAndReasonUploadedTemplateId,
             AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider,
-            CustomerServicesProvider customerServicesProvider,
             EmailAddressFinder emailAddressFinder) {
         this.decisionAndReasonUploadedTemplateId = decisionAndReasonUploadedTemplateId;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
-//        this.customerServicesProvider = customerServicesProvider;
         this.emailAddressFinder = emailAddressFinder;
     }
 
