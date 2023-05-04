@@ -869,6 +869,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipRespondentDirectionNotificationGenerator")
+    public List<NotificationGenerator> aipRespondentDirectionNotificationGenerator(
+            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+            LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation,
+            AppellantNonStandardDirectionPersonalisationEmail appellantNonStandardDirectionPersonalisationEmail,
+            AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentNonStandardDirectionPersonalisation,
+                                legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation,
+                                appellantNonStandardDirectionPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantNonStandardDirectionPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("awaitingRespondentDirectionNotificationGenerator")
     public List<NotificationGenerator> awaitingRespondentDirectionNotificationGenerator(
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
