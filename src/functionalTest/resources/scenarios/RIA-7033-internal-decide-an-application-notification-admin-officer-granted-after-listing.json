@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7033 Internal case Send decide an application notification legal rep granted after listing",
+  "description": "RIA-7033 - Internal case - send decide an (admofficer) application (granted) notification after listing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

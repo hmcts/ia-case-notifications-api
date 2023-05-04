@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7033 Internal case Send decide an application notification legal rep refused before listing",
+  "description": "RIA-7033 Internal case Send decide an (admofficer) application refused notification before listing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -22,7 +22,7 @@
                 "date":"",
                 "decision":"Refused",
                 "state":"appealSubmitted",
-                "applicantRole":"caseworker-ia-legalrep-solicitor",
+                "applicantRole":"caseworker-ia-admofficer",
                 "decisionReason":"No Reason given",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Judge"
