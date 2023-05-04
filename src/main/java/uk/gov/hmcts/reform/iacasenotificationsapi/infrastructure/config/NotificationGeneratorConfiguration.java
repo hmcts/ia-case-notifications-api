@@ -2576,7 +2576,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("decideAnApplicationInternalNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
             HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {

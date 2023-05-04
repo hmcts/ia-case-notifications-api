@@ -10,7 +10,6 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-		  "isAcceleratedDetainedAppeal": "No",
           "ariaListingReference": "PA/12345/2019",
           "listCaseHearingCentre": "taylorHouse",
           "decideAnApplicationId": "1",
@@ -42,7 +41,7 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
-		"isAcceleratedDetainedAppeal": "No",
+        "isAdmin": "Yes",
         "ariaListingReference": "PA/12345/2019",
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
