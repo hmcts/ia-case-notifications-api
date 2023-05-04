@@ -24,7 +24,7 @@
                 "date":"{$TODAY}",
                 "decision":"Granted",
                 "state":"prepareForHearing",
-                "applicantRole":"caseworker-ia-legalrep-solicitor",
+                "applicantRole":"caseworker-ia-admofficer",
                 "decisionReason":"No Reason given",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Judge"
