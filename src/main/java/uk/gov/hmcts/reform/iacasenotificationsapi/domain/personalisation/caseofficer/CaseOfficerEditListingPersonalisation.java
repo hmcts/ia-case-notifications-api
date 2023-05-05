@@ -7,12 +7,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
@@ -46,9 +44,7 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).equals(Optional.of(HearingCentre.REMOTE_HEARING))
-                    ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
-                    : Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
+        return Collections.singleton(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 
     @Override

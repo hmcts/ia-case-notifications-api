@@ -5,6 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
@@ -79,6 +83,9 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
                 homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
+
+    @Test
+    public void should_return_personalisation_when_all_information_given() {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })

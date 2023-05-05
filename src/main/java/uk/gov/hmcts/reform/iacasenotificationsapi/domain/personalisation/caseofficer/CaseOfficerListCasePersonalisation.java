@@ -51,7 +51,7 @@ public class CaseOfficerListCasePersonalisation implements EmailNotificationPers
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase));
+        return Collections.singleton(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 
     @Override
