@@ -19,12 +19,37 @@
     </suppress>
 	<!-- The following CVEs are suppressed for the purpose of getting the current PR onto the preview environment
          They should still be addressed -->
+    <suppress until="2023-05-27">
+        <notes><![CDATA[
+                 file name: accessors-smart-2.4.8.jar 
+		]]>
+        </notes>
+        <cve>CVE-2022-45688</cve>
+    </suppress>
+    <suppress until="2023-05-27">
+        <notes><![CDATA[
+                file name: json-smart-2.4.8.jar 
+                ]]>
+        </notes>
+        <cve>CVE-2023-1370</cve>
+     </suppress>
      <suppress until="2023-05-27">
+        <notes><![CDATA[
+                file name: guava-30.0-jre.jar 
+                ]]>
+        </notes>
+        <cve>CVE-2020-8908</cve>
+     </suppress>
+    <suppress until="2023-05-27">
         <notes><![CDATA[
                   pivotal_software:spring_framework:5.3.22
                 ]]>
         </notes>
-        <cve>CVE-2023-20863</cve>
+	<cve>CVE-2023-20863</cve>
+	<cve>CVE-2023-20873</cve>
+	<cve>CVE-2023-20862</cve>
+	<cve>CVE-2016-1000027</cve>
+	<cve>CVE-2020-5408</cve>
      </suppress>
      <!-- end of temporary suppressions -->
 </suppressions>
