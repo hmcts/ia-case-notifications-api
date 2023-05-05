@@ -1375,8 +1375,6 @@ ftpaApplicationDecidedDaysToWait:
   outOfCountry: 28
   ada: 7
 
-appellantDaysToAskReinstate: 14
-
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
   connectionTimeout: 5000
