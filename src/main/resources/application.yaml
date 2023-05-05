@@ -563,12 +563,14 @@ govnotify:
           email: 91a8351f-8c6f-425f-9ca6-f41e4055cd71
         homeOffice:
           email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
+        citizen:
+          email: f25439bb-336b-46df-a3d6-70f2e365943c
+          sms: 49a823dc-166c-411e-a5a7-383f02af10fd
       otherParty:
         legalRep:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
         homeOffice:
           email: f6ff1df5-c6b5-4f77-b500-5c461e35dc43
-#       citizen: Same template as for 'granted'
     applicationNotAdmitted:
       applicant:
         legalRep:

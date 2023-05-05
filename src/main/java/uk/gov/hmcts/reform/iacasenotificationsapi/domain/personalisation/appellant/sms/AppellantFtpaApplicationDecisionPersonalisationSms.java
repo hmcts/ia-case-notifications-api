@@ -23,7 +23,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
     private final String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
     private final String ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId;
     private final String ftpaRespondentDecisionRefusedToAppellantSmsTemplateId;
-    private final String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
+    private final String ftpaAppellantDecisionGrantedToAppellantSmsTemplateId;
+    private final String ftpaAppellantDecisionPartiallyGrantedToAppellantSmsTemplateId;
     private final String ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId;
     private final String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
@@ -35,7 +36,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
         @Value("${govnotify.template.applicationGranted.otherParty.citizen.sms}") String ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId,
         @Value("${govnotify.template.applicationNotAdmitted.otherParty.citizen.sms}") String ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId,
         @Value("${govnotify.template.applicationRefused.otherParty.citizen.sms}") String ftpaRespondentDecisionRefusedToAppellantSmsTemplateId,
-        @Value("${govnotify.template.applicationGranted.applicant.citizen.sms}") String ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId,
+        @Value("${govnotify.template.applicationGranted.applicant.citizen.sms}") String ftpaAppellantDecisionGrantedToAppellantSmsTemplateId,
+        @Value("${govnotify.template.applicationPartiallyGranted.applicant.citizen.sms}") String ftpaAppellantDecisionPartiallyGrantedToAppellantSmsTemplateId,
         @Value("${govnotify.template.applicationNotAdmitted.applicant.citizen.sms}") String ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId,
         @Value("${govnotify.template.applicationRefused.applicant.citizen.sms}") String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
@@ -46,7 +48,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
         this.ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId = ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
         this.ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId = ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId;
         this.ftpaRespondentDecisionRefusedToAppellantSmsTemplateId = ftpaRespondentDecisionRefusedToAppellantSmsTemplateId;
-        this.ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId = ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
+        this.ftpaAppellantDecisionGrantedToAppellantSmsTemplateId = ftpaAppellantDecisionGrantedToAppellantSmsTemplateId;
+        this.ftpaAppellantDecisionPartiallyGrantedToAppellantSmsTemplateId = ftpaAppellantDecisionPartiallyGrantedToAppellantSmsTemplateId;
         this.ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId = ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId;
         this.ftpaAppellantDecisionRefusedToAppellantSmsTemplateId = ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
@@ -62,9 +65,12 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
 
         switch (getDecisionOutcomeType(asylumCase)) {
             case FTPA_GRANTED:
+                return applicantType.equals(APPELLANT_APPLICANT)
+                    ? ftpaAppellantDecisionGrantedToAppellantSmsTemplateId
+                    : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
             case FTPA_PARTIALLY_GRANTED:
                 return applicantType.equals(APPELLANT_APPLICANT)
-                    ? ftpaAppellantDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId
+                    ? ftpaAppellantDecisionPartiallyGrantedToAppellantSmsTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
             case FTPA_REFUSED:
                 return applicantType.equals(APPELLANT_APPLICANT)

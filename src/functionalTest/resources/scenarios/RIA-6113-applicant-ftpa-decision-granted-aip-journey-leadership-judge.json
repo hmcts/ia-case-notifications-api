@@ -12,6 +12,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "aip",
+          "appellantInUk": "Yes",
           "subscriptions": [
             {
               "id": "1",
