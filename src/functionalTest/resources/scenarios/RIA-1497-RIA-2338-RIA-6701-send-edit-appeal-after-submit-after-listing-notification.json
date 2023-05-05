@@ -46,8 +46,7 @@
           "A1234567",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "{$customerServices.telephoneNumber}"
         ]
       }
 

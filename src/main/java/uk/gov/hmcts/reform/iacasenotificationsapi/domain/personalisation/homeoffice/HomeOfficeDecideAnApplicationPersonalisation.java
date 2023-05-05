@@ -96,14 +96,14 @@ public class HomeOfficeDecideAnApplicationPersonalisation implements EmailNotifi
             String decision = makeAnApplication.getDecision();
             String applicantRole = makeAnApplication.getApplicantRole();
 
-            boolean isApplicationListed = makeAnApplicationService.isApplicationListed(State.get(makeAnApplication.getState()));
+            String listingRef = asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(null);
 
             boolean isHomeOfficeUser = Arrays.asList(HOME_OFFICE_APC,
                     HOME_OFFICE_LART,
                     HOME_OFFICE_POU,
                     HOME_OFFICE_RESPONDENT_OFFICER).contains(applicantRole);
 
-            if (isApplicationListed) {
+            if (listingRef != null) {
                 if ("Granted".equals(decision)) {
                     return isHomeOfficeUser ?  homeOfficeDecideAnApplicationGrantedAfterListingTemplateId : homeOfficeDecideAnApplicationGrantedOtherPartyAfterListingTemplateId;
                 } else {

@@ -88,9 +88,9 @@ govnotify:
       caseOfficer:
         email: 5964b437-eee1-48e2-b0b6-daf71be9decb
       homeOffice:
-        email: 9ecbd284-315e-489f-9c52-f17a44424ba5
+        email: 28892700-c3f2-4ed5-92e5-3519dac399c9
         pendingPaymentEaHu:
-          email: bcea839a-9829-4200-8217-059479dd20cf
+          email: a579dcf7-6ddd-43ba-9b2c-495c1b1f8f7c
       adminOfficer:
         pendingPaymentPa:
           email: b90bbc57-1ee9-40cb-9037-fe5a2552a136
@@ -611,6 +611,14 @@ govnotify:
           email: 70ad102c-0665-4e8f-8844-0c06f0760a34
         homeOffice:
           email: d6eb9928-ff8c-4b62-8a8b-f30c81201a8a
+    applicationRefusedOrNotAdmitted:
+      otherParty:
+        detentionEngagementTeam:
+          email: a75a4356-da57-4eaf-b986-e1417b8dce81
+    applicationGrantedOrPartiallyGranted:
+      otherParty:
+        detentionEngagementTeam:
+          email: f655d716-7c04-4c6b-b64c-80d6e7f2b4b7
     applicationReheardEnabled:
       caseOfficer:
         email: 9698e02a-1e45-4a25-8741-85a260c359c4
@@ -640,14 +648,14 @@ govnotify:
     reinstateAppeal:
       legalRep:
         beforeListing:
-          email: 64a6c31c-5c7b-486d-8fdd-d51e72d2aec0
+          email: 28f1eb01-16e0-4ec8-a783-05c5754cdbe8
         afterListing:
-          email: 10d1ab62-f521-4cdc-8778-ca9202299776
+          email: 222e5fcd-b6a5-41ac-a3be-f1d849b96dac
       homeOffice:
         beforeListing:
-          email: e91c46b7-5cd1-4a58-a22a-76d3986c47fa
+          email: 18deee1b-635a-4821-8119-34c146e14c03
         afterListing:
-          email: 50f69e87-5e12-45ca-bdce-d4620ec1d511
+          email: 15242842-2a21-4ac2-921c-1b125efe0dba
       appellant:
         beforeListing:
           email: cdae7658-29d9-48ce-a477-1e542b7d3c8b
@@ -848,6 +856,9 @@ govnotify:
         email: 7afe65bd-65ff-4f6b-b9ba-0ffc20623903
       homeOffice:
         email: 82aa4d65-9202-4568-ae7c-cbfeba9e1520
+      appellant:
+        email: 9dce71ff-5985-4bea-8958-b1dc155132dd
+        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
     adaSuitabilityReview:
       legalRep:
         unsuitable:
@@ -877,6 +888,21 @@ govnotify:
         email: 671af79b-6c0d-4d49-8b9d-3a29efa0758d
       legalRep:
         email: 427d6a0f-4f67-41b7-8814-1fe44fec4ee0
+    markAppealAsDetained:
+      legalRep:
+        email: 1baf79a7-1a7f-4a2c-9a03-eb5ec6ff7a49
+      homeOffice:
+        email: 7b972a67-7665-4b3b-a64c-ed74d1ca8d55
+    removeDetentionStatus:
+      legalRep:
+        email: 23669485-ffb0-4ae2-9d36-26c437a57e92
+      homeOffice:
+        email: 3891dcd8-a9d1-47e8-8b87-3da77789a913
+      appellant:
+        email:
+          beforeListing: 5bc75d7e-37ac-4382-a43a-0d27038c81de
+          afterListing: c2487cec-7ca4-450f-a5ae-b6d93ce99b6e
+        sms: e2dcdeee-c61e-4f56-836a-53116011bb20
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -977,6 +1003,7 @@ security:
       - "editAppeal"
       - "uploadAdditionalEvidence"
       - "submitAppeal"
+      - "paymentAppeal"
       - "submitReasonsForAppeal"
       - "submitTimeExtension"
       - "submitClarifyingQuestionAnswers"
@@ -1060,6 +1087,8 @@ security:
       - "transferOutOfAda"
       - "markAppealAsAda"
       - "markAppealPaid"
+      - "removeDetainedStatus"
+      - "markAppealAsDetained"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1097,6 +1126,8 @@ security:
       - "makeNewApplication"
       - "editAppealAfterSubmit"
       - "markAppealAsAda"
+      - "removeDetainedStatus"
+      - "markAppealAsDetained"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1143,6 +1174,7 @@ security:
       - "changeBailDirectionDueDate"
       - "adaSuitabilityReview"
       - "transferOutOfAda"
+      - "reviewHearingRequirements"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
@@ -1154,6 +1186,7 @@ security:
       - "makeNewApplication"
 
 ### dependency configuration
+ccdGatewayUrl: ${CCD_GW_URL:http://localhost:3453}
 core_case_data_api_url: ${CCD_URL:http://127.0.0.1:4452}
 document_management.url: ${DM_URL:http://127.0.0.1:4506}
 
@@ -1289,7 +1322,9 @@ adaCaseListed:
 ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28
-  ada: 5
+  ada: 7
+
+appellantDaysToAskReinstate: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}

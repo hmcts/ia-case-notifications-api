@@ -1,6 +1,5 @@
 {
   "description": "RIA-6780: Send notification to DET when Home Office uploads appeal response (Internal ADA) - Decision withdrawn",
-  "enabled": false,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeLart",
@@ -18,15 +17,15 @@
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "appealReviewOutcome": "decisionWithdrawn",
-          "listCaseHearingDate": "{$TODAY}",
+          "listCaseHearingDate": "2024-05-03T14:25:15.000",
           "respondentDocuments": [
             {
               "id": "docId",
               "value": {
                 "document": {
-                  "document_url": "http://dm-store/docId",
-                  "document_binary_url": "http://dm-store/docId/binary",
-                  "document_filename": "filename"
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
                 },
                 "description": "description",
                 "dateUploaded": "{$TODAY}",
@@ -52,15 +51,11 @@
         "isAdmin": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
         "appealReviewOutcome": "decisionWithdrawn",
-        "listCaseHearingDate": "{$TODAY}",
+        "listCaseHearingDate": "2024-05-03T14:25:15.000",
         "notificationsSent":[
           {
             "id":"67801_UPLOADED_HO_RESPONSE_DETENTION_ENGAGEMENT_TEAM",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "67801_UPLOADED_HO_RESPONSE_CASE_OFFICER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }

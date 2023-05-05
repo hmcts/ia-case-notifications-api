@@ -32,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
+import uk.gov.hmcts.reform.iacasenotificationsapi.fixtures.Fixture;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.LaunchDarklyFunctionalTestClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapMerger;
@@ -59,6 +60,8 @@ public class CcdScenarioRunnerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private List<Verifier> verifiers;
+    @Autowired private List<Fixture> fixtures;
+
 
     @Autowired
     private LaunchDarklyFunctionalTestClient launchDarklyFunctionalTestClient;
@@ -75,6 +78,10 @@ public class CcdScenarioRunnerTest {
 
         boolean launchDarklyFeature = false;
         loadPropertiesIntoMapValueExpander();
+
+        for (Fixture fixture : fixtures) {
+            fixture.prepare();
+        }
 
         assertFalse(
                 "Verifiers are configured",
@@ -101,7 +108,6 @@ public class CcdScenarioRunnerTest {
             final Headers authorizationHeaders = getAuthorizationHeaders(scenario);
 
             String description = MapValueExtractor.extract(scenario, "description");
-
             Object scenarioEnabled = MapValueExtractor.extract(scenario, "enabled");
 
             Object scenarioFeature = MapValueExtractor.extract(scenario, "launchDarklyKey");
@@ -383,7 +389,7 @@ public class CcdScenarioRunnerTest {
 
         if ("SystemUser".equalsIgnoreCase(credentials)) {
             return authorizationHeadersProvider
-                .getSystemUserAuthorization();
+                    .getSystemUserAuthorization();
         }
 
         return new Headers();

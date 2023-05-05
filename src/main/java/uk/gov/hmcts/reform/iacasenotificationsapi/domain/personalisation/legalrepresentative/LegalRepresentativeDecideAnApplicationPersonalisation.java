@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
 
@@ -78,11 +77,10 @@ public class LegalRepresentativeDecideAnApplicationPersonalisation implements Le
             String decision = makeAnApplication.getDecision();
             String applicantRole = makeAnApplication.getApplicantRole();
 
-            boolean isApplicationListed = makeAnApplicationService.isApplicationListed(State.get(makeAnApplication.getState()));
-
+            String listingRef = asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(null);
             boolean isLegalRepUser = applicantRole.equals(ROLE_LEGAL_REP);
 
-            if (isApplicationListed) {
+            if (listingRef != null) {
                 if ("Granted".equals(decision)) {
                     return isLegalRepUser ?  legalRepresentativeDecideAnApplicationGrantedAfterListingTemplateId : legalRepresentativeDecideAnApplicationGrantedOtherPartyAfterListingTemplateId;
                 } else {

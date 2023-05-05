@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -166,64 +165,76 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         switch (makeAnApplicationType) {
             case TIME_EXTENSION:
                 assertEquals("yes", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case ADJOURN:
             case EXPEDITE:
+            case UPDATE_HEARING_REQUIREMENTS:
             case TRANSFER:
-                assertEquals("yes", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("yes", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
-            case JUDGE_REVIEW:
+            case JUDGE_REVIEW_LO:
                 assertEquals("yes", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case LINK_OR_UNLINK:
                 assertEquals("yes", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case REINSTATE:
                 assertEquals("yes", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case WITHDRAW:
                 assertEquals("yes", personalisation.get("grantedWithdraw"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
+            case UPDATE_APPEAL_DETAILS:
             case OTHER:
-                assertEquals("yes", personalisation.get("grantedOther"));
+                assertEquals("yes", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
+                assertEquals("no", personalisation.get("grantedJudgesReview"));
+                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
+                assertEquals("no", personalisation.get("grantedReinstate"));
+                assertEquals("no", personalisation.get("grantedWithdraw"));
+                break;
+            case TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS:
+                assertEquals("yes", personalisation.get("grantedTransferOutOfAda"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
+                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
@@ -282,71 +293,71 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         assertEquals("granted", personalisation.get("applicationDecision"));
         assertEquals(makeAnApplicationType.getValue(), personalisation.get("applicationType"));
         assertEquals(decisionReason, personalisation.get("applicationDecisionReason"));
-        assertEquals(null, personalisation.get("decisionMaker"));
-        assertEquals(null, personalisation.get("judgesReviewDeadlineDate"));
-        assertEquals(null, personalisation.get("makeAnApplicationLink"));
+        assertNull(personalisation.get("decisionMaker"));
+        assertNull(personalisation.get("judgesReviewDeadlineDate"));
+        assertNull(personalisation.get("makeAnApplicationLink"));
 
         switch (makeAnApplicationType) {
             case TIME_EXTENSION:
                 assertEquals("yes", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case ADJOURN:
             case EXPEDITE:
             case TRANSFER:
-                assertEquals("yes", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("yes", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
-            case JUDGE_REVIEW:
+            case JUDGE_REVIEW_LO:
                 assertEquals("yes", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case LINK_OR_UNLINK:
                 assertEquals("yes", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case REINSTATE:
                 assertEquals("yes", personalisation.get("grantedReinstate"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case WITHDRAW:
                 assertEquals("yes", personalisation.get("grantedWithdraw"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedOther"));
+                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 break;
             case OTHER:
-                assertEquals("yes", personalisation.get("grantedOther"));
+                assertEquals("yes", personalisation.get("grantedUpdateAppealDetailsOrOther"));
                 assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteOrTransfer"));
+                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
                 assertEquals("no", personalisation.get("grantedJudgesReview"));
                 assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
                 assertEquals("no", personalisation.get("grantedReinstate"));

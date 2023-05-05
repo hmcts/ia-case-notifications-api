@@ -241,13 +241,17 @@ public enum AsylumCaseDefinition {
         "ftpaRespondentSubmitted", new TypeReference<YesOrNo>(){}),
 
     FTPA_APPLICANT_TYPE(
-        "ftpaApplicantType", new TypeReference<String>(){}),
+        "ftpaApplicantType", new TypeReference<ApplicantType>(){}),
 
     IS_FTPA_APPELLANT_DECIDED(
         "isFtpaAppellantDecided", new TypeReference<YesOrNo>(){}),
 
     IS_FTPA_RESPONDENT_DECIDED(
         "isFtpaRespondentDecided", new TypeReference<YesOrNo>(){}),
+    FTPA_RESPONDENT_DECISION_DOCUMENT(
+        "ftpaRespondentDecisionDocument", new TypeReference<List<IdValue<DocumentWithDescription>>>(){}),
+    FTPA_RESPONDENT_GROUNDS_DOCUMENTS(
+        "ftpaRespondentGroundsDocuments", new TypeReference<List<IdValue<DocumentWithDescription>>>(){}),
 
     HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS(
         "homeOfficeFtpaAppellantInstructStatus", new TypeReference<String>() {}),
@@ -346,6 +350,9 @@ public enum AsylumCaseDefinition {
 
     CONTACT_PREFERENCE(
         "contactPreference", new TypeReference<ContactPreference>(){}),
+
+    CONTACT_PREFERENCE_UN_REP(
+            "contactPreferenceUnRep", new TypeReference<List<String>>(){}),
 
     FEE_UPDATE_RECORDED(
         "feeUpdateRecorded", new TypeReference<CheckValues<String>>(){}),
