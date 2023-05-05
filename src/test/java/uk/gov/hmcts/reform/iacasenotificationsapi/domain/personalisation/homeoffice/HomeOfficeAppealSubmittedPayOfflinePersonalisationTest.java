@@ -84,9 +84,6 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
                 homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
 
-    @Test
-    public void should_return_personalisation_when_all_information_given() {
-
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
