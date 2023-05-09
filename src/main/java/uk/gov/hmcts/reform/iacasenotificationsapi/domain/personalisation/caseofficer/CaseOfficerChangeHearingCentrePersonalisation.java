@@ -24,6 +24,7 @@ public class CaseOfficerChangeHearingCentrePersonalisation implements EmailNotif
     private EmailAddressFinder emailAddressFinder;
     private final String listCaseCaseOfficerEmailAddress;
 
+
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
     @Value("${govnotify.emailPrefix.nonAda}")

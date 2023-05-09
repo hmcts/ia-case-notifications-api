@@ -385,7 +385,7 @@ public enum AsylumCaseDefinition {
     TRANSFER_OUT_OF_ADA_REASON(
             "transferOutOfAdaReason", new TypeReference<String>(){}),
     IS_ADMIN(
-        "isAdmin", new TypeReference<YesOrNo>() {}),
+        "isAdmin", new TypeReference<YesOrNo>() {})
     ;
 
     private final String value;

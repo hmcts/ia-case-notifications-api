@@ -106,6 +106,7 @@ public enum Event {
     MARK_APPEAL_AS_ADA("markAppealAsAda"),
     REMOVE_DETAINED_STATUS("removeDetainedStatus"),
     MARK_APPEAL_AS_DETAINED("markAppealAsDetained"),
+  
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 
