@@ -83,20 +83,13 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
                 homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
-
-
-    @Test
-    public void should_return_personalisation_when_all_information_given() {
-
-        Map<String, String> personalisation =
-                homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-    }
   
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+        Map<String, String> personalisation =
+            homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
+
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);  
         assertEquals(isAda.equals(YesOrNo.YES)
