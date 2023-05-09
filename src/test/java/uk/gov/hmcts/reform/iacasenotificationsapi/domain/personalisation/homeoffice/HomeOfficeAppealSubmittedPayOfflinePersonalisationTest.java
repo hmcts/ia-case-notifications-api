@@ -7,10 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 import java.util.Map;
 import java.util.Optional;
@@ -83,18 +79,19 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
                 homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
-  
+
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);  
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
 }
