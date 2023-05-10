@@ -1094,7 +1094,6 @@ adminEmailAddresses:
   hattonCross: ${IA_ADMIN_HATTON_CROSS_EMAIL:hattonxedets@example.com}
   manchester: ${IA_ADMIN_MANCHESTER_EMAIL:manchesteredets@example.com}
   glasgow: ${IA_ADMIN_GLASGOW_EMAIL:glasgowedets@example.com}
-  belfast: ${IA_ADMIN_BELFAST_EMAIL:belfastedets@example.com}
   bradford: ${IA_ADMIN_BRADFORD_EMAIL:bradfordedets@example.com}
   birmingham: ${IA_ADMIN_BIRMINGHAM_EMAIL:birminghamedets@example.com}
 

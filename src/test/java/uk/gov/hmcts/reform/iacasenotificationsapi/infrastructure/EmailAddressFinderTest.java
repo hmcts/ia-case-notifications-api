@@ -53,7 +53,7 @@ public class EmailAddressFinderTest {
         when(hearingCentreEmailAddresses.get(hearingCentre)).thenReturn(hearingCentreEmailAddress);
         when(homeOfficeEmailAddresses.get(listCaseHearingCentre)).thenReturn(listCaseHearingCenterEmailAddress);
         when(homeOfficeFtpaEmailAddresses.get(listCaseHearingCentre)).thenReturn(listCaseHearingCenterEmailAddress);
-        when(adminEmailAddresses.get(listCaseHearingCentre)).thenReturn(listCaseHearingCenterEmailAddress);
+        when(adminEmailAddresses.get(hearingCentre)).thenReturn(adminEmailAddress);
 
         emailAddressFinder = new EmailAddressFinder(
             hearingCentreEmailAddresses,
@@ -142,10 +142,57 @@ public class EmailAddressFinderTest {
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("hearingCentre is not present");
     }
+
     @Test
-    public void should_return_given_admin_email_address_from_lookup_map() {
-        assertEquals(adminEmailAddress, emailAddressFinder.getAdminEmailAddress(asylumCase));
+    public void should_return_correct_admin_email_address_from_lookup_map() {
+        when(adminEmailAddresses.get(HearingCentre.BIRMINGHAM)).thenReturn("birminghamedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.NOTTINGHAM)).thenReturn("birminghamedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.COVENTRY)).thenReturn("birminghamedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.BRADFORD)).thenReturn("bradfordedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.NEWCASTLE)).thenReturn("bradfordedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.GLASGOW)).thenReturn("glasgowedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.GLASGOW_TRIBUNAL_CENTRE)).thenReturn("glasgowedets@example.com");
+        when(adminEmailAddresses.get(HearingCentre.BELFAST)).thenReturn("glasgowedets@example.com");
+
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.BIRMINGHAM));
+        assertEquals("birminghamedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.NOTTINGHAM));
+        assertEquals("birminghamedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.COVENTRY));
+        assertEquals("birminghamedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.BRADFORD));
+        assertEquals("bradfordedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.NEWCASTLE));
+        assertEquals("bradfordedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.BRADFORD));
+        assertEquals("bradfordedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.GLASGOW));
+        assertEquals("glasgowedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.GLASGOW_TRIBUNAL_CENTRE));
+        assertEquals("glasgowedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.BELFAST));
+        assertEquals("glasgowedets@example.com", emailAddressFinder.getAdminEmailAddress(asylumCase));
+
     }
+
     @Test
     public void should_return_given_legal_rep_email_address_from_lookup_map() {
         assertEquals(legalRepEmailAddress, emailAddressFinder.getLegalRepEmailAddress(asylumCase));
