@@ -97,11 +97,16 @@ public enum Event {
     NOC_REQUEST_BAIL("nocRequestBail"),
     END_APPEAL_AUTOMATICALLY("endAppealAutomatically"),
     UPDATE_PAYMENT_STATUS("updatePaymentStatus"),
+    CREATE_CASE_LINK("createCaseLink"),
+    MAINTAIN_CASE_LINKS("maintainCaseLinks"),
+    CREATE_BAIL_CASE_LINK("createBailCaseLink"),
+    MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
     ADA_SUITABILITY_REVIEW("adaSuitabilityReview"),
     TRANSFER_OUT_OF_ADA("transferOutOfAda"),
     MARK_APPEAL_AS_ADA("markAppealAsAda"),
     REMOVE_DETAINED_STATUS("removeDetainedStatus"),
     MARK_APPEAL_AS_DETAINED("markAppealAsDetained"),
+  
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 
