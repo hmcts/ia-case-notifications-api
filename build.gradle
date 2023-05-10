@@ -283,7 +283,7 @@ repositories {
 dependencyManagement {
     dependencies {
 
-        dependencySet(group: 'org.yaml', version: '1.33') {
+        dependencySet(group: 'org.yaml', version: '2.0') {
             entry 'snakeyaml'
         }
 
@@ -293,26 +293,26 @@ dependencyManagement {
             entry 'tomcat-embed-websocket'
         }
 
-        //CVE-2021-42550
-        dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
-            entry 'logback-classic'
-            entry 'logback-core'
-        }
-
         dependencySet(group: 'commons-fileupload', version: '1.5') {
             entry 'commons-fileupload'
         }
 
-        //CVE-2021-44228, CVE-2021-44832, CVE-2021-45046
-        dependencySet(group: 'org.apache.logging.log4j', version: '2.17.1') {
-            entry 'log4j-api'
-            entry 'log4j-to-slf4j'
-        }
-
-        dependencySet(group: 'com.fasterxml.jackson.core', version: '2.14.1') {
+        dependencySet(group: 'com.fasterxml.jackson.core', version: '2.15.0') {
             entry 'jackson-databind'
             entry 'jackson-core'
+            entry 'jackson-annotations'
         }
+
+        dependencySet(group: 'com.fasterxml.jackson.dataformat', version: '2.15.0') {
+            entry 'jackson-dataformat-yaml'
+            entry 'jackson-dataformat-csv'
+        }
+
+        dependencySet(group: 'com.fasterxml.jackson.datatype', version: '2.15.0') {
+            entry 'jackson-datatype-jsr310'
+            entry 'jackson-datatype-jdk8'
+        }
+
     }
 }
 
@@ -327,17 +327,15 @@ dependencies {
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: versions.springCloud
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
-
     compile group: 'org.springframework.security', name: 'spring-security-oauth2-client'
     compile group: 'org.springframework.security', name: 'spring-security-oauth2-resource-server'
     compile group: 'org.springframework.security', name: 'spring-security-oauth2-jose'
-
 
     // CVE-2019-17195
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.22'
 
     // CVE-2021-27568
-    compile group: 'net.minidev', name: 'json-smart', version: '2.4.8'
+    compile group: 'net.minidev', name: 'json-smart', version: '2.4.10'
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.6.2'
 
@@ -362,14 +360,12 @@ dependencies {
 
     compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.17.2-RELEASE'
 
-    compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
+    compile group: 'com.google.guava', name: 'guava', version: '31.1-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compileOnly 'org.projectlombok:lombok:1.18.12'
-    compile group: 'org.yaml', name: 'snakeyaml'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
     compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.0.5'
-
 
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
@@ -378,11 +374,9 @@ dependencies {
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
 
-
     testCompile group: 'org.pitest', name: 'pitest', version: versions.pitest
     testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
     testCompile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
-    testCompile group: 'org.yaml', name: 'snakeyaml'
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testCompile group: 'org.springframework.security', name: 'spring-security-test'
