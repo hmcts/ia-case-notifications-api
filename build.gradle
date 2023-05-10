@@ -365,7 +365,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.12'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.0.5'
+    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.1.0'
 
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
