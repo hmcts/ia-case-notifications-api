@@ -86,12 +86,12 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);
         Map<String, String> personalisation =
-                homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
+            homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
 }

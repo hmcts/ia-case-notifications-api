@@ -101,6 +101,10 @@ public class EventTest {
         assertEquals("nocRequestBail", NOC_REQUEST_BAIL.toString());
         assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
         assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
+        assertEquals("createCaseLink", Event.CREATE_CASE_LINK.toString());
+        assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
+        assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
+        assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
         assertEquals("adaSuitabilityReview", ADA_SUITABILITY_REVIEW.toString());
         assertEquals("transferOutOfAda", TRANSFER_OUT_OF_ADA.toString());
         assertEquals("markAppealAsAda", MARK_APPEAL_AS_ADA.toString());
@@ -109,6 +113,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(99, Event.values().length);
+        assertEquals(103, Event.values().length);
     }
 }
