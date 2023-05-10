@@ -96,8 +96,6 @@ def secrets = [
         secret('admin-office-birmingham-email', 'IA_ADMIN_BIRMINGHAM_EMAIL'),
 
 
-
-
         secret('ctsc-admin-ftpa-decision-email', 'IA_CTSC_ADMIN_FTPA_DECISION'),
         secret('ctsc-admin-pending-payment-email', 'IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL'),
 

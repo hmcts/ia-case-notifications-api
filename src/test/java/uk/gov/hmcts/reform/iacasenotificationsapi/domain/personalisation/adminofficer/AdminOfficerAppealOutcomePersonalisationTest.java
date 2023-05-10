@@ -108,40 +108,6 @@ class AdminOfficerAppealOutcomePersonalisationTest {
         assertEquals(applicationDecision, personalisation.get("applicationDecision"));
 
     }
-
-//    @Test
-//    public void should_return_personalisation_when_all_mandatory_information_given() {
-//        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-//        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-//        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-//        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
-//        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-//        when(asylumCase.read(IS_DECISION_ALLOWED, String.class)).thenReturn(Optional.empty());
-//
-//
-//        Map<String, String> personalisation = adminOfficerPersonalisationProvider.getAdminPersonalisation(asylumCase);
-//
-//        assertEquals("", personalisation.get("appellantGivenNames"));
-//        assertEquals("", personalisation.get("appellantFamilyName"));
-//        assertEquals("", personalisation.get("appealReferenceNumber"));
-//        assertEquals("", personalisation.get("ariaListingReference"));
-//        assertEquals("", personalisation.get("hearingCentre"));
-//        assertEquals("", personalisation.get("applicationDecision"));
-//
-//    }
-
-//    private Map<String, String> getPersonalisationMapWithGivenValues() {
-//        return ImmutableMap
-//                .<String, String>builder()
-//                .put("appealReferenceNumber", appealReferenceNumber)
-//                .put("ariaListingReference", ariaListingReference)
-//                .put("appellantGivenNames", appellantGivenNames)
-//                .put("appellantFamilyName", appellantFamilyName)
-//                .put("hearingCentre", hearingCentre)
-//                .put("applicationDecision", applicationDecision)
-//                .build();
-//    }
-
 }
 
 
