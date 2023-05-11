@@ -111,9 +111,9 @@
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
-          "{$iaExUiFrontendUrl}",
           "Appeal an immigration or asylum decision: Appeal reference:",
-          "PA/12345/2019"
+          "PA/12345/2019",
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]
