@@ -37,17 +37,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAdjournHearingWithoutDatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAppellantFtpaSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentEditAppealAfterSubmitPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentEvidenceDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentForceCaseProgressionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentForceCaseToSubmitHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentFtpaSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentRequestResponseAmendPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
@@ -904,23 +894,45 @@ public class NotificationGeneratorConfiguration {
     @Bean("aipRespondentDirectionNotificationGenerator")
     public List<NotificationGenerator> aipRespondentDirectionNotificationGenerator(
             RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
-            AppellantNonStandardDirectionPersonalisationEmail appellantNonStandardDirectionPersonalisationEmail,
-            AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms,
+            AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail appellantNonStandardDirectionOfHomeOfficePersonalisationEmail,
+            AppellantNonStandardDirectionOfHomeOfficePersonalisationSms appellantNonStandardDirectionOfHomeOfficePersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(respondentNonStandardDirectionPersonalisation,
-                                appellantNonStandardDirectionPersonalisationEmail),
+                            appellantNonStandardDirectionOfHomeOfficePersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new SmsNotificationGenerator(
-                        newArrayList(appellantNonStandardDirectionPersonalisationSms),
+                        newArrayList(appellantNonStandardDirectionOfHomeOfficePersonalisationSms),
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("aipAppellantNonStandardDirectionNotificationGenerator")
+    public List<NotificationGenerator> aipAppellantNonStandardDirectionNotificationGenerator(
+        RespondentNonStandardDirectionOfAppellantPersonalization respondentNonStandardDirectionOfAppellantPersonalization,
+        AppellantNonStandardDirectionPersonalisationEmail appellantNonStandardDirectionPersonalisationEmail,
+        AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentNonStandardDirectionOfAppellantPersonalization, appellantNonStandardDirectionPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantNonStandardDirectionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 

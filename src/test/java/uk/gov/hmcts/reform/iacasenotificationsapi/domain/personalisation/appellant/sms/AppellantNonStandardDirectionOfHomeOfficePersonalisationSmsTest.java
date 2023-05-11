@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Collections;
 import java.util.Map;
@@ -25,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantNonStandardDirectionPersonalisationSmsTest {
+class AppellantNonStandardDirectionOfHomeOfficePersonalisationSmsTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -42,7 +41,7 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
 
-    private AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms;
+    private AppellantNonStandardDirectionOfHomeOfficePersonalisationSms appellantNonStandardDirectionPersonalisationSms;
 
     @BeforeEach
     void setup() {
@@ -53,7 +52,7 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
                 .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppellantMobilePhone));
 
-        appellantNonStandardDirectionPersonalisationSms = new AppellantNonStandardDirectionPersonalisationSms(
+        appellantNonStandardDirectionPersonalisationSms = new AppellantNonStandardDirectionOfHomeOfficePersonalisationSms(
                 smsTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder);
@@ -104,7 +103,7 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
 
         Map<String, String> personalisation = appellantNonStandardDirectionPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToTimelinePage"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }
