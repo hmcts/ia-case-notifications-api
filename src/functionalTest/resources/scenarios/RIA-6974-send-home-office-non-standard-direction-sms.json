@@ -23,8 +23,8 @@
                 "parties": "respondent",
                 "dateDue": "{$TODAY+14}",
                 "dateSent": "{$TODAY}",
-                "wantsEmail": "Yes",
-                "email": "appellantEmailAddress@test.com",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes",
                 "tag": ""
               }
             }
@@ -51,8 +51,8 @@
               "parties": "respondent",
               "dateDue": "{$TODAY+14}",
               "dateSent": "{$TODAY}",
-              "wantsEmail": "Yes",
-              "email": "appellantEmailAddress@test.com",
+              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+              "wantsSms": "Yes",
               "tag": ""
             }
           }
@@ -63,7 +63,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_APPELLANT_NON_STANDARD_DIRECTION",
+            "id": "1003_APPELLANT_NON_STANDARD_DIRECTION_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -87,15 +87,12 @@
         ]
       },
       {
-        "reference": "1003_APPELLANT_NON_STANDARD_DIRECTION",
-        "recipient": "appellantEmailAddress@test.com",
-        "subject": "Subject: Immigration and Asylum appeal: The Tribunal has sent the Home Office a message",
+        "reference": "1003_APPELLANT_NON_STANDARD_DIRECTION_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
         "body": [
+          "Appeal an immigration or asylum decision: Appeal an immigration or asylum decision: Appeal reference:",
           "PA/12345/2019",
-          "LP/12345/2019",
-          "CASE001",
-          "Talha Awan",
-          "The Tribunal has asked the Home Office to do something with your appeal.",
           "{$iaExUiFrontendUrl}"
         ]
       }
