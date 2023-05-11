@@ -112,8 +112,7 @@
         "subject": "",
         "body": [
           "Appeal an immigration or asylum decision: Appeal reference:",
-          "PA/12345/2019",
-          "{$iaExUiFrontendUrl}"
+          "PA/12345/2019"
         ]
       }
     ]
