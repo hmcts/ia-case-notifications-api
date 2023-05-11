@@ -15,6 +15,18 @@
           "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
           "journeyType": "aip",
           "appellantEmailAddress": "appellantEmailAddress@test.com",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "respondent",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "No",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ],
           "directions": [
             {
               "id": "1",
@@ -23,8 +35,6 @@
                 "parties": "respondent",
                 "dateDue": "{$TODAY+14}",
                 "dateSent": "{$TODAY}",
-                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-                "wantsSms": "Yes",
                 "tag": ""
               }
             }
@@ -43,6 +53,18 @@
         "listCaseHearingCentre": "taylorHouse",
         "ariaListingReference": "LP/12345/2019",
         "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
+        "subscriptions": [
+          {
+            "id": "1",
+            "value": {
+              "subscriber": "respondent",
+              "email": "{$TEST_CITIZEN_USERNAME}",
+              "wantsEmail": "No",
+              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+              "wantsSms": "Yes"
+            }
+          }
+        ],
         "directions": [
           {
             "id": "1",
@@ -51,8 +73,6 @@
               "parties": "respondent",
               "dateDue": "{$TODAY+14}",
               "dateSent": "{$TODAY}",
-              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-              "wantsSms": "Yes",
               "tag": ""
             }
           }
