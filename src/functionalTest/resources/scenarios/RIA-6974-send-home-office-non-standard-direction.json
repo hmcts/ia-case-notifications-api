@@ -14,7 +14,6 @@
           "ariaListingReference": "LP/12345/2019",
           "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
           "journeyType": "aip",
-          "appellantEmailAddress": "appellantEmailAddress@test.com",
           "subscriptions": [
             {
               "id": "1",
@@ -108,7 +107,7 @@
       },
       {
         "reference": "1003_APPELLANT_NON_STANDARD_DIRECTION",
-        "recipient": "appellantEmailAddress@test.com",
+        "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Subject: Immigration and Asylum appeal: The Tribunal has sent the Home Office a message",
         "body": [
           "PA/12345/2019",
