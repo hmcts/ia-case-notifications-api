@@ -19,7 +19,7 @@
             {
               "id": "1",
               "value": {
-                "subscriber": "respondent",
+                "subscriber": "appellant",
                 "email": "{$TEST_CITIZEN_USERNAME}",
                 "wantsEmail": "No",
                 "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
@@ -57,7 +57,7 @@
           {
             "id": "1",
             "value": {
-              "subscriber": "respondent",
+              "subscriber": "appellant",
               "email": "{$TEST_CITIZEN_USERNAME}",
               "wantsEmail": "No",
               "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
