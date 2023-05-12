@@ -21,15 +21,18 @@ public class HomeOfficeDecisionWithoutHearingPersonalisation implements EmailNot
     private final String homeOfficeDecisionWithoutHearingTemplateId;
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
+    private final String iaExUiFrontendUrl;
 
     public HomeOfficeDecisionWithoutHearingPersonalisation(
             @Value("${govnotify.template.decisionWithoutHearing.homeOffice.email}") String homeOfficeDecisionWithoutHearingTemplateId,
             EmailAddressFinder emailAddressFinder,
-            CustomerServicesProvider customerServicesProvider
+            CustomerServicesProvider customerServicesProvider,
+            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
     ) {
         this.homeOfficeDecisionWithoutHearingTemplateId = homeOfficeDecisionWithoutHearingTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     @Override
@@ -60,6 +63,7 @@ public class HomeOfficeDecisionWithoutHearingPersonalisation implements EmailNot
                         .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                         .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                         .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                        .put("linkToOnlineService", iaExUiFrontendUrl)
                         .build();
     }
 }
