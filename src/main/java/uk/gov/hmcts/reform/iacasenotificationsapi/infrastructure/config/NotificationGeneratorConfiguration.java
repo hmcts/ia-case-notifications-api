@@ -904,7 +904,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("aipRespondentDirectionNotificationGenerator")
     public List<NotificationGenerator> aipRespondentDirectionNotificationGenerator(
             RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
-            LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation,
             AppellantNonStandardDirectionPersonalisationEmail appellantNonStandardDirectionPersonalisationEmail,
             AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
@@ -913,7 +912,6 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(respondentNonStandardDirectionPersonalisation,
-                                legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation,
                                 appellantNonStandardDirectionPersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
