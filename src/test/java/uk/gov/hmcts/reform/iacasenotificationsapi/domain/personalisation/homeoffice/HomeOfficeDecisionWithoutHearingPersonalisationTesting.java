@@ -41,7 +41,7 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
     private String mockedHomeOfficeEmail = "ho-taylorhouse@example.com";
     private String iaServicesPhone = "0300 123 1711";
     private String iaServicesEmail = "contactia@justice.gov.uk";
-    private final String iaExUiFrontendUrl = "http://localhost";
+    private String iaExUiFrontendUrl = "http://localhost";
     private Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
             "customerServicesEmail", iaServicesEmail);
 
