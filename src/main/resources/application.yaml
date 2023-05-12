@@ -837,7 +837,7 @@ govnotify:
         canProceed:
           email: 846d3cbe-4e1e-4f78-b165-a96b40fe44b6
         cannotProceed:
-          email: 9dc5be6b-ca82-425f-b55e-207432fdb02b
+          email: 44b68e95-6abf-42c6-b942-71ef896ba14d
       appellant:
         canProceed:
           email: fc2b3a2d-af6a-4536-8cb7-bd1cdaf7466b
