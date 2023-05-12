@@ -288,14 +288,14 @@ govnotify:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
     endAppealBeforeListing:
       legalRep:
-        email: eaa54608-a67e-4c20-9c48-5530a255e114
+        email: 7eb6e398-c85d-483f-9ff7-6ec7a3e17651
       homeOffice:
         email: 3b08a41e-803c-45bb-9759-1bae4650420f
       appellant:
         email: 228b092a-c9dd-46d6-abb4-f62f3cf90c2b
     endAppealAfterListing:
       legalRep:
-        email: 28176e8c-bc2d-45db-9f7f-8219ee930e80
+        email: 0e691417-34ae-4dbc-8e83-4d272fb4e9e2
       homeOffice:
         email: f0cc3ca1-c273-46d5-9a2b-ea32c275acb8
       appellant:
