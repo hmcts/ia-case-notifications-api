@@ -41,6 +41,7 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
     private String mockedHomeOfficeEmail = "ho-taylorhouse@example.com";
     private String iaServicesPhone = "0300 123 1711";
     private String iaServicesEmail = "contactia@justice.gov.uk";
+    private String iaExUiFrontendUrl = "http://localhost";
     private Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
             "customerServicesEmail", iaServicesEmail);
 
@@ -57,7 +58,8 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
         homeOfficeDecisionWithoutHearingPersonalisation = new HomeOfficeDecisionWithoutHearingPersonalisation(
                 homeOfficeDecisionWithoutHearingTemplateId,
                 emailAddressFinder,
-                customerServicesProvider
+                customerServicesProvider,
+                iaExUiFrontendUrl
         );
     }
 
@@ -102,5 +104,6 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
         assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaServicesPhone, personalisation.get("customerServicesTelephone"));
         assertEquals(iaServicesEmail, personalisation.get("customerServicesEmail"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 }
