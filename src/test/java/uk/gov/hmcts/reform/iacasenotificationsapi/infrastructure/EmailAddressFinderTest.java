@@ -61,12 +61,8 @@ public class EmailAddressFinderTest {
             homeOfficeEmailAddresses,
             homeOfficeFtpaEmailAddresses,
             bailHearingCentreEmailAddresses,
-
-            adminEmailAddresses
-
+            adminEmailAddresses,
             listCaseCaseOfficerEmailAddress
-
-
         );
     }
 
