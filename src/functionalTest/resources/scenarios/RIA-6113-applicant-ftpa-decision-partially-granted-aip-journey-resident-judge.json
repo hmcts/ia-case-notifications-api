@@ -63,7 +63,7 @@
     "notifications": [
       {
         "reference": "61134_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
-        "recipient": "{$upperTribunalNoticesEmailAddress}",
+        "recipient": "{$upperTribunalNoticesIacEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [
           "PA/12345/2019",
