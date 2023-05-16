@@ -40,7 +40,7 @@
     "notifications": [
       {
         "reference": "9009_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
-        "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
+        "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
           "PA/12345/2019",
