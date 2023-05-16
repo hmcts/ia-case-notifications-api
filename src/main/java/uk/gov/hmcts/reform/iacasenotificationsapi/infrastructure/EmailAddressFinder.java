@@ -8,12 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Hearing
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-
-
-
-
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
@@ -154,7 +149,8 @@ public class EmailAddressFinder {
                 return emailAddressesMap.get(hearingCentre);
         }
     }
-    public String getAdminEmailAddress(AsylumCase asylumCase){
+
+    public String getAdminEmailAddress(AsylumCase asylumCase) {
         return asylumCase
                 .read(HEARING_CENTRE, HearingCentre.class)
                 .map(it -> Optional.ofNullable(getAdminHearingCentreAddress(adminEmailAddresses, it))

@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 import static java.util.Arrays.stream;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.aspectj.apache.bcel.classfile.Unknown;
-
 import java.util.Optional;
 
 public enum HearingCentre {

@@ -8,7 +8,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.util.Map;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,6 +72,7 @@ public class AdminOfficerPersonalisationProviderTest {
         assertEquals(hearingCentre, personalisation.get("hearingCentre"));
         assertEquals(applicationDecision, personalisation.get("applicationDecision"));
     }
+
     @Test
     public void should_return_reviewed_hearing_requirements_personalisation() {
 

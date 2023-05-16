@@ -291,6 +291,7 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
     @Bean("appealOutcomeRepNotificationGenerator")
     public List<NotificationGenerator> appealOutcomeRepNotificationGenerator(
         LegalRepresentativeAppealOutcomePersonalisation legalRepresentativeAppealOutcomePersonalisation,
