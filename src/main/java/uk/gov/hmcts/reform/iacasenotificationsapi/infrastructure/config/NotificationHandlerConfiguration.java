@@ -995,6 +995,27 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipAppellantNonStandardDirectionNotificationHandler(
+        @Qualifier("aipAppellantNonStandardDirectionNotificationGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SEND_DIRECTION
+                    && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.APPELLANT)
+                    && isAipJourney(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> awaitingRespondentDirectionNotificationHandler(
         @Qualifier("awaitingRespondentDirectionNotificationGenerator") List<NotificationGenerator> notificationGenerators,
         DirectionFinder directionFinder) {

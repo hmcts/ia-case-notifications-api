@@ -14,24 +14,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class AppellantNonStandardDirectionPersonalisationSms implements SmsNotificationPersonalisation {
+public class AppellantNonStandardDirectionOfHomeOfficePersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String appellantNonStandardDirectionTemplateId;
+    private final String appellantNonStandardDirectionBeforeListingTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
 
-    public AppellantNonStandardDirectionPersonalisationSms(
-            @Value("${govnotify.template.nonStandardDirectionOfAppellant.appellant.sms}") String appellantNonStandardDirectionTemplateId,
+    public AppellantNonStandardDirectionOfHomeOfficePersonalisationSms(
+            @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeBeforeListing.appellant.sms}") String appellantNonStandardDirectionBeforeListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder) {
-        this.appellantNonStandardDirectionTemplateId = appellantNonStandardDirectionTemplateId;
+        this.appellantNonStandardDirectionBeforeListingTemplateId = appellantNonStandardDirectionBeforeListingTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return appellantNonStandardDirectionTemplateId;
+        return appellantNonStandardDirectionBeforeListingTemplateId;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class AppellantNonStandardDirectionPersonalisationSms implements SmsNotif
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("linkToTimelinePage", iaAipFrontendUrl)
+                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
     }
 }
