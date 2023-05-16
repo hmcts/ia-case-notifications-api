@@ -39,7 +39,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
 
     private Long caseId = 12345L;
     private String upperTribunalNoticesEmailAddress = "homeoffice-granted@example.com";
-    private String upperTribunalNoticesIacEmailAddress = "homeoffice-granted-iac@example.com";
+    private String upperTribunalPermissionApplicationsEmailAddress = "homeoffice-granted-iac@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String ariaListingReference = "ariaListingReference";
@@ -80,7 +80,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
                 dismissedTemplateId,
                 personalisationProvider,
                 upperTribunalNoticesEmailAddress,
-                upperTribunalNoticesIacEmailAddress
+                upperTribunalPermissionApplicationsEmailAddress
 
             );
     }
@@ -163,7 +163,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
                 .thenReturn(Optional.of(state));
 
             String expectedEmailAddress = Set.of(FTPA_GRANTED, FTPA_PARTIALLY_GRANTED).contains(decision)
-                ? upperTribunalNoticesIacEmailAddress
+                ? upperTribunalPermissionApplicationsEmailAddress
                 : upperTribunalNoticesEmailAddress;
 
             assertTrue(homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase)

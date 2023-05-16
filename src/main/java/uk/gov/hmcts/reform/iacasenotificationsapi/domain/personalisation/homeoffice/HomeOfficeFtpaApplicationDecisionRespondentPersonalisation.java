@@ -19,7 +19,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
     private final PersonalisationProvider personalisationProvider;
     private final String upperTribunalNoticesEmailAddress;
-    private final String upperTribunalNoticesIacEmailAddress;
+    private final String upperTribunalPermissionApplicationsEmailAddress;
     private final String applicationGrantedApplicantHomeOfficeTemplateId;
     private final String applicationPartiallyGrantedApplicantHomeOfficeTemplateId;
     private final String applicationNotAdmittedApplicantHomeOfficeTemplateId;
@@ -38,7 +38,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
         @Value("${govnotify.template.applicationDismissed.homeOffice.email}") String applicationDismissedHomeOfficeTemplateId,
         PersonalisationProvider personalisationProvider,
         @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress,
-        @Value("${upperTribunalNoticesIacEmailAddress}") String upperTribunalNoticesIacEmailAddress
+        @Value("${upperTribunalPermissionApplicationsEmailAddress}") String upperTribunalPermissionApplicationsEmailAddress
     ) {
         this.applicationGrantedApplicantHomeOfficeTemplateId = applicationGrantedApplicantHomeOfficeTemplateId;
         this.applicationPartiallyGrantedApplicantHomeOfficeTemplateId = applicationPartiallyGrantedApplicantHomeOfficeTemplateId;
@@ -49,7 +49,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
         this.applicationDismissedHomeOfficeTemplateId = applicationDismissedHomeOfficeTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.upperTribunalNoticesEmailAddress = upperTribunalNoticesEmailAddress;
-        this.upperTribunalNoticesIacEmailAddress = upperTribunalNoticesIacEmailAddress;
+        this.upperTribunalPermissionApplicationsEmailAddress = upperTribunalPermissionApplicationsEmailAddress;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
                 ) {
                     String recipient = ftpaRespondentLjRjDecision(asylumCase)
                         .map(decision -> List.of(FTPA_GRANTED,FTPA_PARTIALLY_GRANTED).contains(decision)
-                            ? upperTribunalNoticesIacEmailAddress
+                            ? upperTribunalPermissionApplicationsEmailAddress
                             : upperTribunalNoticesEmailAddress)
                         .orElseThrow(() -> new IllegalStateException("Appellant decision not present"));
 
