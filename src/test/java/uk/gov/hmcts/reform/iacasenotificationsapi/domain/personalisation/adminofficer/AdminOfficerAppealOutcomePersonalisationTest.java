@@ -8,7 +8,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.util.Map;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,14 +48,14 @@ class AdminOfficerAppealOutcomePersonalisationTest {
 
     @BeforeEach
     public void setup() {
-        String iaExUiFrontendUrl = "hhh";
+        final String IA_EXUI_FRONTEND_URL = "hhh";
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
-        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(iaExUiFrontendUrl);
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(IA_EXUI_FRONTEND_URL);
 
         adminOfficerAppealOutcomePersonalisation = new AdminOfficerAppealOutcomePersonalisation(
                 decisionAndReasonUploadedTemplateId,
