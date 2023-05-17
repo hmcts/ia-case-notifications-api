@@ -48,14 +48,14 @@ class AdminOfficerAppealOutcomePersonalisationTest {
 
     @BeforeEach
     public void setup() {
-        final String IA_EXUI_FRONTEND_URL = "hhh";
+        final String iaExUiFrontendUrl = "hhh";
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
-        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(IA_EXUI_FRONTEND_URL);
+        adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(iaExUiFrontendUrl);
 
         adminOfficerAppealOutcomePersonalisation = new AdminOfficerAppealOutcomePersonalisation(
                 decisionAndReasonUploadedTemplateId,
