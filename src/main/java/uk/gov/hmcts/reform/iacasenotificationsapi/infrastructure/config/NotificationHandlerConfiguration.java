@@ -987,8 +987,7 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.SEND_DIRECTION
                             && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
-                            && isAipJourney(asylumCase)
-                            && callback.getCaseDetails().getState() != State.AWAITING_RESPONDENT_EVIDENCE;
+                            && isAipJourney(asylumCase);
                 },
                 notificationGenerators
         );

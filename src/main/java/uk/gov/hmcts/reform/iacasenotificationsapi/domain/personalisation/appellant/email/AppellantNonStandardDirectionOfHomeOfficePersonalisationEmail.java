@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @Service
 public class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String iaExUiFrontendUrl;
+    private final String iaAipFrontendUrl;
     private final PersonalisationProvider personalisationProvider;
     private final String appellantNonStandardDirectionBeforeListingTemplateId;
     private final String appellantNonStandardDirectionAfterListingTemplateId;
@@ -31,12 +31,12 @@ public class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail imple
     public AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail(
             @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeBeforeListing.appellant.email}") String appellantNonStandardDirectionBeforeListingTemplateId,
             @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeAfterListing.appellant.email}") String appellantNonStandardDirectionAfterListingTemplateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             PersonalisationProvider personalisationProvider,
             CustomerServicesProvider customerServicesProvider,
             RecipientsFinder recipientsFinder
     ) {
-        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.appellantNonStandardDirectionBeforeListingTemplateId = appellantNonStandardDirectionBeforeListingTemplateId;
         this.appellantNonStandardDirectionAfterListingTemplateId = appellantNonStandardDirectionAfterListingTemplateId;
         this.personalisationProvider = personalisationProvider;
@@ -68,7 +68,7 @@ public class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail imple
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("linkToOnlineService", iaAipFrontendUrl)
                 .putAll(personalisationProvider.getPersonalisation(callback));
 
         return listCaseFields.build();
