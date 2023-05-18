@@ -1,5 +1,5 @@
 {
-  "description": "RIA-3855 decision outcome judge home office notification failure",
+  "description": "RIA-3855 decision outcome judge home office notification failure (Judge, appeal allowed) + RIA-6949 Send notification also to Admin Officer",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -59,7 +59,7 @@
       },
       {
         "reference": "3855_APPEAL_OUTCOME_ADMIN",
-        "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
+        "recipient": "{$adminEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
           "PA/12345/2019",
