@@ -65,7 +65,7 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPELLANT_NON_STANDARD_DIRECTION_SMS",
+        assertEquals(caseId + "_APPELLANT_NON_STANDARD_DIRECTION_OF_HOME_OFFICE_SMS",
                 appellantNonStandardDirectionPersonalisationSms.getReferenceId(caseId));
     }
 

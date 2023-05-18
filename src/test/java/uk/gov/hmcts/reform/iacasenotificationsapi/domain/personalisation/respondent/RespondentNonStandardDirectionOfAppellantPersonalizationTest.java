@@ -201,7 +201,7 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
 
     @ParameterizedTest
     @EnumSource(value = State.class, names = {
-            "FTPA_SUBMITTED", "DECIDED", "FTPA_DECIDED", "CASE_BUILDING"
+        "FTPA_SUBMITTED", "DECIDED", "FTPA_DECIDED", "CASE_BUILDING"
     })
     void should_throw_exception_when_send_direction_event_not_available_in_current_state(State currentState) {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
