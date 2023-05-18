@@ -1247,6 +1247,8 @@ paymentExceptionsAdminOfficerEmailAddress: ${PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EM
 apcHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_APC}
 lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
+upperTribunalPermissionApplicationsEmailAddress: ${IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL:UTIACpermissionapplications@grantedpartgranted.fake.com}
+
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
