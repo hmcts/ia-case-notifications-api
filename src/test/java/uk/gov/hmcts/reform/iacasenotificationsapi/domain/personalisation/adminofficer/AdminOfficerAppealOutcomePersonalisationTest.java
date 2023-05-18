@@ -91,7 +91,8 @@ class AdminOfficerAppealOutcomePersonalisationTest {
         "GLASGOW,ALLOWED",
         "GLASGOW,DISMISSED",
         "BELFAST,ALLOWED",
-        "BELFAST,DISMISSED"
+        "BELFAST,DISMISSED",
+        "COVENTRY,ALLOWED"
     })
     void should_return_personalisation_when_all_information_given(String hearingCentre, String applicationDecision) {
         // Given

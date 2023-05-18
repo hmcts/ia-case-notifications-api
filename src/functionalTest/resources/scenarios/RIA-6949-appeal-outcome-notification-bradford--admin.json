@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "judge",
     "input": {
-      "id": 6949,
+      "id": 69493,
       "eventId": "sendDecisionAndReasons",
       "state": "decided",
       "caseData": {
@@ -28,15 +28,15 @@
         "hearingCentre": "bradford",
         "notificationsSent": [
           {
-            "id": "6949_APPEAL_OUTCOME_HOME_OFFICE",
+            "id": "69493_APPEAL_OUTCOME_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6949_APPEAL_OUTCOME_ADMIN",
+            "id": "69493_APPEAL_OUTCOME_ADMIN",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6949_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+            "id": "69493_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
 
@@ -45,7 +45,7 @@
     },
     "notifications": [
       {
-        "reference": "6949_APPEAL_OUTCOME_HOME_OFFICE",
+        "reference": "69493_APPEAL_OUTCOME_HOME_OFFICE",
         "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -60,7 +60,7 @@
       },
 
       {
-        "reference": "6949_APPEAL_OUTCOME_ADMIN",
+        "reference": "69493_APPEAL_OUTCOME_ADMIN",
         "recipient": "{$adminEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -72,7 +72,7 @@
         ]
       },
       {
-        "reference": "6949_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+        "reference": "69493_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
