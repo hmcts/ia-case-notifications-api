@@ -84,7 +84,6 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     private String customerServicesEmail = "cust.services@example.com";
     private int oocDays = 28;
     private int inCountryDays = 14;
-
     private AppellantFtpaApplicationDecisionPersonalisationEmail appellantFtpaApplicationDecisionPersonalisationEmail;
 
     @BeforeEach

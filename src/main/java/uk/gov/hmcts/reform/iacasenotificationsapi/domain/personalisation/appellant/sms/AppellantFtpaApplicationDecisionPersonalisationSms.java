@@ -28,7 +28,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
     private final String ftpaAppellantDecisionRefusedToAppellantSmsTemplateId;
     private final String iaAipFrontendUrl;
     private final String oocDays;
-    private final String inCountryDays;
+    private final String inCountryDays;    
     private final RecipientsFinder recipientsFinder;
 
     public AppellantFtpaApplicationDecisionPersonalisationSms(

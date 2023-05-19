@@ -18,6 +18,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDec
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -66,7 +67,6 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     private String mockedAppellantMobilePhone = "07123456789";
     private int oocDays = 28;
     private int inCountryDays = 14;
-
     private AppellantFtpaApplicationDecisionPersonalisationSms appellantFtpaApplicationDecisionPersonalisationSms;
 
     @BeforeEach

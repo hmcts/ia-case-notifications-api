@@ -102,6 +102,10 @@ public class EventTest {
         assertEquals("nocRequestBail", NOC_REQUEST_BAIL.toString());
         assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
         assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
+        assertEquals("createCaseLink", Event.CREATE_CASE_LINK.toString());
+        assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
+        assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
+        assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
