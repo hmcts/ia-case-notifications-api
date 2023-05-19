@@ -33,8 +33,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
     private final String ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId;
     private final String ftpaAppellantDecisionRefusedToAppellantEmailTemplateId;
     private final String iaAipFrontendUrl;
-    private final long oocDays;
-    private final long inCountryDays;
+    private final String oocDays;
+    private final String inCountryDays;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
@@ -46,8 +46,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         @Value("${govnotify.template.applicationNotAdmitted.applicant.citizen.email}") String ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId,
         @Value("${govnotify.template.applicationRefused.applicant.citizen.email}") String ftpaAppellantDecisionRefusedToAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        @Value("${ftpaOutOfCountryDays}") long oocDays,
-        @Value("${ftpaInCountryDays}") long inCountryDays,
+        @Value("${ftpaOutOfCountryDays}") int oocDays,
+        @Value("${ftpaInCountryDays}") int inCountryDays,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -58,8 +58,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         this.ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId = ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId;
         this.ftpaAppellantDecisionRefusedToAppellantEmailTemplateId = ftpaAppellantDecisionRefusedToAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
-        this.oocDays = oocDays;
-        this.inCountryDays = inCountryDays;
+        this.oocDays = String.valueOf(oocDays);
+        this.inCountryDays = String.valueOf(inCountryDays);
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
@@ -117,7 +117,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
                 .put("linkToService", iaAipFrontendUrl)
                 .put("applicationDecision", ftpaDecisionVerbalization(getDecisionOutcomeType(asylumCase)))
                 .put("dueDate", asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)
-                    .map(inUk -> inUk.equals(YES) ? dueDate(inCountryDays) : dueDate(oocDays)).orElse(""))
+                    .map(inUk -> inUk.equals(YES) ? inCountryDays : oocDays).orElse(""))
                 .build();
     }
 
