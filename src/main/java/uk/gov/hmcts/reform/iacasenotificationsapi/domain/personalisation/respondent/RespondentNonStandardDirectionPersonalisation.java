@@ -144,16 +144,9 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         .parse(direction.getDateDue())
                         .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
-        //LinkedList<String> result = new LinkedList<String>();
-        StringBuilder string = new StringBuilder();
-
+        String directionParties = new String();
         if (direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT)) {
-            String directionParties = String.valueOf(direction.getParties());
-            for (String w : directionParties.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
-                //result.add(w);
-                string.append(w + " ");
-            }
-
+            directionParties = "Appellant and Respondent";
         }
 
         return ImmutableMap
@@ -166,7 +159,7 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("explanation", direction.getExplanation())
-                .put("direction", string.toString().toLowerCase(Locale.ROOT))
+                .put("direction", directionParties)
                 .put("dueDate", directionDueDate)
                 .build();
     }

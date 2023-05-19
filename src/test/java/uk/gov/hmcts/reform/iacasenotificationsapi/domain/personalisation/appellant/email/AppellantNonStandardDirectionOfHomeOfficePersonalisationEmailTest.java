@@ -17,11 +17,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -43,11 +42,17 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PersonalisationProvider personalisationProvider;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
 
 
     private Long caseId = 12345L;
     private String emailBeforeTemplateId = "someEmailTemplateId";
     private String emailAfterTemplateId = "someEmailTemplateId";
+    private String toAppellantAndRespondentAfterTemplateId = "someEmailTemplateId";
+    private String toAppellantAndRespondentBeforeTemplateId = "someEmailTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -77,10 +82,13 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
         appellantNonStandardDirectionPersonalisationEmail = new AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail(
                 emailBeforeTemplateId,
                 emailAfterTemplateId,
+                toAppellantAndRespondentAfterTemplateId,
+                toAppellantAndRespondentBeforeTemplateId,
                 iaAipFrontendUrl,
                 personalisationProvider,
                 customerServicesProvider,
-                recipientsFinder);
+                recipientsFinder,
+                directionFinder);
     }
 
     @Test
@@ -93,6 +101,26 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
     public void should_return_given_template_id_after_listing() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
                 .thenReturn(Optional.of(HearingCentre.BELFAST));
+        assertEquals(emailAfterTemplateId,
+                appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_given_template_id_before_listing_to_appellant_and_respondent() {
+        when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
+        when(direction.getParties()).thenReturn(Parties.APPELLANT_AND_RESPONDENT);
+
+        assertEquals(emailAfterTemplateId,
+                appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_given_template_id_after_listing_to_appellant_and_respondent() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.BELFAST));
+        when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
+        when(direction.getParties()).thenReturn(Parties.APPELLANT_AND_RESPONDENT);
+
         assertEquals(emailAfterTemplateId,
                 appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
     }

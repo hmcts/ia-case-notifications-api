@@ -16,10 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,9 +34,14 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationSmsTest {
     private CaseDetails<AsylumCase> caseDetails;
     @Mock
     RecipientsFinder recipientsFinder;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
 
     private Long caseId = 12345L;
     private String smsTemplateId = "someSmsTemplateId";
+    private String toAppellantAndRespondentSmsTemplateId = "someSmsTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
@@ -54,13 +59,23 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationSmsTest {
 
         appellantNonStandardDirectionPersonalisationSms = new AppellantNonStandardDirectionOfHomeOfficePersonalisationSms(
                 smsTemplateId,
+                smsTemplateId,
                 iaAipFrontendUrl,
-                recipientsFinder);
+                recipientsFinder,
+                directionFinder);
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(smsTemplateId, appellantNonStandardDirectionPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantNonStandardDirectionPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_given_template_to_appellant_and_respondent_id() {
+        when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
+        when(direction.getParties()).thenReturn(Parties.RESPONDENT);
+
+        assertEquals(smsTemplateId, appellantNonStandardDirectionPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
