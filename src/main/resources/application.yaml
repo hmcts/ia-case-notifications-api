@@ -411,8 +411,14 @@ govnotify:
     applyForFtpa:
       respondent:
         email: 317498af-4da1-44c7-935e-d70009bc687f
+        toAppellant:
+          email: 01a0aedf-28d8-4c45-b41f-a12ec090d3b5
+          sms: 7545277a-ecf7-4e29-b1bd-ee67898e6d20
       appellant:
         email: 28ea778a-f2fb-4447-9144-a3815c92edbc
+      aip:
+        email: e88352c7-7e70-40ef-b18b-55e9acdd603d
+        sms: f340b389-803a-40a8-a202-6f998b854a53
       adminOfficer:
         email: aa44dab0-a9cd-4129-99bd-9ba2d4c8a57b
       caseOfficer:
@@ -532,11 +538,17 @@ govnotify:
           email: ff724fb9-2daa-4ed1-9405-5ed389c4df7a
         homeOffice:
           email: d97f959e-7d5f-462a-9b71-2f20086ab44f
+        citizen:
+          email: 9284c9b4-1fc3-4cc0-95d4-7b765ac13b8c
+          sms: c397fdb4-b23e-44aa-bf1a-ee54d70051c9
       otherParty:
         legalRep:
           email: bd848684-72e9-4c85-a845-dac52de75bf4
         homeOffice:
           email: bf8caa99-b3b7-4fae-bb0c-2c25f919fb65
+        citizen:
+          email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
+          sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationPartiallyGranted:
       admin:
         email: 5ed2b159-98e3-4878-a75f-f365370cba4d
@@ -550,28 +562,41 @@ govnotify:
           email: 3856665e-53b3-4efa-bedf-25c08d8f01b7
         homeOffice:
           email: f6ff1df5-c6b5-4f77-b500-5c461e35dc43
+#       citizen: Same template as for 'granted'
     applicationNotAdmitted:
       applicant:
         legalRep:
           email: f22b0a18-9487-4f86-9bf5-45ebfa6c882c
         homeOffice:
           email: 9cd8317c-3c89-43cc-b106-5c44041e9298
+        citizen:
+          email: bff3142f-c738-4625-8fae-911405a8c076
+          sms: 21f40d4c-4157-4e00-8cb3-01ad09cced0a
       otherParty:
         legalRep:
           email: 755da55a-85ec-40b9-9f1c-7e382bdf7c9e
         homeOffice:
           email: 9c70eced-4423-4426-b550-7f858771417d
+        citizen:
+          email: 49a68f8a-8fa6-4803-92fe-aa8fd8287132
+          sms: da5a342b-0d52-4e97-841f-523476d02f42
     applicationRefused:
       applicant:
         legalRep:
           email: 5e031048-eeed-4754-98c1-b6cff789d407
         homeOffice:
           email: fcbe9da1-628b-4661-9128-4e57f1f5e21d
+        citizen:
+          email: 0809b13f-86ac-40eb-be80-ada12aaaa811
+          sms: e54d5a6a-7986-49fb-88e6-27f52baa9ed6
       otherParty:
         legalRep:
           email: ce7523f4-9244-4b14-b4aa-aa91457e02ce
         homeOffice:
           email: 14d4a6cc-cca3-4718-b1a1-c222b4043ddf
+        citizen:
+          email: 6cdffe24-757f-4d9b-8787-52048325748e
+          sms: 141c8405-d1f6-477a-92cd-0093eb2d32e6
     applicationReheardEnabled:
       caseOfficer:
         email: f273c1cd-ffcd-40a4-a562-9fe12cfe4a33
@@ -806,7 +831,13 @@ govnotify:
         email: f90edfba-ac37-47fa-ab55-e429ffa9f372
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
-        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9        
+        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
+    decisionWithoutHearing:
+      homeOffice:
+        email: e973baa6-71fa-47f7-8991-4a554b4490ba
+      appellant:
+        email: 8f071df1-61e6-44f3-baae-58209d42ab62
+        sms: 380ea39c-a4f7-43ed-99f1-cd9c78060070
     createCaseLink:
       legalRep:
         beforeListing:
@@ -951,6 +982,7 @@ security:
       - "requestHearingRequirementsFeature"
       - "asyncStitchingComplete"
       - "uploadAddendumEvidenceLegalRep"
+      - "applyForFTPAAppellant"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -1023,6 +1055,7 @@ security:
       - "manageFeeUpdate"
       - "recordOutOfTimeDecision"
       - "markAppealPaid"
+      - "decisionWithoutHearing"
       - "createCaseLink"
       - "maintainCaseLinks"
     caseworker-ia-admofficer:
@@ -1228,6 +1261,9 @@ appellantDaysToWait:
   afterHearingRequirementsSubmitted: 14
 
 appellantDaysToAskReinstate: 14
+
+ftpaOutOfCountryDays: 28
+ftpaInCountryDays: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}
