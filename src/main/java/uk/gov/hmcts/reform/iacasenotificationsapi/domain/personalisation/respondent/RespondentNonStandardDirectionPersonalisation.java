@@ -23,6 +23,8 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
     public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
     private final String respondentNonStandardDirectionBeforeListingTemplateId;
     private final String respondentNonStandardDirectionAfterListingTemplateId;
+    private final String respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+    private final String respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId;
     private final String iaExUiFrontendUrl;
     private final String apcHomeOfficeEmailAddress;
     private final String lartHomeOfficeEmailAddress;
@@ -34,6 +36,8 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
     public RespondentNonStandardDirectionPersonalisation(
         @Value("${govnotify.template.nonStandardDirectionBeforeListing.respondent.email}") String respondentNonStandardDirectionBeforeListingTemplateId,
         @Value("${govnotify.template.nonStandardDirectionAfterListing.respondent.email}") String respondentNonStandardDirectionAfterListingTemplateId,
+        @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentBeforeListing.respondent.email}") String respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId,
+        @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentAfterListing.respondent.email}") String respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${apcHomeOfficeEmailAddress}") String apcHomeOfficeEmailAddress,
         @Value("${lartHomeOfficeEmailAddress}") String lartHomeOfficeEmailAddress,
@@ -44,6 +48,8 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
     ) {
         this.respondentNonStandardDirectionBeforeListingTemplateId = respondentNonStandardDirectionBeforeListingTemplateId;
         this.respondentNonStandardDirectionAfterListingTemplateId = respondentNonStandardDirectionAfterListingTemplateId;
+        this.respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId = respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+        this.respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId = respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.apcHomeOfficeEmailAddress = apcHomeOfficeEmailAddress;
         this.lartHomeOfficeEmailAddress = lartHomeOfficeEmailAddress;
@@ -55,8 +61,16 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appealService.isAppealListed(asylumCase) ? respondentNonStandardDirectionAfterListingTemplateId
-                : respondentNonStandardDirectionBeforeListingTemplateId;
+        if (directionFinder
+                .findFirst(asylumCase, DirectionTag.NONE)
+                .map(direction -> direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT))
+                .orElse(false)) {
+            return appealService.isAppealListed(asylumCase)
+                    ? respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId : respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+        } else {
+            return appealService.isAppealListed(asylumCase)
+                    ? respondentNonStandardDirectionAfterListingTemplateId : respondentNonStandardDirectionBeforeListingTemplateId;
+        }
     }
 
     @Override
@@ -130,6 +144,18 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         .parse(direction.getDateDue())
                         .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
+        //LinkedList<String> result = new LinkedList<String>();
+        StringBuilder string = new StringBuilder();
+
+        if (direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT)) {
+            String directionParties = String.valueOf(direction.getParties());
+            for (String w : directionParties.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
+                //result.add(w);
+                string.append(w + " ");
+            }
+
+        }
+
         return ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -140,6 +166,7 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("explanation", direction.getExplanation())
+                .put("direction", string.toString().toLowerCase(Locale.ROOT))
                 .put("dueDate", directionDueDate)
                 .build();
     }
