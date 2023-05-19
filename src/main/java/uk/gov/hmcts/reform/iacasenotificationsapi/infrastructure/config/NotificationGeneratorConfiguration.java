@@ -419,6 +419,27 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appellantChangeDirectionDueDateAipNotificationGenerator")
+    public List<NotificationGenerator> appellantChangeDirectionDueDateAipNotificationGenerator(
+        AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail appellantChangeDirectionDueDateOfAppellantPersonalisationEmail,
+        AppellantChangeDirectionDueDateOfAppellantPersonalisationSms appellantChangeDirectionDueDateOfAppellantPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                Collections.singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                Collections.singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("respondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator")
     public List<NotificationGenerator> respondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator(
         RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
