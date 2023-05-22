@@ -6,11 +6,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.*;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +28,8 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
@@ -36,6 +45,8 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     @Mock
     Callback<AsylumCase> callback;
     @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
@@ -49,6 +60,7 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     private final Long caseId = 12345L;
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String appellantTemplateId = "appellantTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
@@ -78,16 +90,21 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
 
         when((emailAddressFinder.getHomeOfficeEmailAddress(asylumCase))).thenReturn(homeOfficeEmail);
 
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
+
         respondentChangeDirectionDueDatePersonalisation = new RespondentChangeDirectionDueDatePersonalisation(
-                afterListingTemplateId,
-                beforeListingTemplateId,
-                iaExUiFrontendUrl,
-                personalisationProvider,
-                apcHomeOfficeEmailAddress,
-                lartHomeOfficeEmailAddress,
-                customerServicesProvider,
-                appealService,
-                emailAddressFinder
+            afterListingTemplateId,
+            beforeListingTemplateId,
+            appellantTemplateId,
+            iaExUiFrontendUrl,
+            personalisationProvider,
+            apcHomeOfficeEmailAddress,
+            lartHomeOfficeEmailAddress,
+            customerServicesProvider,
+            appealService,
+            emailAddressFinder
         );
     }
 
@@ -104,6 +121,14 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     void should_return_the_given_after_listing_template_id() {
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         assertEquals(afterListingTemplateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_the_given_aip_template_id() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
+
+        assertEquals(appellantTemplateId,
+            respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

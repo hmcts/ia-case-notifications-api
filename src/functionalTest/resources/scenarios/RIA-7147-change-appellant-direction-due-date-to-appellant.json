@@ -61,6 +61,10 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
+            "id": "71471_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
             "id": "71471_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
@@ -79,6 +83,21 @@
           "A1234567",
           "Pablo Jimenez",
           "{$iaAipFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "71471_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+        "recipient": "{$apcHomeOfficeEmailAddress}",
+        "subject": "Immigration and Asylum appeal: The Tribunal has sent you a message",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "ARIA-LISTING-REFERENCE",
+          "Pablo Jimenez",
+          "Upload additional evidence",
+          "{$TODAY+14}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]

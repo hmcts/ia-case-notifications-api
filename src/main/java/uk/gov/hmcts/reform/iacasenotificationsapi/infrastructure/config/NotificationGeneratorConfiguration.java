@@ -421,6 +421,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("appellantChangeDirectionDueDateAipNotificationGenerator")
     public List<NotificationGenerator> appellantChangeDirectionDueDateAipNotificationGenerator(
+        RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
         AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail appellantChangeDirectionDueDateOfAppellantPersonalisationEmail,
         AppellantChangeDirectionDueDateOfAppellantPersonalisationSms appellantChangeDirectionDueDateOfAppellantPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -428,7 +429,10 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                Collections.singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationEmail),
+                List.of(
+                    appellantChangeDirectionDueDateOfAppellantPersonalisationEmail,
+                    respondentChangeDirectionDueDatePersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             ),

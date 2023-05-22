@@ -398,6 +398,8 @@ govnotify:
       appellant:
         email: c81bf72e-d601-42ce-8c13-3c8d9abb62b3
         sms: b3f900b1-5905-461e-9611-63c1c6be906e
+      homeOffice:
+        email: 1a16daed-a2f2-4d10-9f67-49cb543ab7bb
     changeToHearingRequirements:
       adminOfficer:
         email: 95a45479-1a6e-413b-8d96-1ad1404ab3db

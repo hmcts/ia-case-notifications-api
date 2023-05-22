@@ -59,7 +59,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
     private AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail appellantChangeDirectionDueDateOfAppellantPersonalisationEmail;
     private String directionExplanation = "Some HO change direction due date content";
     private String dueDate = "2020-10-08";
-    private String iaExUiFrontendUrl = "frontendUrl";
+    private String iaAipFrontendUrl = "iaAipFrontendUrl";
 
     @BeforeEach
     public void setup() {
@@ -72,6 +72,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         appellantChangeDirectionDueDateOfAppellantPersonalisationEmail =
             new AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail(
                 emailTemplateId,
+                iaAipFrontendUrl,
                 personalisationProvider,
                 recipientsFinder,
                 customerServicesProvider
@@ -124,7 +125,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("iaCaseListHyperLink"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
     @Test
@@ -141,7 +142,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("iaCaseListHyperLink"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals("\nListing reference: " + ariaListingRef, personalisation.get("listingReferenceLine"));
     }
 
@@ -157,7 +158,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("iaCaseListHyperLink"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals("", personalisation.get("listingReferenceLine"));
 
     }
@@ -166,7 +167,6 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
                                                                String mockedAppellantGivenNames, String mockedAppellantFamilyName) {
         return ImmutableMap
             .<String, String>builder()
-            .put("iaCaseListHyperLink", iaExUiFrontendUrl)
             .put("appealReferenceNumber", mockedAppealReferenceNumber)
             .put("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
             .put("appellantGivenNames", mockedAppellantGivenNames)

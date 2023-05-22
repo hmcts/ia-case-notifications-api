@@ -21,16 +21,19 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail impl
 
     private final String templateId;
     private final PersonalisationProvider personalisationProvider;
+    private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail(
         @Value("${govnotify.template.changeDirectionDueDateOfAppellant.appellant.email}") String templateId,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         PersonalisationProvider personalisationProvider,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.templateId = templateId;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.personalisationProvider = personalisationProvider;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -64,6 +67,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail impl
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.getPersonalisation(callback))
+            .put("linkToOnlineService", iaAipFrontendUrl)
             .put("listingReferenceLine", listingReferenceLine);
 
         return listCaseFields.build();
