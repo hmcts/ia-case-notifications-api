@@ -52,7 +52,7 @@ public class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail imple
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPELLANT_NON_STANDARD_DIRECTION";
+        return caseId + "_APPELLANT_NON_STANDARD_DIRECTION_OF_HOME_OFFICE_EMAIL";
     }
 
     @Override

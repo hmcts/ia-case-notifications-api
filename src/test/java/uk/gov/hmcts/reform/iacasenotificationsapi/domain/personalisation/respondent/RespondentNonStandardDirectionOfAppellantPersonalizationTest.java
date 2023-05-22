@@ -12,6 +12,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionOfAppellantPersonalization.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionOfAppellantPersonalization.EVENT_NOT_AVAILABLE;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -113,40 +117,27 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     }
 
     @Test
-    void should_throw_exception_if_current_visible_state_to_home_office_all_is_not_present() {
-
-        assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
-    }
-
-    @Test
     void should_return_correct_email_address_for_home_office() {
 
         List<State> apcEmail = newArrayList(
                 State.APPEAL_SUBMITTED,
                 State.PENDING_PAYMENT,
-                State.AWAITING_RESPONDENT_EVIDENCE
-
+                State.AWAITING_RESPONDENT_EVIDENCE,
+                State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
+                State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED
         );
 
 
         List<State> lartEmail = newArrayList(
-                State.CASE_BUILDING,
                 State.CASE_UNDER_REVIEW,
-                State.RESPONDENT_REVIEW
-        );
-
-        List<State> ftpaEmail = newArrayList(
-                State.FTPA_SUBMITTED,
-                State.FTPA_DECIDED
+                State.RESPONDENT_REVIEW,
+                State.AWAITING_REASONS_FOR_APPEAL,
+                State.REASONS_FOR_APPEAL_SUBMITTED
         );
 
         List<State> pouNoListedEmail = newArrayList(
                 State.LISTING,
-                State.SUBMIT_HEARING_REQUIREMENTS,
-                State.ENDED,
-                State.APPEAL_TAKEN_OFFLINE
+                State.SUBMIT_HEARING_REQUIREMENTS
         );
 
         List<State> poulistedEmail = newArrayList(
@@ -154,17 +145,13 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
                 State.FINAL_BUNDLING,
                 State.PRE_HEARING,
                 State.DECISION,
-                State.ADJOURNED,
-                State.DECIDED,
-                State.ENDED,
-                State.APPEAL_TAKEN_OFFLINE
+                State.ADJOURNED
         );
 
         Map<String, List<State>> states = new HashMap<>();
 
         states.put(apcHomeOfficeEmailAddress, apcEmail);
         states.put(lartHomeOfficeEmailAddress, lartEmail);
-        states.put(homeOfficeFtpaEmailAddress, ftpaEmail);
         states.put(homeOfficeEmail, pouNoListedEmail);
         states.put(homeOfficeHearingCentreEmail, poulistedEmail);
 
@@ -203,13 +190,26 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     }
 
     @Test
-    void should_throw_exception_when_home_office_is_missing_in_the_case_data() {
+    void should_throw_exception_if_current_visible_state_to_home_office_all_is_not_present() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
+                .hasMessage(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = State.class, names = {
+        "FTPA_SUBMITTED", "DECIDED", "FTPA_DECIDED", "CASE_BUILDING"
+    })
+    void should_throw_exception_when_send_direction_event_not_available_in_current_state(State currentState) {
+        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+                .thenReturn(Optional.of(currentState));
+
+        assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage(EVENT_NOT_AVAILABLE);
     }
 
     @Test

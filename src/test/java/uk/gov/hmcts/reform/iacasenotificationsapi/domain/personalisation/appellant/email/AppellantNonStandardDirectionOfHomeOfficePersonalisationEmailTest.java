@@ -99,7 +99,7 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPELLANT_NON_STANDARD_DIRECTION",
+        assertEquals(caseId + "_APPELLANT_NON_STANDARD_DIRECTION_OF_HOME_OFFICE_EMAIL",
                 appellantNonStandardDirectionPersonalisationEmail.getReferenceId(caseId));
     }
 
