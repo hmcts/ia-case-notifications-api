@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,22 +122,28 @@ public class LegalRepresentativeEditListingPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        Map<String, String> expPersonalisation = new HashMap<>();
+        expPersonalisation.putAll(getPersonalisationMapWithGivenValues());
+        expPersonalisation.put("linkToOnlineService", iaExUiFrontendUrl);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     public void should_return_personalisation_when_optional_fields_are_blank() {
+        Map<String, String> expPersonalisation = new HashMap<>();
+        expPersonalisation.putAll(getPersonalisationMapWithBlankValues());
+        expPersonalisation.put("linkToOnlineService", iaExUiFrontendUrl);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithBlankValues());
 
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

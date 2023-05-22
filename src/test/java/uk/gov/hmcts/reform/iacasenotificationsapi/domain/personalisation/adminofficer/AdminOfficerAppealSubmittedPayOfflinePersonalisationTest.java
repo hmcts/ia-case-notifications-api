@@ -6,6 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_TYPE;
 
 import java.util.Map;
@@ -18,6 +21,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,8 +29,6 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -39,12 +41,13 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
     void setup() {
 
         adminOfficerAppealSubmittedPayOfflinePersonalisation = new AdminOfficerAppealSubmittedPayOfflinePersonalisation(
-            templateId,
-            remissionTemplateId,
-            changeToHearingRequirementsAdminOfficerEmailAddress,
-            paymentExceptionsAdminOfficerEmailAddress,
-            adminOfficerPersonalisationProvider
+                templateId,
+                remissionTemplateId,
+                changeToHearingRequirementsAdminOfficerEmailAddress,
+                paymentExceptionsAdminOfficerEmailAddress,
+                new AdminOfficerPersonalisationProvider("")
         );
+
     }
 
     @Test
@@ -54,62 +57,68 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(
-        value = RemissionType.class,
-        names = {"HO_WAIVER_REMISSION", "HELP_WITH_FEES", "EXCEPTIONAL_CIRCUMSTANCES_REMISSION"})
+            value = RemissionType.class,
+            names = {"HO_WAIVER_REMISSION", "HELP_WITH_FEES", "EXCEPTIONAL_CIRCUMSTANCES_REMISSION"})
     void should_return_given_template_id_with_remission(RemissionType remissionType) {
         when(asylumCase.read(REMISSION_TYPE, RemissionType.class)).thenReturn(Optional.of(remissionType));
         assertEquals(
-            remissionTemplateId, adminOfficerAppealSubmittedPayOfflinePersonalisation.getTemplateId(asylumCase));
+                remissionTemplateId, adminOfficerAppealSubmittedPayOfflinePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
 
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
-            adminOfficerAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
+                adminOfficerAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
         assertTrue(adminOfficerAppealSubmittedPayOfflinePersonalisation.getRecipientsList(asylumCase)
-            .contains(changeToHearingRequirementsAdminOfficerEmailAddress));
+                .contains(changeToHearingRequirementsAdminOfficerEmailAddress));
     }
 
     @ParameterizedTest
     @EnumSource(
-        value = RemissionType.class,
-        names = {"HO_WAIVER_REMISSION", "HELP_WITH_FEES", "EXCEPTIONAL_CIRCUMSTANCES_REMISSION"})
+            value = RemissionType.class,
+            names = {"HO_WAIVER_REMISSION", "HELP_WITH_FEES", "EXCEPTIONAL_CIRCUMSTANCES_REMISSION"})
     void should_return_payment_email_address_with_remission(RemissionType remissionType) {
         when(asylumCase.read(REMISSION_TYPE, RemissionType.class)).thenReturn(Optional.of(remissionType));
         assertTrue(adminOfficerAppealSubmittedPayOfflinePersonalisation.getRecipientsList(asylumCase)
-            .contains(paymentExceptionsAdminOfficerEmailAddress));
+                .contains(paymentExceptionsAdminOfficerEmailAddress));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+                () -> adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation((AsylumCase) null))
+                .isExactlyInstanceOf(NullPointerException.class)
+                .hasMessage("asylumCase must not be null");
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of(APPEAL_REFERENCE_NUMBER.value(), "",
+                AsylumCaseDefinition.APPELLANT_GIVEN_NAMES.value(), "", APPELLANT_FAMILY_NAME.value(), "",
+                "linkToOnlineService", "", ARIA_LISTING_REFERENCE.value(), "");
         Map<String, String> personalisation =
-            adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
+                adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation).usingRecursiveComparison().isEqualTo(expPersonalisation);
 
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of(APPEAL_REFERENCE_NUMBER.value(), "",
+                AsylumCaseDefinition.APPELLANT_GIVEN_NAMES.value(), "", APPELLANT_FAMILY_NAME.value(), "",
+                "linkToOnlineService", "", ARIA_LISTING_REFERENCE.value(), "");
         Map<String, String> personalisation =
-            adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
+                adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 }

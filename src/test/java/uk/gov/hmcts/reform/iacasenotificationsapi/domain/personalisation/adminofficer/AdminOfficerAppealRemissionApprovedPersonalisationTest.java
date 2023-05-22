@@ -31,7 +31,7 @@ class AdminOfficerAppealRemissionApprovedPersonalisationTest {
         adminOfficerAppealRemissionApprovedPersonalisation = new AdminOfficerAppealRemissionApprovedPersonalisation(
             templateId,
             feesAdminOfficerEmailAddress,
-            adminOfficerPersonalisationProvider
+            new AdminOfficerPersonalisationProvider("")
         );
     }
 
@@ -65,20 +65,25 @@ class AdminOfficerAppealRemissionApprovedPersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName",
+                "", "appellantGivenNames", "", "linkToOnlineService", "");
         Map<String, String> personalisation =
             adminOfficerAppealRemissionApprovedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
+
 
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName",
+                "", "appellantGivenNames", "", "linkToOnlineService", "");
         Map<String, String> personalisation =
             adminOfficerAppealRemissionApprovedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
 }

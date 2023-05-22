@@ -6,8 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -215,10 +214,16 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     void should_return_given_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
 
+        Map<String, String> expPersonalisation = Map.of("appellantFamilyName", "someAppellantFamilyName",
+                "appellantGivenNames", "someAppellantGivenNames", "ariaListingReference",
+                "someAriaListingReference", "customerServicesEmail", "cust.services@example.com",
+                "customerServicesTelephone", "555 555 555", "hmctsReference", "hmctsReference",
+                "homeOfficeReference", "homeOfficeReference", "linkToOnlineService", "http://localhost");
+                ;
         Map<String, String> personalisation =
                 respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

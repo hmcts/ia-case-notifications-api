@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -18,10 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -131,10 +129,17 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
+
+        Map<String, String> expPersonalisation =  ImmutableMap.<String, String>builder().put("appealReferenceNumber", "")
+                .put("homeOfficeReferenceNumber", "")
+                .put("appellantGivenNames", "")
+                .put("appellantFamilyName", "")
+                .put("Hyperlink to service", "http://localhost")
+                .put("dueDate", "22 Sep 2021").build();
         Map<String, String> personalisation =
             appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
-
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(expPersonalisation.keySet(), personalisation.keySet());
+        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

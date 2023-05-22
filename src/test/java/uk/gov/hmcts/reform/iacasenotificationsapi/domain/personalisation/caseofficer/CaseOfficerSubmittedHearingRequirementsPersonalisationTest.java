@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -90,11 +91,17 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber)
+                .put(APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             caseOfficerSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation).usingRecursiveComparison().isEqualTo(expPersonalisation);
     }
 
     @Test

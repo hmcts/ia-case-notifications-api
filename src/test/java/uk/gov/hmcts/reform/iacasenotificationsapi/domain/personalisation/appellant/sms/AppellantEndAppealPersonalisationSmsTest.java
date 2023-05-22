@@ -119,6 +119,7 @@ public class AppellantEndAppealPersonalisationSmsTest {
         assertEquals(endAppealApprover, personalisation.get("endAppealApprover"));
         assertEquals(LocalDate.parse(endAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("endAppealDate"));
         assertEquals(outcomeOfAppeal, personalisation.get("outcomeOfAppeal"));
+
     }
 
     @Test

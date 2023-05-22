@@ -3,8 +3,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +28,10 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
     private String templateId = "applyForLateRemissionTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String legalRepEmailAddress = "legalrep@example.com";
+    private String appealReferenceNumber = "someReferenceNumber";
+    private String legalRepRefNumber = "somelegalRepRefNumber";
+    private String appellantGivenNames = "someAppellantGivenNames";
+    private String appellantFamilyName = "someAppellantFamilyName";
 
     private LegalRepresentativeRequestFeeRemissionPersonalisation legalRepresentativeRequestFeeRemissionPersonalisation;
 
@@ -32,6 +40,7 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
 
         legalRepresentativeRequestFeeRemissionPersonalisation =
             new LegalRepresentativeRequestFeeRemissionPersonalisation(templateId, iaExUiFrontendUrl, customerServicesProvider);
+
     }
 
     @Test
@@ -57,20 +66,40 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-
+        final Map<String, String> expectedPersonalisation =
+                ImmutableMap
+                        .<String, String>builder()
+                        .put("appealReferenceNumber", appealReferenceNumber)
+                        .put("appellantGivenNames", appellantGivenNames)
+                        .put("appellantFamilyName", appellantFamilyName)
+                        .put("legalRepReferenceNumber", legalRepRefNumber)
+                        .put("linkToOnlineService", iaExUiFrontendUrl)
+                        .build();
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         Map<String, String> personalisation =
             legalRepresentativeRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expectedPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
 
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
-
+        final Map<String, String> expectedPersonalisation =
+                ImmutableMap
+                        .<String, String>builder()
+                        .put("appealReferenceNumber", "")
+                        .put("appellantGivenNames", "")
+                        .put("appellantFamilyName", "")
+                        .put("legalRepReferenceNumber", "")
+                        .put("linkToOnlineService", iaExUiFrontendUrl)
+                        .build();
         Map<String, String> personalisation =
             legalRepresentativeRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expectedPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 }

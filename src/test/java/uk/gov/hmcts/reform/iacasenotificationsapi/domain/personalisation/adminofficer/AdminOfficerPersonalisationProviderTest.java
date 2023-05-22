@@ -30,26 +30,35 @@ public class AdminOfficerPersonalisationProviderTest {
     @Test
     public void should_return_default_personalisation() {
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName",
+                "", "appellantGivenNames", "", "linkToOnlineService",
+                "http://somefrontendurl");
         Map<String, String> personalisation = adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     public void should_return_reviewed_hearing_requirements_personalisation() {
 
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName", "",
+                "appellantGivenNames", "", "linkToOnlineService", "http://somefrontendurl");
+
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     public void should_return_change_to_hearing_requirements_personalisation() {
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "", "appellantFamilyName",
+                "", "appellantGivenNames", "", "ariaListingReference", "",
+                "linkToOnlineService", "http://somefrontendurl");
 
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 }

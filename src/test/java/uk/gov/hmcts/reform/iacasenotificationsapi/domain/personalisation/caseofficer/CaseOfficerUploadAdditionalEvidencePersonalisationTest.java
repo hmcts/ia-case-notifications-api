@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -101,10 +101,18 @@ public class CaseOfficerUploadAdditionalEvidencePersonalisationTest {
     public void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForCaseOfficer());
 
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber)
+                .put(APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put(ARIA_LISTING_REFERENCE.value(), ariaListingReference)
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             caseOfficerUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

@@ -40,7 +40,7 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
     private String directionDueDate = "2019-09-10";
-    private String expectedDirectionDueDate = "10 Oct 2019";
+    private String expectedDirectionDueDate = "10 Sep 2019";
 
     private String legalRepEmailAddress = "legalrep@example.com";
 
@@ -118,14 +118,14 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("legalRepReferenceNumber", legalRepRefNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
                 .put("insertDate", expectedDirectionDueDate)
                 .build();
 
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).usingRecursiveComparison().isEqualTo(expectedPersonalisation);
     }
 
     @Test

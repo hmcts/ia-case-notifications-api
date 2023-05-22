@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -154,10 +155,22 @@ class PersonalisationProviderTest {
     @Test
     void should_return_edit_case_listing_personalisation() {
         when(callback.getEvent()).thenReturn(Event.EDIT_CASE_LISTING);
-
+        Map<String, String> expPersonalisation1 = Map.of("appealReferenceNumber", "someReferenceNumber", "appellantFamilyName", "appellantFamilyName",
+                "appellantGivenNames", "appellantGivenNames", "ariaListingReference", "someAriaListingReference",
+                "hearingCentreAddress", "some hearing centre address", "hearingCentreName", "taylorHouse",
+                "hearingDate", "2019-08-27", "hearingRequirementInCameraCourt", "someRequirementsInCamera",
+                "hearingRequirementMultimedia", "someRequirementsMultimedia");
+        Map<String, String> expPersonalisation2 = Map.of("hearingRequirementOther", "someRequirementsOther",
+                "hearingRequirementSingleSexCourt", "someRequirementsSingleSexCourt",
+                "hearingRequirementVulnerabilities", "someRequirementsVulnerabilities", "hearingTime", "14:25",
+                "homeOfficeReferenceNumber", "homeOfficeRefNumber", "legalRepReferenceNumber", "legalRepReferenceNumber",
+                "linkToOnlineService", "http://localhost", "oldHearingCentre", "manchester", "oldHearingDate", "2019-08-20",
+                "remoteVideoCallTribunalResponse", "someRemoteVideoCallTribunalResponse");
+        Map<String, String> expPersonalisation = ImmutableMap.<String, String>builder().putAll(expPersonalisation1)
+                .putAll(expPersonalisation2).build();
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(requirementsVulnerabilities);
         assertThat(personalisation.get("hearingRequirementMultimedia")).contains(requirementsMultimedia);
@@ -170,10 +183,27 @@ class PersonalisationProviderTest {
     void should_return_edit_case_listing_personalisation_when_submit_hearing_present() {
         when(callback.getEvent()).thenReturn(Event.EDIT_CASE_LISTING);
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.YES));
+        Map<String, String> expPersonalisation1 = Map.of("appealReferenceNumber", "someReferenceNumber", "appellantFamilyName",
+                "appellantFamilyName", "appellantGivenNames", "appellantGivenNames", "ariaListingReference",
+                "someAriaListingReference", "hearingCentreAddress", "some hearing centre address", "hearingCentreName",
+                "taylorHouse", "hearingDate", "2019-08-27", "hearingRequirementInCameraCourt",
+                "someCaseOfficerReviewedInCamera", "hearingRequirementMultimedia",
+                "someCaseOfficerReviewedMultimedia", "hearingRequirementOther",
+                "someCaseOfficerReviewedOther");
+        Map<String, String> expPersonalisation2 = Map.of("hearingRequirementSingleSexCourt",
+                "someCaseOfficerReviewedSingleSexCourt",
+               "hearingRequirementVulnerabilities",
+                "someCaseOfficerReviewedVulnerabilities", "hearingTime", "14:25",
+                "homeOfficeReferenceNumber", "homeOfficeRefNumber", "legalRepReferenceNumber",
+                "legalRepReferenceNumber", "linkToOnlineService", "http://localhost", "oldHearingCentre",
+                "manchester", "oldHearingDate", "2019-08-20", "remoteVideoCallTribunalResponse",
+                "someRemoteVideoCallTribunalResponse");
+        Map<String, String> expPersonalisation = ImmutableMap.<String, String>builder().putAll(expPersonalisation1)
+                .putAll(expPersonalisation2).build();
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse"))
             .contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities"))
@@ -188,28 +218,41 @@ class PersonalisationProviderTest {
     @Test
     void should_return_uploaded_additional_evidence_personalisation() {
         when(callback.getEvent()).thenReturn(Event.UPLOAD_ADDITIONAL_EVIDENCE);
-
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "someReferenceNumber",
+                "appellantFamilyName", "appellantFamilyName", "appellantGivenNames",
+                "appellantGivenNames", "ariaListingReference", "someAriaListingReference",
+                "homeOfficeReferenceNumber", "homeOfficeRefNumber", "legalRepReferenceNumber",
+                "legalRepReferenceNumber");
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     void should_return_non_direction_personalisation() {
         when(callback.getEvent()).thenReturn(Event.SEND_DIRECTION);
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber",
+                "someReferenceNumber", "appellantFamilyName", "appellantFamilyName",
+                "appellantGivenNames", "appellantGivenNames", "ariaListingReference", "someAriaListingReference",
+                "dueDate", "29 Oct 2019", "explanation", "someExplanation", "homeOfficeReferenceNumber",
+                "homeOfficeRefNumber", "iaCaseListHyperLink", "http://localhost",
+                "legalRepReferenceNumber", "legalRepReferenceNumber");
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     void should_return_reviewed_hearing_requirements_personalisation() {
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "someReferenceNumber",
+                "appellantFamilyName", "appellantFamilyName", "appellantGivenNames",
+                "appellantGivenNames");
 
         Map<String, String> personalisation =
             personalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
@@ -219,10 +262,13 @@ class PersonalisationProviderTest {
         when(asylumCase.read(DIRECTION_EDIT_EXPLANATION, String.class))
             .thenReturn(Optional.of(directionEditExplanation));
         when(asylumCase.read(DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.of(directionEditDateDue));
-
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "someReferenceNumber", "appellantFamilyName", "appellantFamilyName",
+                "appellantGivenNames", "appellantGivenNames", "ariaListingReference", "someAriaListingReference", "dueDate", "14 Feb 2020", "explanation", "This is edit direction explanation", "homeOfficeReferenceNumber",
+                "homeOfficeRefNumber", "iaCaseListHyperLink", "http://localhost", "legalRepReferenceNumber",
+                "legalRepReferenceNumber");
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

@@ -97,10 +97,16 @@ public class HomeOfficeHearingBundleReadyPersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> expPersonalisation = Map.of(APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber,
+                APPELLANT_FAMILY_NAME.value(), appellantFamilyName,
+                APPELLANT_GIVEN_NAMES.value(), appellantGivenNames,
+                ARIA_LISTING_REFERENCE.value(), ariaListingReference,
+                HOME_OFFICE_REFERENCE_NUMBER.value(), homeOfficeReferenceNumber,
+                "linkToOnlineService", iaExUiFrontendUrl);
         Map<String, String> personalisation =
             homeOfficeHearingBundleReadyPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

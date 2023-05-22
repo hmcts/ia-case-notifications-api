@@ -3,6 +3,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import java.util.Map;
 import java.util.Optional;
@@ -51,18 +54,18 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     private String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
     private String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
 
+    private Map<String, String> mockedPersonalisation;
     private AppellantRemoveRepresentationPersonalisationEmail appellantRemoveRepresentationPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
-
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getId()).thenReturn(ccdCaseId);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(appellantDateOfBirth));
-        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(appellantDateOfBirth));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
@@ -107,7 +110,9 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-
+        Map<String, String> expPersonalisation = Map.of(LEGAL_REP_REFERENCE_NUMBER.value(),"",
+                AsylumCaseDefinition.APPELLANT_GIVEN_NAMES.value(), "",   APPELLANT_FAMILY_NAME.value(),"",
+                "ccdCaseId", "", APPELLANT_DATE_OF_BIRTH.value(), "");
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationEmail.getPersonalisation(callback);
 
@@ -118,6 +123,7 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
         assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
         assertEquals(securityCode, personalisation.get("securityCode"));
         assertEquals(validDateFormatted, personalisation.get("validDate"));
+
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -126,11 +132,14 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     void should_return_personalisation_when_all_mandatory_information_given() {
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.empty());
 
+        Map<String, String> expPersonalisation = Map.of(LEGAL_REP_REFERENCE_NUMBER.value(),"",
+                AsylumCaseDefinition.APPELLANT_GIVEN_NAMES.value(), "",   APPELLANT_FAMILY_NAME.value(),"",
+                "ccdCaseId", "", APPELLANT_DATE_OF_BIRTH.value(), "");
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationEmail.getPersonalisation(callback);
 

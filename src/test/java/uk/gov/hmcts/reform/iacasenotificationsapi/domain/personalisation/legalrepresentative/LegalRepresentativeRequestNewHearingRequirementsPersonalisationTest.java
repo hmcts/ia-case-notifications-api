@@ -90,8 +90,13 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
     void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation = legalRepresentativeRequestNewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> expPersonalisation = Map.of("appealReferenceNumber", "someReferenceNumber",
+                "appellantFamilyName", "someAppellantFamilyName", "appellantGivenNames",
+                "someAppellantGivenNames", "dueDate", "27 Aug 2019", "explanation",
+                "someExplanation", "legalRepReferenceNumber", "somelegalRepRefNumber",
+                "linkToOnlineService", "http://localhost");
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

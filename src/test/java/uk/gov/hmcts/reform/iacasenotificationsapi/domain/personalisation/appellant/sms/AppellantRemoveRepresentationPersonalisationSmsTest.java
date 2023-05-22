@@ -4,7 +4,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,6 +119,14 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), legalRepReferenceNumber)
+                .put(APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put(APPELLANT_DATE_OF_BIRTH.value(), appellantDateOfBirth)
+                .put("ccdCaseId", "0")
+                .build();
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationSms.getPersonalisation(callback);
 
@@ -139,6 +152,14 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.empty());
 
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), "")
+                .put(APPELLANT_GIVEN_NAMES.value(), "")
+                .put(APPELLANT_FAMILY_NAME.value(), "")
+                .put(APPELLANT_DATE_OF_BIRTH.value(), "")
+                .put("ccdCaseId", "0")
+                .build();
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationSms.getPersonalisation(callback);
 

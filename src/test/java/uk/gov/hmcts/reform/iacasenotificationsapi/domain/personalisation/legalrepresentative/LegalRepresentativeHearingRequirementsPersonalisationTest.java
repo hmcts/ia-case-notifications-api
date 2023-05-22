@@ -4,12 +4,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -21,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
@@ -117,11 +115,20 @@ public class LegalRepresentativeHearingRequirementsPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber)
+                .put(APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), legalRepRefNumber)
+                .put("dueDate", "27 Aug 2019")
+                .put("explanation", directionExplanation)
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             legalRepresentativeHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
@@ -131,11 +138,20 @@ public class LegalRepresentativeHearingRequirementsPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), "")
+                .put(APPELLANT_GIVEN_NAMES.value(), "")
+                .put(APPELLANT_FAMILY_NAME.value(), "")
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), "")
+                .put("dueDate", "27 Aug 2019")
+                .put("explanation", directionExplanation)
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             legalRepresentativeHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

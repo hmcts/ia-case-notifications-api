@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,12 +94,15 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        Map<String, String> expPersonalisation = new HashMap<>();
+        expPersonalisation.putAll(getPersonalisationForHomeOffice());
+        expPersonalisation.put("linkToOnlineService", iaExUiFrontendUrl);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForHomeOffice());
 
         Map<String, String> personalisation =
             homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

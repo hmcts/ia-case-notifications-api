@@ -4,11 +4,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -38,6 +37,8 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+
+    private String iaAipFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -66,7 +67,6 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
 
-        String iaAipFrontendUrl = "http://localhost";
         appellantHearingBundleReadyPersonalisationEmail =
             new AppellantHearingBundleReadyPersonalisationEmail(
                 templateId,
@@ -135,10 +135,19 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), "")
+                .put(AsylumCaseDefinition.ARIA_LISTING_REFERENCE.value(), "")
+                .put(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER.value(), "")
+                .put(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES.value(), "")
+                .put(AsylumCaseDefinition.APPELLANT_FAMILY_NAME.value(), "")
+                .put("Hyperlink to service", iaAipFrontendUrl)
+                .build();
         Map<String, String> personalisation =
             appellantHearingBundleReadyPersonalisationEmail.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

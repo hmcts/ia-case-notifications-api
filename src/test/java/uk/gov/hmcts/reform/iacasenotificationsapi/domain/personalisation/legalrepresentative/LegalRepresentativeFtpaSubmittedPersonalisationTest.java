@@ -7,6 +7,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,12 +91,14 @@ public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
 
     @Test
     public void should_return_given_personalisation() {
-
+        Map<String, String> expPersonalisation = new HashMap<>();
+        expPersonalisation.putAll(getPersonalisation());
+        expPersonalisation.put("linkToOnlineService", iaExUiFrontendUrl);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> personalisation =
             legalRepresentativeFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

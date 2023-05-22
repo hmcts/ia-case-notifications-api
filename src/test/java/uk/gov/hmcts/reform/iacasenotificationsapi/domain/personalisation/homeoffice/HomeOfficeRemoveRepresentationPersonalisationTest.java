@@ -15,6 +15,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_COMPANY_ADDRESS;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
@@ -188,11 +190,22 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber)
+                .put(AsylumCaseDefinition.ARIA_LISTING_REFERENCE.value(), ariaListingReference)
+                .put(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER.value(), homeOfficeRefNumber)
+                .put(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(AsylumCaseDefinition.APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put(AsylumCaseDefinition.LEGAL_REPRESENTATIVE_NAME.value(), "")
+                .put(AsylumCaseDefinition.LEGAL_REP_COMPANY_ADDRESS.value(), "")
+                .put(AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS.value(), "")
+                .build();
         Map<String, String> personalisation =
             homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test

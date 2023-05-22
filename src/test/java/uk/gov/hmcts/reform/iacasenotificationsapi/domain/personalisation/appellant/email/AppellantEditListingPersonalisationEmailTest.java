@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -111,21 +112,23 @@ public class AppellantEditListingPersonalisationEmailTest {
     @Test
     public void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
-
+        Map<String, String> expPersonalisation = ImmutableMap.<String, String>builder().putAll(getPersonalisationMapWithGivenValues())
+              .put("hyperlink to service", "http://localhost").build();
         Map<String, String> personalisation =
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
     public void should_return_personalisation_when_optional_fields_are_blank() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithBlankValues());
-
+        Map<String, String> expPersonalisation = ImmutableMap.<String, String>builder().putAll(getPersonalisationMapWithBlankValues())
+                .put("hyperlink to service", "http://localhost").build();
         Map<String, String> personalisation =
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

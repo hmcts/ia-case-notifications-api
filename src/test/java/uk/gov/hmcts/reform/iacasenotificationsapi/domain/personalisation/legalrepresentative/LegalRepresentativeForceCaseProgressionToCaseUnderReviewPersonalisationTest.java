@@ -11,6 +11,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -91,11 +93,18 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), appealReferenceNumber)
+                .put(APPELLANT_GIVEN_NAMES.value(), appellantGivenNames)
+                .put(APPELLANT_FAMILY_NAME.value(), appellantFamilyName)
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), legalRepRefNumber)
+                .build();
 
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 
     @Test
@@ -105,10 +114,16 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-
+        Map<String, String> expPersonalisation = ImmutableMap
+                .<String, String>builder()
+                .put(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER.value(), "")
+                .put(APPELLANT_GIVEN_NAMES.value(), "")
+                .put(APPELLANT_FAMILY_NAME.value(), "")
+                .put(LEGAL_REP_REFERENCE_NUMBER.value(), "")
+                .build();
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(expPersonalisation).usingRecursiveComparison().isEqualTo(personalisation);
     }
 }
