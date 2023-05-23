@@ -144,11 +144,6 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         .parse(direction.getDateDue())
                         .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
-        String directionParties = new String();
-        if (direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT)) {
-            directionParties = "Appellant and Respondent";
-        }
-
         return ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -159,7 +154,6 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("explanation", direction.getExplanation())
-                .put("direction", directionParties)
                 .put("dueDate", directionDueDate)
                 .build();
     }
