@@ -90,14 +90,14 @@
       {
         "reference": "71471_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: The Tribunal has sent you a message",
+        "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "ARIA-LISTING-REFERENCE",
           "Pablo Jimenez",
           "Upload additional evidence",
-          "{$TODAY+14}",
+          "{$TODAY+14|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
