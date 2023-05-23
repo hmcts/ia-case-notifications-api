@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 
@@ -14,6 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
@@ -64,7 +66,7 @@ public class RespondentChangeDirectionDueDatePersonalisation implements EmailNot
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (isAipJourney(asylumCase)) {
+        if (isAipJourney(asylumCase) && !isDirectionToRespondent(asylumCase)) {
             return respondentChangeAppellantDirectionDueDateTemplateId;
         } else {
             return appealService.isAppealListed(asylumCase)
@@ -162,5 +164,11 @@ public class RespondentChangeDirectionDueDatePersonalisation implements EmailNot
         return asylumCase
             .read(JOURNEY_TYPE, JourneyType.class)
             .map(type -> type == AIP).orElse(false);
+    }
+
+    private boolean isDirectionToRespondent(AsylumCase asylumCase) {
+        return asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+            .map(Parties -> Parties.equals(Parties.RESPONDENT))
+            .orElse(false);
     }
 }
