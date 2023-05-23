@@ -7,13 +7,19 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_JUDGE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_ALLOWED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_DISMISSED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_GRANTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REHEARD35;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REMADE32;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +45,6 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
 
     private Long caseId = 12345L;
     private String upperTribunalNoticesEmailAddress = "homeoffice-granted@example.com";
-    private String upperTribunalPermissionApplicationsEmailAddress = "homeoffice-granted-iac@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String ariaListingReference = "ariaListingReference";
@@ -79,9 +84,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
                 allowedTemplateId,
                 dismissedTemplateId,
                 personalisationProvider,
-                upperTribunalNoticesEmailAddress,
-                upperTribunalPermissionApplicationsEmailAddress
-
+                upperTribunalNoticesEmailAddress
             );
     }
 
@@ -162,12 +165,8 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
             when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
                 .thenReturn(Optional.of(state));
 
-            String expectedEmailAddress = Set.of(FTPA_GRANTED, FTPA_PARTIALLY_GRANTED).contains(decision)
-                ? upperTribunalPermissionApplicationsEmailAddress
-                : upperTribunalNoticesEmailAddress;
-
             assertTrue(homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase)
-                .contains(expectedEmailAddress));
+                .contains(upperTribunalNoticesEmailAddress));
         });
     }
 

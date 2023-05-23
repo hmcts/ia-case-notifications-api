@@ -4,15 +4,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_GRANTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_JUDGE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_REMADE_RULE_32;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +37,6 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
 
     private Long caseId = 12345L;
     private String homeOfficeEmailAddress = "homeoffice-allowed@example.com";
-    private String upperTribunalPermissionApplicationsEmailAddress = "homeoffice-allowed-iac@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String ariaListingReference = "ariaListingReference";
@@ -78,8 +76,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
                 allowedTemplateId,
                 dismissedTemplateId,
                 personalisationProvider,
-                homeOfficeEmailAddress,
-                upperTribunalPermissionApplicationsEmailAddress
+                homeOfficeEmailAddress
             );
     }
 
@@ -163,12 +160,8 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
                 when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
                     .thenReturn(Optional.of(state));
 
-                String expectedEmailAddress = Set.of(FTPA_GRANTED, FTPA_PARTIALLY_GRANTED).contains(decision)
-                    ? upperTribunalPermissionApplicationsEmailAddress
-                    : homeOfficeEmailAddress;
-
                 assertTrue(homeOfficeFtpaApplicationDecisionRespondentPersonalisation.getRecipientsList(asylumCase)
-                    .contains(expectedEmailAddress));
+                    .contains(homeOfficeEmailAddress));
             });
     }
 

@@ -1,24 +1,28 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_JUDGE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.FtpaNotificationPersonalisationUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implements EmailNotificationPersonalisation, FtpaNotificationPersonalisationUtil {
+public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implements EmailNotificationPersonalisation {
 
     private final PersonalisationProvider personalisationProvider;
     private final String upperTribunalNoticesEmailAddress;
-    private final String upperTribunalPermissionApplicationsEmailAddress;
     private final String applicationGrantedOtherPartyHomeOfficeTemplateId;
     private final String applicationPartiallyGrantedOtherPartyHomeOfficeTemplateId;
     private final String applicationNotAdmittedOtherPartyHomeOfficeTemplateId;
@@ -36,8 +40,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implement
         @Value("${govnotify.template.applicationAllowed.homeOffice.email}") String applicationAllowedHomeOfficeTemplateId,
         @Value("${govnotify.template.applicationDismissed.homeOffice.email}") String applicationDismissedHomeOfficeTemplateId,
         PersonalisationProvider personalisationProvider,
-        @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress,
-        @Value("${upperTribunalPermissionApplicationsEmailAddress}") String upperTribunalPermissionApplicationsEmailAddress
+        @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress
     ) {
         this.applicationGrantedOtherPartyHomeOfficeTemplateId = applicationGrantedOtherPartyHomeOfficeTemplateId;
         this.applicationPartiallyGrantedOtherPartyHomeOfficeTemplateId = applicationPartiallyGrantedOtherPartyHomeOfficeTemplateId;
@@ -48,7 +51,6 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implement
         this.applicationDismissedHomeOfficeTemplateId = applicationDismissedHomeOfficeTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.upperTribunalNoticesEmailAddress = upperTribunalNoticesEmailAddress;
-        this.upperTribunalPermissionApplicationsEmailAddress = upperTribunalPermissionApplicationsEmailAddress;
     }
 
     @Override
@@ -93,13 +95,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implement
                     State.FTPA_SUBMITTED,
                     State.FTPA_DECIDED).contains(currentState)
                     ) {
-                    String recipient = ftpaAppellantLjRjDecision(asylumCase)
-                        .map(decision -> List.of(FTPA_GRANTED,FTPA_PARTIALLY_GRANTED).contains(decision)
-                            ? upperTribunalPermissionApplicationsEmailAddress
-                            : upperTribunalNoticesEmailAddress)
-                        .orElseThrow(() -> new IllegalStateException("Appellant decision not present"));
-
-                    return Collections.singleton(recipient);
+                    return Collections.singleton(upperTribunalNoticesEmailAddress);
                 } else {
                     throw new IllegalStateException("homeOffice email Address cannot be found");
                 }
