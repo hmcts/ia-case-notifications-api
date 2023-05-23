@@ -63,7 +63,7 @@ public class AdminOfficerFtpaDecisionRespondentPersonalisation implements EmailN
             .map(decision -> List.of(FTPA_GRANTED,FTPA_PARTIALLY_GRANTED).contains(decision)
                 ? Set.of(upperTribunalPermissionApplicationsEmailAddress)
                 : Set.of(ctscAdminFtpaDecisionEmailAddress))
-            .orElseThrow(() -> new IllegalStateException("Appellant decision not present"));
+            .orElseThrow(() -> new IllegalStateException("Respondent FTPA decision not present"));
     }
 
     @Override
