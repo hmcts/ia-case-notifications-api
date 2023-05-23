@@ -925,6 +925,12 @@ govnotify:
           email: 63c30831-4dd0-4c0a-b70f-4c439dcc66ea
         afterListing:
           email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
+    markAsReadyForUtTransfer:
+      upperTribunal:
+        beforeListing:
+          email: 872fb57b-5a47-4d1e-adc2-e6b58c450d2b
+        afterListing:
+          email: 185756fb-e2df-4d92-8384-299d595066f9
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1125,6 +1131,7 @@ security:
       - "maintainCaseLinks"
       - "removeDetainedStatus"
       - "markAppealAsDetained"
+      - "markAsReadyForUtTransfer"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1168,6 +1175,7 @@ security:
       - "markAppealAsAda"
       - "removeDetainedStatus"
       - "markAppealAsDetained"
+      - "markAsReadyForUtTransfer"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1324,6 +1332,7 @@ paymentExceptionsAdminOfficerEmailAddress: ${PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EM
 apcHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_APC}
 lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
+upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
