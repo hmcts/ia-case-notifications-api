@@ -3931,8 +3931,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.MARK_AS_READY_FOR_UT_TRANSFER,
+                && callback.getEvent() == Event.MARK_AS_READY_FOR_UT_TRANSFER
+                && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> markAsReadyForUtTransferInternalNotificationHandler(
+            @Qualifier("markAsReadyForUtTransferInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.MARK_AS_READY_FOR_UT_TRANSFER
+                                && isInternalCase(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
         );
     }
 }
