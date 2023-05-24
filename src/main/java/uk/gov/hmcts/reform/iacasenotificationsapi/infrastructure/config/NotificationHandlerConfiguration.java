@@ -411,6 +411,31 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantChangeDirectionDueDateAipNotificationHandler(
+        @Qualifier("appellantChangeDirectionDueDateAipNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                boolean isAppellant = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                    .map(Parties -> Parties.equals(Parties.APPELLANT))
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                       && isAppellant
+                       && isAipJourney(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
     private boolean isOneOfHomeOfficeApiNotifications(Callback<AsylumCase> callback) {
 
         return Arrays.asList(

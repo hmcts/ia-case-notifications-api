@@ -394,6 +394,12 @@ govnotify:
           afterListing: ab1a7e10-20c0-4960-9330-d4fc0ca8aa80
           beforeListing: 867e4336-c1fd-4853-81a8-9540a751c844
         sms: 6af930c5-4775-4149-ba6f-f554198340c4
+    changeDirectionDueDateOfAppellant:
+      appellant:
+        email: c81bf72e-d601-42ce-8c13-3c8d9abb62b3
+        sms: b3f900b1-5905-461e-9611-63c1c6be906e
+      homeOffice:
+        email: 1a16daed-a2f2-4d10-9f67-49cb543ab7bb
     changeToHearingRequirements:
       adminOfficer:
         email: 95a45479-1a6e-413b-8d96-1ad1404ab3db
