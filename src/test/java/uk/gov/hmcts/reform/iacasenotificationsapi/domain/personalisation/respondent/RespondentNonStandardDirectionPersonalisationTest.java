@@ -137,7 +137,9 @@ public class RespondentNonStandardDirectionPersonalisationTest {
         List<State> apcEmail = newArrayList(
                 State.APPEAL_SUBMITTED,
                 State.PENDING_PAYMENT,
-                State.AWAITING_RESPONDENT_EVIDENCE
+                State.AWAITING_RESPONDENT_EVIDENCE,
+                State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
+                State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED
 
         );
 
@@ -145,7 +147,9 @@ public class RespondentNonStandardDirectionPersonalisationTest {
         List<State> lartEmail = newArrayList(
                 State.CASE_BUILDING,
                 State.CASE_UNDER_REVIEW,
-                State.RESPONDENT_REVIEW
+                State.RESPONDENT_REVIEW,
+                State.AWAITING_REASONS_FOR_APPEAL,
+                State.REASONS_FOR_APPEAL_SUBMITTED
         );
 
         List<State> ftpaEmail = newArrayList(

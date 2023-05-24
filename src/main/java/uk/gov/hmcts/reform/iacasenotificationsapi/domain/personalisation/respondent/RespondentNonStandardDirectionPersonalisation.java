@@ -67,13 +67,17 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                 if (Arrays.asList(
                         State.APPEAL_SUBMITTED,
                         State.PENDING_PAYMENT,
-                        State.AWAITING_RESPONDENT_EVIDENCE
+                        State.AWAITING_RESPONDENT_EVIDENCE,
+                        State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
+                        State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED
                 ).contains(currentState)) {
                     return Collections.singleton(apcHomeOfficeEmailAddress);
                 } else if (Arrays.asList(
                         State.CASE_BUILDING,
                         State.CASE_UNDER_REVIEW,
-                        State.RESPONDENT_REVIEW
+                        State.RESPONDENT_REVIEW,
+                        State.AWAITING_REASONS_FOR_APPEAL,
+                        State.REASONS_FOR_APPEAL_SUBMITTED
                 ).contains(currentState)) {
                     return Collections.singleton(lartHomeOfficeEmailAddress);
                 } else if (Arrays.asList(
