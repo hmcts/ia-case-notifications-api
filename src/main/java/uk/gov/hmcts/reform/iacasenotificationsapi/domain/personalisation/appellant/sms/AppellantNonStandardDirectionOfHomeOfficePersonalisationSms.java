@@ -7,31 +7,43 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
 public class AppellantNonStandardDirectionOfHomeOfficePersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String appellantNonStandardDirectionBeforeListingTemplateId;
+    private final String appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
+    private final DirectionFinder directionFinder;
 
     public AppellantNonStandardDirectionOfHomeOfficePersonalisationSms(
             @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeBeforeListing.appellant.sms}") String appellantNonStandardDirectionBeforeListingTemplateId,
+            @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentBeforeListing.appellant.sms}") String appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder) {
+            RecipientsFinder recipientsFinder,
+            DirectionFinder directionFinder) {
         this.appellantNonStandardDirectionBeforeListingTemplateId = appellantNonStandardDirectionBeforeListingTemplateId;
+        this.appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId = appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
+        this.directionFinder = directionFinder;
     }
 
     @Override
-    public String getTemplateId() {
-        return appellantNonStandardDirectionBeforeListingTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        if (directionFinder
+                .findFirst(asylumCase, DirectionTag.NONE)
+                .map(direction -> direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT))
+                .orElse(false)) {
+            return appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+        } else {
+            return appellantNonStandardDirectionBeforeListingTemplateId;
+        }
     }
 
     @Override

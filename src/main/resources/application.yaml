@@ -211,6 +211,18 @@ govnotify:
       appellant:
         email: 724ffcdc-4766-48ab-9a9b-8f0c051ac62d
         sms: 538769db-d03f-4dde-8136-17e9ab4828b2
+    nonStandardDirectionToAppellantAndRespondentBeforeListing:
+      respondent:
+        email: 6c4aa342-8878-4010-8b08-c3a61cb80687
+      appellant:
+        email: e3b16a22-f17e-4879-a43d-1148a4adb982
+        sms: 3ba4d89a-c03e-4d06-bfe0-af563908a280
+    nonStandardDirectionToAppellantAndRespondentAfterListing:
+      respondent:
+        email: 2ad1ae11-161d-4a22-832e-37edda971954
+      appellant:
+        email: e584d2c5-3559-41d4-93f0-8b4864f8d460
+        sms: 3ba4d89a-c03e-4d06-bfe0-af563908a280
     nonStandardDirectionOfAppellant:
       appellant:
         email: 36d4523c-1240-45a0-8ef3-1aa2a6e2eaf7

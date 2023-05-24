@@ -8,12 +8,10 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -25,29 +23,47 @@ public class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail imple
     private final PersonalisationProvider personalisationProvider;
     private final String appellantNonStandardDirectionBeforeListingTemplateId;
     private final String appellantNonStandardDirectionAfterListingTemplateId;
+    private final String appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+    private final String appellantNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final RecipientsFinder recipientsFinder;
+    private final DirectionFinder directionFinder;
 
     public AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail(
             @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeBeforeListing.appellant.email}") String appellantNonStandardDirectionBeforeListingTemplateId,
             @Value("${govnotify.template.nonStandardDirectionOfHomeOfficeAfterListing.appellant.email}") String appellantNonStandardDirectionAfterListingTemplateId,
+            @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentBeforeListing.appellant.email}") String appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId,
+            @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentAfterListing.appellant.email}") String appellantNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             PersonalisationProvider personalisationProvider,
             CustomerServicesProvider customerServicesProvider,
-            RecipientsFinder recipientsFinder
+            RecipientsFinder recipientsFinder,
+            DirectionFinder directionFinder
     ) {
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.appellantNonStandardDirectionBeforeListingTemplateId = appellantNonStandardDirectionBeforeListingTemplateId;
         this.appellantNonStandardDirectionAfterListingTemplateId = appellantNonStandardDirectionAfterListingTemplateId;
+        this.appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId = appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+        this.appellantNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId = appellantNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
         this.recipientsFinder = recipientsFinder;
+        this.directionFinder = directionFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAppealListed(asylumCase)
-                ? appellantNonStandardDirectionAfterListingTemplateId : appellantNonStandardDirectionBeforeListingTemplateId;
+
+        if (directionFinder
+                .findFirst(asylumCase, DirectionTag.NONE)
+                .map(direction -> direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT))
+                .orElse(false)) {
+            return isAppealListed(asylumCase)
+                    ? appellantNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId : appellantNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+        } else {
+            return isAppealListed(asylumCase)
+                    ? appellantNonStandardDirectionAfterListingTemplateId : appellantNonStandardDirectionBeforeListingTemplateId;
+        }
     }
 
     @Override
