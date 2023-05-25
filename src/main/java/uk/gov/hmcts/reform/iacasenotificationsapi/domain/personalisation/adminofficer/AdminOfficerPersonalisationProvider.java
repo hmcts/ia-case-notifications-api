@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -9,6 +10,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealDecision
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ReasonForLinkAppealOptions;
 
 @Service
 public class AdminOfficerPersonalisationProvider {
@@ -36,9 +38,10 @@ public class AdminOfficerPersonalisationProvider {
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""));
+                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
+                .put("linkedCase", asylumCase.read(REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class).map(value ->"Yes").orElse("No"));
 
-        asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+                asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
             .ifPresent(hearingCentre -> builder.put("hearingCentre", String.valueOf(hearingCentre).toUpperCase()));
         asylumCase.read(AsylumCaseDefinition.IS_DECISION_ALLOWED, AppealDecision.class)
             .ifPresent(appealOutcomeDecision -> builder.put("applicationDecision", String.valueOf(appealOutcomeDecision).toUpperCase()));
