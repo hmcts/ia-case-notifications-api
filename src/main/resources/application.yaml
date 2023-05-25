@@ -931,6 +931,17 @@ govnotify:
           email: 872fb57b-5a47-4d1e-adc2-e6b58c450d2b
         afterListing:
           email: 185756fb-e2df-4d92-8384-299d595066f9
+      legalRep:
+        beforeListing:
+          email: 5594eb77-fa94-4c88-8cef-2deb58c97b5a
+        afterListing:
+          email: cb4e497e-24f0-4c14-8c21-dcef7f29d740
+      homeOffice:
+        beforeListing:
+          email: dc6f1491-bf1b-4ab9-bd6c-93e36222846a
+        afterListing:
+          email: 578f285d-85b9-4932-85ef-0053589ee335
+
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000

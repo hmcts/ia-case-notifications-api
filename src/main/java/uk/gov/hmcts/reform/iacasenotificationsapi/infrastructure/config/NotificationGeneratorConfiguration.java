@@ -3632,6 +3632,8 @@ public class NotificationGeneratorConfiguration {
     @Bean("markAsReadyForUtTransferNotificationGenerator")
     public List<NotificationGenerator> markAsReadyForUtTransferNotificationGenerator(
         UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
+        LegalRepresentativeMarkAsReadyForUtTransferPersonalisation legalRepresentativeMarkAsReadyForUtTransferPersonalisation,
+        HomeOfficeMarkAppealReadyForUtTransferPersonalisation homeOfficeMarkAppealReadyForUtTransferPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3639,11 +3641,33 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    upperTribunalMarkAsReadyForUtTransferPersonalisation
+                    upperTribunalMarkAsReadyForUtTransferPersonalisation,
+                        legalRepresentativeMarkAsReadyForUtTransferPersonalisation,
+                        homeOfficeMarkAppealReadyForUtTransferPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("markAsReadyForUtTransferInternalNotificationGenerator")
+    public List<NotificationGenerator> markAsReadyForUtTransferInternalNotificationGenerator(
+            UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
+            HomeOfficeMarkAppealReadyForUtTransferPersonalisation homeOfficeMarkAppealReadyForUtTransferPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                upperTribunalMarkAsReadyForUtTransferPersonalisation,
+                                homeOfficeMarkAppealReadyForUtTransferPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 }
