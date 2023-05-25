@@ -3949,6 +3949,20 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipMarkAsReadyForUtTransferNotificationHandler(
+        @Qualifier("aipMarkAsReadyForUtTransferNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && Objects.equals(Event.MARK_AS_READY_FOR_UT_TRANSFER, callback.getEvent())
+                    && isAipJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
 }
 
 
