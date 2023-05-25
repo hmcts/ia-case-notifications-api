@@ -919,68 +919,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("aipRespondentDirectionNotificationGenerator")
     public List<NotificationGenerator> aipRespondentDirectionNotificationGenerator(
             RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
-            AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail appellantNonStandardDirectionOfHomeOfficePersonalisationEmail,
-            AppellantNonStandardDirectionOfHomeOfficePersonalisationSms appellantNonStandardDirectionOfHomeOfficePersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(respondentNonStandardDirectionPersonalisation,
-                            appellantNonStandardDirectionOfHomeOfficePersonalisationEmail),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new SmsNotificationGenerator(
-                        newArrayList(appellantNonStandardDirectionOfHomeOfficePersonalisationSms),
+                        newArrayList(respondentNonStandardDirectionPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
-        );
-    }
-
-    @Bean("aipAppellantAndRespondentDirectionNotificationGenerator")
-    public List<NotificationGenerator> aipAppellantAndRespondentDirectionNotificationGenerator(
-            RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
-            AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail appellantNonStandardDirectionOfHomeOfficePersonalisationEmail,
-            AppellantNonStandardDirectionOfHomeOfficePersonalisationSms appellantNonStandardDirectionOfHomeOfficePersonalisationSms,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-                new EmailNotificationGenerator(
-                        newArrayList(respondentNonStandardDirectionPersonalisation,
-                                appellantNonStandardDirectionOfHomeOfficePersonalisationEmail),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new SmsNotificationGenerator(
-                        newArrayList(appellantNonStandardDirectionOfHomeOfficePersonalisationSms),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("aipAppellantNonStandardDirectionNotificationGenerator")
-    public List<NotificationGenerator> aipAppellantNonStandardDirectionNotificationGenerator(
-        RespondentNonStandardDirectionOfAppellantPersonalization respondentNonStandardDirectionOfAppellantPersonalization,
-        AppellantNonStandardDirectionPersonalisationEmail appellantNonStandardDirectionPersonalisationEmail,
-        AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(respondentNonStandardDirectionOfAppellantPersonalization, appellantNonStandardDirectionPersonalisationEmail),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new SmsNotificationGenerator(
-                newArrayList(appellantNonStandardDirectionPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            )
         );
     }
 
