@@ -3673,6 +3673,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("aipMarkAsReadyForUtTransferNotificationGenerator")
     public List<NotificationGenerator> aipMarkAsReadyForUtTransferNotificationGenerator(
+        UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
         AppellantMarkAsReadyForUtTransferPersonalisationEmail appellantMarkAsReadyForUtTransferPersonalisationEmail,
         AppellantMarkAsReadyForUtTransferPersonalisationSms appellantMarkAsReadyForUtTransferPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -3680,7 +3681,10 @@ public class NotificationGeneratorConfiguration {
 
         return List.of(
             new EmailNotificationGenerator(
-                newArrayList(appellantMarkAsReadyForUtTransferPersonalisationEmail),
+                newArrayList(
+                    upperTribunalMarkAsReadyForUtTransferPersonalisation,
+                    appellantMarkAsReadyForUtTransferPersonalisationEmail
+                ),
                 notificationSender,
                 notificationIdAppender
             ),

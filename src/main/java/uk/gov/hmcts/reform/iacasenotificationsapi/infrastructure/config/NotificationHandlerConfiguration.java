@@ -3932,7 +3932,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.MARK_AS_READY_FOR_UT_TRANSFER
-                && !isInternalCase(callback.getCaseDetails().getCaseData()),
+                && !isInternalCase(callback.getCaseDetails().getCaseData())
+                && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
