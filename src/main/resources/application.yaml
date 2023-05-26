@@ -941,7 +941,11 @@ govnotify:
           email: dc6f1491-bf1b-4ab9-bd6c-93e36222846a
         afterListing:
           email: 578f285d-85b9-4932-85ef-0053589ee335
-
+      appellant:
+        email:
+          beforeListing: e065c9c5-318b-4e27-b1c7-11c445a355d2
+          afterListing: 780b1e2a-f8a4-4e87-a7e4-2b18e603ae44
+        sms: 8cd782c2-df1f-4a31-91b3-468d46a766f7
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000

@@ -3670,4 +3670,29 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("aipMarkAsReadyForUtTransferNotificationGenerator")
+    public List<NotificationGenerator> aipMarkAsReadyForUtTransferNotificationGenerator(
+        UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
+        AppellantMarkAsReadyForUtTransferPersonalisationEmail appellantMarkAsReadyForUtTransferPersonalisationEmail,
+        AppellantMarkAsReadyForUtTransferPersonalisationSms appellantMarkAsReadyForUtTransferPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    upperTribunalMarkAsReadyForUtTransferPersonalisation,
+                    appellantMarkAsReadyForUtTransferPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantMarkAsReadyForUtTransferPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
