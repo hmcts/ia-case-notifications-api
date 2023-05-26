@@ -39,9 +39,9 @@ public class AdminOfficerPersonalisationProvider {
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
-                .put("linkedCase", asylumCase.read(REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class).map(value ->"Yes").orElse("No"));
+                .put("linkedCase", asylumCase.read(REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class).map(value -> "Yes").orElse("No"));
 
-                asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+        asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
             .ifPresent(hearingCentre -> builder.put("hearingCentre", String.valueOf(hearingCentre).toUpperCase()));
         asylumCase.read(AsylumCaseDefinition.IS_DECISION_ALLOWED, AppealDecision.class)
             .ifPresent(appealOutcomeDecision -> builder.put("applicationDecision", String.valueOf(appealOutcomeDecision).toUpperCase()));
