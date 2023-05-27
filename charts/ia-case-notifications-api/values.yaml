@@ -36,6 +36,8 @@ java:
           alias: IA_HEARING_CENTRE_BIRMINGHAM_EMAIL
         - name: hearing-centre-hatton-cross-email
           alias: IA_HEARING_CENTRE_HATTON_CROSS_EMAIL
+        - name: hearing-centre-harmondsworth-email
+          alias: IA_HEARING_CENTRE_HARMONDSWORTH_EMAIL
         - name: hearing-centre-glasgow-email
           alias: IA_HEARING_CENTRE_GLASGOW_EMAIL
         - name: home-office-bradford-email
@@ -52,6 +54,8 @@ java:
           alias: IA_HOME_OFFICE_BIRMINGHAM_EMAIL
         - name: home-office-hatton-cross-email
           alias: IA_HOME_OFFICE_HATTON_CROSS_EMAIL
+        - name: home-office-harmondsworth-email
+          alias: IA_HOME_OFFICE_HARMONDSWORTH_EMAIL
         - name: home-office-glasgow-email
           alias: IA_HOME_OFFICE_GLASGOW_EMAIL
         - name: home-office-apc-email
@@ -64,6 +68,8 @@ java:
           alias: IA_FTPA_HOME_OFFICE_NEWCASTLE_EMAIL
         - name: ftpa-home-office-hatton-cross-email
           alias: IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL
+        - name: ftpa-home-office-harmondsworth-email
+          alias: IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL
         - name: hearing-centre-bradford-telephone
           alias: IA_HEARING_CENTRE_BRADFORD_TELEPHONE
         - name: hearing-centre-manchester-telephone

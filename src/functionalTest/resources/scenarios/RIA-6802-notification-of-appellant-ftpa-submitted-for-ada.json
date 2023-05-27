@@ -1,5 +1,5 @@
 {
-  "description": "RIA-1373-RIA-2936-RIA-3742 Notification of appellant ftpa application submitted",
+  "description": "RIA-6802 Notification of appellant ftpa application submitted - for ADA",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
