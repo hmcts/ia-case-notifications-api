@@ -2,11 +2,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 
 /**
  * This bean provides the email address for Detention Engagement Team for unrepresented detained cases.
@@ -32,7 +30,7 @@ public class DetEmailService {
         @Value("${detentionEngagementTeamIrcEmailAddresses.harmondsworth}") String detEmailAddressHarmondsworth,
         @Value("${detentionEngagementTeamIrcEmailAddresses.tinsleyhouse}") String detEmailAddressTinsleyHouse,
         @Value("${detentionEngagementTeamIrcEmailAddresses.yarlswood}") String detEmailAddressYarlswood
-        ) {
+    ) {
         this.adaDetEmailAddress = adaDetEmailAddress;
         this.detEmailAddressBrookhouse = detEmailAddressBrookhouse;
         this.detEmailAddressColnbrook = detEmailAddressColnbrook;
@@ -47,7 +45,7 @@ public class DetEmailService {
 
         String ircName = asylumCase.read(IRC_NAME, String.class).orElse("");
 
-        switch(ircName) {
+        switch (ircName) {
             case "Brookhouse":
                 return detEmailAddressBrookhouse;
             case "Colnbrook":
