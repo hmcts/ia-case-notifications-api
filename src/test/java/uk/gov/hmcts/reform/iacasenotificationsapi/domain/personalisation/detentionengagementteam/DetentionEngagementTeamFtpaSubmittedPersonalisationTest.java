@@ -58,7 +58,7 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
         when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         detentionEngagementTeamFtpaSubmittedPersonalisation = new DetentionEngagementTeamFtpaSubmittedPersonalisation(
             templateId,

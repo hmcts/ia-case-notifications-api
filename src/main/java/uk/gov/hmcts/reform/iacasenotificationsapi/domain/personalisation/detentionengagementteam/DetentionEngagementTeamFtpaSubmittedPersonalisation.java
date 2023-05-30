@@ -46,7 +46,7 @@ public class DetentionEngagementTeamFtpaSubmittedPersonalisation implements Emai
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Set.of(detEmailService.getAdaDetEmailAddress());
+        return Set.of(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

@@ -1352,7 +1352,7 @@ nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
-adaDetUnrepresentedEmailAddress: ${IA_UNREPRESENTED_ADA_DET_EMAIL:det-unrepresented@example.com}
+adaDetUnrepresentedEmailAddress: ${IA_DET_DEFAULT_EMAIL:det-default@example.com}
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}
@@ -1363,6 +1363,16 @@ respondentEmailAddresses:
 ftpaSubmitted:
   ctscAdminEmailAddress: ${IA_CTSC_ADMIN_FTPA_SUBMITTED:ctscFtpaSubmitted@example.gov.uk}
   respondentEmailAddress: ${IA_RESPONDENT_FTPA_SUBMITTED:homeOfficeFtpaSubmitted@example.gov.uk}
+
+### DET Email addresses for IRC
+detentionEngagementTeamIrcEmailAddresses:
+  brookhouse: ${IA_DET_IRC_BROOKHOUSE_EMAIL:det-irc-brookhouse@example.com}
+  colnbrook: ${IA_DET_IRC_COLNBROOK_EMAIL:det-irc-colnbrook@example.com}
+  derwentside: ${IA_DET_IRC_DERWENTSIDE_EMAIL:det-irc-derwentside@example.com}
+  dungavel: ${IA_DET_IRC_DUNGAVEL_EMAIL:det-irc-dungavel@example.com}
+  harmondsworth: ${IA_DET_IRC_HARMONDSWORTH_EMAIL:det-irc-harmondsworth@example.com}
+  tinsleyhouse: ${IA_DET_IRC_TINSLEYHOUSE_EMAIL:det-irc-tinsleyhouse@example.com}
+  yarlswood: ${IA_DET_IRC_YARLSWOOD_EMAIL:det-irc-yarlswood@example.com}
 
 detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
 

@@ -100,7 +100,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     @Test
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detentionEngagementTeamEmail);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
             detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));

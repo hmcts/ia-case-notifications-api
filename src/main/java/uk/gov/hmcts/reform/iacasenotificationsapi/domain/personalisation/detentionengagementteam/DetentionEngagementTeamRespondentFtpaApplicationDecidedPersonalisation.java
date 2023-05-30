@@ -69,7 +69,7 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
+        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

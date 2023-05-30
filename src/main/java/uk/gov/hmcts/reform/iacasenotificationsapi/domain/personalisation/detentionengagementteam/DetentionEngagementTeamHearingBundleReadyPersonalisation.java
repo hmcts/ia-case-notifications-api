@@ -46,7 +46,7 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
+        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

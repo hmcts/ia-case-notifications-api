@@ -119,7 +119,7 @@ class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
 
         when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
         when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
     }
 
     @Test

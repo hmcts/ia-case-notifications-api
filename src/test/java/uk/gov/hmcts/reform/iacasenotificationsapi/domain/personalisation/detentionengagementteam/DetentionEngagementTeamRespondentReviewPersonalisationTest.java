@@ -70,7 +70,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
 
     @Test
     void should_return_given_det_email_address() {
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detentionEngagementTeamEmail);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
                 detentionEngagementTeamRespondentReviewPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
