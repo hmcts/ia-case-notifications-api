@@ -14,7 +14,8 @@
           "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
           "listCaseHearingDate": "2023-05-03T14:25:15.000",
-          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted"
+          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
+          "stateBeforeEndAppeal": "appealSubmitted"
         }
       }
     }
