@@ -93,7 +93,6 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
     }
 
     private String getRespondentEmailAddress(AsylumCase asylumCase) {
-        System.out.println(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class).get().toString());
         return asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)
                 .map(s -> {
                     if (Arrays.asList(
