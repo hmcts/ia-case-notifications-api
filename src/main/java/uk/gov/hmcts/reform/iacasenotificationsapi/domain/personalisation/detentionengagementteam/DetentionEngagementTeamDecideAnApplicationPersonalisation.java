@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicat
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
 
 @Slf4j
@@ -73,8 +72,8 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        return !detentionFacility.get().equals("immigrationRemovalCentre") ?
-            Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        return !detentionFacility.get().equals("immigrationRemovalCentre")
+            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

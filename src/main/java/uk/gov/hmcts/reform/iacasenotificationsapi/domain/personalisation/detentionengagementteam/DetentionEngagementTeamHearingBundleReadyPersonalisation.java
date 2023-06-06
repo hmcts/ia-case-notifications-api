@@ -46,7 +46,10 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        return !detentionFacility.get().equals("immigrationRemovalCentre")
+            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

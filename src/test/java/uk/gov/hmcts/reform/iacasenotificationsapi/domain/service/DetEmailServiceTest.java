@@ -1,16 +1,17 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IRC_NAME;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -24,7 +25,7 @@ public class DetEmailServiceTest {
 
     @Mock
     AsylumCase asylumCase;
-    private final Map<String, String> detEmailAddressMap =
+    private final Map<String, String> mockIrcToExpectedEmailMap =
         ImmutableMap
             .<String, String>builder()
             .put("Brookhouse", "det-irc-brookhouse@example.com")
@@ -39,36 +40,41 @@ public class DetEmailServiceTest {
 
     @BeforeEach
     void setUp() {
-        detEmailService = new DetEmailService(detEmailAddressMap);
+        detEmailService = new DetEmailService(mockIrcToExpectedEmailMap);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"Brookhouse", "Colnbrook", "Derwentside", "Dungavel", "Harmondsworth", "Tinsley House", "Yarlswood"})
-    void should_return_det_email_address_based_off_Irc_mapping(String ircName) {
+    @Test
+    void should_return_det_email_address_based_off_Irc_mapping() {
+        for (Map.Entry<String, String> entry: mockIrcToExpectedEmailMap.entrySet()) {
+            when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of(entry.getKey()));
 
-        when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of(ircName));
-
-        if (ircName.equals("Tinsley House")) {
-            ircName = "TinsleyHouse";
+            assertEquals(entry.getValue(), detEmailService.getDetEmailAddress(asylumCase));
         }
-        String expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-        String actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
+    }
 
-        switch (ircName) {
-            case "Brookhouse":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-            case "Colnbrook":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-            case "Derwentside":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-            case "Dungavel":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-            case "Harmondsworth":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-            case "Tinsley House":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-            case "Yarlswood":
-                assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
-        }
+    @Test
+    void should_return_det_email_address_for_tinsley_house_after_formatting_string() {
+        when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of("Tinsley House"));
+
+        assertThat(mockIrcToExpectedEmailMap.get("TinsleyHouse"))
+            .isEqualTo(detEmailService.getDetEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_throw_exception_on_email_address_when_Irc_name_is_empty() {
+        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> detEmailService.getDetEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("IRC name is not present");
+    }
+
+    @Test
+    public void should_throw_exception_on_email_address_when_Irc_name_is_not_mapped() {
+        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("Larne House"));
+
+        assertThatThrownBy(() -> detEmailService.getDetEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("DET email address not found for: Larne House");
     }
 }
