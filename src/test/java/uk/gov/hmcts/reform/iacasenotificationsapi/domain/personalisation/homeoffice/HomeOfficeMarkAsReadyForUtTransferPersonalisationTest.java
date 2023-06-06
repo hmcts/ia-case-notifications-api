@@ -105,7 +105,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
 
     @Test
     public void should_return_the_ho_apc_email_address_until_case_under_review() {
-        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+        when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
                 .thenReturn(Optional.of(State.CASE_UNDER_REVIEW));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
@@ -113,7 +113,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
 
     @Test
     public void should_return_the_ho_lart_email_address_until_listing() {
-        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+        when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
                 .thenReturn(Optional.of(State.LISTING));
 
         assertEquals(Collections.singleton(homeOfficeLartEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
@@ -123,7 +123,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     public void should_return_the_ho_hearing_centre_email_address_after_listing() {
         String homeOfficeBhamEmailAddress = "ho-birmingham@example.com";
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeBhamEmailAddress);
-        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+        when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
                 .thenReturn(Optional.of(State.PRE_HEARING));
 
         assertEquals(Collections.singleton(homeOfficeBhamEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
