@@ -22,10 +22,17 @@ public class DetEmailService {
     }
 
     public String getDetEmailAddressMapping(Map<String, String> detEmailAddressesMap, String ircName) {
-        return detEmailAddressesMap.get(ircName);
+        return detEmailAddressesMap.get(ircName.replaceAll(" ", ""));
     }
 
     public String getDetEmailAddress(AsylumCase asylumCase) {
+        var a = asylumCase
+            .read(IRC_NAME, String.class)
+            .map(it -> Optional.ofNullable(getDetEmailAddressMapping(detentionEngagementTeamIrcEmailAddresses, it))
+                .orElseThrow(() -> new IllegalStateException("DET email address not found for: " + it.toString()))
+            )
+            .orElseThrow(() -> new IllegalStateException("IRC name is not present"));
+
         return asylumCase
             .read(IRC_NAME, String.class)
             .map(it -> Optional.ofNullable(getDetEmailAddressMapping(detentionEngagementTeamIrcEmailAddresses, it))

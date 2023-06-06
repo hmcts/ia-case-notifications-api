@@ -72,9 +72,9 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Set<String> emailAddress = Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        return !detentionFacility.get().equals("immigrationRemovalCentre") ? Collections.emptySet() : emailAddress;
+        return !detentionFacility.get().equals("immigrationRemovalCentre") ?
+            Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override
