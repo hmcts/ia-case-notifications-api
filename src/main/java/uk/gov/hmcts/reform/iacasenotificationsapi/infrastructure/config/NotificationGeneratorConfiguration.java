@@ -964,6 +964,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+
     @Bean("aipAppellantAndRespondentDirectionNotificationGenerator")
     public List<NotificationGenerator> aipAppellantAndRespondentDirectionNotificationGenerator(
             RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
