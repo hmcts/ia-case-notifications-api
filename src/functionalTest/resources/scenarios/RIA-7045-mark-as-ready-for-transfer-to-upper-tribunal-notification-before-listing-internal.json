@@ -12,6 +12,7 @@
         "replacements": {
           "utAppealReferenceNumber": "UI-2023-123456",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
+          "stateBeforeEndAppeal": "appealSubmitted",
           "isAdmin": "Yes"
         }
       }
