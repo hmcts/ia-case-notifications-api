@@ -24,8 +24,7 @@ public class DetEmailServiceTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    Map<String, String> detEmailAddressMap =
+    private final Map<String, String> detEmailAddressMap =
         ImmutableMap
             .<String, String>builder()
             .put("Brookhouse", "det-irc-brookhouse@example.com")
@@ -49,37 +48,26 @@ public class DetEmailServiceTest {
 
         when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of(ircName));
 
-        String expectedDetEmailAddress;
-        String actualDetEmailAddress;
+        if (ircName.equals("Tinsley House")) {
+            ircName = "TinsleyHouse";
+        }
+        String expectedDetEmailAddress = detEmailAddressMap.get(ircName);
+        String actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
 
         switch (ircName) {
             case "Brookhouse":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
             case "Colnbrook":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
             case "Derwentside":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
             case "Dungavel":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
             case "Harmondsworth":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
             case "Tinsley House":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
             case "Yarlswood":
-                expectedDetEmailAddress = detEmailAddressMap.get(ircName);
-                actualDetEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
                 assertEquals(expectedDetEmailAddress, actualDetEmailAddress);
         }
     }
