@@ -10,6 +10,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "appellantGivenNames": "Test",
           "appellantFamilyName": "User",
           "appealType": "refusalOfEu",
@@ -53,6 +55,8 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
         "appellantGivenNames": "Test",
         "appellantFamilyName": "User",
         "appealType": "refusalOfEu",
