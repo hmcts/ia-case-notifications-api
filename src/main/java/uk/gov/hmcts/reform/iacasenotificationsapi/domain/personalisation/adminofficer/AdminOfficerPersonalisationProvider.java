@@ -10,7 +10,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealDecision
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ReasonForLinkAppealOptions;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.caselinking.CaseLink;
 
 @Service
 public class AdminOfficerPersonalisationProvider {
@@ -39,7 +39,7 @@ public class AdminOfficerPersonalisationProvider {
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
-                .put("linkedCase", asylumCase.read(REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class).map(value -> "Yes").orElse("No"));
+                .put("linkedCase", asylumCase.read(AsylumCaseDefinition.CASE_LINKS, CaseLink.class).map(value -> "Yes").orElse("No"));
 
         asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
             .ifPresent(hearingCentre -> builder.put("hearingCentre", String.valueOf(hearingCentre).toUpperCase()));
