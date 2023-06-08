@@ -11,7 +11,8 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "ariaListingReference": "LP/12345/2019",
-          "isDecisionAllowed": "allowed"
+          "isDecisionAllowed": "allowed",
+          "caseLinks": "Yes"
         }
       }
     }
