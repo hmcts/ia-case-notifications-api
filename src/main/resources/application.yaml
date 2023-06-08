@@ -966,12 +966,12 @@ govnotify:
           beforeListing: 5bc75d7e-37ac-4382-a43a-0d27038c81de
           afterListing: c2487cec-7ca4-450f-a5ae-b6d93ce99b6e
         sms: e2dcdeee-c61e-4f56-836a-53116011bb20
-        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
     decisionWithoutHearing:
       homeOffice:
         email: e973baa6-71fa-47f7-8991-4a554b4490ba
       appellant:
         email: 8f071df1-61e6-44f3-baae-58209d42ab62
+        sms: 380ea39c-a4f7-43ed-99f1-cd9c78060070
     createCaseLink:
       legalRep:
         beforeListing:
