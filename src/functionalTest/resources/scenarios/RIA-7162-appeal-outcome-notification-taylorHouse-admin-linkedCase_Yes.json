@@ -12,7 +12,16 @@
         "replacements": {
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "allowed",
-          "caseLinks": "Yes"
+          "caseLinks": [
+            {"id" : "7162",
+              "value": {
+                "CaseReference": "testCase",
+                "CaseType": "testType",
+                "CreatedDateTime": "2023-06-08 17:37:39",
+                "ReasonForLink": []
+              }
+            }
+          ]
         }
       }
     }
