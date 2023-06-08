@@ -214,9 +214,33 @@ govnotify:
     nonStandardDirectionOfHomeOfficeBeforeListing:
       legalRep:
         email: 0c7f415c-93bb-443f-a6fb-691962b59aac
+      appellant:
+        email: 7d70d2dd-0d70-4c0f-a5fe-65e7d7d63847
+        sms: 538769db-d03f-4dde-8136-17e9ab4828b2
     nonStandardDirectionOfHomeOfficeAfterListing:
       legalRep:
         email: 6e3d2285-8de8-404d-9173-4873a252016d
+      appellant:
+        email: 724ffcdc-4766-48ab-9a9b-8f0c051ac62d
+        sms: 538769db-d03f-4dde-8136-17e9ab4828b2
+    nonStandardDirectionToAppellantAndRespondentBeforeListing:
+      respondent:
+        email: 6c4aa342-8878-4010-8b08-c3a61cb80687
+      appellant:
+        email: e3b16a22-f17e-4879-a43d-1148a4adb982
+        sms: 3ba4d89a-c03e-4d06-bfe0-af563908a280
+    nonStandardDirectionToAppellantAndRespondentAfterListing:
+      respondent:
+        email: 2ad1ae11-161d-4a22-832e-37edda971954
+      appellant:
+        email: e584d2c5-3559-41d4-93f0-8b4864f8d460
+        sms: 3ba4d89a-c03e-4d06-bfe0-af563908a280
+    nonStandardDirectionOfAppellant:
+      appellant:
+        email: 36d4523c-1240-45a0-8ef3-1aa2a6e2eaf7
+        sms: cc5b1c52-e1e5-43a8-a077-15b63d501228
+      respondent:
+        email: 51dc22ca-9a55-4cd3-98e9-ca9ea167ee74
     hearingRequirementsDirection:
       legalRep:
         email: db70b725-e0d9-4af5-aa3a-00007766bc3b
@@ -417,6 +441,12 @@ govnotify:
           afterListing: ebfbc40d-619e-4e88-b238-ef8e60636ca2
           beforeListing: c315b1db-8245-4cba-8e64-a928f1bb99bb
         sms: 6af930c5-4775-4149-ba6f-f554198340c4
+    changeDirectionDueDateOfAppellant:
+      appellant:
+        email: c81bf72e-d601-42ce-8c13-3c8d9abb62b3
+        sms: b3f900b1-5905-461e-9611-63c1c6be906e
+      homeOffice:
+        email: 1a16daed-a2f2-4d10-9f67-49cb543ab7bb
     changeToHearingRequirements:
       adminOfficer:
         email: d3317a7a-4ce5-4032-b6b4-2806683b8b9a
@@ -446,8 +476,14 @@ govnotify:
     applyForFtpa:
       respondent:
         email: d600db47-d924-4e98-9eba-1098bfb56b31
+        toAppellant:
+          email: 01a0aedf-28d8-4c45-b41f-a12ec090d3b5
+          sms: 7545277a-ecf7-4e29-b1bd-ee67898e6d20
       appellant:
         email: 42accad2-aeac-42e6-b4e3-c613af87a319
+      aip:
+        email: e88352c7-7e70-40ef-b18b-55e9acdd603d
+        sms: f340b389-803a-40a8-a202-6f998b854a53
       adminOfficer:
         email: 351bcf88-a741-44e9-84ef-8ed1e2ddeb18
       caseOfficer:
@@ -571,11 +607,17 @@ govnotify:
           email: 3b4d2ea8-b164-4f5a-918c-b03236b9d6c3
         homeOffice:
           email: 0640e5dc-4001-4c6e-9123-8b5b34348a1f
+        citizen:
+          email: 9284c9b4-1fc3-4cc0-95d4-7b765ac13b8c
+          sms: c397fdb4-b23e-44aa-bf1a-ee54d70051c9
       otherParty:
         legalRep:
           email: 348230df-ccb3-4444-8958-15ffb1f1cf9d
         homeOffice:
           email: 6d482f84-ec49-42ed-8460-7f846ff4529e
+        citizen:
+          email: 6d2eb76b-3c7d-4bed-a0b3-c606df669242
+          sms: 17752fe3-ac51-4854-be0c-a7c5e773fc47
     applicationPartiallyGranted:
       admin:
         email: f5846789-5eb1-49d6-a500-dcab04695d5f
@@ -584,6 +626,11 @@ govnotify:
           email: 742bbd08-4bda-4e90-a261-778ca01b15b6
         respondent:
           email: 732beeb3-63ea-4ede-a131-dc2c316c51d6
+        homeOffice:
+          email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
+        citizen:
+          email: f25439bb-336b-46df-a3d6-70f2e365943c
+          sms: 49a823dc-166c-411e-a5a7-383f02af10fd
       otherParty:
         legalRep:
           email: c0f513a4-b62c-4ded-8d78-5859bfd135cd
@@ -595,22 +642,38 @@ govnotify:
           email: b1b3dab0-bc6a-4395-a42a-5cafaeccf759
         respondent:
           email: 52feff55-1be3-4a3b-9ad9-d33f288762f8
+        homeOffice:
+          email: 9cd8317c-3c89-43cc-b106-5c44041e9298
+        citizen:
+          email: bff3142f-c738-4625-8fae-911405a8c076
+          sms: 21f40d4c-4157-4e00-8cb3-01ad09cced0a
       otherParty:
         legalRep:
           email: 249ef3dc-b414-424e-9bfc-3d18f66fb1ab
         homeOffice:
           email: 96842611-999d-4557-bcd8-3e92ef4e53c4
+        citizen:
+          email: 49a68f8a-8fa6-4803-92fe-aa8fd8287132
+          sms: da5a342b-0d52-4e97-841f-523476d02f42
     applicationRefused:
       applicant:
         legalRep:
           email: 29136fb1-5143-4106-b1e8-8d83042bb103
         respondent:
           email: 0f746c17-06df-43e5-bc89-e7b2e8602666
+        homeOffice:
+          email: fcbe9da1-628b-4661-9128-4e57f1f5e21d
+        citizen:
+          email: 0809b13f-86ac-40eb-be80-ada12aaaa811
+          sms: e54d5a6a-7986-49fb-88e6-27f52baa9ed6
       otherParty:
         legalRep:
           email: 70ad102c-0665-4e8f-8844-0c06f0760a34
         homeOffice:
           email: d6eb9928-ff8c-4b62-8a8b-f30c81201a8a
+        citizen:
+          email: 6cdffe24-757f-4d9b-8787-52048325748e
+          sms: 141c8405-d1f6-477a-92cd-0093eb2d32e6
     applicationRefusedOrNotAdmitted:
       otherParty:
         detentionEngagementTeam:
@@ -903,6 +966,12 @@ govnotify:
           beforeListing: 5bc75d7e-37ac-4382-a43a-0d27038c81de
           afterListing: c2487cec-7ca4-450f-a5ae-b6d93ce99b6e
         sms: e2dcdeee-c61e-4f56-836a-53116011bb20
+        sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
+    decisionWithoutHearing:
+      homeOffice:
+        email: e973baa6-71fa-47f7-8991-4a554b4490ba
+      appellant:
+        email: 8f071df1-61e6-44f3-baae-58209d42ab62
     createCaseLink:
       legalRep:
         beforeListing:
@@ -1068,6 +1137,7 @@ security:
       - "requestHearingRequirementsFeature"
       - "asyncStitchingComplete"
       - "uploadAddendumEvidenceLegalRep"
+      - "applyForFTPAAppellant"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -1142,6 +1212,7 @@ security:
       - "transferOutOfAda"
       - "markAppealAsAda"
       - "markAppealPaid"
+      - "decisionWithoutHearing"
       - "createCaseLink"
       - "maintainCaseLinks"
       - "removeDetainedStatus"
@@ -1191,6 +1262,7 @@ security:
       - "removeDetainedStatus"
       - "markAppealAsDetained"
       - "markAsReadyForUtTransfer"
+      - "decisionWithoutHearing"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1348,9 +1420,11 @@ apcHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_APC}
 lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
+
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
+upperTribunalPermissionApplicationsEmailAddress: ${IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL:UTIACpermissionapplications@grantedpartgranted.fake.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
 adaDetUnrepresentedEmailAddress: ${IA_UNREPRESENTED_ADA_DET_EMAIL:det-unrepresented@example.com}
 
@@ -1394,6 +1468,9 @@ ftpaApplicationDecidedDaysToWait:
   inCountry: 14
   outOfCountry: 28
   ada: 7
+
+ftpaOutOfCountryDays: 28
+ftpaInCountryDays: 14
 
 launchDarkly:
   sdkKey: ${LAUNCH_DARKLY_SDK_KEY:sdk-key}

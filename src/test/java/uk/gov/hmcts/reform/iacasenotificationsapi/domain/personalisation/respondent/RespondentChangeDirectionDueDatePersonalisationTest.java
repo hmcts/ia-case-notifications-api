@@ -4,11 +4,17 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +36,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -48,6 +57,8 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     @Mock
     CaseDetails<AsylumCase> caseDetails;
     @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
@@ -61,6 +72,7 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     private final Long caseId = 12345L;
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String appellantTemplateId = "appellantTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
@@ -90,16 +102,21 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
 
         when((emailAddressFinder.getHomeOfficeEmailAddress(asylumCase))).thenReturn(homeOfficeEmail);
 
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
+
         respondentChangeDirectionDueDatePersonalisation = new RespondentChangeDirectionDueDatePersonalisation(
-                afterListingTemplateId,
-                beforeListingTemplateId,
-                iaExUiFrontendUrl,
-                personalisationProvider,
-                apcHomeOfficeEmailAddress,
-                lartHomeOfficeEmailAddress,
-                customerServicesProvider,
-                appealService,
-                emailAddressFinder
+            afterListingTemplateId,
+            beforeListingTemplateId,
+            appellantTemplateId,
+            iaExUiFrontendUrl,
+            personalisationProvider,
+            apcHomeOfficeEmailAddress,
+            lartHomeOfficeEmailAddress,
+            customerServicesProvider,
+            appealService,
+            emailAddressFinder
         );
     }
 
@@ -116,6 +133,28 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     void should_return_the_given_after_listing_template_id() {
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         assertEquals(afterListingTemplateId, respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Parties.class, names = {
+        "RESPONDENT",
+        "LEGAL_REPRESENTATIVE",
+        "BOTH",
+        "APPELLANT",
+        "APPELLANT_AND_RESPONDENT"
+    })
+    void should_return_the_given_aip_template_id_when_direction_it_to_respondent(Parties parties) {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
+        when(asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)).thenReturn(Optional.of(parties));
+
+        String templateId = respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase);
+
+        if (!parties.equals(RESPONDENT)) {
+            assertEquals(appellantTemplateId, templateId);
+        } else {
+            assertNotEquals(appellantTemplateId, templateId);
+        }
+
     }
 
     @Test
