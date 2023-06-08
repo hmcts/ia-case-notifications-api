@@ -388,6 +388,8 @@ public enum AsylumCaseDefinition {
         "isAdmin", new TypeReference<YesOrNo>() {}),
     UT_APPEAL_REFERENCE_NUMBER(
         "utAppealReferenceNumber", new TypeReference<String>() {}),
+    NOTIFICATION_ATTACHMENT_DOCUMENTS(
+            "notificationAttachmentDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>() {}),
     IRC_NAME(
         "ircName", new TypeReference<String>(){}),
     DETENTION_FACILITY(
