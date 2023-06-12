@@ -1,10 +1,10 @@
 {
-  "description": "RIA-7152 Send request case building notification to DET (Colnbrook).",
+  "description": "RIA-7152 Send request case building notification to DET (Tinsley house).",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
     "input": {
-      "id": 7152,
+      "id": 71524,
       "eventId": "requestCaseBuilding",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -13,7 +13,7 @@
           "currentCaseStateVisibleToHomeOfficeAll":"awaitingRespondentEvidence",
           "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
           "isAcceleratedDetainedAppeal": "Yes",
-          "ircName": "Colnbrook",
+          "ircName": "Tinsleyhouse",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -42,7 +42,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7152_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
+            "id": "71524_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -50,8 +50,8 @@
     },
     "notifications": [
       {
-        "reference": "7152_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
-        "recipient": "det-irc-colnbrook@example.com",
+        "reference": "71524_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
+        "recipient": "det-irc-tinsleyhouse@example.com",
         "subject": "Accelerated detained appeal – SERVE IN PERSON: Appeal reasons form",
         "body": [
           "Home Office reference: A1234567",

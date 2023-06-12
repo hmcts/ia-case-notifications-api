@@ -1,0 +1,64 @@
+{
+  "description": "RIA-7152 Send request case building notification to DET (Tinsley house).",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "caseOfficer",
+    "input": {
+      "id": 71523,
+      "eventId": "requestCaseBuilding",
+      "state": "awaitingRespondentEvidence",
+      "caseData": {
+        "template": "minimal-internal-appeal-submitted.json",
+        "replacements": {
+          "currentCaseStateVisibleToHomeOfficeAll":"awaitingRespondentEvidence",
+          "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "ircName": "TinsleyHouse",
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "requestCaseBuilding",
+                "document": {
+                  "document_url": "http://dm-store:8080/documents/c59723f2-f114-4530-9fa5-1af8ab69c92d",
+                  "document_filename": "PA/12345/2019 -internal IRC ADA-ADA appellant letter-appeal reasons.PDF",
+                  "document_binary_url": "http://dm-store:8080/documents/c59723f2-f114-4530-9fa5-1af8ab69c92d/binary"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "2023-06-12"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-internal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "71523_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "71523_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
+        "recipient": "det-irc-tinsleyhouse@example.com",
+        "subject": "Accelerated detained appeal – SERVE IN PERSON: Appeal reasons form",
+        "body": [
+          "Home Office reference: A1234567",
+          "HMCTS reference: PA/12345/2019",
+          "Appellant name: Talha Awan"
+        ]
+      }
+    ]
+  }
+}
