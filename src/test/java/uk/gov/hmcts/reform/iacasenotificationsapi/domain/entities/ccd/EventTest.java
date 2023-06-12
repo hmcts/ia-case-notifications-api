@@ -47,6 +47,7 @@ public class EventTest {
         assertEquals("uploadAddendumEvidenceHomeOffice", Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE.toString());
         assertEquals("uploadAddendumEvidenceAdminOfficer", Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER.toString());
         assertEquals("requestResponseReview", Event.REQUEST_RESPONSE_REVIEW.toString());
+        assertEquals("decisionWithoutHearing", Event.DECISION_WITHOUT_HEARING.toString());
         assertEquals("sendDecisionAndReasons", Event.SEND_DECISION_AND_REASONS.toString());
         assertEquals("requestReasonsForAppeal", Event.REQUEST_REASONS_FOR_APPEAL.toString());
         assertEquals("submitReasonsForAppeal", Event.SUBMIT_REASONS_FOR_APPEAL.toString());
@@ -101,11 +102,15 @@ public class EventTest {
         assertEquals("nocRequestBail", NOC_REQUEST_BAIL.toString());
         assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
         assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
+        assertEquals("createCaseLink", Event.CREATE_CASE_LINK.toString());
+        assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
+        assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
+        assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(94, Event.values().length);
+        assertEquals(99, Event.values().length);
     }
 }
