@@ -1,12 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +48,9 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        return !detentionFacility.get().equals("immigrationRemovalCentre")
+            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationType.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
@@ -71,7 +71,9 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        return !detentionFacility.get().equals("immigrationRemovalCentre")
+            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

@@ -2,9 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -46,7 +49,9 @@ public class DetentionEngagementTeamFtpaSubmittedPersonalisation implements Emai
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Set.of(detEmailService.getAdaDetEmailAddress());
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        return !detentionFacility.get().equals("immigrationRemovalCentre")
+            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override
