@@ -1713,17 +1713,29 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedDetentionEngagementTeamNotificationHandler(
+        @Qualifier("ftpaSubmittedDetentionEngagementTeamNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                    && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedAipNotificationHandler(
         @Qualifier("ftpaSubmittedAipNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
 
-        // RIA-6112
+        // RIA-611
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                && isAipJourney(callback.getCaseDetails().getCaseData())
-            && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
-            && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+                && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -1794,7 +1806,19 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
-                && isAipJourney(callback.getCaseDetails().getCaseData())
+                && isAipJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> respondentFtpaSubmittedNotificationHandlerDetentionEngagementTeam(
+        @Qualifier("respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
                     && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData())
                     && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerator
