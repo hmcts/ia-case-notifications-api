@@ -58,7 +58,7 @@ class OtherDetentionEngagementTeamFtpaSubmittedPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
         when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         otherDetentionEngagementTeamFtpaSubmittedPersonalisation = new OtherDetentionEngagementTeamFtpaSubmittedPersonalisation(
             templateId,
@@ -82,8 +82,12 @@ class OtherDetentionEngagementTeamFtpaSubmittedPersonalisationTest {
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(otherDetentionEngagementTeamFtpaSubmittedPersonalisation.getRecipientsList(asylumCase)
-            .contains(detEmailAddress));
+        String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+
+        assertTrue(
+            otherDetentionEngagementTeamFtpaSubmittedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test

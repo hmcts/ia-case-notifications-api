@@ -69,7 +69,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
 
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -119,8 +119,12 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(detentionEngagementTeamUploadAppealResponsePersonalisation.getRecipientsList(asylumCase)
-            .contains(detEmailAddress));
+        String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+
+        assertTrue(
+            detentionEngagementTeamUploadAppealResponsePersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test

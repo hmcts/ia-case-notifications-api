@@ -65,7 +65,7 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(listingReference));
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detEmailAddress);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FTPA_REFUSED));
 
         String customerServicesTelephone = "555 555 555";
@@ -130,8 +130,12 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getRecipientsList(asylumCase)
-            .contains(detEmailAddress));
+        String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+
+        assertTrue(
+            detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test

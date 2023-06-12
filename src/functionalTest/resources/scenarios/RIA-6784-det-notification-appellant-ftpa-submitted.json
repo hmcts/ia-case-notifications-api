@@ -11,6 +11,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "listCaseHearingCentre": "taylorHouse",
@@ -25,6 +27,8 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
         "notificationsSent": [
           {
             "id": "6784_FTPA_SUBMITTED_DETENTION_ENGAGEMENT_TEAM",

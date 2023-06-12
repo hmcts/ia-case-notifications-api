@@ -70,10 +70,12 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
 
     @Test
     void should_return_given_det_email_address() {
-        when(detEmailService.getAdaDetEmailAddress()).thenReturn(detentionEngagementTeamEmail);
+        String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamRespondentReviewPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamRespondentReviewPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test

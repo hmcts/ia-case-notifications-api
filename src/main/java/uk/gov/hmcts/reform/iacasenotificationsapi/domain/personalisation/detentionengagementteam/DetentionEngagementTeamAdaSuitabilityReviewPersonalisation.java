@@ -64,7 +64,9 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detEmailService.getAdaDetEmailAddress());
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        return !detentionFacility.get().equals("immigrationRemovalCentre")
+            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

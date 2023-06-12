@@ -388,6 +388,10 @@ public enum AsylumCaseDefinition {
         "isAdmin", new TypeReference<YesOrNo>() {}),
     UT_APPEAL_REFERENCE_NUMBER(
         "utAppealReferenceNumber", new TypeReference<String>() {}),
+    IRC_NAME(
+        "ircName", new TypeReference<String>(){}),
+    DETENTION_FACILITY(
+        "detentionFacility", new TypeReference<String>(){}),
     ;
 
     private final String value;
