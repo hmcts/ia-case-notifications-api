@@ -65,7 +65,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("immigrationRemovalCentre")) {
+        if (detentionFacility.isEmpty() || !detentionFacility.get().equals("immigrationRemovalCentre")) {
             return Collections.emptySet();
         }
 

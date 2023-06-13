@@ -49,7 +49,7 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("immigrationRemovalCentre")) {
+        if (detentionFacility.isEmpty() || !detentionFacility.get().equals("immigrationRemovalCentre")) {
             return Collections.emptySet();
         }
 
