@@ -313,6 +313,8 @@ govnotify:
     requestCaseBuilding:
       legalRep:
         email: c08dc7ff-6a7e-437e-adbd-07e173f6b286
+      detentionEngagementTeam:
+        email: 9609ebb3-cb45-4322-ba2c-f3d2a162f7b6
     homeOfficeResponseUploaded:
       caseOfficer:
         email: 0df260d7-fd82-430b-86bb-047083a8172a
