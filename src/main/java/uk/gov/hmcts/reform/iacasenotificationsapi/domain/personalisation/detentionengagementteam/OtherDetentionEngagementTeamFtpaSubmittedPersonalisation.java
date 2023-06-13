@@ -50,8 +50,11 @@ public class OtherDetentionEngagementTeamFtpaSubmittedPersonalisation implements
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        return !detentionFacility.get().equals("immigrationRemovalCentre")
-            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        if (detentionFacility.isEmpty() || detentionFacility.get().equals("immigrationRemovalCentre")) {
+            return Collections.emptySet();
+        }
+
+        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override
