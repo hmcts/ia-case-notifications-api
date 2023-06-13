@@ -94,7 +94,4 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
             throw new IllegalStateException("Failed to get Request case building document in compatible format");
         }
     }
-
-
-
 }
