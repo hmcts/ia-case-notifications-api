@@ -73,7 +73,8 @@ public class NotificationHandlerConfiguration {
 
         BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) ->
             callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-            && callback.getEvent() == Event.FORCE_REQUEST_CASE_BUILDING;
+            && callback.getEvent() == Event.FORCE_REQUEST_CASE_BUILDING
+            && !isInternalCase(callback.getCaseDetails().getCaseData());
         return new NotificationHandler(function, notificationGenerators);
     }
 
@@ -1048,7 +1049,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REQUEST_CASE_BUILDING,
+                && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -4194,6 +4196,20 @@ public class NotificationHandlerConfiguration {
                     && Objects.equals(Event.MARK_AS_READY_FOR_UT_TRANSFER, callback.getEvent())
                     && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAdaRequestCaseBuildingNotificationHandler(
+            @Qualifier("internalAdaRequestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent().equals(Event.REQUEST_CASE_BUILDING)
+                                && isInternalCase(callback.getCaseDetails().getCaseData())
+                                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
         );
     }
 

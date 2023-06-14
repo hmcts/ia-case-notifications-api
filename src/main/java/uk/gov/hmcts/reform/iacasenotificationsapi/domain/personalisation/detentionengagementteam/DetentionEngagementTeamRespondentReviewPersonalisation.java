@@ -49,8 +49,11 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        return !detentionFacility.get().equals("immigrationRemovalCentre")
-            ? Collections.emptySet() : Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        if (detentionFacility.isEmpty() || !detentionFacility.get().equals("immigrationRemovalCentre")) {
+            return Collections.emptySet();
+        }
+
+        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override

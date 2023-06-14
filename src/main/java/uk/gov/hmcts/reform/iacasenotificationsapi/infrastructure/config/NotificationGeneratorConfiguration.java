@@ -3902,4 +3902,19 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("internalAdaRequestCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> internalAdaRequestCaseBuildingNotificationGenerator(
+            DetentionEngagementTeamRequestCaseBuildingPersonalisation detentionEngagementTeamRequestCaseBuildingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamRequestCaseBuildingPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
