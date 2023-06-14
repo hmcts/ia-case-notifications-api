@@ -1182,7 +1182,8 @@ public class NotificationHandlerConfiguration {
                         && directionFinder
                            .findFirst(asylumCase, DirectionTag.NONE)
                            .map(direction -> direction.getParties().equals(Parties.BOTH))
-                           .orElse(false);
+                           .orElse(false)
+                        && !AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -1735,7 +1736,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                && isAipJourney(callback.getCaseDetails().getCaseData())
+                && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -1755,7 +1757,8 @@ public class NotificationHandlerConfiguration {
                     callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
                     && instructStatus.equals("FAIL")
-                    && !isAipJourney(callback.getCaseDetails().getCaseData());
+                    && !isAipJourney(callback.getCaseDetails().getCaseData())
+                        && !AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerator
         );
@@ -2141,7 +2144,8 @@ public class NotificationHandlerConfiguration {
                     FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT")
-                       && !isAipJourney(asylumCase);
+                       && !isAipJourney(asylumCase)
+                       && !AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -2167,8 +2171,7 @@ public class NotificationHandlerConfiguration {
                     "_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL")
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS")
-                       && isAipJourney(asylumCase)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase);
+                       && isAipJourney(asylumCase);
             },
             notificationGenerators
         );
@@ -2325,7 +2328,8 @@ public class NotificationHandlerConfiguration {
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && isAipJourney(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
+                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
+                    && !AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -2475,7 +2479,8 @@ public class NotificationHandlerConfiguration {
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
-                       && isAipJourney(asylumCase);
+                       && isAipJourney(asylumCase)
+                       && !AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators
         );
