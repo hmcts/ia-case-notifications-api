@@ -2329,8 +2329,7 @@ public class NotificationHandlerConfiguration {
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && isAipJourney(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
-                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
-                    && !AsylumCaseUtils.isInternalCase(asylumCase);
+                    "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
             },
             notificationGenerators
         );
@@ -2480,8 +2479,7 @@ public class NotificationHandlerConfiguration {
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
-                       && isAipJourney(asylumCase)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase);
+                       && isAipJourney(asylumCase);
             },
             notificationGenerators
         );
