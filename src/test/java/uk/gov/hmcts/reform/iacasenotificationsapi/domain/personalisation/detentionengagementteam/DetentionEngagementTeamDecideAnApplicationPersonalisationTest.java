@@ -21,7 +21,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.DateProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationTypes;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -103,7 +103,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = MakeAnApplicationType.class, names = {
+    @EnumSource(value = MakeAnApplicationTypes.class, names = {
         "ADJOURN",
         "EXPEDITE",
         "JUDGE_REVIEW",
@@ -118,7 +118,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         "TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS",
         "OTHER"
     })
-    void should_return_personalisation_of_all_information_given_as_applicant(MakeAnApplicationType makeAnApplicationType) {
+    void should_return_personalisation_of_all_information_given_as_applicant(MakeAnApplicationTypes makeAnApplicationType) {
         initializePrefixes(detentionEngagementTeamDecideAnApplicationPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
@@ -242,7 +242,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = MakeAnApplicationType.class, names = {
+    @EnumSource(value = MakeAnApplicationTypes.class, names = {
         "ADJOURN",
         "EXPEDITE",
         "JUDGE_REVIEW",
@@ -257,7 +257,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         "TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS",
         "OTHER"
     })
-    void should_return_personalisation_of_all_information_given_as_other_party(MakeAnApplicationType makeAnApplicationType) {
+    void should_return_personalisation_of_all_information_given_as_other_party(MakeAnApplicationTypes makeAnApplicationType) {
         initializePrefixes(detentionEngagementTeamDecideAnApplicationPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
