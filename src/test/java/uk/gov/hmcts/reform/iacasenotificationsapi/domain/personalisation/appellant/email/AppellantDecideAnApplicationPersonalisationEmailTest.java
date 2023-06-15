@@ -14,20 +14,25 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -49,7 +54,10 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
     AppealService appealService;
     @Mock
     MakeAnApplication makeAnApplication;
-
+    @Mock
+    UserDetailsProvider userDetailsProvider;
+    @Mock
+    UserDetails userDetails;
 
     private Long caseId = 12345L;
     private String emailTemplateIdRefusedBeforeListing = "emailTemplateIdRefusedBeforeListing";
@@ -61,9 +69,10 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
 
     private String iaAipFrontendUrl = "http://localhost";
     private String applicationType = "someApplicationType";
+    private String applicationTypePhrase = "some application type";
     private String decisionMaker = "someDecisionMaker";
-    private String citizenUser = "citizen";
-    private String homeOfficeUser = "caseworker-ia-homeofficelart";
+    private final String citizenUser = "citizen";
+    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -88,18 +97,22 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         when(makeAnApplicationService.getMakeAnApplication(asylumCase, true)).thenReturn(Optional.ofNullable(makeAnApplication));
         when(makeAnApplication.getType()).thenReturn(applicationType);
+        when(makeAnApplicationService.mapApplicationTypeToPhrase(makeAnApplication))
+            .thenReturn(applicationTypePhrase);
         when(makeAnApplication.getDecisionMaker()).thenReturn(decisionMaker);
+        when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
 
         appellantDecideAnApplicationPersonalisationEmail = new AppellantDecideAnApplicationPersonalisationEmail(
-                emailTemplateIdRefusedBeforeListing,
-                emailTemplateIdRefusedAfterListing,
-                emailTemplateIdGrantedBeforeListing,
-                emailTemplateIdGrantedAfterListing,
-                emailTemplateIdOtherPartyBeforeListing,
-                emailTemplateIdOtherPartyAfterListing,
-                iaAipFrontendUrl,
-                recipientsFinder,
-                makeAnApplicationService);
+            emailTemplateIdRefusedBeforeListing,
+            emailTemplateIdRefusedAfterListing,
+            emailTemplateIdGrantedBeforeListing,
+            emailTemplateIdGrantedAfterListing,
+            emailTemplateIdOtherPartyBeforeListing,
+            emailTemplateIdOtherPartyAfterListing,
+            iaAipFrontendUrl,
+            recipientsFinder,
+            makeAnApplicationService,
+            userDetailsProvider);
     }
 
     @Test
@@ -195,6 +208,7 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
+        when(userDetails.getRoles()).thenReturn(List.of(citizenUser));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(appellantDecideAnApplicationPersonalisationEmail);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -225,6 +239,55 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = { citizenUser, homeOfficeUser })
+    public void should_return_personalisation_when_all_information_given_and_decision_granted(String user) {
+        when(userDetails.getRoles()).thenReturn(List.of(user));
+
+        String decision = "Granted";
+        when(makeAnApplication.getDecision()).thenReturn(decision);
+
+        Map<String, String> personalisation =
+                appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
+
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(mockedListingReferenceNumber, personalisation.get("ariaListingReference"));
+        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
+        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
+        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals(decision, personalisation.get("decision"));
+        assertEquals(user.equals(citizenUser) ? applicationType : applicationTypePhrase,
+            personalisation.get("applicationType"));
+
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { citizenUser, homeOfficeUser })
+    public void should_return_personalisation_when_all_information_given_and_decision_refused(String user) {
+        when(userDetails.getRoles()).thenReturn(List.of(user));
+
+        String decision = "Refused";
+        when(makeAnApplication.getDecision()).thenReturn(decision);
+
+        Map<String, String> personalisation =
+                appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
+
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(mockedListingReferenceNumber, personalisation.get("ariaListingReference"));
+        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
+        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
+        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals(decision, personalisation.get("decision"));
+        assertEquals(decisionMaker, personalisation.get("decision maker role"));
+        assertEquals(user.equals(citizenUser) ? applicationType : applicationTypePhrase,
+            personalisation.get("applicationType"));
+
+        verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
+    }
+
+    @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_information_given_and_decision_granted(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -234,7 +297,7 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         when(makeAnApplication.getDecision()).thenReturn(decision);
 
         Map<String, String> personalisation =
-                appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedListingReferenceNumber, personalisation.get("ariaListingReference"));
@@ -261,7 +324,7 @@ public class AppellantDecideAnApplicationPersonalisationEmailTest {
         when(makeAnApplication.getDecision()).thenReturn(decision);
 
         Map<String, String> personalisation =
-                appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantDecideAnApplicationPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedListingReferenceNumber, personalisation.get("ariaListingReference"));

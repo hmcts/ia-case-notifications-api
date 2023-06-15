@@ -2,7 +2,7 @@
 
 properties([
   // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
-  pipelineTriggers([cron('H 22 * * *')]),
+  pipelineTriggers([cron('H 08 * * 1-5')]),
   parameters([
           string(name: 'URL_TO_TEST', defaultValue: 'http://ia-case-notifications-api-aat.service.core-compute-aat.internal', description: 'The URL you want to run these tests against'),
           string(name: 'SecurityRules',
@@ -108,6 +108,7 @@ def secrets = [
         secret('home-office-email-apc', 'HOME_OFFICE_EMAIL_APC'),
         secret('home-office-email-lart', 'HOME_OFFICE_EMAIL_LART'),
         secret('upper-tribunal-notices-email', 'IA_UPPER_TRIBUNAL_NOTICES_EMAIL'),
+        secret('utiac-permission-applications-email', 'IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL'),
         secret('nbc-email', 'IA_NBC_EMAIL'),
         secret('ctsc-email', 'IA_CTSC_EMAIL'),
 
@@ -158,17 +159,23 @@ withNightlyPipeline(type, product, component) {
   loadVaultSecrets(secrets)
 
   enableSecurityScan()
+
+  /*
+   When the tokens expire (they last only 180 days), follow instructions here to generate new ones:
+   https://tools.hmcts.net/confluence/display/RBS/Fortify+Access+Tokens
+   To access fortify, use MyApps (https://myapps.microsoft.com/)
+
+   The tokens must be stored as secrets in Azure (portal.azure.com) in the the ia-demo vault. Be advised that they may
+   appear duplicated if you add them the first time, but they're not. Don't delete them or you'll need somebody else
+   to recover them.
+   */
   enableFortifyScan()
   enableMutationTest()
-
-  afterSuccess('fortify-scan') {
-    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
-  }
 
   enableSlackNotifications('#ia-tech')
   enableFullFunctionalTest()
 
-  afterSuccess('fortify-scan') {
+  afterAlways('fortify-scan') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
   }
 

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
@@ -33,6 +34,7 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final MakeAnApplicationService makeAnApplicationService;
+    private final UserDetailsProvider userDetailsProvider;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -48,7 +50,8 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
             @Value("${govnotify.template.decideAnApplication.otherParty.appellant.afterListing.email}") String decideAnApplicationAfterListingOtherPartyEmailTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
-            MakeAnApplicationService makeAnApplicationService) {
+            MakeAnApplicationService makeAnApplicationService,
+            UserDetailsProvider userDetailsProvider) {
         this.decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId = decideAnApplicationRefusedBeforeListingAppellantEmailTemplateId;
         this.decideAnApplicationRefusedAfterListingAppellantEmailTemplateId = decideAnApplicationRefusedAfterListingAppellantEmailTemplateId;
         this.decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId = decideAnApplicationGrantedBeforeListingAppellantEmailTemplateId;
@@ -58,6 +61,7 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.makeAnApplicationService = makeAnApplicationService;
+        this.userDetailsProvider = userDetailsProvider;
     }
 
     @Override
@@ -113,6 +117,13 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
         Optional<MakeAnApplication> makeAnApplicationOptional = makeAnApplicationService.getMakeAnApplication(asylumCase, true);
         String decision = makeAnApplicationOptional.map(MakeAnApplication::getDecision).orElse("");
 
+        String applicationType = makeAnApplicationOptional
+            .map(application -> !hasRole(ROLE_CITIZEN)
+                                && !ROLE_CITIZEN.equals(application.getApplicantRole())
+                ? makeAnApplicationService.mapApplicationTypeToPhrase(application)
+                : application.getType())
+            .orElse("");
+
         ImmutableMap.Builder<String, String> builder = ImmutableMap
                 .<String, String>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
@@ -121,12 +132,19 @@ public class AppellantDecideAnApplicationPersonalisationEmail implements EmailNo
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("applicationType", makeAnApplicationOptional.map(MakeAnApplication::getType).orElse(""))
+                .put("applicationType", applicationType)
                 .put("decision", decision)
                 .put("Hyperlink to service", iaAipFrontendUrl);
         if (DECISION_REFUSED.equals(decision)) {
             builder.put("decision maker role", makeAnApplicationOptional.map(MakeAnApplication::getDecisionMaker).orElse(""));
         }
         return builder.build();
+    }
+
+    private boolean hasRole(String roleName) {
+        return userDetailsProvider
+            .getUserDetails()
+            .getRoles()
+            .contains(roleName);
     }
 }
