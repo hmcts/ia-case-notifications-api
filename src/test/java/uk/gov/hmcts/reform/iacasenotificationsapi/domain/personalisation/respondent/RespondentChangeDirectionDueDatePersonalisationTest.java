@@ -61,8 +61,6 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
     private final String homeOfficeEmail = "ho-taylorhouse@example.com";
     private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
-
-
     private final String hmctsReference = "hmctsReference";
     private final String ariaListingReference = "someAriaListingReference";
     private final String homeOfficeReference = "homeOfficeReference";
