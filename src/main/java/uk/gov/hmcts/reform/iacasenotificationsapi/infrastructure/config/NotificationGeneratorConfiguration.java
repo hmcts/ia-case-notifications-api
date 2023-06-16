@@ -3962,6 +3962,7 @@ public class NotificationGeneratorConfiguration {
         UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
         AppellantMarkAsReadyForUtTransferPersonalisationEmail appellantMarkAsReadyForUtTransferPersonalisationEmail,
         AppellantMarkAsReadyForUtTransferPersonalisationSms appellantMarkAsReadyForUtTransferPersonalisationSms,
+        HomeOfficeMarkAppealReadyForUtTransferPersonalisation homeOfficeMarkAppealReadyForUtTransferPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
@@ -3969,7 +3970,8 @@ public class NotificationGeneratorConfiguration {
             new EmailNotificationGenerator(
                 newArrayList(
                     upperTribunalMarkAsReadyForUtTransferPersonalisation,
-                    appellantMarkAsReadyForUtTransferPersonalisationEmail
+                    appellantMarkAsReadyForUtTransferPersonalisationEmail,
+                    homeOfficeMarkAppealReadyForUtTransferPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
