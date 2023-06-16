@@ -2138,6 +2138,7 @@ public class NotificationHandlerConfiguration {
 
                        && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
                     FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
+                       && !AsylumCaseUtils.isInternalCase(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT")
                        && !isAipJourney(asylumCase);
