@@ -5,7 +5,7 @@ import static java.util.Arrays.stream;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Optional;
 
-public enum  MakeAnApplicationType {
+public enum  MakeAnApplicationTypes {
 
     ADJOURN("Adjourn"),
     EXPEDITE("Expedite"),
@@ -21,14 +21,14 @@ public enum  MakeAnApplicationType {
     TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS("Transfer out of accelerated detained appeals process"),
     OTHER("Other");
 
-    MakeAnApplicationType(String value) {
+    MakeAnApplicationTypes(String value) {
         this.value = value;
     }
 
     @JsonValue
     private final String value;
 
-    public static Optional<MakeAnApplicationType> from(
+    public static Optional<MakeAnApplicationTypes> from(
         String value
     ) {
         return stream(values())
