@@ -20,4 +20,16 @@
             ]]</notes>
         <cve>CVE-2022-45688</cve>
     </suppress>
+    <suppress until="2024-06-01">
+        <notes>![CDATA[
+            Delaying spring upgrade until later date.
+            ]]</notes>
+        <cve>CVE-2023-20883</cve>
+    </suppress>
+    <suppress until="2024-06-01">
+        <notes>![CDATA[
+            Delaying tomcat upgrade until later date.
+            ]]</notes>
+        <cve>CVE-2023-28709</cve>
+    </suppress>
 </suppressions>
