@@ -3998,4 +3998,22 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("updateDetentionLocationNotificationGenerator")
+    public List<NotificationGenerator> updateDetentionLocationNotificationGenerator(
+            LegalRepresentativeUpdateDetentionLocationPersonalisation legalRepresentativeUpdateDetentionLocationPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeUpdateDetentionLocationPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
