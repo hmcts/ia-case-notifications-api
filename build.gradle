@@ -21,7 +21,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.11'
     id 'uk.gov.hmcts.java' version '0.12.43'
     id 'io.freefair.lombok' version '6.2.0'
-    id 'au.com.dius.pact' version '4.1.7'
+    id 'au.com.dius.pact' version '4.1.38'
 }
 
 apply plugin: 'java'
@@ -33,7 +33,7 @@ def versions = [
         junit              : '5.8.2',
         junitPlatform      : '1.7.2',
         gradlePitest       : '1.5.1',
-        pact_version       : '4.1.7',
+        pact_version       : '4.1.38',
         pitest             : '1.5.2',
         reformLogging      : '5.1.7',
         reformHealthStarter: '0.0.5',
