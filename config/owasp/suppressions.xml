@@ -20,7 +20,8 @@
             ]]</notes>
         <cve>CVE-2022-45688</cve>
     </suppress>
-    <suppress until="2023-06-15">
-        <cve>CVE-2023-28709</cve><!-- Tomcat 9.0.73 -->
+    <suppress>
+        <cve>CVE-2023-28709</cve>
+        <cve>CVE-2023-20883</cve>
     </suppress>
 </suppressions>
