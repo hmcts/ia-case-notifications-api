@@ -394,6 +394,17 @@ public enum AsylumCaseDefinition {
         "ircName", new TypeReference<String>(){}),
     DETENTION_FACILITY(
         "detentionFacility", new TypeReference<String>(){}),
+
+    PREVIOUS_DETENTION_LOCATION(
+
+            "previousDetentionLocation", new TypeReference<String>() {}),
+
+
+    PRISON_NAME(
+            "prisonName", new TypeReference<String>(){}),
+
+    OTHER_DETENTION_FACILITY_NAME(
+            "otherDetentionFacilityName", new TypeReference<OtherDetentionFacilityName>(){})
     ;
 
     private final String value;

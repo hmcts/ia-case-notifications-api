@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.util.Optional;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
@@ -43,5 +44,26 @@ public class AsylumCaseUtils {
                 .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
         return appealListed.isPresent();
+    }
+
+    public static String getDetentionFacilityName(AsylumCase asylumCase) {
+        String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class)
+                .orElse("");
+        switch (detentionFacility) {
+            case "immigrationRemovalCentre":
+                return getFacilityName(IRC_NAME, asylumCase);
+            case "prison":
+                return getFacilityName(PRISON_NAME, asylumCase);
+            case "other":
+                return asylumCase.read(OTHER_DETENTION_FACILITY_NAME, OtherDetentionFacilityName.class)
+                        .orElseThrow(() -> new RequiredFieldMissingException("Other detention facility name is missing")).getOther();
+            default:
+                throw new RequiredFieldMissingException("Detention Facility is missing");
+        }
+    }
+
+    private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {
+        return asylumCase.read(field, String.class)
+                .orElseThrow(() -> new RequiredFieldMissingException(field.name() + " is missing"));
     }
 }
