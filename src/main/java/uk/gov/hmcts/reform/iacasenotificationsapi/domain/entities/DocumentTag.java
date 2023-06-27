@@ -30,6 +30,7 @@ public enum DocumentTag {
     BAIL_SUBMISSION("bailSubmission"),
     B1_DOCUMENT("b1Document"),
     ADA_SUITABILITY("adaSuitability"),
+    INTERNAL_ADA_SUITABILITY("internalAdaSuitability"),
     APPEAL_FORM("appealForm"),
     FTPA_DECISION_AND_REASONS("ftpaDecisionAndReasons"),
     FTPA_APPELLANT("ftpaAppellant"),
