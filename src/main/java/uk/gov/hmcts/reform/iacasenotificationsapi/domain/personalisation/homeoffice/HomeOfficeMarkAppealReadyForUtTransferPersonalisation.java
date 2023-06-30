@@ -6,10 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppealListed;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -31,6 +29,8 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
     private final EmailAddressFinder emailAddressFinder;
     private final String respondentEmailAddressUntilRespondentReview;
     private final String respondentEmailAddressAtRespondentReview;
+    private final String endAppealEmailAddresses;
+
     private final PersonalisationProvider personalisationProvider;
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -45,6 +45,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
             @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}")
             String respondentEmailAddressUntilRespondentReview,
             @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddressAtRespondentReview,
+            @Value("${endAppealHomeOfficeEmailAddress}") String endAppealEmailAddresses,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder,
             PersonalisationProvider personalisationProvider,
@@ -55,6 +56,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
         this.markReadyForUtTransferAfterListingTemplateId = markReadyForUtTransferAfterListingTemplateId;
         this.respondentEmailAddressUntilRespondentReview = respondentEmailAddressUntilRespondentReview;
         this.respondentEmailAddressAtRespondentReview = respondentEmailAddressAtRespondentReview;
+        this.endAppealEmailAddresses = endAppealEmailAddresses;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
@@ -70,7 +72,14 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(getRespondentEmailAddress(asylumCase));
+
+        if (AsylumCaseUtils.isAipJourney(asylumCase)) {
+            return (isAppealListed(asylumCase))
+                ? Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)) :
+                Collections.singleton(endAppealEmailAddresses);
+        } else {
+            return Collections.singleton(getRespondentEmailAddress(asylumCase));
+        }
     }
 
     @Override
@@ -96,17 +105,17 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
         return asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)
                 .map(s -> {
                     if (Arrays.asList(
-                            State.APPEAL_SUBMITTED,
-                            State.PENDING_PAYMENT,
-                            State.AWAITING_RESPONDENT_EVIDENCE,
-                            State.CASE_BUILDING,
-                            State.CASE_UNDER_REVIEW
+                        State.APPEAL_SUBMITTED,
+                        State.PENDING_PAYMENT,
+                        State.AWAITING_RESPONDENT_EVIDENCE,
+                        State.CASE_BUILDING,
+                        State.CASE_UNDER_REVIEW
                     ).contains(s)) {
                         return respondentEmailAddressUntilRespondentReview;
                     } else if (Arrays.asList(
-                            State.RESPONDENT_REVIEW,
-                            State.SUBMIT_HEARING_REQUIREMENTS,
-                            State.LISTING
+                        State.RESPONDENT_REVIEW,
+                        State.SUBMIT_HEARING_REQUIREMENTS,
+                        State.LISTING
                     ).contains(s)) {
                         return respondentEmailAddressAtRespondentReview;
                     }

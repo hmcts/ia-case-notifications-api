@@ -21,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -49,6 +50,8 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     private String homeOfficeRefNumber = "someRepRefNumber";
     private final String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
+    private final String endAppealEmailAddresses = "HO-end-appeal@example.com";
+
 
     @Mock
     PersonalisationProvider personalisationProvider;
@@ -74,6 +77,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
             afterListingTemplateId,
             homeOfficeApcEmailAddress,
             homeOfficeLartEmailAddress,
+            endAppealEmailAddresses,
             iaExUiFrontendUrl,
             emailAddressFinder,
             personalisationProvider,
@@ -125,6 +129,26 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeBhamEmailAddress);
         when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
                 .thenReturn(Optional.of(State.PRE_HEARING));
+
+        assertEquals(Collections.singleton(homeOfficeBhamEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_ho_end_appeal_email_address_before_listing_aip() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class))
+            .thenReturn(Optional.of(JourneyType.AIP));
+
+        assertEquals(Collections.singleton(endAppealEmailAddresses), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_ho_hearing_centre_email_address_after_listing_aip() {
+        String homeOfficeBhamEmailAddress = "ho-birmingham@example.com";
+
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class))
+            .thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.BIRMINGHAM));
+        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeBhamEmailAddress);
 
         assertEquals(Collections.singleton(homeOfficeBhamEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
     }
