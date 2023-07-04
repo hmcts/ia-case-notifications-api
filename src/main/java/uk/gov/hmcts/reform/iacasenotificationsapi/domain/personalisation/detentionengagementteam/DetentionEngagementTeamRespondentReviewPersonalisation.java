@@ -2,38 +2,41 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.service.notify.NotificationClientException;
 
 @Service
-public class DetentionEngagementTeamRespondentReviewPersonalisation implements EmailNotificationPersonalisation {
+@Slf4j
+public class DetentionEngagementTeamRespondentReviewPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String detentionEngagementTeamRespondentReviewTemplateId;
-    private final DirectionFinder directionFinder;
     private final DetEmailService detEmailService;
+    private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamRespondentReviewPersonalisation(
         @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
         @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-        DirectionFinder directionFinder,
-        DetEmailService detEmailService
+        DetEmailService detEmailService,
+        DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
-        this.directionFinder = directionFinder;
         this.detEmailService = detEmailService;
+        this.documentDownloadClient = documentDownloadClient;
     }
 
     @Override
@@ -57,27 +60,28 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        final Direction direction =
-                directionFinder
-                        .findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)
-                        .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_REVIEW + "' is not present"));
-
-        final String directionDueDate =
-                LocalDate
-                        .parse(direction.getDateDue())
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
         return ImmutableMap
-            .<String, String>builder()
+            .<String, Object>builder()
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? "ADA" : "IAFT")
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("directionDueDate", directionDueDate)
+            .put("documentLink", getRespondentReviewLetterJsonObject(asylumCase))
             .build();
+
     }
+
+    private JSONObject getRespondentReviewLetterJsonObject(AsylumCase asylumCase) {
+        try {
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, REQUEST_RESPONDENT_REVIEW));
+        } catch (IOException | NotificationClientException e) {
+            log.error("Failed to get Request Respondent Review Letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Request Respondent Review Letter in compatible format");
+        }
+    }
+
 }
