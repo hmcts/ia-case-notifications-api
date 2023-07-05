@@ -4269,6 +4269,20 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAdaSuitabilityReviewNotificationHandler(
+        @Qualifier("internalAdaSuitabilityReviewNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent().equals(Event.ADA_SUITABILITY_REVIEW)
+                && isInternalCase(callback.getCaseDetails().getCaseData())
+                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+            notificationGenerators
+        );
+    }
+
 }
 
 

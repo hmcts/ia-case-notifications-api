@@ -4016,4 +4016,19 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalAdaSuitabilityReviewNotificationGenerator")
+    public List<NotificationGenerator> internalAdaSuitabilityReviewNotificationGenerator(
+        DetentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

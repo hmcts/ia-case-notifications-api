@@ -937,6 +937,8 @@ govnotify:
           email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
       detentionEngagementTeam:
         email: b7019a3f-ad5e-4e03-bdee-01098920b856
+        internalAda:
+          email: e6c27617-dfaf-45ec-a0ca-a4003d6d971a
     transferOutOfAda:
       homeOffice:
         beforeListing:
