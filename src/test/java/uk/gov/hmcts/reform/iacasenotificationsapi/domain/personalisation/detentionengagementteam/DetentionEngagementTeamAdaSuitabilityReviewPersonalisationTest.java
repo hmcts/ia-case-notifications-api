@@ -52,7 +52,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     DocumentWithMetadata internalAdaSuitabilityLetter = getDocumentWithMetadata(
         "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.INTERNAL_ADA_SUITABILITY);
     IdValue<DocumentWithMetadata> internalAdaSuitabilityLetterId = new IdValue<>("1", internalAdaSuitabilityLetter);
-    private DetentionEngagementTeamAdaSuitabilityReviewPersonalisation detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation;
+    private DetentionEngagementTeamAdaSuitabilityReviewPersonalisation detentionEngagementTeamAdaSuitabilityReviewPersonalisation;
 
 
     @BeforeEach
@@ -66,7 +66,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(internalAdaSuitabilityLetterId)));
         when(documentDownloadClient.getJsonObjectFromDocument(internalAdaSuitabilityLetter)).thenReturn(jsonDocument);
 
-        detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation =
+        detentionEngagementTeamAdaSuitabilityReviewPersonalisation =
             new DetentionEngagementTeamAdaSuitabilityReviewPersonalisation(
                 templateId,
                 detEmailService,
@@ -77,14 +77,14 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation.getTemplateId());
+        assertEquals(templateId, detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + internalAdaSuitabilityReviewPersonalisationReferenceId,
-            detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -93,14 +93,14 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         assertTrue(
-            detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+            detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
+            () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -110,7 +110,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
-            () -> detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase))
+            () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase))
             .isExactlyInstanceOf(RequiredFieldMissingException.class)
             .hasMessage("Internal ADA Suitability document is not present");
     }
@@ -121,6 +121,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
         final Map<String, Object> expectedPersonalisation =
             ImmutableMap
                 .<String, Object>builder()
+                .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
@@ -129,7 +130,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
                 .build();
 
         Map<String, Object> actualPersonalisation =
-            detentionEngagementTeamInternalAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
