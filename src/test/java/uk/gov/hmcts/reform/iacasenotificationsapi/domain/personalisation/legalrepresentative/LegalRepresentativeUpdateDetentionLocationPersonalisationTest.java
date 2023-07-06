@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -11,12 +12,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -35,7 +39,8 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-    private final String transferOutOfAdaReason = "Determined unsuitable following Suitability Review";
+    private final String adaPrefix = "Accelerated detained appeal";
+    private final String nonAdaPrefix = "Immigration and Asylum appeal";
 
     @Mock
     AsylumCase asylumCase;
@@ -104,11 +109,20 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
                 .hasMessage("asylumCase must not be null");
     }
 
-    @Test
-    public void should_return_personalisation_when_all_information_given() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+        initializePrefixes(legalRepresentativeUpdateDetentionLocationPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         Map<String, String> personalisation =
                 legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation(asylumCase);
+
+        String a = personalisation.get("subjectPrefix");
+
+        assertEquals(isAda.equals(YesOrNo.YES)
+                ? adaPrefix
+                : nonAdaPrefix, personalisation.get("subjectPrefix"));
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));

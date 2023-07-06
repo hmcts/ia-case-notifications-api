@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getDetentionFacilityName;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppealListed;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -15,10 +14,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
-
-
-
-
 @Service
 public class LegalRepresentativeUpdateDetentionLocationPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
@@ -28,6 +23,10 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
     private final CustomerServicesProvider customerServicesProvider;
     private final PersonalisationProvider personalisationProvider;
 
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public LegalRepresentativeUpdateDetentionLocationPersonalisation(
             @NotNull(message = "updateDetentionLocationBeforeListingAppellantTemplateId cannot be null")
@@ -64,6 +63,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .putAll(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase))
+                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("oldDetentionLocation", asylumCase.read(AsylumCaseDefinition.PREVIOUS_DETENTION_LOCATION, String.class)
                         .orElseThrow(() -> new RequiredFieldMissingException("Previous Detention location is missing")))
                 .put("newDetentionLocation", getDetentionFacilityName(asylumCase))
