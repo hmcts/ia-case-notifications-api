@@ -6,9 +6,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
 public class AsylumCaseUtils {
@@ -61,6 +64,16 @@ public class AsylumCaseUtils {
             default:
                 throw new RequiredFieldMissingException("Detention Facility is missing");
         }
+    }
+
+    public static DocumentWithMetadata getLetterForNotification(AsylumCase asylumCase, DocumentTag documentTag) {
+        Optional<List<IdValue<DocumentWithMetadata>>> optionalNotificationLetters = asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS);
+        return optionalNotificationLetters
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(IdValue::getValue)
+                .filter(d -> d.getTag() == documentTag)
+                .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
     }
 
     private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {

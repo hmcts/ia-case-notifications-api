@@ -908,9 +908,14 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamRespondentReviewPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
                 new EmailNotificationGenerator(
-                        newArrayList(respondentDirectionPersonalisation, detentionEngagementTeamRespondentReviewPersonalisation),
+                        newArrayList(respondentDirectionPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
