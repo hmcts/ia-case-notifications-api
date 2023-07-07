@@ -21,7 +21,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -30,11 +30,11 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
-    private DirectionFinder directionFinder;
-    @Mock
     private DetEmailService detEmailService;
     @Mock
     Direction direction;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
 
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -43,7 +43,6 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String detentionEngagementTeamRespondentReviewTemplateId = "detentionEngagementTeamRespondentReviewTemplateId";
-    private final String detentionEngagementTeamEmail = "det@email.com";
     private final String directionDueDate = "2023-02-02";
 
     private DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation;
@@ -52,8 +51,8 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     void setup() {
         detentionEngagementTeamRespondentReviewPersonalisation = new DetentionEngagementTeamRespondentReviewPersonalisation(
                 detentionEngagementTeamRespondentReviewTemplateId,
-                directionFinder,
-                detEmailService
+                detEmailService,
+                documentDownloadClient
         );
     }
 
@@ -82,7 +81,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-                () -> detentionEngagementTeamRespondentReviewPersonalisation.getPersonalisation((AsylumCase) null))
+                () -> detentionEngagementTeamRespondentReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
@@ -93,20 +92,13 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
 
-        when((direction.getDateDue())).thenReturn(directionDueDate);
-        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW))
-                .thenReturn(Optional.of(direction));
-
-
         final Map<String, String> expectedPersonalisation =
                 ImmutableMap
                         .<String, String>builder()
                         .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("ariaListingReference", ariaListingReference)
                         .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
                         .put("appellantGivenNames", appellantGivenNames)
                         .put("appellantFamilyName", appellantFamilyName)
-                        .put("insertDate", directionDueDate)
                         .build();
 
         Map<String, String> actualPersonalisation =
