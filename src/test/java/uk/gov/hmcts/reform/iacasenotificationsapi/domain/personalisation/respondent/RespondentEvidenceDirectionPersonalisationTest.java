@@ -42,6 +42,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     private String companyName = "Legal Rep Company Name";
     private String companyAddress = "45 Lunar House Spa Road London SE1 3HP";
     private String legalRepName = "Legal Rep Name";
+    private String legalRepFamilyName = "Legal Rep Family Name";
     private String legalRepReference = "Legal Rep Reference";
     private String legalRepEmail = "Legal Rep Email";
     private String legalRepCompanyName = "Legal Rep Company Name";
@@ -76,6 +77,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
 
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.of(legalRepFamilyName));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReference));
         when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(legalRepCompanyName));
@@ -151,7 +153,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(companyName, personalisation.get("companyName"));
         assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName, personalisation.get("legalRepName"));
+        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
         assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
         assertEquals(legalRepReference, personalisation.get("legalRepReference"));
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
@@ -208,7 +210,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(companyName, personalisation.get("companyName"));
         assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName, personalisation.get("legalRepName"));
+        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
         assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
         assertEquals(legalRepReference, personalisation.get("legalRepReference"));
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
