@@ -4270,5 +4270,3 @@ public class NotificationHandlerConfiguration {
     }
 
 }
-
-
