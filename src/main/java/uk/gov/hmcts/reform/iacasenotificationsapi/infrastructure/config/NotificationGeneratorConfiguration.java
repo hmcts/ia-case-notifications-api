@@ -4021,4 +4021,19 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalAdaGenerateHearingBundleNotificationGenerator")
+    public List<NotificationGenerator> internalAdaGenerateHearingBundleNotificationGenerator(
+            DetentionEngagementTeamGenerateHearingBundlePersonalisation detentionEngagementTeamGenerateHearingBundlePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamGenerateHearingBundlePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

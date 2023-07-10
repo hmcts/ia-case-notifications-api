@@ -54,6 +54,8 @@ govnotify:
   emailPrefix:
     ada: "Accelerated detained appeal"
     nonAda: "Immigration and Asylum appeal"
+    internalAda: "ADA"
+    internalNonAda: "IAFT"
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:
@@ -344,6 +346,9 @@ govnotify:
         email: 0df260d7-fd82-430b-86bb-047083a8172a
       detentionEngagementTeam:
         email: c15c1d5d-aa44-4725-b953-14bd506cf7ce
+    generateHearingBundle:
+      detentionEngagementTeam:
+        email: e4c5547d-7cff-49f5-b47c-7861343db513
     hearingBundleReady:
       detentionEngagementTeam:
         email: 734a1474-aa91-40bf-b227-96be926d846c

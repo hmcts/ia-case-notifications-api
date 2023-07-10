@@ -4269,4 +4269,18 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAdaGenerateHearingBundleNotificationHandler(
+            @Qualifier("internalAdaGenerateHearingBundleNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent().equals(Event.GENERATE_HEARING_BUNDLE)
+                                && isInternalCase(callback.getCaseDetails().getCaseData())
+                                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
 }

@@ -1,0 +1,64 @@
+{
+  "description": "RIA-7199 Internal ADA generate hearing bundle notification with document attachment",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "caseOfficer",
+    "input": {
+      "id": 7199,
+      "eventId": "generateHearingBundle",
+      "state": "finalBundling",
+      "caseData": {
+        "template": "minimal-internal-appeal-submitted.json",
+        "replacements": {
+          "currentCaseStateVisibleToHomeOfficeAll":"finalBundling",
+          "currentCaseStateVisibleToLegalRepresentative": "finalBundling",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "ircName": "Colnbrook",
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "hearingBundle",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-internal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "7199_INTERNAL_ADA_HEARING_BUNDLE_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "7199_INTERNAL_ADA_HEARING_BUNDLE_EMAIL",
+        "recipient": "det-irc-colnbrook@example.com",
+        "subject": "ADA – SERVE IN PERSON: Hearing bundle ready",
+        "body": [
+          "Home Office reference: A1234567",
+          "HMCTS reference: PA/12345/2019",
+          "Appellant name: Talha Awan"
+        ]
+      }
+    ]
+  }
+}
