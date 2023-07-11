@@ -177,8 +177,8 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("appealReviewOutcome", "maintain")
                 .put("hearingDate", hearingDateFormatted)
-                .put("documentDownloadTitle", "Home Office Response")
-                .put("linkToDownloadDocument", appealResponseJsonDocument)
+                .put("documentName", "Home Office Response")
+                .put("documentLink", appealResponseJsonDocument)
                 .build();
 
         Map<String, Object> actualPersonalisation =
@@ -208,8 +208,8 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("appealReviewOutcome", "withdraw")
                 .put("hearingDate", hearingDateFormatted)
-                .put("documentDownloadTitle", "Withdrawal Letter")
-                .put("linkToDownloadDocument", appealResponseJsonDocument)
+                .put("documentName", "Withdrawal Letter")
+                .put("documentLink", appealResponseJsonDocument)
                 .build();
 
         Map<String, Object> actualPersonalisation =

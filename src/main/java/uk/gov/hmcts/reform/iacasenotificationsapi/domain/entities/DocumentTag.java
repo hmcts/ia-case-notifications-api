@@ -37,6 +37,7 @@ public enum DocumentTag {
     FTPA_RESPONDENT("ftpaRespondent"),
     REQUEST_CASE_BUILDING("requestCaseBuilding"),
     REQUEST_RESPONDENT_REVIEW("requestRespondentReview"),
+    HEARING_BUNDLE_READY_LETTER("hearingBundleReadyLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
@@ -53,3 +54,4 @@ public enum DocumentTag {
         return id;
     }
 }
+

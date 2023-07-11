@@ -97,8 +97,8 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("appealReviewOutcome", appealReviewOutcome)
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("documentDownloadTitle", documentDownloadTitle)
-            .put("linkToDownloadDocument", getAppealResponseDocument(asylumCase))
+            .put("documentName", documentDownloadTitle)
+            .put("documentLink", getAppealResponseDocument(asylumCase))
             .build();
     }
 

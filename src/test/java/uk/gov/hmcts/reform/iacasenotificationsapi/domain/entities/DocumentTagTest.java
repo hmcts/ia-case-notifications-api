@@ -35,10 +35,11 @@ public class DocumentTagTest {
         assertEquals("b1Document", DocumentTag.B1_DOCUMENT.toString());
         assertEquals("internalAdaSuitability", DocumentTag.INTERNAL_ADA_SUITABILITY.toString());
         assertEquals("requestRespondentReview", DocumentTag.REQUEST_RESPONDENT_REVIEW.toString());
+        assertEquals("hearingBundleReadyLetter", DocumentTag.HEARING_BUNDLE_READY_LETTER.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(33, DocumentTag.values().length);
+        assertEquals(34, DocumentTag.values().length);
     }
 }
