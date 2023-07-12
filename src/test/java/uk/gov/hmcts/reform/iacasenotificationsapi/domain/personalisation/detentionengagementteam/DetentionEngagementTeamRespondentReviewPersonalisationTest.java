@@ -32,18 +32,14 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     @Mock
     private DetEmailService detEmailService;
     @Mock
-    Direction direction;
-    @Mock
     DocumentDownloadClient documentDownloadClient;
 
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String ariaListingReference = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String detentionEngagementTeamRespondentReviewTemplateId = "detentionEngagementTeamRespondentReviewTemplateId";
-    private final String directionDueDate = "2023-02-02";
 
     private DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation;
 

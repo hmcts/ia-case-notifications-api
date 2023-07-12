@@ -15,8 +15,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -26,33 +24,26 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
 
     private static final String HOME_OFFICE_RESPONSE = "Home Office Response";
     private static final String WITHDRAWAL_LETTER = "Withdrawal Letter";
-    private static final String MAINTAIN = "maintain";
-    private static final String WITHDRAW = "withdraw";
+    private static final String WITHDRAW = "decisionWithdrawn";
 
     private final CustomerServicesProvider customerServicesProvider;
     private final String detentionEngagementTeamUploadAppealResponseTemplateId;
     private final String adaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
-    private final DateTimeExtractor dateTimeExtractor;
-    private final HearingDetailsFinder hearingDetailsFinder;
 
     public DetentionEngagementTeamUploadAppealResponsePersonalisation(
         @Value("${govnotify.template.homeOfficeResponseUploaded.detentionEngagementTeam.email}") String detentionEngagementTeamUploadAppealResponseTemplateId,
-        @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
+        @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
         DetEmailService detEmailService,
-        DocumentDownloadClient documentDownloadClient,
-        DateTimeExtractor dateTimeExtractor,
-        HearingDetailsFinder hearingDetailsFinder
+        DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamUploadAppealResponseTemplateId = detentionEngagementTeamUploadAppealResponseTemplateId;
         this.adaPrefix = adaPrefix;
         this.customerServicesProvider = customerServicesProvider;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
-        this.dateTimeExtractor = dateTimeExtractor;
-        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -79,9 +70,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String ariaListingReferenceIfPresent = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-            .map(ariaListingReference -> "Listing reference: " + ariaListingReference)
-            .orElse("");
 
         String appealReviewOutcome = getAppealReviewOutcome(asylumCase);
         String documentDownloadTitle = appealReviewOutcome.equals(WITHDRAW) ? WITHDRAWAL_LETTER : HOME_OFFICE_RESPONSE;
@@ -91,14 +79,11 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("subjectPrefix", adaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReferenceIfPresent", ariaListingReferenceIfPresent)
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("appealReviewOutcome", appealReviewOutcome)
-            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("documentDownloadTitle", documentDownloadTitle)
-            .put("linkToDownloadDocument", getAppealResponseDocument(asylumCase))
+            .put("documentLink", appealReviewOutcome.equals(WITHDRAW) ? new JSONObject() : getAppealResponseLetter(asylumCase))
+            .put("documentName", documentDownloadTitle)
             .build();
     }
 
@@ -106,23 +91,23 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisation implemen
         AppealReviewOutcome appealReviewOutcome = asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
             .orElseThrow(() -> new IllegalStateException("Appeal review outcome is not present"));
 
-        return appealReviewOutcome == AppealReviewOutcome.DECISION_MAINTAINED ? MAINTAIN : WITHDRAW;
+        return appealReviewOutcome.toString();
     }
 
-    private JSONObject getAppealResponseDocument(AsylumCase asylumCase) {
-        Optional<List<IdValue<DocumentWithMetadata>>> optionalRespondentDocuments = asylumCase.read(RESPONDENT_DOCUMENTS);
+    private JSONObject getAppealResponseLetter(AsylumCase asylumCase) {
+        Optional<List<IdValue<DocumentWithMetadata>>> optionalRespondentDocuments = asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS);
         DocumentWithMetadata document = optionalRespondentDocuments
             .orElse(Collections.emptyList())
             .stream()
             .map(IdValue::getValue)
-            .filter(d -> d.getTag() == DocumentTag.APPEAL_RESPONSE)
-            .findFirst().orElseThrow(() -> new IllegalStateException("Home Office response document not available"));
+            .filter(d -> d.getTag() == DocumentTag.UPLOAD_THE_APPEAL_RESPONSE)
+            .findFirst().orElseThrow(() -> new IllegalStateException("Appeal response letter not available"));
 
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Home Office response document in compatible format", e);
-            throw new IllegalStateException("Failed to get Home Office response document in compatible format");
+            log.error("Failed to get Appeal response letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Appeal response letter in compatible format");
         }
     }
 }
