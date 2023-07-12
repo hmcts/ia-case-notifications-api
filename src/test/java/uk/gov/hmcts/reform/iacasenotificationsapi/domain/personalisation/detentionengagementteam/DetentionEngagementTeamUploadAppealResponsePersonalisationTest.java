@@ -1,11 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.compareStringsAndJsonObjects;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.getDocumentWithMetadata;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -29,8 +31,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMe
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -46,21 +46,19 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     DetEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-    @Mock
-    DateTimeExtractor dateTimeExtractor;
-    @Mock
-    HearingDetailsFinder hearingDetailsFinder;
 
     private final String templateId = "someTemplateId";
     private final String adaPrefix = "Accelerated detained appeal";
-    private final String hearingDateFormatted = "15 March 2023";
     private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String listingReference = "listingReference";
-    private final String listingReferenceIfPresent = "Listing reference: " + listingReference;
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+
+    DocumentWithMetadata appealResponseLetter = getDocumentWithMetadata(
+            "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.UPLOAD_THE_APPEAL_RESPONSE);
+    IdValue<DocumentWithMetadata> appealResponseLetterId = new IdValue<>("1", appealResponseLetter);
     private JSONObject appealResponseJsonDocument;
 
     private DetentionEngagementTeamUploadAppealResponsePersonalisation
@@ -86,12 +84,12 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
 
         String hearingDate = "2023-03-15T10:13:38.410992";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDate));
-        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDate);
-        when(dateTimeExtractor.extractHearingDate(hearingDate)).thenReturn(hearingDateFormatted);
 
         List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.APPEAL_RESPONSE);
         appealResponseJsonDocument =  new JSONObject("{\"title\": \"Home Office Response JsonDocument\"}");
         when(asylumCase.read(RESPONDENT_DOCUMENTS)).thenReturn(Optional.of(appealResponseDocuments));
+        when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(appealResponseLetterId)));
+        when(documentDownloadClient.getJsonObjectFromDocument(appealResponseLetter)).thenReturn(appealResponseJsonDocument);
 
         detentionEngagementTeamUploadAppealResponsePersonalisation =
             new DetentionEngagementTeamUploadAppealResponsePersonalisation(
@@ -99,9 +97,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 adaPrefix,
                 customerServicesProvider,
                 detEmailService,
-                documentDownloadClient,
-                dateTimeExtractor,
-                hearingDetailsFinder
+                documentDownloadClient
             );
     }
 
@@ -148,19 +144,22 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_appeal_response_document_is_missing() {
-        when(asylumCase.read(RESPONDENT_DOCUMENTS)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
+                .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
+
+        DocumentWithMetadata letter = getDocumentWithMetadata(
+                "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.ADA_SUITABILITY);
+        IdValue<DocumentWithMetadata> adaLetter = new IdValue<>("1", letter);
+        when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(adaLetter)));
 
         assertThatThrownBy(
             () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Home Office response document not available");
+            .hasMessage("Appeal response letter not available");
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given_maintain() throws NotificationClientException, IOException {
-
-        appealResponseJsonDocument =  new JSONObject("{\"title\": \"Home Office Response JsonDocument\"}");
-        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
 
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
@@ -171,14 +170,11 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
-                .put("appealReviewOutcome", "maintain")
-                .put("hearingDate", hearingDateFormatted)
-                .put("documentDownloadTitle", "Home Office Response")
-                .put("linkToDownloadDocument", appealResponseJsonDocument)
+                .put("documentName", "Home Office Response")
+                .put("documentLink", appealResponseJsonDocument)
                 .build();
 
         Map<String, Object> actualPersonalisation =
@@ -190,9 +186,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_information_given_withdrawn() throws NotificationClientException, IOException {
 
-        appealResponseJsonDocument =  new JSONObject("{\"title\": \"Withdrawal letter JsonDocument\"}");
-        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
-
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));
 
@@ -202,14 +195,11 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantFamilyName)
-                .put("appealReviewOutcome", "withdraw")
-                .put("hearingDate", hearingDateFormatted)
-                .put("documentDownloadTitle", "Withdrawal Letter")
-                .put("linkToDownloadDocument", appealResponseJsonDocument)
+                .put("documentName", "Withdrawal Letter")
+                .put("documentLink", new JSONObject())
                 .build();
 
         Map<String, Object> actualPersonalisation =

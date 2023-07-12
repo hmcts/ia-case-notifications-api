@@ -1,5 +1,6 @@
 {
   "description": "RIA-6780: Send notification to DET when Home Office uploads appeal response (Internal ADA) - Decision withdrawn",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeLart",
@@ -20,7 +21,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "appealReviewOutcome": "decisionWithdrawn",
           "listCaseHearingDate": "2024-05-03T14:25:15.000",
-          "respondentDocuments": [
+          "notificationAttachmentDocuments": [
             {
               "id": "docId",
               "value": {
@@ -31,7 +32,7 @@
                 },
                 "description": "description",
                 "dateUploaded": "{$TODAY}",
-                "tag": "appealResponse",
+                "tag": "uploadTheAppealResponse",
                 "suppliedBy": "suppliedBy"
               }
             }

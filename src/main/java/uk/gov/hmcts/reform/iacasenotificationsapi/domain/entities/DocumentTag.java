@@ -37,6 +37,7 @@ public enum DocumentTag {
     FTPA_RESPONDENT("ftpaRespondent"),
     REQUEST_CASE_BUILDING("requestCaseBuilding"),
     REQUEST_RESPONDENT_REVIEW("requestRespondentReview"),
+    UPLOAD_THE_APPEAL_RESPONSE("uploadTheAppealResponse"),
 
     @JsonEnumDefaultValue
     NONE("");
