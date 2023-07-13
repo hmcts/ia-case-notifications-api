@@ -38,6 +38,7 @@ public enum DocumentTag {
     REQUEST_CASE_BUILDING("requestCaseBuilding"),
     REQUEST_RESPONDENT_REVIEW("requestRespondentReview"),
     UPLOAD_THE_APPEAL_RESPONSE("uploadTheAppealResponse"),
+    HEARING_BUNDLE_READY_LETTER("hearingBundleReadyLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

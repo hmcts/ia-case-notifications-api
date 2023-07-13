@@ -25,16 +25,17 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
     private final String detHearingBundleReadyTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
+    private String subjectPrefix;
     private final DetEmailService detEmailService;
 
     public DetentionEngagementTeamHearingBundleReadyPersonalisation(
         @Value("${govnotify.template.hearingBundleReady.detentionEngagementTeam.email}") String detHearingBundleReadyTemplateId,
+        @Value("${govnotify.emailPrefix.adaInPerson}") String subjectPrefix,
         DetEmailService detEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
         this.detHearingBundleReadyTemplateId = detHearingBundleReadyTemplateId;
+        this.subjectPrefix = subjectPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
@@ -65,34 +66,33 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
         return ImmutableMap
             .<String, Object>builder()
-            .put("subjectPrefix", adaPrefix)
+            .put("subjectPrefix", subjectPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("link_to_hearing_bundle", getHearingBundleDocumentInJsonObject(asylumCase))
+            .put("documentLink", getHearingBundleReadyLetterInJsonObject(asylumCase))
             .build();
     }
 
-    private JSONObject getHearingBundleDocumentInJsonObject(AsylumCase asylumCase) {
-        Optional<List<IdValue<DocumentWithMetadata>>> maybeLegalRepresentativeDocuments = asylumCase.read(HEARING_DOCUMENTS);
-        List<DocumentWithMetadata> documents = maybeLegalRepresentativeDocuments
+    private JSONObject getHearingBundleReadyLetterInJsonObject(AsylumCase asylumCase) {
+        Optional<List<IdValue<DocumentWithMetadata>>> maybeNotificationAttachmentDocuments = asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS);
+        List<DocumentWithMetadata> documents = maybeNotificationAttachmentDocuments
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(IdValue::getValue)
-                .filter(document -> document.getTag() == DocumentTag.HEARING_BUNDLE)
+                .filter(document -> document.getTag() == DocumentTag.HEARING_BUNDLE_READY_LETTER)
                 .collect(Collectors.toList());
 
         if (documents.size() == 0) {
-            throw new RequiredFieldMissingException("Hearing Bundle is not available");
+            throw new RequiredFieldMissingException("Hearing Bundle ready letter is not available");
         }
         DocumentWithMetadata document = documents.get(0);
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Hearing bundle document in compatible format", e);
-            throw new IllegalStateException("Failed to get Hearing bundle document document in compatible format");
+            log.error("Failed to get Hearing bundle ready letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Hearing bundle ready letter in compatible format");
         }
     }
 }
