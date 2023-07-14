@@ -61,7 +61,7 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_HEARING_BUNDLE_IS_READY_DET_ADA_EMAIL";
+        return caseId + "_HEARING_BUNDLE_IS_READY_INTERNAL_DET_EMAIL";
     }
 
     @Override

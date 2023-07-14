@@ -80,7 +80,7 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_HEARING_BUNDLE_IS_READY_DET_ADA_EMAIL",
+        assertEquals(caseId + "_HEARING_BUNDLE_IS_READY_INTERNAL_DET_EMAIL",
             detentionEngagementTeamHearingBundleReadyPersonalisation.getReferenceId(caseId));
     }
 
