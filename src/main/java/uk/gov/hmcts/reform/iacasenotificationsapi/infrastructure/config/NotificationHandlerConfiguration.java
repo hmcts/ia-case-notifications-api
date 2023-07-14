@@ -1397,8 +1397,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyAdaDetNotificationHandler(
-            @Qualifier("HearingBundleReadyDetAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyInternalDetNotificationHandler(
+            @Qualifier("HearingBundleReadyInternalDetNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
@@ -1408,7 +1408,7 @@ public class NotificationHandlerConfiguration {
                                     && callback.getCaseDetails().getState() != State.FTPA_DECIDED
                                     && "DONE".equalsIgnoreCase(getStitchStatus(callback))
                                     && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData())
-                                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData());
+                                    && AsylumCaseUtils.isAppellantInDetention(callback.getCaseDetails().getCaseData());
                 },
                 notificationGenerators
         );

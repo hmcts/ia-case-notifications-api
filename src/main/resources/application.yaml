@@ -55,6 +55,7 @@ govnotify:
     ada: "Accelerated detained appeal"
     nonAda: "Immigration and Asylum appeal"
     adaInPerson: "ADA - SERVE IN PERSON"
+    nonAdaInPerson: "IAFT - SERVE IN PERSON"
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:

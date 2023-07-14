@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -25,17 +26,20 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
     private final String detHearingBundleReadyTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private String subjectPrefix;
+    private String adaPrefix;
+    private String nonAdaPrefix;
     private final DetEmailService detEmailService;
 
     public DetentionEngagementTeamHearingBundleReadyPersonalisation(
         @Value("${govnotify.template.hearingBundleReady.detentionEngagementTeam.email}") String detHearingBundleReadyTemplateId,
-        @Value("${govnotify.emailPrefix.adaInPerson}") String subjectPrefix,
+        @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
+        @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
         DetEmailService detEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
         this.detHearingBundleReadyTemplateId = detHearingBundleReadyTemplateId;
-        this.subjectPrefix = subjectPrefix;
+        this.adaPrefix = adaPrefix;
+        this.nonAdaPrefix = nonAdaPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
@@ -66,7 +70,7 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
         return ImmutableMap
             .<String, Object>builder()
-            .put("subjectPrefix", subjectPrefix)
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
