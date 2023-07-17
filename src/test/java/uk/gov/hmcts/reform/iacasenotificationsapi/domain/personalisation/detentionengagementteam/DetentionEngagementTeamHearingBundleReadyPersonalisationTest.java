@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.io.IOException;
@@ -20,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -48,7 +48,8 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String detHearingBundleReadyTemplateId = "detHearingBundleReadyTemplateId";
     private final String detentionEngagementTeamEmail = "det@email.com";
-    private final String subjectPrefix = "ADA - SERVE IN PERSON";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
 
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"Hearing bundle JsonDocument\"}");
     DocumentWithMetadata hearingBundleDoc = TestUtils.getDocumentWithMetadata(
@@ -63,11 +64,11 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamHearingBundleReadyPersonalisation = new DetentionEngagementTeamHearingBundleReadyPersonalisation(
                 detHearingBundleReadyTemplateId,
-                subjectPrefix,
+                adaPrefix,
+                nonAdaPrefix,
                 detEmailService,
                 documentDownloadClient
         );
-        ReflectionTestUtils.setField(detentionEngagementTeamHearingBundleReadyPersonalisation, "subjectPrefix", subjectPrefix);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
@@ -79,7 +80,7 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_HEARING_BUNDLE_IS_READY_DET_ADA_EMAIL",
+        assertEquals(caseId + "_HEARING_BUNDLE_IS_READY_INTERNAL_DET_EMAIL",
             detentionEngagementTeamHearingBundleReadyPersonalisation.getReferenceId(caseId));
     }
 
@@ -97,12 +98,21 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
     void should_return_personalisation_of_all_information() throws NotificationClientException, IOException {
         Map<String, Object> personalisation = detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(subjectPrefix, personalisation.get("subjectPrefix"));
+        assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(jsonObject, personalisation.get("documentLink"));
+    }
+
+    @Test
+    void should_return_non_ada_prefix_if_non_ada() throws NotificationClientException, IOException {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        Map<String, Object> personalisation = detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase);
+
+        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
     }
 
     @Test
