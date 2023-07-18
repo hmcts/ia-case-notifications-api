@@ -33,7 +33,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
         @Value("${govnotify.template.adaSuitabilityReview.detentionEngagementTeam.email}") String internalAdaSuitabilityReviewTemplateId,
         DetEmailService detEmailService,
         DocumentDownloadClient documentDownloadClient,
-        @Value("${govnotify.emailPrefix.ada}") String adaPrefix
+        @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix
     ) {
         this.internalAdaSuitabilityReviewTemplateId = internalAdaSuitabilityReviewTemplateId;
         this.detEmailService = detEmailService;

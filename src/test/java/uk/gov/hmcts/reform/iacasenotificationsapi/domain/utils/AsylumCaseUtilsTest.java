@@ -23,6 +23,12 @@ public class AsylumCaseUtilsTest {
     private AsylumCase asylumCase;
 
     @Test
+    void should_return_correct_value_for_det() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(AsylumCaseUtils.isAppellantInDetention(asylumCase));
+    }
+
+    @Test
     void should_return_correct_value_for_ada() {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         assertTrue(AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase));

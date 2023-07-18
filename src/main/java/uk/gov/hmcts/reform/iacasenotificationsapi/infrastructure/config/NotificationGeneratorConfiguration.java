@@ -1369,8 +1369,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("HearingBundleReadyDetAdaNotificationGenerator")
-    public List<NotificationGenerator> hearingBundleReadyAdaDetNotificationGenerator(
+    @Bean("HearingBundleReadyInternalDetNotificationGenerator")
+    public List<NotificationGenerator> hearingBundleReadyInternalDetNotificationGenerator(
             HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation,
             DetentionEngagementTeamHearingBundleReadyPersonalisation detentionEngagementTeamHearingBundleReadyPersonalisation,
             GovNotifyNotificationSender notificationSender,
