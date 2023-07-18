@@ -35,7 +35,7 @@ public class DetentionEngagementTeamAppealDecidedPersonalisation implements Emai
     @Value("${govnotify.emailPrefix.adaInPerson}")
     private String adaSubjectPrefix;
 
-    @Value("${govnotify.emailPrefix.iaftInPerson}")
+    @Value("${govnotify.emailPrefix.nonAdaInPerson}")
     private String iaftSubjectPrefix;
 
     public DetentionEngagementTeamAppealDecidedPersonalisation(
