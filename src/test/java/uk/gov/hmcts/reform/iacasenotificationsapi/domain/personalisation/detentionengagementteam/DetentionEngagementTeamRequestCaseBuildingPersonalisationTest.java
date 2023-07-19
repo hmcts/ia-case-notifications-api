@@ -44,7 +44,8 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
 
     private final String requestcaseBuildingTemplateId = "someTemplateId";
     private final String requestCaseBuildingPersonalisationReferenceId = "_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL";
-    private final String adaPrefix = "Accelerated detained appeal";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
+    private final String detainedPrefix = "IAFT - SERVE IN PERSON";
     private final String ircName = "Tinsley House";
     private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -74,6 +75,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
                 new DetentionEngagementTeamRequestCaseBuildingPersonalisation(
                         requestcaseBuildingTemplateId,
                         adaPrefix,
+                        detainedPrefix,
                         detEmailService,
                         documentDownloadClient
                 );

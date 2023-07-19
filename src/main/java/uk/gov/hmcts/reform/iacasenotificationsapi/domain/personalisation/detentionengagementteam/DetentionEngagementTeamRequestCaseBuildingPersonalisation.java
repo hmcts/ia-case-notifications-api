@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -30,16 +31,19 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
     private final String internalAdaRequestCaseBuildingTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private String adaPrefix;
+    private String detainedPrefix;
     private final DetEmailService detEmailService;
 
     public DetentionEngagementTeamRequestCaseBuildingPersonalisation(
             @Value("${govnotify.template.requestCaseBuilding.detentionEngagementTeam.email}") String templateId,
-            @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
+            @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
+            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String detainedPrefix,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.internalAdaRequestCaseBuildingTemplateId = templateId;
         this.adaPrefix = adaPrefix;
+        this.detainedPrefix = detainedPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
@@ -70,7 +74,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
 
         return ImmutableMap
                 .<String, Object>builder()
-                .put("subjectPrefix", adaPrefix)
+                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : detainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))

@@ -4252,7 +4252,7 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent().equals(Event.REQUEST_CASE_BUILDING)
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
-                                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                                && isDetainedAppeal(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
     }
