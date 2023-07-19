@@ -7,6 +7,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,6 +101,18 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
 
         assertTrue(
             detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+    }
+
+    @Test
+    public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+        assertEquals(Collections.emptySet(), detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase));
+    }
+
+    @Test
+    public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase));
     }
 
     @ParameterizedTest

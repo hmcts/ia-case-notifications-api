@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.json.JSONObject;
@@ -104,13 +105,15 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
     }
 
     @Test
-    void should_return_empty_list_when_detention_facility_is_not_irc() {
-        String detentionEngagementTeamEmail = "det@email.com";
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+    public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+        assertEquals(Collections.emptySet(), detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase));
+    }
 
-        assertTrue(
-                detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase).isEmpty());
+    @Test
+    public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
