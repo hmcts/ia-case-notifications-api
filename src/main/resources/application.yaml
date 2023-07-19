@@ -1019,6 +1019,12 @@ govnotify:
           email: acf67e1c-ec14-48f5-aed9-61a703831a5c
         afterListing:
           email: 59bbd0ed-2b2f-432b-8111-0cb4b9ea9a7d
+    appealDecided:
+        detentionTeam:
+          dismissed:
+            email: b2f060ba-f0f3-4dd7-b634-6e30424c8c2a
+          allowed:
+            email: 03cb8170-abe1-42f1-9cfd-8526e1635294
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000

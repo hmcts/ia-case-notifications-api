@@ -4021,4 +4021,20 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalAdaAppealDecidedNotificationGenerator")
+    public List<NotificationGenerator> internalAdaAppealDecidedNotificationGenerator(
+            DetentionEngagementTeamAppealDecidedPersonalisation detentionEngagementTeamAppealDecidedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamAppealDecidedPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+
+    }
 }

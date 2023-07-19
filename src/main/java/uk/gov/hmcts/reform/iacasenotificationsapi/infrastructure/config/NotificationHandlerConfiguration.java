@@ -305,7 +305,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                        && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -4268,5 +4269,21 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAdaAppealDecidedNotificationHandler(
+            @Qualifier("internalAdaAppealDecidedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent().equals(Event.SEND_DECISION_AND_REASONS)
+                                && isInternalCase(callback.getCaseDetails().getCaseData())
+                                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+
 
 }
