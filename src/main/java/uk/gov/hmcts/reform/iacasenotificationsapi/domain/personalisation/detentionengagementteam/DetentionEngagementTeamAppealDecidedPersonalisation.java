@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DECISION_ALLOWED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_ADA_DECISION_AND_REASONS_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
@@ -63,6 +64,11 @@ public class DetentionEngagementTeamAppealDecidedPersonalisation implements Emai
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        if (detentionFacility.isEmpty() || !detentionFacility.get().equals("immigrationRemovalCentre")) {
+            return Collections.emptySet();
+        }
+
         return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 

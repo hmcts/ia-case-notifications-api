@@ -104,6 +104,16 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
     }
 
     @Test
+    void should_return_empty_list_when_detention_facility_is_not_irc() {
+        String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+
+        assertTrue(
+                detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase).isEmpty());
+    }
+
+    @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> detentionEngagementTeamAppealDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null))
