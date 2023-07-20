@@ -119,18 +119,18 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("A"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("B"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("C"));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of("D"));
 
         Map<String, String> personalisation =
             caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("ariaListingReference"));
+        assertEquals("A", personalisation.get("appealReferenceNumber"));
+        assertEquals("B", personalisation.get("appellantGivenNames"));
+        assertEquals("C", personalisation.get("appellantFamilyName"));
+        assertEquals("D", personalisation.get("ariaListingReference"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
@@ -143,7 +143,7 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(asylumCase);
+            caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(callback);
 
         assertEquals("hello", personalisation.get("appealReferenceNumber"));
     }
