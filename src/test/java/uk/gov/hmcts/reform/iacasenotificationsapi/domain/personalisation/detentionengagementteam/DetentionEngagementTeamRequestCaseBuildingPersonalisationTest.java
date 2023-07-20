@@ -96,9 +96,20 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertEquals(Collections.singleton(detEmailAddress),
-                detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase)
-        );
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+
+        assertTrue(
+            detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+    }
+
+    @Test
+    public void should_return_empty_set_email_address_from_asylum_case() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+
+        assertTrue(
+            detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
     }
 
     @Test

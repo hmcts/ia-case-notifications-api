@@ -13,6 +13,7 @@
           "currentCaseStateVisibleToHomeOfficeAll":"awaitingRespondentEvidence",
           "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
           "isAcceleratedDetainedAppeal": "Yes",
+          "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Tinsley House",
           "notificationAttachmentDocuments": [
             {
