@@ -125,7 +125,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             State.LISTING,
             State.SUBMIT_HEARING_REQUIREMENTS,
             State.REASONS_FOR_APPEAL_SUBMITTED,
-            State.LISTING
+            State.AWAITING_REASONS_FOR_APPEAL
         );
 
         List<State> pouEmail = newArrayList(
