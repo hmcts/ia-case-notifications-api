@@ -82,13 +82,17 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
         if (Arrays.asList(
                 State.APPEAL_SUBMITTED,
                 State.PENDING_PAYMENT,
-                State.AWAITING_RESPONDENT_EVIDENCE).contains(stateBeforeEndAppeal)) {
+                State.AWAITING_RESPONDENT_EVIDENCE,
+                State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED,
+                State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS).contains(stateBeforeEndAppeal)) {
             return Collections.singleton(apcHomeOfficeEmailAddress);
         } else if (Arrays.asList(
                     State.CASE_BUILDING,
                     State.CASE_UNDER_REVIEW,
                     State.RESPONDENT_REVIEW,
                     State.SUBMIT_HEARING_REQUIREMENTS,
+                    State.AWAITING_REASONS_FOR_APPEAL,
+                    State.REASONS_FOR_APPEAL_SUBMITTED,
                     State.LISTING).contains(stateBeforeEndAppeal)) {
             return Collections.singleton(lartHomeOfficeEmailAddress);
         } else if (
