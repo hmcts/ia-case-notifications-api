@@ -60,7 +60,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_DENTENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW",
+        assertEquals(caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW",
                 detentionEngagementTeamRespondentReviewPersonalisation.getReferenceId(caseId));
     }
 
