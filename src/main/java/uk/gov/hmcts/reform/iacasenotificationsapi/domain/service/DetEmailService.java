@@ -26,14 +26,14 @@ public class DetEmailService {
     }
 
     public String getDetEmailAddressMapping(Map<String, String> detEmailAddressesMap, String name) {
-        String formattedName = name.replaceAll("\\s|[^a-zA-Z]","");
+        String formattedName = name.replaceAll("[^a-zA-Z]","");
         return detEmailAddressesMap.get(formattedName);
     }
 
     public String getDetEmailAddress(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
 
-        return detentionFacility.get().equals("immigrationRemovalCentre")
+        return detentionFacility.isPresent() && detentionFacility.get().equals("immigrationRemovalCentre")
             ?
             asylumCase
                 .read(IRC_NAME, String.class)
