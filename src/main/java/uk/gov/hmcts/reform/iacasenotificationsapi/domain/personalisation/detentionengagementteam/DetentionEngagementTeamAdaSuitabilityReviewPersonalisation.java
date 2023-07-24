@@ -27,7 +27,6 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
     private final DocumentDownloadClient documentDownloadClient;
     private final DetEmailService detEmailService;
     private String adaPrefix;
-    private final String ircValue = "immigrationRemovalCentre";
 
     public DetentionEngagementTeamAdaSuitabilityReviewPersonalisation(
         @Value("${govnotify.template.adaSuitabilityReview.detentionEngagementTeam.email}") String internalAdaSuitabilityReviewTemplateId,
@@ -49,7 +48,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || !detentionFacility.get().equals(ircValue)) {
+        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
             return Collections.emptySet();
         }
 

@@ -46,13 +46,13 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DENTENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
+        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
     }
 
     @Override
-    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || !detentionFacility.get().equals("immigrationRemovalCentre")) {
+        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
             return Collections.emptySet();
         }
 
