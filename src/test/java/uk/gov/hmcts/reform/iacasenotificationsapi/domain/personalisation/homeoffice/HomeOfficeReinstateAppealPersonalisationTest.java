@@ -113,9 +113,9 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
         List<State> apcEmail = newArrayList(
             State.APPEAL_SUBMITTED,
             State.AWAITING_RESPONDENT_EVIDENCE,
-            State.PENDING_PAYMENT
-
-
+            State.PENDING_PAYMENT,
+            State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED,
+            State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS
         );
 
         List<State> lartEmail = newArrayList(
@@ -123,7 +123,9 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             State.CASE_UNDER_REVIEW,
             State.RESPONDENT_REVIEW,
             State.LISTING,
-            State.SUBMIT_HEARING_REQUIREMENTS
+            State.SUBMIT_HEARING_REQUIREMENTS,
+            State.REASONS_FOR_APPEAL_SUBMITTED,
+            State.AWAITING_REASONS_FOR_APPEAL
         );
 
         List<State> pouEmail = newArrayList(
