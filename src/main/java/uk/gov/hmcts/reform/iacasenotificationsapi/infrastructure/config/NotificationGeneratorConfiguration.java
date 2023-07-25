@@ -3989,8 +3989,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdaRequestCaseBuildingNotificationGenerator")
-    public List<NotificationGenerator> internalAdaRequestCaseBuildingNotificationGenerator(
+    @Bean("internalRequestCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> internalRequestCaseBuildingNotificationGenerator(
             DetentionEngagementTeamRequestCaseBuildingPersonalisation detentionEngagementTeamRequestCaseBuildingPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {

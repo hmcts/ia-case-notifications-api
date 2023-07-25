@@ -4244,8 +4244,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalAdaRequestCaseBuildingNotificationHandler(
-            @Qualifier("internalAdaRequestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalRequestCaseBuildingNotificationHandler(
+            @Qualifier("internalRequestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) ->

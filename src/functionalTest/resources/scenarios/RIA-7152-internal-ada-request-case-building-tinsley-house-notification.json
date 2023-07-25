@@ -12,6 +12,7 @@
         "replacements": {
           "currentCaseStateVisibleToHomeOfficeAll":"awaitingRespondentEvidence",
           "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
+          "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Tinsley House",
@@ -43,7 +44,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "71521_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
+            "id": "71521_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -51,9 +52,9 @@
     },
     "notifications": [
       {
-        "reference": "71521_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL",
+        "reference": "71521_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
         "recipient": "det-irc-tinsleyhouse@example.com",
-        "subject": "Accelerated detained appeal – SERVE IN PERSON: Appeal reasons form",
+        "subject": "ADA – SERVE IN PERSON: Appeal reasons form",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",
