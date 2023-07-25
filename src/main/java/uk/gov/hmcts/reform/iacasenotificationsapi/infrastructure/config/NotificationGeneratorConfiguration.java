@@ -4037,4 +4037,20 @@ public class NotificationGeneratorConfiguration {
         );
 
     }
+
+    @Bean("internalSubmitAppealInTimeNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealInTimeNotificationGenerator(
+            AdminOfficerAppealSubmittedInTimePersonalisation adminOfficerAppealSubmittedInTimePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(adminOfficerAppealSubmittedInTimePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+
+    }
 }
