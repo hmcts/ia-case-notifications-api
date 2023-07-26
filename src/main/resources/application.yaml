@@ -100,6 +100,8 @@ govnotify:
           email: f4521175-17ac-4ea9-9196-1769bea29d10
         remission:
           email: c6fb22e2-c3fa-41f6-a4de-b9f6a55aa417
+        nonAdaInTimeDetainedOnly:
+          email: 0e187f28-ee4e-4ef0-8218-0f922c433bf4
     remissionDecision:
       legalRep:
         approved:

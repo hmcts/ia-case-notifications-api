@@ -40,6 +40,7 @@ public enum DocumentTag {
     UPLOAD_THE_APPEAL_RESPONSE("uploadTheAppealResponse"),
     HEARING_BUNDLE_READY_LETTER("hearingBundleReadyLetter"),
     INTERNAL_ADA_DECISION_AND_REASONS_LETTER("internalAdaDecisionAndReasonsLetter"),
+    INTERNAL_APPEAL_SUBMISSION("internalAppealSubmission"),
 
     @JsonEnumDefaultValue
     NONE("");
