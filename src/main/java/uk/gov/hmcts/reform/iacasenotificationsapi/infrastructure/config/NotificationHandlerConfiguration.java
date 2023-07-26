@@ -4271,15 +4271,15 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalAdaAppealDecidedNotificationHandler(
-            @Qualifier("internalAdaAppealDecidedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetAppealDecidedNotificationHandler(
+            @Qualifier("internalDetAppealDecidedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) ->
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent().equals(Event.SEND_DECISION_AND_REASONS)
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
-                                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
     }

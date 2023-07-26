@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7211 Internal Ada Appeal decided.",
+  "description": "RIA-7214 Internal Detained Appeal decided.",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
@@ -12,7 +12,7 @@
         "replacements": {
           "ircName": "Brookhouse",
           "detentionFacility": "immigrationRemovalCentre",
-          "isAcceleratedDetainedAppeal": "Yes",
+          "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "dismissed",
@@ -58,7 +58,7 @@
       {
         "reference": "71521_INTERNAL_DET_APPEAL_DECIDED_EMAIL",
         "recipient": "det-irc-brookhouse@example.com",
-        "subject": "ADA – SERVE IN PERSON: Appeal decided",
+        "subject": "IAFT – SERVE IN PERSON: Appeal decided",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",
