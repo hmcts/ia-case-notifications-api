@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -42,9 +43,11 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
     @Mock
     DocumentDownloadClient documentDownloadClient;
 
-    private final String requestcaseBuildingTemplateId = "someTemplateId";
-    private final String requestCaseBuildingPersonalisationReferenceId = "_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL";
-    private final String adaPrefix = "Accelerated detained appeal";
+    private final String requestCaseBuildingAdaTemplateId = "someAdaTemplateId";
+    private final String requestCaseBuildingDetainedTemplateId = "someDetainedTemplateId";
+    private final String requestCaseBuildingPersonalisationReferenceId = "_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
+    private final String detainedPrefix = "IAFT - SERVE IN PERSON";
     private final String ircName = "Tinsley House";
     private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -72,18 +75,30 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
 
         detentionEngagementTeamRequestCaseBuildingPersonalisation =
                 new DetentionEngagementTeamRequestCaseBuildingPersonalisation(
-                        requestcaseBuildingTemplateId,
+                        requestCaseBuildingAdaTemplateId,
+                        requestCaseBuildingDetainedTemplateId,
                         adaPrefix,
+                        detainedPrefix,
                         detEmailService,
                         documentDownloadClient
                 );
     }
 
     @Test
-    public void should_return_given_template_id() {
+    public void should_return_given_template_id_ada() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertEquals(
-                requestcaseBuildingTemplateId,
-                detentionEngagementTeamRequestCaseBuildingPersonalisation.getTemplateId()
+                requestCaseBuildingAdaTemplateId,
+                detentionEngagementTeamRequestCaseBuildingPersonalisation.getTemplateId(asylumCase)
+        );
+    }
+
+    @Test
+    public void should_return_given_template_id_detained() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertEquals(
+            requestCaseBuildingDetainedTemplateId,
+            detentionEngagementTeamRequestCaseBuildingPersonalisation.getTemplateId(asylumCase)
         );
     }
 
@@ -104,12 +119,15 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
     }
 
     @Test
-    public void should_return_empty_set_email_address_from_asylum_case() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+    public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+        assertEquals(Collections.emptySet(), detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase));
+    }
 
-        assertTrue(
-            detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+    @Test
+    public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -133,6 +151,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given_refused() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         final Map<String, Object> expectedPersonalisation =
                 ImmutableMap

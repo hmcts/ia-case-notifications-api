@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -28,25 +29,31 @@ import uk.gov.service.notify.NotificationClientException;
 public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String internalAdaRequestCaseBuildingTemplateId;
+    private final String internalDetainedRequestCaseBuildingTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private String adaPrefix;
+    private final String adaPrefix;
+    private final String detainedPrefix;
     private final DetEmailService detEmailService;
 
     public DetentionEngagementTeamRequestCaseBuildingPersonalisation(
-            @Value("${govnotify.template.requestCaseBuilding.detentionEngagementTeam.email}") String templateId,
-            @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
+            @Value("${govnotify.template.requestCaseBuilding.detentionEngagementTeam.ada.email}") String templateIdAda,
+            @Value("${govnotify.template.requestCaseBuilding.detentionEngagementTeam.detained.email}") String templateIdDetained,
+            @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
+            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String detainedPrefix,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
-        this.internalAdaRequestCaseBuildingTemplateId = templateId;
+        this.internalAdaRequestCaseBuildingTemplateId = templateIdAda;
+        this.internalDetainedRequestCaseBuildingTemplateId = templateIdDetained;
         this.adaPrefix = adaPrefix;
+        this.detainedPrefix = detainedPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
     @Override
-    public String getTemplateId() {
-        return internalAdaRequestCaseBuildingTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return isAcceleratedDetainedAppeal(asylumCase) ? internalAdaRequestCaseBuildingTemplateId : internalDetainedRequestCaseBuildingTemplateId;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_ADA_REQUEST_CASE_BUILDING_EMAIL";
+        return caseId + "_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL";
     }
 
     @Override
@@ -70,7 +77,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
 
         return ImmutableMap
                 .<String, Object>builder()
-                .put("subjectPrefix", adaPrefix)
+                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : detainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
