@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DECISION_ALLOWED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_ADA_DECISION_AND_REASONS_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
@@ -53,7 +53,7 @@ public class DetentionEngagementTeamAppealDecidedPersonalisation implements Emai
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_ADA_APPEAL_DECIDED_EMAIL";
+        return caseId + "_INTERNAL_DET_APPEAL_DECIDED_EMAIL";
     }
 
     @Override
@@ -94,7 +94,7 @@ public class DetentionEngagementTeamAppealDecidedPersonalisation implements Emai
 
     private JSONObject getAppealDecidedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_ADA_DECISION_AND_REASONS_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DET_DECISION_AND_REASONS_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal Appeal decision Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal Appeal decision Letter in compatible format");

@@ -4022,8 +4022,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdaAppealDecidedNotificationGenerator")
-    public List<NotificationGenerator> internalAdaAppealDecidedNotificationGenerator(
+    @Bean("internalDetAppealDecidedNotificationGenerator")
+    public List<NotificationGenerator> internalDetAppealDecidedNotificationGenerator(
             DetentionEngagementTeamAppealDecidedPersonalisation detentionEngagementTeamAppealDecidedPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
