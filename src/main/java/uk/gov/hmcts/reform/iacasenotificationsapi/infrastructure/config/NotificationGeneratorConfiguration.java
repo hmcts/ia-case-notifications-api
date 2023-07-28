@@ -3316,6 +3316,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("recordOfTimeDecisionCanProceedEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedEmailInternalNotificationHandler(
+            AdminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation adminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(adminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,

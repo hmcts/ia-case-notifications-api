@@ -3416,7 +3416,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCanProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCanProceedEmailNotificationGenerator")
@@ -3434,9 +3433,34 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
                        && Arrays.asList(IN_TIME, OutOfTimeDecisionType.APPROVED)
                            .contains(outOfTimeDecisionType)
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                       && !isInternalCase(asylumCase);
 
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCanProceedEmailInternalNotificationHandler(
+            @Qualifier("recordOfTimeDecisionCanProceedEmailInternalNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    OutOfTimeDecisionType outOfTimeDecisionType =
+                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
+                                    .orElse(UNKNOWN);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
+                            && outOfTimeDecisionType == OutOfTimeDecisionType.APPROVED
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+
+                }, notificationGenerators
         );
     }
 
