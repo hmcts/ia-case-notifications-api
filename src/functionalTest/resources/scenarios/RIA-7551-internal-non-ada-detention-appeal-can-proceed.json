@@ -1,20 +1,21 @@
 {
-  "description": "RIA-7551 internal non-ada Appeal can proceed notification",
+  "description": "RIA-7551 CaseOfficer record out of time decision and appeal can proceed",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "CaseOfficer",
     "input": {
       "id": 7551,
-      "eventId": "submitAppeal",
+      "eventId": "recordOutOfTimeDecision",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "appealType":"protection",
+          "outOfTimeDecisionType": "approved",
+          "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal": "No",
           "detentionFacility": "prison",
           "prisonName": "The Mount",
-          "isAcceleratedDetainedAppeal": "No",
-          "appellantInDetention": "Yes",
-          "submissionOutOfTime": "No",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -41,6 +42,8 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "appealType": "protection",
+        "outOfTimeDecisionType": "approved",
         "notificationsSent": [
           {
             "id": "7551_INTERNAL_NON_ADA_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED",
@@ -53,7 +56,7 @@
       {
         "reference": "7551_INTERNAL_NON_ADA_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED",
         "recipient": "det-prison-the-mount@example.com",
-        "subject": "IAFT – SERVE IN PERSON: Appeal details have been sent",
+        "subject": "IAFT – SERVE IN PERSON: Appeal can proceed",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",
