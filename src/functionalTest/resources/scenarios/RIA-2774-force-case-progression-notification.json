@@ -62,7 +62,7 @@
     "notifications": [
       {
         "reference": "2774_RESPONDENT_FORCE_CASE_PROGRESSION",
-        "recipient": "{$respondentEmailAddresses.nonStandardDirectionUntilListing}",
+        "recipient": "{$IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL}",
         "subject": "Immigration and Asylum appeal: Case progressed without respondent evidence",
         "body": [
           "PA/12345/2019",
