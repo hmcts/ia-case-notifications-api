@@ -911,6 +911,9 @@ govnotify:
         cannotProceed:
           email: 233b7b72-9fcd-421a-bf8d-0e20cf23343c
           sms: c54e3e51-43ba-48f4-ae88-8a269153259c
+      adminOfficer:
+        canProceed:
+          email: 08f27b34-cd85-40c7-953d-eebea17467d1
     upperTribunalBundleFailed:
       adminOfficer:
         email: 04dc7de2-32d6-4a00-a8e6-c3c4ee9bc985
@@ -1280,6 +1283,7 @@ security:
       - "markAppealAsDetained"
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
+      - "recordOutOfTimeDecision"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
