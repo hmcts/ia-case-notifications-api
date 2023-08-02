@@ -981,6 +981,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("respondentEvidenceInternalNonAdaNotificationGenerator")
+    public List<NotificationGenerator> respondentEvidenceInternalNonAdaNotificationGenerator(
+            DetentionEngagementTeamRequestRespondentEvidencePersonalisation detentionEngagementTeamRequestRespondentEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamRequestRespondentEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("respondentDirectionNotificationGenerator")
     public List<NotificationGenerator> respondentDirectionNotificationGenerator(
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
