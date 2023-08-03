@@ -157,6 +157,7 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     public void should_return_personalisation_when_override_method_is_called(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("hello"));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
