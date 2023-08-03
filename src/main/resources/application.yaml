@@ -56,6 +56,7 @@ govnotify:
     nonAda: "Immigration and Asylum appeal"
     adaInPerson: "ADA - SERVE IN PERSON"
     nonAdaInPerson: "IAFT - SERVE IN PERSON"
+    nonAdaByPost: "IAFT - SERVE BY POST"
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:
@@ -100,6 +101,8 @@ govnotify:
           email: f4521175-17ac-4ea9-9196-1769bea29d10
         remission:
           email: c6fb22e2-c3fa-41f6-a4de-b9f6a55aa417
+        nonAdaInTimeDetainedOnly:
+          email: 0e187f28-ee4e-4ef0-8218-0f922c433bf4
     remissionDecision:
       legalRep:
         approved:
@@ -164,6 +167,9 @@ govnotify:
           nonAda: 33430912-89d5-416d-8d49-52eae9ce82c3
       respondent:
         email: 72d1e710-ad05-4bfa-8d8a-edc0cf0005e9
+      detentionEngagementTeam:
+        email:
+          nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
     respondentEvidenceSubmitted:
       caseOfficer:
         email: 0add854c-a0f2-4f74-93ac-79660f576482
@@ -340,7 +346,10 @@ govnotify:
       legalRep:
         email: c08dc7ff-6a7e-437e-adbd-07e173f6b286
       detentionEngagementTeam:
-        email: 9609ebb3-cb45-4322-ba2c-f3d2a162f7b6
+        ada:
+          email: 9609ebb3-cb45-4322-ba2c-f3d2a162f7b6
+        detained:
+          email: a19170d5-2744-451d-b129-45feac446905
     homeOfficeResponseUploaded:
       caseOfficer:
         email: 0df260d7-fd82-430b-86bb-047083a8172a
@@ -909,6 +918,9 @@ govnotify:
         cannotProceed:
           email: 233b7b72-9fcd-421a-bf8d-0e20cf23343c
           sms: c54e3e51-43ba-48f4-ae88-8a269153259c
+      adminOfficer:
+        canProceed:
+          email: 08f27b34-cd85-40c7-953d-eebea17467d1
     upperTribunalBundleFailed:
       adminOfficer:
         email: 04dc7de2-32d6-4a00-a8e6-c3c4ee9bc985
@@ -1278,6 +1290,7 @@ security:
       - "markAppealAsDetained"
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
+      - "recordOutOfTimeDecision"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"

@@ -997,6 +997,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("respondentEvidenceInternalNonAdaNotificationGenerator")
+    public List<NotificationGenerator> respondentEvidenceInternalNonAdaNotificationGenerator(
+            DetentionEngagementTeamRequestRespondentEvidencePersonalisation detentionEngagementTeamRequestRespondentEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamRequestRespondentEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("respondentDirectionNotificationGenerator")
     public List<NotificationGenerator> respondentDirectionNotificationGenerator(
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
@@ -3332,6 +3347,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("recordOfTimeDecisionCanProceedEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> recordOfTimeDecisionCanProceedEmailInternalNotificationHandler(
+            AdminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation adminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(adminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
@@ -4005,8 +4035,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdaRequestCaseBuildingNotificationGenerator")
-    public List<NotificationGenerator> internalAdaRequestCaseBuildingNotificationGenerator(
+    @Bean("internalRequestCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> internalRequestCaseBuildingNotificationGenerator(
             DetentionEngagementTeamRequestCaseBuildingPersonalisation detentionEngagementTeamRequestCaseBuildingPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
@@ -4038,8 +4068,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdaAppealDecidedNotificationGenerator")
-    public List<NotificationGenerator> internalAdaAppealDecidedNotificationGenerator(
+    @Bean("internalDetAppealDecidedNotificationGenerator")
+    public List<NotificationGenerator> internalDetAppealDecidedNotificationGenerator(
             DetentionEngagementTeamAppealDecidedPersonalisation detentionEngagementTeamAppealDecidedPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -4047,6 +4077,22 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(Collections.singleton(detentionEngagementTeamAppealDecidedPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+
+    }
+
+    @Bean("internalSubmitAppealInTimeNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealInTimeNotificationGenerator(
+            AdminOfficerAppealSubmittedInTimePersonalisation adminOfficerAppealSubmittedInTimePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(adminOfficerAppealSubmittedInTimePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )

@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATION_ATTACHMENT_DOCUMENTS;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -23,29 +23,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
-
 @Service
 @Slf4j
-public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamRequestRespondentEvidencePersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String internalAdaRequestCaseBuildingTemplateId;
     private final String internalDetainedRequestCaseBuildingTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private final String adaPrefix;
     private final String detainedPrefix;
     private final DetEmailService detEmailService;
 
-    public DetentionEngagementTeamRequestCaseBuildingPersonalisation(
-            @Value("${govnotify.template.requestCaseBuilding.detentionEngagementTeam.ada.email}") String templateIdAda,
-            @Value("${govnotify.template.requestCaseBuilding.detentionEngagementTeam.detained.email}") String templateIdDetained,
-            @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
-            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String detainedPrefix,
+    public DetentionEngagementTeamRequestRespondentEvidencePersonalisation(
+            @Value("${govnotify.template.requestRespondentEvidenceDirection.detentionEngagementTeam.email.nonAda}") String templateIdDetained,
+            @Value("${govnotify.emailPrefix.nonAdaByPost}") String detainedPrefix,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
-        this.internalAdaRequestCaseBuildingTemplateId = templateIdAda;
         this.internalDetainedRequestCaseBuildingTemplateId = templateIdDetained;
-        this.adaPrefix = adaPrefix;
         this.detainedPrefix = detainedPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
@@ -53,7 +46,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAcceleratedDetainedAppeal(asylumCase) ? internalAdaRequestCaseBuildingTemplateId : internalDetainedRequestCaseBuildingTemplateId;
+        return internalDetainedRequestCaseBuildingTemplateId;
     }
 
     @Override
@@ -68,7 +61,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL";
+        return caseId + "_INTERNAL_DET_REQUEST_RESPONDENT_EVIDENCE_EMAIL";
     }
 
     @Override
@@ -77,33 +70,33 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
 
         return ImmutableMap
                 .<String, Object>builder()
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : detainedPrefix)
+                .put("subjectPrefix", detainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("documentLink", getRequestCaseBuildingDocumentInJsonObject(asylumCase))
+                .put("documentLink", getRequestRespondentEvidenceDocumentInJsonObject(asylumCase))
                 .build();
     }
 
-    private JSONObject getRequestCaseBuildingDocumentInJsonObject(AsylumCase asylumCase) {
+    private JSONObject getRequestRespondentEvidenceDocumentInJsonObject(AsylumCase asylumCase) {
         Optional<List<IdValue<DocumentWithMetadata>>> maybeDocuments = asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS);
         List<DocumentWithMetadata> documents = maybeDocuments
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(IdValue::getValue)
-                .filter(document -> document.getTag() == DocumentTag.REQUEST_CASE_BUILDING)
+                .filter(document -> document.getTag() == DocumentTag.INTERNAL_REQUEST_RESPONDENT_EVIDENCE_LETTER)
                 .collect(Collectors.toList());
 
         if (documents.size() == 0) {
-            throw new RequiredFieldMissingException("Request case building document is not present");
+            throw new RequiredFieldMissingException("Request respondent evidence document is not present");
         }
         DocumentWithMetadata document = documents.get(0);
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Request case building document in compatible format", e);
-            throw new IllegalStateException("Failed to get Request case building document in compatible format");
+            log.error("Failed to get Request respondent evidence document in compatible format", e);
+            throw new IllegalStateException("Failed to get Request respondent evidence document in compatible format");
         }
     }
 }

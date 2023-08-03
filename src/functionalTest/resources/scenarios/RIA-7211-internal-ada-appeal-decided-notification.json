@@ -13,13 +13,14 @@
           "ircName": "Brookhouse",
           "detentionFacility": "immigrationRemovalCentre",
           "isAcceleratedDetainedAppeal": "Yes",
+          "appellantInDetention": "Yes",
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "dismissed",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalAdaDecisionAndReasonsLetter",
+                "tag": "internalDetDecisionAndReasonsLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -47,7 +48,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "71521_INTERNAL_ADA_APPEAL_DECIDED_EMAIL",
+            "id": "71521_INTERNAL_DET_APPEAL_DECIDED_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -55,7 +56,7 @@
     },
     "notifications": [
       {
-        "reference": "71521_INTERNAL_ADA_APPEAL_DECIDED_EMAIL",
+        "reference": "71521_INTERNAL_DET_APPEAL_DECIDED_EMAIL",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "ADA – SERVE IN PERSON: Appeal decided",
         "body": [

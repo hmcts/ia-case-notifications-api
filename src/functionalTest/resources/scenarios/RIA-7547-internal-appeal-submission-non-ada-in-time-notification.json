@@ -1,26 +1,25 @@
 {
-  "description": "RIA-7152 Send request case building notification to DET (Tinsley house).",
+  "description": "RIA-7547 Send appeal submitted notification to DET(Internal, non-Ada, In-time)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "caseOfficer",
+    "credentials": "AdminOfficer",
     "input": {
-      "id": 71521,
-      "eventId": "requestCaseBuilding",
-      "state": "awaitingRespondentEvidence",
+      "id": 7547,
+      "eventId": "submitAppeal",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "currentCaseStateVisibleToHomeOfficeAll":"awaitingRespondentEvidence",
-          "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
+          "detentionFacility": "prison",
+          "prisonName": "The Mount",
+          "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
-          "isAcceleratedDetainedAppeal": "Yes",
-          "detentionFacility": "immigrationRemovalCentre",
-          "ircName": "Tinsley House",
+          "submissionOutOfTime": "No",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "requestCaseBuilding",
+                "tag": "internalAppealSubmission",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -44,7 +43,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "71521_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
+            "id": "7547_INTERNAL_NON_ADA_APPEAL_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -52,9 +51,9 @@
     },
     "notifications": [
       {
-        "reference": "71521_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
-        "recipient": "det-irc-tinsleyhouse@example.com",
-        "subject": "ADA – SERVE IN PERSON: Appeal reasons form",
+        "reference": "7547_INTERNAL_NON_ADA_APPEAL_SUBMITTED",
+        "recipient": "det-prison-the-mount@example.com",
+        "subject": "IAFT – SERVE IN PERSON: Appeal details have been sent",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",

@@ -1,26 +1,26 @@
 {
-  "description": "RIA-7152 Send request case building notification to DET (Tinsley house).",
+  "description": "RIA-7551 CaseOfficer record out of time decision and appeal can proceed",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "caseOfficer",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 71521,
-      "eventId": "requestCaseBuilding",
-      "state": "awaitingRespondentEvidence",
+      "id": 7551,
+      "eventId": "recordOutOfTimeDecision",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "currentCaseStateVisibleToHomeOfficeAll":"awaitingRespondentEvidence",
-          "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
+          "appealType":"protection",
+          "outOfTimeDecisionType": "approved",
           "appellantInDetention": "Yes",
-          "isAcceleratedDetainedAppeal": "Yes",
-          "detentionFacility": "immigrationRemovalCentre",
-          "ircName": "Tinsley House",
+          "isAcceleratedDetainedAppeal": "No",
+          "detentionFacility": "prison",
+          "prisonName": "The Mount",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "requestCaseBuilding",
+                "tag": "recordOutOfTimeDecisionDocument",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -42,9 +42,11 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "appealType": "protection",
+        "outOfTimeDecisionType": "approved",
         "notificationsSent": [
           {
-            "id": "71521_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
+            "id": "7551_INTERNAL_NON_ADA_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -52,9 +54,9 @@
     },
     "notifications": [
       {
-        "reference": "71521_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
-        "recipient": "det-irc-tinsleyhouse@example.com",
-        "subject": "ADA – SERVE IN PERSON: Appeal reasons form",
+        "reference": "7551_INTERNAL_NON_ADA_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED",
+        "recipient": "det-prison-the-mount@example.com",
+        "subject": "IAFT – SERVE IN PERSON: Appeal can proceed",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",

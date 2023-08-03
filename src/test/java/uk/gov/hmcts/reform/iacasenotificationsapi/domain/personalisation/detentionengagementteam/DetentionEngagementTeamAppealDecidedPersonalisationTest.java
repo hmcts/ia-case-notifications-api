@@ -59,7 +59,7 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
     private final String formNameForNonAdaDismissed = "IAFT-DE5: Ask for permission to appeal to the Upper Tribunal (Immigration and Asylum Chamber) – Detained appeal";
     private final String formLinkForNonAdaDismissed = "This form can be found here: https://www.gov.uk/government/publications/ask-for-permission-to-appeal-to-the-upper-tribunal-immigration-and-asylum-chamber-detained-appeal-form-iaft-de5";
     DocumentWithMetadata appealDecidedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "appeal_decided", "some other desc", DocumentTag.INTERNAL_ADA_DECISION_AND_REASONS_LETTER);
+            "id", "appeal_decided", "some other desc", DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER);
     IdValue<DocumentWithMetadata> appealDecided = new IdValue<>("1", appealDecidedDoc);
     private DetentionEngagementTeamAppealDecidedPersonalisation detentionEngagementTeamAppealDecidedPersonalisation;
 
@@ -90,7 +90,7 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_INTERNAL_ADA_APPEAL_DECIDED_EMAIL",
+        assertEquals(caseId + "_INTERNAL_DET_APPEAL_DECIDED_EMAIL",
                 detentionEngagementTeamAppealDecidedPersonalisation.getReferenceId(caseId));
     }
 
