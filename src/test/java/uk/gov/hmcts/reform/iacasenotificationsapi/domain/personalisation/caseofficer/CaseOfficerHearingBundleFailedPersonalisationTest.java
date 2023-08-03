@@ -152,9 +152,11 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
-    @Test
-    public void should_return_personalisation_when_override_method_is_called() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_override_method_is_called(YesOrNo isAda) {
 
+        initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("hello"));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
@@ -163,6 +165,9 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(callback);
 
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertEquals("hello", personalisation.get("appealReferenceNumber"));
     }
 
