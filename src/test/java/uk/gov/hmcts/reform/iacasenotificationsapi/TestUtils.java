@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 
 public class TestUtils {
 
-    private TestUtils(){
+    private TestUtils() {
 
     }
 
