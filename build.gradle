@@ -364,12 +364,12 @@ dependencies {
 
     implementation group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.17.2-RELEASE'
 
-    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '32.1.2-jre'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.1.0'
+    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.2.1'
 
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
