@@ -1688,3 +1688,8 @@ launchDarkly:
 
 govUkHolidays:
   url: https://www.gov.uk/
+
+ia:
+  config:
+    validator:
+      secret: ${IA_CONFIG_VALIDATOR_SECRET:}
