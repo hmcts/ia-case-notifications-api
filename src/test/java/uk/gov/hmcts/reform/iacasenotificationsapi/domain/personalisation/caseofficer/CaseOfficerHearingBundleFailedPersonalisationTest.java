@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseof
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -26,6 +27,8 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
@@ -36,6 +39,8 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
+    @Mock
+    Callback<AsylumCase> callback;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
@@ -70,6 +75,12 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
             iaExUiFrontendUrl,
             customerServicesProvider,
             emailAddressFinder);
+
+        @SuppressWarnings("unchecked")
+        CaseDetails<AsylumCase> caseDetails = mock(CaseDetails.class);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        when(caseDetails.getId()).thenReturn(123L);
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
     }
 
     @Test
@@ -123,22 +134,42 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
 
         initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("A"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("B"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("C"));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of("D"));
+
+        Map<String, String> personalisation =
+            caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(callback);
+
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertEquals("A", personalisation.get("appealReferenceNumber"));
+        assertEquals("B", personalisation.get("appellantGivenNames"));
+        assertEquals("C", personalisation.get("appellantFamilyName"));
+        assertEquals("D", personalisation.get("ariaListingReference"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_override_method_is_called(YesOrNo isAda) {
+
+        initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("hello"));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(asylumCase);
+            caseOfficerHearingBundleFailedPersonalisation.getPersonalisation(callback);
 
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals("hello", personalisation.get("appealReferenceNumber"));
     }
 
 }

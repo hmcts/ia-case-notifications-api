@@ -1,5 +1,6 @@
 {
   "description": "RIA-7214 Internal Detained Appeal decided.",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",

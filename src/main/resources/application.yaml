@@ -847,6 +847,9 @@ govnotify:
                 email: 4e079f0c-38e2-4a02-a057-7cca421ee421
               afterListing:
                 email: 53693fc5-31bf-478b-95dc-afe875291a03
+    decisionAndReasonsTemplateUploaded:
+      admin:
+        email: 489aadaf-2d48-4ea4-a388-bbc6d6942e91
     requestNewHearingRequirements:
       legalRep:
         email: afe66f48-e967-49f8-ba57-323e8711dd4d
@@ -1365,6 +1368,16 @@ idam:
     services: ${IA_S2S_AUTHORIZED_SERVICES:ccd,ccd_data,ccd_gw,ccd_ps,iac}
 
 ### Email addresses
+
+adminEmailAddresses:
+  newport: ${IA_ADMIN_NEWPORT_EMAIL:newportedets@example.com}
+  taylorHouse: ${IA_ADMIN_TAYLOR_HOUSE_EMAIL:taylorhouseedets@example.com}
+  hattonCross: ${IA_ADMIN_HATTON_CROSS_EMAIL:hattonxedets@example.com}
+  manchester: ${IA_ADMIN_MANCHESTER_EMAIL:manchesteredets@example.com}
+  glasgow: ${IA_ADMIN_GLASGOW_EMAIL:glasgowedets@example.com}
+  bradford: ${IA_ADMIN_BRADFORD_EMAIL:bradfordedets@example.com}
+  birmingham: ${IA_ADMIN_BIRMINGHAM_EMAIL:birminghamedets@example.com}
+
 hearingCentreEmailAddresses:
   bradford: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
   manchester: ${IA_HEARING_CENTRE_MANCHESTER_EMAIL:hc-manchester@example.com}
@@ -1675,3 +1688,8 @@ launchDarkly:
 
 govUkHolidays:
   url: https://www.gov.uk/
+
+ia:
+  config:
+    validator:
+      secret: ${IA_CONFIG_VALIDATOR_SECRET:}
