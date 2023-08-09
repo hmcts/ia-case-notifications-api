@@ -60,6 +60,18 @@
         ]
       },
       {
+        "reference": "4827_APPEAL_OUTCOME_ADMIN",
+        "recipient": "{$adminEmailAddresses.taylorHouse}",
+        "subject": "Immigration and Asylum appeal: decision and reasons",
+        "body": [
+          "Pablo Jimenez",
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "TAYLORHOUSE",
+          "DISMISSED"
+        ]
+      },
+      {
         "reference": "4827_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
         "recipient": "{$ctscAdminPendingPaymentEmailAddress}",
         "subject": "Immigration and Asylum appeal: An unpaid appeal has been decided or ended",
