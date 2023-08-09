@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerPersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -30,7 +30,7 @@ public class DetentionEngagementTeamEndAppealAutomaticallyPersonalisation implem
     private final String nonAdaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
-    private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    private final PersonalisationProvider personalisationProvider;
 
     public DetentionEngagementTeamEndAppealAutomaticallyPersonalisation(
             @Value("${govnotify.template.endAppealAutomatically.detentionEngagementTeam.nonAda.email}")
@@ -38,13 +38,13 @@ public class DetentionEngagementTeamEndAppealAutomaticallyPersonalisation implem
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient,
-            AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
+            PersonalisationProvider personalisationProvider
     ) {
         this.endAppealAutomaticallyDueToNonPaymentTemplateId = endAppealAutomaticallyDueToNonPaymentTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
-        this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
+        this.personalisationProvider = personalisationProvider;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class DetentionEngagementTeamEndAppealAutomaticallyPersonalisation implem
         return ImmutableMap
                 .<String, Object>builder()
                 .put("subjectPrefix", nonAdaPrefix)
-                .putAll(adminOfficerPersonalisationProvider.getAppellantPersonalisation(asylumCase))
+                .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
                 .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
                 .build();
     }

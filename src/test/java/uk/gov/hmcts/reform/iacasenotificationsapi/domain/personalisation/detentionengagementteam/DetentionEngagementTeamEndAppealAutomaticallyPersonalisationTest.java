@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.json.JSONObject;
@@ -25,8 +26,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerPersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -41,7 +42,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     @Mock
     private DetEmailService detEmailService;
     @Mock
-    private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    private PersonalisationProvider personalisationProvider;
     private String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
@@ -66,7 +67,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
                 nonAdaPrefix,
                 detEmailService,
                 documentDownloadClient,
-                adminOfficerPersonalisationProvider
+                personalisationProvider
         );
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
@@ -106,6 +107,13 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
 
     @Test
     void should_return_personalisation_of_all_information() throws NotificationClientException, IOException {
+        Map<String, String> appelantInfo = new HashMap<>();
+        appelantInfo.put("appellantGivenNames", appellantGivenNames);
+        appelantInfo.put("appellantFamilyName", appellantFamilyName);
+        appelantInfo.put("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
+        appelantInfo.put("appealReferenceNumber", appealReferenceNumber);
+
+        when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
         Map<String, Object> personalisation = detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
