@@ -90,4 +90,13 @@ public class AdminOfficerPersonalisationProviderTest {
 
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
+
+    @Test
+    public void should_return_appelant_personalisation() {
+
+        Map<String, String> personalisation =
+                adminOfficerPersonalisationProvider.getAppellantPersonalisation(asylumCase);
+
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+    }
 }

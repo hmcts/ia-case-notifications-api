@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_END_APPEAL_AUTOMATICALLY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantPersonalisation;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
 import java.io.IOException;
@@ -18,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerPersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -30,18 +30,21 @@ public class DetentionEngagementTeamEndAppealAutomaticallyPersonalisation implem
     private final String nonAdaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
+    private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
     public DetentionEngagementTeamEndAppealAutomaticallyPersonalisation(
             @Value("${govnotify.template.endAppealAutomatically.detentionEngagementTeam.nonAda.email}")
             String endAppealAutomaticallyDueToNonPaymentTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetEmailService detEmailService,
-            DocumentDownloadClient documentDownloadClient
+            DocumentDownloadClient documentDownloadClient,
+            AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
         this.endAppealAutomaticallyDueToNonPaymentTemplateId = endAppealAutomaticallyDueToNonPaymentTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
+        this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class DetentionEngagementTeamEndAppealAutomaticallyPersonalisation implem
         return ImmutableMap
                 .<String, Object>builder()
                 .put("subjectPrefix", nonAdaPrefix)
-                .putAll(getAppellantPersonalisation(asylumCase))
+                .putAll(adminOfficerPersonalisationProvider.getAppellantPersonalisation(asylumCase))
                 .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
                 .build();
     }

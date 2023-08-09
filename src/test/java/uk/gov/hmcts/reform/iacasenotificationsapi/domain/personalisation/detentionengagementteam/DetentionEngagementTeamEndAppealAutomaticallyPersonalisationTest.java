@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerPersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -39,6 +40,8 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     private DocumentDownloadClient documentDownloadClient;
     @Mock
     private DetEmailService detEmailService;
+    @Mock
+    private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
@@ -62,7 +65,8 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
                 templateId,
                 nonAdaPrefix,
                 detEmailService,
-                documentDownloadClient
+                documentDownloadClient,
+                adminOfficerPersonalisationProvider
         );
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
