@@ -43,6 +43,7 @@ public enum DocumentTag {
     INTERNAL_APPEAL_SUBMISSION("internalAppealSubmission"),
     INTERNAL_REQUEST_RESPONDENT_EVIDENCE_LETTER("internalRequestRespondentEvidenceLetter"),
     INTERNAL_END_APPEAL_AUTOMATICALLY("internalEndAppealAutomatically"),
+    INTERNAL_APPEAL_FEE_DUE_LETTER("internalAppealFeeDueLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
