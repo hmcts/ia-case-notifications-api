@@ -40,10 +40,11 @@ public class DocumentTagTest {
         assertEquals("internalDetDecisionAndReasonsLetter", DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER.toString());
         assertEquals("internalAppealSubmission", DocumentTag.INTERNAL_APPEAL_SUBMISSION.toString());
         assertEquals("internalRequestRespondentEvidenceLetter", DocumentTag.INTERNAL_REQUEST_RESPONDENT_EVIDENCE_LETTER.toString());
+        assertEquals("internalEndAppealAutomatically", DocumentTag.INTERNAL_END_APPEAL_AUTOMATICALLY.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(38, DocumentTag.values().length);
+        assertEquals(39, DocumentTag.values().length);
     }
 }
