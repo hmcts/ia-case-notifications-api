@@ -24,6 +24,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "manchester",
         "isDecisionAllowed": "allowed",
         "notificationsSent": [
           {
