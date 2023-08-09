@@ -4,16 +4,19 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -29,6 +32,7 @@ public class PersonalisationProvider {
     private static final String APPELLANT_GIVEN_NAMES_CONST = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_CONST = "appellantFamilyName";
     private static final String ASYLUM_NOT_NULL_MESSAGE = "asylumCase must not be null";
+    private static final String HOME_OFFICE_REFERENCE_NUMBER_CONST = "homeOfficeReferenceNumber";
     private final String iaExUiFrontendUrl;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
@@ -38,7 +42,7 @@ public class PersonalisationProvider {
         .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
         .put("legalRepReferenceNumber", LEGAL_REP_REFERENCE_NUMBER)
         .put(ARIA_LISTING_REFERENCE_CONST, ARIA_LISTING_REFERENCE)
-        .put("homeOfficeReferenceNumber", HOME_OFFICE_REFERENCE_NUMBER)
+        .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, HOME_OFFICE_REFERENCE_NUMBER)
         .put(APPELLANT_GIVEN_NAMES_CONST, APPELLANT_GIVEN_NAMES)
         .put(APPELLANT_FAMILY_NAME_CONST, APPELLANT_FAMILY_NAME);
 
@@ -249,7 +253,7 @@ public class PersonalisationProvider {
             .<String, String>builder()
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .build();
@@ -292,5 +296,17 @@ public class PersonalisationProvider {
             .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
+    }
+
+    public Map<String, String> getAppellantPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, ASYLUM_NOT_NULL_MESSAGE);
+
+        return ImmutableMap
+                .<String, String>builder()
+                .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .build();
     }
 }

@@ -259,4 +259,15 @@ class PersonalisationProviderTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
     }
+
+    @Test
+    void should_return_appelant_personalisation_when_all_information_given() {
+
+        Map<String, String> personalisation = personalisationProvider.getAppellantPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+    }
 }
