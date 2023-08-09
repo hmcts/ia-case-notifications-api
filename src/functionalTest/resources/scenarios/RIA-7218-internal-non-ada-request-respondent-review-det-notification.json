@@ -61,7 +61,7 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "detentionFacility": "immigrationRemovalCentre",
-        "ircName": "The Mount",
+        "ircName": "Brookhouse",
         "directions": [
           {
             "id": "1",
