@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
@@ -24,15 +24,15 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class AdminOfficerEndAppealAutomaticallyPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamEndAppealAutomaticallyPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String endAppealAutomaticallyDueToNonPaymentTemplateId;
     private final String nonAdaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
-    public AdminOfficerEndAppealAutomaticallyPersonalisation(
-            @Value("${govnotify.template.endAppealAutomatically.adminOfficer.nonAda.email}")
+    public DetentionEngagementTeamEndAppealAutomaticallyPersonalisation(
+            @Value("${govnotify.template.endAppealAutomatically.detentionEngagementTeam.nonAda.email}")
             String endAppealAutomaticallyDueToNonPaymentTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetEmailService detEmailService,

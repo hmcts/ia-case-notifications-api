@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamEndAppealAutomaticallyPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -32,7 +33,7 @@ import uk.gov.service.notify.NotificationClientException;
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
+class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -46,19 +47,19 @@ class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final Long caseId = 12345L;
-    private AdminOfficerEndAppealAutomaticallyPersonalisation adminOfficerEndAppealAutomaticallyPersonalisation;
+    private DetentionEngagementTeamEndAppealAutomaticallyPersonalisation detentionEngagementTeamEndAppealAutomaticallyPersonalisation;
 
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     DocumentWithMetadata endAppealAutomaticallyDoc = TestUtils.getDocumentWithMetadata(
             "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_END_APPEAL_AUTOMATICALLY);
     IdValue<DocumentWithMetadata> endAppealAutomaticallyBundle = new IdValue<>("1", endAppealAutomaticallyDoc);
 
-    AdminOfficerEndAppealAutomaticallyPersonalisationTest() {
+    DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest() {
     }
 
     @BeforeEach
     public void setup() throws NotificationClientException, IOException {
-        adminOfficerEndAppealAutomaticallyPersonalisation = new AdminOfficerEndAppealAutomaticallyPersonalisation(
+        detentionEngagementTeamEndAppealAutomaticallyPersonalisation = new DetentionEngagementTeamEndAppealAutomaticallyPersonalisation(
                 templateId,
                 nonAdaPrefix,
                 detEmailService,
@@ -75,7 +76,7 @@ class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_INTERNAL_NON_ADA_END_APPEAL_AUTOMATICALLY",
-                adminOfficerEndAppealAutomaticallyPersonalisation.getReferenceId(caseId));
+                detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -85,24 +86,24 @@ class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                adminOfficerEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+                detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertEquals(Collections.emptySet(), adminOfficerEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals(Collections.emptySet(), adminOfficerEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     void should_return_personalisation_of_all_information() throws NotificationClientException, IOException {
-        Map<String, Object> personalisation = adminOfficerEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase);
+        Map<String, Object> personalisation = detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
@@ -115,7 +116,7 @@ class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> adminOfficerEndAppealAutomaticallyPersonalisation.getPersonalisationForLink((AsylumCase) null))
+        assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
@@ -123,7 +124,7 @@ class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> adminOfficerEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
+        assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("internalEndAppealAutomatically document not available");
     }
@@ -131,7 +132,7 @@ class AdminOfficerEndAppealAutomaticallyPersonalisationTest {
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(endAppealAutomaticallyDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> adminOfficerEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
+        assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("Failed to get Internal automatically end appeal Letter in compatible format");
     }

@@ -4102,13 +4102,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalEndAppealAutomaticallyNotificationGenerator")
     public List<NotificationGenerator> internalEndAppealAutomaticallyNotificationGenerator(
-            AdminOfficerEndAppealAutomaticallyPersonalisation adminOfficerEndAppealAutomaticallyPersonalisation,
+            DetentionEngagementTeamEndAppealAutomaticallyPersonalisation detentionEngagementTeamEndAppealAutomaticallyPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(adminOfficerEndAppealAutomaticallyPersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamEndAppealAutomaticallyPersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
