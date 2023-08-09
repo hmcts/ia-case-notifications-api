@@ -14,8 +14,8 @@
           "outOfTimeDecisionType": "rejected",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "detentionFacility": "prison",
-          "prisonName": "The Mount"
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse"
         }
       }
     }

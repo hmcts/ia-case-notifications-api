@@ -10,8 +10,8 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "detentionFacility": "prison",
-          "prisonName": "The Mount",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "submissionOutOfTime": "No",
@@ -52,7 +52,7 @@
     "notifications": [
       {
         "reference": "7547_INTERNAL_NON_ADA_APPEAL_SUBMITTED",
-        "recipient": "det-prison-the-mount@example.com",
+        "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE IN PERSON: Appeal details have been sent",
         "body": [
           "Home Office reference: A1234567",
