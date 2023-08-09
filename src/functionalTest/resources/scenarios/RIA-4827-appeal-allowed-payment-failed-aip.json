@@ -11,6 +11,7 @@
       "caseData": {
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
+          "hearingCentre": "manchester",
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "allowed",
           "paymentStatus": "Failed",
@@ -25,6 +26,7 @@
     "caseData": {
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "manchester",
         "isDecisionAllowed": "allowed",
         "notificationsSent": [
           {
@@ -33,6 +35,10 @@
           },
           {
             "id": "4827_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "4827_APPEAL_OUTCOME_ADMIN",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
