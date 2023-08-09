@@ -75,6 +75,18 @@
         ]
       },
       {
+        "reference": "4444_APPEAL_OUTCOME_ADMIN",
+        "recipient": "{$adminEmailAddresses.taylorHouse}",
+        "subject": "Immigration and Asylum appeal: decision and reasons",
+        "body": [
+          "Talha Awan",
+          "PA/12345/2019",
+          "LP/12345/2019",
+          "TAYLORHOUSE",
+          "ALLOWED"
+        ]
+      },
+      {
         "reference": "4444_APPEAL_OUTCOME_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has been decided",
