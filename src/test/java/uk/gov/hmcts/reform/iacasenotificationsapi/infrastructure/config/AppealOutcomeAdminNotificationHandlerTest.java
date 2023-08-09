@@ -47,8 +47,10 @@ class AppealOutcomeAdminNotificationHandlerTest {
         given(callback.getEvent()).willReturn(event);
 
         // when
+        boolean res = asylumCasePreSubmitCallbackHandler.canHandle(ABOUT_TO_START, callback);
+
         // then
-        assertThat(asylumCasePreSubmitCallbackHandler.canHandle(ABOUT_TO_START, callback)).isFalse();
+        assertThat(res).isFalse();
     }
 
     @ParameterizedTest
@@ -58,8 +60,10 @@ class AppealOutcomeAdminNotificationHandlerTest {
         given(callback.getEvent()).willReturn(event);
 
         // when
+        boolean res = asylumCasePreSubmitCallbackHandler.canHandle(ABOUT_TO_SUBMIT, callback);
+
         // then
-        assertThat(asylumCasePreSubmitCallbackHandler.canHandle(ABOUT_TO_SUBMIT, callback))
+        assertThat(res)
                 .isEqualTo(event == SEND_DECISION_AND_REASONS);
     }
 }
