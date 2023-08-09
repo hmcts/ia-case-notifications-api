@@ -11,6 +11,7 @@
       "caseData": {
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
+          "hearingCentre": "manchester",
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "allowed",
           "notificationsSent": []
