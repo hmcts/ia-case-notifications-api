@@ -66,7 +66,6 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of(ircName));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(markAppealPaidDocId)));
         when(documentDownloadClient.getJsonObjectFromDocument(markAppealPaidDoc)).thenReturn(jsonDocument);
@@ -99,7 +98,7 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
             detentionEngagementTeamMarkAsPaidPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
