@@ -4114,4 +4114,19 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalDetainedAppealFeeDueNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedAppealFeeDueNotificationGenerator(
+            DetentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation detentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
