@@ -1,20 +1,21 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
-import com.google.common.collect.ImmutableMap;
-import java.io.IOException;
-import java.util.*;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -51,12 +52,7 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-
-        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        return detEmailService.getRecipientsList(asylumCase);
     }
 
     @Override

@@ -129,7 +129,7 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
     public void should_return_given_email_address_from_asylum_case() {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(
             detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));

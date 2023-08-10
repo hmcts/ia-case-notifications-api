@@ -4,9 +4,9 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.*;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,12 +69,7 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-
-        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        return detEmailService.getRecipientsList(asylumCase);
     }
 
     @Override

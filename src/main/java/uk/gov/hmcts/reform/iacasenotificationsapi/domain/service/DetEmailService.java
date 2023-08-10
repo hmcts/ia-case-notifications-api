@@ -3,8 +3,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IRC_NAME;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -41,6 +43,10 @@ public class DetEmailService {
                 .orElseThrow(() -> new IllegalStateException("IRC name is not present"))
             :
                 StringUtils.EMPTY;
+    }
+
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return Collections.singleton(getDetEmailAddress(asylumCase));
     }
 
 }

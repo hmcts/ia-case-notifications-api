@@ -3349,13 +3349,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("recordOfTimeDecisionCanProceedEmailInternalNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCanProceedEmailInternalNotificationHandler(
-            AdminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation adminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation,
+            DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(adminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
@@ -4086,13 +4086,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalSubmitAppealInTimeNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealInTimeNotificationGenerator(
-            AdminOfficerAppealSubmittedInTimePersonalisation adminOfficerAppealSubmittedInTimePersonalisation,
+            DetentionEngagementTeamAppealSubmittedInTimePersonalisation detentionEngagementTeamAppealSubmittedInTimePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(adminOfficerAppealSubmittedInTimePersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamAppealSubmittedInTimePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
