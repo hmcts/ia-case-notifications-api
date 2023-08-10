@@ -1,16 +1,13 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.RECORD_OUT_OF_TIME_DECISION_DOCUMENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,14 +21,14 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class AdminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String recordOutOfTimeDecisionCanProceedTemplateId;
     private final String nonAdaPrefix;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
-    public AdminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation(
+    public DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation(
             @Value("${govnotify.template.recordOutOfTimeDecision.adminOfficer.canProceed.email}") String recordOutOfTimeDecisionCanProceedTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix, DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
@@ -49,11 +46,7 @@ public class AdminOfficerRecordOutOfTimeDecisionCanProceedPersonalisation implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        return detEmailService.getRecipientsList(asylumCase);
     }
 
     @Override

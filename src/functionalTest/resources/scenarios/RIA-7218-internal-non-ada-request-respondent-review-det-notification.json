@@ -10,8 +10,8 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "detentionFacility": "prison",
-          "prisonName": "The Mount",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "directions": [
             {
               "id": "1",
@@ -60,8 +60,8 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
-        "detentionFacility": "prison",
-        "prisonName": "The Mount",
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
         "directions": [
           {
             "id": "1",

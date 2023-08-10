@@ -14,8 +14,8 @@
           "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "detentionFacility": "prison",
-          "prisonName": "The Mount",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -53,7 +53,7 @@
     "notifications": [
       {
         "reference": "7160_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL",
-        "recipient": "det-prison-the-mount@example.com",
+        "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE IN PERSON: Appeal reasons form",
         "body": [
           "Home Office reference: A1234567",

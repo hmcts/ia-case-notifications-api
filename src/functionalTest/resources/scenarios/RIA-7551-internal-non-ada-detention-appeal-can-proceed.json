@@ -14,8 +14,8 @@
           "outOfTimeDecisionType": "approved",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "detentionFacility": "prison",
-          "prisonName": "The Mount",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -55,7 +55,7 @@
     "notifications": [
       {
         "reference": "7551_INTERNAL_NON_ADA_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED",
-        "recipient": "det-prison-the-mount@example.com",
+        "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE IN PERSON: Appeal can proceed",
         "body": [
           "Home Office reference: A1234567",

@@ -87,7 +87,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(
                 detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));

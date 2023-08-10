@@ -112,7 +112,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
             detentionEngagementTeamRequestCaseBuildingPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));

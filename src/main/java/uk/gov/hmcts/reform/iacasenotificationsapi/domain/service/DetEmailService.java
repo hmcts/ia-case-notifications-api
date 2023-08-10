@@ -1,9 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IRC_NAME;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 
@@ -14,15 +18,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 public class DetEmailService {
 
     private final Map<String, String> detentionEngagementTeamIrcEmailAddresses;
-    private final Map<String, String> detentionEngagementTeamPrisonEmailAddresses;
-
 
     public DetEmailService(
-        Map<String, String> detentionEngagementTeamIrcEmailAddresses,
-        Map<String, String> detentionEngagementTeamPrisonEmailAddresses
+        Map<String, String> detentionEngagementTeamIrcEmailAddresses
     ) {
         this.detentionEngagementTeamIrcEmailAddresses = detentionEngagementTeamIrcEmailAddresses;
-        this.detentionEngagementTeamPrisonEmailAddresses = detentionEngagementTeamPrisonEmailAddresses;
     }
 
     public String getDetEmailAddressMapping(Map<String, String> detEmailAddressesMap, String name) {
@@ -42,12 +42,11 @@ public class DetEmailService {
                 )
                 .orElseThrow(() -> new IllegalStateException("IRC name is not present"))
             :
-            asylumCase
-                .read(PRISON_NAME, String.class)
-                .map(it -> Optional.ofNullable(getDetEmailAddressMapping(detentionEngagementTeamPrisonEmailAddresses, it))
-                    .orElseThrow(() -> new IllegalStateException("DET email address not found for: " + it.toString()))
-                )
-                .orElseThrow(() -> new IllegalStateException("Prison name is not present"));
+                StringUtils.EMPTY;
+    }
+
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return Collections.singleton(getDetEmailAddress(asylumCase));
     }
 
 }
