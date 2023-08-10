@@ -4448,4 +4448,29 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealFeeDueRecordRemissionDecisionNotificationHandler(
+        @Qualifier("internalDetainedAppealFeeDueNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+                    .orElse(false);
+
+                return callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getCaseDetails().getState().equals(State.PENDING_PAYMENT)
+                       && isInternalCase(asylumCase)
+                       && isAppellantInDetention(asylumCase)
+                       && !isAcceleratedDetainedAppeal(asylumCase)
+                       && isRemissionPartiallyApprovedOrRejected
+                       && isEaHuEuAppeal(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
 }
