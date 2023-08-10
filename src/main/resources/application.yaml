@@ -1050,6 +1050,11 @@ govnotify:
             email: b2f060ba-f0f3-4dd7-b634-6e30424c8c2a
           allowed:
             email: 03cb8170-abe1-42f1-9cfd-8526e1635294
+    appealFeeIsDue:
+      detentionEngagementTeam:
+        nonAda:
+          email: 5a3cb739-fe09-423b-b3e1-43fe4aee8a3d
+
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000

@@ -3035,6 +3035,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && !isInternalCase(asylumCase)
                        && isPartiallyApproved;
             },
             notificationGenerators
@@ -3060,6 +3061,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && !isInternalCase(asylumCase)
                        && isRejected;
             },
             notificationGenerators
