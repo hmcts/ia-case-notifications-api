@@ -173,6 +173,10 @@ govnotify:
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
+    markAppealAsPaid:
+      detentionEngagementTeam:
+        email:
+          nonAda: ebe7750b-064b-4c13-a026-326402be0817
     respondentEvidenceSubmitted:
       caseOfficer:
         email: 0add854c-a0f2-4f74-93ac-79660f576482

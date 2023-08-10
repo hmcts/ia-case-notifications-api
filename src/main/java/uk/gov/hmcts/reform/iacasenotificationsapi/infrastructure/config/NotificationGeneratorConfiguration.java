@@ -4129,4 +4129,22 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("markAsPaidInternalDetNotificationGenerator")
+    public List<NotificationGenerator> markAsPaidInternalDetNotificationHandler(
+            DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamMarkAsPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
