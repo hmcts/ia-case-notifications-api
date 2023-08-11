@@ -2841,7 +2841,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isCorrectAppealType
-                       && isApproved;
+                       && isApproved
+                       && !isInternalCase(asylumCase);
 
             }, notificationGenerators
         );
