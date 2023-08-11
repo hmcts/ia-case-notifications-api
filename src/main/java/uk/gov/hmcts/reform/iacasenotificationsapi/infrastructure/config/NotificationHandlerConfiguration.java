@@ -2841,7 +2841,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isCorrectAppealType
-                       && isApproved;
+                       && isApproved
+                       && !isInternalCase(asylumCase);
 
             }, notificationGenerators
         );
@@ -3035,6 +3036,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && !isInternalCase(asylumCase)
                        && isPartiallyApproved;
             },
             notificationGenerators
@@ -3060,6 +3062,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && !isInternalCase(asylumCase)
                        && isRejected;
             },
             notificationGenerators
@@ -4443,6 +4446,31 @@ public class NotificationHandlerConfiguration {
                             && isNoRemission
                             && isEaHuEuAppeal(asylumCase);
                 }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealFeeDueRecordRemissionDecisionNotificationHandler(
+        @Qualifier("internalDetainedAppealFeeDueNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+                    .orElse(false);
+
+                return callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getCaseDetails().getState().equals(State.PENDING_PAYMENT)
+                       && isInternalCase(asylumCase)
+                       && isAppellantInDetention(asylumCase)
+                       && !isAcceleratedDetainedAppeal(asylumCase)
+                       && isRemissionPartiallyApprovedOrRejected
+                       && isEaHuEuAppeal(asylumCase);
+            }, notificationGenerators
         );
     }
 

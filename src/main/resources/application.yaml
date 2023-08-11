@@ -159,7 +159,7 @@ govnotify:
         email: 759e7336-11ac-437c-be03-a2da44da49ba
     pendingPaymentEaHuEu:
       detentionEngagementTeam:
-        email: 5f3cdec9-42a5-4e5d-8b07-39f5fbddb72a
+        email: 5a3cb739-fe09-423b-b3e1-43fe4aee8a3d
     requestRespondentEvidenceDirection:
       appellant:
         email: 9c8ab848-b1f7-4dbe-9854-4922e94ece67
@@ -1050,6 +1050,7 @@ govnotify:
             email: b2f060ba-f0f3-4dd7-b634-6e30424c8c2a
           allowed:
             email: 03cb8170-abe1-42f1-9cfd-8526e1635294
+
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000

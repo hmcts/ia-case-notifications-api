@@ -4117,13 +4117,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalDetainedAppealFeeDueNotificationGenerator")
     public List<NotificationGenerator> internalDetainedAppealFeeDueNotificationGenerator(
-            DetentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation detentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation,
+            DetentionEngagementTeamAppealFeeDuePersonalisation detentionEngagementTeamAppealFeeDuePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamAppealFeeDuePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
@@ -4145,6 +4145,21 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("internalDetainedAppealFeeDueDetNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedAppealFeeDueDetNotificationGenerator(
+        DetentionEngagementTeamAppealFeeDuePersonalisation detentionEngagementTeamAppealFeeDuePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamAppealFeeDuePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }

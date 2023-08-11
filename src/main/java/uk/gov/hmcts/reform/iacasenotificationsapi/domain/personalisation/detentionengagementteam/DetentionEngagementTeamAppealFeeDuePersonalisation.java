@@ -22,14 +22,14 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamAppealFeeDuePersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String internalDetainedAppealFeeDueTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private final DetEmailService detEmailService;
     private String subjectPrefix;
 
-    public DetentionEngagementTeamAppealFeeDueNoRemissionHuEaEuPersonalisation(
+    public DetentionEngagementTeamAppealFeeDuePersonalisation(
             @Value("${govnotify.template.pendingPaymentEaHuEu.detentionEngagementTeam.email}") String internalDetainedAppealFeeDueTemplateId,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient,
