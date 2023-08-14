@@ -281,6 +281,9 @@ govnotify:
       remoteHearing:
         legalRep:
           email: df3c0c01-e865-4142-aa89-a9b67de85f1f
+      detentionEngagementTeam:
+        nonAda:
+          email: b7e398f0-4a1a-4e13-ae98-9569967e1a7d
     adaCaseListedSendDirection:
       legalRep:
         email: a61da7e2-d70f-4d62-89c5-fc54155321c9
