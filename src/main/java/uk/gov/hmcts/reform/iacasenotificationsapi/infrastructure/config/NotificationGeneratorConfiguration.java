@@ -4162,4 +4162,19 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("listCaseInternalDetainedNotificationGenerator")
+    public List<NotificationGenerator> listCaseInternalDetainedNotificationGenerator(
+            DetentionEngagementTeamListCasePersonalisation detentionEngagementTeamListCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamListCasePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

@@ -45,6 +45,7 @@ public enum DocumentTag {
     INTERNAL_END_APPEAL_AUTOMATICALLY("internalEndAppealAutomatically"),
     INTERNAL_APPEAL_FEE_DUE_LETTER("internalAppealFeeDueLetter"),
     INTERNAL_DET_MARK_AS_PAID_LETTER("internalDetMarkAsPaidLetter"),
+    INTERNAL_LIST_CASE_LETTER("internalListCaseLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

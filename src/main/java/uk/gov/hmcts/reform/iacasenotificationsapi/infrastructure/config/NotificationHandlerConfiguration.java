@@ -595,6 +595,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return (callback.getEvent() == Event.LIST_CASE
                             && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !isInternalCase(asylumCase)
                             && !isAcceleratedDetainedAppeal(asylumCase));
                 } else {
                     return false;
@@ -638,6 +639,29 @@ public class NotificationHandlerConfiguration {
                 && callback.getEvent() == Event.LIST_CASE
                 && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> listCaseInternalDetainedNotificationHandler(
+            @Qualifier("listCaseInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    boolean isAllowedAsylumCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.LIST_CASE);
+
+                    if (isAllowedAsylumCase) {
+                        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                        return (callback.getEvent() == Event.LIST_CASE
+                                && isInternalCase(asylumCase)
+                                && isAppellantInDetention(asylumCase)
+                                && !isAcceleratedDetainedAppeal(asylumCase));
+                    } else {
+                        return false;
+                    }
+                },
+                notificationGenerators
         );
     }
 
