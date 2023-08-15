@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.*;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -16,26 +17,35 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldD
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 
+
 @Service
 public class EmailAddressFinder {
 
     private String listCaseHearingCentreIsNotPresent = "listCaseHearingCentre is not present";
+    private final String noEmailAddressDecisionWithoutHearing = "No email address for decisions made without hearing";
     private final Map<HearingCentre, String> hearingCentreEmailAddresses;
     private final Map<HearingCentre, String> homeOfficeEmailAddresses;
     private final Map<HearingCentre, String> homeOfficeFtpaEmailAddresses;
     private final Map<BailHearingCentre, String> bailHearingCentreEmailAddresses;
+
+    private final Map<HearingCentre, String> adminEmailAddresses;
+
     private final String listCaseCaseOfficerEmailAddress;
+
 
     public EmailAddressFinder(
             Map<HearingCentre, String> hearingCentreEmailAddresses,
             Map<HearingCentre, String> homeOfficeEmailAddresses,
             Map<HearingCentre, String> homeOfficeFtpaEmailAddresses,
             Map<BailHearingCentre, String> bailHearingCentreEmailAddresses,
+            Map<HearingCentre, String> adminEmailAddresses,
             @Value("${listCaseCaseOfficerEmailAddress}") String listCaseCaseOfficerEmailAddress) {
+
         this.hearingCentreEmailAddresses = hearingCentreEmailAddresses;
         this.homeOfficeEmailAddresses = homeOfficeEmailAddresses;
         this.homeOfficeFtpaEmailAddresses = homeOfficeFtpaEmailAddresses;
         this.bailHearingCentreEmailAddresses = bailHearingCentreEmailAddresses;
+        this.adminEmailAddresses = adminEmailAddresses;
         this.listCaseCaseOfficerEmailAddress = listCaseCaseOfficerEmailAddress;
     }
 
@@ -120,10 +130,38 @@ public class EmailAddressFinder {
             case NOTTINGHAM:
             case COVENTRY:
                 return emailAddressesMap.get(HearingCentre.BIRMINGHAM);
+            case DECISION_WITHOUT_HEARING:
+                return noEmailAddressDecisionWithoutHearing;
             default:
                 return emailAddressesMap.get(hearingCentre);
         }
     }
+
+
+    private String getAdminHearingCentreAddress(Map<HearingCentre, String> emailAddressesMap, HearingCentre hearingCentre) {
+        switch (hearingCentre) {
+            case GLASGOW_TRIBUNAL_CENTRE:
+            case BELFAST:
+                return emailAddressesMap.get(HearingCentre.GLASGOW);
+            case NOTTINGHAM:
+            case COVENTRY:
+                return emailAddressesMap.get(HearingCentre.BIRMINGHAM);
+            case NEWCASTLE:
+                return emailAddressesMap.get(HearingCentre.BRADFORD);
+            default:
+                return emailAddressesMap.get(hearingCentre);
+        }
+    }
+
+    public String getAdminEmailAddress(AsylumCase asylumCase) {
+        return asylumCase
+                .read(HEARING_CENTRE, HearingCentre.class)
+                .map(it -> Optional.ofNullable(getAdminHearingCentreAddress(adminEmailAddresses, it))
+                        .orElseThrow(() -> new IllegalStateException("Hearing centre email address not found: " + it.toString()))
+                )
+                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+    }
+
 
     public String getHomeOfficeEmailAddress(AsylumCase asylumCase) {
         return asylumCase
@@ -160,16 +198,18 @@ public class EmailAddressFinder {
     }
 
     private boolean isRemoteHearing(AsylumCase asylumCase) {
-        return asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+        return asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
             .map(hearingCentre -> hearingCentre == HearingCentre.REMOTE_HEARING)
             .orElse(false);
     }
 
     private boolean isDecisionWithoutHearing(AsylumCase asylumCase) {
-        return asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+        return asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
                 .map(hearingCentre -> hearingCentre == HearingCentre.DECISION_WITHOUT_HEARING)
                 .orElse(false);
     }
+
+
 
     public String getListCaseCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
         if (isRemoteHearing(asylumCase)) {
@@ -189,4 +229,5 @@ public class EmailAddressFinder {
             }).orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
         }
     }
+
 }
