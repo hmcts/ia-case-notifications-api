@@ -389,6 +389,9 @@ govnotify:
       appellant:
         email: 52052bbd-50f0-4f57-b26c-407c3393b898
         sms: ed6f3668-46aa-4b17-b74b-10292cf6ea75
+      detentionEngagementTeam:
+        nonAda:
+          email: 9997718e-3be1-4ae8-a89d-892f827fcad4
     reviewHearingRequirements:
       adminOfficer:
         email: 0d387f6d-003d-4b0f-a027-271e4b95a3a4

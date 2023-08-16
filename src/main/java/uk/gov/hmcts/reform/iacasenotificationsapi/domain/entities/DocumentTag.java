@@ -46,6 +46,8 @@ public enum DocumentTag {
     INTERNAL_APPEAL_FEE_DUE_LETTER("internalAppealFeeDueLetter"),
     INTERNAL_DET_MARK_AS_PAID_LETTER("internalDetMarkAsPaidLetter"),
     INTERNAL_LIST_CASE_LETTER("internalListCaseLetter"),
+    INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW("internalDetainedRequestHomeOfficeResponseReview"),
+    INTERNAL_REQUEST_HEARING_REQUIREMENTS_LETTER("internalRequestHearingRequirementsLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
