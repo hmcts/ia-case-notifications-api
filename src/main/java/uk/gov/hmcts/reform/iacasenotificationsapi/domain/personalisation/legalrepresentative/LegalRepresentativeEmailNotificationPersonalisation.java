@@ -28,14 +28,11 @@ public interface LegalRepresentativeEmailNotificationPersonalisation extends Ema
             .map(it -> it.getCaseRoleId() == null)
             .orElse(false)) {
 
-
-
             return Collections.emptySet();
-        } else {
-
-            return Collections.singleton(asylumCase
-                .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
-                .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")));
         }
+
+        return Collections.singleton(asylumCase
+            .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
+            .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")));
     }
 }
