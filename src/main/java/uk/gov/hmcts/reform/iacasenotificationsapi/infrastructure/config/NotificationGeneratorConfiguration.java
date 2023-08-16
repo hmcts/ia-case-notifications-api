@@ -1906,6 +1906,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
     public List<NotificationGenerator> forceCaseProgressionToCaseUnderReviewNotificationGenerator(
         LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation forceCaseProgressionToCaseUnderReviewPersonalisation,
+        RespondentForceCaseToCaseUnderReviewPersonalisation respondentForceCaseToCaseUnderReviewPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -1913,11 +1914,42 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    forceCaseProgressionToCaseUnderReviewPersonalisation
+                    forceCaseProgressionToCaseUnderReviewPersonalisation,
+                        respondentForceCaseToCaseUnderReviewPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("forceAppellantCaseProgressionEmailNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseProgressionEmailNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
+            RespondentForceCaseToCaseUnderReviewPersonalisation homeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficePersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender)
+        );
+    }
+
+    @Bean("forceAppellantCaseProgressionSmsNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseProgressionSmsNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -3394,4 +3426,3 @@ public class NotificationGeneratorConfiguration {
         );
     }
 }
-
