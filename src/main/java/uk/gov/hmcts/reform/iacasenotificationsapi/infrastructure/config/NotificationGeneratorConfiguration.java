@@ -4177,4 +4177,19 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("requestHearingRequirementsInternalDetainedNotificationGenerator")
+    public List<NotificationGenerator> requestHearingRequirementsInternalDetainedNotificationGenerator(
+            DetentionEngagementTeamRequestHearingRequirementPersonalisation detentionEngagementTeamRequestHearingRequirementPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamRequestHearingRequirementPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

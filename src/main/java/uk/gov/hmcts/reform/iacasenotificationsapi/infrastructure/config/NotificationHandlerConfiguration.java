@@ -698,7 +698,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE
-                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -714,6 +715,23 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE
                     && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> requestHearingRequirementsInternalDetainedNotificationHandler(
+            @Qualifier("requestHearingRequirementsInternalDetainedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return (callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && !isAcceleratedDetainedAppeal(asylumCase));
+                },
+                notificationGenerators
         );
     }
 
