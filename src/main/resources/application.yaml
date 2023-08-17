@@ -367,6 +367,9 @@ govnotify:
         email: 0df260d7-fd82-430b-86bb-047083a8172a
       detentionEngagementTeam:
         email: c15c1d5d-aa44-4725-b953-14bd506cf7ce
+    reviewHomeOfficeResponse:
+      detentionEngagementTeam:
+        email: 31f172e8-8929-4538-88b0-57d0d89af676
     hearingBundleReady:
       detentionEngagementTeam:
         email: e4c5547d-7cff-49f5-b47c-7861343db513
