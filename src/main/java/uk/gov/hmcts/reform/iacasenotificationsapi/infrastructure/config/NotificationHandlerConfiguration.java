@@ -4551,6 +4551,7 @@ public class NotificationHandlerConfiguration {
                             && isAppellantInDetention(asylumCase);
                 }, notificationGenerators
         );
+
     }
 
 }
