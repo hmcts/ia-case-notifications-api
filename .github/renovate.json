@@ -6,6 +6,9 @@
   "labels": [
     "dependencies"
   ],
+  "schedule": [
+    "3am"
+  ],
   "helmv3": {
     "bumpVersion": "patch"
   },
@@ -33,5 +36,5 @@
       "automerge": true
     }
   ],
-  "prConcurrentLimit": 10
+  "prConcurrentLimit": 3
 }
