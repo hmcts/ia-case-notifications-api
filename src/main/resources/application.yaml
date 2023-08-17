@@ -328,6 +328,8 @@ govnotify:
     endAppeal:
       appellant:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
+      detentionEngagementTeam:
+        email: cef6603c-b5dd-4e63-b438-1e93644bad5c
     endAppealBeforeListing:
       legalRep:
         email: 7eb6e398-c85d-483f-9ff7-6ec7a3e17651

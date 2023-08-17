@@ -94,13 +94,13 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     }
 
     @Test
-    public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
+    void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         assertEquals(Collections.emptySet(), detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
-    public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
+    void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
         assertEquals(Collections.emptySet(), detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
     }
@@ -125,7 +125,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
@@ -133,7 +133,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_when_appeal_submission_is_empty() {
+    void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
@@ -141,7 +141,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
+    void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(endAppealAutomaticallyDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
