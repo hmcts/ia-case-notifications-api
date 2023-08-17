@@ -35,7 +35,7 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         return Collections.singleton(asylumCase
-                .read(APPELLANT_EMAIL, String.class)
+                .read(APPELLANT_EMAIL_ADDRESS, String.class)
                 .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
     }
 
@@ -51,7 +51,7 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail 
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("appellantEmailAddress", asylumCase.read(APPELLANT_EMAIL, String.class)
+            .put("appellantEmailAddress", asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)
                         .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")))
             .build();
     }

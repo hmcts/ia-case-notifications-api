@@ -40,7 +40,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
     @BeforeEach
     void setUp() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(appellantEmailAddress));
+        when(asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(appellantEmailAddress));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
@@ -69,7 +69,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
     @Test
     void should_throw_an_illegal_state_exception_when_email_is_not_in_recipient_list() {
-        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("appellantEmailAddress is not present");
@@ -77,7 +77,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
     @Test
     public void should_throw_exception_when_appellant_email_is_not_present() {
-        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantEmailAddress is not present");
