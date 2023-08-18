@@ -105,19 +105,19 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
     }
 
     @Test
-    public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
+    void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         assertEquals(Collections.emptySet(), detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
-    public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
+    void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
         assertEquals(Collections.emptySet(), detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> detentionEngagementTeamAppealDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
