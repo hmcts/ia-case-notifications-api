@@ -12,4 +12,9 @@ public class SubjectPrefixesInitializer {
         ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
         ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
     }
+
+    public static void initializePrefixesForInternalAppeal(Object testClass) {
+        ReflectionTestUtils.setField(testClass, "adaPrefix", "ADA - SERVE IN PERSON");
+        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "IAFT - SERVE IN PERSON");
+    }
 }

@@ -1,5 +1,5 @@
 {
-  "description": "RIA-6812: internal ada case decide an application by Home office (Granted)",
+  "description": "RIA-7671: internal ada case decide an application by Home office (Granted) (old - 6812)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -16,6 +16,7 @@
           "appellantFamilyName": "User",
           "appealType": "refusalOfEu",
           "isAdmin": "Yes",
+          "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "decideAnApplicationId": "1",
           "makeAnApplications": [
@@ -62,16 +63,7 @@
         "appealType": "refusalOfEu",
         "isAdmin": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
-        "decideAnApplicationId": "1",
-        "notificationsSent":[
-          {
-            "id":"68121_DECIDE_AN_APPLICATION_DET",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id":"68121_DECIDE_AN_APPLICATION_HOME_OFFICE",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }]
+        "decideAnApplicationId": "1"
       }
     }
   }

@@ -789,7 +789,7 @@ govnotify:
     decideAnApplication:
         applicant:
           detentionEngagementTeam:
-            email: 51135c0f-4dc1-4a6b-bcc5-a27db656cb41
+            email: 7c806a4d-bc0f-49e8-b068-0951296e7569
         otherParty:
           detentionEngagementTeam:
             email: 47289033-479f-45e2-aa17-2c785378733a
@@ -1050,7 +1050,7 @@ govnotify:
     appealDecided:
         detentionTeam:
           dismissed:
-            email: b2f060ba-f0f3-4dd7-b634-6e30424c8c2a
+              email: b2f060ba-f0f3-4dd7-b634-6e30424c8c2a
           allowed:
             email: 03cb8170-abe1-42f1-9cfd-8526e1635294
 
