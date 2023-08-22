@@ -4222,4 +4222,20 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalMarkAppealAsAdaNotificationGenerator")
+    public List<NotificationGenerator> internalMarkAppealAsAdaNotificationGenerator(
+            DetentionEngagementTeamMarkAppealAsAdaPersonalisation detentionEngagementTeamMarkAppealAsAdaPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamMarkAppealAsAdaPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

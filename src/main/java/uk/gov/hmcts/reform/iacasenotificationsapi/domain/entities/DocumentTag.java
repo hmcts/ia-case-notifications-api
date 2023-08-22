@@ -48,6 +48,7 @@ public enum DocumentTag {
     INTERNAL_LIST_CASE_LETTER("internalListCaseLetter"),
     INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW("internalDetainedRequestHomeOfficeResponseReview"),
     INTERNAL_REQUEST_HEARING_REQUIREMENTS_LETTER("internalRequestHearingRequirementsLetter"),
+    INTERNAL_DET_MARK_AS_ADA_LETTER("internalDetMarkAsAdaLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
