@@ -83,18 +83,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "70334_DECIDE_AN_APPLICATION_HOME_OFFICE",
-        "recipient": "{$apcHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: An appellant application has been refused",
-        "body": [
-          "PA/12345/2019",
-          "A123456",
-          "Talha Awan"
-        ]
-      }
-    ]
+    }
   }
 }
