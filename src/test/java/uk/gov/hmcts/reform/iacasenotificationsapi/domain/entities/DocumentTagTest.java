@@ -46,7 +46,7 @@ public class DocumentTagTest {
         assertEquals("internalListCaseLetter", DocumentTag.INTERNAL_LIST_CASE_LETTER.toString());
         assertEquals("internalRequestHearingRequirementsLetter", DocumentTag.INTERNAL_REQUEST_HEARING_REQUIREMENTS_LETTER.toString());
         assertEquals("internalDetainedRequestHomeOfficeResponseReview", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW.toString());
-        assertEquals("internalDetainedRequestHomeOfficeResponseReview", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER.toString());
+        assertEquals("internalDetMarkAsAdaLetter", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER.toString());
     }
 
     @Test
