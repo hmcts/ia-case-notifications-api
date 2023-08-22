@@ -10,6 +10,8 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "decideAnApplicationId": "1",
           "notificationAttachmentDocuments": [
             {
@@ -55,6 +57,8 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
         "isAdmin": "Yes",
         "notificationAttachmentDocuments": [
           {
