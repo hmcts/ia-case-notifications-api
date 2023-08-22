@@ -2461,8 +2461,7 @@ public class NotificationHandlerConfiguration {
      * To find if the decision outcome was not admitted or refused or remade-32. It checks the leadership judge outcome,
      * if not present, it checks the resident judge outcome. The parameters should be both of type appellant or both
      * of type respondent.
-     *
-     * @param asylumCase                     The asylum case
+     * @param asylumCase The asylum case
      * @param ftpaByWhoLjDecisionOutcomeType leadership judge decision on ftpa application by appellant or respondent,
      *                                       FTPA_APPELLANT_DECISION_OUTCOME_TYPE or FTPA_RESPONDENT_DECISION_OUTCOME_TYPE
      * @param ftpaByWhoRjDecisionOutcomeType resident judge decision on ftpa application by appellant or respondent,
@@ -2529,8 +2528,7 @@ public class NotificationHandlerConfiguration {
      * To find if the decision outcome was granted or partially granted. It checks the leadership judge outcome,
      * if not present, it checks the resident judge outcome. The parameters should be both of type appellant or both
      * of type respondent.
-     *
-     * @param asylumCase                     The asylum case
+     * @param asylumCase The asylum case
      * @param ftpaByWhoLjDecisionOutcomeType leadership judge decision on ftpa application by appellant or respondent,
      *                                       FTPA_APPELLANT_DECISION_OUTCOME_TYPE or FTPA_RESPONDENT_DECISION_OUTCOME_TYPE
      * @param ftpaByWhoRjDecisionOutcomeType resident judge decision on ftpa application by appellant or respondent,
@@ -4554,7 +4552,6 @@ public class NotificationHandlerConfiguration {
                             && isAppellantInDetention(asylumCase);
                 }, notificationGenerators
         );
-
     }
 
     @Bean
