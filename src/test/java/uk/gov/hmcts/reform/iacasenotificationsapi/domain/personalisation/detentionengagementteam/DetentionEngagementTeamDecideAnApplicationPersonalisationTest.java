@@ -1,32 +1,38 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesForInternalAppeal;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.DateProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationTypes;
+import uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -39,8 +45,6 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     @Mock
     private MakeAnApplicationService makeAnApplicationService;
     @Mock
-    private DateProvider dateProvider;
-    @Mock
     private MakeAnApplication makeAnApplication;
     @Mock
     private DetEmailService detEmailService;
@@ -50,41 +54,41 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String decisionReason = "someDecisionReason";
     private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId = "detentionEngagementTeamDecideAnApplicationApplicantTemplateId";
-    private final String detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId = "detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId";
-    private final String makeAnApplicationFormLink = "someLink";
-    private final int judgesReviewDeadlineDateDelay = 14;
-    private final String customerServiceTelephone = "0123456789";
-    private final String customerServiceEmail = "hm@email.com";
-    private final String calculatedDeadline = "03 March 2023";
-    private final String adminOfficerRole = "caseworker-ia-admofficer";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
+    DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
+            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DECIDE_AN_APPLICATION_LETTER);
+    IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
 
     private DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation;
 
     @BeforeEach
-    void setup() {
+    void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamDecideAnApplicationPersonalisation = new DetentionEngagementTeamDecideAnApplicationPersonalisation(
             detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
-            detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId,
-            makeAnApplicationFormLink,
-            judgesReviewDeadlineDateDelay,
             customerServicesProvider,
             makeAnApplicationService,
-            dateProvider,
-            detEmailService
+            detEmailService,
+            documentDownloadClient
         );
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(document)));
+        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonObject);
+        when((makeAnApplicationService.getMakeAnApplication(asylumCase, true))).thenReturn(Optional.of(makeAnApplication));
+
     }
 
     @Test
     void should_return_given_template_id() {
-
-        when(makeAnApplicationService.getMakeAnApplication(asylumCase, true)).thenReturn(Optional.of(makeAnApplication));
-
-        assertEquals(detentionEngagementTeamDecideAnApplicationOtherPartyTemplateId, detentionEngagementTeamDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
-
-        when(makeAnApplication.getApplicantRole()).thenReturn(adminOfficerRole);
-        assertEquals(detentionEngagementTeamDecideAnApplicationApplicantTemplateId, detentionEngagementTeamDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
+        assertEquals(detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
+            detentionEngagementTeamDecideAnApplicationPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -116,290 +120,40 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = MakeAnApplicationTypes.class, names = {
-        "ADJOURN",
-        "EXPEDITE",
-        "JUDGE_REVIEW",
-        "JUDGE_REVIEW_LO",
-        "LINK_OR_UNLINK",
-        "TIME_EXTENSION",
-        "TRANSFER",
-        "WITHDRAW",
-        "UPDATE_HEARING_REQUIREMENTS",
-        "UPDATE_APPEAL_DETAILS",
-        "REINSTATE",
-        "TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS",
-        "OTHER"
-    })
-    void should_return_personalisation_of_all_information_given_as_applicant(MakeAnApplicationTypes makeAnApplicationType) {
-        initializePrefixes(detentionEngagementTeamDecideAnApplicationPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-
-        when(dateProvider.dueDate(judgesReviewDeadlineDateDelay)).thenReturn(calculatedDeadline);
-
-        when(makeAnApplicationService.getMakeAnApplication(asylumCase, true)).thenReturn(Optional.of(makeAnApplication));
-        when(makeAnApplication.getDecision()).thenReturn("Granted");
-        when(makeAnApplication.getType()).thenReturn(makeAnApplicationType.getValue());
-        when(makeAnApplication.getDecisionMaker()).thenReturn("Judge");
-        when(makeAnApplication.getDecisionReason()).thenReturn(decisionReason);
-        when(makeAnApplication.getApplicantRole()).thenReturn(adminOfficerRole);
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(ImmutableMap
-            .<String, String>builder()
-            .put("customerServicesTelephone", customerServiceTelephone)
-            .put("customerServicesEmail", customerServiceEmail)
-            .build());
-
-        Map<String, String> personalisation = detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals(customerServiceTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServiceEmail, personalisation.get("customerServicesEmail"));
-        assertEquals("Accelerated detained appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReferenceIfPresent"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("Judge", personalisation.get("decisionMaker"));
-        assertEquals("grant", personalisation.get("applicationDecision"));
-        assertEquals(makeAnApplicationType.getValue(), personalisation.get("applicationType"));
-        assertEquals(decisionReason, personalisation.get("applicationDecisionReason"));
-        assertEquals(calculatedDeadline, personalisation.get("judgesReviewDeadlineDate"));
-        assertEquals(makeAnApplicationFormLink, personalisation.get("makeAnApplicationLink"));
-
-        switch (makeAnApplicationType) {
-            case TIME_EXTENSION:
-                assertEquals("yes", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case ADJOURN:
-            case EXPEDITE:
-            case UPDATE_HEARING_REQUIREMENTS:
-            case TRANSFER:
-                assertEquals("yes", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case JUDGE_REVIEW_LO:
-                assertEquals("yes", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case LINK_OR_UNLINK:
-                assertEquals("yes", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case REINSTATE:
-                assertEquals("yes", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case WITHDRAW:
-                assertEquals("yes", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case UPDATE_APPEAL_DETAILS:
-            case OTHER:
-                assertEquals("yes", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                break;
-            case TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS:
-                assertEquals("yes", personalisation.get("grantedTransferOutOfAda"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                break;
-            default:
-                break;
-        }
+    @ValueSource(booleans = {true, false})
+    void shouldReturnPersonalisationForRefused(boolean isAcceleratedDetained) {
+        when(makeAnApplication.getDecision()).thenReturn("Refused");
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAcceleratedDetained ? YES : NO));
+        initializePrefixesForInternalAppeal(detentionEngagementTeamDecideAnApplicationPersonalisation);
+        Map<String, Object> personalisationForLink = detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase);
+        //assert the personalisation map values
+        assertEquals(isAcceleratedDetained ? adaPrefix : nonAdaPrefix, personalisationForLink.get("subjectPrefix"));
+        assertEquals(appellantGivenNames, personalisationForLink.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisationForLink.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisationForLink.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReferenceNumber, personalisationForLink.get("homeOfficeReferenceNumber"));
+        assertEquals(jsonObject, personalisationForLink.get("documentLink"));
+        assertEquals(isAcceleratedDetained ? "*IAFT-ADA4: Make an application – Accelerated detained appeal (ADA)" : "*IAFT-DE4: Make an application – Detained appeal",
+                personalisationForLink.get("form"));
+        assertEquals(isAcceleratedDetained ? "https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaft-ada4" : "https://www.gov.uk/government/publications/make-an-application-detained-appeal-form-iaft-de4",
+                personalisationForLink.get("formLink"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = MakeAnApplicationTypes.class, names = {
-        "ADJOURN",
-        "EXPEDITE",
-        "JUDGE_REVIEW",
-        "JUDGE_REVIEW_LO",
-        "LINK_OR_UNLINK",
-        "TIME_EXTENSION",
-        "TRANSFER",
-        "WITHDRAW",
-        "UPDATE_HEARING_REQUIREMENTS",
-        "UPDATE_APPEAL_DETAILS",
-        "REINSTATE",
-        "TRANSFER_OUT_OF_ACCELERATED_DETAINED_APPEALS_PROCESS",
-        "OTHER"
-    })
-    void should_return_personalisation_of_all_information_given_as_other_party(MakeAnApplicationTypes makeAnApplicationType) {
-        initializePrefixes(detentionEngagementTeamDecideAnApplicationPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-
-        when(makeAnApplicationService.getMakeAnApplication(asylumCase, true)).thenReturn(Optional.of(makeAnApplication));
+    @ValueSource(booleans = {true, false})
+    void shouldReturnPersonalisationForGranted(boolean isAcceleratedDetained) {
         when(makeAnApplication.getDecision()).thenReturn("Granted");
-        when(makeAnApplication.getType()).thenReturn(makeAnApplicationType.getValue());
-        when(makeAnApplication.getDecisionReason()).thenReturn(decisionReason);
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(ImmutableMap
-            .<String, String>builder()
-            .put("customerServicesTelephone", customerServiceTelephone)
-            .put("customerServicesEmail", customerServiceEmail)
-            .build());
-
-        Map<String, String> personalisation = detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals(customerServiceTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServiceEmail, personalisation.get("customerServicesEmail"));
-        assertEquals("Accelerated detained appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReferenceIfPresent"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("granted", personalisation.get("applicationDecision"));
-        assertEquals(makeAnApplicationType.getValue(), personalisation.get("applicationType"));
-        assertEquals(decisionReason, personalisation.get("applicationDecisionReason"));
-        assertNull(personalisation.get("decisionMaker"));
-        assertNull(personalisation.get("judgesReviewDeadlineDate"));
-        assertNull(personalisation.get("makeAnApplicationLink"));
-
-        switch (makeAnApplicationType) {
-            case TIME_EXTENSION:
-                assertEquals("yes", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case ADJOURN:
-            case EXPEDITE:
-            case TRANSFER:
-                assertEquals("yes", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case JUDGE_REVIEW_LO:
-                assertEquals("yes", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case LINK_OR_UNLINK:
-                assertEquals("yes", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case REINSTATE:
-                assertEquals("yes", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case WITHDRAW:
-                assertEquals("yes", personalisation.get("grantedWithdraw"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                break;
-            case OTHER:
-                assertEquals("yes", personalisation.get("grantedUpdateAppealDetailsOrOther"));
-                assertEquals("no", personalisation.get("grantedAndTimeExtension"));
-                assertEquals("no", personalisation.get("grantedAdjournExpediteTransferOrUpdateHearingReqs"));
-                assertEquals("no", personalisation.get("grantedJudgesReview"));
-                assertEquals("no", personalisation.get("grantedLinkOrUnlik"));
-                assertEquals("no", personalisation.get("grantedReinstate"));
-                assertEquals("no", personalisation.get("grantedWithdraw"));
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Test
-    void should_return_personalisation_with_formatted_tribunal_caseworker_term() {
-        initializePrefixes(detentionEngagementTeamDecideAnApplicationPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
-
-        when(dateProvider.dueDate(judgesReviewDeadlineDateDelay)).thenReturn(calculatedDeadline);
-
-        when(makeAnApplicationService.getMakeAnApplication(asylumCase, true)).thenReturn(Optional.of(makeAnApplication));
-        when(makeAnApplication.getDecision()).thenReturn("Refused");
-        when(makeAnApplication.getType()).thenReturn("Expedite");
-        when(makeAnApplication.getDecisionMaker()).thenReturn("Tribunal Caseworker");
-        when(makeAnApplication.getDecisionReason()).thenReturn(decisionReason);
-        when(makeAnApplication.getApplicantRole()).thenReturn(adminOfficerRole);
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(ImmutableMap
-            .<String, String>builder()
-            .put("customerServicesTelephone", customerServiceTelephone)
-            .put("customerServicesEmail", customerServiceEmail)
-            .build());
-
-        Map<String, String> personalisation = detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals("refuse", personalisation.get("applicationDecision"));
-        assertEquals("Legal Officer", personalisation.get("decisionMaker"));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAcceleratedDetained ? YES : NO));
+        initializePrefixesForInternalAppeal(detentionEngagementTeamDecideAnApplicationPersonalisation);
+        Map<String, Object> personalisationForLink = detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase);
+        //assert the personalisation map values
+        assertEquals(isAcceleratedDetained ? adaPrefix : nonAdaPrefix, personalisationForLink.get("subjectPrefix"));
+        assertEquals(appellantGivenNames, personalisationForLink.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisationForLink.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisationForLink.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReferenceNumber, personalisationForLink.get("homeOfficeReferenceNumber"));
+        assertEquals(jsonObject, personalisationForLink.get("documentLink"));
+        assertEquals("", personalisationForLink.get("form"));
+        assertEquals("", personalisationForLink.get("formLink"));
     }
 }
-
