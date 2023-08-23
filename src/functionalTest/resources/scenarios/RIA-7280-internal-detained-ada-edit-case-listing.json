@@ -1,11 +1,11 @@
 {
-  "description": "RIA-7673 Internal Detained ADA edit case listing notification",
+  "description": "RIA-7280 Internal Detained ADA edit case listing notification",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7673,
+      "id": 7280,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -53,7 +53,7 @@
         "listCaseHearingDate": "2019-05-03T14:25:15.000",
         "notificationsSent": [
           {
-            "id": "7673_INTERNAL_DETAINED_EDIT_CASE_LISTING_DET",
+            "id": "7280_INTERNAL_DETAINED_EDIT_CASE_LISTING_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -61,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "7673_INTERNAL_DETAINED_EDIT_CASE_LISTING_DET",
+        "reference": "7280_INTERNAL_DETAINED_EDIT_CASE_LISTING_DET",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "ADA – SERVE IN PERSON: Hearing details changed",
         "body": [
