@@ -47,6 +47,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 @Slf4j
 @Configuration
 public class NotificationHandlerConfiguration {
+    private static final String ADMIN_OFFICER_ROLE = "caseworker-ia-admofficer";
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
@@ -3030,22 +3031,9 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
-                                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                                && isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                                && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationDetNotificationHandler(
-        @Qualifier("decideAnApplicationDetNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                && isInternalCase(callback.getCaseDetails().getCaseData())
-                && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
-            notificationGenerators
         );
     }
 
@@ -4551,7 +4539,22 @@ public class NotificationHandlerConfiguration {
                             && isAppellantInDetention(asylumCase);
                 }, notificationGenerators
         );
+    }
 
+    private boolean isApplicationCreatedByAdmin(AsylumCase asylumCase) {
+        String id = asylumCase.read(DECIDE_AN_APPLICATION_ID, String.class).orElse("");
+        Optional<List<IdValue<MakeAnApplication>>> mayBeMakeAnApplications = asylumCase.read(MAKE_AN_APPLICATIONS);
+
+        //get application from list of applications where application id matches to id
+        Optional<MakeAnApplication> makeAnApplication = mayBeMakeAnApplications
+                .flatMap(list -> list.stream()
+                        .filter(application -> application.getId().equals(id))
+                        .findFirst()
+                        .map(IdValue::getValue));
+        // check if application is present and applicant type is admin
+        return makeAnApplication
+                .map(application -> application.getApplicantRole().equals(ADMIN_OFFICER_ROLE))
+                .orElse(false);
     }
 
 }
