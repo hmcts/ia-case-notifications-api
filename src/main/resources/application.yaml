@@ -56,6 +56,7 @@ govnotify:
     nonAda: "Immigration and Asylum appeal"
     adaInPerson: "ADA - SERVE IN PERSON"
     nonAdaInPerson: "IAFT - SERVE IN PERSON"
+    adaByPost: "ADA - SERVE BY POST"
     nonAdaByPost: "IAFT - SERVE BY POST"
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
@@ -991,6 +992,8 @@ govnotify:
         email: 671af79b-6c0d-4d49-8b9d-3a29efa0758d
       legalRep:
         email: 427d6a0f-4f67-41b7-8814-1fe44fec4ee0
+      detentionEngagementTeam:
+        email: e60389a1-ed40-4b51-aa77-9a5be16db376
     markAppealAsDetained:
       legalRep:
         email: 1baf79a7-1a7f-4a2c-9a03-eb5ec6ff7a49

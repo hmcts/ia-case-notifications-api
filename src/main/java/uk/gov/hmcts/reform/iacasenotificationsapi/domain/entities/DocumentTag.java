@@ -49,6 +49,7 @@ public enum DocumentTag {
     INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW("internalDetainedRequestHomeOfficeResponseReview"),
     INTERNAL_REQUEST_HEARING_REQUIREMENTS_LETTER("internalRequestHearingRequirementsLetter"),
     INTERNAL_DECIDE_AN_APPLICATION_LETTER("internalDecideAnApplicationLetter"),
+    INTERNAL_DET_MARK_AS_ADA_LETTER("internalDetMarkAsAdaLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

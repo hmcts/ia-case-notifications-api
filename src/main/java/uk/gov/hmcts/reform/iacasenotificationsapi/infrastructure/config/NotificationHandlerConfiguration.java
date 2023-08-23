@@ -4292,7 +4292,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) ->
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.MARK_APPEAL_AS_ADA,
+                                && callback.getEvent() == Event.MARK_APPEAL_AS_ADA
+                                && !isInternalCase(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
     }
@@ -4555,6 +4556,22 @@ public class NotificationHandlerConfiguration {
         return makeAnApplication
                 .map(application -> application.getApplicantRole().equals(ADMIN_OFFICER_ROLE))
                 .orElse(false);
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalMarkAppealAsAdaNotificationHandler(
+            @Qualifier("internalMarkAppealAsAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.MARK_APPEAL_AS_ADA
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+                }, notificationGenerators
+        );
     }
 
 }
