@@ -10,9 +10,27 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
           "ariaListingReference": "PA/12345/2019",
           "listCaseHearingCentre": "taylorHouse",
           "decideAnApplicationId": "1",
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalDecideAnApplicationLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ],
           "makeAnApplications": [
               {
               "id": "1",
@@ -41,28 +59,22 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
         "isAdmin": "Yes",
         "ariaListingReference": "PA/12345/2019",
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
+          {
+            "id":"70333_DECIDE_AN_APPLICATION_DET",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "70333_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "70333_DECIDE_AN_APPLICATION_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: An appellant application has been refused",
-        "body": [
-          "PA/12345/2019",
-          "A1234567",
-          "Talha Awan"
-        ]
-      }
-    ]
+    }
   }
 }

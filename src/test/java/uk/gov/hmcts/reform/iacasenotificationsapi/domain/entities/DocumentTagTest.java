@@ -46,11 +46,12 @@ public class DocumentTagTest {
         assertEquals("internalListCaseLetter", DocumentTag.INTERNAL_LIST_CASE_LETTER.toString());
         assertEquals("internalRequestHearingRequirementsLetter", DocumentTag.INTERNAL_REQUEST_HEARING_REQUIREMENTS_LETTER.toString());
         assertEquals("internalDetainedRequestHomeOfficeResponseReview", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW.toString());
+        assertEquals("internalDecideAnApplicationLetter", DocumentTag.INTERNAL_DECIDE_AN_APPLICATION_LETTER.toString());
         assertEquals("internalDetMarkAsAdaLetter", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(45, DocumentTag.values().length);
+        assertEquals(46, DocumentTag.values().length);
     }
 }

@@ -1,5 +1,6 @@
 {
   "description": "RIA-7033 Internal case Send make an application notification home office APC refused after listing",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

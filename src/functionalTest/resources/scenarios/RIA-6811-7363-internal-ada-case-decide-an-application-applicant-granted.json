@@ -1,20 +1,24 @@
 {
-  "description": "RIA-7033 - Internal case - send decide an (admofficer) application (granted) notification after listing",
+  "description": "RIA-6811, 7363: internal ada case decideAnApplication event (Granted)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "Judge",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 70331,
+      "id": 68111,
       "eventId": "decideAnApplication",
-      "state": "prepareForHearing",
+      "state": "caseBuilding",
       "caseData": {
-        "template": "minimal-internal-appeal-submitted.json",
+        "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ariaListingReference": "PA/12345/2019",
-          "listCaseHearingCentre": "taylorHouse",
-          "decideAnApplicationId": "1",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "appellantGivenNames": "Test",
+          "appellantFamilyName": "User",
+          "appealType": "refusalOfEu",
+          "isAdmin": "Yes",
+          "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "decideAnApplicationId": "1",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -32,20 +36,29 @@
             }
           ],
           "makeAnApplications": [
-              {
+            {
               "id": "1",
               "value": {
                 "type":"Other",
                 "details":"",
-                "evidence":[],
+                "evidence":[
+                  {
+                    "id": "1",
+                    "value": {
+                      "document_url": "http://document-store/AAA",
+                      "document_filename": "Annexure-E.pdf",
+                      "document_binary_url": "http://document-store/AAA/binary"
+                    }
+                  }
+                ],
                 "applicant":"",
-                "date":"{$TODAY}",
+                "date":"",
                 "decision":"Granted",
-                "state":"prepareForHearing",
+                "state":"caseBuilding",
                 "applicantRole":"caseworker-ia-admofficer",
-                "decisionReason":"No Reason given",
+                "decisionReason":"A reason for the decision",
                 "decisionDate":"{$TODAY}",
-                "decisionMaker": "Judge"
+                "decisionMaker": "Tribunal Caseworker"
               }
             }
           ]
@@ -57,13 +70,25 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-internal-appeal-submitted.json",
+      "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "isAdmin": "Yes",
-        "ariaListingReference": "PA/12345/2019",
-        "listCaseHearingCentre": "taylorHouse",
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
+        "appellantGivenNames": "Test",
+        "appellantFamilyName": "User",
+        "appealType": "refusalOfEu",
+        "isAdmin": "Yes",
+        "isAcceleratedDetainedAppeal": "Yes",
+        "decideAnApplicationId": "1",
+        "notificationsSent":[
+          {
+            "id":"68111_DECIDE_AN_APPLICATION_DET",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id":"68111_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }],
         "notificationAttachmentDocuments": [
           {
             "id": "1",
@@ -78,16 +103,6 @@
               "description": "",
               "dateUploaded": "{$TODAY}"
             }
-          }
-        ],
-        "notificationsSent": [
-          {
-            "id":"70331_DECIDE_AN_APPLICATION_DET",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "70331_DECIDE_AN_APPLICATION_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }

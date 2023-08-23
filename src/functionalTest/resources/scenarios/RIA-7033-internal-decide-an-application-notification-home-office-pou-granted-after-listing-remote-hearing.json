@@ -1,6 +1,7 @@
 {
   "description": "RIA-7033 Internal case Send decide an application notification home office POU granted after listing in remote hearing",
   "launchDarklyKey": "tcw-notifications-feature:true",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

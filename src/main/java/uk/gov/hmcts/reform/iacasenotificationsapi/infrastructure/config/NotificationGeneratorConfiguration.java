@@ -2899,12 +2899,20 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("decideAnApplicationInternalNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
+            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
             HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamDecideAnApplicationPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
                 new EmailNotificationGenerator(
                         newArrayList(
                                 homeOfficeDecideAnApplicationPersonalisation
@@ -2912,27 +2920,6 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
-        );
-    }
-
-    @Bean("decideAnApplicationDetNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationDetNotificationGenerator(
-        DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Collections.singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamDecideAnApplicationPersonalisation,
-                    homeOfficeDecideAnApplicationPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
         );
     }
 
