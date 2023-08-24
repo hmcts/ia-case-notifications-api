@@ -1350,6 +1350,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.EDIT_CASE_LISTING
                 && isRepJourney(callback.getCaseDetails().getCaseData())
+                && !isInternalCase(callback.getCaseDetails().getCaseData())
             && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -1363,6 +1364,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_CASE_LISTING
+                    && !isInternalCase(callback.getCaseDetails().getCaseData())
                     && isRepJourney(callback.getCaseDetails().getCaseData())
             && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
@@ -1377,6 +1379,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.EDIT_CASE_LISTING
+                && !isInternalCase(callback.getCaseDetails().getCaseData())
                 && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -4535,6 +4538,23 @@ public class NotificationHandlerConfiguration {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     return callback.getEvent() == Event.END_APPEAL
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedEditCaseListingNotificationHandler(
+            @Qualifier("editCaseListingInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callback.getEvent() == Event.EDIT_CASE_LISTING
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isInternalCase(asylumCase)
                             && isAppellantInDetention(asylumCase);
