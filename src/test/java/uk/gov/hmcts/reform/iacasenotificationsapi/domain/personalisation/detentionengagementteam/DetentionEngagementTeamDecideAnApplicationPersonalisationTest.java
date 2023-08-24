@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -155,5 +156,13 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         assertEquals(jsonObject, personalisationForLink.get("documentLink"));
         assertEquals("", personalisationForLink.get("form"));
         assertEquals("", personalisationForLink.get("formLink"));
+    }
+    
+    @Test
+    void should_throw_exception_when_make_an_application_list_is_empty() {
+        when((makeAnApplicationService.getMakeAnApplication(asylumCase, true))).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("MakeAnApplication is not present");
     }
 }

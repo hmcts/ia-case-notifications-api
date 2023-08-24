@@ -72,7 +72,8 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         Optional<MakeAnApplication> optionalMakeAnApplication = getMakeAnApplication(asylumCase);
-        boolean isRefused = optionalMakeAnApplication.get().getDecision().equals("Refused");
+        MakeAnApplication makeAnApplication = optionalMakeAnApplication.orElseThrow(() -> new IllegalStateException("MakeAnApplication is not present"));
+        boolean isRefused = makeAnApplication.getDecision().equals("Refused");
         ImmutableMap.Builder<String, Object> personalizationBuilder = ImmutableMap
             .<String, Object>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
