@@ -1864,7 +1864,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                    && AsylumCaseUtils.isAppellantInDetention(callback.getCaseDetails().getCaseData())
                     && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
