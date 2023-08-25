@@ -50,10 +50,11 @@ public class DocumentTagTest {
         assertEquals("internalDetMarkAsAdaLetter", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER.toString());
         assertEquals("internalDetainedEditCaseListingLetter", DocumentTag.INTERNAL_DETAINED_EDIT_CASE_LISTING_LETTER.toString());
         assertEquals("internalApplyForFtpaRespondent", DocumentTag.INTERNAL_APPLY_FOR_FTPA_RESPONDENT.toString());
+        assertEquals("internalFtpaSubmittedAppellantLetter", DocumentTag.INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(48, DocumentTag.values().length);
+        assertEquals(49, DocumentTag.values().length);
     }
 }

@@ -1,26 +1,39 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesForInternalAppeal;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -33,39 +46,43 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
+
     private final String templateId = "someTemplateId";
-    private final String adaPrefix = "Accelerated detained appeal";
     private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
+    DocumentWithMetadata internalFtpaSubmittedLetter = TestUtils.getDocumentWithMetadata(
+            "id", "internal_ftpa_submission", "some other desc", DocumentTag.INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER);
+    IdValue<DocumentWithMetadata> document = new IdValue<>("1", internalFtpaSubmittedLetter);
     private DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation;
 
     DetentionEngagementTeamFtpaSubmittedPersonalisationTest() {
     }
 
     @BeforeEach
-    void setup() {
+    void setup() throws NotificationClientException, IOException {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        String listingReference = "listingReference";
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(listingReference));
-
-        String customerServicesTelephone = "555 555 555";
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
-        String customerServicesEmail = "customer.services@example.com";
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonObject);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(document)));
 
         detentionEngagementTeamFtpaSubmittedPersonalisation = new DetentionEngagementTeamFtpaSubmittedPersonalisation(
             templateId,
-            adaPrefix,
             customerServicesProvider,
-            detEmailService
+            detEmailService,
+            documentDownloadClient
         );
     }
 
@@ -107,31 +124,26 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisation((AsylumCase) null))
+            () -> detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisationForLink((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
 
-    @Test
-    public void should_return_personalisation_when_all_information_given_maintain() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
+    public void should_return_personalisation_when_all_information_given_maintain(YesOrNo isAcceleratedDetained) {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAcceleratedDetained));
+        initializePrefixesForInternalAppeal(detentionEngagementTeamFtpaSubmittedPersonalisation);
+        Map<String, Object> actualPersonalisation =
+            detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisationForLink(asylumCase);
 
-        String listingReferenceIfPresent = "Listing reference: listingReference";
-        final Map<String, String> expectedPersonalisation =
-            ImmutableMap
-                .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("subjectPrefix", adaPrefix)
-                .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReferenceIfPresent", listingReferenceIfPresent)
-                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .build();
-
-        Map<String, String> actualPersonalisation =
-            detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        //assert the personalisation map values
+        assertEquals(actualPersonalisation.get("appealReferenceNumber"), appealReferenceNumber);
+        assertEquals(actualPersonalisation.get("homeOfficeReferenceNumber"), homeOfficeReferenceNumber);
+        assertEquals(actualPersonalisation.get("appellantGivenNames"), appellantGivenNames);
+        assertEquals(actualPersonalisation.get("appellantFamilyName"), appellantFamilyName);
+        assertEquals(actualPersonalisation.get("subjectPrefix"), isAcceleratedDetained.equals(YesOrNo.YES) ? adaPrefix : nonAdaPrefix);
+        assertEquals(actualPersonalisation.get("documentLink"), jsonObject);
     }
 }
 

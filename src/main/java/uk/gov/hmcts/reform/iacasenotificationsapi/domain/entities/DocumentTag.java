@@ -52,7 +52,7 @@ public enum DocumentTag {
     INTERNAL_DET_MARK_AS_ADA_LETTER("internalDetMarkAsAdaLetter"),
     INTERNAL_DETAINED_EDIT_CASE_LISTING_LETTER("internalDetainedEditCaseListingLetter"),
     INTERNAL_APPLY_FOR_FTPA_RESPONDENT("internalApplyForFtpaRespondent"),
-
+    INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER("internalFtpaSubmittedAppellantLetter"),
     @JsonEnumDefaultValue
     NONE("");
 
