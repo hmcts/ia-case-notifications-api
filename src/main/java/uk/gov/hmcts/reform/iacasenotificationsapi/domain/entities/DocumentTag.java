@@ -51,6 +51,7 @@ public enum DocumentTag {
     INTERNAL_DECIDE_AN_APPLICATION_LETTER("internalDecideAnApplicationLetter"),
     INTERNAL_DET_MARK_AS_ADA_LETTER("internalDetMarkAsAdaLetter"),
     INTERNAL_DETAINED_EDIT_CASE_LISTING_LETTER("internalDetainedEditCaseListingLetter"),
+    INTERNAL_APPLY_FOR_FTPA_RESPONDENT("internalApplyForFtpaRespondent"),
 
     @JsonEnumDefaultValue
     NONE("");

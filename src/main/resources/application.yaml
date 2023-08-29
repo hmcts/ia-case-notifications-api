@@ -526,8 +526,9 @@ govnotify:
         email: 3219c9a3-afc7-4439-bb2e-90de798f98a8
       otherHomeOffice:
         email: 690d236e-60bf-4dee-b9e5-37b885555278
-      otherDetentionEngagementTeam:
-        email: c314e1a7-e4dc-4e77-93d1-8d70d07bd9e8
+      homeOffice:
+        detentionEngagementTeam:
+          email: 25fcdc45-722c-4d8e-a199-42f1387ee339
     respondentReview:
       legalRep:
         email: ed2d12f7-c5d0-40c1-a603-3a9f3dd1a95b
