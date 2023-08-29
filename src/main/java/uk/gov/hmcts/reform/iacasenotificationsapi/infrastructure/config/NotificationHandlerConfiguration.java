@@ -621,7 +621,8 @@ public class NotificationHandlerConfiguration {
                         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                         return (callback.getEvent() == Event.LIST_CASE
                                 && isRepJourney(callback.getCaseDetails().getCaseData())
-                                && isAcceleratedDetainedAppeal(asylumCase));
+                                && isAcceleratedDetainedAppeal(asylumCase))
+                                && !isInternalCase(asylumCase);
                     } else {
                         return false;
                     }
