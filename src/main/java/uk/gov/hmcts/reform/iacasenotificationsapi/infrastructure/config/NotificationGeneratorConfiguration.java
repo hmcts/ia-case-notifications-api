@@ -1843,17 +1843,21 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ?  newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation, respondentAppellantFtpaSubmittedPersonalisation)
-            : newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation);
-
-
         return Arrays.asList(
-            new EmailNotificationGenerator(
-                personalisations,
-                notificationSender,
-                notificationIdAppender
-            )
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamFtpaSubmittedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentAppellantFtpaSubmittedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 

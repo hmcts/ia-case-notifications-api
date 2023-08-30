@@ -1,37 +1,49 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.service.notify.NotificationClientException;
 
 @Service
-public class DetentionEngagementTeamFtpaSubmittedPersonalisation implements EmailNotificationPersonalisation {
-
+@Slf4j
+public class DetentionEngagementTeamFtpaSubmittedPersonalisation implements EmailWithLinkNotificationPersonalisation {
+    @Value("${govnotify.emailPrefix.adaInPerson}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAdaInPerson}")
+    private String nonAdaPrefix;
     private final String applyForFtpaTemplateId;
-    private final String adaPrefix;
     private final CustomerServicesProvider customerServicesProvider;
     private final DetEmailService detEmailService;
 
+    private final DocumentDownloadClient documentDownloadClient;
+
     public DetentionEngagementTeamFtpaSubmittedPersonalisation(
         @Value("${govnotify.template.applyForFtpa.detentionEngagementTeam.email}") String applyForFtpaTemplateId,
-        @Value("${govnotify.emailPrefix.ada}") String adaPrefix,
         CustomerServicesProvider customerServicesProvider,
-        DetEmailService detEmailService
-    ) {
+        DetEmailService detEmailService,
+        DocumentDownloadClient documentDownloadClient) {
         this.applyForFtpaTemplateId = applyForFtpaTemplateId;
-        this.adaPrefix = adaPrefix;
         this.customerServicesProvider = customerServicesProvider;
         this.detEmailService = detEmailService;
+        this.documentDownloadClient = documentDownloadClient;
     }
 
     @Override
@@ -50,22 +62,27 @@ public class DetentionEngagementTeamFtpaSubmittedPersonalisation implements Emai
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String ariaListingReferenceIfPresent = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-            .map(ariaListingReference -> "Listing reference: " + ariaListingReference)
-            .orElse("");
-
         return ImmutableMap
-            .<String, String>builder()
+            .<String, Object>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-            .put("subjectPrefix", adaPrefix)
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReferenceIfPresent", ariaListingReferenceIfPresent)
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("documentLink", getFtpaSubmittedLetterJsonObject(asylumCase))
             .build();
+    }
+
+    private JSONObject getFtpaSubmittedLetterJsonObject(AsylumCase asylumCase) {
+        try {
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER));
+        } catch (IOException | NotificationClientException e) {
+            log.error("Failed to get Internal Appeal decision Letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal Appeal decision Letter in compatible format");
+        }
     }
 }

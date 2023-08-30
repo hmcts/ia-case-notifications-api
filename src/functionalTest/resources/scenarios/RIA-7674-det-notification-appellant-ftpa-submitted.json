@@ -1,13 +1,13 @@
 {
-  "description": "RIA-6784 Detention engagement team Notification of appellant's ftpa application submitted",
+  "description": "RIA-7674 Detention engagement team Notification of appellant's ftpa application submitted (Detained)",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 6784,
+      "id": 7674,
       "eventId": "applyForFTPAAppellant",
-      "state": "ftpaSubmitted",
+      "state": "decided",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
@@ -16,7 +16,24 @@
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019"
+          "ariaListingReference": "LP/12345/2019",
+          "appellantInDetention": "Yes",
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalFtpaSubmittedAppellantLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
         }
       }
     }
@@ -31,11 +48,11 @@
         "ircName": "Brookhouse",
         "notificationsSent": [
           {
-            "id": "6784_FTPA_SUBMITTED_DETENTION_ENGAGEMENT_TEAM",
+            "id": "7674_FTPA_SUBMITTED_DETENTION_ENGAGEMENT_TEAM",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6784_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "7674_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
