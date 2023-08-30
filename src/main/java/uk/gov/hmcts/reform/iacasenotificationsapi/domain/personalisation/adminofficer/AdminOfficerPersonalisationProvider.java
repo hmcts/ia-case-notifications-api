@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import java.util.List;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
