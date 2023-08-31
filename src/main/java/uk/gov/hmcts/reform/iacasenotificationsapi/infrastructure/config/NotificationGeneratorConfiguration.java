@@ -1923,8 +1923,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("forceAppellantCaseProgressionEmailNotificationGenerator")
-    public List<NotificationGenerator> forceAppellantCaseProgressionEmailNotificationGenerator(
+    @Bean("forceAppellantCaseToCaseUnderReviewEmailNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseToCaseUnderReviewEmailNotificationGenerator(
             AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
             RespondentForceCaseToCaseUnderReviewPersonalisation homeOfficePersonalisation,
             GovNotifyNotificationSender notificationSender,
@@ -1938,8 +1938,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("forceAppellantCaseProgressionSmsNotificationGenerator")
-    public List<NotificationGenerator> forceAppellantCaseProgressionSmsNotificationGenerator(
+    @Bean("forceAppellantCaseToCaseUnderReviewSmsNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseToCaseUnderReviewSmsNotificationGenerator(
             AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {

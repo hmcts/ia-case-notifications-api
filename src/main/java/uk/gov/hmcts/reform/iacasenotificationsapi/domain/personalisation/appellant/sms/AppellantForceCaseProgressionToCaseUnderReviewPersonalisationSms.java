@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -53,6 +54,8 @@ public class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms im
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("link to timeline", iaAipFrontendUrl)
+                .put("mobileNumber", asylumCase.read(MOBILE_NUMBER, String.class)
+                        .orElseThrow(() -> new IllegalStateException("mobileNumber is not present")))
                 .build();
     }
 }
