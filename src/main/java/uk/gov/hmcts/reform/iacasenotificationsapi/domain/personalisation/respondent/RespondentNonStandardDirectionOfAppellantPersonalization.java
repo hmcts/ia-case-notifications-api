@@ -3,10 +3,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -20,8 +20,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @Service
 public class RespondentNonStandardDirectionOfAppellantPersonalization implements EmailNotificationPersonalisation {
 
-    public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
-    public static final String EVENT_NOT_AVAILABLE = "Send direction event not available in current state";
+    private final String currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
+    private final String eventNotAvailable = "Send direction event not available in current state";
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String apcHomeOfficeEmailAddress;
@@ -97,9 +97,9 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
                         return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
                 }
-                throw new IllegalStateException(EVENT_NOT_AVAILABLE);
+                throw new IllegalStateException(eventNotAvailable);
             })
-            .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
+            .orElseThrow(() -> new IllegalStateException(currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent));
     }
 
     @Override

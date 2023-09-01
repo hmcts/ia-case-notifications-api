@@ -5,21 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionOfAppellantPersonalization.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionOfAppellantPersonalization.EVENT_NOT_AVAILABLE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,6 +50,8 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
     private final String homeOfficeEmail = "ho-taylorhouse@example.com";
     private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
+    private final String currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
+    private final String eventNotAvailable = "Send direction event not available in current state";
 
     private String directionDueDate = "2019-08-27";
     private String expectedDirectionDueDate = "27 Aug 2019";
@@ -196,7 +186,7 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
 
         assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
+                .hasMessage(currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent);
     }
 
     @ParameterizedTest
@@ -209,7 +199,7 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
 
         assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage(EVENT_NOT_AVAILABLE);
+                .hasMessage(eventNotAvailable);
     }
 
     @Test
