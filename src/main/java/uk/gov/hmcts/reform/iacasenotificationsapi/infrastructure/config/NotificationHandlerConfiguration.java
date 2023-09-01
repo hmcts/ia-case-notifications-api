@@ -4286,7 +4286,25 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) ->
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.TRANSFER_OUT_OF_ADA,
+                                && callback.getEvent() == Event.TRANSFER_OUT_OF_ADA
+                                && !isInternalCase(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedTransferOutOfAdaNotificationHandler(
+            @Qualifier("internalDetainedTransferOutOfAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.TRANSFER_OUT_OF_ADA
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+                },
                 notificationGenerators
         );
     }

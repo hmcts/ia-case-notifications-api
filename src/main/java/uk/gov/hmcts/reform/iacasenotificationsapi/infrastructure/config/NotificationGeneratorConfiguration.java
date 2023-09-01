@@ -4263,4 +4263,19 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+
+    @Bean("internalDetainedTransferOutOfAdaNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedTransferOutOfAdaNotificationGenerator(
+            DetentionEngagementTeamTransferOutOfAdaPersonalisation detentionEngagementTeamTransferOutOfAdaPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamTransferOutOfAdaPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
