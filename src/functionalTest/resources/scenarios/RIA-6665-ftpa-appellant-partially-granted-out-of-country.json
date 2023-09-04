@@ -13,6 +13,7 @@
         "replacements": {
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaAppellantDecisionOutcomeType": "partiallyGranted",
+          "ftpaAppellantRjDecisionOutcomeType": "partiallyGranted",
           "ftpaApplicantType": "appellant",
           "ariaListingReference": "987654321",
           "appellantInUk": "No"

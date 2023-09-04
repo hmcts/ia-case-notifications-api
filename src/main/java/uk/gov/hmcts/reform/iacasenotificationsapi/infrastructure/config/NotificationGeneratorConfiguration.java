@@ -4278,4 +4278,20 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalAppellantFtpaDecidedByRjNotificationGenerator")
+    public List<NotificationGenerator> internalAppellantFtpaDecidedByRjNotificationGenerator(
+            DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
 }
