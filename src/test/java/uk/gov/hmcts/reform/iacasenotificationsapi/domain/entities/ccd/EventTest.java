@@ -47,6 +47,7 @@ public class EventTest {
         assertEquals("uploadAddendumEvidenceHomeOffice", Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE.toString());
         assertEquals("uploadAddendumEvidenceAdminOfficer", Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER.toString());
         assertEquals("requestResponseReview", Event.REQUEST_RESPONSE_REVIEW.toString());
+        assertEquals("decisionWithoutHearing", Event.DECISION_WITHOUT_HEARING.toString());
         assertEquals("sendDecisionAndReasons", Event.SEND_DECISION_AND_REASONS.toString());
         assertEquals("requestReasonsForAppeal", Event.REQUEST_REASONS_FOR_APPEAL.toString());
         assertEquals("submitReasonsForAppeal", Event.SUBMIT_REASONS_FOR_APPEAL.toString());
@@ -87,11 +88,29 @@ public class EventTest {
         assertEquals("manageFeeUpdate", MANAGE_FEE_UPDATE.toString());
         assertEquals("recordOutOfTimeDecision", RECORD_OUT_OF_TIME_DECISION.toString());
         assertEquals("editPaymentMethod", EDIT_PAYMENT_METHOD.toString());
+        assertEquals("submitApplication", SUBMIT_APPLICATION.toString());
+        assertEquals("uploadBailSummary", UPLOAD_BAIL_SUMMARY.toString());
+        assertEquals("uploadSignedDecisionNotice", UPLOAD_SIGNED_DECISION_NOTICE.toString());
+        assertEquals("endApplication", END_APPLICATION.toString());
+        assertEquals("uploadDocuments", UPLOAD_DOCUMENTS.toString());
+        assertEquals("editBailDocuments", EDIT_BAIL_DOCUMENTS.toString());
+        assertEquals("changeBailDirectionDueDate", CHANGE_BAIL_DIRECTION_DUE_DATE.toString());
+        assertEquals("sendBailDirection", SEND_BAIL_DIRECTION.toString());
+        assertEquals("makeNewApplication", MAKE_NEW_APPLICATION.toString());
+        assertEquals("editBailApplicationAfterSubmit", EDIT_BAIL_APPLICATION_AFTER_SUBMIT.toString());
+        assertEquals("stopLegalRepresenting", STOP_LEGAL_REPRESENTING.toString());
+        assertEquals("nocRequestBail", NOC_REQUEST_BAIL.toString());
+        assertEquals("endAppealAutomatically", END_APPEAL_AUTOMATICALLY.toString());
+        assertEquals("updatePaymentStatus", UPDATE_PAYMENT_STATUS.toString());
+        assertEquals("createCaseLink", Event.CREATE_CASE_LINK.toString());
+        assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
+        assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
+        assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(80, Event.values().length);
+        assertEquals(99, Event.values().length);
     }
 }

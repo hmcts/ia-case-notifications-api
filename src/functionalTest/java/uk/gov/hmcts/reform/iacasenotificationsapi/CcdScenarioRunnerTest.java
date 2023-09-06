@@ -18,8 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.StreamSupport;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +63,7 @@ public class CcdScenarioRunnerTest {
     @Autowired
     private LaunchDarklyFunctionalTestClient launchDarklyFunctionalTestClient;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MapSerializer.setObjectMapper(objectMapper);
         RestAssured.baseURI = targetInstance;
@@ -101,7 +101,6 @@ public class CcdScenarioRunnerTest {
             final Headers authorizationHeaders = getAuthorizationHeaders(scenario);
 
             String description = MapValueExtractor.extract(scenario, "description");
-
             Object scenarioEnabled = MapValueExtractor.extract(scenario, "enabled");
 
             Object scenarioFeature = MapValueExtractor.extract(scenario, "launchDarklyKey");
@@ -379,6 +378,11 @@ public class CcdScenarioRunnerTest {
         if ("Citizen".equalsIgnoreCase(credentials)) {
             return authorizationHeadersProvider
                     .getCitizenAuthorization();
+        }
+
+        if ("SystemUser".equalsIgnoreCase(credentials)) {
+            return authorizationHeadersProvider
+                    .getSystemUserAuthorization();
         }
 
         return new Headers();

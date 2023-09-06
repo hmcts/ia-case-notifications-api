@@ -1,4 +1,5 @@
 govnotify.key: not-used-in-integration
+govnotify.bail.key: not-used-in-integration
 
 respondentEmailAddresses:
   nonStandardDirectionUntilListing: not-used-in-integration
@@ -10,6 +11,7 @@ feesAdminOfficerEmailAddress: not-used-in-integration
 apcHomeOfficeEmailAddress: not-used-in-integration
 lartHomeOfficeEmailAddress: not-used-in-integration
 upperTribunalNoticesEmailAddress: not-used-in-integration
+upperTribunalPermissionApplicationsEmailAddress: not-used-in-integration
 nbcEmailAddress: not-used-in-integration
 ctscEmailAddress: not-used-in-integration
 

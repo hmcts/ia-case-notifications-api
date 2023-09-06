@@ -70,12 +70,13 @@ public class CaseOfficerListCasePersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
-        when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
+        when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
         when(stringProvider.get("hearingCentreAddress", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreAddress));
+        when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(remoteHearingCentreAddress);
 
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
 
@@ -125,7 +126,7 @@ public class CaseOfficerListCasePersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
     }
 
     @Test
@@ -145,7 +146,7 @@ public class CaseOfficerListCasePersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
     }
 
     @Test
@@ -153,7 +154,7 @@ public class CaseOfficerListCasePersonalisationTest {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(remoteHearingCentre));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(remoteHearingCentre));
 
-        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(taylorHouseEmailAddress);
+        when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(taylorHouseEmailAddress);
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase))
             .thenReturn(remoteHearingCentreAddress);
 

@@ -19,7 +19,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -29,19 +28,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.lanwen.wiremock.ext.WiremockResolver;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.StaticPortWiremockFactory;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotificationEmailStub;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -52,12 +49,11 @@ public class SendsDirectionTest extends SpringBootIntegrationTest implements Wit
     private static final String UUID_PATTERN =
         "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
     @MockBean
-    private NotificationSender notificationSender;
+    private GovNotifyNotificationSender notificationSender;
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia", "caseworker-ia-caseofficer"})
-    public void sends_notification(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) {
+    public void sends_notification() {
 
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
@@ -81,7 +77,11 @@ public class SendsDirectionTest extends SpringBootIntegrationTest implements Wit
                             "1980-04-12",
                             "1980-04-12",
                             DirectionTag.NONE,
-                            Collections.emptyList()))))));
+                            Collections.emptyList(),
+                            Collections.emptyList(),
+                            UUID.randomUUID().toString(),
+                            "someDirectionType")
+                        )))));
 
         Optional<List<IdValue<String>>> notificationsSent =
             response

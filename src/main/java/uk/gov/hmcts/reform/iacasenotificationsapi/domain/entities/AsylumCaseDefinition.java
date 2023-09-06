@@ -5,6 +5,7 @@ import java.util.List;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.caselinking.CaseLink;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
 
 public enum AsylumCaseDefinition {
@@ -44,6 +45,9 @@ public enum AsylumCaseDefinition {
 
     APPELLANT_FAMILY_NAME(
             "appellantFamilyName", new TypeReference<String>(){}),
+
+    APPELLANT_ADDRESS(
+        "appellantAddress", new TypeReference<AddressUk>(){}),
 
     LEGAL_REP_REFERENCE_NUMBER(
             "legalRepReferenceNumber", new TypeReference<String>(){}),
@@ -326,6 +330,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_IN_UK(
         "appellantInUk", new TypeReference<YesOrNo>() {}),
 
+    APPEAL_OUT_OF_COUNTRY(
+        "appealOutOfCountry", new TypeReference<YesOrNo>() {}),
+
     APPELLANT_DATE_OF_BIRTH(
         "appellantDateOfBirth", new TypeReference<String>() {}),
 
@@ -349,6 +356,16 @@ public enum AsylumCaseDefinition {
 
     OUT_OF_TIME_DECISION_TYPE(
         "outOfTimeDecisionType", new TypeReference<OutOfTimeDecisionType>(){}),
+
+    HAS_SERVICE_REQUEST_ALREADY(
+        "hasServiceRequestAlready", new TypeReference<YesOrNo>(){}),
+    APPELLANT_PIN_IN_POST(
+        "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
+
+    APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
+
+    CASE_LINKS(
+            "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){})
     ;
 
     private final String value;

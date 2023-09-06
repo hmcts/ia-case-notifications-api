@@ -14,16 +14,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.OUT_OF_TIME_DECISION_TYPE;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,11 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.lanwen.wiremock.ext.WiremockResolver;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
-import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.StaticPortWiremockFactory;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
@@ -43,6 +35,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.CcdEventAuthorizor;
 
 @Slf4j
@@ -53,7 +46,7 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
     @MockBean
     private CcdEventAuthorizor ccdEventAuthorizor;
     @MockBean
-    private NotificationSender notificationSender;
+    private GovNotifyNotificationSender notificationSender;
     private List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
         Lists.newArrayList(
             new HashMap.SimpleImmutableEntry<>(Event.SUBMIT_APPEAL, "_APPEAL_SUBMITTED_CASE_OFFICER"),
@@ -66,8 +59,7 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia", "caseworker-ia-caseofficer"})
-    public void should_send_multiple_notifications_of_same_type_with_unique_reference_numbers(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) {
+    public void should_send_multiple_notifications_of_same_type_with_unique_reference_numbers() {
 
         addServiceAuthStub(server);
 
@@ -141,8 +133,14 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
         List<IdValue<String>> allNotifications =
             maybeNotificationsSent.orElseThrow(IllegalStateException::new);
 
-        assertThat(allNotifications.size()).isGreaterThan(1);
-        assertThat(allNotifications.get(0).getId()).isNotEqualTo(allNotifications.get(1).getId());
+        if (eventWithSuffixPair.getKey() == Event.SUBMIT_APPEAL) {
+            assertThat(allNotifications.size()).isEqualTo(1);
+        } else {
+            assertThat(allNotifications.size()).isGreaterThan(1);
+            assertThat(allNotifications.get(0).getId()).isNotEqualTo(allNotifications.get(1).getId());
+        }
+
+
 
     }
 
@@ -203,7 +201,11 @@ public class MultipleNotificationsTest extends SpringBootIntegrationTest impleme
             LocalDate.now().plusDays(7L).format(DateTimeFormatter.ofPattern(dateFormat)),
             LocalDate.now().format(DateTimeFormatter.ofPattern(dateFormat)),
             directionTag,
-            Collections.emptyList());
+            Collections.emptyList(),
+            Collections.emptyList(),
+            UUID.randomUUID().toString(),
+            "someDirectionType"
+        );
     }
 
 }

@@ -7,7 +7,10 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackResponse;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
@@ -17,7 +20,7 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
     private final BiPredicate<PostSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction;
     private final List<? extends NotificationGenerator> notificationGenerators;
-    private final Optional<ErrorHandler> errorHandling;
+    private final Optional<ErrorHandler<AsylumCase>> errorHandling;
 
     public PostSubmitNotificationHandler(BiPredicate<PostSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction,
                                          List<? extends NotificationGenerator> notificationGenerator
@@ -29,7 +32,7 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
     public PostSubmitNotificationHandler(BiPredicate<PostSubmitCallbackStage, Callback<AsylumCase>> canHandleFunction,
                                          List<? extends NotificationGenerator> notificationGenerator,
-                                         ErrorHandler errorHandling
+                                         ErrorHandler<AsylumCase> errorHandling
     ) {
         this.canHandleFunction = canHandleFunction;
         this.notificationGenerators = notificationGenerator;
@@ -40,8 +43,17 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
     public boolean canHandle(PostSubmitCallbackStage callbackStage, Callback<AsylumCase> callback) {
         requireNonNull(callbackStage, "callbackStage must not be null");
         requireNonNull(callback, "callback must not be null");
-
+        if (getEventsToSkip().contains(callback.getEvent())) {
+            return false;
+        }
         return canHandleFunction.test(callbackStage, callback);
+    }
+
+    private List<Event> getEventsToSkip() {
+        return List.of(
+                Event.STOP_LEGAL_REPRESENTING,
+                Event.NOC_REQUEST_BAIL
+        );
     }
 
     @Override
@@ -54,7 +66,6 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
 
         try {
             notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
-
             if (!notificationGenerators.isEmpty()) {
 
                 int lastNotificationGeneratorIndex = notificationGenerators.size() - 1;
@@ -82,4 +93,5 @@ public class PostSubmitNotificationHandler implements PostSubmitCallbackHandler<
         }
         return postSubmitCallbackResponse;
     }
+
 }
