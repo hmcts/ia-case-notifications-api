@@ -3,10 +3,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -20,8 +20,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @Service
 public class RespondentNonStandardDirectionOfAppellantPersonalization implements EmailNotificationPersonalisation {
 
-    private final String currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
-    private final String eventNotAvailable = "Send direction event not available in current state";
+    public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
+    public static final String EVENT_NOT_AVAILABLE = "Send direction event not available in current state";
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String apcHomeOfficeEmailAddress;
@@ -62,34 +62,34 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
         return asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
             .map(currentState -> {
                 if (Arrays.asList(
-                        State.APPEAL_SUBMITTED,
-                        State.PENDING_PAYMENT,
-                        State.AWAITING_RESPONDENT_EVIDENCE,
-                        State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
-                        State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED
+                    State.APPEAL_SUBMITTED,
+                    State.PENDING_PAYMENT,
+                    State.AWAITING_RESPONDENT_EVIDENCE,
+                    State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
+                    State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED
                 ).contains(currentState)) {
                     return Collections.singleton(apcHomeOfficeEmailAddress);
                 } else if (Arrays.asList(
-                        State.CASE_UNDER_REVIEW,
-                        State.RESPONDENT_REVIEW,
-                        State.AWAITING_REASONS_FOR_APPEAL,
-                        State.REASONS_FOR_APPEAL_SUBMITTED
+                    State.CASE_UNDER_REVIEW,
+                    State.RESPONDENT_REVIEW,
+                    State.AWAITING_REASONS_FOR_APPEAL,
+                    State.REASONS_FOR_APPEAL_SUBMITTED
                 ).contains(currentState)) {
                     return Collections.singleton(lartHomeOfficeEmailAddress);
                 } else if (Arrays.asList(
-                        State.LISTING,
-                        State.SUBMIT_HEARING_REQUIREMENTS).contains(currentState)
-                        && !appealService.isAppealListed(asylumCase)) {
+                    State.LISTING,
+                    State.SUBMIT_HEARING_REQUIREMENTS).contains(currentState)
+                           && !appealService.isAppealListed(asylumCase)) {
                     return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                 } else if (Arrays.asList(
-                        State.PREPARE_FOR_HEARING,
-                        State.FINAL_BUNDLING,
-                        State.PRE_HEARING,
-                        State.DECISION,
-                        State.ADJOURNED
+                    State.PREPARE_FOR_HEARING,
+                    State.FINAL_BUNDLING,
+                    State.PRE_HEARING,
+                    State.DECISION,
+                    State.ADJOURNED
                 ).contains(currentState) && appealService.isAppealListed(asylumCase)) {
                     final Optional<HearingCentre> maybeCaseIsListed = asylumCase
-                            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+                        .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
                     if (maybeCaseIsListed.isPresent()) {
                         return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
@@ -97,9 +97,9 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
                         return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
                 }
-                throw new IllegalStateException(eventNotAvailable);
+                throw new IllegalStateException(EVENT_NOT_AVAILABLE);
             })
-            .orElseThrow(() -> new IllegalStateException(currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent));
+            .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
     }
 
     @Override
@@ -112,30 +112,30 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         String listingReferenceLine = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-                .map(ref -> "\nListing reference: " + ref)
-                .orElse("");
+            .map(ref -> "\nListing reference: " + ref)
+            .orElse("");
 
         final Direction direction =
-                directionFinder
-                        .findFirst(asylumCase, DirectionTag.NONE)
-                        .orElseThrow(() -> new IllegalStateException("non-standard direction is not present"));
+            directionFinder
+                .findFirst(asylumCase, DirectionTag.NONE)
+                .orElseThrow(() -> new IllegalStateException("non-standard direction is not present"));
 
         final String directionDueDate =
-                LocalDate
-                        .parse(direction.getDateDue())
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            LocalDate
+                .parse(direction.getDateDue())
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return ImmutableMap
-                .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("listingReferenceLine", listingReferenceLine)
-                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("linkToOnlineService", iaExUiFrontendUrl)
-                .put("explanation", direction.getExplanation())
-                .put("dueDate", directionDueDate)
-                .build();
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("listingReferenceLine", listingReferenceLine)
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("explanation", direction.getExplanation())
+            .put("dueDate", directionDueDate)
+            .build();
     }
 }

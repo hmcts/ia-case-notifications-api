@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @Service
 public class RespondentChangeDirectionDueDatePersonalisation implements EmailNotificationPersonalisation {
 
-    private final String currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
+    public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
     private final String respondentChangeDirectionDueDateBeforeListingTemplateId;
     private final String respondentChangeDirectionDueDateAfterListingTemplateId;
     private final String respondentChangeAppellantDirectionDueDateTemplateId;
@@ -129,9 +129,9 @@ public class RespondentChangeDirectionDueDatePersonalisation implements EmailNot
                         return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
                 }
-                throw new IllegalStateException(currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent);
+                throw new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
             })
-        .orElseThrow(() -> new IllegalStateException(currentCaseStateVisibleToHomeOfficeAllFlagIsNotPresent));
+            .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
     }
 
     @Override
