@@ -17,6 +17,7 @@
           "ariaListingReference": "LR/1234/2345",
           "appealType": "refusalOfEu",
           "isAdmin": "Yes",
+          "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "ftpaRespondentRjDecisionOutcomeType": "partiallyGranted",
           "ftpaApplicantType": "respondent",
@@ -43,6 +44,22 @@
                   "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
                 },
                 "description": "description"
+              }
+            }
+          ],
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalHoFtpaDecidedLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
               }
             }
           ]
@@ -72,7 +89,7 @@
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "68032_RESPONDENT_FTPA_APPLICATION_DECISION_DETENTION_ENGAGEMENT_TEAM",
+            "id": "68032_INTERNAL_DET_HO_FTPA_DECIDED_EMAIL",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
