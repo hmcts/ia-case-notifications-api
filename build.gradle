@@ -205,6 +205,7 @@ jacocoTestReport {
 }
 
 pitest {
+    print('./gradlew --version'.execute().text.trim())
     //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
     junit5PluginVersion = '0.15'
     targetClasses = ['uk.gov.hmcts.reform.iacasenotificationsapi.*']
