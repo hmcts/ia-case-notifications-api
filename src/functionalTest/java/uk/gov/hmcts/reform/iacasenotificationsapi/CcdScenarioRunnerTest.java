@@ -72,10 +72,6 @@ public class CcdScenarioRunnerTest {
 
     @Test
     public void scenarios_should_behave_as_specified() throws IOException {
-        System.out.println("TEST LOG 1");
-        System.err.println("TEST LOG 2");
-        System.out.print("TEST LOG 3");
-        System.err.print("TEST LOG 4");
         boolean launchDarklyFeature = false;
         loadPropertiesIntoMapValueExpander();
 
