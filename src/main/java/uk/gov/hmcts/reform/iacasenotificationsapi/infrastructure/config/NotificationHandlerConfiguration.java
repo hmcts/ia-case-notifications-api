@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.APPELLANT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.RESPONDENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
@@ -11,6 +12,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.BUILD_CASE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESIDENT_JUDGE_FTPA_DECISION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
@@ -4611,6 +4614,46 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.MARK_APPEAL_AS_ADA
                             && isInternalCase(asylumCase)
                             && isAppellantInDetention(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAppellantFtpaDecidedByRjNotificationHandler(
+            @Qualifier("internalAppellantFtpaDecidedByRjNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    if (!callback.getEvent().equals(RESIDENT_JUDGE_FTPA_DECISION)) {
+                        return false;
+                    }
+
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isAppellantFtpaApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
+                            .map(applicantType -> APPELLANT == applicantType).orElse(false);
+
+                    if (!isAppellantFtpaApplication) {
+                        return false;
+                    }
+
+                    Optional<FtpaDecisionOutcomeType> ftpaAppellantDecisionOutcomeType = asylumCase
+                            .read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+
+                    if (ftpaAppellantDecisionOutcomeType.isEmpty()) {
+                        throw new RequiredFieldMissingException("FTPA decision not found");
+                    }
+
+                    if (List.of(FTPA_GRANTED, FTPA_PARTIALLY_GRANTED, FTPA_REFUSED).contains(ftpaAppellantDecisionOutcomeType.get())) {
+
+                        return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                                && isAppellantFtpaApplication
+                                && isInternalCase(asylumCase)
+                                && isAppellantInDetention(asylumCase);
+                    } else {
+                        return false;
+                    }
                 }, notificationGenerators
         );
     }

@@ -529,6 +529,9 @@ govnotify:
       homeOffice:
         detentionEngagementTeam:
           email: 25fcdc45-722c-4d8e-a199-42f1387ee339
+    ftpaDecidedByResidentJudge:
+      detentionEngagementTeam:
+        email: e1bf96d6-505f-4fcc-bc90-12ad29065bb9
     respondentReview:
       legalRep:
         email: ed2d12f7-c5d0-40c1-a603-3a9f3dd1a95b
@@ -1731,3 +1734,6 @@ ia:
   config:
     validator:
       secret: ${IA_CONFIG_VALIDATOR_SECRET:}
+
+linksToForms:
+  iaut1: ${IAUT1_FORM_URL:https://www.gov.uk/government/publications/form-iaut1-application-for-permission-to-appeal-from-first-tier-tribunal}
