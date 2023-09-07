@@ -33,6 +33,8 @@ The following environment variables are required when running the api without it
 | IA_ADMIN_GLASGOW_EMAIL | some-email |
 | IA_ADMIN_BRADFORD_EMAIL | some-email |
 | IA_ADMIN_BIRMINGHAM_EMAIL | some-email |
+| IA_ADMIN_HARMONDSWORTH_EMAIL | some-email |
+| IA_ADMIN_YARLSWOOD_EMAIL | some-email |
 | IA_HEARING_CENTRE_BRADFORD_EMAIL |  some-email |
 | IA_HEARING_CENTRE_MANCHESTER_EMAIL |  some-email |
 | IA_HEARING_CENTRE_NEWPORT_EMAIL |  some-email |

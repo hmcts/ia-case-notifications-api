@@ -36,6 +36,10 @@ java:
           alias: IA_ADMIN_BRADFORD_EMAIL
         - name: admin-office-birmingham-email
           alias: IA_ADMIN_BIRMINGHAM_EMAIL
+        - name: admin-office-harmondsworth-email
+          alias: IA_ADMIN_HARMONDSWORTH_EMAIL
+        - name: admin-office-yarlswood-email
+          alias: IA_ADMIN_YARLSWOOD_EMAIL
         - name: hearing-centre-bradford-email
           alias: IA_HEARING_CENTRE_BRADFORD_EMAIL
         - name: hearing-centre-manchester-email

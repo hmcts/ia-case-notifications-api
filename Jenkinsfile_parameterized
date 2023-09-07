@@ -92,6 +92,8 @@ def secrets = [
     secret('admin-office-glasgow-email', 'IA_ADMIN_GLASGOW_EMAIL'),
     secret('admin-office-bradford-email', 'IA_ADMIN_BRADFORD_EMAIL'),
     secret('admin-office-birmingham-email', 'IA_ADMIN_BIRMINGHAM_EMAIL'),
+    secret('admin-office-harmondsworth-email', 'IA_ADMIN_HARMONDSWORTH_EMAIL'),
+    secret('admin-office-yarlswood-email', 'IA_ADMIN_YARLSWOOD_EMAIL'),
 
     secret('case-officer-list-case-email', 'IA_CASE_OFFICER_LIST_CASE_EMAIL'),
 
