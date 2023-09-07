@@ -2503,8 +2503,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalAdaRespondentFtpaApplicationNotificationHandler(
-        @Qualifier("internalAdaRespondentFtpaApplicationNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalRespondentFtpaApplicationNotificationHandler(
+        @Qualifier("internalRespondentFtpaApplicationNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -2527,7 +2527,7 @@ public class NotificationHandlerConfiguration {
                     || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
                     && isRespondentApplication
                     && validDecisionOutcomeTypes.contains(decisionOutcomeType)
-                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
+                    && AsylumCaseUtils.isAppellantInDetention(asylumCase)
                     && AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators

@@ -1074,6 +1074,12 @@ govnotify:
     editCaseListing:
       detentionEngagementTeam:
         email: 698cccf8-99b5-4360-b2b5-8aedb9667e21
+    hoFtpaDecided:
+      detentionEngagementTeam:
+        granted:
+          email: 6c30a67d-e848-44c7-b861-1c474fd11871
+        refused:
+          email: 80d16b48-5a0c-4a09-93e8-a24f98939c57
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

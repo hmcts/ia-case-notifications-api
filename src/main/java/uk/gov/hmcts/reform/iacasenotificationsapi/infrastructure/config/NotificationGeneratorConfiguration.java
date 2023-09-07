@@ -2487,8 +2487,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdaRespondentFtpaApplicationNotificationGenerator")
-    public List<NotificationGenerator> internalAdaRespondentFtpaApplicationNotificationGenerator(
+    @Bean("internalRespondentFtpaApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalRespondentFtpaApplicationNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
         DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation,
         GovNotifyNotificationSender notificationSender,
