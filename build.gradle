@@ -172,7 +172,6 @@ task integration(type: Test, description: 'Runs the integration tests.', group: 
 }
 
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
-    'export LAUNCH_DARKLY_SDK_KEY=sdk-adb35234-dc38-4f53-9473-thisnotright'.execute()
     systemProperty "scenario", System.getProperty('scenario')
 
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
