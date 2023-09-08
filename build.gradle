@@ -221,8 +221,9 @@ pitest {
     ]
     threads = 10
     outputFormats = ['XML', 'HTML']
-    timestampedReports = false
+    timestampedReports = true
     failWhenNoMutations = false
+    verbose = true
     mutationThreshold = 90
 }
 
