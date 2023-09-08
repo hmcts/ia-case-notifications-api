@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.RetryableException;
 import io.restassured.RestAssured;
 import io.restassured.http.Headers;
 import java.io.IOException;
@@ -196,8 +197,8 @@ public class CcdScenarioRunnerTest {
                             )
                     );
                     break;
-                } catch(Error e) {
-                    System.out.println("Scenario failed with error" + e.getMessage());
+                } catch(Error | RetryableException e) {
+                    System.out.println("Scenario failed with error " + e.getMessage());
                 }
             }
         }
