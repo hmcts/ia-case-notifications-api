@@ -4,7 +4,8 @@ buildscript {
     }
     dependencies {
 
-        classpath("net.serenity-bdd:serenity-gradle-plugin:3.2.3")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:3.6.22")
+        classpath("au.com.dius.pact:au.com.dius.pact.gradle.plugin:4.4.0-beta.1")
     }
 }
 
@@ -27,7 +28,7 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
 apply plugin: 'project-report'
 apply plugin: 'idea'
 
@@ -39,8 +40,8 @@ def versions = [
         pitest             : '1.9.0',
         reformLogging      : '5.1.7',
         reformHealthStarter: '0.0.5',
-        restAssured        : '4.3.1',
-        serenity           : '3.2.3',
+        restAssured        : '5.3.1',
+        serenity           : '3.6.22',
         sonarPitest        : '0.5',
         springHystrix      : '2.2.10.RELEASE',
         springDoc          : '1.6.8',
@@ -182,11 +183,6 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
         outputs.upToDateWhen {false}
         showStandardStreams = true
     }
-//    retry {
-//        failOnPassedAfterRetry = true
-//        maxFailures = 42
-//        maxRetries = 3
-//    }
 }
 
 task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
@@ -333,6 +329,14 @@ dependencyManagement {
 }
 
 dependencies {
+    modules {
+        module("org.codehaus.groovy:groovy") {
+            replacedBy("org.apache.groovy:groovy", "conflicts in current rest-assured version")
+        }
+        module("org.codehaus.groovy:groovy-xml") {
+            replacedBy("org.apache.groovy:groovy-xml", "conflicts in current rest-assured version")
+        }
+    }
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
@@ -399,8 +403,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 
-    testImplementation group: 'io.rest-assured', name: 'rest-assured-all', version: versions.restAssured
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
+    testImplementation(group: 'io.rest-assured', name: 'rest-assured-all', version: versions.restAssured)
 
     testImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
