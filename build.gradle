@@ -337,6 +337,9 @@ dependencies {
         module("org.codehaus.groovy:groovy-xml") {
             replacedBy("org.apache.groovy:groovy-xml", "conflicts in current rest-assured version")
         }
+        module("org.codehaus.groovy:groovy-json") {
+            replacedBy("org.apache.groovy:groovy-json", "conflicts in current rest-assured version")
+        }
     }
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
@@ -405,6 +408,7 @@ dependencies {
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 
     testImplementation(group: 'io.rest-assured', name: 'rest-assured-all', version: versions.restAssured)
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
 
     testImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
