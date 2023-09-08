@@ -196,7 +196,7 @@ public class CcdScenarioRunnerTest {
                             )
                     );
                     break;
-                } catch(Exception e) {
+                } catch(Error e) {
                     System.out.println("Scenario failed with error" + e.getMessage());
                 }
             }
