@@ -2487,10 +2487,9 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalRespondentFtpaApplicationNotificationGenerator")
-    public List<NotificationGenerator> internalRespondentFtpaApplicationNotificationGenerator(
+    @Bean("internalRespondentFtpaApplicationHoNotificationGenerator")
+    public List<NotificationGenerator> internalRespondentFtpaApplicationHoNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
-        DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
@@ -2499,7 +2498,17 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation),
                 notificationSender,
                 notificationIdAppender
-            ),
+            )
+        );
+    }
+
+    @Bean("internalRespondentFtpaApplicationDetNotificationGenerator")
+    public List<NotificationGenerator> internalRespondentFtpaApplicationDetNotificationGenerator(
+        DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation),
                 notificationSender,
