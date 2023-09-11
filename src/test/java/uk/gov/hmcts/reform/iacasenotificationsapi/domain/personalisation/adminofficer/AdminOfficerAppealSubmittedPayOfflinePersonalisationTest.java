@@ -100,6 +100,7 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
 
     }
@@ -110,6 +111,7 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 }
