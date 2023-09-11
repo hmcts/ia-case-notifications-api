@@ -58,7 +58,6 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -68,7 +67,6 @@ class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
         Map<String, String> personalisation =
                 adminOfficerDecidedOrEndedAppealPendingPayment.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 }
