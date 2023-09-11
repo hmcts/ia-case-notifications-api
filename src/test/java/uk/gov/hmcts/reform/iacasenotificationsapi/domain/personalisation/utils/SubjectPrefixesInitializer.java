@@ -17,4 +17,9 @@ public class SubjectPrefixesInitializer {
         ReflectionTestUtils.setField(testClass, "adaPrefix", "ADA - SERVE IN PERSON");
         ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "IAFT - SERVE IN PERSON");
     }
+
+    public static void initializePrefixesForInternalAppealByPost(Object testClass) {
+        ReflectionTestUtils.setField(testClass, "adaPrefix", "ADA - SERVE BY POST");
+        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "IAFT - SERVE BY POST");
+    }
 }

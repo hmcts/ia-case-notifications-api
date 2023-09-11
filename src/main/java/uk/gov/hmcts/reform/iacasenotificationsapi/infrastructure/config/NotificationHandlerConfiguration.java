@@ -1309,12 +1309,63 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.SEND_DIRECTION
                         && !isAipJourney(asylumCase)
+                        && !isInternalCase(asylumCase)
                         && directionFinder
                            .findFirst(asylumCase, DirectionTag.NONE)
                            .map(direction -> direction.getParties().equals(Parties.BOTH))
                            .orElse(false);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantRespondentInternalNonStandardDirectionHandler(
+            @Qualifier("appellantRespondentInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SEND_DIRECTION
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && directionFinder
+                            .findFirst(asylumCase, DirectionTag.NONE)
+                            .map(direction -> direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT))
+                            .orElse(false);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantInternalNonStandardDirectionHandler(
+            @Qualifier("appellantInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SEND_DIRECTION
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && directionFinder
+                            .findFirst(asylumCase, DirectionTag.NONE)
+                            .map(direction -> direction.getParties().equals(Parties.APPELLANT))
+                            .orElse(false);
+                },
+                notificationGenerators
         );
     }
 

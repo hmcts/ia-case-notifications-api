@@ -257,6 +257,11 @@ govnotify:
         sms: cc5b1c52-e1e5-43a8-a077-15b63d501228
       respondent:
         email: 51dc22ca-9a55-4cd3-98e9-ca9ea167ee74
+    nonStandardDirectionInternal:
+      detentionEngagementTeam:
+        email: f1d0d726-138c-4e73-ac56-aeefbe6c9611
+      respondent:
+        email: 03f9eaad-7d71-4563-a23a-821847303aae
     hearingRequirementsDirection:
       legalRep:
         email: db70b725-e0d9-4af5-aa3a-00007766bc3b

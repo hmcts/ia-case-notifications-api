@@ -57,6 +57,9 @@ public enum DocumentTag {
     INTERNAL_HO_FTPA_DECIDED_LETTER("internalHoFtpaDecidedLetter"),
 
     INTERNAL_APPELLANT_FTPA_DECIDED_LETTER("internalAppellantFtpaDecidedLetter"),
+
+    INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER("internalNonStandardDirectionAppellantLetter"),
+    INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER("internalNonStandardDirectionRespondentLetter"),
     @JsonEnumDefaultValue
     NONE("");
 

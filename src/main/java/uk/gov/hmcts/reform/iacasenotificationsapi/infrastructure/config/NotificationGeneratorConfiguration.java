@@ -2237,6 +2237,39 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appellantRespondentInternalNonStandardDirectionGenerator")
+    public List<NotificationGenerator> appellantRespondentInternalNonStandardDirectionGenerator(
+        DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
+        RespondentInternalNonStandardDirectionPersonalisation respondentInternalNonStandardDirectionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation, respondentInternalNonStandardDirectionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("appellantInternalNonStandardDirectionGenerator")
+    public List<NotificationGenerator> appellantInternalNonStandardDirectionGenerator(
+            DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+
     @Bean("requestResponseAmendDirectionGenerator")
     public List<NotificationGenerator> requestResponseAmendDirectionGenerator(
             RespondentRequestResponseAmendPersonalisation respondentRequestResponseAmendPersonalisation,
