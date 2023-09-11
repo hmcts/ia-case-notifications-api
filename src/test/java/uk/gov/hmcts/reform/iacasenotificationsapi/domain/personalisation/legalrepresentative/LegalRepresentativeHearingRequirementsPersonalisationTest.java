@@ -121,7 +121,9 @@ public class LegalRepresentativeHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(personalisation).isNotEmpty();
+        Assertions.assertThat(personalisation).isNotEmpty();
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
     @Test
@@ -135,7 +137,9 @@ public class LegalRepresentativeHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        Assertions.assertThat(personalisation).isNotEmpty();
+        Assertions.assertThat(personalisation).isNotEmpty();
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
