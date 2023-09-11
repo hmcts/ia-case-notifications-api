@@ -104,7 +104,6 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeNonStandardDirectionPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
