@@ -2503,8 +2503,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalRespondentFtpaApplicationNotificationHandler(
-        @Qualifier("internalRespondentFtpaApplicationNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalRespondentFtpaApplicationHoNotificationHandler(
+        @Qualifier("internalRespondentFtpaApplicationHoNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -2529,6 +2529,36 @@ public class NotificationHandlerConfiguration {
                     && validDecisionOutcomeTypes.contains(decisionOutcomeType)
                     && AsylumCaseUtils.isAppellantInDetention(asylumCase)
                     && AsylumCaseUtils.isInternalCase(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalRespondentFtpaApplicationDetNotificationHandler(
+        @Qualifier("internalRespondentFtpaApplicationDetNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isRespondentApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
+                    .map(applicantType -> RESPONDENT == applicantType).orElse(false);
+                FtpaDecisionOutcomeType decisionOutcomeType = AsylumCaseUtils.getFtpaDecisionOutcomeType(asylumCase)
+                    .orElse(null);
+                Set<FtpaDecisionOutcomeType> validDecisionOutcomeTypes = Set.of(
+                    FTPA_REFUSED,
+                    FTPA_GRANTED,
+                    FTPA_PARTIALLY_GRANTED
+                );
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                       && isRespondentApplication
+                       && validDecisionOutcomeTypes.contains(decisionOutcomeType)
+                       && AsylumCaseUtils.isAppellantInDetention(asylumCase)
+                       && AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators
         );
