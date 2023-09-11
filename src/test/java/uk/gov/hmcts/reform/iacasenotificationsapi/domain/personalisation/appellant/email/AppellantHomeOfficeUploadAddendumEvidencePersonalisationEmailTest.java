@@ -143,6 +143,7 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
+        Assertions.assertThat(personalisation).isNotEmpty();
         Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
