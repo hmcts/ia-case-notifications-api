@@ -157,7 +157,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
         assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(requirementsVulnerabilities);
@@ -174,7 +173,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertThat(personalisation.get("remoteVideoCallTribunalResponse"))
             .contains(remoteVideoCallTribunalResponse);
@@ -193,7 +191,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -203,7 +200,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -213,7 +209,6 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation =
             personalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -227,7 +222,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 

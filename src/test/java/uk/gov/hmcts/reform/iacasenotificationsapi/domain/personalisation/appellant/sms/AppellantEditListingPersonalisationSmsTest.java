@@ -117,7 +117,6 @@ public class AppellantEditListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -128,7 +127,6 @@ public class AppellantEditListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 

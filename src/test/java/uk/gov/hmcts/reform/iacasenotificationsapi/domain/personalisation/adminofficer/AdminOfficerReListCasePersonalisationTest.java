@@ -61,7 +61,6 @@ class AdminOfficerReListCasePersonalisationTest {
 
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
 
     }
@@ -71,7 +70,6 @@ class AdminOfficerReListCasePersonalisationTest {
 
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 }

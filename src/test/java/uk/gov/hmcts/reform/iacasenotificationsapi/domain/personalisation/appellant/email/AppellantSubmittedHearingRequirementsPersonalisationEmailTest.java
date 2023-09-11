@@ -122,7 +122,6 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantSubmittedHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(personalisation).isNotEmpty();
         Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

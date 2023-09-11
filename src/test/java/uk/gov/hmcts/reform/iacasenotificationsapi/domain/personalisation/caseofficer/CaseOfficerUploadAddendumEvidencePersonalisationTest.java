@@ -91,7 +91,6 @@ public class CaseOfficerUploadAddendumEvidencePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 

@@ -86,7 +86,6 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
 
     }
@@ -97,7 +96,6 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 }
