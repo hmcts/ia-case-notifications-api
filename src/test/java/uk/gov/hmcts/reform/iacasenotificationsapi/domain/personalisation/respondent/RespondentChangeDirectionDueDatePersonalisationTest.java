@@ -274,6 +274,16 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
                 .hasMessage("callback must not be null");
     }
 
+    @Test
+    void should_throw_exception_on_personalisation_when_information_empty() {
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(ImmutableMap.<String, String>builder().build());
+
+        Map<String, String> personalisation =
+                respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
+
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+    }
+
     private Map<String, String> getPersonalisation() {
         return ImmutableMap
                 .<String, String>builder()
