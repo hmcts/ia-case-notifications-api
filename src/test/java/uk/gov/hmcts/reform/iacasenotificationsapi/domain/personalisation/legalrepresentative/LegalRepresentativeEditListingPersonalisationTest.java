@@ -127,6 +127,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation).isNotEmpty();
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -137,6 +138,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }

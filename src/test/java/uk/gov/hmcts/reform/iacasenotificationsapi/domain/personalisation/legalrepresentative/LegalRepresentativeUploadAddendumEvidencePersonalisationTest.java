@@ -79,6 +79,7 @@ public class LegalRepresentativeUploadAddendumEvidencePersonalisationTest {
             legalRepresentativeUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation).isNotEmpty();
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
