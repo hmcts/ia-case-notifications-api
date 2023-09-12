@@ -108,6 +108,7 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation).isNotEmpty();
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
