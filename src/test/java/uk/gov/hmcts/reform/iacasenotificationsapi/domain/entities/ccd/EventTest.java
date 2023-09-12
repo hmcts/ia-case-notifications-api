@@ -111,11 +111,12 @@ public class EventTest {
         assertEquals("markAppealAsAda", MARK_APPEAL_AS_ADA.toString());
         assertEquals("markAsReadyForUtTransfer", MARK_AS_READY_FOR_UT_TRANSFER.toString());
         assertEquals("updateDetentionLocation", UPDATE_DETENTION_LOCATION.toString());
+        assertEquals("updateHearingRequirements", UPDATE_HEARING_REQUIREMENTS.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(106, Event.values().length);
+        assertEquals(107, Event.values().length);
     }
 }
