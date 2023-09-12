@@ -29,12 +29,11 @@ import uk.gov.service.notify.NotificationClientException;
 @Service
 public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation implements EmailWithLinkNotificationPersonalisation {
     @Value("${linksToForms.iaut1}")
-    private static String iaut1FormUrl;
+    private String iaut1FormUrl;
     private final String internalAppellantFtpaDecidedByResidentJudgeLetterTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private final DetEmailService detEmailService;
     private final PersonalisationProvider personalisationProvider;
-    private String formLinkForTemplateIfRequired = "*[IAUT1: Application for permission to appeal from First-tier Tribunal](" + iaut1FormUrl + ")";
     private String adaPrefix;
     private String nonAdaPrefix;
 
@@ -85,8 +84,10 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
             throw new RequiredFieldMissingException("FTPA decision not found");
         }
 
-        if (ftpaAppellantDecisionOutcomeType.get().equals(FTPA_GRANTED)) {
-            formLinkForTemplateIfRequired = "";
+        String formLinkForTemplateIfRequired = "";
+
+        if (List.of(FTPA_PARTIALLY_GRANTED, FTPA_REFUSED).contains(ftpaAppellantDecisionOutcomeType.get())) {
+            formLinkForTemplateIfRequired = "*[IAUT1: Application for permission to appeal from First-tier Tribunal](" + iaut1FormUrl + ")";
         }
 
         return ImmutableMap
