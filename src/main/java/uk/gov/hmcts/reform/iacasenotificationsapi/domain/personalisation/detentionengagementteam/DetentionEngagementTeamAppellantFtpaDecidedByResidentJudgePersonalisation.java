@@ -87,7 +87,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
         String formLinkForTemplateIfRequired = "";
 
         if (List.of(FTPA_PARTIALLY_GRANTED, FTPA_REFUSED).contains(ftpaAppellantDecisionOutcomeType.get())) {
-            formLinkForTemplateIfRequired = "*[IAUT1: Application for permission to appeal from First-tier Tribunal](" + iaut1FormUrl + ")";
+            formLinkForTemplateIfRequired = "*IAUT1: Application for permission to appeal from First-tier Tribunal\n" + iaut1FormUrl;
         }
 
         return ImmutableMap

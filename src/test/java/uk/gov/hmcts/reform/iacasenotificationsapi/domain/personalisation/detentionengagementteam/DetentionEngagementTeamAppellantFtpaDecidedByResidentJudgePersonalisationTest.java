@@ -59,7 +59,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String iaut1FormUrl = "https://www.gov.uk/government/publications/form-iaut1-application-for-permission-to-appeal-from-first-tier-tribunal";
-    private final String formLinkForTemplateIfRequired = "*[IAUT1: Application for permission to appeal from First-tier Tribunal](" + iaut1FormUrl + ")";
+    private final String formLinkForTemplateIfRequired = "*IAUT1: Application for permission to appeal from First-tier Tribunal\n" + iaut1FormUrl;
     DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
             "1", "FTPA decided by resident judge letter", "some other desc", DocumentTag.INTERNAL_APPELLANT_FTPA_DECIDED_LETTER);
     IdValue<DocumentWithMetadata> internalFtpaDecidedByRjLetterId = new IdValue<>("1", internalFtpaDecidedByRjLetter);
