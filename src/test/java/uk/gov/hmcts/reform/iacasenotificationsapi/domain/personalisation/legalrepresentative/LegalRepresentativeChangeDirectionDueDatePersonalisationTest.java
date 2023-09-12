@@ -105,7 +105,6 @@ public class LegalRepresentativeChangeDirectionDueDatePersonalisationTest {
             legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
