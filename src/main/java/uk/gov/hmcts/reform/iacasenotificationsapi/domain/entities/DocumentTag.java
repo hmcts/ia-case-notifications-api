@@ -55,8 +55,8 @@ public enum DocumentTag {
     INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER("internalFtpaSubmittedAppellantLetter"),
     INTERNAL_DETAINED_TRANSFER_OUT_OF_ADA_LETTER("internalDetainedTransferOutOfAdaLetter"),
     INTERNAL_HO_FTPA_DECIDED_LETTER("internalHoFtpaDecidedLetter"),
-
     INTERNAL_APPELLANT_FTPA_DECIDED_LETTER("internalAppellantFtpaDecidedLetter"),
+    INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER("internalHearingRequirementsUpdatedLetter"),
     @JsonEnumDefaultValue
     NONE("");
 
