@@ -1085,6 +1085,9 @@ govnotify:
           email: 6c30a67d-e848-44c7-b861-1c474fd11871
         refused:
           email: 80d16b48-5a0c-4a09-93e8-a24f98939c57
+    updateHearingRequirements:
+      detentionEngagementTeam:
+        email: 758bce3f-9438-4dc3-8a34-c56803dd4922
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1290,6 +1293,7 @@ security:
       - "markAppealAsDetained"
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
+      - "updateHearingRequirements"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1388,6 +1392,7 @@ security:
       - "adaSuitabilityReview"
       - "transferOutOfAda"
       - "reviewHearingRequirements"
+      - "updateHearingRequirements"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
@@ -1479,6 +1484,7 @@ homeOfficeFtpaEmailAddresses:
   glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-ftpa-harmondsworth@example.com}
+  yarlswood: ${IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-ftpa-yarlswood@example.com}
 
 
 hearingCentreTelephoneNumber:
