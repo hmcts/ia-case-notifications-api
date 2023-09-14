@@ -59,7 +59,8 @@ public enum DocumentTag {
     INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER("internalNonStandardDirectionAppellantLetter"),
     INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER("internalNonStandardDirectionRespondentLetter"),
     INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER("internalHearingRequirementsUpdatedLetter"),
-  
+    INTERNAL_MAINTAIN_CASE_LINKS_LETTER("internalMaintainCaseLinksLetter"),
+
     @JsonEnumDefaultValue
     NONE("");
 

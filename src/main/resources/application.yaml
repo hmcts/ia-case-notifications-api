@@ -1043,6 +1043,8 @@ govnotify:
           email: 63c30831-4dd0-4c0a-b70f-4c439dcc66ea
         afterListing:
           email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
+      detentionEngagementTeam:
+          email: 5fe2aacb-8bd2-47f0-a28f-56b440f188c3
     markAsReadyForUtTransfer:
       upperTribunal:
         beforeListing:
