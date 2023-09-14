@@ -58,7 +58,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId = "detentionEngagementTeamDecideAnApplicationApplicantTemplateId";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DECIDE_AN_APPLICATION_LETTER);
+            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DECIDE_AN_APPELLANT_APPLICATION_LETTER);
     IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
