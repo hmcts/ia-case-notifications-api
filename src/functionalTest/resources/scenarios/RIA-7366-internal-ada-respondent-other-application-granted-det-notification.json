@@ -1,10 +1,10 @@
 {
-  "description": "RIA-7033 Internal case Send decide an (admofficer) application refused notification before listing",
+  "description": "RIA-7366: internal ada case home office (other) application decided (Granted)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "Judge",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 70334,
+      "id": 7366,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -12,12 +12,14 @@
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
           "decideAnApplicationId": "1",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalDecideAnAppellantApplicationLetter",
+                "tag": "internalDecideHomeOfficeApplicationLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -30,20 +32,29 @@
             }
           ],
           "makeAnApplications": [
-              {
+            {
               "id": "1",
               "value": {
                 "type":"Other",
                 "details":"",
-                "evidence":[],
-                "applicant":"",
+                "evidence":[
+                  {
+                    "id": "1",
+                    "value": {
+                      "document_url": "http://document-store/AAA",
+                      "document_filename": "Annexure-E.pdf",
+                      "document_binary_url": "http://document-store/AAA/binary"
+                    }
+                  }
+                ],
+                "applicant":"Respondent",
                 "date":"",
-                "decision":"Refused",
-                "state":"appealSubmitted",
-                "applicantRole":"caseworker-ia-admofficer",
-                "decisionReason":"No Reason given",
+                "decision":"Granted",
+                "state":"caseBuilding",
+                "applicantRole":"",
+                "decisionReason":"A reason for the decision",
                 "decisionDate":"{$TODAY}",
-                "decisionMaker": "Judge"
+                "decisionMaker": "Tribunal Caseworker"
               }
             }
           ]
@@ -59,12 +70,20 @@
       "replacements": {
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
-        "isAdmin": "Yes",
+	    "appellantInDetention": "Yes",
+        "isAcceleratedDetainedAppeal": "Yes",
+        "decideAnApplicationId": "1",
+        "notificationsSent":[
+          {
+            "id":"7366_DECIDE_A_RESPONDENT_APPLICATION_DET",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ],
         "notificationAttachmentDocuments": [
           {
             "id": "1",
             "value": {
-              "tag": "internalDecideAnAppellantApplicationLetter",
+              "tag": "internalDecideHomeOfficeApplicationLetter",
               "document": {
                 "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                 "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -74,16 +93,6 @@
               "description": "",
               "dateUploaded": "{$TODAY}"
             }
-          }
-        ],
-        "notificationsSent": [
-          {
-            "id":"70334_DECIDE_AN_APPLICATION_DET",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "70334_DECIDE_AN_APPLICATION_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }

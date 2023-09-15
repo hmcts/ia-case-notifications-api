@@ -875,6 +875,9 @@ govnotify:
                 email: 4e079f0c-38e2-4a02-a057-7cca421ee421
               afterListing:
                 email: 53693fc5-31bf-478b-95dc-afe875291a03
+    decideARespondentApplication:
+      detentionEngagementTeam:
+        email: 9eb1f5c7-2a2a-4c0d-b152-c71fa5fc7227
     decisionAndReasonsTemplateUploaded:
       admin:
         email: 489aadaf-2d48-4ea4-a388-bbc6d6942e91
