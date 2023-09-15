@@ -59,9 +59,9 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adaPrefix = "ADA - SERVE BY POST";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    DocumentWithMetadata internalMaintainCaseLinksLetter = getDocumentWithMetadata(
-            "1", "MaintainCaseLinks letter", "some other desc", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER);
-    IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalMaintainCaseLinksLetter);
+    DocumentWithMetadata internalMaintainCaseUnlinkAppealLetter = getDocumentWithMetadata(
+            "1", "Maintain case unlink letter", "some other desc", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER);
+    IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalMaintainCaseUnlinkAppealLetter);
     private DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation;
 
     @BeforeEach
@@ -74,7 +74,7 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
 
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(internalMaintainCaseLinksLetterId)));
-        when(documentDownloadClient.getJsonObjectFromDocument(internalMaintainCaseLinksLetter)).thenReturn(jsonDocument);
+        when(documentDownloadClient.getJsonObjectFromDocument(internalMaintainCaseUnlinkAppealLetter)).thenReturn(jsonDocument);
 
         detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation =
                 new DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation(
