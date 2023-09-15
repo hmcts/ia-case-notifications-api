@@ -51,7 +51,7 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
     private PersonalisationProvider personalisationProvider;
 
     private final String templateId = "someTemplateId";
-    private final String personalisationReferenceId = "_INTERNAL_DET_MAINTAIN_CASE_LINKS_EMAIL";
+    private final String personalisationReferenceId = "_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL";
     private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "someReferenceNumber";
@@ -137,7 +137,7 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
         assertThatThrownBy(
                 () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalMaintainCaseLinksLetter document not available");
+                .hasMessage("maintainCaseUnlinkAppealLetter document not available");
     }
 
     @ParameterizedTest

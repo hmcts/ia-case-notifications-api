@@ -57,7 +57,7 @@ class DocumentTagTest {
         assertEquals("internalNonStandardDirectionAppellantLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER.toString());
         assertEquals("internalNonStandardDirectionRespondentLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER.toString());
         assertEquals("internalHearingRequirementsUpdatedLetter", DocumentTag.INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER.toString());
-        assertEquals("internalMaintainCaseLinksLetter", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER.toString());
+        assertEquals("maintainCaseUnlinkAppealLetter", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER.toString());
     }
 
     @Test
