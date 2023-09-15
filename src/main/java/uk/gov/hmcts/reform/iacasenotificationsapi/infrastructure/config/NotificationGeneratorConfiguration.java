@@ -2972,6 +2972,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("decideARespondentApplicationInternalNotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationInternalNotificationGenerator(
+            DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("decideAnApplicationAipNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationAipNotificationGenerator(
             HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,

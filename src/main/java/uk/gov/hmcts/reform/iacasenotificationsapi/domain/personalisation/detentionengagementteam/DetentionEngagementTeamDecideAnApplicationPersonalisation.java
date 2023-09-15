@@ -105,7 +105,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
 
     private JSONObject getApplicationDecidedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DECIDE_AN_APPLICATION_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DECIDE_AN_APPELLANT_APPLICATION_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal Appeal decision Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal Appeal decision Letter in compatible format");
