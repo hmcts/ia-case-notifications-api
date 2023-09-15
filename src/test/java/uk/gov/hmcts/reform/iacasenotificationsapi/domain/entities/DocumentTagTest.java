@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class DocumentTagTest {
+class DocumentTagTest {
 
     @Test
-    public void has_correct_values() {
+    void has_correct_values() {
         assertEquals("caseArgument", DocumentTag.CASE_ARGUMENT.toString());
         assertEquals("respondentEvidence", DocumentTag.RESPONDENT_EVIDENCE.toString());
         assertEquals("appealResponse", DocumentTag.APPEAL_RESPONSE.toString());
@@ -58,10 +58,11 @@ public class DocumentTagTest {
         assertEquals("internalNonStandardDirectionAppellantLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER.toString());
         assertEquals("internalNonStandardDirectionRespondentLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER.toString());
         assertEquals("internalHearingRequirementsUpdatedLetter", DocumentTag.INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER.toString());
+        assertEquals("maintainCaseUnlinkAppealLetter", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER.toString());
     }
 
     @Test
-    public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(56, DocumentTag.values().length);
+    void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
+        assertEquals(57, DocumentTag.values().length);
     }
 }
