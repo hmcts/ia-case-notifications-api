@@ -37,7 +37,7 @@ import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
+class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -60,9 +60,9 @@ class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
     private final String adaPrefix = "ADA - SERVE BY POST";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     DocumentWithMetadata internalMaintainCaseLinksLetter = getDocumentWithMetadata(
-            "1", "MaintainCaseLinks letter", "some other desc", DocumentTag.INTERNAL_MAINTAIN_CASE_LINKS_LETTER);
+            "1", "MaintainCaseLinks letter", "some other desc", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER);
     IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalMaintainCaseLinksLetter);
-    private DetentionEngagementTeamMaintainCaseLinksPersonalisation detentionEngagementTeamMaintainCaseLinksPersonalisation;
+    private DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation;
 
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
@@ -76,8 +76,8 @@ class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(internalMaintainCaseLinksLetterId)));
         when(documentDownloadClient.getJsonObjectFromDocument(internalMaintainCaseLinksLetter)).thenReturn(jsonDocument);
 
-        detentionEngagementTeamMaintainCaseLinksPersonalisation =
-                new DetentionEngagementTeamMaintainCaseLinksPersonalisation(
+        detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation =
+                new DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation(
                         templateId,
                         detEmailService,
                         documentDownloadClient,
@@ -86,19 +86,19 @@ class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
                         nonAdaPrefix
                 );
 
-        initializePrefixesForInternalAppealByPost(detentionEngagementTeamMaintainCaseLinksPersonalisation);
+        initializePrefixesForInternalAppealByPost(detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation);
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, detentionEngagementTeamMaintainCaseLinksPersonalisation.getTemplateId());
+        assertEquals(templateId, detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + personalisationReferenceId,
-                detentionEngagementTeamMaintainCaseLinksPersonalisation.getReferenceId(caseId));
+                detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -107,25 +107,25 @@ class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
-                detentionEngagementTeamMaintainCaseLinksPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+                detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
     }
 
     @Test
     void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertEquals(Collections.emptySet(), detentionEngagementTeamMaintainCaseLinksPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals(Collections.emptySet(), detentionEngagementTeamMaintainCaseLinksPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(
-                () -> detentionEngagementTeamMaintainCaseLinksPersonalisation.getPersonalisationForLink((AsylumCase) null))
+                () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
@@ -135,7 +135,7 @@ class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
-                () -> detentionEngagementTeamMaintainCaseLinksPersonalisation.getPersonalisationForLink(asylumCase))
+                () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("internalMaintainCaseLinksLetter document not available");
     }
@@ -159,7 +159,7 @@ class DetentionEngagementTeamMaintainCaseLinksPersonalisationTest {
         }
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamMaintainCaseLinksPersonalisation.getPersonalisationForLink(asylumCase);
+                detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

@@ -1044,6 +1044,7 @@ govnotify:
         afterListing:
           email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
       detentionEngagementTeam:
+        unlinkAppeal:
           email: 5fe2aacb-8bd2-47f0-a28f-56b440f188c3
     markAsReadyForUtTransfer:
       upperTribunal:

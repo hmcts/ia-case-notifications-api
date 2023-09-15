@@ -4351,15 +4351,15 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalCaseUnlinkAppealNotificationGenerator")
-    public List<NotificationGenerator> internalCaseUnlinkAppealNotificationGenerator(
-            DetentionEngagementTeamMaintainCaseLinksPersonalisation detentionEngagementTeamMaintainCaseLinksPersonalisation,
+    @Bean("internalMaintainCaseUnlinkAppealNotificationGenerator")
+    public List<NotificationGenerator> internalMaintainCaseUnlinkAppealNotificationGenerator(
+            DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseLinksPersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )

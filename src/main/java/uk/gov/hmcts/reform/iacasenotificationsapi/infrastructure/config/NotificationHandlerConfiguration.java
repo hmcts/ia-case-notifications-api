@@ -103,8 +103,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseUnlinkAppealNotificationHandler(
-            @Qualifier("internalCaseUnlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalMaintainCaseUnlinkAppealNotificationHandler(
+            @Qualifier("internalMaintainCaseUnlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {

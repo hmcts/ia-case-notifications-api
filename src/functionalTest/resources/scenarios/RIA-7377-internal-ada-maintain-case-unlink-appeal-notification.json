@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7377 Internal Ada maintain case list notification to DET",
+  "description": "RIA-7377 Internal Ada maintain case unlink appeal notification to DET",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -19,7 +19,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalMaintainCaseLinksLetter",
+                "tag": "maintainCaseUnlinkAppealLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -43,7 +43,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7377_INTERNAL_DET_MAINTAIN_CASE_LINKS_EMAIL",
+            "id": "7377_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
