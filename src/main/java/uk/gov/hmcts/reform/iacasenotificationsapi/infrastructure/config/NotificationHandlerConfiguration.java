@@ -1175,7 +1175,8 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.SEND_DIRECTION
                             && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
                             && !isAipJourney(asylumCase)
-                            && callback.getCaseDetails().getState() != State.AWAITING_RESPONDENT_EVIDENCE;
+                            && callback.getCaseDetails().getState() != State.AWAITING_RESPONDENT_EVIDENCE
+                            && !isInternalCase(asylumCase);
                 },
                 notificationGenerators
         );
@@ -1261,7 +1262,8 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SEND_DIRECTION
                        && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
                        && callback.getCaseDetails().getState() == State.AWAITING_RESPONDENT_EVIDENCE
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                        && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
