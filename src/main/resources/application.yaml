@@ -1049,6 +1049,8 @@ govnotify:
       detentionEngagementTeam:
         unlinkAppeal:
           email: 5fe2aacb-8bd2-47f0-a28f-56b440f188c3
+        linkAppeal:
+          email: 19cbbc3d-f0cc-49a7-adfd-9addac5441ed
     markAsReadyForUtTransfer:
       upperTribunal:
         beforeListing:
