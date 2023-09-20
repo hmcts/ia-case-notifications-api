@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.MAINTAIN_CASE_LINK_APPEAL_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
@@ -22,23 +22,23 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamMaintainCaseLinkAppealPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String internalDetMaintainCaseUnlinkAppealTemplateId;
+    private final String internalDetMaintainCaseLinkAppealTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private final DetEmailService detEmailService;
     private final PersonalisationProvider personalisationProvider;
     private String adaPrefix;
     private String nonAdaPrefix;
 
-    public DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation(
-            @Value("${govnotify.template.maintainCaseLinks.detentionEngagementTeam.unlinkAppeal.email}") String internalDetMaintainCaseUnlinkAppealTemplateId,
+    public DetentionEngagementTeamMaintainCaseLinkAppealPersonalisation(
+            @Value("${govnotify.template.maintainCaseLinks.detentionEngagementTeam.linkAppeal.email}") String internalDetMaintainCaseLinkAppealTemplateId,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient,
             PersonalisationProvider personalisationProvider, @Value("${govnotify.emailPrefix.adaByPost}") String adaPrefix,
             @Value("${govnotify.emailPrefix.nonAdaByPost}") String nonAdaPrefix
     ) {
-        this.internalDetMaintainCaseUnlinkAppealTemplateId = internalDetMaintainCaseUnlinkAppealTemplateId;
+        this.internalDetMaintainCaseLinkAppealTemplateId = internalDetMaintainCaseLinkAppealTemplateId;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
         this.personalisationProvider = personalisationProvider;
@@ -48,7 +48,7 @@ public class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation impl
 
     @Override
     public String getTemplateId() {
-        return internalDetMaintainCaseUnlinkAppealTemplateId;
+        return internalDetMaintainCaseLinkAppealTemplateId;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation impl
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL";
+        return caseId + "_INTERNAL_DET_MAINTAIN_CASE_LINK_APPEAL_EMAIL";
     }
 
     @Override
@@ -69,16 +69,16 @@ public class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation impl
                 .<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                .put("documentLink", getInternalMaintainCaseUnlinkAppealDocumentInJsonObject(asylumCase))
+                .put("documentLink", getInternalMaintainCaseLinkAppealDocumentInJsonObject(asylumCase))
                 .build();
     }
 
-    private JSONObject getInternalMaintainCaseUnlinkAppealDocumentInJsonObject(AsylumCase asylumCase) {
+    private JSONObject getInternalMaintainCaseLinkAppealDocumentInJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, MAINTAIN_CASE_UNLINK_APPEAL_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, MAINTAIN_CASE_LINK_APPEAL_LETTER));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal Detained Maintain case unLink appeal document in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal Detained Maintain case unLink appeal document in compatible format");
+            log.error("Failed to get Internal Detained Maintain case link appeal document in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal Detained Maintain case link appeal document in compatible format");
         }
     }
 }
