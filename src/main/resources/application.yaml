@@ -958,6 +958,8 @@ govnotify:
     amendRespondentEvidenceDirection:
       legalRep:
         email: 24c7ec45-ad60-4dcb-9749-40e20c0ca601
+      detentionEngagementTeam:
+        email: d9449fd6-289d-421e-8837-5ba38b169921
     endAppealAutomatically:
       legalRep:
         email: 7afe65bd-65ff-4f6b-b9ba-0ffc20623903
