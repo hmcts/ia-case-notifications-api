@@ -1096,6 +1096,9 @@ govnotify:
     updateHearingRequirements:
       detentionEngagementTeam:
         email: 758bce3f-9438-4dc3-8a34-c56803dd4922
+    uploadAdditionalEvidence:
+      detentionEngagementTeam:
+        email: 9e31aa05-a53a-41c4-a4e2-a14f6cf61ef3
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

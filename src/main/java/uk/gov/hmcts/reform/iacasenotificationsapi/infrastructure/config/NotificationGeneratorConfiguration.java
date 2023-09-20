@@ -4397,4 +4397,18 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalUploadAdditionalEvidenceNotificationGenerator")
+    public List<NotificationGenerator> internalUploadAdditionalEvidenceNotificationGenerator(
+        DetentionEngagementTeamUploadAdditionalEvidencePersonalisation detentionEngagementTeamUploadAdditionalEvidencePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamUploadAdditionalEvidencePersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
