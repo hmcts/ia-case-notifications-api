@@ -9,19 +9,15 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.powermock.api.mockito.PowerMockito;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
