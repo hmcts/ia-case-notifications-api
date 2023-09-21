@@ -62,6 +62,8 @@ public enum DocumentTag {
     INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER("internalHearingRequirementsUpdatedLetter"),
     MAINTAIN_CASE_UNLINK_APPEAL_LETTER("maintainCaseUnlinkAppealLetter"),
     MAINTAIN_CASE_LINK_APPEAL_LETTER("maintainCaseLinkAppealLetter"),
+    INTERNAL_UPLOAD_ADDITIONAL_EVIDENCE_LETTER("internalUploadAdditionalEvidenceLetter"),
+
 
     @JsonEnumDefaultValue
     NONE("");
