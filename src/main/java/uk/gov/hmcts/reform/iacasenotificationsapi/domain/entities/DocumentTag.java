@@ -57,7 +57,7 @@ public enum DocumentTag {
     INTERNAL_DETAINED_TRANSFER_OUT_OF_ADA_LETTER("internalDetainedTransferOutOfAdaLetter"),
     INTERNAL_HO_FTPA_DECIDED_LETTER("internalHoFtpaDecidedLetter"),
     INTERNAL_APPELLANT_FTPA_DECIDED_LETTER("internalAppellantFtpaDecidedLetter"),
-    INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER("internalNonStandardDirectionAppellantLetter"),
+    INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER("internalNonStandardDirectionToAppellantLetter"),
     INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER("internalNonStandardDirectionRespondentLetter"),
     INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER("internalHearingRequirementsUpdatedLetter"),
     MAINTAIN_CASE_UNLINK_APPEAL_LETTER("maintainCaseUnlinkAppealLetter"),
