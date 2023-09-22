@@ -55,7 +55,7 @@ class DocumentTagTest {
         assertEquals("internalDetainedTransferOutOfAdaLetter", DocumentTag.INTERNAL_DETAINED_TRANSFER_OUT_OF_ADA_LETTER.toString());
         assertEquals("internalHoFtpaDecidedLetter", DocumentTag.INTERNAL_HO_FTPA_DECIDED_LETTER.toString());
         assertEquals("internalAppellantFtpaDecidedLetter", DocumentTag.INTERNAL_APPELLANT_FTPA_DECIDED_LETTER.toString());
-        assertEquals("internalNonStandardDirectionAppellantLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER.toString());
+        assertEquals("internalNonStandardDirectionToAppellantLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER.toString());
         assertEquals("internalNonStandardDirectionRespondentLetter", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER.toString());
         assertEquals("internalHearingRequirementsUpdatedLetter", DocumentTag.INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER.toString());
         assertEquals("maintainCaseUnlinkAppealLetter", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER.toString());
