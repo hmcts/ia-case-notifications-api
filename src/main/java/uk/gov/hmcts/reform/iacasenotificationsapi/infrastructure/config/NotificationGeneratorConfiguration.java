@@ -4411,6 +4411,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
     @Bean("internalRequestResponseAmendNotificationGenerator")
     public List<NotificationGenerator> internalRequestResponseAmendNotificationGenerator(
             DetentionEngagementTeamRequestResponseAmendPersonalisation detentionEngagementTeamRequestResponseAmendPersonalisation,
@@ -4425,6 +4426,7 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
     @Bean("internalUploadAddendumEvidenceNotificationGenerator")
     public List<NotificationGenerator> internalUploadAddendumEvidenceNotificationGenerator(
         DetentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation,
