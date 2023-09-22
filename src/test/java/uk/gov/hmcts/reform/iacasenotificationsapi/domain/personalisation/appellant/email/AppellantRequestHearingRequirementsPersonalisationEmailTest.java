@@ -130,7 +130,7 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
         assertEquals(homeOfficeRefeNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("22 Sept 2021", personalisation.get("dueDate"));
+        assertEquals("22 Sep 2021", personalisation.get("dueDate"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
