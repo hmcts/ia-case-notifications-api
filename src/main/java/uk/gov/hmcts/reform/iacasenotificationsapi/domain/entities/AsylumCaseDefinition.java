@@ -342,6 +342,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_EMAIL_ADDRESS(
         "appellantEmailAddress", new TypeReference<String>(){}),
 
+    APPELLANT_PHONE_NUMBER(
+            "appellantPhoneNumber", new TypeReference<String>(){}),
+
     MOBILE_NUMBER(
         "mobileNumber", new TypeReference<String>(){}),
 
