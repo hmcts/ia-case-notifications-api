@@ -1101,6 +1101,9 @@ govnotify:
     uploadAdditionalEvidence:
       detentionEngagementTeam:
         email: 9e31aa05-a53a-41c4-a4e2-a14f6cf61ef3
+    uploadAddendumEvidenceAdminOfficer:
+      detentionEngagementTeam:
+        email: 9e31aa05-a53a-41c4-a4e2-a14f6cf61ef3
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
