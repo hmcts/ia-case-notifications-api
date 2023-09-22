@@ -4411,4 +4411,19 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("internalEditAppealNotificationGenerator")
+    public List<NotificationGenerator> internalEditAppealNotificationGenerator(
+            DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamEditAppealPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
