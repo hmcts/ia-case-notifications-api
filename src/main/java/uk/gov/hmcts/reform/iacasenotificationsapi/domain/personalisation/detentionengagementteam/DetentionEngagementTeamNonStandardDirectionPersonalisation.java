@@ -76,7 +76,7 @@ public class DetentionEngagementTeamNonStandardDirectionPersonalisation implemen
 
     private JSONObject getAppealDecidedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal end appeal letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal automatically end appeal Letter in compatible format");
