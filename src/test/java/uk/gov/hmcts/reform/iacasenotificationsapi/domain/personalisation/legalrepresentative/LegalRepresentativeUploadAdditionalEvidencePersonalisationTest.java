@@ -94,7 +94,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     public void should_return_empty_recipients_from_asylum_case_for_aip_journey() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
 
-        assert(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase)).isEmpty();
+        assertThat(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase)).isEmpty();
     }
 
     @Test
