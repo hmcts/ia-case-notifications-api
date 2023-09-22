@@ -44,7 +44,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSmsTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of(mockedAppealReferenceNumber));
-        when(asylumCase.read(MOBILE_NUMBER, String.class))
+        when(asylumCase.read(APPELLANT_PHONE_NUMBER, String.class))
                 .thenReturn(Optional.of(mockedAppellantMobilePhone));
 
         sut = new AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms(
@@ -88,7 +88,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSmsTest {
 
     @Test
     public void should_throw_exception_when_appellant_sms_is_not_present() {
-        when(asylumCase.read(MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_PHONE_NUMBER, String.class)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> sut.getPersonalisation(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("mobileNumber is not present");
