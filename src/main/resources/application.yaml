@@ -960,6 +960,8 @@ govnotify:
     amendRespondentEvidenceDirection:
       legalRep:
         email: 24c7ec45-ad60-4dcb-9749-40e20c0ca601
+      detentionEngagementTeam:
+        email: d9449fd6-289d-421e-8837-5ba38b169921
     endAppealAutomatically:
       legalRep:
         email: 7afe65bd-65ff-4f6b-b9ba-0ffc20623903
@@ -1051,6 +1053,8 @@ govnotify:
       detentionEngagementTeam:
         unlinkAppeal:
           email: 5fe2aacb-8bd2-47f0-a28f-56b440f188c3
+        linkAppeal:
+          email: 19cbbc3d-f0cc-49a7-adfd-9addac5441ed
     markAsReadyForUtTransfer:
       upperTribunal:
         beforeListing:
@@ -1096,6 +1100,12 @@ govnotify:
     updateHearingRequirements:
       detentionEngagementTeam:
         email: 758bce3f-9438-4dc3-8a34-c56803dd4922
+    uploadAdditionalEvidence:
+      detentionEngagementTeam:
+        email: 9e31aa05-a53a-41c4-a4e2-a14f6cf61ef3
+    uploadAddendumEvidenceAdminOfficer:
+      detentionEngagementTeam:
+        email: 9e31aa05-a53a-41c4-a4e2-a14f6cf61ef3
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

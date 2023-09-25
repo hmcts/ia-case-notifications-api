@@ -62,7 +62,7 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     private String detEmailAddress = "detEmail@example.com";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER);
+            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER);
     IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
 
     @Mock

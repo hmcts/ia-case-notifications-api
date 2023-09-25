@@ -77,8 +77,8 @@ public class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation impl
         try {
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, MAINTAIN_CASE_UNLINK_APPEAL_LETTER));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal Detained Maintain case links document in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal Detained Maintain case links document in compatible format");
+            log.error("Failed to get Internal Detained Maintain case unLink appeal document in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal Detained Maintain case unLink appeal document in compatible format");
         }
     }
 }

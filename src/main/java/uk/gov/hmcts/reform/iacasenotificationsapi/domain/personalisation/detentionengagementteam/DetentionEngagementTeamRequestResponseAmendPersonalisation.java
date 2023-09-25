@@ -5,10 +5,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Documen
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,34 +21,33 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamNonStandardDirectionPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamRequestResponseAmendPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String sendNonStandardDirectionTemplateId;
     @Value("${govnotify.emailPrefix.adaByPost}")
     private String adaPrefix;
-
     @Value("${govnotify.emailPrefix.nonAdaByPost}")
     private String nonAdaPrefix;
+
+    private final String detentionEngagementTeamRequestResponseAmendTemplateId;
+    private final PersonalisationProvider personalisationProvider;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
-    private final PersonalisationProvider personalisationProvider;
 
-    public DetentionEngagementTeamNonStandardDirectionPersonalisation(
-            @Value("${govnotify.template.nonStandardDirectionInternal.detentionEngagementTeam.email}")
-            String sendNonStandardDirectionTemplateId,
+    public DetentionEngagementTeamRequestResponseAmendPersonalisation(
+            @Value("${govnotify.template.amendRespondentEvidenceDirection.detentionEngagementTeam.email}") String detentionEngagementTeamRequestResponseAmendTemplateId,
+            PersonalisationProvider personalisationProvider,
             DetEmailService detEmailService,
-            DocumentDownloadClient documentDownloadClient,
-            PersonalisationProvider personalisationProvider
+            DocumentDownloadClient documentDownloadClient
     ) {
-        this.sendNonStandardDirectionTemplateId = sendNonStandardDirectionTemplateId;
+        this.detentionEngagementTeamRequestResponseAmendTemplateId = detentionEngagementTeamRequestResponseAmendTemplateId;
+        this.personalisationProvider = personalisationProvider;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
-        this.personalisationProvider = personalisationProvider;
     }
 
     @Override
-    public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_STANDARD_DIRECTION_DET";
+    public String getTemplateId(AsylumCase asylumCase) {
+        return detentionEngagementTeamRequestResponseAmendTemplateId;
     }
 
     @Override
@@ -58,28 +56,29 @@ public class DetentionEngagementTeamNonStandardDirectionPersonalisation implemen
     }
 
     @Override
-    public String getTemplateId() {
-        return sendNonStandardDirectionTemplateId;
+    public String getReferenceId(Long caseId) {
+        return caseId + "_REQUEST_RESPONSE_AMEND_DET";
     }
 
     @Override
-    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) throws IOException, NotificationClientException {
+    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        return ImmutableMap
+        ImmutableMap.Builder<String, Object> personalizationBuilder = ImmutableMap
                 .<String, Object>builder()
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
-                .build();
+                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("documentLink", getRequestResponseAmendLetterJsonObject(asylumCase));
+
+        return personalizationBuilder.build();
     }
 
-    private JSONObject getAppealDecidedLetterJsonObject(AsylumCase asylumCase) {
+    private JSONObject getRequestResponseAmendLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, AMEND_HOME_OFFICE_APPEAL_RESPONSE));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal end appeal letter in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal automatically end appeal Letter in compatible format");
+            log.error("Failed to get amend Home Office response Letter in compatible format", e);
+            throw new IllegalStateException("Failed to get amend Home Office response Letter in compatible format");
         }
     }
 }
