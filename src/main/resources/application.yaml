@@ -510,6 +510,8 @@ govnotify:
       appellant:
         email: d7ff2b1d-86af-47af-9cab-a875f0dd3274
         sms: 2015a5dd-2b6f-4ae9-aa5b-9746531afa19
+      detentionEngagementTeam:
+        email: 3c3f62f2-0ec3-4422-8114-eebd49621f8a
     applyForFtpa:
       respondent:
         email: d600db47-d924-4e98-9eba-1098bfb56b31

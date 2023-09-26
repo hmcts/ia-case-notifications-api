@@ -1900,9 +1900,27 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
-                        && isRepJourney(asylumCase);
+                        && isRepJourney(asylumCase)
+                        && !isInternalCase(asylumCase);
             },
                         notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> changeHearingCentreInternalNotificationHandler(
+            @Qualifier("changeHearingCentreInternalNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+
+                },
+                notificationGenerator
         );
     }
 
