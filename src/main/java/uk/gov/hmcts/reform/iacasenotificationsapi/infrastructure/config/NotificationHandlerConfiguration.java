@@ -4882,10 +4882,18 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                String appellant = "The appellant";
+
+                boolean isAppellantRespondent = asylumCase.read(IS_APPELLANT_RESPONDENT, String.class)
+                    .map(value -> value.equals(appellant))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
                        && isInternalCase(asylumCase)
-                       && isAppellantInDetention(asylumCase);
+                       && isAppellantInDetention(asylumCase)
+                       && isAppellantRespondent;
+
             }, notificationGenerators
         );
     }
