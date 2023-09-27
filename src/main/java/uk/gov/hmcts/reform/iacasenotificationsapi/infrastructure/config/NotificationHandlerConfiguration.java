@@ -51,6 +51,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 public class NotificationHandlerConfiguration {
     private static final String ADMIN_OFFICER_ROLE = "caseworker-ia-admofficer";
     private static final String RESPONDENT_APPLICANT = "Respondent";
+    private static final String IS_APPELLANT = "The appellant";
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
@@ -4882,10 +4883,16 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean isAppellantRespondent = asylumCase.read(IS_APPELLANT_RESPONDENT, String.class)
+                    .map(value -> value.equals(IS_APPELLANT))
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
                        && isInternalCase(asylumCase)
-                       && isAppellantInDetention(asylumCase);
+                       && isAppellantInDetention(asylumCase)
+                       && isAppellantRespondent;
+
             }, notificationGenerators
         );
     }
