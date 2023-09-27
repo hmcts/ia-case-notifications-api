@@ -51,7 +51,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 public class NotificationHandlerConfiguration {
     private static final String ADMIN_OFFICER_ROLE = "caseworker-ia-admofficer";
     private static final String RESPONDENT_APPLICANT = "Respondent";
-
     private static final String IS_APPELLANT = "The appellant";
 
     @Bean
