@@ -4462,7 +4462,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
-    
+
     @Bean("internalDetainedAppellantOnlyChangeDirectionDueDateNotificationGenerator")
     public List<NotificationGenerator> internalDetainedAppellantOnlyChangeDirectionDueDateNotificationGenerator(
             DetentionEngagementTeamChangeDueDatePersonalisation detentionEngagementTeamChangeDueDatePersonalisation,
@@ -4488,6 +4488,21 @@ public class NotificationGeneratorConfiguration {
         return List.of(
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(Collections.singleton(detentionEngagementTeamChangeDueDatePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("internalHomeOfficeUploadAdditionalAddendumEvidenceNotificationGenerator")
+    public List<NotificationGenerator> internalHomeOfficeUploadAdditionalAddendumEvidenceNotificationGenerator(
+            DetentionEngagementTeamHomeOfficeUploadAdditionalAddendumEvidencePersonalisation detentionEngagementTeamHomeOfficeUploadAdditionalAddendumEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamHomeOfficeUploadAdditionalAddendumEvidencePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
