@@ -4508,4 +4508,19 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("internalLegalOfficerUploadAddendumEvidenceNotificationGenerator")
+    public List<NotificationGenerator> internalLegalOfficerUploadAddendumEvidenceNotificationGenerator(
+            DetentionEngagementTeamLegalOfficerUploadAddendumEvidence detentionEngagementTeamLegalOfficerUploadAddendumEvidence,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamLegalOfficerUploadAddendumEvidence)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

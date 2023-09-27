@@ -91,4 +91,26 @@ public class AsylumCaseUtils {
             .map(type -> type == AIP).orElse(false);
     }
 
+    public static List<IdValue<DocumentWithMetadata>> getAddendumEvidenceDocuments(AsylumCase asylumCase) {
+        Optional<List<IdValue<DocumentWithMetadata>>> maybeExistingAdditionalEvidenceDocuments =
+                asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS);
+        if (maybeExistingAdditionalEvidenceDocuments.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return maybeExistingAdditionalEvidenceDocuments.get();
+    }
+
+
+    public static Optional<IdValue<DocumentWithMetadata>> getLatestAddendumEvidenceDocument(AsylumCase asylumCase) {
+        List<IdValue<DocumentWithMetadata>> addendums = getAddendumEvidenceDocuments(asylumCase);
+
+        if (addendums.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<IdValue<DocumentWithMetadata>> optionalLatestAddendum = addendums.stream().findFirst();
+        return Optional.of(optionalLatestAddendum.get());
+    }
+
 }
