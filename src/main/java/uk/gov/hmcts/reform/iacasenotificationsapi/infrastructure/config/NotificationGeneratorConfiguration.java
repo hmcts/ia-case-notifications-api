@@ -4456,6 +4456,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
     @Bean("internalEditAppealNotificationGenerator")
     public List<NotificationGenerator> internalEditAppealNotificationGenerator(
             DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,

@@ -4889,6 +4889,7 @@ public class NotificationHandlerConfiguration {
             }, notificationGenerators
         );
     }
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEditAppealNotificationNotificationHandler(
             @Qualifier("internalEditAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
