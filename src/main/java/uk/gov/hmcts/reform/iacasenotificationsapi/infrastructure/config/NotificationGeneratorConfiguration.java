@@ -1812,6 +1812,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("changeHearingCentreInternalNotificationGenerator")
+    public List<NotificationGenerator> changeHearingCentreInternalNotificationGenerator(
+            DetentionEngagementTeamChangeHearingCentrePersonalisation detentionEngagementTeamChangeHearingCentrePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamChangeHearingCentrePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("ftpaSubmittedLegalRepNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedLegalRep(
         LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation,
@@ -4427,6 +4442,20 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalUploadAddendumEvidenceNotificationGenerator")
+    public List<NotificationGenerator> internalUploadAddendumEvidenceNotificationGenerator(
+        DetentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
     @Bean("internalEditAppealNotificationGenerator")
     public List<NotificationGenerator> internalEditAppealNotificationGenerator(
             DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,

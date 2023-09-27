@@ -1795,8 +1795,9 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
-                        && isRepJourney(callback.getCaseDetails().getCaseData()),
-            notificationGenerator
+                        && isRepJourney(callback.getCaseDetails().getCaseData())
+                        && !isInternalCase(callback.getCaseDetails().getCaseData()),
+        notificationGenerator
         );
     }
 
@@ -1899,9 +1900,27 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
-                        && isRepJourney(asylumCase);
+                        && isRepJourney(asylumCase)
+                        && !isInternalCase(asylumCase);
             },
                         notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> changeHearingCentreInternalNotificationHandler(
+            @Qualifier("changeHearingCentreInternalNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+
+                },
+                notificationGenerator
         );
     }
 
@@ -4855,6 +4874,21 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalUploadAddendumEvidenceAdminNotificationHandler(
+        @Qualifier("internalUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
+                       && isInternalCase(asylumCase)
+                       && isAppellantInDetention(asylumCase);
+            }, notificationGenerators
+        );
+    }
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEditAppealNotificationNotificationHandler(
             @Qualifier("internalEditAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {

@@ -1,37 +1,25 @@
 {
-  "description": "RIA-7436 Send Non Standard Direction to Appellant on Internal Detained Appeal.",
+  "description": "RIA-7690 Internal Detained change hearing centre notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "caseOfficer",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 7436,
-      "eventId": "sendDirection",
-      "state": "decision",
+      "id": 7690,
+      "eventId": "changeHearingCentre",
+      "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "ircName": "Brookhouse",
           "detentionFacility": "immigrationRemovalCentre",
-          "isAcceleratedDetainedAppeal": "No",
+          "ircName": "Brookhouse",
+          "isAdmin": "Yes",
           "appellantInDetention": "Yes",
-          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-          "directions": [
-            {
-              "id": "1",
-              "value": {
-                "explanation": "The non-standard direction explanation goes here",
-                "parties": "appellant",
-                "dateDue": "{$TODAY+14}",
-                "dateSent": "{$TODAY}",
-                "tag": ""
-              }
-            }
-          ],
+          "listCaseHearingCentre": "harmondsworth",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalNonStandardDirectionToAppellantLetter",
+                "tag": "internalChangeHearingCentreLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -53,13 +41,30 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
+        "isAdmin": "Yes",
+        "appellantInDetention": "Yes",
+        "listCaseHearingCentre": "harmondsworth",
         "notificationsSent": [
           {
-            "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_DET",
+            "id": "7690_INTERNAL_DET_CHANGE_HEARING_CENTRE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7690_INTERNAL_DET_CHANGE_HEARING_CENTRE_EMAIL",
+        "recipient": "det-irc-brookhouse@example.com",
+        "subject": "IAFT – SERVE BY POST: Hearing centre changed",
+        "body": [
+          "Home Office reference: A1234567",
+          "HMCTS reference: PA/12345/2019",
+          "Appellant name: Talha Awan"
+        ]
+      }
+    ]
   }
 }
