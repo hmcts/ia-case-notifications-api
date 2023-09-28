@@ -11,7 +11,10 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "currentCaseStateVisibleToHomeOfficeAll": "awaitingRespondentEvidence"
+          "currentCaseStateVisibleToHomeOfficeAll": "awaitingRespondentEvidence",
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
+          "appellantInDetention": "Yes"
         }
       }
     }
