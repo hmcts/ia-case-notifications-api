@@ -2365,7 +2365,8 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
-                    && AsylumCaseUtils.isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase)
+                    && isAppellantInDetention(asylumCase);
             },
             notificationGenerator
         );
@@ -4951,4 +4952,5 @@ public class NotificationHandlerConfiguration {
             }, notificationGenerators
         );
     }
+
 }

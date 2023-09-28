@@ -1108,6 +1108,9 @@ govnotify:
     uploadAddendumEvidenceAdminOfficer:
       detentionEngagementTeam:
         email: 9e31aa05-a53a-41c4-a4e2-a14f6cf61ef3
+    editAppeal:
+      detentionEngagementTeam:
+        email: 54d24fe0-257e-4dbb-b1e8-1271c0eeec86
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1314,6 +1317,7 @@ security:
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
       - "updateHearingRequirements"
+      - "editAppeal"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1413,6 +1417,7 @@ security:
       - "transferOutOfAda"
       - "reviewHearingRequirements"
       - "updateHearingRequirements"
+      - "editAppeal"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
