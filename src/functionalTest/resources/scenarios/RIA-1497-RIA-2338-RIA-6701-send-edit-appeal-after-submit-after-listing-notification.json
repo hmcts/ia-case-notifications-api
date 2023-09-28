@@ -13,7 +13,8 @@
           "isAdmin": "Yes",
           "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
           "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019"
+          "ariaListingReference": "LP/12345/2019",
+          "appellantInDetention": "Yes"
         }
       }
     }

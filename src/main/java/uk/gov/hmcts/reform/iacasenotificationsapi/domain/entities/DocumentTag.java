@@ -65,6 +65,7 @@ public enum DocumentTag {
     MAINTAIN_CASE_LINK_APPEAL_LETTER("maintainCaseLinkAppealLetter"),
     INTERNAL_UPLOAD_ADDITIONAL_EVIDENCE_LETTER("internalUploadAdditionalEvidenceLetter"),
     AMEND_HOME_OFFICE_APPEAL_RESPONSE("amendHomeOfficeAppealResponse"),
+    INTERNAL_EDIT_APPEAL_LETTER("internalEditAppealLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
