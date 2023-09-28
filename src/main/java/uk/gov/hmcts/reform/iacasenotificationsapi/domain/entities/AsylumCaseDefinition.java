@@ -408,6 +408,9 @@ public enum AsylumCaseDefinition {
 
     APPELLANT_IN_DETENTION(
             "appellantInDetention", new TypeReference<YesOrNo>(){}),
+
+    IS_APPELLANT_RESPONDENT(
+            "isAppellantRespondent", new TypeReference<String>(){}),
     ;
 
     private final String value;
