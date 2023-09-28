@@ -65,7 +65,7 @@ public class DetentionEngagementTeamEditAppealPersonalisation implements EmailWi
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        return ImmutableMap
+         return ImmutableMap
                 .<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
