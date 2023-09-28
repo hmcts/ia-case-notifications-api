@@ -457,6 +457,8 @@ govnotify:
         email: a4e7e8fd-d260-45ee-80d4-4fc48aa7c585
         sms: f38ac04a-af21-447c-afe5-8eca0ab39d38
     changeDirectionDueDate:
+      detentionEngagementTeam:
+        email: 57af3624-c404-44ed-bc74-326b87014da6
       legalRep:
         afterListing:
           email: 170bd475-f0df-4439-8ca0-83d665213371

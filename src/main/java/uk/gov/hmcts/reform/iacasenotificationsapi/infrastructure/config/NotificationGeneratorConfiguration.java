@@ -4456,4 +4456,35 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("internalDetainedAppellantOnlyChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedAppellantOnlyChangeDirectionDueDateNotificationGenerator(
+            DetentionEngagementTeamChangeDueDatePersonalisation detentionEngagementTeamChangeDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamChangeDueDatePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    //TODO: Add HO email personalisation
+    @Bean("internalDetainedAppellantRespondentChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedAppellantRespondentChangeDirectionDueDateNotificationGenerator(
+            DetentionEngagementTeamChangeDueDatePersonalisation detentionEngagementTeamChangeDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamChangeDueDatePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

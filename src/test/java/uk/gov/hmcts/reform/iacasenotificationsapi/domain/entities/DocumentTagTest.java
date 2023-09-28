@@ -63,6 +63,7 @@ class DocumentTagTest {
         assertEquals("maintainCaseLinkAppealLetter", DocumentTag.MAINTAIN_CASE_LINK_APPEAL_LETTER.toString());
         assertEquals("internalUploadAdditionalEvidenceLetter", DocumentTag.INTERNAL_UPLOAD_ADDITIONAL_EVIDENCE_LETTER.toString());
         assertEquals("amendHomeOfficeAppealResponse", DocumentTag.AMEND_HOME_OFFICE_APPEAL_RESPONSE.toString());
+        assertEquals("internalChangeDirectionDueDateLetter", DocumentTag.INTERNAL_CHANGE_DIRECTION_DUE_DATE_LETTER.toString());
     }
 
     @Test

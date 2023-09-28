@@ -425,7 +425,8 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isRespondent
                        && !isOneOfHomeOfficeApiNotifications(callback)
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                       && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -537,7 +538,8 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isRespondent
                        && isOneOfHomeOfficeApiNotifications(callback)
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                       && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -589,7 +591,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isLegalRepresentative
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                       && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -615,12 +618,64 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isRespondent
-                       && isRepJourney(asylumCase);
+                       && isRepJourney(asylumCase)
+                       && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppellantOnlyChangeDirectionDueDateNotificationHandler(
+            @Qualifier("internalDetainedAppellantOnlyChangeDirectionDueDateNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean isAppellant = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                            .map(Parties -> Parties.equals(Parties.APPELLANT))
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                            && isAppellant
+                            && isInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppellantRespondentChangeDirectionDueDateNotificationHandler(
+            @Qualifier("internalDetainedAppellantRespondentChangeDirectionDueDateNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean isAppellantAndRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                            .map(Parties -> Parties.equals(Parties.APPELLANT_AND_RESPONDENT))
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                            && isAppellantAndRespondent
+                            && isInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
         @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
