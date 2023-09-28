@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.EDIT_APPEAL_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_EDIT_APPEAL_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
@@ -75,7 +75,7 @@ public class DetentionEngagementTeamEditAppealPersonalisation implements EmailWi
 
     private JSONObject getInternalEditAppealDocumentInJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, EDIT_APPEAL_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_EDIT_APPEAL_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal Detained edit appeal document in compatible format", e);
             throw new IllegalStateException("Failed to get Internal Detained edit appeal document in compatible format");

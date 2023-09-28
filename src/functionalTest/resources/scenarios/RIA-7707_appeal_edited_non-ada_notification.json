@@ -5,7 +5,7 @@
     "credentials": "CaseOfficer",
     "input": {
       "id": 7707,
-      "eventId": "editAppeal",
+      "eventId": "editAppealAfterSubmit",
       "state": "*",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
@@ -54,7 +54,7 @@
           {
             "id": "1",
             "value": {
-              "tag": "editAppealLetter",
+              "tag": "internalEditAppealLetter",
               "document": {
                 "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                 "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",

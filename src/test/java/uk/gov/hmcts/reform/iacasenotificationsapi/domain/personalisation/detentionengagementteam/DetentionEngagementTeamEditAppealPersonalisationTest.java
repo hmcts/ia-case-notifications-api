@@ -59,7 +59,7 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
     private final String adaPrefix = "ADA - SERVE BY POST";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     DocumentWithMetadata internalEditAppealLetter = getDocumentWithMetadata(
-            "1", "Edit appeal letter", "some other desc", DocumentTag.EDIT_APPEAL_LETTER);
+            "1", "Edit appeal letter", "some other desc", DocumentTag.INTERNAL_EDIT_APPEAL_LETTER);
     IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalEditAppealLetter);
     private DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation;
 
@@ -136,7 +136,7 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
         assertThatThrownBy(
                 () -> detentionEngagementTeamEditAppealPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("editAppealLetter document not available");
+                .hasMessage("internalEditAppealLetter document not available");
     }
 
     @ParameterizedTest

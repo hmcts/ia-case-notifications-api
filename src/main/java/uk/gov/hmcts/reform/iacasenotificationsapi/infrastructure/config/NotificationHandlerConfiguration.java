@@ -2309,7 +2309,8 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
-                    && AsylumCaseUtils.isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase)
+                    && isAppellantInDetention(asylumCase);
             },
             notificationGenerator
         );
@@ -4887,22 +4888,6 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && isAppellantInDetention(asylumCase);
             }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalEditAppealNotificationNotificationHandler(
-            @Qualifier("internalEditAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == EDIT_APPEAL
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
-                }, notificationGenerators
         );
     }
 

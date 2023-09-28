@@ -2375,17 +2375,23 @@ public class NotificationGeneratorConfiguration {
     @Bean("editAppealAfterSubmitInternalCaseNotificationGenerator")
     public List<NotificationGenerator> editAppealAfterSubmitInternalCaseNotificationGenerator(
         RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
+        DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(
                     respondentEditAppealAfterSubmitPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
-            )
+            ),
+            new EmailWithLinkNotificationGenerator(
+                 newArrayList(Collections.singleton(detentionEngagementTeamEditAppealPersonalisation)),
+                 notificationSender,
+                 notificationIdAppender
+                )
         );
     }
 
@@ -4457,18 +4463,4 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalEditAppealNotificationGenerator")
-    public List<NotificationGenerator> internalEditAppealNotificationGenerator(
-            DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamEditAppealPersonalisation)),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
 }
