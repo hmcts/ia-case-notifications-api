@@ -676,6 +676,7 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
+    
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
         @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
