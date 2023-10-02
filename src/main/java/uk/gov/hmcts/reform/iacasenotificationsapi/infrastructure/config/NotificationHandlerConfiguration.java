@@ -1801,7 +1801,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE
-                        && isRepJourney(callback.getCaseDetails().getCaseData()),
+                        && isRepJourney(callback.getCaseDetails().getCaseData())
+                        && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -1814,7 +1815,8 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) ->
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE
-                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                                && isAipJourney(callback.getCaseDetails().getCaseData())
+                                && !isInternalCase(callback.getCaseDetails().getCaseData()),
                 notificationGenerator
         );
     }
@@ -4962,16 +4964,51 @@ public class NotificationHandlerConfiguration {
             @Qualifier("internalHomeOfficeUploadAdditionalAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && List.of(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE).contains(callback.getEvent())
-                        && isInternalCase(asylumCase)
-                        && isAppellantInDetention(asylumCase);
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && List.of(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE).contains(callback.getEvent())
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
 
-            }, notificationGenerators
+                }, notificationGenerators
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalLegalOfficerUploadAddendumEvidenceNotificationHandler(
+            @Qualifier("internalLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    Optional<IdValue<DocumentWithMetadata>> latestAddendum = getLatestAddendumEvidenceDocument(asylumCase);
+                    if (latestAddendum.isEmpty()) {
+                        return false;
+                    }
+
+
+                    final String legalOfficerAddendumUploadedByLabel = "TCW";
+                    final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
+
+                    DocumentWithMetadata addendum = latestAddendum.get().getValue();
+
+                    if (addendum.getSuppliedBy() == null || addendum.getUploadedBy() == null) {
+                        return false;
+                    }
+
+                    if (!addendum.getUploadedBy().equals(legalOfficerAddendumUploadedByLabel) || !addendum.getSuppliedBy().equals(legalOfficerAddendumUploadSuppliedByLabel)) {
+                        return false;
+                    }
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+
+                }, notificationGenerators
+        );
+    }
 }
