@@ -67,6 +67,7 @@ public enum DocumentTag {
     AMEND_HOME_OFFICE_APPEAL_RESPONSE("amendHomeOfficeAppealResponse"),
     INTERNAL_CHANGE_DIRECTION_DUE_DATE_LETTER("internalChangeDirectionDueDateLetter"),
     INTERNAL_EDIT_APPEAL_LETTER("internalEditAppealLetter"),
+    HOME_OFFICE_UPLOAD_ADDITIONAL_ADDENDUM_EVIDENCE_LETTER("homeOfficeUploadAdditionalAddendumEvidenceLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

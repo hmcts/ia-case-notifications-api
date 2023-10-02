@@ -1112,6 +1112,11 @@ govnotify:
       detentionEngagementTeam:
         email: 54d24fe0-257e-4dbb-b1e8-1271c0eeec86
 
+    homeOfficeUploadAdditionalAddendumEvidence:
+      detentionEngagementTeam:
+        email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
+
+
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
