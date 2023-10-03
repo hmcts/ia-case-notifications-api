@@ -29,7 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HomeOfficeEmailFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -51,12 +51,12 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     private final String adaPrefix = "ADA - SERVE BY POST";
     @Mock
-    HomeOfficeEmailFinder homeOfficeEmailFinder;
+    DetEmailService detEmailService;
 
     private Long caseId = 12345L;
     private String templateId = "templateId";
     private String iaExUiFrontendUrl = "http://localhost";
-    private String respondentEmailAddress = "respondent@example.com";
+    private String detEmailAddress = "det@example.com";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
             "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER);
@@ -66,16 +66,16 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
     DocumentDownloadClient documentDownloadClient;
 
 
-    private RespondentInternalNonStandardDirectionPersonalisation respondentInternalNonStandardDirectionPersonalisation;
+    private DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation;
 
     @BeforeEach
     public void setup() throws NotificationClientException, IOException {
-        respondentInternalNonStandardDirectionPersonalisation = new RespondentInternalNonStandardDirectionPersonalisation(
+
+        detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation = new DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation(
             templateId,
             documentDownloadClient,
             personalisationProvider,
-            homeOfficeEmailFinder
-        );
+            detEmailService);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(document)));
@@ -84,31 +84,31 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
 
     @Test
     public void should_return_give_reference_id() {
-        assertEquals(caseId + "_INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT",
-            respondentInternalNonStandardDirectionPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
+            detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, respondentInternalNonStandardDirectionPersonalisation.getTemplateId());
+        assertEquals(templateId, detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_recipient_email_id() {
         when(caseDetails.getState()).thenReturn(State.SUBMIT_HEARING_REQUIREMENTS);
-        when(homeOfficeEmailFinder.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(respondentEmailAddress));
-        assertEquals(Collections.singleton(respondentEmailAddress), respondentInternalNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
+        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
+        assertEquals(Collections.singleton(detEmailAddress), detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getRecipientsList(asylumCase));
     }
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_given_personalisation(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixesForInternalAppealByPost(respondentInternalNonStandardDirectionPersonalisation);
+        initializePrefixesForInternalAppealByPost(detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation);
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(getPersonalisation());
 
         Map<String, Object> personalisation =
-            respondentInternalNonStandardDirectionPersonalisation.getPersonalisationForLink(callback);
+            detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getPersonalisationForLink(callback);
         //assert the personalisation map values
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
         assertEquals(jsonObject, personalisation.get("documentLink"));
@@ -118,7 +118,7 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
     @Test
     public void should_throw_exception_when_personalisation_when_callback_is_null() {
 
-        assertThatThrownBy(() -> respondentInternalNonStandardDirectionPersonalisation.getPersonalisationForLink((AsylumCase) null))
+        assertThatThrownBy(() -> detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getPersonalisationForLink((AsylumCase) null))
             .hasMessage("asylumCase must not be null")
             .isExactlyInstanceOf(NullPointerException.class);
 

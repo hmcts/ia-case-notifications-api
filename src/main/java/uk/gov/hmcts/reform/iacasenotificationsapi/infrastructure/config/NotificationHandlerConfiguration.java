@@ -1428,12 +1428,27 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.SEND_DIRECTION
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
-                            && directionFinder
-                            .findFirst(asylumCase, DirectionTag.NONE)
-                            .map(direction -> direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT))
-                            .orElse(false);
+                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hoInternalNonStandardDirectionHandler(
+            @Qualifier("hoInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SEND_DIRECTION
+                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.RESPONDENT, directionFinder);
                 },
                 notificationGenerators
         );
@@ -1453,12 +1468,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.SEND_DIRECTION
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
-                            && directionFinder
-                            .findFirst(asylumCase, DirectionTag.NONE)
-                            .map(direction -> direction.getParties().equals(Parties.APPELLANT))
-                            .orElse(false);
+                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder);
                 },
                 notificationGenerators
         );
@@ -4972,6 +4982,15 @@ public class NotificationHandlerConfiguration {
 
             }, notificationGenerators
         );
+    }
+
+    private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
+        return isInternalCase(asylumCase)
+                && isAppellantInDetention(asylumCase)
+                && directionFinder
+                .findFirst(asylumCase, DirectionTag.NONE)
+                .map(direction -> direction.getParties().equals(party))
+                .orElse(false);
     }
 
 }
