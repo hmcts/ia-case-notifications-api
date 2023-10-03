@@ -456,6 +456,8 @@ govnotify:
       appellant:
         email: a4e7e8fd-d260-45ee-80d4-4fc48aa7c585
         sms: f38ac04a-af21-447c-afe5-8eca0ab39d38
+      detentionEngagementTeam:
+        email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
     changeDirectionDueDate:
       detentionEngagementTeam:
         email: 57af3624-c404-44ed-bc74-326b87014da6
