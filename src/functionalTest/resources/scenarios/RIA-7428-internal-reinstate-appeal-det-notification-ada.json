@@ -67,7 +67,7 @@
     "notifications": [
       {
         "reference": "7428_REINSTATE_APPEAL_HOME_OFFICE",
-        "recipient": "ia-respondentapc@fake.hmcts.net",
+        "recipient": "{$apcHomeOfficeEmailAddress}",
         "subject": "Accelerated detained appeal: appeal reinstated",
         "body": [
           "HMCTS reference: PA/12345/2019",
