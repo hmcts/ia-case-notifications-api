@@ -2908,18 +2908,25 @@ public class NotificationGeneratorConfiguration {
     @Bean("reinstateAppealInternalNotificationGenerator")
     public List<NotificationGenerator> reinstateAppealInternalNotificationHandler(
             HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            DetentionEngagementTeamReinstateAppealPersonalisation detentionEngagementTeamReinstateAppealPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-
-        return Collections.singletonList(
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                homeOfficeReinstateAppealPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                )
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    homeOfficeReinstateAppealPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamReinstateAppealPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 

@@ -69,6 +69,7 @@ public enum DocumentTag {
     INTERNAL_EDIT_APPEAL_LETTER("internalEditAppealLetter"),
     HOME_OFFICE_UPLOAD_ADDITIONAL_ADDENDUM_EVIDENCE_LETTER("homeOfficeUploadAdditionalAddendumEvidenceLetter"),
     LEGAL_OFFICER_UPLOAD_ADDITIONAL_EVIDENCE_LETTER("legalOfficerUploadAdditionalEvidenceLetter"),
+    INTERNAL_REINSTATE_APPEAL_LETTER("internalReinstateAppealLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
