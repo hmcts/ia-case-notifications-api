@@ -12,7 +12,6 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
-          "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
