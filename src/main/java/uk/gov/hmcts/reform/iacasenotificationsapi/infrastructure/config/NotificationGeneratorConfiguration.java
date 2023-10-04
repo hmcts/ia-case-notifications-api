@@ -2255,13 +2255,13 @@ public class NotificationGeneratorConfiguration {
     @Bean("appellantRespondentInternalNonStandardDirectionGenerator")
     public List<NotificationGenerator> appellantRespondentInternalNonStandardDirectionGenerator(
         DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
-        RespondentInternalNonStandardDirectionPersonalisation respondentInternalNonStandardDirectionPersonalisation,
+        DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation, respondentInternalNonStandardDirectionPersonalisation),
+                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation, detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -2283,7 +2283,20 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("hoInternalNonStandardDirectionGenerator")
+    public List<NotificationGenerator> hoInternalNonStandardDirectionGenerator(
+            DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
     @Bean("requestResponseAmendDirectionGenerator")
     public List<NotificationGenerator> requestResponseAmendDirectionGenerator(

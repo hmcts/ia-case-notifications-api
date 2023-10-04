@@ -15,14 +15,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HomeOfficeEmailFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class RespondentInternalNonStandardDirectionPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String sendNonStandardDirectionTemplateId;
     @Value("${govnotify.emailPrefix.adaByPost}")
@@ -33,28 +33,28 @@ public class RespondentInternalNonStandardDirectionPersonalisation implements Em
     private final DocumentDownloadClient documentDownloadClient;
     private final PersonalisationProvider personalisationProvider;
 
-    private final HomeOfficeEmailFinder homeOfficeEmailFinder;
+    private final DetEmailService detEmailService;
 
-    public RespondentInternalNonStandardDirectionPersonalisation(
+    public DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation(
             @Value("${govnotify.template.nonStandardDirectionInternal.respondent.email}")
             String sendNonStandardDirectionTemplateId,
             DocumentDownloadClient documentDownloadClient,
             PersonalisationProvider personalisationProvider,
-            HomeOfficeEmailFinder homeOfficeEmailFinder) {
+            DetEmailService detEmailService) {
         this.sendNonStandardDirectionTemplateId = sendNonStandardDirectionTemplateId;
         this.documentDownloadClient = documentDownloadClient;
         this.personalisationProvider = personalisationProvider;
-        this.homeOfficeEmailFinder = homeOfficeEmailFinder;
+        this.detEmailService = detEmailService;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT";
+        return caseId + "_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET";
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return homeOfficeEmailFinder.getRecipientsList(asylumCase);
+        return detEmailService.getRecipientsList(asylumCase);
     }
 
     @Override
