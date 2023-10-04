@@ -7,7 +7,7 @@
     "dependencies"
   ],
   "schedule": [
-    "3am"
+    "before 3am every weekday"
   ],
   "helmv3": {
     "bumpVersion": "patch"
