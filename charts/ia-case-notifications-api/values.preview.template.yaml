@@ -3,9 +3,8 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
-    IA_AIP_FRONTEND_URL: "https://ia-aip-frontend-pr-1004.preview.platform.hmcts.net"
-    IA_EXUI_FRONTEND_URL: "https://xui-ia-case-api-pr-1699.preview.platform.hmcts.net"
-    CCD_URL: "https://ccd-data-store-api-ia-case-api-pr-1699.preview.platform.hmcts.net"
+    IA_AIP_FRONTEND_URL: "https://immigration-appeal.{{ .Values.global.environment }}.platform.hmcts.net/"
+    IA_EXUI_FRONTEND_URL: "https://manage-case.{{ .Values.global.environment }}.platform.hmcts.net/"
     OPEN_ID_IDAM_URL: "https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net"
 
 
