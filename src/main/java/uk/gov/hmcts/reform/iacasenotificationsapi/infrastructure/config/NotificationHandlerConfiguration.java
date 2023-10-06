@@ -678,8 +678,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppellantHOChangeDirectionDueDateNotificationHandler(
-            @Qualifier("internalDetainedAppellantHOChangeDirectionDueDateNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppellantHoChangeDirectionDueDateNotificationHandler(
+            @Qualifier("internalDetainedAppellantHoChangeDirectionDueDateNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(

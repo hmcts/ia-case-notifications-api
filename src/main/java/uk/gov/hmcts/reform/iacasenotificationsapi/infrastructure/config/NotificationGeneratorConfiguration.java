@@ -4514,15 +4514,15 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalDetainedAppellantHOChangeDirectionDueDateNotificationGenerator")
-    public List<NotificationGenerator> internalDetainedAppellantHOChangeDirectionDueDateNotificationGenerator(
-            DetentionEngagementTeamChangeHODirectionDueDatePersonalisation detentionEngagementTeamChangeHODirectionDueDatePersonalisation,
+    @Bean("internalDetainedAppellantHoChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedAppellantHoChangeDirectionDueDateNotificationGenerator(
+            DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation detentionEngagementTeamChangeHoDirectionDueDatePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamChangeHODirectionDueDatePersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamChangeHoDirectionDueDatePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )

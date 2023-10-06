@@ -39,7 +39,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
+class DetentionEngagementTeamChangeHoDirectionDueDatePersonalisationTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -58,13 +58,13 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
     private final String adaPrefix = "ADA - SERVE BY POST";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     private final Long caseId = 12345L;
-    private DetentionEngagementTeamChangeHODirectionDueDatePersonalisation detentionEngagementTeamChangeHODirectionDueDatePersonalisation;
+    private DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation detentionEngagementTeamChangeHoDirectionDueDatePersonalisation;
 
-    DocumentWithMetadata changeHODirectionDueDateLetter = TestUtils.getDocumentWithMetadata(
+    DocumentWithMetadata changeHoDirectionDueDateLetter = TestUtils.getDocumentWithMetadata(
             "id", "detained-appellant-change-ho-direction-due-date-letter", "some other desc", DocumentTag.INTERNAL_HO_CHANGE_DIRECTION_DUE_DATE_LETTER);
-    IdValue<DocumentWithMetadata> notificationDocs = new IdValue<>("1", changeHODirectionDueDateLetter);
+    IdValue<DocumentWithMetadata> notificationDocs = new IdValue<>("1", changeHoDirectionDueDateLetter);
 
-    DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest() {
+    DetentionEngagementTeamChangeHoDirectionDueDatePersonalisationTest() {
     }
 
     @BeforeEach
@@ -79,7 +79,7 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(notificationDocs)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonDocument);
 
-        detentionEngagementTeamChangeHODirectionDueDatePersonalisation = new DetentionEngagementTeamChangeHODirectionDueDatePersonalisation(
+        detentionEngagementTeamChangeHoDirectionDueDatePersonalisation = new DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation(
                 templateId,
                 detEmailService,
                 personalisationProvider,
@@ -91,14 +91,14 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
     public void should_return_given_template_id_detained() {
         assertEquals(
                 templateId,
-                detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getTemplateId(asylumCase)
+                detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getTemplateId(asylumCase)
         );
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_INTERNAL_DET_CHANGE_HO_DIRECTION_DUE_DATE_EMAIL",
-                detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getReferenceId(caseId));
+                detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -108,19 +108,19 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(
-                detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+                detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertEquals(Collections.emptySet(), detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals(Collections.emptySet(), detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -140,7 +140,7 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(NO));
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase);
+                detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
@@ -148,7 +148,7 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
     @Test
     void should_return_personalisation_if_decision_dismissed_for_nonAda() throws NotificationClientException, IOException {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
-        Map<String, Object> personalisation = detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase);
+        Map<String, Object> personalisation = detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase);
 
         assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
     }
@@ -156,7 +156,7 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getPersonalisationForLink((AsylumCase) null))
+        assertThatThrownBy(() -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
@@ -164,15 +164,15 @@ class DetentionEngagementTeamChangeHODirectionDueDatePersonalisationTest {
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
+        assertThatThrownBy(() -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("internalHoChangeDirectionDueDateLetter document not available");
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
-        when(documentDownloadClient.getJsonObjectFromDocument(changeHODirectionDueDateLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamChangeHODirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
+        when(documentDownloadClient.getJsonObjectFromDocument(changeHoDirectionDueDateLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
+        assertThatThrownBy(() -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("Failed to get Internal Change HO Direction Due Date Letter in compatible format");
     }

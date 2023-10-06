@@ -23,9 +23,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamChangeHODirectionDueDatePersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String detentionEngagementTeamChangeHODirectionDueDateTemplateId;
+    private final String detentionEngagementTeamChangeHoDirectionDueDateTemplateId;
     private final DetEmailService detEmailService;
     private final PersonalisationProvider personalisationProvider;
     private final DocumentDownloadClient documentDownloadClient;
@@ -36,14 +36,14 @@ public class DetentionEngagementTeamChangeHODirectionDueDatePersonalisation impl
 
     private final String nonAdaPrefix;
 
-    public DetentionEngagementTeamChangeHODirectionDueDatePersonalisation(
-            @Value("${govnotify.template.changeDirectionDueDateOfHomeOffice.detentionEngagementTeam.email}") String detentionEngagementTeamChangeHODirectionDueDateTemplateId,
+    public DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation(
+            @Value("${govnotify.template.changeDirectionDueDateOfHomeOffice.detentionEngagementTeam.email}") String detentionEngagementTeamChangeHoDirectionDueDateTemplateId,
             DetEmailService detEmailService,
             PersonalisationProvider personalisationProvider,
             DocumentDownloadClient documentDownloadClient,
             @Value("${govnotify.emailPrefix.adaByPost}") String adaPrefix,
             @Value("${govnotify.emailPrefix.nonAdaByPost}") String nonAdaPrefix) {
-        this.detentionEngagementTeamChangeHODirectionDueDateTemplateId = detentionEngagementTeamChangeHODirectionDueDateTemplateId;
+        this.detentionEngagementTeamChangeHoDirectionDueDateTemplateId = detentionEngagementTeamChangeHoDirectionDueDateTemplateId;
         this.detEmailService = detEmailService;
         this.personalisationProvider = personalisationProvider;
         this.documentDownloadClient = documentDownloadClient;
@@ -58,7 +58,7 @@ public class DetentionEngagementTeamChangeHODirectionDueDatePersonalisation impl
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return detentionEngagementTeamChangeHODirectionDueDateTemplateId;
+        return detentionEngagementTeamChangeHoDirectionDueDateTemplateId;
     }
 
     @Override
