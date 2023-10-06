@@ -482,6 +482,8 @@ govnotify:
           afterListing: ebfbc40d-619e-4e88-b238-ef8e60636ca2
           beforeListing: c315b1db-8245-4cba-8e64-a928f1bb99bb
         sms: 6af930c5-4775-4149-ba6f-f554198340c4
+      detentionEngagementTeam:
+        email: d2263454-047a-498a-9c73-c644bd6dde76
     changeDirectionDueDateOfAppellant:
       appellant:
         email: c81bf72e-d601-42ce-8c13-3c8d9abb62b3

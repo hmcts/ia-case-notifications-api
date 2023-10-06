@@ -676,6 +676,32 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppellantHOChangeDirectionDueDateNotificationHandler(
+            @Qualifier("internalDetainedAppellantHOChangeDirectionDueDateNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                            .map(Parties -> Parties.equals(Parties.RESPONDENT))
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                            && isRespondent
+                            && isAppellantInDetention(asylumCase)
+                            && isInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
     
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
