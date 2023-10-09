@@ -766,6 +766,10 @@ govnotify:
           sms: 2f7ae47e-733a-4e1b-bb1d-e62101dd6844
         afterListing:
           email: c193b002-fdd4-4e51-8cdf-064942937ff9
+      detentionEngagementTeam:
+        email:
+          ada: 3e328516-5262-44b4-8a65-41dc795d669b
+          nonAda: f4a9b5e9-f5d1-4659-a8c3-b4b61eb94cce
     makeAnApplication:
       appellant:
         sms: 5f1533b6-ee8c-448e-99a8-b3e0b6c2de30
