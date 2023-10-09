@@ -73,11 +73,11 @@ public class DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation impl
         return ImmutableMap.<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                .put("documentLink", getHODirectionDueDateChangedLetterJsonObject(asylumCase))
+                .put("documentLink", getHoDirectionDueDateChangedLetterJsonObject(asylumCase))
                 .build();
     }
 
-    private JSONObject getHODirectionDueDateChangedLetterJsonObject(AsylumCase asylumCase) {
+    private JSONObject getHoDirectionDueDateChangedLetterJsonObject(AsylumCase asylumCase) {
         try {
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, DocumentTag.INTERNAL_HO_CHANGE_DIRECTION_DUE_DATE_LETTER));
         } catch (IOException | NotificationClientException e) {
