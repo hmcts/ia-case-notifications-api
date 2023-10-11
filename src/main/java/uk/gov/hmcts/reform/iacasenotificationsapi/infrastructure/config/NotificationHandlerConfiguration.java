@@ -4926,15 +4926,15 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalUpdateHearingRequirementsNotificationHandler(
-        @Qualifier("internalUpdateHearingRequirementsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalUpdateHearingAdjustmentsNotificationHandler(
+        @Qualifier("internalUpdateHearingAdjustmentsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.UPDATE_HEARING_REQUIREMENTS
+                       && callback.getEvent() == UPDATE_HEARING_ADJUSTMENTS
                        && isInternalCase(asylumCase)
                        && isAppellantInDetention(asylumCase);
             }, notificationGenerators

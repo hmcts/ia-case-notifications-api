@@ -59,7 +59,7 @@ public enum DocumentTag {
     INTERNAL_APPELLANT_FTPA_DECIDED_LETTER("internalAppellantFtpaDecidedLetter"),
     INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER("internalNonStandardDirectionToAppellantLetter"),
     INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER("internalNonStandardDirectionToRespondentLetter"),
-    INTERNAL_HEARING_REQUIREMENTS_UPDATED_LETTER("internalHearingRequirementsUpdatedLetter"),
+    INTERNAL_HEARING_ADJUSTMENTS_UPDATED_LETTER("internalHearingAdjustmentsUpdatedLetter"),
     MAINTAIN_CASE_UNLINK_APPEAL_LETTER("maintainCaseUnlinkAppealLetter"),
     INTERNAL_CHANGE_HEARING_CENTRE_LETTER("internalChangeHearingCentreLetter"),
     MAINTAIN_CASE_LINK_APPEAL_LETTER("maintainCaseLinkAppealLetter"),

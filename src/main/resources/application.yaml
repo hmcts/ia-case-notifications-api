@@ -1107,7 +1107,7 @@ govnotify:
           email: 6c30a67d-e848-44c7-b861-1c474fd11871
         refused:
           email: 80d16b48-5a0c-4a09-93e8-a24f98939c57
-    updateHearingRequirements:
+    updateHearingAdjustments:
       detentionEngagementTeam:
         email: 758bce3f-9438-4dc3-8a34-c56803dd4922
     uploadAdditionalEvidence:
@@ -1329,7 +1329,6 @@ security:
       - "markAppealAsDetained"
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
-      - "updateHearingRequirements"
       - "editAppeal"
     caseworker-ia-admofficer:
       - "listCase"
@@ -1429,7 +1428,6 @@ security:
       - "adaSuitabilityReview"
       - "transferOutOfAda"
       - "reviewHearingRequirements"
-      - "updateHearingRequirements"
       - "editAppeal"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"

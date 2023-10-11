@@ -4393,15 +4393,15 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalUpdateHearingRequirementsNotificationGenerator")
-    public List<NotificationGenerator> internalUpdateHearingRequirementsNotificationGenerator(
-        DetentionEngagementTeamUpdateHearingRequirementsPersonalisation detentionEngagementTeamUpdateHearingRequirementsPersonalisation,
+    @Bean("internalUpdateHearingAdjustmentsNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateHearingAdjustmentsNotificationGenerator(
+        DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisation detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamUpdateHearingRequirementsPersonalisation)),
+                newArrayList(Collections.singleton(detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation)),
                 notificationSender,
                 notificationIdAppender
             )
