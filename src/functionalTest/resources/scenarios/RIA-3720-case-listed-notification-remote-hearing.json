@@ -12,7 +12,6 @@
         "replacements": {
           "appellantInUk": "No",
           "remoteVideoCallTribunalResponse": "remote video call tribunal response",
-          "ariaListingReference": "LP/12345/2021",
           "hearingCentre": "birmingham",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2021-02-19T14:25:15.000",
@@ -56,7 +55,6 @@
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2021",
           "CASE001",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
@@ -79,7 +77,6 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2021",
           "A1234567",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
@@ -103,7 +100,6 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2021",
           "{$iaExUiFrontendUrl}",
           "19 Feb 2021",
           "14:25",
