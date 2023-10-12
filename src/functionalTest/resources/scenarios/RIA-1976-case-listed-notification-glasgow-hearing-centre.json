@@ -11,7 +11,6 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "glasgow",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
@@ -51,7 +50,6 @@
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2019",
           "CASE001",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
@@ -73,7 +71,6 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2019",
           "A1234567",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
@@ -95,7 +92,6 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2019",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
           "3 May 2019",

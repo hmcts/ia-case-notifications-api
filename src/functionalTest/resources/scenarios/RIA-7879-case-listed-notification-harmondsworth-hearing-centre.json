@@ -12,7 +12,6 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
-          "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
@@ -53,7 +52,6 @@
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2023",
-          "LP/12345/2023",
           "3 Sep 2023",
           "14:25",
           "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
@@ -65,7 +63,6 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
-          "LP/12345/2023",
           "3 Sep 2023",
           "14:25",
           "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
@@ -77,7 +74,6 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
-          "LP/12345/2023",
           "3 Sep 2023",
           "14:25",
           "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"

@@ -10,7 +10,6 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ariaListingReference": "LP/12345/2019",
           "hearingCentre": "bradford",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
@@ -21,7 +20,6 @@
       "caseDataBefore": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
@@ -58,7 +56,6 @@
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2019",
           "CASE001",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
@@ -83,7 +80,6 @@
         "subject": "Immigration and Asylum appeal: change to Hearing requirements",
         "body": [
           "PA/12345/2019",
-          "LP/12345/2019",
           "A1234567",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
