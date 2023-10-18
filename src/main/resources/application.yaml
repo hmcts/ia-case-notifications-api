@@ -1330,6 +1330,8 @@ security:
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
       - "editAppeal"
+      - "buildCase"
+      - "listCase"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
