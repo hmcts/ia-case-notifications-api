@@ -67,7 +67,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, caseOfficerEditListingPersonalisation.getTemplateId());
+        assertEquals(templateId, caseOfficerEditListingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

@@ -81,7 +81,7 @@ class HomeOfficeEditListingPersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, homeOfficeEditListingPersonalisation.getTemplateId());
+        assertEquals(templateId, homeOfficeEditListingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

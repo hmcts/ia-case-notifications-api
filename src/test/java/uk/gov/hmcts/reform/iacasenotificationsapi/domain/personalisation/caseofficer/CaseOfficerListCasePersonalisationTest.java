@@ -94,7 +94,7 @@ public class CaseOfficerListCasePersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, caseOfficerListCasePersonalisation.getTemplateId());
+        assertEquals(templateId, caseOfficerListCasePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

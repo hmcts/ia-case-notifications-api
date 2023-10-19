@@ -135,7 +135,7 @@ public class HomeOfficeListCasePersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, homeOfficeListCasePersonalisation.getTemplateId());
+        assertEquals(templateId, homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

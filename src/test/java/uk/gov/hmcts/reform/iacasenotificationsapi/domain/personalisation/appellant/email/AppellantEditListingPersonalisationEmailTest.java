@@ -84,7 +84,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, appellantEditListingPersonalisationEmail.getTemplateId());
+        assertEquals(templateId, appellantEditListingPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
