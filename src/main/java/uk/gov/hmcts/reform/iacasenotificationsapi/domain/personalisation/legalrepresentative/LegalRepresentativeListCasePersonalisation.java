@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
@@ -17,6 +18,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
     private final String legalRepresentativeCaseListedTemplateId;
     private final String legalRepresentativeOutOfCountryCaseListedTemplateId;
+    private final String listAssistHearingLegalRepresentativeCaseListedTemplateId;
+    private final String listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
@@ -26,6 +29,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     public LegalRepresentativeListCasePersonalisation(
         @Value("${govnotify.template.caseListed.legalRep.email}") String legalRepresentativeCaseListedTemplateId,
         @Value("${govnotify.template.caseListed.remoteHearing.legalRep.email}") String legalRepresentativeOutOfCountryCaseListedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseListed.legalRep.email}") String listAssistHearingLegalRepresentativeCaseListedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseListed.remoteHearing.legalRep.email}") String listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,
@@ -33,6 +38,8 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     ) {
         this.legalRepresentativeCaseListedTemplateId = legalRepresentativeCaseListedTemplateId;
         this.legalRepresentativeOutOfCountryCaseListedTemplateId = legalRepresentativeOutOfCountryCaseListedTemplateId;
+        this.listAssistHearingLegalRepresentativeCaseListedTemplateId = listAssistHearingLegalRepresentativeCaseListedTemplateId;
+        this.listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId = listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.customerServicesProvider = customerServicesProvider;
@@ -41,12 +48,15 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
+        YesOrNo isIntegrated = asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO);
         if (asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
             .map(centre -> centre == HearingCentre.REMOTE_HEARING)
             .orElse(false)) {
-            return legalRepresentativeOutOfCountryCaseListedTemplateId;
+            return (isIntegrated == YesOrNo.YES ?
+                    listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId : legalRepresentativeOutOfCountryCaseListedTemplateId);
         } else {
-            return legalRepresentativeCaseListedTemplateId;
+            return (isIntegrated == YesOrNo.YES ?
+                    listAssistHearingLegalRepresentativeCaseListedTemplateId : legalRepresentativeCaseListedTemplateId);
         }
     }
 

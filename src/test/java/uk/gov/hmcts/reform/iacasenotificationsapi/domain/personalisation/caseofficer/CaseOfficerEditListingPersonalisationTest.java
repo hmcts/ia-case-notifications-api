@@ -38,6 +38,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String listCaseHearingCentreEmailAddress = "listCaseHearingCentre@example.com";
@@ -59,6 +60,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
         caseOfficerEditListingPersonalisation = new CaseOfficerEditListingPersonalisation(
             templateId,
+            listAssistHearingTemplateId,
             emailAddressFinder,
             personalisationProvider);
     }

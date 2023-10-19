@@ -367,6 +367,9 @@ public enum AsylumCaseDefinition {
 
     APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
 
+    IS_INTEGRATED(
+            "isIntegrated", new TypeReference<YesOrNo>(){}),
+
     CASE_LINKS(
             "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){})
     ;

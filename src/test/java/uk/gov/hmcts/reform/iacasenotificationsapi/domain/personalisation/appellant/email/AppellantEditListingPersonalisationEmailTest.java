@@ -43,6 +43,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String mockedAppellantEmailAddress = "legalRep@example.com";
     private String hearingCentreAddress = "some hearing centre address";
@@ -73,6 +74,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
         appellantEditListingPersonalisationEmail = new AppellantEditListingPersonalisationEmail(
             templateId,
+            listAssistHearingTemplateId,
             iaAipFrontendUrl,
             personalisationProvider,
             customerServicesProvider,
