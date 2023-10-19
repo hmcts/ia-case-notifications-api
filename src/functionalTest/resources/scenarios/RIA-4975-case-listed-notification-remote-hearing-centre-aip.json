@@ -11,6 +11,7 @@
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "hearingCentre": "birmingham",
+          "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
           "homeOfficeReferenceNumber": "1212-0099-0062-8083",
@@ -79,6 +80,7 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "Pablo Jimenez",
           "3 May 2019",
           "14:25",
@@ -91,6 +93,7 @@
         "subject": "Immigration and Asylum appeal: Your hearing details",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "1212-0099-0062-8083",
           "Pablo Jimenez",
           "{$iaAipFrontendUrl}",
@@ -119,6 +122,7 @@
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
+          "LP/12345/2019",
           "1212-0099-0062-8083",
           "Pablo Jimenez",
           "{$iaExUiFrontendUrl}",
