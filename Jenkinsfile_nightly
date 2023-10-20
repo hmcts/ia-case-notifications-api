@@ -172,7 +172,7 @@ withNightlyPipeline(type, product, component) {
 
   loadVaultSecrets(secrets)
 
-//  enableSecurityScan()
+  enableSecurityScan()
 
   /*
    When the tokens expire (they last only 180 days), follow instructions here to generate new ones:
@@ -185,7 +185,7 @@ withNightlyPipeline(type, product, component) {
    */
 //  TODO re add in fortify once issues have been resolved
 //  enableFortifyScan()
-//  enableMutationTest()
+  enableMutationTest()
 
   enableSlackNotifications('#ia-tech')
   enableFullFunctionalTest()
