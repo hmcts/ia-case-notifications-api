@@ -1,9 +1,8 @@
 {
   "description": "RIA-7195 edit case listing notification with isIntegrated field (remote hearing)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "CaseOfficer",
     "input": {
       "id": 1015,
       "eventId": "editCaseListing",
@@ -17,6 +16,7 @@
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "remoteVideoCallTribunalResponse": "Some tribunal response",
           "isIntegrated": "Yes"
         }
       },
@@ -25,7 +25,8 @@
         "replacements": {
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2023-09-02T14:25:15.000",
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "isIntegrated": "Yes"
         }
       }
     }
@@ -66,7 +67,8 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Remote hearing"
+          "Remote hearing",
+          "Some tribunal response"
         ]
       },
       {
@@ -77,7 +79,8 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Remote hearing"
+          "Remote hearing",
+          "Some tribunal response"
         ]
       },
       {
