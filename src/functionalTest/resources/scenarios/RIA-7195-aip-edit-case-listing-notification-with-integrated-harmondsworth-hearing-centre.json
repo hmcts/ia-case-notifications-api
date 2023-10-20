@@ -1,6 +1,5 @@
 {
   "description": "RIA-7195 AIP edit case listing notification with isIntegrated field (Harmondsworth hearing centre)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
