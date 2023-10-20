@@ -13,7 +13,7 @@
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2023",
-          "hearingCentre": "harmondsworth",
+          "hearingCentre": "birmingham",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
@@ -29,7 +29,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
-        "hearingCentre": "harmondsworth",
+        "hearingCentre": "birmingham",
         "listCaseHearingCentre": "remoteHearing",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
@@ -63,7 +63,7 @@
       },
       {
         "reference": "1015_CASE_LISTED_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.harmondsworth}",
+        "recipient": "{$homeOfficeEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
@@ -74,7 +74,7 @@
       },
       {
         "reference": "1015_CASE_LISTED_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
+        "recipient": "{$hearingCentreEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
