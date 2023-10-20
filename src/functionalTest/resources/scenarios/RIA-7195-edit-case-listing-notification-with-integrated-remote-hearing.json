@@ -13,7 +13,7 @@
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2023",
-          "hearingCentre": "harmondsworth",
+          "hearingCentre": "taylorHouse",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
@@ -37,7 +37,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
-        "hearingCentre": "harmondsworth",
+        "hearingCentre": "taylorHouse",
         "listCaseHearingCentre": "remoteHearing",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
@@ -59,8 +59,19 @@
     },
     "notifications": [
       {
+        "reference": "1015_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: check the details of your hearing",
+        "body": [
+          "PA/12345/2023",
+          "3 Sep 2023",
+          "14:25",
+          "Remote hearing"
+        ]
+      },
+      {
         "reference": "1015_CASE_RE_LISTED_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.harmondsworth}",
+        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
@@ -71,19 +82,8 @@
       },
       {
         "reference": "1015_CASE_RE_LISTED_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
+        "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: case re-listed",
-        "body": [
-          "PA/12345/2023",
-          "3 Sep 2023",
-          "14:25",
-          "Remote hearing"
-        ]
-      },
-      {
-        "reference": "1015_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2023",
           "3 Sep 2023",
