@@ -366,8 +366,8 @@ dependencies {
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDoc
 
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.81'
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.81'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.82'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.82'
 
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 
