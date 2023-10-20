@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1015,
+      "id": 1016,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -23,6 +23,7 @@
       "caseDataBefore": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2023-09-02T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
@@ -44,15 +45,15 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1015_CASE_RE_LISTED_HOME_OFFICE",
+            "id": "1016_CASE_RE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1015_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "1016_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1015_CASE_RE_LISTED_CASE_OFFICER",
+            "id": "1016_CASE_RE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -60,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "1015_CASE_RE_LISTED_HOME_OFFICE",
+        "reference": "1016_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -72,7 +73,7 @@
         ]
       },
       {
-        "reference": "1015_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "1016_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
@@ -84,7 +85,7 @@
         ]
       },
       {
-        "reference": "1015_CASE_RE_LISTED_CASE_OFFICER",
+        "reference": "1016_CASE_RE_LISTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
