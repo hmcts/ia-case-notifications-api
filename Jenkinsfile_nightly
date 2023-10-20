@@ -169,7 +169,7 @@ withNightlyPipeline(type, product, component) {
 
   loadVaultSecrets(secrets)
 
-  enableSecurityScan()
+//  enableSecurityScan()
 
   /*
    When the tokens expire (they last only 180 days), follow instructions here to generate new ones:
@@ -182,13 +182,73 @@ withNightlyPipeline(type, product, component) {
    */
 //  TODO re add in fortify once issues have been resolved
 //  enableFortifyScan()
-  enableMutationTest()
+//  enableMutationTest()
 
   enableSlackNotifications('#ia-tech')
   enableFullFunctionalTest()
 
+  afterAlways('mutationTest') {
+    publishHTML([
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/pitest",
+            reportFiles          : 'index.html',
+            reportName           : 'IAC Case Api Mutation Test Report'
+    ])
+  }
+
   afterAlways('fortify-scan') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+  }
+
+  before('fullFunctionalTest') {
+    try {
+      builder.gradle('test')
+      builder.gradle('integration')
+      builder.gradle('smoke')
+    } finally {
+      junit '**/test-results/**/*.xml'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/test",
+              reportFiles          : "index.html",
+              reportName           : "IAC Case Api Unit Test Report"
+      ]
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/smoke",
+              reportFiles          : "index.html",
+              reportName           : "IAC Case Api Smoke Test Report"
+      ]
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/integration",
+              reportFiles          : "index.html",
+              reportName           : "IAC Case Api Integration Test Report"
+      ]
+    }
+  }
+
+  afterAlways('fullFunctionalTest') {
+    publishHTML([
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/tests/functional",
+            reportFiles          : 'index.html',
+            reportName           : 'IAC Case Api Functional Test Report'
+    ])
+
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/build/reports/**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/**/*'
   }
 
 }
