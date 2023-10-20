@@ -70,9 +70,9 @@
         ]
       },
       {
-        "reference": "1015_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: check the details of your hearing",
+        "reference": "1015_CASE_RE_LISTED_CASE_OFFICER",
+        "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
+        "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
           "3 Sep 2023",
@@ -81,9 +81,9 @@
         ]
       },
       {
-        "reference": "1015_CASE_RE_LISTED_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
-        "subject": "Immigration and Asylum appeal: case re-listed",
+        "reference": "1015_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2023",
           "3 Sep 2023",
