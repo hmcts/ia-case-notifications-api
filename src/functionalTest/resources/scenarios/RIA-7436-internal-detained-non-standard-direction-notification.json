@@ -41,20 +41,6 @@
                 "description": "",
                 "dateUploaded": "{$TODAY}"
               }
-            },
-            {
-              "id": "2",
-              "value": {
-                "tag": "internalNonStandardDirectionToRespondentLetter",
-                "document": {
-                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
-                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
-                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
-                },
-                "suppliedBy": "",
-                "description": "",
-                "dateUploaded": "{$TODAY}"
-              }
             }
           ]
         }
@@ -70,10 +56,6 @@
         "notificationsSent": [
           {
             "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_DET",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

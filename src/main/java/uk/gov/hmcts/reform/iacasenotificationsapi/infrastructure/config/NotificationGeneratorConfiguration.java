@@ -2255,13 +2255,12 @@ public class NotificationGeneratorConfiguration {
     @Bean("appellantRespondentInternalNonStandardDirectionGenerator")
     public List<NotificationGenerator> appellantRespondentInternalNonStandardDirectionGenerator(
         DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
-        DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation, detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation),
+                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
