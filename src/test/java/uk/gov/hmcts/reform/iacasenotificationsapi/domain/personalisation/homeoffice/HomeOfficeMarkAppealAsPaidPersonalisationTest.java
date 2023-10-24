@@ -108,8 +108,9 @@ class HomeOfficeMarkAppealAsPaidPersonalisationTest {
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
+
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeMarkAppealAsPaidPersonalisation);

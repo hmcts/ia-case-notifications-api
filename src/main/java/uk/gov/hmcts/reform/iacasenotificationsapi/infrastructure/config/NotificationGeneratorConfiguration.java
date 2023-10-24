@@ -4224,7 +4224,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("markAsPaidInternalDETandHONotificationGenerator")
-    public List<NotificationGenerator> markAsPaidInternalDETandHONotificationHandler(
+    public List<NotificationGenerator> markAsPaidInternalDetandHoNotificationHandler(
             DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
             HomeOfficeMarkAppealAsPaidPersonalisation homeOfficeMarkAppealAsPaidPersonalisation,
             GovNotifyNotificationSender notificationSender,

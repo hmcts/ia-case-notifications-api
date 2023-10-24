@@ -3079,8 +3079,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> markAsPaidInternalDETandHONotificationHandler(
-            @Qualifier("markAsPaidInternalDETandHONotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> markAsPaidInternalDetandHoNotificationHandler(
+            @Qualifier("markAsPaidInternalDetandHoNotificationHandler")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
