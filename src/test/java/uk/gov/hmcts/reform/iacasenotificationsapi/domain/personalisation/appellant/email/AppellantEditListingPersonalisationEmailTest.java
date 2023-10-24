@@ -43,6 +43,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String mockedAppellantEmailAddress = "legalRep@example.com";
     private String hearingCentreAddress = "some hearing centre address";
@@ -73,6 +74,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
         appellantEditListingPersonalisationEmail = new AppellantEditListingPersonalisationEmail(
             templateId,
+            listAssistHearingTemplateId,
             iaAipFrontendUrl,
             personalisationProvider,
             customerServicesProvider,
@@ -82,7 +84,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, appellantEditListingPersonalisationEmail.getTemplateId());
+        assertEquals(templateId, appellantEditListingPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test

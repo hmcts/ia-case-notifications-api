@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -19,25 +20,37 @@ public class LegalRepresentativeEditListingPersonalisation implements LegalRepre
 
     private final String legalRepresentativeCaseEditedTemplateId;
     private final String legalRepresentativeCaseEditedRemoteHearingTemplateId;
+    private final String listAssistHearingLegalRepresentativeCaseEditedTemplateId;
+    private final String listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeEditListingPersonalisation(
         @Value("${govnotify.template.caseEdited.legalRep.email}") String legalRepresentativeCaseEditedTemplateId,
         @Value("${govnotify.template.caseEditedRemoteHearing.legalRep.email}") String legalRepresentativeCaseEditedRemoteHearingTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseEdited.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseEditedRemoteHearing.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.legalRepresentativeCaseEditedTemplateId = legalRepresentativeCaseEditedTemplateId;
         this.legalRepresentativeCaseEditedRemoteHearingTemplateId = legalRepresentativeCaseEditedRemoteHearingTemplateId;
+        this.listAssistHearingLegalRepresentativeCaseEditedTemplateId = listAssistHearingLegalRepresentativeCaseEditedTemplateId;
+        this.listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId = listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).equals(Optional.of(HearingCentre.REMOTE_HEARING))
-            ? legalRepresentativeCaseEditedRemoteHearingTemplateId : legalRepresentativeCaseEditedTemplateId;
+        YesOrNo isIntegrated = asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO);
+        if (asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).equals(Optional.of(HearingCentre.REMOTE_HEARING))) {
+            return isIntegrated == YesOrNo.YES ?
+                    listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId : legalRepresentativeCaseEditedRemoteHearingTemplateId;
+        } else {
+            return isIntegrated == YesOrNo.YES ?
+                    listAssistHearingLegalRepresentativeCaseEditedTemplateId : legalRepresentativeCaseEditedTemplateId;
+        }
     }
 
     @Override

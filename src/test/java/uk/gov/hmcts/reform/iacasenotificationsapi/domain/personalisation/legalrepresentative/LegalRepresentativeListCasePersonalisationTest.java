@@ -41,6 +41,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
     private String outOfCountryTemplateId = "someOocTemplateId";
+    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private String listAssistHearingOutOfCountryTemplateId = "listAssistHearingOocTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String legalRepEmailAddress = "legalRepEmailAddress@example.com";
@@ -128,6 +130,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
         legalRepresentativeListCasePersonalisation = new LegalRepresentativeListCasePersonalisation(
             templateId,
             outOfCountryTemplateId,
+            listAssistHearingTemplateId,
+            listAssistHearingOutOfCountryTemplateId,
             iaExUiFrontendUrl,
             dateTimeExtractor,
             customerServicesProvider,

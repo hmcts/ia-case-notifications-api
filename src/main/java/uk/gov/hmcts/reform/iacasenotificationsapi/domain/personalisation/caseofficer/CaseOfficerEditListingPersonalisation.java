@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 
 import java.util.Collections;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -17,21 +19,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 public class CaseOfficerEditListingPersonalisation implements EmailNotificationPersonalisation {
 
     private final String caseOfficerCaseEditedTemplateId;
+    private final String listAssistHearingCaseOfficerCaseEditedTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
 
     public CaseOfficerEditListingPersonalisation(
             @Value("${govnotify.template.caseEdited.caseOfficer.email}") String caseOfficerCaseEditedTemplateId,
+            @Value("${govnotify.template.listAssistHearing.caseEdited.caseOfficer.email}") String listAssistHearingCaseOfficerCaseEditedTemplateId,
             EmailAddressFinder emailAddressFinder,
             PersonalisationProvider personalisationProvider) {
         this.caseOfficerCaseEditedTemplateId = caseOfficerCaseEditedTemplateId;
+        this.listAssistHearingCaseOfficerCaseEditedTemplateId = listAssistHearingCaseOfficerCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
     }
 
     @Override
-    public String getTemplateId() {
-        return caseOfficerCaseEditedTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+                ? listAssistHearingCaseOfficerCaseEditedTemplateId : caseOfficerCaseEditedTemplateId;
     }
 
     @Override
