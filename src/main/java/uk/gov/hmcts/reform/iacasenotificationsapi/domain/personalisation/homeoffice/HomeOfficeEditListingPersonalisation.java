@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
 import com.google.common.collect.ImmutableMap;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
@@ -22,25 +24,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 public class HomeOfficeEditListingPersonalisation implements EmailNotificationPersonalisation {
 
     private final String homeOfficeCaseEditedTemplateId;
+    private final String listAssistHearingHomeOfficeCaseEditedTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeEditListingPersonalisation(
         @Value("${govnotify.template.caseEdited.homeOffice.email}") String homeOfficeCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         EmailAddressFinder emailAddressFinder,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.homeOfficeCaseEditedTemplateId = homeOfficeCaseEditedTemplateId;
+        this.listAssistHearingHomeOfficeCaseEditedTemplateId = listAssistHearingHomeOfficeCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
-    public String getTemplateId() {
-        return homeOfficeCaseEditedTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+                ? listAssistHearingHomeOfficeCaseEditedTemplateId : homeOfficeCaseEditedTemplateId;
     }
 
     @Override
