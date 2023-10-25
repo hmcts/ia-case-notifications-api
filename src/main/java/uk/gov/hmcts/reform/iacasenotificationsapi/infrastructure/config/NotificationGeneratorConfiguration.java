@@ -4222,7 +4222,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("markAsPaidInternalDETandHONotificationGenerator")
+    @Bean("markAsPaidInternalDetandHonotificationGenerator")
     public List<NotificationGenerator> markAsPaidInternalDetandHoNotificationHandler(
             DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
             HomeOfficeMarkAppealAsPaidPersonalisation homeOfficeMarkAppealAsPaidPersonalisation,

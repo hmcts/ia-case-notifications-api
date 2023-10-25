@@ -87,7 +87,7 @@
       },
       {
         "reference": "7947_MARK_AS_PAID_HOME_OFFICE",
-        "recipient": "\tapc_privatebetainbox@example.com",
+        "recipient": "apc_privatebetainbox@example.com",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
           "HMCTS reference: PA/12345/2019",
