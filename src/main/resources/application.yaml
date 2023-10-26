@@ -178,6 +178,9 @@ govnotify:
       detentionEngagementTeam:
         email:
           nonAda: ebe7750b-064b-4c13-a026-326402be0817
+      homeOffice:
+        email:
+          nonAda: 28892700-c3f2-4ed5-92e5-3519dac399c9
     respondentEvidenceSubmitted:
       caseOfficer:
         email: 0add854c-a0f2-4f74-93ac-79660f576482

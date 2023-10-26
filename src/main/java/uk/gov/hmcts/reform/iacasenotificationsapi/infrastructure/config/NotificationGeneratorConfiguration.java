@@ -4222,20 +4222,27 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("markAsPaidInternalDetNotificationGenerator")
-    public List<NotificationGenerator> markAsPaidInternalDetNotificationHandler(
+    @Bean("markAsPaidInternalDetandHonotificationGenerator")
+    public List<NotificationGenerator> markAsPaidInternalDetandHoNotificationHandler(
             DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
+            HomeOfficeMarkAppealAsPaidPersonalisation homeOfficeMarkAppealAsPaidPersonalisation,
             GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
-    ) {
+            NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(
                                 detentionEngagementTeamMarkAsPaidPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                    newArrayList(
+                        homeOfficeMarkAppealAsPaidPersonalisation
+                    ),
+                    notificationSender,
+                    notificationIdAppender
                 )
         );
     }
