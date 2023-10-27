@@ -4225,7 +4225,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("markAsPaidInternalDetandHonotificationGenerator")
     public List<NotificationGenerator> markAsPaidInternalDetandHoNotificationHandler(
             DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
-            HomeOfficeMarkAppealAsPaidPersonalisation homeOfficeMarkAppealAsPaidPersonalisation,
+            HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation, //identical notification already existing for different event, reusing it.
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
@@ -4239,7 +4239,7 @@ public class NotificationGeneratorConfiguration {
                 ),
                 new EmailNotificationGenerator(
                     newArrayList(
-                        homeOfficeMarkAppealAsPaidPersonalisation
+                        homeOfficeSubmitAppealPersonalisation
                     ),
                     notificationSender,
                     notificationIdAppender
