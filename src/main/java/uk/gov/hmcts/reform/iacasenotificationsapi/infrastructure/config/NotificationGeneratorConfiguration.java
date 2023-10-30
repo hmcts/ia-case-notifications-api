@@ -1398,6 +1398,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("uploadAdditionalEvidenceAip")
+    public List<NotificationGenerator> uploadAdditionalEvidenceAip(
+            HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("uploadAdditionalEvidenceHomeOffice")
     public List<NotificationGenerator> uploadAdditionalEvidenceHomeOffice(
         LegalRepresentativeUploadAdditionalEvidencePersonalisation legalRepresentativeUploadAdditionalEvidencePersonalisation,
