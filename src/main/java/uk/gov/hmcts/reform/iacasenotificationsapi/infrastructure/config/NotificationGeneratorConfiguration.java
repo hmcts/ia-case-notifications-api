@@ -1401,12 +1401,20 @@ public class NotificationGeneratorConfiguration {
     @Bean("uploadAdditionalEvidenceAip")
     public List<NotificationGenerator> uploadAdditionalEvidenceAip(
             HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation,
+            AppellantUploadAdditionalEvidencePersonalisationEmail appellantUploadAdditionalEvidencePersonalisationEmail,
+            AppellantUploadAdditionalEvidencePersonalisationSms appellantUploadAdditionalEvidencePersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation),
+                        newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation,
+                                appellantUploadAdditionalEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUploadAdditionalEvidencePersonalisationSms),
                         notificationSender,
                         notificationIdAppender
                 )
