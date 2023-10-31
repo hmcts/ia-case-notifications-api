@@ -73,7 +73,7 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(beforeListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId());
+                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
