@@ -47,6 +47,7 @@ public class AppellantUploadAdditionalEvidencePersonalisationEmail implements Em
         return isAppealListed(asylumCase)
                 ? uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId : uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
     }
+
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
