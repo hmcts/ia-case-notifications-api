@@ -78,7 +78,7 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
         assertEquals(afterListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId());
+                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
