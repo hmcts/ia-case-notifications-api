@@ -518,6 +518,15 @@ govnotify:
         email: f5e4cbca-4fc8-4e39-bb92-9fe915aa8c61
       adminOfficer:
         email: 5469078a-4ccf-4579-b72b-37900e091455
+    recordAdjournmentDetails:
+      respondent:
+        email: 85442b94-d5ed-4542-b483-94556cc4e3bb
+      caseOfficer:
+        email: ea5abf36-c37b-4d9d-88ff-ef9cda6fd3cf
+      legalRep:
+        email: 153cab2a-0533-424f-bcaf-41b916d06321
+      adminOfficer:
+        email: 6c007d84-488d-498a-9d53-85ba5e008d31
     reListCase:
       adminOfficer:
         email: efec8c6f-38ea-46b6-ad00-9e6870935a4b
@@ -1118,6 +1127,7 @@ security:
       - "decisionWithoutHearing"
       - "createCaseLink"
       - "maintainCaseLinks"
+      - "recordAdjournmentDetails"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -1149,6 +1159,7 @@ security:
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
       - "decisionWithoutHearing"
+      - "recordAdjournmentDetails"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1202,6 +1213,7 @@ security:
       - "endAppealAutomatically"
       - "updatePaymentStatus"
       - "listCase"
+      - "recordAdjournmentDetails"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"

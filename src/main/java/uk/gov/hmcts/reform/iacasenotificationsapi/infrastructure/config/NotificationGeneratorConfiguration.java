@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaDecisionAppellantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaDecisionRespondentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRecordAdjournmentDetailsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReListCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRemissionDecisionPartiallyApprovedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRequestFeeRemissionPersonalisation;
@@ -1960,6 +1961,29 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("recordAdjournmentDetailsNotificationGenerator")
+    public List<NotificationGenerator> recordAdjournmentDetailsNotificationGenerator(
+            LegalRepresentativeRecordAdjournmentDetailsPersonalisation legalRepresentativeRecordAdjournmentDetailsPersonalisation,
+            RespondentRecordAdjournmentDetailsPersonalisation respondentRecordAdjournmentDetailsPersonalisation,
+            AdminOfficerRecordAdjournmentDetailsPersonalisation adminOfficerRecordAdjournmentDetailsPersonalisation,
+            CaseOfficerRecordAdjournmentDetailsPersonalisation caseOfficerRecordAdjournmentDetailsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ?  newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, respondentRecordAdjournmentDetailsPersonalisation, adminOfficerRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation)
+                : newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, adminOfficerRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation);
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
