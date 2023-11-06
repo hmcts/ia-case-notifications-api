@@ -5070,27 +5070,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentTurnOnNotificationsNotificationHandler(
-            @Qualifier("respondentTurnOnNotificationsNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-        //turn on notifications event means implicitly that it is an EJP case
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == TURN_ON_NOTIFICATIONS
-                            && isInternalCase(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
         return isInternalCase(asylumCase)
                 && isAppellantInDetention(asylumCase)
