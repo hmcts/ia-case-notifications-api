@@ -1125,6 +1125,29 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealInternalHoNotificationHandler(
+            @Qualifier("submitAppealHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        // RIA-7948 - submitAppeal HO missing notification
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isRpAndDcAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == RP || type == DC).orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SUBMIT_APPEAL
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && (isAcceleratedDetainedAppeal(asylumCase) || (!isAcceleratedDetainedAppeal(asylumCase) && isRpAndDcAppealType));
+                }, notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealOutOfTimeAipNotificationHandler(
         @Qualifier("submitAppealOutOfTimeAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
