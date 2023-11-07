@@ -411,6 +411,28 @@ public enum AsylumCaseDefinition {
 
     IS_APPELLANT_RESPONDENT(
             "isAppellantRespondent", new TypeReference<String>(){}),
+    IS_EJP(
+            "isEjp", new TypeReference<YesOrNo>() {}),
+
+    LEGAL_REP_COMPANY_EJP(
+            "legalRepCompanyEjp", new TypeReference<String>() {}),
+
+    LEGAL_REP_NAME_EJP(
+            "legalRepNameEjp", new TypeReference<String>() {}),
+    LEGAL_REP_GIVEN_NAME_EJP(
+            "legalRepGivenNameEjp", new TypeReference<String>() {}),
+
+    LEGAL_REP_FAMILY_NAME_EJP(
+            "legalRepFamilyNameEjp", new TypeReference<String>() {}),
+
+    LEGAL_REP_EMAIL_EJP(
+            "legalRepEmailEjp", new TypeReference<String>() {}),
+
+    LEGAL_REP_REFERENCE_EJP(
+            "legalRepReferenceEjp", new TypeReference<String>() {}),
+
+    IS_LEGALLY_REPRESENTED_EJP(
+            "isLegallyRepresentedEjp", new TypeReference<YesOrNo>() {}),
     ;
 
     private final String value;

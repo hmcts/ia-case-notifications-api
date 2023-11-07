@@ -119,26 +119,6 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
-
-        initializePrefixes(appellantRequestHearingRequirementsPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-
-        Map<String, String> personalisation =
-            appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefeNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("22 Sep 2021", personalisation.get("dueDate"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestHearingRequirementsPersonalisation);
