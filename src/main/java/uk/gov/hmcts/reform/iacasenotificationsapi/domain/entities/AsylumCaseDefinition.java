@@ -205,6 +205,9 @@ public enum AsylumCaseDefinition {
     ADJOURN_HEARING_WITHOUT_DATE_REASONS(
         "adjournHearingWithoutDateReasons", new TypeReference<String>() {}),
 
+    RELIST_CASE_IMMEDIATELY(
+            "relistCaseImmediately", new TypeReference<YesOrNo>(){}),
+
     REASON_FOR_LINK_APPEAL(
         "reasonForLinkAppeal", new TypeReference<ReasonForLinkAppealOptions>() {}),
 
