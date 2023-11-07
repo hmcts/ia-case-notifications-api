@@ -114,4 +114,10 @@ public class AsylumCaseUtils {
         return optionalLatestAddendum.isEmpty() ? Optional.empty() : Optional.of(optionalLatestAddendum.get());
     }
 
+
+    // This method uses the isEjp field which is set yes for EJP when a case is saved or no if paper form
+    public static boolean isEjpCase(AsylumCase asylumCase) {
+        return asylumCase.read(IS_EJP, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES;
+    }
+
 }
