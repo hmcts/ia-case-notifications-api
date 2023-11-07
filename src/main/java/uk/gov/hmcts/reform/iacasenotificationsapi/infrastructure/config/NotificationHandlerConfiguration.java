@@ -1878,6 +1878,28 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> recordAdjournmentDetailsHandler(
+        @Qualifier("recordAdjournmentDetailsNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean cannotRelistCaseImmediately =
+                            asylumCase.read(RELIST_CASE_IMMEDIATELY, YesOrNo.class)
+                                .map(relistCaseImmediately -> relistCaseImmediately == NO)
+                                .orElse(false);
+
+                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_ADJOURNMENT_DETAILS
+                            && cannotRelistCaseImmediately);
+                },
+                notificationGenerator
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> decisionWithoutHearingHandler(
             @Qualifier("decisionWithoutHearingNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
 
