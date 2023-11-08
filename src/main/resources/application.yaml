@@ -1214,6 +1214,7 @@ security:
       - "updatePaymentStatus"
       - "listCase"
       - "recordAdjournmentDetails"
+      - "editCaseListing"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"
