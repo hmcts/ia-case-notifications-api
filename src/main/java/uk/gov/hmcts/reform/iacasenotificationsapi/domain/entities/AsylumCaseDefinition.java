@@ -411,6 +411,9 @@ public enum AsylumCaseDefinition {
 
     IS_APPELLANT_RESPONDENT(
             "isAppellantRespondent", new TypeReference<String>(){}),
+
+    APPLIES_FOR_COSTS(
+            "appliesForCosts", new TypeReference<List<IdValue<ApplyForCosts>>>(){}),
     ;
 
     private final String value;

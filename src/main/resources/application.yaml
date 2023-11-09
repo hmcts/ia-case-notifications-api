@@ -1119,11 +1119,11 @@ govnotify:
     editAppeal:
       detentionEngagementTeam:
         email: 54d24fe0-257e-4dbb-b1e8-1271c0eeec86
-
     homeOfficeUploadAdditionalAddendumEvidence:
       detentionEngagementTeam:
         email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
-
+    applyForCostsNotificationForRespondent:
+        email: e3c04c78-3a7f-4943-a095-840dc8d8b34f
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1272,6 +1272,7 @@ security:
       - "makeNewApplication"
       - "stopLegalRepresenting"
       - "nocRequestBail"
+      - "applyForCosts"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1384,16 +1385,19 @@ security:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
+      - "applyForCosts"
     caseworker-ia-homeofficelart:
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
+      - "applyForCosts"
     caseworker-ia-homeofficepou:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
+      - "applyForCosts"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"
@@ -1402,6 +1406,7 @@ security:
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
+      - "applyForCosts"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"
@@ -1550,6 +1555,7 @@ apcHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_APC}
 lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
+applyForCostsHomeOfficeEmailAddress: ${HO_APPLY_FOR_COSTS_EMAIL:ho-apply-for-costs@example.com}
 
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
