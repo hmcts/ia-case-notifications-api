@@ -170,7 +170,9 @@ govnotify:
           ada: f43d0290-c78b-4698-a95e-b967cbd312b7
           nonAda: 33430912-89d5-416d-8d49-52eae9ce82c3
       respondent:
-        email: 72d1e710-ad05-4bfa-8d8a-edc0cf0005e9
+        email:
+          nonEjp: 72d1e710-ad05-4bfa-8d8a-edc0cf0005e9
+          ejp: 492e19f3-6e91-4eb2-961c-7abe1931a0b2
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580

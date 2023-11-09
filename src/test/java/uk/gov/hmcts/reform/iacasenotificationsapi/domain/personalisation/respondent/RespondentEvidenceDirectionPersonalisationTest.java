@@ -5,17 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CHANGE_ORGANISATION_REQUEST_FIELD;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_COMPANY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_COMPANY_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.time.LocalDateTime;
@@ -52,6 +42,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String ejpTemplateId = "someEjpTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String respondentReviewEmailAddress = "respondentReview@example.com";
 
@@ -62,7 +53,12 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     private String legalRepName = "Legal Rep Name";
     private String legalRepReference = "Legal Rep Reference";
     private String legalRepEmail = "Legal Rep Email";
-    private String legalRepCompanyName = "Legal Rep Company Name";
+    private String legalRepEjpGivenName = "Given Name";
+    private String legalRepEjpFamilyName = "Family Name";
+
+    private String legalRepEjpReference = "Legal Rep Reference Ejp";
+    private String legalRepEjpEmail = "Legal Rep Email Ejp";
+    private String legalRepEjpCompanyName = "Legal Rep Company Name Ejp";
     private AddressUk legalRepCompanyAddress;
 
     private String appealReferenceNumber = "someReferenceNumber";
@@ -96,7 +92,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReference));
-        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(legalRepCompanyName));
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(companyName));
         when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.of(legalRepCompanyAddress));
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -104,15 +100,29 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
         respondentEvidenceDirectionPersonalisation = new RespondentEvidenceDirectionPersonalisation(
             templateId,
+            ejpTemplateId,
             respondentReviewEmailAddress,
             iaExUiFrontendUrl,
             directionFinder,
             customerServicesProvider);
+        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(LEGAL_REP_GIVEN_NAME_EJP, String.class)).thenReturn(Optional.of(legalRepEjpGivenName));
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME_EJP, String.class)).thenReturn(Optional.of(legalRepEjpFamilyName));
+        when(asylumCase.read(LEGAL_REP_EMAIL_EJP, String.class)).thenReturn(Optional.of(legalRepEjpEmail));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.of(legalRepEjpReference));
+        when(asylumCase.read(LEGAL_REP_COMPANY_EJP, String.class)).thenReturn(Optional.of(legalRepEjpCompanyName));
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, respondentEvidenceDirectionPersonalisation.getTemplateId());
+        assertEquals(templateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_given_ejp_template_id() {
+        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
+        assertEquals(ejpTemplateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -267,5 +277,29 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertThatThrownBy(() -> respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("direction 'respondentEvidence' is not present");
+    }
+
+    @Test
+    public void should_return_ejp_personalisation_when_all_information_given() {
+
+        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
+        Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(legalRepEjpCompanyName, personalisation.get("companyName"));
+        assertEquals(legalRepEjpEmail, personalisation.get("legalRepEmail"));
+        assertEquals(legalRepEjpReference, personalisation.get("legalRepReference"));
+        assertEquals(legalRepEjpGivenName +  " " + legalRepEjpFamilyName, personalisation.get("legalRepName"));
+
+        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+
     }
 }
