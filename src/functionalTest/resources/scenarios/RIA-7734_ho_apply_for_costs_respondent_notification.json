@@ -11,7 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "legalRepReferenceNumber": "A1234567",
-          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "journeyType": "rep",
           "appealType": "revocationOfProtection",
           "appealGroundsRevocation": {
@@ -70,7 +70,7 @@
     "notifications": [
       {
         "reference": "7734_APPLY_FOR_COSTS_SUBMITTED",
-        "recipient": "ia-law-firm-a@fake.hmcts.net",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Costs application submitted",
         "body": [
           "HMCTS reference: PA/12345/2019",
