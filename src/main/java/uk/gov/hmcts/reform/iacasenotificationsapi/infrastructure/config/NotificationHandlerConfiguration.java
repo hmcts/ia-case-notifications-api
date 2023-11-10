@@ -5070,6 +5070,21 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> applyForCostsRespondentNotificationNotificationHandler(
+        @Qualifier("applyForCostsRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent().equals(APPLY_FOR_COSTS)
+                    && !isInternalCase(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
         return isInternalCase(asylumCase)
                 && isAppellantInDetention(asylumCase)
