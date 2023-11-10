@@ -9,8 +9,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
