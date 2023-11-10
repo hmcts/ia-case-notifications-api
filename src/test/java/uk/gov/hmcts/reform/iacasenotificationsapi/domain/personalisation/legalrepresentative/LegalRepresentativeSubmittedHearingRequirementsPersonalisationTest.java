@@ -95,8 +95,8 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
         Map<String, String> personalisation =
             legalRepresentativeSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
-
-        Assertions.assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation).isNotEmpty();
+        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
     }
 
     @Test

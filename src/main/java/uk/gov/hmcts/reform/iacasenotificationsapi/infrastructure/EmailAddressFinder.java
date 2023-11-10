@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldD
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 
+
 @Service
 public class EmailAddressFinder {
 

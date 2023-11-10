@@ -112,6 +112,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
@@ -126,6 +127,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 

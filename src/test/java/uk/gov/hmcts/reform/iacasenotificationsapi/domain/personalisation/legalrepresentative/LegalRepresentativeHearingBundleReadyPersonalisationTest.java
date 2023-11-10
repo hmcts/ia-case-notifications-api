@@ -117,6 +117,7 @@ public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeHearingBundleReadyPersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
@@ -141,6 +142,7 @@ public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeHearingBundleReadyPersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
