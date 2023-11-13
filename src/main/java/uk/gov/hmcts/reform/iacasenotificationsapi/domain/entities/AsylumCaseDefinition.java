@@ -433,6 +433,9 @@ public enum AsylumCaseDefinition {
 
     IS_LEGALLY_REPRESENTED_EJP(
             "isLegallyRepresentedEjp", new TypeReference<YesOrNo>() {}),
+
+    APPLIES_FOR_COSTS(
+            "appliesForCosts", new TypeReference<List<IdValue<ApplyForCosts>>>(){}),
     ;
 
     private final String value;
