@@ -235,8 +235,7 @@ public class PersonalisationProvider {
         return ImmutableMap
             .<String, String>builder()
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
             .build();
     }
 
@@ -254,8 +253,7 @@ public class PersonalisationProvider {
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
             .build();
     }
 
@@ -267,8 +265,7 @@ public class PersonalisationProvider {
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("respondentReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
             .build();
     }
 
@@ -280,8 +277,7 @@ public class PersonalisationProvider {
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
             .build();
     }
 
@@ -292,8 +288,7 @@ public class PersonalisationProvider {
             .<String, String>builder()
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
     }
@@ -305,8 +300,15 @@ public class PersonalisationProvider {
                 .<String, String>builder()
                 .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .putAll(getAppellantCredentials(asylumCase))
                 .build();
+    }
+
+    public Map<String, String> getAppellantCredentials(AsylumCase asylumCase) {
+        return ImmutableMap
+            .<String, String>builder()
+            .put(APPELLANT_GIVEN_NAMES_CONST, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .build();
     }
 }
