@@ -64,7 +64,7 @@
           "Listing reference: LP/12345/2019",
           "Your reference: TEST7662",
           "Appellant name: Talha Awan",
-          "The online service: {$iaExUiFrontendUrl}"
+          "The online service: https://manage-case.aat.platform.hmcts.net/"
         ]
       }
     ]
