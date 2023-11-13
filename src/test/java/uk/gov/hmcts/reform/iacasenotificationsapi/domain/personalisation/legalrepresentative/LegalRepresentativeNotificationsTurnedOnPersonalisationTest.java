@@ -20,7 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class LegalRepresentativeTransferredToFirstTierTribunalPersonalisationTest {
+class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -87,6 +87,7 @@ class LegalRepresentativeTransferredToFirstTierTribunalPersonalisationTest {
             .hasMessage("legalRepresentativeEmailAddress is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
+
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
@@ -95,6 +96,7 @@ class LegalRepresentativeTransferredToFirstTierTribunalPersonalisationTest {
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
+
     @Test
     public void should_return_personalisation_when_all_information_given() {
 

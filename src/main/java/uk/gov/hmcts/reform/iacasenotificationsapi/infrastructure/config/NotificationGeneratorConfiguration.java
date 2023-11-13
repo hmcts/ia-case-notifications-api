@@ -4587,8 +4587,8 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-      return Collections.singletonList(
-          new EmailNotificationGenerator(
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
               newArrayList(
                   legalRepresentativeNotificationsTurnedOnPersonalisation
               ),
