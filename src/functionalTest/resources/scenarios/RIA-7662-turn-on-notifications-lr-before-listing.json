@@ -1,18 +1,20 @@
 {
   "description": "RIA-7662 Send notification to LR when turn on notification event completed by admin or legal officer",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "CaseOfficer",
+    "credentials": "AdminOfficer",
     "input": {
-      "id": 7662,
       "eventId": "turnOnNotifications",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "minimal-appeal-submitted.json",
+        "template": "minimal-ejp-appeal-submitted.json",
         "replacements": {
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "legalRepReferenceNumberEjp": "CASE002"
+          "appealReferenceNumber": "PA/12345/2018",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
+          "isNotificationTurnedOff": "Yes",
+          "isLegallyRepresentedEjp": "Yes"
         }
       }
     }
@@ -21,23 +23,31 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-appeal-submitted.json",
+      "template": "minimal-ejp-appeal-submitted.json",
       "replacements": {
-        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "appealReferenceNumber": "PA/12345/2018",
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
         "notificationsSent": [
           {
-            "reference": "7662_NOTIFICATIONS_TURNED_ON",
-            "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-            "subject": "\tImmigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
-            "body": [
-              "HMCTS reference: PA/12345/2019",
-              "Your reference: CASE002",
-              "Appellant name: Talha Awan",
-              "The online service: {$iaExUiFrontendUrl}"
-            ]
+            "id": "7662_7662_NOTIFICATIONS_TURNED_ON",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7662_NOTIFICATIONS_TURNED_ON",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "\tImmigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
+        "body": [
+          "HMCTS reference: PA/12345/2019",
+          "Your reference: CASE002",
+          "Appellant name: Talha Awan",
+          "The online service: {$iaExUiFrontendUrl}"
+        ]
+      }
+    ]
   }
 }
