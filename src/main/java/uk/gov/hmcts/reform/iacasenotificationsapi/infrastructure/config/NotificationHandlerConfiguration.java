@@ -5047,6 +5047,22 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> notificationsTurnedOnLegalRepNotificationHandler(
+        @Qualifier("notificationsTurnedOnLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == TURN_ON_NOTIFICATIONS
+                       && isInternalCase(asylumCase)
+                       && isRepJourney(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
         return isInternalCase(asylumCase)
                 && isAppellantInDetention(asylumCase)

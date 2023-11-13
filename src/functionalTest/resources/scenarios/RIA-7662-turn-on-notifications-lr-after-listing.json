@@ -1,0 +1,49 @@
+{
+  "description": "RIA-7662 Send notification to LR when turn on notification event completed by admin or legal officer after listing",
+  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 7662,
+      "eventId": "turnOnNotifications",
+      "state": "decision",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "ariaListingReference": "LP/12345/2019",
+          "listCaseHearingCentre": "harmondsworth",
+          "listCaseHearingDate": "2019-05-03T14:25:15.000",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepReferenceNumberEjp": "CASE002"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "listCaseHearingCentre": "harmondsworth",
+        "listCaseHearingDate": "2019-05-03T14:25:15.000",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "notificationsSent": [
+          {
+            "reference": "7662_NOTIFICATIONS_TURNED_ON",
+            "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+            "subject": "\tImmigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
+            "body": [
+              "HMCTS reference: PA/12345/2019",
+              "Listing reference: LP/12345/2019",
+              "Your reference: CASE002",
+              "Appellant name: Talha Awan",
+              "The online service: {$iaExUiFrontendUrl}"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

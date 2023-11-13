@@ -1124,6 +1124,13 @@ govnotify:
       detentionEngagementTeam:
         email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
 
+    notificationsTurnedOn:
+      legalRep:
+        beforeListing:
+          email: e686c287-9ef0-4a84-96f0-be4daed26430
+        afterListing:
+          email: bc327677-eef1-4863-94cc-5c964ff9eb9d
+
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1332,6 +1339,7 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "turnOnNotifications"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1379,6 +1387,7 @@ security:
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
       - "recordOutOfTimeDecision"
+      - "turnOnNotifications"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
