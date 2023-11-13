@@ -4,6 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
+      "id": 7662,
       "eventId": "turnOnNotifications",
       "state": "appealSubmitted",
       "caseData": {
@@ -14,7 +15,12 @@
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "isNotificationTurnedOff": "Yes",
-          "isLegallyRepresentedEjp": "Yes"
+          "isLegallyRepresentedEjp": "Yes",
+          "legalRepEmailEjp": "ia-law-firm-a@fake.hmcts.net",
+          "legalRepCompanyEjp": "Legal company",
+          "legalRepGivenNameEjp": "John",
+          "legalRepFamilyNameEjp": "Smith",
+          "legalRepReferenceEjp": "TEST7662"
         }
       }
     }
@@ -26,11 +32,19 @@
       "template": "minimal-ejp-appeal-submitted.json",
       "replacements": {
         "appealReferenceNumber": "PA/12345/2018",
+        "appellantInDetention": "Yes",
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
+        "isNotificationTurnedOff": "Yes",
+        "isLegallyRepresentedEjp": "Yes",
+        "legalRepEmailEjp": "ia-law-firm-a@fake.hmcts.net",
+        "legalRepCompanyEjp": "Legal company",
+        "legalRepGivenNameEjp": "John",
+        "legalRepFamilyNameEjp": "Smith",
+        "legalRepReferenceEjp": "TEST7662",
         "notificationsSent": [
           {
-            "id": "7662_7662_NOTIFICATIONS_TURNED_ON",
+            "id": "7662_NOTIFICATIONS_TURNED_ON",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -40,10 +54,10 @@
       {
         "reference": "7662_NOTIFICATIONS_TURNED_ON",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "\tImmigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
+        "subject": "Immigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
         "body": [
-          "HMCTS reference: PA/12345/2019",
-          "Your reference: CASE002",
+          "HMCTS reference: PA/12345/2018",
+          "Your reference: TEST7662",
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}"
         ]
