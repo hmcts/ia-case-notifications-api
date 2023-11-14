@@ -96,6 +96,7 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
     }
 
@@ -110,6 +111,7 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
     }
 }
