@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -42,6 +43,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String dateOfBirth = "1 Mar 2020";
     private final String legalRepEmailEjp = "legalRep@example.com";
+
     private LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation;
 
     @BeforeEach
@@ -97,6 +99,8 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
             .hasMessage("legalRepresentativeEmailAddress is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
+
+
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
