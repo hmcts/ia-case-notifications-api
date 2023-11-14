@@ -33,9 +33,9 @@ public class RespondentTurnOnNotificationsPersonalisation implements EmailNotifi
 
 
     public RespondentTurnOnNotificationsPersonalisation(
-            @NotNull(message = "endAppealHomeOfficeTemplateId cannot be null")
+            @NotNull(message = "homeOfficeTurnOnNotificationsBeforeListingTemplateId cannot be null")
             @Value("${govnotify.template.turnOnNotifications.homeOffice.beforeListing.email}") String homeOfficeTurnOnNotificationsBeforeListingTemplateId,
-            @NotNull(message = "endAppealHomeOfficeTemplateId cannot be null")
+            @NotNull(message = "homeOfficeTurnOnNotificationsAfterListingTemplateId cannot be null")
             @Value("${govnotify.template.turnOnNotifications.homeOffice.afterListing.email}") String homeOfficeTurnOnNotificationsAfterListingTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         PersonalisationProvider personalisationProvider,
