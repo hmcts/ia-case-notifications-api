@@ -19,17 +19,20 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
 
     private final String legalRepresentativeTransferredToFirstTierAfterListingTemplateId;
     private final String legalRepresentativeTransferredToFirstTierBeforeListingTemplateId;
+    private final String iaExUiFrontendUrl;
 
 
     public LegalRepresentativeNotificationsTurnedOnPersonalisation(
         @NotNull(message = "legalRepresentativeTransferredToFirstTierBeforeListingTemplateId cannot be null")
         @Value("${govnotify.template.notificationsTurnedOn.legalRep.beforeListing.email}") String legalRepresentativeTransferredToFirstTierBeforeListingTemplateId,
         @NotNull(message = "legalRepresentativeTransferredToFirstTierAfterListingTemplateId cannot be null")
-        @Value("${govnotify.template.notificationsTurnedOn.legalRep.afterListing.email}") String legalRepresentativeTransferredToFirstTierAfterListingTemplateId
+        @Value("${govnotify.template.notificationsTurnedOn.legalRep.afterListing.email}") String legalRepresentativeTransferredToFirstTierAfterListingTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
 
     ) {
         this.legalRepresentativeTransferredToFirstTierAfterListingTemplateId = legalRepresentativeTransferredToFirstTierAfterListingTemplateId;
         this.legalRepresentativeTransferredToFirstTierBeforeListingTemplateId = legalRepresentativeTransferredToFirstTierBeforeListingTemplateId;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     @Override
@@ -62,6 +65,7 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("dateOfBirth", defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
     }
 }

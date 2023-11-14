@@ -59,7 +59,7 @@
           "HMCTS reference: PA/12345/2018",
           "Your reference: TEST7662",
           "Appellant name: Talha Awan",
-          "https://{$iaExUiFrontendUrl}"
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]

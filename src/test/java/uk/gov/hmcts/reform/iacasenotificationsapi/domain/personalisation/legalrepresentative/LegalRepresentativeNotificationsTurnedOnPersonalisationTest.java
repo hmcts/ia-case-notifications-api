@@ -27,6 +27,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final Long caseId = 12345L;
+    private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String legalRepReferenceEjp = "someLegalRepReferenceNumber";
@@ -48,7 +49,8 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
 
         legalRepresentativeNotificationsTurnedOnPersonalisation = new LegalRepresentativeNotificationsTurnedOnPersonalisation(
             beforeListingTemplateId,
-            afterListingTemplateId
+            afterListingTemplateId,
+            iaExUiFrontendUrl
         );
     }
 
@@ -109,6 +111,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(legalRepReferenceEjp, personalisation.get("legalRepReferenceNumberEjp"));
         assertEquals(dateOfBirth, personalisation.get("dateOfBirth"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
 }
