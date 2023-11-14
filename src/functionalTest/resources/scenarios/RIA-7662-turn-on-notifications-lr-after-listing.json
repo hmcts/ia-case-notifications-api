@@ -64,7 +64,7 @@
           "Listing reference: LP/12345/2019",
           "Your reference: TEST7662",
           "Appellant name: Talha Awan",
-          "{$iaExUiFrontendUrl}"
+          "https://{$iaExUiFrontendUrl}"
         ]
       }
     ]
