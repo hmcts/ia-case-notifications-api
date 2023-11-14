@@ -5096,7 +5096,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == TURN_ON_NOTIFICATIONS
                        && isInternalCase(asylumCase)
-                       && isRepJourney(asylumCase);
+                       && isLegalRepEjp(asylumCase);
             }, notificationGenerators
         );
     }

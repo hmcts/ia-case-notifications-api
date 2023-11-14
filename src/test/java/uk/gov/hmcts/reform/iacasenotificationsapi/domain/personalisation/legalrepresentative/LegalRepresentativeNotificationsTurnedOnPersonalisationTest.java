@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -24,6 +27,10 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final Long caseId = 12345L;
@@ -50,6 +57,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
         legalRepresentativeNotificationsTurnedOnPersonalisation = new LegalRepresentativeNotificationsTurnedOnPersonalisation(
             beforeListingTemplateId,
             afterListingTemplateId,
+            personalisationProvider,
             iaExUiFrontendUrl
         );
     }
@@ -105,13 +113,19 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeNotificationsTurnedOnPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
         assertEquals(legalRepReferenceEjp, personalisation.get("legalRepReferenceNumberEjp"));
         assertEquals(dateOfBirth, personalisation.get("dateOfBirth"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
+    private Map<String, String> getPersonalisationMapWithGivenValues() {
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .build();
+    }
 }

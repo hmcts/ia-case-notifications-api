@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
@@ -20,6 +21,7 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
     private final String legalRepresentativeTransferredToFirstTierAfterListingTemplateId;
     private final String legalRepresentativeTransferredToFirstTierBeforeListingTemplateId;
     private final String iaExUiFrontendUrl;
+    private final PersonalisationProvider personalisationProvider;
 
 
     public LegalRepresentativeNotificationsTurnedOnPersonalisation(
@@ -27,12 +29,14 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
         @Value("${govnotify.template.notificationsTurnedOn.legalRep.beforeListing.email}") String legalRepresentativeTransferredToFirstTierBeforeListingTemplateId,
         @NotNull(message = "legalRepresentativeTransferredToFirstTierAfterListingTemplateId cannot be null")
         @Value("${govnotify.template.notificationsTurnedOn.legalRep.afterListing.email}") String legalRepresentativeTransferredToFirstTierAfterListingTemplateId,
+        PersonalisationProvider personalisationProvider,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
 
     ) {
         this.legalRepresentativeTransferredToFirstTierAfterListingTemplateId = legalRepresentativeTransferredToFirstTierAfterListingTemplateId;
         this.legalRepresentativeTransferredToFirstTierBeforeListingTemplateId = legalRepresentativeTransferredToFirstTierBeforeListingTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.personalisationProvider = personalisationProvider;
     }
 
     @Override
@@ -59,11 +63,8 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
 
         return ImmutableMap
             .<String, String>builder()
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
+            .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase))
             .put("legalRepReferenceNumberEjp", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_EJP, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("dateOfBirth", defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();

@@ -28,6 +28,9 @@ public class AsylumCaseUtils {
             .orElse(NO)
             .equals(YES);
     }
+    public static boolean isLegalRepEjp(AsylumCase asylumCase) {
+        return asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class).isPresent();
+    }
 
     public static boolean isAgeAssessmentAppeal(AsylumCase asylumCase) {
         return (asylumCase.read(APPEAL_TYPE, AppealType.class)).orElse(null) == AppealType.AG;
