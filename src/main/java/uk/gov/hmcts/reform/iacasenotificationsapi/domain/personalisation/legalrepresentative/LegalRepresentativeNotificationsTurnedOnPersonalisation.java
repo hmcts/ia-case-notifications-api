@@ -26,9 +26,9 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
 
     public LegalRepresentativeNotificationsTurnedOnPersonalisation(
         @NotNull(message = "legalRepresentativeTransferredToFirstTierBeforeListingTemplateId cannot be null")
-        @Value("${govnotify.template.notificationsTurnedOn.legalRep.beforeListing.email}") String legalRepresentativeTransferredToFirstTierBeforeListingTemplateId,
+        @Value("${govnotify.template.turnOnNotifications.legalRep.beforeListing.email}") String legalRepresentativeTransferredToFirstTierBeforeListingTemplateId,
         @NotNull(message = "legalRepresentativeTransferredToFirstTierAfterListingTemplateId cannot be null")
-        @Value("${govnotify.template.notificationsTurnedOn.legalRep.afterListing.email}") String legalRepresentativeTransferredToFirstTierAfterListingTemplateId,
+        @Value("${govnotify.template.turnOnNotifications.legalRep.afterListing.email}") String legalRepresentativeTransferredToFirstTierAfterListingTemplateId,
         PersonalisationProvider personalisationProvider,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
 
