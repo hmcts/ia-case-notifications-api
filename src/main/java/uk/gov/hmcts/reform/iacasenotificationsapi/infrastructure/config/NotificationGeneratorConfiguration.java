@@ -2194,6 +2194,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("decisionWithoutHearingInternalNotificationGenerator")
+    public List<NotificationGenerator> decisionWithoutHearingInternalNotificationGenerator(
+            HomeOfficeDecisionWithoutHearingPersonalisation homeOfficeDecisionWithoutHearingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeDecisionWithoutHearingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("requestCmaRequirementsAipNotificationGenerator")
     public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
         AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
