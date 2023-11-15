@@ -2358,6 +2358,25 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> decisionWithoutHearingInternalHandler(
+            @Qualifier("decisionWithoutHearingInternalNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        // RIA-7929
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.DECISION_WITHOUT_HEARING
+                                && isInternalCase(asylumCase)
+                                && isAppellantInDetention(asylumCase);
+                },
+                notificationGenerator
+        );
+    }
+
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCmaRequirementsAipNotificationHandler(
