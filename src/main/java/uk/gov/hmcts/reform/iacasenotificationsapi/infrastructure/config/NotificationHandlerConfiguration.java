@@ -5071,8 +5071,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> applyForCostsRespondentNotificationNotificationHandler(
-        @Qualifier("applyForCostsRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> applyForCostsNotificationNotificationHandler(
+        @Qualifier("applyForCostsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {

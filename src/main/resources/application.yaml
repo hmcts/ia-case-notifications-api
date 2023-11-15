@@ -1124,8 +1124,11 @@ govnotify:
     homeOfficeUploadAdditionalAddendumEvidence:
       detentionEngagementTeam:
         email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
-    applyForCostsNotificationForRespondent:
+    applyForCostsNotification:
+      respondent:
         email: e3c04c78-3a7f-4943-a095-840dc8d8b34f
+      applicant:
+        email: a5dc23cd-422c-4b0b-baa8-f972978184ef
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
