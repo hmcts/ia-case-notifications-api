@@ -19,22 +19,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class ApplyForCostsRespondentPersonalisation implements EmailNotificationPersonalisation {
+public class ApplyForCostsApplicantPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String applyForCostsNotificationForRespondentTemplateId;
+    private final String applyForCostsNotificationForApplicantTemplateId;
     private final String homeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public ApplyForCostsRespondentPersonalisation(
-        @Value("${govnotify.template.applyForCostsNotification.respondent.email}") String applyForCostsNotificationForRespondentTemplateId,
+    public ApplyForCostsApplicantPersonalisation(
+        @Value("${govnotify.template.applyForCostsNotification.applicant.email}") String applyForCostsNotificationForApplicantTemplateId,
         @Value("${applyForCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider,
         PersonalisationProvider personalisationProvider
     ) {
-        this.applyForCostsNotificationForRespondentTemplateId = applyForCostsNotificationForRespondentTemplateId;
+        this.applyForCostsNotificationForApplicantTemplateId = applyForCostsNotificationForApplicantTemplateId;
         this.homeOfficeEmailAddress = homeOfficeEmailAddress;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -43,21 +43,21 @@ public class ApplyForCostsRespondentPersonalisation implements EmailNotification
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return applyForCostsNotificationForRespondentTemplateId;
+        return applyForCostsNotificationForApplicantTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         if (isHomeOfficeApplicant(asylumCase)) {
-            return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
-        } else {
             return Collections.singleton(homeOfficeEmailAddress);
+        } else {
+            return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
         }
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPLY_FOR_COSTS_RESPONDENT_EMAIL";
+        return caseId + "_APPLY_FOR_COSTS_APPLICANT_EMAIL";
     }
 
     @Override
@@ -65,21 +65,21 @@ public class ApplyForCostsRespondentPersonalisation implements EmailNotification
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
-                .<String, String>builder()
-                .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+            .<String, String>builder()
+            .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
 
-        final String respondent = "respondent";
-        final String respondentReferenceNumber = "respondentReferenceNumber";
+        final String applicantReferenceNumber = "applicantReferenceNumber";
+        final String applicant = "applicant";
 
         if (isHomeOfficeApplicant(asylumCase)) {
             personalisationBuilder
-                .put(respondent, "Your")
-                .put(respondentReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""));
+                .put(applicant, retrieveLatestApplyForCosts(asylumCase).getValue().getApplyForCostsApplicantType())
+                .put(applicantReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
         } else {
             personalisationBuilder
-                .put(respondent, retrieveLatestApplyForCosts(asylumCase).getValue().getRespondentToCostsOrder())
-                .put(respondentReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
+                .put(applicant, "Your")
+                .put(applicantReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""));
         }
 
         return personalisationBuilder.build();

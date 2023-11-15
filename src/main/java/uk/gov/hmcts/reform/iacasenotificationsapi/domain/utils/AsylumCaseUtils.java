@@ -124,4 +124,27 @@ public class AsylumCaseUtils {
         return asylumCase.read(IS_EJP, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES;
     }
 
+    // This method checks who are the applicant to the costs order
+    public static boolean isHomeOfficeApplicant(AsylumCase asylumCase) {
+        ApplyForCosts latestApplyForCosts = retrieveLatestApplyForCosts(asylumCase).getValue();
+        final String applicantType = latestApplyForCosts.getApplyForCostsApplicantType();
+        if (applicantType.equals("Home office")) {
+            return true;
+        } else if (applicantType.equals("Legal representative")) {
+            return false;
+        }
+        throw new IllegalStateException("Correct applicant type is not present");
+    }
+
+    public static IdValue<ApplyForCosts> retrieveLatestApplyForCosts(AsylumCase asylumCase) {
+        Optional<List<IdValue<ApplyForCosts>>> applyForCosts = asylumCase.read(APPLIES_FOR_COSTS);
+
+        if (applyForCosts.isPresent()) {
+            List<IdValue<ApplyForCosts>> applyForCostsList = applyForCosts.get();
+            return applyForCostsList.get(0);
+        } else {
+            throw new IllegalStateException("Applies for costs are not present");
+        }
+    }
+
 }
