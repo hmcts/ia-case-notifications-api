@@ -32,6 +32,7 @@
     "caseData": {
       "template": "minimal-ejp-appeal-submitted.json",
       "replacements": {
+        "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
         "appealReferenceNumber": "PA/12345/2018",
         "appellantInDetention": "Yes",
         "detentionFacility": "immigrationRemovalCentre",

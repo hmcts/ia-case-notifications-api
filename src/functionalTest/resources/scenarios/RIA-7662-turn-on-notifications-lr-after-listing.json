@@ -34,6 +34,7 @@
     "caseData": {
       "template": "minimal-ejp-appeal-submitted.json",
       "replacements": {
+        "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
         "listCaseHearingCentre": "taylorHouse",
         "ariaListingReference": "LP/12345/2019",
         "appealReferenceNumber": "PA/12345/2018",
