@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @Service
 public class ApplyForCostsApplicantPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String applyForCostsNotificationForRespondentTemplateId;
+    private final String applyForCostsNotificationForApplicantTemplateId;
     private final String homeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
     private final PersonalisationProvider personalisationProvider;
@@ -34,7 +34,7 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
         CustomerServicesProvider customerServicesProvider,
         PersonalisationProvider personalisationProvider
     ) {
-        this.applyForCostsNotificationForRespondentTemplateId = applyForCostsNotificationForApplicantTemplateId;
+        this.applyForCostsNotificationForApplicantTemplateId = applyForCostsNotificationForApplicantTemplateId;
         this.homeOfficeEmailAddress = homeOfficeEmailAddress;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -43,7 +43,7 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return applyForCostsNotificationForRespondentTemplateId;
+        return applyForCostsNotificationForApplicantTemplateId;
     }
 
     @Override
