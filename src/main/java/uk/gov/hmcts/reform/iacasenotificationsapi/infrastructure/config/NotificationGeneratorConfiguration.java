@@ -4617,4 +4617,21 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("notificationsTurnedOnLegalRepNotificationGenerator")
+    public List<NotificationGenerator> turnOnNotificationLegalRepNotificationGenerator(
+        LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+              newArrayList(
+                  legalRepresentativeNotificationsTurnedOnPersonalisation
+              ),
+              notificationSender,
+              notificationIdAppender
+          )
+      );
+    }
 }

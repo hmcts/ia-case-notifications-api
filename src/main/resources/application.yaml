@@ -1121,7 +1121,6 @@ govnotify:
     editAppeal:
       detentionEngagementTeam:
         email: 54d24fe0-257e-4dbb-b1e8-1271c0eeec86
-
     homeOfficeUploadAdditionalAddendumEvidence:
       detentionEngagementTeam:
         email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
@@ -1133,7 +1132,11 @@ govnotify:
           email: 3d464d05-c816-4843-9187-c213ca465d8f
         afterListing:
           email: cbfa0361-8f5b-4aaa-b19b-f304e7ade628
-
+      legalRep:
+        beforeListing:
+          email: e686c287-9ef0-4a84-96f0-be4daed26430
+        afterListing:
+          email: bc327677-eef1-4863-94cc-5c964ff9eb9d
 
 
   bail:
