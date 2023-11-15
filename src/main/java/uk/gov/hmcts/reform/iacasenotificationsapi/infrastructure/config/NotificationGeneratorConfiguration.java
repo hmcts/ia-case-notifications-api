@@ -4587,6 +4587,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("respondentTurnOnNotificationsNotificationGenerator")
+    public List<NotificationGenerator> respondentTurnOnNotificationsNotificationGenerator(
+            RespondentTurnOnNotificationsPersonalisation respondentTurnOnNotificationsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(respondentTurnOnNotificationsPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("notificationsTurnedOnLegalRepNotificationGenerator")
     public List<NotificationGenerator> turnOnNotificationLegalRepNotificationGenerator(
         LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation,

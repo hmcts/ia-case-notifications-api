@@ -1126,12 +1126,17 @@ govnotify:
         email: e7bbe8fe-f9b5-493e-a87e-ae812e462460
     applyForCostsNotificationForRespondent:
         email: e3c04c78-3a7f-4943-a095-840dc8d8b34f
-    notificationsTurnedOn:
-      legalRep:
+    turnOnNotifications:
+      homeOffice:
         beforeListing:
-          email: e686c287-9ef0-4a84-96f0-be4daed26430
+          email: 3d464d05-c816-4843-9187-c213ca465d8f
         afterListing:
-          email: bc327677-eef1-4863-94cc-5c964ff9eb9d
+          email: cbfa0361-8f5b-4aaa-b19b-f304e7ade628
+        legalRep:
+          beforeListing:
+            email: e686c287-9ef0-4a84-96f0-be4daed26430
+          afterListing:
+            email: bc327677-eef1-4863-94cc-5c964ff9eb9d
 
 
   bail:
