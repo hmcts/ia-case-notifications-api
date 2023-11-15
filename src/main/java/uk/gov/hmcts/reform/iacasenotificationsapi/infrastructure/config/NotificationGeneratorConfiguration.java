@@ -2195,6 +2195,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("decisionWithoutHearingInternalNotificationGenerator")
+    public List<NotificationGenerator> decisionWithoutHearingInternalNotificationGenerator(
+            HomeOfficeDecisionWithoutHearingPersonalisation homeOfficeDecisionWithoutHearingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeDecisionWithoutHearingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("requestCmaRequirementsAipNotificationGenerator")
     public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
         AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
@@ -4600,5 +4616,22 @@ public class NotificationGeneratorConfiguration {
                         notificationIdAppender
                 )
         );
+    }
+
+    @Bean("notificationsTurnedOnLegalRepNotificationGenerator")
+    public List<NotificationGenerator> turnOnNotificationLegalRepNotificationGenerator(
+        LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+              newArrayList(
+                  legalRepresentativeNotificationsTurnedOnPersonalisation
+              ),
+              notificationSender,
+              notificationIdAppender
+          )
+      );
     }
 }

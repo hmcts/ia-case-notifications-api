@@ -6,6 +6,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
@@ -59,7 +61,7 @@ public class AsylumCaseUtilsTest {
             )
     );
 
-
+    private final String legalRepEmailEjp = "legalRep@example.com";
 
     @Test
     void should_return_correct_value_for_det() {
@@ -154,6 +156,19 @@ public class AsylumCaseUtilsTest {
 
         assertEquals(Collections.emptyList(), AsylumCaseUtils.getAddendumEvidenceDocuments(asylumCase));
         assertEquals(Optional.empty(), AsylumCaseUtils.getLatestAddendumEvidenceDocument(asylumCase));
+    }
+
+    @Test
+    public void testIsLegalRepEjp() {
+
+        Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.of(legalRepEmailEjp));
+        assertTrue(isLegalRepEjp(asylumCase));
+    }
+
+    @Test
+    public void testIsNotLegalRepEjp() {
+        Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.empty());
+        assertFalse(isLegalRepEjp(asylumCase));
     }
 
     @ParameterizedTest
