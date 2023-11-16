@@ -54,7 +54,6 @@ class ApplyForCostsApplicantPersonalisationTest {
     private static String newestApplicationCreatedNumber = "1";
     private static String unreasonableCostsType = "Unreasonable costs";
     private String homeOfficeReferenceNumber = "A1234567/001";
-    private String legalRepReferenceNumber = "OUR-REF";
     private ApplyForCostsApplicantPersonalisation applyForCostsApplicantPersonalisation;
 
     @BeforeEach
@@ -81,7 +80,18 @@ class ApplyForCostsApplicantPersonalisationTest {
         when(personalisationProvider.getApplyForCostsPesonalisation(asylumCase)).thenReturn(applyForCostsApplicantPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+
+        Map<String, String> homeOfficeRecipientHeader = new HashMap<>();
+        homeOfficeRecipientHeader.put("recipient", homeOffice);
+        homeOfficeRecipientHeader.put("recipientReferenceNumber", homeOfficeReferenceNumber);
+
+        Map<String, String> legalRepRecipientHeader = new HashMap<>();
+        legalRepRecipientHeader.put("recipient", "Your");
+        legalRepRecipientHeader.put("recipientReferenceNumber", legalRepRefNumber);
+
+        when(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase)).thenReturn(homeOfficeRecipientHeader);
+        when(personalisationProvider.getLegalRepRecipientHeader(asylumCase)).thenReturn(legalRepRecipientHeader);
     }
 
     @Test
@@ -132,18 +142,18 @@ class ApplyForCostsApplicantPersonalisationTest {
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
-            assertEquals("Home office", personalisation.get("applicant"));
-            assertEquals(homeOfficeReferenceNumber, personalisation.get("applicantReferenceNumber"));
+            assertEquals("Home office", personalisation.get("recipient"));
+            assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
         } else {
-            assertEquals("Your", personalisation.get("applicant"));
-            assertEquals(legalRepReferenceNumber, personalisation.get("applicantReferenceNumber"));
+            assertEquals("Your", personalisation.get("recipient"));
+            assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
         }
     }
 
     static Stream<Arguments> appliesForCostsProvider() {
         return Stream.of(
             Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice)))),
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Home office"))))
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))))
         );
     }
 }

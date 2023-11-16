@@ -1,10 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHomeOfficeApplicant;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
 
 import java.util.Collections;
 import java.util.Map;
@@ -69,17 +66,10 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
             .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
 
-        final String applicantReferenceNumber = "applicantReferenceNumber";
-        final String applicant = "applicant";
-
         if (isHomeOfficeApplicant(asylumCase)) {
-            personalisationBuilder
-                .put(applicant, retrieveLatestApplyForCosts(asylumCase).getValue().getApplyForCostsApplicantType())
-                .put(applicantReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
+            personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
         } else {
-            personalisationBuilder
-                .put(applicant, "Your")
-                .put(applicantReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""));
+            personalisationBuilder.putAll(personalisationProvider.getLegalRepRecipientHeader(asylumCase));
         }
 
         return personalisationBuilder.build();
