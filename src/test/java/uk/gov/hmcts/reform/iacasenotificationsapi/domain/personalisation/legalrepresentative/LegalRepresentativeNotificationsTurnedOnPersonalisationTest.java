@@ -42,6 +42,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String dateOfBirth = "1 Mar 2020";
     private final String legalRepEmailEjp = "legalRep@example.com";
+    private final String ccdReferenceNumberForDisplay = "someRefNumber";
 
     private LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation;
 
@@ -54,6 +55,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
+        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumberForDisplay));
 
         legalRepresentativeNotificationsTurnedOnPersonalisation = new LegalRepresentativeNotificationsTurnedOnPersonalisation(
             beforeListingTemplateId,
@@ -120,6 +122,7 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
         assertEquals(legalRepReferenceEjp, personalisation.get("legalRepReferenceNumberEjp"));
         assertEquals(dateOfBirth, personalisation.get("dateOfBirth"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(ccdReferenceNumberForDisplay, personalisation.get("ccdReferenceNumberForDisplay"));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

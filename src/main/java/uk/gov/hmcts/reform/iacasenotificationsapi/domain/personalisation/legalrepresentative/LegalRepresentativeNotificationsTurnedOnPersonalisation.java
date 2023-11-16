@@ -65,6 +65,7 @@ public class LegalRepresentativeNotificationsTurnedOnPersonalisation implements 
             .<String, String>builder()
             .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase))
             .put("legalRepReferenceNumberEjp", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_EJP, String.class).orElse(""))
+            .put("ccdReferenceNumberForDisplay", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("dateOfBirth", defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
