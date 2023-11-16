@@ -1129,6 +1129,9 @@ govnotify:
         email: e3c04c78-3a7f-4943-a095-840dc8d8b34f
       applicant:
         email: a5dc23cd-422c-4b0b-baa8-f972978184ef
+    respondToCostsNotification:
+      applicant:
+        email: bcf74bf3-e042-45dd-a4de-262dc81f0697
     turnOnNotifications:
       homeOffice:
         beforeListing:
@@ -1290,6 +1293,7 @@ security:
       - "stopLegalRepresenting"
       - "nocRequestBail"
       - "applyForCosts"
+      - "respondToCosts"
     caseworker-ia-caseofficer:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1405,18 +1409,21 @@ security:
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
       - "applyForCosts"
+      - "respondToCosts"
     caseworker-ia-homeofficelart:
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "makeAnApplication"
       - "applyForCosts"
+      - "respondToCosts"
     caseworker-ia-homeofficepou:
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
       - "makeAnApplication"
       - "applyForCosts"
+      - "respondToCosts"
     caseworker-ia-respondentofficer:
       - "uploadHomeOfficeBundle"
       - "addAppealResponse"
@@ -1426,6 +1433,7 @@ security:
       - "applyForFTPARespondent"
       - "makeAnApplication"
       - "applyForCosts"
+      - "respondToCosts"
     caseworker-ia-iacjudge:
       - "endAppeal"
       - "sendDecisionAndReasons"

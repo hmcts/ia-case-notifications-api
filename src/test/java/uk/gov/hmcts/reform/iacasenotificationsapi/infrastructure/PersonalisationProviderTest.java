@@ -85,6 +85,8 @@ class PersonalisationProviderTest {
 
     private final String directionExplanation = "someExplanation";
     private final String directionDueDate = "2019-10-29";
+    private final String recipientReferenceNumber = "recipientReferenceNumber";
+    private final String recipient = "recipient";
 
     private PersonalisationProvider personalisationProvider;
 
@@ -287,6 +289,26 @@ class PersonalisationProviderTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals("1", personalisation.get("applicationId"));
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
+    }
+
+    @Test
+    void should_return_home_office_recipient_header_when_all_information_given() {
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
+
+        Map<String, String> personalisation = personalisationProvider.getHomeOfficeRecipientHeader(asylumCase);
+
+        assertEquals("Home office", personalisation.get(recipient));
+        assertEquals(homeOfficeRefNumber, personalisation.get(recipientReferenceNumber));
+    }
+
+    @Test
+    void should_return_legal_rep_recipient_header_when_all_information_given() {
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
+
+        Map<String, String> personalisation = personalisationProvider.getLegalRepRecipientHeader(asylumCase);
+
+        assertEquals("Your", personalisation.get(recipient));
+        assertEquals(legalRepReferenceNumber, personalisation.get(recipientReferenceNumber));
     }
 
 }
