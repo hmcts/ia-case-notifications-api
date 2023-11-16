@@ -5111,8 +5111,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> applyForCostsRespondentNotificationNotificationHandler(
-        @Qualifier("applyForCostsRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> applyForCostsNotificationHandler(
+        @Qualifier("applyForCostsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -5120,6 +5120,37 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(APPLY_FOR_COSTS)
+                    && !isInternalCase(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> notificationsTurnedOnLegalRepNotificationHandler(
+        @Qualifier("notificationsTurnedOnLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == TURN_ON_NOTIFICATIONS
+                       && isInternalCase(asylumCase)
+                       && isLegalRepEjp(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> respondToCostsNotificationHandler(
+        @Qualifier("respondToCostsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent().equals(RESPOND_TO_COSTS)
                     && !isInternalCase(asylumCase);
             }, notificationGenerators
         );

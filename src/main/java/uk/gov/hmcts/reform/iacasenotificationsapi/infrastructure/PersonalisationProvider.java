@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -33,10 +34,13 @@ public class PersonalisationProvider {
     private static final String APPELLANT_FAMILY_NAME_CONST = "appellantFamilyName";
     private static final String ASYLUM_NOT_NULL_MESSAGE = "asylumCase must not be null";
     private static final String HOME_OFFICE_REFERENCE_NUMBER_CONST = "homeOfficeReferenceNumber";
+    private static final String LINK_TO_ONLINE_SERVICE = "linkToOnlineService";
     private final String iaExUiFrontendUrl;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
     private final DateTimeExtractor dateTimeExtractor;
+    private final String recipientReferenceNumber = "recipientReferenceNumber";
+    private final String recipient = "recipient";
 
     ImmutableMap.Builder<String, AsylumCaseDefinition> personalisationBuilder = new ImmutableMap.Builder<String, AsylumCaseDefinition>()
         .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
@@ -113,7 +117,7 @@ public class PersonalisationProvider {
 
         final Builder<String, String> caseListingValues = ImmutableMap
             .<String, String>builder()
-            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
             .put("oldHearingCentre", hearingCentreNameBefore)
             .put("oldHearingDate", oldHearingDate == null || oldHearingDate.isEmpty() ? "" : dateTimeExtractor.extractHearingDate(oldHearingDate))
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
@@ -289,7 +293,7 @@ public class PersonalisationProvider {
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put(ARIA_LISTING_REFERENCE_CONST, asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .putAll(getAppellantCredentials(asylumCase))
-            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
             .build();
     }
 
@@ -297,11 +301,11 @@ public class PersonalisationProvider {
         requireNonNull(asylumCase, ASYLUM_NOT_NULL_MESSAGE);
 
         return ImmutableMap
-                .<String, String>builder()
-                .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .putAll(getAppellantCredentials(asylumCase))
-                .build();
+            .<String, String>builder()
+            .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
+            .build();
     }
 
     public Map<String, String> getAppellantCredentials(AsylumCase asylumCase) {
@@ -311,4 +315,40 @@ public class PersonalisationProvider {
             .put(APPELLANT_FAMILY_NAME_CONST, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .build();
     }
+
+    public Map<String, String> getApplyForCostsPesonalisation(AsylumCase asylumCase) {
+        final String newestApplicationCreatedNumber = "1";
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
+            .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
+            //ExUi will always display the latest application with number 1 in 'Costs' tab
+            .put("applicationId", newestApplicationCreatedNumber)
+            .put("appliedCostsType", retrieveLatestApplyForCosts(
+                asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()
+            ).build();
+    }
+
+    public Map<String, String> getHomeOfficeRecipientHeader(AsylumCase asylumCase) {
+        final String homeOffice = "Home office";
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(recipient, homeOffice)
+            .put(recipientReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .build();
+    }
+
+    public Map<String, String> getLegalRepRecipientHeader(AsylumCase asylumCase) {
+        final String yourPrefix = "Your";
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(recipient, yourPrefix)
+            .put(recipientReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .build();
+    }
+
 }

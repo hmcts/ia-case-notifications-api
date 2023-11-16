@@ -1,20 +1,26 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
@@ -55,7 +61,7 @@ public class AsylumCaseUtilsTest {
             )
     );
 
-
+    private final String legalRepEmailEjp = "legalRep@example.com";
 
     @Test
     void should_return_correct_value_for_det() {
@@ -150,5 +156,56 @@ public class AsylumCaseUtilsTest {
 
         assertEquals(Collections.emptyList(), AsylumCaseUtils.getAddendumEvidenceDocuments(asylumCase));
         assertEquals(Optional.empty(), AsylumCaseUtils.getLatestAddendumEvidenceDocument(asylumCase));
+    }
+
+    @Test
+    public void testIsLegalRepEjp() {
+
+        Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.of(legalRepEmailEjp));
+        assertTrue(isLegalRepEjp(asylumCase));
+    }
+
+    @Test
+    public void testIsNotLegalRepEjp() {
+        Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.empty());
+        assertFalse(isLegalRepEjp(asylumCase));
+    }
+
+    @ParameterizedTest
+    @MethodSource("respondentEmails")
+    void should_return_correct_boolean_value(List<IdValue<ApplyForCosts>> applyForCostsList) {
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        if (applyForCostsList.get(0).getValue().getRespondentToCostsOrder().equals("Legal representative")) {
+            assertTrue(AsylumCaseUtils.isHomeOfficeApplicant(asylumCase));
+        } else {
+            assertFalse(AsylumCaseUtils.isHomeOfficeApplicant(asylumCase));
+        }
+    }
+
+    @Test
+    void should_throw_when_applies_for_costs_are_not_present() {
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> AsylumCaseUtils.retrieveLatestApplyForCosts(asylumCase))
+            .hasMessage("Applies for costs are not present")
+            .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void should_throw_when_correct_type_applicant_is_not_present() {
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Admin Officer")));
+
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        assertThatThrownBy(() -> AsylumCaseUtils.isHomeOfficeApplicant(asylumCase))
+            .hasMessage("Correct applicant type is not present")
+            .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    static Stream<Arguments> respondentEmails() {
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Legal representative", "Home office")))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Legal representative"))))
+        );
     }
 }
