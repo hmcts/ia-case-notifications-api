@@ -39,6 +39,8 @@ public class PersonalisationProvider {
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
     private final DateTimeExtractor dateTimeExtractor;
+    private final String recipientReferenceNumber = "recipientReferenceNumber";
+    private final String recipient = "recipient";
 
     ImmutableMap.Builder<String, AsylumCaseDefinition> personalisationBuilder = new ImmutableMap.Builder<String, AsylumCaseDefinition>()
         .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
@@ -299,11 +301,11 @@ public class PersonalisationProvider {
         requireNonNull(asylumCase, ASYLUM_NOT_NULL_MESSAGE);
 
         return ImmutableMap
-                .<String, String>builder()
-                .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .putAll(getAppellantCredentials(asylumCase))
-                .build();
+            .<String, String>builder()
+            .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .putAll(getAppellantCredentials(asylumCase))
+            .build();
     }
 
     public Map<String, String> getAppellantCredentials(AsylumCase asylumCase) {
@@ -327,6 +329,26 @@ public class PersonalisationProvider {
             .put("appliedCostsType", retrieveLatestApplyForCosts(
                 asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()
             ).build();
+    }
+
+    public Map<String, String> getHomeOfficeRecipientHeader(AsylumCase asylumCase) {
+        final String homeOffice = "Home office";
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(recipient, homeOffice)
+            .put(recipientReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .build();
+    }
+
+    public Map<String, String> getLegalRepRecipientHeader(AsylumCase asylumCase) {
+        final String yourPrefix = "Your";
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put(recipient, yourPrefix)
+            .put(recipientReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .build();
     }
 
 }
