@@ -4367,12 +4367,18 @@ public class NotificationGeneratorConfiguration {
     @Bean("editCaseListingInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> editCaseListingInternalDetainedNotificationGenerator(
             DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation,
+            HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(Collections.singleton(detentionEngagementTeamEditCaseListingPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(homeOfficeEditListingPersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
