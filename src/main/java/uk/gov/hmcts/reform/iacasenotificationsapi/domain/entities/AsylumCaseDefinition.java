@@ -436,7 +436,15 @@ public enum AsylumCaseDefinition {
 
     APPLIES_FOR_COSTS(
             "appliesForCosts", new TypeReference<List<IdValue<ApplyForCosts>>>(){}),
+
+    UPPER_TRIBUNAL_REFERENCE_NUMBER(
+            "upperTribunalReferenceNumber", new TypeReference<String>() {}),
+
+    CCD_REFERENCE_NUMBER_FOR_DISPLAY(
+        "ccdReferenceNumberForDisplay", new TypeReference<String>() {}),
     ;
+
+
 
     private final String value;
     private final TypeReference typeReference;

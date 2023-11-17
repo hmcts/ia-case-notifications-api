@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -30,8 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ApplyForCostsRespondentPersonalisationTest {
-
+class ApplyForCostsApplicantPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,7 +40,7 @@ class ApplyForCostsRespondentPersonalisationTest {
     PersonalisationProvider personalisationProvider;
 
     private Long caseId = 12345L;
-    private String applyForCostsNotificationForRespondentTemplateId = "applyForCostsNotificationForRespondentTemplateId";
+    private String applyForCostsNotificationForApplicantTemplateId = "applyForCostsNotificationForRespondentTemplateId";
     private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
     private String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
     private String iaExUiFrontendUrl = "http://localhost";
@@ -56,30 +54,30 @@ class ApplyForCostsRespondentPersonalisationTest {
     private static String newestApplicationCreatedNumber = "1";
     private static String unreasonableCostsType = "Unreasonable costs";
     private String homeOfficeReferenceNumber = "A1234567/001";
-    private ApplyForCostsRespondentPersonalisation applyForCostsRespondentPersonalisation;
+    private ApplyForCostsApplicantPersonalisation applyForCostsApplicantPersonalisation;
 
     @BeforeEach
     void setup() {
-        applyForCostsRespondentPersonalisation = new ApplyForCostsRespondentPersonalisation(
-            applyForCostsNotificationForRespondentTemplateId,
+        applyForCostsApplicantPersonalisation = new ApplyForCostsApplicantPersonalisation(
+            applyForCostsNotificationForApplicantTemplateId,
             homeOfficeEmailAddress,
             emailAddressFinder,
             customerServicesProvider,
             personalisationProvider
         );
 
-        Map<String, String> applyForCostsRespondentPersonalisationTemplate = new HashMap<>();
+        Map<String, String> applyForCostsApplicantPersonalisationTemplate = new HashMap<>();
 
-        applyForCostsRespondentPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
-        applyForCostsRespondentPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
-        applyForCostsRespondentPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
-        applyForCostsRespondentPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
-        applyForCostsRespondentPersonalisationTemplate.put("applicationId", newestApplicationCreatedNumber);
-        applyForCostsRespondentPersonalisationTemplate.put("appliedCostsType", "Wasted");
+        applyForCostsApplicantPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
+        applyForCostsApplicantPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
+        applyForCostsApplicantPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
+        applyForCostsApplicantPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
+        applyForCostsApplicantPersonalisationTemplate.put("applicationId", newestApplicationCreatedNumber);
+        applyForCostsApplicantPersonalisationTemplate.put("appliedCostsType", "Wasted");
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(personalisationProvider.getApplyForCostsPesonalisation(asylumCase)).thenReturn(applyForCostsRespondentPersonalisationTemplate);
+        when(personalisationProvider.getApplyForCostsPesonalisation(asylumCase)).thenReturn(applyForCostsApplicantPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
@@ -94,18 +92,17 @@ class ApplyForCostsRespondentPersonalisationTest {
 
         when(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase)).thenReturn(homeOfficeRecipientHeader);
         when(personalisationProvider.getLegalRepRecipientHeader(asylumCase)).thenReturn(legalRepRecipientHeader);
-
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(applyForCostsNotificationForRespondentTemplateId, applyForCostsRespondentPersonalisation.getTemplateId(asylumCase));
+        assertEquals(applyForCostsNotificationForApplicantTemplateId, applyForCostsApplicantPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPLY_FOR_COSTS_RESPONDENT_EMAIL",
-            applyForCostsRespondentPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_APPLY_FOR_COSTS_APPLICANT_EMAIL",
+            applyForCostsApplicantPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
@@ -114,16 +111,16 @@ class ApplyForCostsRespondentPersonalisationTest {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
-            assertTrue(applyForCostsRespondentPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
+            assertTrue(applyForCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         } else {
-            assertTrue(applyForCostsRespondentPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
+            assertTrue(applyForCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         }
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> applyForCostsRespondentPersonalisation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> applyForCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -133,7 +130,7 @@ class ApplyForCostsRespondentPersonalisationTest {
     void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        Map<String, String> personalisation = applyForCostsRespondentPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = applyForCostsApplicantPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
@@ -142,15 +139,14 @@ class ApplyForCostsRespondentPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("1", personalisation.get("applicationId"));
-
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
+            assertEquals("Home office", personalisation.get("recipient"));
+            assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
+        } else {
             assertEquals("Your", personalisation.get("recipient"));
             assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
-        } else {
-            assertEquals(applyForCostsList.get(0).getValue().getRespondentToCostsOrder(), personalisation.get("recipient"));
-            assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
         }
     }
 

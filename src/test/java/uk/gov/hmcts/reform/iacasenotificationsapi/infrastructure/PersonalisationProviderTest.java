@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 
@@ -86,6 +85,8 @@ class PersonalisationProviderTest {
 
     private final String directionExplanation = "someExplanation";
     private final String directionDueDate = "2019-10-29";
+    private final String recipientReferenceNumber = "recipientReferenceNumber";
+    private final String recipient = "recipient";
 
     private PersonalisationProvider personalisationProvider;
 
@@ -273,10 +274,41 @@ class PersonalisationProviderTest {
 
     @Test
     void should_return_appelant_credentials_when_all_information_given() {
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent")));
 
-        Map<String, String> personalisation = personalisationProvider.getAppellantCredentials(asylumCase);
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        Map<String, String> personalisation = personalisationProvider.getApplyForCostsPesonalisation(asylumCase);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals("1", personalisation.get("applicationId"));
+        assertEquals("Wasted", personalisation.get("appliedCostsType"));
     }
+
+    @Test
+    void should_return_home_office_recipient_header_when_all_information_given() {
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
+
+        Map<String, String> personalisation = personalisationProvider.getHomeOfficeRecipientHeader(asylumCase);
+
+        assertEquals("Home office", personalisation.get(recipient));
+        assertEquals(homeOfficeRefNumber, personalisation.get(recipientReferenceNumber));
+    }
+
+    @Test
+    void should_return_legal_rep_recipient_header_when_all_information_given() {
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
+
+        Map<String, String> personalisation = personalisationProvider.getLegalRepRecipientHeader(asylumCase);
+
+        assertEquals("Your", personalisation.get(recipient));
+        assertEquals(legalRepReferenceNumber, personalisation.get(recipientReferenceNumber));
+    }
+
 }

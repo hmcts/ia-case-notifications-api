@@ -12,16 +12,19 @@ import lombok.ToString;
 public class ApplyForCosts {
     private String appliedCostsType;
     private String respondentToCostsOrder;
+    private String applyForCostsApplicantType;
 
     public ApplyForCosts() {
         // noop -- for deserializer
     }
 
-    public ApplyForCosts(String appliedCostsType, String respondentToCostsOrder) {
+    public ApplyForCosts(String appliedCostsType, String respondentToCostsOrder, String applyForCostsApplicantType) {
         requireNonNull(appliedCostsType);
         requireNonNull(respondentToCostsOrder);
+        requireNonNull(applyForCostsApplicantType);
         this.appliedCostsType = appliedCostsType;
         this.respondentToCostsOrder = respondentToCostsOrder;
+        this.applyForCostsApplicantType = applyForCostsApplicantType;
     }
 
     public String getAppliedCostsType() {
@@ -32,6 +35,11 @@ public class ApplyForCosts {
     public String getRespondentToCostsOrder() {
         requireNonNull(respondentToCostsOrder);
         return respondentToCostsOrder;
+    }
+
+    public String getApplyForCostsApplicantType() {
+        requireNonNull(applyForCostsApplicantType);
+        return applyForCostsApplicantType;
     }
 
 }

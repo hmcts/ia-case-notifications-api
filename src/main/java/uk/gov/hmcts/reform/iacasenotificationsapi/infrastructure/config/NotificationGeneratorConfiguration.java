@@ -14,7 +14,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsApplicantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsRespondentPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsApplicantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.*;
@@ -2217,6 +2219,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("decisionWithoutHearingInternalNotificationGenerator")
+    public List<NotificationGenerator> decisionWithoutHearingInternalNotificationGenerator(
+            HomeOfficeDecisionWithoutHearingPersonalisation homeOfficeDecisionWithoutHearingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeDecisionWithoutHearingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("requestCmaRequirementsAipNotificationGenerator")
     public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
         AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
@@ -4289,12 +4307,18 @@ public class NotificationGeneratorConfiguration {
     @Bean("listCaseInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> listCaseInternalDetainedNotificationGenerator(
             DetentionEngagementTeamListCasePersonalisation detentionEngagementTeamListCasePersonalisation,
+            HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(Collections.singleton(detentionEngagementTeamListCasePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(homeOfficeListCasePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
@@ -4589,18 +4613,62 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("applyForCostsRespondentNotificationGenerator")
-    public List<NotificationGenerator> applyForCostsRespondentNotificationGenerator(
+    @Bean("applyForCostsNotificationGenerator")
+    public List<NotificationGenerator> applyForCostsNotificationGenerator(
         ApplyForCostsRespondentPersonalisation applyForCostsRespondentPersonalisation,
+        ApplyForCostsApplicantPersonalisation applyForCostsApplicantPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(applyForCostsRespondentPersonalisation, applyForCostsApplicantPersonalisation),
+            notificationSender,
+            notificationIdAppender)
+        );
+    }
+
+    @Bean("respondentTurnOnNotificationsNotificationGenerator")
+    public List<NotificationGenerator> respondentTurnOnNotificationsNotificationGenerator(
+            RespondentTurnOnNotificationsPersonalisation respondentTurnOnNotificationsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
         return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(respondentTurnOnNotificationsPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("notificationsTurnedOnLegalRepNotificationGenerator")
+    public List<NotificationGenerator> turnOnNotificationLegalRepNotificationGenerator(
+        LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(
             new EmailNotificationGenerator(
-                newArrayList(Collections.singleton(applyForCostsRespondentPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
+              newArrayList(
+                  legalRepresentativeNotificationsTurnedOnPersonalisation
+              ),
+              notificationSender,
+              notificationIdAppender
+          )
+      );
+    }
+
+    @Bean("respondToCostsNotificationGenerator")
+    public List<NotificationGenerator> respondToCostsNotificationGenerator(
+        RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(respondToCostsApplicantPersonalisation),
+            notificationSender,
+            notificationIdAppender)
         );
     }
 }
