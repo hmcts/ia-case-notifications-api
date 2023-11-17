@@ -16,21 +16,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class RespondToCostsApplicantPersonalisation implements EmailNotificationPersonalisation {
-    private final String respondToCostsNotificationForApplicantTemplateId;
+public class RespondToCostsRespondentPersonalisation implements EmailNotificationPersonalisation {
+    private final String respondToCostsNotificationForRespondentTemplateId;
     private final String homeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public RespondToCostsApplicantPersonalisation(
-        @Value("${govnotify.template.respondToCostsNotification.applicant.email}") String respondToCostsNotificationForApplicantTemplateId,
+    public RespondToCostsRespondentPersonalisation(
+        @Value("${govnotify.template.respondToCostsNotification.respondent.email}") String respondToCostsNotificationForRespondentTemplateId,
         @Value("${applyForCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider,
         PersonalisationProvider personalisationProvider
     ) {
-        this.respondToCostsNotificationForApplicantTemplateId = respondToCostsNotificationForApplicantTemplateId;
+        this.respondToCostsNotificationForRespondentTemplateId = respondToCostsNotificationForRespondentTemplateId;
         this.homeOfficeEmailAddress = homeOfficeEmailAddress;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -39,21 +39,21 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return respondToCostsNotificationForApplicantTemplateId;
+        return respondToCostsNotificationForRespondentTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         if (isHomeOfficeApplicant(asylumCase)) {
-            return Collections.singleton(homeOfficeEmailAddress);
-        } else {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
+        } else {
+            return Collections.singleton(homeOfficeEmailAddress);
         }
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_RESPOND_TO_COSTS_APPLICANT_EMAIL";
+        return caseId + "_RESPOND_TO_COSTS_RESPONDENT_EMAIL";
     }
 
     @Override
@@ -66,9 +66,9 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
 
         if (isHomeOfficeApplicant(asylumCase)) {
-            personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
-        } else {
             personalisationBuilder.putAll(personalisationProvider.getLegalRepRecipientHeader(asylumCase));
+        } else {
+            personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
         }
 
         return personalisationBuilder.build();
