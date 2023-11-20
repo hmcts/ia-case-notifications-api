@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsApplicantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsRespondentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsApplicantPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsRespondentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.*;
@@ -4374,7 +4375,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("editCaseListingInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> editCaseListingInternalDetainedNotificationGenerator(
         DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation,
-        GovNotifyNotificationSender notificationSender,
+        HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
@@ -4382,7 +4383,12 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(Collections.singleton(detentionEngagementTeamEditCaseListingPersonalisation)),
                 notificationSender,
                 notificationIdAppender
-            )
+            ),
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(homeOfficeEditListingPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -4647,11 +4653,12 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondToCostsNotificationGenerator")
     public List<NotificationGenerator> respondToCostsNotificationGenerator(
         RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation,
+        RespondToCostsRespondentPersonalisation respondToCostsRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(respondToCostsApplicantPersonalisation),
+            newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
             notificationSender,
             notificationIdAppender
             )

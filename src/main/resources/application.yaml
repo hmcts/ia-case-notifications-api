@@ -1132,6 +1132,8 @@ govnotify:
     respondToCostsNotification:
       applicant:
         email: bcf74bf3-e042-45dd-a4de-262dc81f0697
+      respondent:
+        email: 4cc2a1cc-b89d-46f2-8f79-dcd663ef14a0
     turnOnNotifications:
       homeOffice:
         beforeListing:
