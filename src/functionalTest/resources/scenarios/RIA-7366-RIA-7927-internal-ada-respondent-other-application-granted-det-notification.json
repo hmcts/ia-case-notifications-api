@@ -100,7 +100,7 @@
             "notifications": [
               {
                 "reference": "7366_DECIDE_AN_APPLICATION_HOME_OFFICE",
-                "recipient": "apc_privatebetainbox@example.com",
+                "recipient": "{$apcHomeOfficeEmailAddress}",
                 "subject": "Accelerated detained appeal: Your application has been granted",
                 "body": [
                   "HMCTS reference: PA/12345/2019",
