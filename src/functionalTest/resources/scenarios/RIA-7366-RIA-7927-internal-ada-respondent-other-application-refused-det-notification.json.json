@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7366: internal ada case home office (other) application decided (Refused)",
+  "description": "RIA-7366 and 7927: internal ada case home office (other) application decided (Refused)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
