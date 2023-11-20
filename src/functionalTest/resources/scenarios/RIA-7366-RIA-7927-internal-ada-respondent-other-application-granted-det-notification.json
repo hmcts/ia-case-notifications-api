@@ -72,7 +72,7 @@
         "ircName": "Brookhouse",
 	    "appellantInDetention": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
-        "decideAnApplicationId": "1",
+        "decideAnApplicationId": "2",
         "notificationsSent":[
           {
             "id":"7366_DECIDE_A_RESPONDENT_APPLICATION_DET",
@@ -96,7 +96,20 @@
               "suppliedBy": "",
               "description": "",
               "dateUploaded": "{$TODAY}"
-            }
+            },
+            "notifications": [
+              {
+                "reference": "7366_DECIDE_AN_APPLICATION_HOME_OFFICE",
+                "recipient": "apc_privatebetainbox@example.com",
+                "subject": "Accelerated detained appeal: Your application has been granted",
+                "body": [
+                  "HMCTS reference: PA/12345/2019",
+                  "Home Office reference: A1234567",
+                  "Appellant name: Talha Awan",
+                  "The online service: {$iaExUiFrontendUrl}"
+                ]
+              }
+            ]
           }
         ]
       }
