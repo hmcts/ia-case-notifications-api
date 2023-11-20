@@ -53,6 +53,7 @@ public class NotificationHandlerConfiguration {
     private static final String RESPONDENT_APPLICANT = "Respondent";
     private static final String IS_APPELLANT = "The appellant";
 
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
         @Qualifier("forceCaseProgressionNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
@@ -5164,4 +5165,5 @@ public class NotificationHandlerConfiguration {
                 .map(direction -> direction.getParties().equals(party))
                 .orElse(false);
     }
+
 }
