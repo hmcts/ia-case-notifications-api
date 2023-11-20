@@ -97,7 +97,20 @@
               "suppliedBy": "",
               "description": "",
               "dateUploaded": "{$TODAY}"
+            },
+            "notifications": [
+            {
+              "reference": "7366_DECIDE_AN_APPLICATION_HOME_OFFICE",
+              "recipient": "apc_privatebetainbox@example.com",
+              "subject": "Accelerated detained appeal: Your application has been refused",
+              "body": [
+                "HMCTS reference: PA/12345/2019",
+                "Home Office reference: A1234567",
+                "Appellant name: Talha Awan",
+                "The online service: {$iaExUiFrontendUrl}"
+              ]
             }
+            ]
           }
         ]
       }
