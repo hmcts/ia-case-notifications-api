@@ -51,7 +51,7 @@
                 "date":"",
                 "decision":"Granted",
                 "state":"caseBuilding",
-                "applicantRole":"",
+                "applicantRole":"caseworker-ia-homeofficeapc",
                 "decisionReason":"A reason for the decision",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Tribunal Caseworker"
