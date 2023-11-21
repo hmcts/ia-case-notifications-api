@@ -3035,6 +3035,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("decideARespondentApplicationInternalNotificationGenerator")
     public List<NotificationGenerator> decideARespondentApplicationInternalNotificationGenerator(
             DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
+            HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3044,9 +3045,17 @@ public class NotificationGeneratorConfiguration {
                         newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
                         notificationSender,
                         notificationIdAppender
-                )
+                ),
+            new EmailNotificationGenerator(
+                newArrayList(
+                    homeOfficeDecideAnApplicationPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
+
 
     @Bean("decideAnApplicationAipNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationAipNotificationGenerator(
