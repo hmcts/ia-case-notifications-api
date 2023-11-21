@@ -1992,7 +1992,8 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE
-                        && isRepJourney(asylumCase);
+                        && isRepJourney(asylumCase)
+                        && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -3290,8 +3291,9 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MAKE_AN_APPLICATION
-                            && isRepJourney(asylumCase);
-                }, notificationGenerators
+                            && isRepJourney(asylumCase)
+                            && !isInternalCase(asylumCase);
+                    }, notificationGenerators
         );
     }
 
