@@ -74,7 +74,6 @@ class ApplyForCostsRespondentPersonalisationTest {
         applyForCostsRespondentPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
         applyForCostsRespondentPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
         applyForCostsRespondentPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
-        applyForCostsRespondentPersonalisationTemplate.put("applicationId", newestApplicationCreatedNumber);
         applyForCostsRespondentPersonalisationTemplate.put("appliedCostsType", "Wasted");
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -141,7 +140,6 @@ class ApplyForCostsRespondentPersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("1", personalisation.get("applicationId"));
 
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
 
