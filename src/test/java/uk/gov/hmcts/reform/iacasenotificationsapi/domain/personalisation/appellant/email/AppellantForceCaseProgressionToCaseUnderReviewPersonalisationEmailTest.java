@@ -96,4 +96,14 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
     }
+
+    @Test
+    public void asylumCase_null_returns_error() {
+        Mockito.when(recipientsFinder.findAll(null, NotificationType.EMAIL))
+                .thenThrow(new NullPointerException("asylumCase must not be null"));
+
+        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(null))
+                .isExactlyInstanceOf(NullPointerException.class)
+                .hasMessage("asylumCase must not be null");
+    }
 }
