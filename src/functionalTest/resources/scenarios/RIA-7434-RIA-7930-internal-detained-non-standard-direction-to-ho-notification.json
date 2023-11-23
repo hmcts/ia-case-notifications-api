@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7436 RIA-7434 Send Non Standard Direction to Appellant and Respondent on Internal Detained Appeal.",
+  "description": "RIA-7434 RIA-7930 Send Non Standard Direction to Respondent on Internal Detained Appeal.",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
@@ -20,7 +20,7 @@
               "id": "1",
               "value": {
                 "explanation": "The non-standard direction explanation goes here",
-                "parties": "appellantAndRespondent",
+                "parties": "respondent",
                 "dateDue": "{$TODAY+14}",
                 "dateSent": "{$TODAY}",
                 "tag": ""
@@ -31,7 +31,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalNonStandardDirectionToAppellantLetter",
+                "tag": "internalNonStandardDirectionToRespondentLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -55,7 +55,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_DET",
+            "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7436_RESPONDENT_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
