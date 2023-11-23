@@ -442,6 +442,9 @@ public enum AsylumCaseDefinition {
 
     CCD_REFERENCE_NUMBER_FOR_DISPLAY(
         "ccdReferenceNumberForDisplay", new TypeReference<String>() {}),
+
+    RESPOND_TO_COSTS_LIST(
+        "respondToCostsList", new TypeReference<DynamicList>(){}),
     ;
 
 
