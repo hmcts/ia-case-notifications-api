@@ -14,10 +14,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -317,15 +314,12 @@ public class PersonalisationProvider {
     }
 
     public Map<String, String> getApplyForCostsPesonalisation(AsylumCase asylumCase) {
-        final String newestApplicationCreatedNumber = "1";
 
         return ImmutableMap
             .<String, String>builder()
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .putAll(getAppellantCredentials(asylumCase))
             .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
-            //ExUi will always display the latest application with number 1 in 'Costs' tab
-            .put("applicationId", newestApplicationCreatedNumber)
             .put("appliedCostsType", retrieveLatestApplyForCosts(
                 asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()
             ).build();
@@ -348,6 +342,18 @@ public class PersonalisationProvider {
             .<String, String>builder()
             .put(recipient, yourPrefix)
             .put(recipientReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .build();
+    }
+
+    public Map<String, String> getRespondToCostsApplicationNumber(AsylumCase asylumCase) {
+        DynamicList applyForCostsDynamicList = asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)
+            .orElseThrow(() -> new IllegalStateException("respondToCostsDynamicList is not present"));
+
+        String applicationNumber = applyForCostsDynamicList.getValue().getLabel().split(",")[0].replaceAll("[^0-9]", "");
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("applicationId", applicationNumber)
             .build();
     }
 
