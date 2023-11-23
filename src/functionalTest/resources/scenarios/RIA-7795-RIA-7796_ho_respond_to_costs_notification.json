@@ -45,7 +45,19 @@
               }
             }
           ],
-        "legalRepName": "Fake Org Ltd"
+          "legalRepName": "Fake Org Ltd",
+          "respondToCostsList": {
+            "value": {
+              "code": "11",
+              "label": "Costs 5, Wasted costs, 22 Nov 2023"
+            },
+            "list_items": [
+              {
+                "code": "15",
+                "label": "Costs 1, Wasted costs, 22 Nov 2023"
+              }
+            ]
+          }
         }
       }
     }
@@ -64,7 +76,7 @@
             "revocationHumanitarianProtection"
           ]
         },
-      "legalRepName": "Fake Org Ltd"
+        "legalRepName": "Fake Org Ltd"
       }
     },
     "notifications": [
@@ -77,7 +89,7 @@
           "Your reference: A1234567",
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
-          "Application name: Cost application 1",
+          "Application name: Cost application 5",
           "Application type: Unreasonable Cost application"
         ]
       },
@@ -90,7 +102,7 @@
           "Home office reference: A1234567",
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
-          "Application name: Cost application 1",
+          "Application name: Cost application 5",
           "Application type: Unreasonable Cost application"
         ]
       }
