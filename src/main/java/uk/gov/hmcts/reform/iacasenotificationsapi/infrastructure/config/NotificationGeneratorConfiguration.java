@@ -1707,6 +1707,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("uploadAddendumEvidenceAdminOfficerInternal")
     public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerInternal(
         HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+        DetentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -1715,6 +1716,13 @@ public class NotificationGeneratorConfiguration {
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeUploadAddendumEvidencePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )
