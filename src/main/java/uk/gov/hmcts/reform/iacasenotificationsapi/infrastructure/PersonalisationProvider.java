@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.DateUtils.formatDateForNotification;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -354,6 +355,15 @@ public class PersonalisationProvider {
         return ImmutableMap
             .<String, String>builder()
             .put("applicationId", applicationNumber)
+            .build();
+    }
+
+    public Map<String, String> getApplyToCostsCreationDate(AsylumCase asylumCase) {
+        String latestApplyForCostsCreationDate = retrieveLatestApplyForCosts(asylumCase).getValue().getApplyForCostsCreationDate();
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("creationDate", formatDateForNotification(LocalDate.parse(latestApplyForCostsCreationDate)))
             .build();
     }
 

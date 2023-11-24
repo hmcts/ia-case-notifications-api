@@ -61,14 +61,11 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        final String newestApplicationCreatedNumber = "1";
-
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            //ExUi will always display the latest application with number 1 in 'Costs' tab
-            .put("applicationId", newestApplicationCreatedNumber)
             .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(personalisationProvider.getApplyToCostsCreationDate(asylumCase));
 
         if (isHomeOfficeApplicant(asylumCase)) {
             personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
