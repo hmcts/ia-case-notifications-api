@@ -258,6 +258,7 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         Map<String, String> personalisation =
                 respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
