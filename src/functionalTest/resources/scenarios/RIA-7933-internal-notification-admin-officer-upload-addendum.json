@@ -1,37 +1,27 @@
 {
-  "description": "RIA-7434 Send Non Standard Direction to Respondent on Internal Detained Appeal.",
+  "description": "RIA-7933 Internal notification of admin officer uploaded addendum evidence",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "caseOfficer",
+    "credentials": "AdminOfficer",
     "input": {
-      "id": 7436,
-      "eventId": "sendDirection",
-      "state": "decision",
+      "id": 7933,
+      "eventId": "uploadAddendumEvidenceAdminOfficer",
+      "state": "preHearing",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "ircName": "Brookhouse",
+          "ariaListingReference": "LP/12345/2019",
+          "listCaseHearingCentre": "taylorHouse",
           "detentionFacility": "immigrationRemovalCentre",
-          "isAcceleratedDetainedAppeal": "No",
+          "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
-          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-          "directions": [
-            {
-              "id": "1",
-              "value": {
-                "explanation": "The non-standard direction explanation goes here",
-                "parties": "respondent",
-                "dateDue": "{$TODAY+14}",
-                "dateSent": "{$TODAY}",
-                "tag": ""
-              }
-            }
-          ],
+          "isAcceleratedDetainedAppeal": "Yes",
+          "isAppellantRespondent": "The appellant",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalNonStandardDirectionToRespondentLetter",
+                "tag": "internalUploadAdditionalEvidenceLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -55,7 +45,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
+            "id": "7933_UPLOADED_ADDENDUM_EVIDENCE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

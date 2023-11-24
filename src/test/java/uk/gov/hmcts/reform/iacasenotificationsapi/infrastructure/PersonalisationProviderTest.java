@@ -88,6 +88,7 @@ class PersonalisationProviderTest {
     private final String directionDueDate = "2019-10-29";
     private final String recipientReferenceNumber = "recipientReferenceNumber";
     private final String recipient = "recipient";
+    private final String applyForCostsCreationDate = "2023-11-24";
 
     private PersonalisationProvider personalisationProvider;
 
@@ -275,7 +276,7 @@ class PersonalisationProviderTest {
 
     @Test
     void should_return_appelant_credentials_when_all_information_given() {
-        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent")));
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", applyForCostsCreationDate)));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -329,5 +330,15 @@ class PersonalisationProviderTest {
         assertThatThrownBy(() -> personalisationProvider.getRespondToCostsApplicationNumber(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("respondToCostsDynamicList is not present");
+    }
+
+    @Test
+    void should_return_apply_for_costs_creation_date_when_all_information_given() {
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", applyForCostsCreationDate)));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        Map<String, String> personalisation = personalisationProvider.getApplyToCostsCreationDate(asylumCase);
+
+        assertEquals("24 Nov 2023", personalisation.get("creationDate"));
     }
 }

@@ -61,11 +61,9 @@ public class ApplyForCostsRespondentPersonalisation implements EmailNotification
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        final String newestApplicationCreatedNumber = "1";
-
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .put("applicationId", newestApplicationCreatedNumber)
+            .putAll(personalisationProvider.getApplyToCostsCreationDate(asylumCase))
             .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
 
