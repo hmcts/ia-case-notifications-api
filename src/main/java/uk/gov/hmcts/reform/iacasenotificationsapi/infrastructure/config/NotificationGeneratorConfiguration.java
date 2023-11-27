@@ -1686,24 +1686,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("uploadAddendumEvidenceLegalRepInternal")
-    public List<NotificationGenerator> uploadAddendumEvidenceLegalRepForInternal(
-        HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    homeOfficeUploadAddendumEvidencePersonalisation),
-                notificationSender,
-                notificationIdAppender
-                )
-            );
-    }
-
-
     @Bean("uploadAddendumEvidenceAdminOfficerInternal")
     public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerInternal(
         HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
