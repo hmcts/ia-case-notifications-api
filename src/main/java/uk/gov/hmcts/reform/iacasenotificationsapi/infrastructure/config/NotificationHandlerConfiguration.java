@@ -2010,6 +2010,20 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAppealExitedOnlineNotificationHandler(
+        @Qualifier("internalAppealExitedOnlineNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE
+                    && isInternalCase(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealExitedOnlineAppellantNotificationHandler(
         @Qualifier("appealExitedOnlineAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -3303,6 +3317,23 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.MAKE_AN_APPLICATION
                     && isRepJourney(asylumCase)
                     && !isInternalCase(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalMakeAnApplicationNotificationHandler(
+        @Qualifier("internalMakeAnApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.MAKE_AN_APPLICATION
+                    && isInternalCase(asylumCase);
             },
             notificationGenerators
         );

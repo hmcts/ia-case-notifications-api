@@ -1798,6 +1798,20 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalAppealExitedOnlineNotificationGenerator")
+    public List<NotificationGenerator> internalAppealExitedOnlineNotificationGenerator(
+        HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeAppealExitedOnlinePersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
     @Bean("appealExitedOnlineAppellantNotificationGenerator")
     public List<NotificationGenerator> appealExitedOnlineAppellantNotificationGenerator(
             HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
@@ -3063,6 +3077,24 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("internalMakeAnApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalMakeAnApplicationNotificationHandler(
+        HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    homeOfficeMakeAnApplicationPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
