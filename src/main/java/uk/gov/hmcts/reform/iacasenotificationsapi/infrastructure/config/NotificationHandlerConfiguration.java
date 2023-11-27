@@ -1903,20 +1903,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceLegalRepInternalHandler(
-        @Qualifier("uploadAddendumEvidenceLegalRepInternal") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP
-                && isInternalCase(callback.getCaseDetails().getCaseData())
-                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
-            notificationGenerator
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> uploadAddendumEvidenceAdminOfficerInternalHandler(
         @Qualifier("uploadAddendumEvidenceAdminOfficerInternal") List<NotificationGenerator> notificationGenerator) {
 
