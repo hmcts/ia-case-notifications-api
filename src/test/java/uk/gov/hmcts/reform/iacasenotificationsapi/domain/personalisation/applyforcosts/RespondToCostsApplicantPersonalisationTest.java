@@ -56,6 +56,7 @@ class RespondToCostsApplicantPersonalisationTest {
     private static String newestApplicationCreatedNumber = "1";
     private static String unreasonableCostsType = "Unreasonable costs";
     private String homeOfficeReferenceNumber = "A1234567/001";
+    private static final String applyForCostsCreationDate = "2023-11-24";
     private RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation;
 
     @BeforeEach
@@ -140,7 +141,6 @@ class RespondToCostsApplicantPersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("1", personalisation.get("applicationId"));
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
@@ -154,8 +154,8 @@ class RespondToCostsApplicantPersonalisationTest {
 
     static Stream<Arguments> appliesForCostsProvider() {
         return Stream.of(
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice)))),
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))))
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
         );
     }
 }

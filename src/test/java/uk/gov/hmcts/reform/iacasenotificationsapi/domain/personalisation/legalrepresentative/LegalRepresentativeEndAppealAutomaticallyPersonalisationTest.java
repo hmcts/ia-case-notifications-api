@@ -147,6 +147,7 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEndAppealAutomaticallyPersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"

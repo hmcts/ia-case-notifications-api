@@ -111,6 +111,7 @@ class LegalRepresentativeManageFeeUpdatePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeManageFeeUpdatePersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
@@ -133,6 +134,7 @@ class LegalRepresentativeManageFeeUpdatePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeManageFeeUpdatePersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
