@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -39,6 +40,7 @@ class ApplyForCostsApplicantPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
 
+    private static final String applyForCostsCreationDate = "2023-11-24";
     private Long caseId = 12345L;
     private String applyForCostsNotificationForApplicantTemplateId = "applyForCostsNotificationForRespondentTemplateId";
     private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
@@ -54,6 +56,7 @@ class ApplyForCostsApplicantPersonalisationTest {
     private static String newestApplicationCreatedNumber = "1";
     private static String unreasonableCostsType = "Unreasonable costs";
     private String homeOfficeReferenceNumber = "A1234567/001";
+
     private ApplyForCostsApplicantPersonalisation applyForCostsApplicantPersonalisation;
 
     @BeforeEach
@@ -129,6 +132,10 @@ class ApplyForCostsApplicantPersonalisationTest {
     void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
+        Map<String, String> applyForCostsCreatedDateMap = new HashMap<>();
+        applyForCostsCreatedDateMap.put("creationDate", "24 Nov 2023");
+        when(personalisationProvider.getApplyToCostsCreationDate(asylumCase)).thenReturn(applyForCostsCreatedDateMap);
+
         Map<String, String> personalisation = applyForCostsApplicantPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
@@ -137,9 +144,8 @@ class ApplyForCostsApplicantPersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("1", personalisation.get("applicationId"));
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
-        assertEquals(applyForCostsList.get(0).getId(), personalisation.get("applicationId"));
+        assertEquals("24 Nov 2023", personalisation.get("creationDate"));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertEquals("Home office", personalisation.get("recipient"));
@@ -152,8 +158,8 @@ class ApplyForCostsApplicantPersonalisationTest {
 
     static Stream<Arguments> appliesForCostsProvider() {
         return Stream.of(
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice)))),
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))))
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
         );
     }
 }

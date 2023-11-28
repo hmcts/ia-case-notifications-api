@@ -38,6 +38,7 @@ public class AsylumCaseUtilsTest {
 
     private final String legalOfficerAddendumUploadedByLabel = "TCW";
     private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
+    private static final String applyForCostsCreationDate = "2023-11-24";
     private final IdValue<DocumentWithMetadata> addendumOne = new IdValue<>(
             "1",
             new DocumentWithMetadata(
@@ -193,7 +194,7 @@ public class AsylumCaseUtilsTest {
 
     @Test
     void should_throw_when_correct_type_applicant_is_not_present() {
-        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Admin Officer")));
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Admin Officer", applyForCostsCreationDate)));
 
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
@@ -204,8 +205,8 @@ public class AsylumCaseUtilsTest {
 
     static Stream<Arguments> respondentEmails() {
         return Stream.of(
-            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Legal representative", "Home office")))),
-            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Legal representative"))))
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Legal representative", "Home office", applyForCostsCreationDate)))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Legal representative", applyForCostsCreationDate))))
         );
     }
 }

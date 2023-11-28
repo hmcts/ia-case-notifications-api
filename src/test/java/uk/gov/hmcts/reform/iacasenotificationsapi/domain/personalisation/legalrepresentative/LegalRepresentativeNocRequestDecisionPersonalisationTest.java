@@ -132,6 +132,7 @@ class LegalRepresentativeNocRequestDecisionPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
@@ -154,6 +155,7 @@ class LegalRepresentativeNocRequestDecisionPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

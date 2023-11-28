@@ -116,26 +116,26 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
             .orElse("");
 
         final Direction direction =
-            directionFinder
-                .findFirst(asylumCase, DirectionTag.NONE)
-                .orElseThrow(() -> new IllegalStateException("non-standard direction is not present"));
+                directionFinder
+                        .findFirst(asylumCase, DirectionTag.NONE)
+                        .orElseThrow(() -> new IllegalStateException("non-standard direction is not present"));
 
         final String directionDueDate =
-            LocalDate
-                .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                LocalDate
+                        .parse(direction.getDateDue())
+                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return ImmutableMap
-            .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("listingReferenceLine", listingReferenceLine)
-            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("linkToOnlineService", iaExUiFrontendUrl)
-            .put("explanation", direction.getExplanation())
-            .put("dueDate", directionDueDate)
-            .build();
+                .<String, String>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("listingReferenceLine", listingReferenceLine)
+                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("explanation", direction.getExplanation())
+                .put("dueDate", directionDueDate)
+                .build();
     }
 }

@@ -88,6 +88,7 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"

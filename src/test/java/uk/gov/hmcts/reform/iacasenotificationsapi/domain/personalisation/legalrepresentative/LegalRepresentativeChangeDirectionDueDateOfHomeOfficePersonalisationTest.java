@@ -120,6 +120,7 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
