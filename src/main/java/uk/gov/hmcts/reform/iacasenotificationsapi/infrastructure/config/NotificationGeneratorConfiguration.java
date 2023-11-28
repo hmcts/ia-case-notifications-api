@@ -1686,24 +1686,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("uploadAddendumEvidenceLegalRepInternal")
-    public List<NotificationGenerator> uploadAddendumEvidenceLegalRepForInternal(
-        HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    homeOfficeUploadAddendumEvidencePersonalisation),
-                notificationSender,
-                notificationIdAppender
-                )
-            );
-    }
-
-
     @Bean("uploadAddendumEvidenceAdminOfficerInternal")
     public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerInternal(
         HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
@@ -1811,6 +1793,20 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeAppealExitedOnlinePersonalisation, legalRepresentativeAppealExitedOnlinePersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
+    @Bean("internalAppealExitedOnlineNotificationGenerator")
+    public List<NotificationGenerator> internalAppealExitedOnlineNotificationGenerator(
+        HomeOfficeAppealExitedOnlinePersonalisation homeOfficeAppealExitedOnlinePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeAppealExitedOnlinePersonalisation),
                 notificationSender,
                 notificationIdAppender)
         );
@@ -3081,6 +3077,24 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("internalMakeAnApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalMakeAnApplicationNotificationHandler(
+        HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    homeOfficeMakeAnApplicationPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
