@@ -10,6 +10,8 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "ariaListingReference": "LP/12345/2019",
+          "listCaseHearingCentre": "taylorHouse",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "isAcceleratedDetainedAppeal": "Yes",
@@ -42,6 +44,10 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "notificationsSent": [
+          {
+            "id": "7691_UPLOADED_ADDENDUM_EVIDENCE_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "7691_INTERNAL_DET_UPLOAD_ADDENDUM_EVIDENCE_ADMIN_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
