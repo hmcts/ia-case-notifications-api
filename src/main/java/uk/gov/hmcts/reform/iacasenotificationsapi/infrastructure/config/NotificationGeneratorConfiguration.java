@@ -1398,6 +1398,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("uploadAdditionalEvidenceAip")
+    public List<NotificationGenerator> uploadAdditionalEvidenceAip(
+            HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation,
+            AppellantUploadAdditionalEvidencePersonalisationEmail appellantUploadAdditionalEvidencePersonalisationEmail,
+            AppellantUploadAdditionalEvidencePersonalisationSms appellantUploadAdditionalEvidencePersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation,
+                                appellantUploadAdditionalEvidencePersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUploadAdditionalEvidencePersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("uploadAdditionalEvidenceHomeOffice")
     public List<NotificationGenerator> uploadAdditionalEvidenceHomeOffice(
         LegalRepresentativeUploadAdditionalEvidencePersonalisation legalRepresentativeUploadAdditionalEvidencePersonalisation,
@@ -1906,6 +1929,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("forceCaseProgressionToCaseUnderReviewNotificationGenerator")
     public List<NotificationGenerator> forceCaseProgressionToCaseUnderReviewNotificationGenerator(
         LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation forceCaseProgressionToCaseUnderReviewPersonalisation,
+        RespondentForceCaseToCaseUnderReviewPersonalisation respondentForceCaseToCaseUnderReviewPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -1913,11 +1937,42 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    forceCaseProgressionToCaseUnderReviewPersonalisation
+                    forceCaseProgressionToCaseUnderReviewPersonalisation,
+                        respondentForceCaseToCaseUnderReviewPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("forceAppellantCaseToCaseUnderReviewEmailNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseToCaseUnderReviewEmailNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail,
+            RespondentForceCaseToCaseUnderReviewPersonalisation homeOfficePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficePersonalisation, appellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender)
+        );
+    }
+
+    @Bean("forceAppellantCaseToCaseUnderReviewSmsNotificationGenerator")
+    public List<NotificationGenerator> forceAppellantCaseToCaseUnderReviewSmsNotificationGenerator(
+            AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantForceCaseProgressionToCaseUnderReviewPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
