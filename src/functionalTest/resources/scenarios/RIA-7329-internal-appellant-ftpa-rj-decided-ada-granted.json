@@ -13,6 +13,10 @@
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "listCaseHearingCentre": "bradford",
+          "listCaseHearingLength": "60",
+          "listCaseHearingDate": "2018-12-31T12:34:56",
+          "ariaListingReference": "AA/12345/1234",
           "isAcceleratedDetainedAppeal": "Yes",
           "ftpaApplicantType": "appellant",
           "ftpaAppellantRjDecisionOutcomeType": "granted",
@@ -44,12 +48,20 @@
       "replacements": {
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
+        "listCaseHearingCentre": "bradford",
+        "listCaseHearingLength": "60",
+        "listCaseHearingDate": "2018-12-31T12:34:56",
+        "ariaListingReference": "AA/12345/1234",
         "isAcceleratedDetainedAppeal": "Yes",
         "ftpaApplicantType": "appellant",
         "ftpaAppellantRjDecisionOutcomeType": "granted",
         "notificationsSent": [
           {
             "id": "7329_INTERNAL_APPELLANT_FTPA_DECIDED_BY_RESIDENT_JUDGE_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7329_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -65,7 +77,19 @@
           "HMCTS reference: PA/12345/2019",
           "Appellant name: Talha Awan"
         ]
+      },
+      {
+        "reference": "7329_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+        "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
+        "subject": "Accelerated detained appeal: application to appeal to Upper Tribunal granted",
+        "body": [
+          "HMCTS reference: PA/12345/2019",
+          "Listing reference: AA/12345/1234",
+          "Appellant name: Talha Awan",
+          " {$iaExUiFrontendUrl}"
+        ]
       }
     ]
   }
 }
+
