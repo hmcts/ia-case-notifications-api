@@ -1,11 +1,11 @@
 {
-  "description": "RIA-7796: Home office lart responds to costs and notifies legal rep(applier)",
+  "description": "RIA-7733-RIA-7734: Home office lart applies for costs and notifies legal rep",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 7796,
-      "eventId": "respondToCosts",
+      "id": 7734,
+      "eventId": "applyForCosts",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -25,11 +25,11 @@
               "id": "1",
               "value": {
                 "appliedCostsType": "Unreasonable costs",
-                "respondentToCostsOrder": "Home office",
+                "respondentToCostsOrder": "Fake Org Ltd",
                 "applyForCostsHearingType": "No",
                 "scheduleOfCostsDocuments": [],
-                "applyForCostsCreationDate": "{$TODAY}",
-                "applyForCostsApplicantType": "Legal representative",
+                "applyForCostsCreationDate": "2023-11-24",
+                "applyForCostsApplicantType": "Home office",
                 "argumentsAndEvidenceDetails": "",
                 "argumentsAndEvidenceDocuments": [
                   {
@@ -69,15 +69,28 @@
     },
     "notifications": [
       {
-        "reference": "7796_RESPOND_TO_COSTS_APPLICANT_EMAIL",
+        "reference": "7734_APPLY_FOR_COSTS_RESPONDENT_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Costs application response received",
+        "subject": "Immigration and Asylum appeal: Costs application submitted",
         "body": [
           "HMCTS reference: PA/12345/2019",
           "Your reference: A1234567",
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
-          "Application name: Cost application 1",
+          "Date application was made: 24 Nov 2023",
+          "Application type: Unreasonable Cost application"
+        ]
+      },
+      {
+        "reference": "7734_APPLY_FOR_COSTS_APPLICANT_EMAIL",
+        "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
+        "subject": "Immigration and Asylum appeal: Costs application submitted",
+        "body": [
+          "HMCTS reference: PA/12345/2019",
+          "Home office reference: A1234567",
+          "Appellant name: Talha Awan",
+          "The online service: {$iaExUiFrontendUrl}",
+          "Date application was made: 24 Nov 2023",
           "Application type: Unreasonable Cost application"
         ]
       }

@@ -117,6 +117,7 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
         Map<String, String> personalisation =
             legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

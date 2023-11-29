@@ -56,6 +56,8 @@ class ApplyForCostsRespondentPersonalisationTest {
     private static String newestApplicationCreatedNumber = "1";
     private static String unreasonableCostsType = "Unreasonable costs";
     private String homeOfficeReferenceNumber = "A1234567/001";
+    private static final String applyForCostsCreationDate = "2023-11-24";
+
     private ApplyForCostsRespondentPersonalisation applyForCostsRespondentPersonalisation;
 
     @BeforeEach
@@ -74,7 +76,6 @@ class ApplyForCostsRespondentPersonalisationTest {
         applyForCostsRespondentPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
         applyForCostsRespondentPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
         applyForCostsRespondentPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
-        applyForCostsRespondentPersonalisationTemplate.put("applicationId", newestApplicationCreatedNumber);
         applyForCostsRespondentPersonalisationTemplate.put("appliedCostsType", "Wasted");
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -132,6 +133,9 @@ class ApplyForCostsRespondentPersonalisationTest {
     @MethodSource("appliesForCostsProvider")
     void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+        Map<String, String> applyForCostsCreatedDateMap = new HashMap<>();
+        applyForCostsCreatedDateMap.put("creationDate", "24 Nov 2023");
+        when(personalisationProvider.getApplyToCostsCreationDate(asylumCase)).thenReturn(applyForCostsCreatedDateMap);
 
         Map<String, String> personalisation = applyForCostsRespondentPersonalisation.getPersonalisation(asylumCase);
 
@@ -141,9 +145,8 @@ class ApplyForCostsRespondentPersonalisationTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("1", personalisation.get("applicationId"));
-
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
+        assertEquals("24 Nov 2023", personalisation.get("creationDate"));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertEquals("Your", personalisation.get("recipient"));
@@ -156,8 +159,8 @@ class ApplyForCostsRespondentPersonalisationTest {
 
     static Stream<Arguments> appliesForCostsProvider() {
         return Stream.of(
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice)))),
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))))
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
         );
     }
 }

@@ -1,25 +1,27 @@
 {
-  "description": "RIA-7377 Internal Ada maintain case unlink appeal notification to DET",
+  "description": "RIA-7933 Internal notification of admin officer uploaded addendum evidence",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "CaseOfficer",
+    "credentials": "AdminOfficer",
     "input": {
-      "id": 7377,
-      "eventId": "maintainCaseLinks",
-      "state": "*",
+      "id": 7933,
+      "eventId": "uploadAddendumEvidenceAdminOfficer",
+      "state": "preHearing",
       "caseData": {
-        "template": "minimal-appeal-submitted.json",
+        "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "ariaListingReference": "LP/12345/2019",
+          "listCaseHearingCentre": "taylorHouse",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
-          "isAdmin": "Yes",
-          "isAcceleratedDetainedAppeal": "Yes",
           "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
+          "isAppellantRespondent": "The appellant",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "maintainCaseUnlinkAppealLetter",
+                "tag": "internalUploadAdditionalEvidenceLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -39,11 +41,11 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-appeal-submitted.json",
+      "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7377_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL",
+            "id": "7933_UPLOADED_ADDENDUM_EVIDENCE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

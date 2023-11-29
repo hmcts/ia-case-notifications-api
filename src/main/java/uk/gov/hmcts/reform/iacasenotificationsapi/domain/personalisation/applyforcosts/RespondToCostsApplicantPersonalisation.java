@@ -24,13 +24,13 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
     private final CustomerServicesProvider customerServicesProvider;
 
     public RespondToCostsApplicantPersonalisation(
-        @Value("${govnotify.template.respondToCostsNotification.applicant.email}") String applyForCostsNotificationForApplicantTemplateId,
+        @Value("${govnotify.template.respondToCostsNotification.applicant.email}") String respondToCostsNotificationForApplicantTemplateId,
         @Value("${applyForCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider,
         PersonalisationProvider personalisationProvider
     ) {
-        this.respondToCostsNotificationForApplicantTemplateId = applyForCostsNotificationForApplicantTemplateId;
+        this.respondToCostsNotificationForApplicantTemplateId = respondToCostsNotificationForApplicantTemplateId;
         this.homeOfficeEmailAddress = homeOfficeEmailAddress;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -63,7 +63,8 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(personalisationProvider.getRespondToCostsApplicationNumber(asylumCase));
 
         if (isHomeOfficeApplicant(asylumCase)) {
             personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));

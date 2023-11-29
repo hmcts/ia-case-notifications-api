@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -87,6 +88,7 @@ class PersonalisationProviderTest {
     private final String directionDueDate = "2019-10-29";
     private final String recipientReferenceNumber = "recipientReferenceNumber";
     private final String recipient = "recipient";
+    private final String applyForCostsCreationDate = "2023-11-24";
 
     private PersonalisationProvider personalisationProvider;
 
@@ -274,7 +276,7 @@ class PersonalisationProviderTest {
 
     @Test
     void should_return_appelant_credentials_when_all_information_given() {
-        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent")));
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", applyForCostsCreationDate)));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -287,7 +289,6 @@ class PersonalisationProviderTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals("1", personalisation.get("applicationId"));
         assertEquals("Wasted", personalisation.get("appliedCostsType"));
     }
 
@@ -311,4 +312,33 @@ class PersonalisationProviderTest {
         assertEquals(legalRepReferenceNumber, personalisation.get(recipientReferenceNumber));
     }
 
+    @Test
+    void should_return_application_number_in_respond_to_costs_when_all_information_given() {
+        DynamicList dynamicList = new DynamicList(new Value("1", "Costs 8, Wasted costs, 15 Nov 2023"), List.of(new Value("1", "Costs 8, Wasted costs, 15 Nov 2023")));
+
+        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(dynamicList));
+
+        Map<String, String> personalisation = personalisationProvider.getRespondToCostsApplicationNumber(asylumCase);
+
+        assertEquals("8", personalisation.get("applicationId"));
+    }
+
+    @Test
+    void should_throw_an_exception_if_respond_to_costs_list_is_not_presented() {
+        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> personalisationProvider.getRespondToCostsApplicationNumber(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("respondToCostsDynamicList is not present");
+    }
+
+    @Test
+    void should_return_apply_for_costs_creation_date_when_all_information_given() {
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", applyForCostsCreationDate)));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        Map<String, String> personalisation = personalisationProvider.getApplyToCostsCreationDate(asylumCase);
+
+        assertEquals("24 Nov 2023", personalisation.get("creationDate"));
+    }
 }

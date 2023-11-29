@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7796: Legal rep responds to costs and notifies home office",
+  "description": "RIA-7795-RIA-7796: Legal rep responds to costs and notifies home office and receives notification as well",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
@@ -45,7 +45,19 @@
               }
             }
           ],
-          "legalRepName": "Fake Org Ltd"
+          "legalRepName": "Fake Org Ltd",
+          "respondToCostsList": {
+            "value": {
+              "code": "11",
+              "label": "Costs 5, Wasted costs, 22 Nov 2023"
+            },
+            "list_items": [
+              {
+                "code": "15",
+                "label": "Costs 1, Wasted costs, 22 Nov 2023"
+              }
+            ]
+          }
         }
       }
     }
@@ -77,7 +89,20 @@
           "Home office reference: A1234567",
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
-          "Application name: Cost application 1",
+          "Application name: Cost application 5",
+          "Application type: Unreasonable Cost application"
+        ]
+      },
+      {
+        "reference": "7796_RESPOND_TO_COSTS_RESPONDENT_EMAIL",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: Costs application response received",
+        "body": [
+          "HMCTS reference: PA/12345/2019",
+          "Your reference: A1234567",
+          "Appellant name: Talha Awan",
+          "The online service: {$iaExUiFrontendUrl}",
+          "Application name: Cost application 5",
           "Application type: Unreasonable Cost application"
         ]
       }

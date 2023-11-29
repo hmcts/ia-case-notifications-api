@@ -103,6 +103,7 @@ public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeUploadAddendumEvidencePersonalisation.getPersonalisation(callback);
 
+        assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 

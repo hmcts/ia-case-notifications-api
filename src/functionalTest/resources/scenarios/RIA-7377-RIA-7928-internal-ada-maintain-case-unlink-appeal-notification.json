@@ -1,37 +1,25 @@
 {
-  "description": "RIA-7434 Send Non Standard Direction to Respondent on Internal Detained Appeal.",
+  "description": "RIA-7377 RIA-7928 Internal Ada maintain case unlink appeal notification to DET and HO",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "caseOfficer",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 7436,
-      "eventId": "sendDirection",
-      "state": "decision",
+      "id": 7377,
+      "eventId": "maintainCaseLinks",
+      "state": "*",
       "caseData": {
-        "template": "minimal-internal-appeal-submitted.json",
+        "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ircName": "Brookhouse",
           "detentionFacility": "immigrationRemovalCentre",
-          "isAcceleratedDetainedAppeal": "No",
+          "ircName": "Brookhouse",
+          "isAdmin": "Yes",
+          "isAcceleratedDetainedAppeal": "Yes",
           "appellantInDetention": "Yes",
-          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-          "directions": [
-            {
-              "id": "1",
-              "value": {
-                "explanation": "The non-standard direction explanation goes here",
-                "parties": "respondent",
-                "dateDue": "{$TODAY+14}",
-                "dateSent": "{$TODAY}",
-                "tag": ""
-              }
-            }
-          ],
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalNonStandardDirectionToRespondentLetter",
+                "tag": "maintainCaseUnlinkAppealLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -51,11 +39,15 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-internal-appeal-submitted.json",
+      "template": "minimal-appeal-submitted.json",
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7436_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
+            "id": "7377_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7377_CASE_UNLINK_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -30,6 +31,11 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
     private final CustomerServicesProvider customerServicesProvider;
     private final AppealService appealService;
     private final EmailAddressFinder emailAddressFinder;
+
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public RespondentNonStandardDirectionOfAppellantPersonalization(
         @Value("${govnotify.template.nonStandardDirectionOfAppellant.respondent.email}") String templateId,
@@ -116,18 +122,19 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
             .orElse("");
 
         final Direction direction =
-            directionFinder
-                .findFirst(asylumCase, DirectionTag.NONE)
-                .orElseThrow(() -> new IllegalStateException("non-standard direction is not present"));
+                directionFinder
+                        .findFirst(asylumCase, DirectionTag.NONE)
+                        .orElseThrow(() -> new IllegalStateException("non-standard direction is not present"));
 
         final String directionDueDate =
-            LocalDate
-                .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                LocalDate
+                        .parse(direction.getDateDue())
+                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("listingReferenceLine", listingReferenceLine)
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
