@@ -5,21 +5,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionOfAppellantPersonalization.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentNonStandardDirectionOfAppellantPersonalization.EVENT_NOT_AVAILABLE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -226,9 +224,12 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
             .hasMessage("asylumCase must not be null");
     }
 
-    @Test
-    public void should_return_personalisation_when_all_information_given() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(respondentNonStandardDirectionOfAppellantPersonalization);
         Map<String, String> personalisation =
             respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase);
         String listingReferenceLine = "\nListing reference: " + ariaListingReference;
@@ -243,11 +244,17 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        Assertions.assertEquals(isAda.equals(YesOrNo.YES)
+                ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
-    @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(respondentNonStandardDirectionOfAppellantPersonalization);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -267,6 +274,9 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        Assertions.assertEquals(isAda.equals(YesOrNo.YES)
+                ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @Test

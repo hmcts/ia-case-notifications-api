@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -30,6 +31,11 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
     private final CustomerServicesProvider customerServicesProvider;
     private final AppealService appealService;
     private final EmailAddressFinder emailAddressFinder;
+
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public RespondentNonStandardDirectionOfAppellantPersonalization(
         @Value("${govnotify.template.nonStandardDirectionOfAppellant.respondent.email}") String templateId,
@@ -126,16 +132,17 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
                         .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return ImmutableMap
-                .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("listingReferenceLine", listingReferenceLine)
-                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("linkToOnlineService", iaExUiFrontendUrl)
-                .put("explanation", direction.getExplanation())
-                .put("dueDate", directionDueDate)
-                .build();
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("listingReferenceLine", listingReferenceLine)
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("explanation", direction.getExplanation())
+            .put("dueDate", directionDueDate)
+            .build();
     }
 }
