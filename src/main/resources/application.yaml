@@ -1134,6 +1134,11 @@ govnotify:
         email: bcf74bf3-e042-45dd-a4de-262dc81f0697
       respondent:
         email: 4cc2a1cc-b89d-46f2-8f79-dcd663ef14a0
+    decideCostsApplication:
+      applicant:
+        email: 390843b2-0cab-4860-8e12-be98b9db2ca4
+      respondent:
+        email: 390843b2-0cab-4860-8e12-be98b9db2ca4
     turnOnNotifications:
       homeOffice:
         beforeListing:
@@ -1154,6 +1159,7 @@ govnotify:
       submitApplication:
         email: 5f30774f-00fb-4c03-b010-e5a8afaa5f05
         sms: 64ac7c79-682f-4bd7-9847-bfd21240e8c6
+
       submitApplicationWithoutLR:
         email: 4888954b-446a-4e84-95cf-58340a66550b
       uploadBailSummary:
@@ -1585,6 +1591,7 @@ lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
 applyForCostsHomeOfficeEmailAddress: ${HO_APPLY_FOR_COSTS_EMAIL:ho-apply-for-costs@example.com}
+decideCostsHomeOfficeEmailAddress: ${HO_DECIDE_A_COSTS_EMAIL:AppealsCostsEnquiries@homeoffice.gov.uk}
 
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
