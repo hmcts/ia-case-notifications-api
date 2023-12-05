@@ -35,6 +35,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_REASON;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STATE_BEFORE_END_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.ADJOURNED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.FTPA_DECIDED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.FTPA_SUBMITTED;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -146,7 +150,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_when_appeal_is_listed() {
+    public void should_return_hearing_centre_homeOffice_email_address_when_appeal_is_listed() {
         when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
                 .thenReturn(Optional.of(HearingCentre.BIRMINGHAM));
 
@@ -154,6 +158,18 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
             Set<String> recipientsList = homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase);
             assertTrue(recipientsList.contains(homeOfficeHearingCentreEmail));
+        }
+    }
+
+    @Test
+    public void should_return_default_email_address_when_appeal_hearing_centre_is_not_found() {
+        when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.empty());
+
+        for (State state : List.of(ADJOURNED, FTPA_SUBMITTED, FTPA_DECIDED, DECISION)) {
+            when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
+            Set<String> recipientsList = homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase);
+            assertTrue(recipientsList.contains(endAppealHomeOfficeEmailAddress));
         }
     }
 
