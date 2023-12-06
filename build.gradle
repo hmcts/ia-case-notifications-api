@@ -45,7 +45,7 @@ def versions = [
         sonarPitest        : '0.5',
         springHystrix      : '2.2.10.RELEASE',
         springDoc          : '1.7.0',
-        springCloud        : '3.1.8'
+        springCloud        : '3.1.6'
 ]
 
 ext.libraries = [
@@ -417,7 +417,7 @@ dependencies {
 
     testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 
-    testImplementation(group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.8') {
+    testImplementation(group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.6') {
         exclude group: "com.github.tomakehurst", module: "wiremock-standalone"
     }
 
