@@ -5216,6 +5216,21 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> additionalEvidenceSubmittedHandler(
+        @Qualifier("additionalEvidenceSubmittedGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent().equals(ADD_EVIDENCE_FOR_COSTS)
+                       && !isInternalCase(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
         return isInternalCase(asylumCase)
                 && isAppellantInDetention(asylumCase)
