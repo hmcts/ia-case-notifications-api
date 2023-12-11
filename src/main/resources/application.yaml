@@ -1591,7 +1591,7 @@ lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
 applyForCostsHomeOfficeEmailAddress: ${HO_APPLY_FOR_COSTS_EMAIL:ho-apply-for-costs@example.com}
-decideCostsHomeOfficeEmailAddress: ${HO_DECIDE_A_COSTS_EMAIL:AppealsCostsEnquiries@homeoffice.gov.uk}
+
 
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}

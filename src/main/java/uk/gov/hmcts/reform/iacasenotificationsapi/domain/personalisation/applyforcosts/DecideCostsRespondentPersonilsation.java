@@ -25,7 +25,7 @@ public class DecideCostsRespondentPersonilsation implements EmailNotificationPer
 
     public DecideCostsRespondentPersonilsation(
         @Value("${govnotify.template.decideCostsApplication.respondent.email}") String decideCostsNotificationForRespondentTemplateId,
-        @Value("${decideCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
+        @Value("${applyForCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider,
         PersonalisationProvider personalisationProvider
