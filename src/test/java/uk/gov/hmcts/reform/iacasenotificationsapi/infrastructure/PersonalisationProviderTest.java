@@ -333,6 +333,15 @@ class PersonalisationProviderTest {
     }
 
     @Test
+    void should_throw_an_exception_if_additional_evidence_applicaiton_number_not_presented() {
+        when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> personalisationProvider.getAdditionalEvidenceApplicationNumber(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("dynamicList is not present");
+    }
+
+    @Test
     void should_return_apply_for_costs_creation_date_when_all_information_given() {
         List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", applyForCostsCreationDate)));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
