@@ -4429,6 +4429,17 @@ public class NotificationHandlerConfiguration {
                 .map(type -> type == AIP).orElse(false);
     }
 
+    public static boolean isHomeOfficeApplicantCostings(AsylumCase asylumCase) {
+        ApplyForCosts latestApplyForCosts = retrieveLatestApplyForCosts(asylumCase).getValue();
+        final String applicantType = latestApplyForCosts.getApplyForCostsApplicantType();
+        if (applicantType.equals("Home office")) {
+            return true;
+        } else if (applicantType.equals("Legal representative")) {
+            return false;
+        }
+        throw new IllegalStateException("Correct applicant type is not present");
+    }
+
     private boolean hasRepEmail(AsylumCase asylumCase) {
         return asylumCase
             .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).isPresent();
@@ -5212,6 +5223,40 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(RESPOND_TO_COSTS)
                     && !isInternalCase(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> additionalEvidenceSubmittedHoHandler(
+        @Qualifier("additionalEvidenceSubmittedHoGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent().equals(ADD_EVIDENCE_FOR_COSTS)
+                       && !isInternalCase(asylumCase)
+                       && isHomeOfficeApplicantCostings(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> additionalEvidenceSubmittedLrHandler(
+        @Qualifier("additionalEvidenceSubmittedLrGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent().equals(ADD_EVIDENCE_FOR_COSTS)
+                       && !isInternalCase(asylumCase)
+                       && !isHomeOfficeApplicantCostings(asylumCase);
+
             }, notificationGenerators
         );
     }

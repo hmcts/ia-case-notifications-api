@@ -14,10 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsApplicantPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsRespondentPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsApplicantPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsRespondentPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.*;
@@ -4805,6 +4802,33 @@ public class NotificationGeneratorConfiguration {
 
         return Collections.singletonList(new EmailNotificationGenerator(
             newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
+            notificationSender,
+            notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("additionalEvidenceSubmittedHoGenerator")
+    public List<NotificationGenerator> additionalEvidenceSubmittedHoGenerator(
+        AdditionalEvidenceSubmittedLrCostsPersonilisation additionalEvidenceSubmittedLrCostsPersonilisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(additionalEvidenceSubmittedLrCostsPersonilisation),
+            notificationSender,
+            notificationIdAppender)
+        );
+    }
+
+    @Bean("additionalEvidenceSubmittedLrGenerator")
+    public List<NotificationGenerator> additionalEvidenceSubmittedLrGenerator(
+        AdditionalEvidenceSubmittedHoCostsPersonilisation additionalEvidenceSubmittedHoCostsPersonilisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(additionalEvidenceSubmittedHoCostsPersonilisation),
             notificationSender,
             notificationIdAppender)
         );
