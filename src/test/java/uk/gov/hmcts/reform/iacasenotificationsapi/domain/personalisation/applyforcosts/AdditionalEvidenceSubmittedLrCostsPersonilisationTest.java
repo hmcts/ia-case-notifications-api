@@ -30,7 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AdditionalEvidenceSubmittedLRCostsPersonilisationTest {
+class AdditionalEvidenceSubmittedLrCostsPersonilisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -42,10 +42,9 @@ class AdditionalEvidenceSubmittedLRCostsPersonilisationTest {
     PersonalisationProvider personalisationProvider;
 
     private Long caseId = 12345L;
-    private String templateId = "templateId";
+    private final String additionalEvidenceForCostsLrId = "additionalEvidenceForCostsLrId";
     private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
     private String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
-    private String iaExUiFrontendUrl = "http://localhost";
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepRefNumber = "someLegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
@@ -57,55 +56,44 @@ class AdditionalEvidenceSubmittedLRCostsPersonilisationTest {
     private static String unreasonableCostsType = "Unreasonable costs";
     private String homeOfficeReferenceNumber = "A1234567/001";
     private static final String applyForCostsCreationDate = "2023-11-24";
-    private AdditionalEvidenceSubmittedLRCostsPersonilisation additionalEvidenceSubmittedLRCostsPersonilisation;
+    private AdditionalEvidenceSubmittedLrCostsPersonilisation additionalEvidenceSubmittedLrCostsPersonilisation;
 
     @BeforeEach
     void setup() {
-        additionalEvidenceSubmittedLRCostsPersonilisation = new AdditionalEvidenceSubmittedLRCostsPersonilisation(
-            templateId,
+        additionalEvidenceSubmittedLrCostsPersonilisation = new AdditionalEvidenceSubmittedLrCostsPersonilisation(
+            additionalEvidenceForCostsLrId,
             homeOfficeEmailAddress,
             emailAddressFinder,
             customerServicesProvider,
             personalisationProvider
         );
 
-        Map<String, String> additionalEvidenceSubmittedLRPersonalisationTemplate = new HashMap<>();
+        Map<String, String> additionalEvidenceSubmittedLrPersonalisationTemplate = new HashMap<>();
 
-        additionalEvidenceSubmittedLRPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
-        additionalEvidenceSubmittedLRPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
-        additionalEvidenceSubmittedLRPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
-        additionalEvidenceSubmittedLRPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
-        additionalEvidenceSubmittedLRPersonalisationTemplate.put("applicationId", newestApplicationCreatedNumber);
-        additionalEvidenceSubmittedLRPersonalisationTemplate.put("appliedCostsType", "Wasted");
+        additionalEvidenceSubmittedLrPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
+        additionalEvidenceSubmittedLrPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
+        additionalEvidenceSubmittedLrPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
+        additionalEvidenceSubmittedLrPersonalisationTemplate.put("applicationId", newestApplicationCreatedNumber);
+        additionalEvidenceSubmittedLrPersonalisationTemplate.put("appliedCostsType", "Unreasonable costs");
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(personalisationProvider.getApplyForCostsPesonalisation(asylumCase)).thenReturn(additionalEvidenceSubmittedLRPersonalisationTemplate);
+        when(personalisationProvider.getApplyForCostsPesonalisation(asylumCase)).thenReturn(additionalEvidenceSubmittedLrPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
-
-        Map<String, String> homeOfficeRecipientHeader = new HashMap<>();
-        homeOfficeRecipientHeader.put("recipient", homeOffice);
-        homeOfficeRecipientHeader.put("recipientReferenceNumber", homeOfficeReferenceNumber);
-
-        Map<String, String> legalRepRecipientHeader = new HashMap<>();
-        legalRepRecipientHeader.put("recipient", "Your");
-        legalRepRecipientHeader.put("recipientReferenceNumber", legalRepRefNumber);
-
-        when(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase)).thenReturn(homeOfficeRecipientHeader);
-        when(personalisationProvider.getLegalRepRecipientHeader(asylumCase)).thenReturn(legalRepRecipientHeader);
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, additionalEvidenceSubmittedLRCostsPersonilisation.getTemplateId(asylumCase));
+        assertEquals(additionalEvidenceForCostsLrId, additionalEvidenceSubmittedLrCostsPersonilisation.getTemplateId(asylumCase));
     }
+
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_RESPOND_TO_COSTS_APPLICANT_EMAIL",
-            additionalEvidenceSubmittedLRCostsPersonilisation.getReferenceId(caseId));
+        assertEquals(caseId + "_ADDITIONAL_EVIDENCE_LEGALREP_EMAIL",
+            additionalEvidenceSubmittedLrCostsPersonilisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
@@ -114,42 +102,34 @@ class AdditionalEvidenceSubmittedLRCostsPersonilisationTest {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
-            assertTrue(additionalEvidenceSubmittedLRCostsPersonilisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
+            assertTrue(additionalEvidenceSubmittedLrCostsPersonilisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         } else {
-            assertTrue(additionalEvidenceSubmittedLRCostsPersonilisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
+            assertTrue(additionalEvidenceSubmittedLrCostsPersonilisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         }
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> additionalEvidenceSubmittedLRCostsPersonilisation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> additionalEvidenceSubmittedLrCostsPersonilisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
 
-    @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
-    void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList) {
-        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+    @Test
+    public void should_return_personalisation_when_all_information_given() {
 
-        Map<String, String> personalisation = additionalEvidenceSubmittedLRCostsPersonilisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = additionalEvidenceSubmittedLrCostsPersonilisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(newestApplicationCreatedNumber, personalisation.get("applicationId"));
+        assertEquals(unreasonableCostsType, personalisation.get("appliedCostsType"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("Wasted", personalisation.get("appliedCostsType"));
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
-            assertEquals("Home office", personalisation.get("recipient"));
-            assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
-        } else {
-            assertEquals("Your", personalisation.get("recipient"));
-            assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
-        }
     }
 
     static Stream<Arguments> appliesForCostsProvider() {

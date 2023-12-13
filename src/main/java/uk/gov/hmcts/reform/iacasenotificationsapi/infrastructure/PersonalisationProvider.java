@@ -358,6 +358,18 @@ public class PersonalisationProvider {
             .build();
     }
 
+    public Map<String, String> getAdditionalEvidenceApplicationNumber(AsylumCase asylumCase) {
+        DynamicList applyForCostsDynamicList = asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)
+            .orElseThrow(() -> new IllegalStateException("dynamicList is not present"));
+
+        String applicationNumber = applyForCostsDynamicList.getValue().getLabel().split(",")[0].replaceAll("[^0-9]", "");
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("applicationId", applicationNumber)
+            .build();
+    }
+
     public Map<String, String> getApplyToCostsCreationDate(AsylumCase asylumCase) {
         String latestApplyForCostsCreationDate = retrieveLatestApplyForCosts(asylumCase).getValue().getApplyForCostsCreationDate();
 
