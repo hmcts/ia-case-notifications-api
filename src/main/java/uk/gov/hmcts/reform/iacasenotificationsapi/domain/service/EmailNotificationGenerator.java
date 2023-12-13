@@ -3,12 +3,15 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
+@Slf4j
 public class EmailNotificationGenerator implements NotificationGenerator {
 
     protected final List<EmailNotificationPersonalisation> personalisationList;
@@ -47,12 +50,15 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
         return subscriberEmails.stream()
-            .map(email ->
-                sendEmail(
+            .map(email -> {
+                log.info("Sending email notification to {}", email);
+                return sendEmail(
                     email,
                     emailNotificationPersonalisation,
                     referenceId,
-                    callback)).collect(Collectors.toList());
+                    callback);
+            }
+            ).collect(Collectors.toList());
     }
 
     protected String sendEmail(
