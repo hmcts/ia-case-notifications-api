@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNot
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder.NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING;
+
 @Slf4j
 public class EmailNotificationGenerator implements NotificationGenerator {
 
@@ -44,20 +46,19 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final BaseNotificationPersonalisation personalisation,
         final AsylumCase asylumCase,
         final String referenceId,
-        final Callback<AsylumCase> callback) {
+        final Callback<AsylumCase> callback
+    ) {
 
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
         return subscriberEmails.stream()
-            .map(email -> {
-                log.info("Sending email notification to {}", email);
-                return sendEmail(
-                    email,
-                    emailNotificationPersonalisation,
-                    referenceId,
-                    callback);
-            }
+            .filter(email -> isValidEmailAddress(email))
+            .map(email -> sendEmail(
+                email,
+                emailNotificationPersonalisation,
+                referenceId,
+                callback)
             ).collect(Collectors.toList());
     }
 
@@ -79,4 +80,12 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         );
     }
 
+    private boolean isValidEmailAddress(String email) {
+        if (email.equals(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING)) {
+            log.warn("Invalid email address {}", email);
+            return false;
+        }
+
+        return true;
+    }
 }
