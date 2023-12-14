@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
