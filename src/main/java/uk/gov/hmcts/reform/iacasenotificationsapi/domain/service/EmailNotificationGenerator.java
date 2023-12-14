@@ -53,7 +53,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
         return subscriberEmails.stream()
-            .filter(email -> isValidEmailAddress(email))
+            .filter(this::isValidEmailAddress)
             .map(email -> sendEmail(
                 email,
                 emailNotificationPersonalisation,
