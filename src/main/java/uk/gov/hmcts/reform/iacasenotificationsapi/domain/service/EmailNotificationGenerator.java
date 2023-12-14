@@ -59,7 +59,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
                 emailNotificationPersonalisation,
                 referenceId,
                 callback)
-            ).collect(Collectors.toList());
+            ).toList();
     }
 
     protected String sendEmail(
