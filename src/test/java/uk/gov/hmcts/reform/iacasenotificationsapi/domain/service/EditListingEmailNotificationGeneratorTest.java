@@ -8,7 +8,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder.NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +33,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEditListingNoChangePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeEditListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @ExtendWith(MockitoExtension.class)
@@ -116,7 +119,7 @@ public class EditListingEmailNotificationGeneratorTest {
     }
 
     @Test
-    public void should_send_cno_hange_notification_when_edit_listing_is_unchanged() {
+    public void should_send_no_change_notification_when_edit_listing_is_unchanged() {
         notificationGenerator =
             new EditListingEmailNotificationGenerator(repEmailNotificationPersonalisationList, notificationSender,
                 notificationIdAppender);
@@ -254,4 +257,32 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(asylumCase, times(0)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
+    @Test
+    public void should_not_send_notification_when_invalid_email_address() {
+        notificationGenerator =
+                new EditListingEmailNotificationGenerator(repEmailNotificationPersonalisationList, notificationSender,
+                        notificationIdAppender);
+
+        when(editListingNoChangeEmailNotificationPersonalisation.getRecipientsList(asylumCase))
+                .thenReturn(singleton(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING));
+
+        when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+        when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+
+        final String listingDateTime = "2020-02-06T13:51:29.369";
+        when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
+                .thenReturn(Optional.of(listingDateTime));
+        when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
+                .thenReturn(Optional.of(listingDateTime));
+
+        notificationGenerator.generate(callback);
+
+        verifyNoInteractions(notificationSender);
+        verify(notificationIdAppender).appendAll(asylumCase, refId1, emptyList());
+        verifyNoMoreInteractions(notificationIdAppender);
+
+        verify(asylumCase, never()).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+    }
 }
