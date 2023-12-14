@@ -81,7 +81,7 @@
     },
     "notifications": [
       {
-        "reference": "7808_ADDITIONAL_EVIDENCE_RESPONDENT_EMAIL",
+        "reference": "7808_ADDITIONAL_EVIDENCE_OTHER_PARTY_EMAIL",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
         "subject": "Immigration and asylum appeal: Cost application response submitted",
         "body": [

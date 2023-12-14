@@ -4,15 +4,21 @@ import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @EqualsAndHashCode
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class ApplyForCosts {
-    private String appliedCostsType;
-    private String respondentToCostsOrder;
     private String applyForCostsApplicantType;
+    private String applyForCostsRespondentRole;
+    private String respondentToCostsOrder;
+    private String loggedUserRole;
+    private String appliedCostsType;
     private String applyForCostsCreationDate;
 
     public ApplyForCosts() {
@@ -29,25 +35,4 @@ public class ApplyForCosts {
         this.applyForCostsApplicantType = applyForCostsApplicantType;
         this.applyForCostsCreationDate = applyForCostsCreationDate;
     }
-
-    public String getAppliedCostsType() {
-        requireNonNull(appliedCostsType);
-        return appliedCostsType;
-    }
-
-    public String getRespondentToCostsOrder() {
-        requireNonNull(respondentToCostsOrder);
-        return respondentToCostsOrder;
-    }
-
-    public String getApplyForCostsApplicantType() {
-        requireNonNull(applyForCostsApplicantType);
-        return applyForCostsApplicantType;
-    }
-
-    public String getApplyForCostsCreationDate() {
-        requireNonNull(applyForCostsCreationDate);
-        return applyForCostsCreationDate;
-    }
-
 }

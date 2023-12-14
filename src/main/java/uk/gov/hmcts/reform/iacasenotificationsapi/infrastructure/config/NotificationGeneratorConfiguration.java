@@ -4793,42 +4793,42 @@ public class NotificationGeneratorConfiguration {
       );
     }
 
-    @Bean("respondToCostsNotificationGenerator")
+    @Bean("respondToCostsApplicantNotificationGenerator")
     public List<NotificationGenerator> respondToCostsNotificationGenerator(
         RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation,
-        RespondToCostsRespondentPersonalisation respondToCostsRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
+            newArrayList(respondToCostsApplicantPersonalisation),
             notificationSender,
             notificationIdAppender
             )
         );
     }
 
-    @Bean("additionalEvidenceSubmittedHoGenerator")
-    public List<NotificationGenerator> additionalEvidenceSubmittedHoGenerator(
-        AdditionalEvidenceSubmittedLrCostsPersonilisation additionalEvidenceSubmittedLrCostsPersonilisation,
+    @Bean("respondToCostsRespondentNotificationGenerator")
+    public List<NotificationGenerator> respondToCostsNotificationGenerator(
+        RespondToCostsRespondentPersonalisation respondToCostsRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(additionalEvidenceSubmittedLrCostsPersonilisation),
-            notificationSender,
-            notificationIdAppender)
+                newArrayList(respondToCostsRespondentPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
-    @Bean("additionalEvidenceSubmittedLrGenerator")
+    @Bean("additionalEvidenceSubmittedOtherPartyGenerator")
     public List<NotificationGenerator> additionalEvidenceSubmittedLrGenerator(
-        AdditionalEvidenceSubmittedHoCostsPersonilisation additionalEvidenceSubmittedHoCostsPersonilisation,
+        AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation additionalEvidenceSubmittedOtherPartyNotificationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(additionalEvidenceSubmittedHoCostsPersonilisation),
+            newArrayList(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation),
             notificationSender,
             notificationIdAppender)
         );

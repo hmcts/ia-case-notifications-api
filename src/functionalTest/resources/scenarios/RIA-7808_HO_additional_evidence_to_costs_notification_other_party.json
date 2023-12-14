@@ -81,7 +81,7 @@
     },
     "notifications": [
       {
-        "reference": "7808_ADDITIONAL_EVIDENCE_LEGALREP_EMAIL",
+        "reference": "7808_ADDITIONAL_EVIDENCE_OTHER_PARTY_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and asylum appeal: Cost application response submitted",
         "body": [

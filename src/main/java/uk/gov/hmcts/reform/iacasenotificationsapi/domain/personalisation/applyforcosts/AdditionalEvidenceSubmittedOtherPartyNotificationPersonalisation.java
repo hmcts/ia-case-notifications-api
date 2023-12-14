@@ -1,31 +1,33 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHomeOfficeApplicant;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADD_EVIDENCE_FOR_COSTS_LIST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class AdditionalEvidenceSubmittedHoCostsPersonilisation implements EmailNotificationPersonalisation {
+public class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation implements EmailNotificationPersonalisation {
     private final String additionalEvidenceForCostsHoId;
     private final String homeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public AdditionalEvidenceSubmittedHoCostsPersonilisation(
-        @Value("${govnotify.template.addEvidenceForCosts.applicant.email}") String additionalEvidenceForCostsHoId,
+    public AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation(
+        @Value("${govnotify.template.addEvidenceForCosts.otherParty.email}") String additionalEvidenceForCostsHoId,
         @Value("${applyForCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider,
@@ -45,7 +47,7 @@ public class AdditionalEvidenceSubmittedHoCostsPersonilisation implements EmailN
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isHomeOfficeApplicant(asylumCase)) {
+        if (isLoggedUserIsHomeOffice(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))) {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
         } else {
             return Collections.singleton(homeOfficeEmailAddress);
@@ -54,7 +56,7 @@ public class AdditionalEvidenceSubmittedHoCostsPersonilisation implements EmailN
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_ADDITIONAL_EVIDENCE_RESPONDENT_EMAIL";
+        return caseId + "_ADDITIONAL_EVIDENCE_OTHER_PARTY_EMAIL";
     }
 
     @Override
@@ -63,11 +65,11 @@ public class AdditionalEvidenceSubmittedHoCostsPersonilisation implements EmailN
 
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
+            .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
+            .putAll(personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.getAdditionalEvidenceApplicationNumber(asylumCase))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
-
 
         return personalisationBuilder.build();
     }

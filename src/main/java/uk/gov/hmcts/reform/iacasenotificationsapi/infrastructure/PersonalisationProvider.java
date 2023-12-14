@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicationById;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.DateUtils.formatDateForNotification;
 
@@ -314,15 +315,26 @@ public class PersonalisationProvider {
             .build();
     }
 
-    public Map<String, String> getApplyForCostsPesonalisation(AsylumCase asylumCase) {
-
+    public Map<String, String> getApplyForCostsPersonalisation(AsylumCase asylumCase) {
         return ImmutableMap
             .<String, String>builder()
             .put(APPEAL_REFERENCE_NUMBER_CONST, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .putAll(getAppellantCredentials(asylumCase))
             .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
-            .put("appliedCostsType", retrieveLatestApplyForCosts(
-                asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()
+            .build();
+    }
+
+    public Map<String, String> getTypeForLatestApplyForCosts(AsylumCase asylumCase) {
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appliedCostsType", retrieveLatestApplyForCosts(asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()
+            ).build();
+    }
+
+    public Map<String, String> getTypeForSelectedApplyForCosts(AsylumCase asylumCase, AsylumCaseDefinition definition) {
+        return ImmutableMap
+            .<String, String>builder()
+            .put("appliedCostsType", getApplicationById(asylumCase, definition).getAppliedCostsType().replaceAll("costs", "").trim()
             ).build();
     }
 

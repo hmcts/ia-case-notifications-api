@@ -64,7 +64,8 @@ public class ApplyForCostsRespondentPersonalisation implements EmailNotification
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(personalisationProvider.getApplyToCostsCreationDate(asylumCase))
-            .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
+            .putAll(personalisationProvider.getTypeForLatestApplyForCosts(asylumCase))
+            .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
 
         if (isHomeOfficeApplicant(asylumCase)) {

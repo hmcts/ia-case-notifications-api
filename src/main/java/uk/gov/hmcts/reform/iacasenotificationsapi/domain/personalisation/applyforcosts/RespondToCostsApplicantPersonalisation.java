@@ -1,7 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.RESPOND_TO_COSTS_LIST;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHomeOfficeApplicant;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHomeOfficeRespondent;
 
 import java.util.Collections;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -44,10 +47,10 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isHomeOfficeApplicant(asylumCase)) {
-            return Collections.singleton(homeOfficeEmailAddress);
-        } else {
+        if (isHomeOfficeRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))) {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
+        } else {
+            return Collections.singleton(homeOfficeEmailAddress);
         }
     }
 
@@ -62,14 +65,15 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
 
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
+            .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
+            .putAll(personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, RESPOND_TO_COSTS_LIST))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.getRespondToCostsApplicationNumber(asylumCase));
 
-        if (isHomeOfficeApplicant(asylumCase)) {
-            personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
-        } else {
+        if (isHomeOfficeRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))) {
             personalisationBuilder.putAll(personalisationProvider.getLegalRepRecipientHeader(asylumCase));
+        } else {
+            personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
         }
 
         return personalisationBuilder.build();

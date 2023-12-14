@@ -283,7 +283,7 @@ class PersonalisationProviderTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        Map<String, String> personalisation = personalisationProvider.getApplyForCostsPesonalisation(asylumCase);
+        Map<String, String> personalisation = personalisationProvider.getApplyForCostsPersonalisation(asylumCase);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
