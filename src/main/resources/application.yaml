@@ -1201,6 +1201,7 @@ security:
       - "endAppealAutomatically"
       - "updatePaymentStatus"
       - "listCase"
+      - "sendBailDirection"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"
