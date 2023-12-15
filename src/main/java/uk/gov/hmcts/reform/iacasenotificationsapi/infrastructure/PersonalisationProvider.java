@@ -327,7 +327,7 @@ public class PersonalisationProvider {
     public Map<String, String> getTypeForLatestCreatedApplyForCosts(AsylumCase asylumCase) {
         return ImmutableMap
             .<String, String>builder()
-            .put("appliedCostsType", retrieveLatestApplyForCosts(asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()).build();
+            .put("appliedCostsType", retrieveLatestApplyForCosts(asylumCase).getAppliedCostsType().replaceAll("costs", "").trim()).build();
     }
 
     public Map<String, String> getTypeForSelectedApplyForCosts(AsylumCase asylumCase, AsylumCaseDefinition definition) {
@@ -368,7 +368,7 @@ public class PersonalisationProvider {
     }
 
     public Map<String, String> getApplyToCostsCreationDate(AsylumCase asylumCase) {
-        String latestApplyForCostsCreationDate = retrieveLatestApplyForCosts(asylumCase).getValue().getApplyForCostsCreationDate();
+        String latestApplyForCostsCreationDate = retrieveLatestApplyForCosts(asylumCase).getApplyForCostsCreationDate();
 
         return ImmutableMap
             .<String, String>builder()

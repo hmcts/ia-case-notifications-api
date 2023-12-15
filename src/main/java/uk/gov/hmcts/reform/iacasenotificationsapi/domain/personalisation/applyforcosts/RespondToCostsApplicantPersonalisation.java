@@ -2,12 +2,13 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyf
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.RESPOND_TO_COSTS_LIST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHomeOfficeRespondent;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -46,7 +47,10 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isHomeOfficeRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))) {
+        ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+        if (applicantAndRespondent.getLeft().equals(JUDGE)) {
+            return Collections.emptySet();
+        } else if (applicantAndRespondent.getLeft().equals(LEGAL_REPRESENTATIVE)) {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
         } else {
             return Collections.singleton(homeOfficeEmailAddress);
@@ -61,6 +65,7 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+        ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
 
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
@@ -69,7 +74,7 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.retrieveSelectedApplicationId(asylumCase, RESPOND_TO_COSTS_LIST));
 
-        if (isHomeOfficeRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))) {
+        if (applicantAndRespondent.getLeft().equals(LEGAL_REPRESENTATIVE)) {
             personalisationBuilder.putAll(personalisationProvider.getLegalRepRecipientHeader(asylumCase));
         } else {
             personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));

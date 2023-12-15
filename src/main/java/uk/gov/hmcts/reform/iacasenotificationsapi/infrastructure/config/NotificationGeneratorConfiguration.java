@@ -4793,28 +4793,15 @@ public class NotificationGeneratorConfiguration {
       );
     }
 
-    @Bean("respondToCostsApplicantNotificationGenerator")
+    @Bean("respondToCostsNotificationGenerator")
     public List<NotificationGenerator> respondToCostsNotificationGenerator(
         RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(respondToCostsApplicantPersonalisation),
-            notificationSender,
-            notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("respondToCostsRespondentNotificationGenerator")
-    public List<NotificationGenerator> respondToCostsNotificationGenerator(
         RespondToCostsRespondentPersonalisation respondToCostsRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-                newArrayList(respondToCostsRespondentPersonalisation),
+                newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )

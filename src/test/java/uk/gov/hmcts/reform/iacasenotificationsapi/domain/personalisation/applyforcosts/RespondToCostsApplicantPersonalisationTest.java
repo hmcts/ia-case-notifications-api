@@ -107,12 +107,14 @@ class RespondToCostsApplicantPersonalisationTest {
     }
 
     @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
+    @MethodSource("appliesForCostsProviderWithJudge")
     void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList respondsToCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
+        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Tribunal")) {
+            assertTrue(respondToCostsApplicantPersonalisation.getRecipientsList(asylumCase).isEmpty());
+        } else if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
             assertTrue(respondToCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         } else {
             assertTrue(respondToCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
@@ -161,6 +163,17 @@ class RespondToCostsApplicantPersonalisationTest {
                 new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
             Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
                 new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
+        );
+    }
+
+    static Stream<Arguments> appliesForCostsProviderWithJudge() {
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Unreasonable costs", "Legal representative", homeOffice))),
+                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
+                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("3", new ApplyForCosts("Wasted costs", homeOffice, "Tribunal"))),
+                new DynamicList(new Value("3", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
         );
     }
 }

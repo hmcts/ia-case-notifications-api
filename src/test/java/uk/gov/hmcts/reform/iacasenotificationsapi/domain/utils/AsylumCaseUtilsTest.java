@@ -6,18 +6,17 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicantAndRespondent;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -172,60 +171,11 @@ public class AsylumCaseUtilsTest {
         assertFalse(isLegalRepEjp(asylumCase));
     }
 
-    @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
-    void should_return_correct_boolean_value(List<IdValue<ApplyForCosts>> applyForCostsList) {
-        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
-
-        if (applyForCostsList.get(0).getValue().getApplyForCostsRespondentRole().equals("Legal representative")) {
-            assertTrue(AsylumCaseUtils.isHomeOfficeApplicant(asylumCase));
-        } else {
-            assertFalse(AsylumCaseUtils.isHomeOfficeApplicant(asylumCase));
-        }
-    }
-
     @Test
     void should_throw_when_applies_for_costs_are_not_present() {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> AsylumCaseUtils.retrieveLatestApplyForCosts(asylumCase))
             .hasMessage("Applies for costs are not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
-    }
-
-    @Test
-    void should_throw_when_correct_type_applicant_is_not_present() {
-        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Home office", "Admin Officer", applyForCostsCreationDate)));
-
-        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
-
-        assertThatThrownBy(() -> AsylumCaseUtils.isHomeOfficeApplicant(asylumCase))
-            .hasMessage("Correct applicant type is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
-    }
-
-    @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
-    void should_correctly_detect_if_respondent_is_home_office(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList respondsToCostsList) {
-        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
-        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
-
-        if (applyForCostsList.get(0).getValue().getApplyForCostsRespondentRole().equals("Home office")) {
-            assertTrue(AsylumCaseUtils.isHomeOfficeRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
-        } else {
-            assertFalse(AsylumCaseUtils.isHomeOfficeRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
-        }
-    }
-
-    @Test
-    void should_throw_incorrect_type_of_respondent() {
-        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", "Admin Officer", "Judge", applyForCostsCreationDate)));
-        DynamicList respondsToCostsList = new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")));
-
-        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
-        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
-
-        assertThatThrownBy(() -> AsylumCaseUtils.isHomeOfficeRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
-            .hasMessage("Correct respondent type is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
 
@@ -237,7 +187,7 @@ public class AsylumCaseUtilsTest {
         );
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertEquals(applyForCostsList.get(0), AsylumCaseUtils.retrieveLatestApplyForCosts(asylumCase));
+        assertEquals(applyForCostsList.get(0).getValue(), AsylumCaseUtils.retrieveLatestApplyForCosts(asylumCase));
     }
 
     @Test
@@ -310,13 +260,52 @@ public class AsylumCaseUtilsTest {
             .isExactlyInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    void should_build_proper_pair_with_applicant_and_respondent() {
+        DynamicList selectedValue = new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")));
 
-    static Stream<Arguments> appliesForCostsProvider() {
-        return Stream.of(
-            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Legal representative", "Home office", applyForCostsCreationDate))),
-                new DynamicList(new Value("1", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
-            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Unreasonable costs", "Home office", "Legal representative", applyForCostsCreationDate))),
-                new DynamicList(new Value("2", "Costs 2, Unreasonable costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"))))
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(
+            new IdValue<>("2", new ApplyForCosts("Wasted costs", "Legal representative", "Home office", applyForCostsCreationDate))
         );
+
+        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        ImmutablePair<String, String> getApplicantAndRespondent = getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+
+        assertEquals("Legal representative", getApplicantAndRespondent.getRight());
+        assertEquals("Home office", getApplicantAndRespondent.getLeft());
+    }
+
+    @Test
+    void should_throw_if_applicant_type_is_not_correct() {
+        DynamicList selectedValue = new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")));
+
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(
+            new IdValue<>("2", new ApplyForCosts("Wasted costs", "Tribunal", "Case officer", applyForCostsCreationDate))
+        );
+
+        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
+            .hasMessage("Correct applicant type is not present")
+            .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void should_throw_if_respondent_type_is_not_correct() {
+        DynamicList selectedValue = new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")));
+
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(
+            new IdValue<>("2", new ApplyForCosts("Wasted costs", "Case officer", "Tribunal", applyForCostsCreationDate))
+        );
+
+        when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
+            .hasMessage("Correct applicant type is not present")
+            .isExactlyInstanceOf(IllegalStateException.class);
     }
 }
