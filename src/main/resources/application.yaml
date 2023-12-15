@@ -1223,6 +1223,7 @@ security:
       - "listCase"
       - "recordAdjournmentDetails"
       - "editCaseListing"
+      - "sendBailDirection"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"
