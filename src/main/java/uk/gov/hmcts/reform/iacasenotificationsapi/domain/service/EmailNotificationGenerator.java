@@ -10,6 +10,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNot
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder.NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING;
+
 @Slf4j
 public class EmailNotificationGenerator implements NotificationGenerator {
 
@@ -50,6 +52,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
         return subscriberEmails.stream()
+            .filter(this::isValidEmailAddress)
             .map(email -> sendEmail(
                 email,
                 emailNotificationPersonalisation,
@@ -74,5 +77,14 @@ public class EmailNotificationGenerator implements NotificationGenerator {
             personalisation.getPersonalisation(callback),
             referenceId
         );
+    }
+
+    private boolean isValidEmailAddress(String email) {
+        if (email.equals(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING)) {
+            log.warn("Invalid email address {}", email);
+            return false;
+        }
+
+        return true;
     }
 }

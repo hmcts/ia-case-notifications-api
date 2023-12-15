@@ -9,7 +9,9 @@ import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder.NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING;
 
 import java.util.List;
 import java.util.Map;
@@ -206,6 +208,28 @@ public class NotificationGeneratorTest {
         verify(asylumCase, times(0)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
+
+    @Test
+    public void should_not_send_notification_when_invalid_email_address() {
+        notificationGenerator =
+                new EmailNotificationGenerator(aipEmailNotificationPersonalisationList, notificationSender,
+                        notificationIdAppender);
+
+        when(emailNotificationPersonalisation.getRecipientsList(asylumCase)).thenReturn(singleton(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING));
+        when(emailNotificationPersonalisation1.getRecipientsList(asylumCase)).thenReturn(singleton(emailAddress2));
+
+        notificationGenerator.generate(callback);
+
+        verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2);
+        verifyNoMoreInteractions(notificationSender);
+
+        verify(notificationIdAppender).appendAll(asylumCase, refId1, emptyList());
+        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
+        verifyNoMoreInteractions(notificationIdAppender);
+
+        verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+    }
 
     @Test
     public void should_not_send_notification_when_sms_personalisation_list_empty() {
