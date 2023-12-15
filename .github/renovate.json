@@ -14,7 +14,10 @@
     "checkstyle",
     "io.rest-assured:rest-assured",
     "io.rest-assured:rest-assured-all",
-    "hashicorp/terraform"
+    "hashicorp/terraform",
+    "io.freefair.lombok",
+    "launchdarkly",
+    "info.solidsoft.pitest"
   ],
   "timezone": "Europe/London",
   "schedule": [
