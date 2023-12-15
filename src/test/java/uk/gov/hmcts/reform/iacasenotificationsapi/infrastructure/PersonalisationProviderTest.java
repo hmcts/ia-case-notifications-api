@@ -368,7 +368,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getTypeForLatestCreatedApplyForCosts(asylumCase);
 
-        assertEquals("Wasted costs", personalisation.get("type"));
+        assertEquals("Wasted", personalisation.get("appliedCostsType"));
     }
 
 
