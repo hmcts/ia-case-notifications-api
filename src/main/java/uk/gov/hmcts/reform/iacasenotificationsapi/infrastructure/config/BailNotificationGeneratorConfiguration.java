@@ -455,7 +455,7 @@ public class BailNotificationGeneratorConfiguration {
     }
 
     @Bean("sendUploadSummaryDirectionNotificationGenerator")
-    public List<BailNotificationGenerator> sendBailDirectionNotificationGenerator(
+    public List<BailNotificationGenerator> sendUploadSummaryDirectionNotificationGenerator(
             HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
             BailGovNotifyNotificationSender notificationSender,
             BailNotificationIdAppender notificationIdAppender) {
