@@ -4817,6 +4817,33 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(new EmailNotificationGenerator(
             newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
             notificationSender,
+            notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("additionalEvidenceSubmittedHoGenerator")
+    public List<NotificationGenerator> additionalEvidenceSubmittedHoGenerator(
+        AdditionalEvidenceSubmittedLrCostsPersonilisation additionalEvidenceSubmittedLrCostsPersonilisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(additionalEvidenceSubmittedLrCostsPersonilisation),
+            notificationSender,
+            notificationIdAppender)
+        );
+    }
+
+    @Bean("additionalEvidenceSubmittedLrGenerator")
+    public List<NotificationGenerator> additionalEvidenceSubmittedLrGenerator(
+        AdditionalEvidenceSubmittedHoCostsPersonilisation additionalEvidenceSubmittedHoCostsPersonilisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(additionalEvidenceSubmittedHoCostsPersonilisation),
+            notificationSender,
             notificationIdAppender)
         );
     }

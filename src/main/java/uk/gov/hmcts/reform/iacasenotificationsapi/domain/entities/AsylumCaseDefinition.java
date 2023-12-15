@@ -445,8 +445,11 @@ public enum AsylumCaseDefinition {
 
     RESPOND_TO_COSTS_LIST(
         "respondToCostsList", new TypeReference<DynamicList>(){}),
-    ;
 
+    ADD_EVIDENCE_FOR_COSTS_LIST(
+        "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
+
+    ;
 
 
     private final String value;
