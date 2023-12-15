@@ -324,18 +324,16 @@ public class PersonalisationProvider {
             .build();
     }
 
-    public Map<String, String> getTypeForLatestApplyForCosts(AsylumCase asylumCase) {
+    public Map<String, String> getTypeForLatestCreatedApplyForCosts(AsylumCase asylumCase) {
         return ImmutableMap
             .<String, String>builder()
-            .put("appliedCostsType", retrieveLatestApplyForCosts(asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()
-            ).build();
+            .put("appliedCostsType", retrieveLatestApplyForCosts(asylumCase).getValue().getAppliedCostsType().replaceAll("costs", "").trim()).build();
     }
 
     public Map<String, String> getTypeForSelectedApplyForCosts(AsylumCase asylumCase, AsylumCaseDefinition definition) {
         return ImmutableMap
             .<String, String>builder()
-            .put("appliedCostsType", getApplicationById(asylumCase, definition).getAppliedCostsType().replaceAll("costs", "").trim()
-            ).build();
+            .put("appliedCostsType", getApplicationById(asylumCase, definition).getAppliedCostsType().replaceAll("costs", "").trim()).build();
     }
 
     public Map<String, String> getHomeOfficeRecipientHeader(AsylumCase asylumCase) {
@@ -358,29 +356,15 @@ public class PersonalisationProvider {
             .build();
     }
 
-    private Map<String, String> buildApplicationId(String applicationNumber) {
+    public Map<String, String> retrieveSelectedApplicationId(AsylumCase asylumCase, AsylumCaseDefinition definition) {
+        DynamicList selectedApplication = asylumCase.read(definition, DynamicList.class)
+            .orElseThrow(() -> new IllegalStateException(definition + " is not present"));
+
+        String applicationNumber = selectedApplication.getValue().getLabel().split(",")[0].replaceAll("[^0-9]", "");
+
         return ImmutableMap.<String, String>builder()
             .put("applicationId", applicationNumber)
             .build();
-    }
-
-    public Map<String, String> retrieveSelectedApplicationId(DynamicList addEvidenceForCostsDynamicList) {
-        String applicationNumber = addEvidenceForCostsDynamicList.getValue().getLabel().split(",")[0].replaceAll("[^0-9]", "");
-        return buildApplicationId(applicationNumber);
-    }
-
-    public Map<String, String> getRespondToCostsApplicationNumber(AsylumCase asylumCase) {
-        DynamicList addEvidenceForCostsDynamicList = asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)
-            .orElseThrow(() -> new IllegalStateException("respondToCostsDynamicList is not present"));
-
-        return retrieveSelectedApplicationId(addEvidenceForCostsDynamicList);
-    }
-
-    public Map<String, String> getAdditionalEvidenceApplicationNumber(AsylumCase asylumCase) {
-        DynamicList addEvidenceForCostsDynamicList = asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)
-            .orElseThrow(() -> new IllegalStateException("dynamicList is not present"));
-
-        return retrieveSelectedApplicationId(addEvidenceForCostsDynamicList);
     }
 
     public Map<String, String> getApplyToCostsCreationDate(AsylumCase asylumCase) {

@@ -16,9 +16,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 
 public class AsylumCaseUtils {
 
-    private final static String HOME_OFFICE = "Home office";
-    private final static String LEGAL_REPRESENTATIVE = "Legal representative";
-    private final static String APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
+    private static final String HOME_OFFICE = "Home office";
+    private static final String LEGAL_REPRESENTATIVE = "Legal representative";
+    private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
+    private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
 
 
     private AsylumCaseUtils() {
@@ -139,7 +140,7 @@ public class AsylumCaseUtils {
         } else if (applicantType.equals(LEGAL_REPRESENTATIVE)) {
             return false;
         }
-        throw new IllegalStateException("Correct applicant type is not present");
+        throw new IllegalStateException(INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE);
     }
 
     public static boolean isHomeOfficeRespondent(AsylumCase asylumCase, Function<AsylumCase, ApplyForCosts> retrieveApplyForCosts) {
@@ -150,7 +151,7 @@ public class AsylumCaseUtils {
         } else if (respondentType.equals(LEGAL_REPRESENTATIVE)) {
             return false;
         }
-        throw new IllegalStateException(APPLICANT_TYPE_ERROR_MESSAGE);
+        throw new IllegalStateException(INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE);
     }
 
     public static IdValue<ApplyForCosts> retrieveLatestApplyForCosts(AsylumCase asylumCase) {
@@ -189,7 +190,7 @@ public class AsylumCaseUtils {
         } else if (selectedApplication.getLoggedUserRole().equals(LEGAL_REPRESENTATIVE)) {
             return false;
         }
-        throw new IllegalStateException(APPLICANT_TYPE_ERROR_MESSAGE);
+        throw new IllegalStateException(INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE);
     }
 
 }

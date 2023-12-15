@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static java.util.Objects.requireNonNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,7 +14,6 @@ import lombok.ToString;
 public class ApplyForCosts {
     private String applyForCostsApplicantType;
     private String applyForCostsRespondentRole;
-    private String respondentToCostsOrder;
     private String loggedUserRole;
     private String appliedCostsType;
     private String applyForCostsCreationDate;
@@ -25,14 +22,22 @@ public class ApplyForCosts {
         // noop -- for deserializer
     }
 
-    public ApplyForCosts(String appliedCostsType, String respondentToCostsOrder, String applyForCostsApplicantType, String applyForCostsCreationDate) {
-        requireNonNull(appliedCostsType);
-        requireNonNull(respondentToCostsOrder);
-        requireNonNull(applyForCostsApplicantType);
-        requireNonNull(applyForCostsCreationDate);
+    public ApplyForCosts(String loggedUserRole, String appliedCostsType) {
+        this.loggedUserRole = loggedUserRole;
         this.appliedCostsType = appliedCostsType;
-        this.respondentToCostsOrder = respondentToCostsOrder;
+    }
+
+    public ApplyForCosts(String appliedCostsType, String applyForCostsRespondentRole, String applyForCostsApplicantType) {
+        this.appliedCostsType = appliedCostsType;
+        this.applyForCostsRespondentRole = applyForCostsRespondentRole;
+        this.applyForCostsApplicantType = applyForCostsApplicantType;
+    }
+
+    public ApplyForCosts(String appliedCostsType, String applyForCostsRespondentRole, String applyForCostsApplicantType, String applyForCostsCreationDate) {
+        this.appliedCostsType = appliedCostsType;
+        this.applyForCostsRespondentRole = applyForCostsRespondentRole;
         this.applyForCostsApplicantType = applyForCostsApplicantType;
         this.applyForCostsCreationDate = applyForCostsCreationDate;
     }
+
 }

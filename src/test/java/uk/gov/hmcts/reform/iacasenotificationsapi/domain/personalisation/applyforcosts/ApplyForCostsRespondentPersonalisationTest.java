@@ -152,7 +152,7 @@ class ApplyForCostsRespondentPersonalisationTest {
             assertEquals("Your", personalisation.get("recipient"));
             assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
         } else {
-            assertEquals(applyForCostsList.get(0).getValue().getRespondentToCostsOrder(), personalisation.get("recipient"));
+            assertEquals(applyForCostsList.get(0).getValue().getApplyForCostsRespondentRole(), personalisation.get("recipient"));
             assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
         }
     }
