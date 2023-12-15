@@ -485,4 +485,19 @@ public class BailNotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("sendUploadSummaryDirectionNotificationGenerator")
+    public List<BailNotificationGenerator> sendUploadSummaryDirectionNotificationGenerator(
+            HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
+            BailGovNotifyNotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new BailEmailNotificationGenerator(
+                        newArrayList(homeOfficeUploadBailSummaryDirectionPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

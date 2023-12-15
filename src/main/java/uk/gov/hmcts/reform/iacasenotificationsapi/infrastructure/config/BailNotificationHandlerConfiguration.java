@@ -531,6 +531,19 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> sendUploadSummaryDirectionNotificationHandler(
+            @Qualifier("sendUploadSummaryDirectionNotificationGenerator")
+            List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+                (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SEND_UPLOAD_BAIL_SUMMARY_DIRECTION,
+                bailNotificationGenerators,
+                getErrorHandler()
+        );
+    }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
