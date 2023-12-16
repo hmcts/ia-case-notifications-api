@@ -305,7 +305,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
         assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
-            .hasMessage("Correct applicant type is not present")
+            .hasMessage("Correct respondent type is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
 }
