@@ -20,12 +20,24 @@
               "revocationHumanitarianProtection"
             ]
           },
+          "addEvidenceForCostsList": {
+            "value": {
+              "code": "1",
+              "label": "Costs 1, Unreasonable costs, 15 Dec 2023"
+            },
+            "list_items": [
+              {
+                "code": "1",
+                "label": "Costs 1, Unreasonable costs, 15 Dec 2023"
+              }
+            ]
+          },
           "appliesForCosts": [
             {
               "id": "1",
               "value": {
                 "appliedCostsType": "Unreasonable costs",
-                "respondentToCostsOrder": "Home office",
+                "loggedUserRole": "Home office",
                 "applyForCostsHearingType": "No",
                 "scheduleOfCostsDocuments": [],
                 "applyForCostsCreationDate": "{$TODAY}",
@@ -45,19 +57,7 @@
               }
             }
           ],
-          "legalRepName": "Fake Org Ltd",
-          "respondToCostsList": {
-            "value": {
-              "code": "11",
-              "label": "Costs 5, Wasted costs, 22 Nov 2023"
-            },
-            "list_items": [
-              {
-                "code": "15",
-                "label": "Costs 1, Wasted costs, 22 Nov 2023"
-              }
-            ]
-          }
+          "legalRepName": "Fake Org Ltd"
         }
       }
     }
