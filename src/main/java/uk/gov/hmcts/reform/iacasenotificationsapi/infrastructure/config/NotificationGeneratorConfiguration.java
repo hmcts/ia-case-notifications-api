@@ -4801,34 +4801,21 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
-            notificationSender,
-            notificationIdAppender
+                newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
+                notificationSender,
+                notificationIdAppender
             )
         );
     }
 
-    @Bean("additionalEvidenceSubmittedHoGenerator")
-    public List<NotificationGenerator> additionalEvidenceSubmittedHoGenerator(
-        AdditionalEvidenceSubmittedLrCostsPersonilisation additionalEvidenceSubmittedLrCostsPersonilisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(additionalEvidenceSubmittedLrCostsPersonilisation),
-            notificationSender,
-            notificationIdAppender)
-        );
-    }
-
-    @Bean("additionalEvidenceSubmittedLrGenerator")
+    @Bean("additionalEvidenceSubmittedOtherPartyGenerator")
     public List<NotificationGenerator> additionalEvidenceSubmittedLrGenerator(
-        AdditionalEvidenceSubmittedHoCostsPersonilisation additionalEvidenceSubmittedHoCostsPersonilisation,
+        AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation additionalEvidenceSubmittedOtherPartyNotificationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(additionalEvidenceSubmittedHoCostsPersonilisation),
+            newArrayList(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation),
             notificationSender,
             notificationIdAppender)
         );

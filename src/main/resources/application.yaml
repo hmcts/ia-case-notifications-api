@@ -1146,11 +1146,8 @@ govnotify:
         afterListing:
           email: bc327677-eef1-4863-94cc-5c964ff9eb9d
     addEvidenceForCosts:
-      applicant:
+      otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
-      respondent:
-        email: 00d05601-19cb-4f9b-909a-b23ee3961be8
-
 
 
   bail:
