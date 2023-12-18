@@ -1,3 +1,10 @@
+import org.gradle.api.artifacts.ComponentSelection
+import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.wrapper.Wrapper
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+
 buildscript {
     repositories {
         jcenter()
