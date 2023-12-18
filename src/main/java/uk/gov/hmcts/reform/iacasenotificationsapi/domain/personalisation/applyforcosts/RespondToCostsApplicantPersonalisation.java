@@ -48,7 +48,7 @@ public class RespondToCostsApplicantPersonalisation implements EmailNotification
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
-        if (applicantAndRespondent.getLeft().equals(JUDGE)) {
+        if ((JUDGE).equals(applicantAndRespondent.getLeft())) {
             return Collections.emptySet();
         } else if (applicantAndRespondent.getLeft().equals(LEGAL_REPRESENTATIVE)) {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));

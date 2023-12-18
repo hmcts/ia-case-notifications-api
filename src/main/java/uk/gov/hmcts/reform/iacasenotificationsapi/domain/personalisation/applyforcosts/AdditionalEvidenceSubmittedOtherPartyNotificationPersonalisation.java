@@ -2,12 +2,13 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyf
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADD_EVIDENCE_FOR_COSTS_LIST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -47,6 +48,12 @@ public class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation im
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST));
+
+        if ((JUDGE).equals(applicantAndRespondent.getLeft())) {
+            return Collections.emptySet();
+        }
+
         if (isLoggedUserIsHomeOffice(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))) {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
         } else {

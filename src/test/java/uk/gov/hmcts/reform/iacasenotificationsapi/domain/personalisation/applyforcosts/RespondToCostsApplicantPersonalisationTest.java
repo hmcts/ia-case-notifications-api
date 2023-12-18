@@ -55,7 +55,6 @@ class RespondToCostsApplicantPersonalisationTest {
     private static String homeOffice = "Home office";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
-    private static String newestApplicationCreatedNumber = "1";
     private String homeOfficeReferenceNumber = "A1234567/001";
     private RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation;
 
@@ -171,9 +170,9 @@ class RespondToCostsApplicantPersonalisationTest {
             Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Unreasonable costs", "Legal representative", homeOffice))),
                 new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
             Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
-                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023")))),
+                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")))),
             Arguments.of(List.of(new IdValue<>("3", new ApplyForCosts("Wasted costs", homeOffice, "Tribunal"))),
-                new DynamicList(new Value("3", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
+                new DynamicList(new Value("3", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"))))
         );
     }
 }

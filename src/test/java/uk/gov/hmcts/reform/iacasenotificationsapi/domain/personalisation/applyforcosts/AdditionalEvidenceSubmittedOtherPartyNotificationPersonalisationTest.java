@@ -95,12 +95,14 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
-    void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList respondsToCostsList) {
+    @MethodSource("appliesForCostsProviderWithJudge")
+    void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList addEvidenceToCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
-        when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
+        when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(addEvidenceToCostsList));
 
-        if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals(homeOffice)) {
+        if (("Tribunal").equals(applyForCostsList.get(0).getValue().getApplyForCostsApplicantType())) {
+            assertTrue(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getRecipientsList(asylumCase).isEmpty());
+        } else if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals(homeOffice)) {
             assertTrue(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         } else {
             assertTrue(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
@@ -144,6 +146,17 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
                 new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
             Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts(homeOffice, "Wasted costs"))),
                 new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
+        );
+    }
+
+    static Stream<Arguments> appliesForCostsProviderWithJudge() {
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Legal representative", "Legal representative", homeOffice, "Unreasonable costs", "24 Nov 2023"))),
+                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts(homeOffice, homeOffice, "Legal representative", "Wasted costs", "24 Nov 2023"))),
+                new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("3", new ApplyForCosts(homeOffice, "Tribunal", homeOffice, "Wasted costs", "24 Nov 2023"))),
+                new DynamicList(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"), List.of(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"))))
         );
     }
 }

@@ -40,4 +40,11 @@ public class ApplyForCosts {
         this.applyForCostsCreationDate = applyForCostsCreationDate;
     }
 
+    public ApplyForCosts(String loggedUserRole, String applyForCostsApplicantType, String applyForCostsRespondentRole, String appliedCostsType, String applyForCostsCreationDate) {
+        this.loggedUserRole = loggedUserRole;
+        this.applyForCostsApplicantType = applyForCostsApplicantType;
+        this.applyForCostsRespondentRole = applyForCostsRespondentRole;
+        this.appliedCostsType = appliedCostsType;
+    }
+
 }
