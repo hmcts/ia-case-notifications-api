@@ -80,7 +80,7 @@ class ApplyForCostsRespondentPersonalisationTest {
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(personalisationProvider.getApplyForCostsPesonalisation(asylumCase)).thenReturn(applyForCostsRespondentPersonalisationTemplate);
+        when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(applyForCostsRespondentPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
@@ -152,7 +152,7 @@ class ApplyForCostsRespondentPersonalisationTest {
             assertEquals("Your", personalisation.get("recipient"));
             assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
         } else {
-            assertEquals(applyForCostsList.get(0).getValue().getRespondentToCostsOrder(), personalisation.get("recipient"));
+            assertEquals(applyForCostsList.get(0).getValue().getApplyForCostsRespondentRole(), personalisation.get("recipient"));
             assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
         }
     }

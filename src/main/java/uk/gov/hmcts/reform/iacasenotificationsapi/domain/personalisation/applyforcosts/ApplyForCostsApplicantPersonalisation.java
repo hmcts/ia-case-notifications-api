@@ -1,12 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHomeOfficeApplicant;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -45,7 +46,8 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isHomeOfficeApplicant(asylumCase)) {
+        ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, func -> retrieveLatestApplyForCosts(asylumCase));
+        if (applicantAndRespondent.getLeft().equals(HOME_OFFICE)) {
             return Collections.singleton(homeOfficeEmailAddress);
         } else {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
@@ -60,14 +62,16 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+        ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, func -> retrieveLatestApplyForCosts(asylumCase));
 
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .putAll(personalisationProvider.getApplyForCostsPesonalisation(asylumCase))
+            .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
+            .putAll(personalisationProvider.getTypeForLatestCreatedApplyForCosts(asylumCase))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.getApplyToCostsCreationDate(asylumCase));
 
-        if (isHomeOfficeApplicant(asylumCase)) {
+        if (applicantAndRespondent.getLeft().equals(HOME_OFFICE)) {
             personalisationBuilder.putAll(personalisationProvider.getHomeOfficeRecipientHeader(asylumCase));
         } else {
             personalisationBuilder.putAll(personalisationProvider.getLegalRepRecipientHeader(asylumCase));
