@@ -1972,8 +1972,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("adjournHearingWithoutDateNotificationGenerator")
-    public List<NotificationGenerator> adjournHearingWithoutDateNotificationGenerator(
+    @Bean("adjournHearingWithoutDateNonIntegratedNotificationGenerator")
+    public List<NotificationGenerator> adjournHearingWithoutDateNotificationNonIntegratedGenerator(
         LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
         RespondentAdjournHearingWithoutDatePersonalisation respondentAdjournHearingWithoutDatePersonalisation,
         AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerAdjournHearingWithoutDatePersonalisation,
@@ -1996,8 +1996,30 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("recordAdjournmentDetailsNotificationGenerator")
-    public List<NotificationGenerator> recordAdjournmentDetailsNotificationGenerator(
+    @Bean("adjournHearingWithoutDateIntegratedNotificationGenerator")
+    public List<NotificationGenerator> adjournHearingWithoutDateNotificationIntegratedGenerator(
+        LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
+        RespondentAdjournHearingWithoutDatePersonalisation respondentAdjournHearingWithoutDatePersonalisation,
+        CaseOfficerAdjournHearingWithoutDatePersonalisation caseOfficerAdjournHearingWithoutDatePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, respondentAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation)
+            : newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation);
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("recordAdjournmentDetailsNonIntegratedNotificationGenerator")
+    public List<NotificationGenerator> recordAdjournmentDetailsNonIntegratedNotificationGenerator(
             LegalRepresentativeRecordAdjournmentDetailsPersonalisation legalRepresentativeRecordAdjournmentDetailsPersonalisation,
             RespondentRecordAdjournmentDetailsPersonalisation respondentRecordAdjournmentDetailsPersonalisation,
             AdminOfficerRecordAdjournmentDetailsPersonalisation adminOfficerRecordAdjournmentDetailsPersonalisation,
@@ -2016,6 +2038,28 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("recordAdjournmentDetailsIntegratedNotificationGenerator")
+    public List<NotificationGenerator> recordAdjournmentDetailsIntegratedNotificationGenerator(
+        LegalRepresentativeRecordAdjournmentDetailsPersonalisation legalRepresentativeRecordAdjournmentDetailsPersonalisation,
+        RespondentRecordAdjournmentDetailsPersonalisation respondentRecordAdjournmentDetailsPersonalisation,
+        CaseOfficerRecordAdjournmentDetailsPersonalisation caseOfficerRecordAdjournmentDetailsPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ?  newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, respondentRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation)
+            : newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation);
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
