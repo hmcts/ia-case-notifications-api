@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7991 Record adjournment details",
+  "description": "RIA-7991 Record adjournment details (List Assist non-integrated: Notification including Admin)",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
