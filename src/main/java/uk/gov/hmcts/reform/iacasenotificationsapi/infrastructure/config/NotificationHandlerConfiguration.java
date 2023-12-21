@@ -2364,7 +2364,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE,
+                && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                && !isInternalCase(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAdjournHearingWithoutDateHandler(
+        @Qualifier("internalAdjournHearingWithoutDateNotificationGenerator")
+        List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                    && isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
