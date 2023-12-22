@@ -297,7 +297,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getHomeOfficeRecipientHeader(asylumCase);
 
-        assertEquals("Home office", personalisation.get(recipient));
+        assertEquals("Home Office", personalisation.get(recipient));
         assertEquals(homeOfficeRefNumber, personalisation.get(recipientReferenceNumber));
     }
 

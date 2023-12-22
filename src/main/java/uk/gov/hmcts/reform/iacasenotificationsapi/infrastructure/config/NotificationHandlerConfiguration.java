@@ -5232,7 +5232,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> additionalEvidenceSubmittedLrHandler(
+    public PreSubmitCallbackHandler<AsylumCase> additionalEvidenceSubmittedOtherPartyHandler(
         @Qualifier("additionalEvidenceSubmittedOtherPartyGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -5243,6 +5243,21 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent().equals(ADD_EVIDENCE_FOR_COSTS)
                        && !isInternalCase(asylumCase);
 
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> considerMakingCostOrderNotificationHandler(
+        @Qualifier("considerMakingCostOrderNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent().equals(CONSIDER_MAKING_COSTS_ORDER)
+                    && !isInternalCase(asylumCase);
             }, notificationGenerators
         );
     }
