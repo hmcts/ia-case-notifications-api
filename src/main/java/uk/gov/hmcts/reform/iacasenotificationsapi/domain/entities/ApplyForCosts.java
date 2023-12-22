@@ -17,6 +17,7 @@ public class ApplyForCosts {
     private String loggedUserRole;
     private String appliedCostsType;
     private String applyForCostsCreationDate;
+    private String applyForCostsDecision;
 
     public ApplyForCosts() {
         // noop -- for deserializer
@@ -33,7 +34,7 @@ public class ApplyForCosts {
         this.applyForCostsApplicantType = applyForCostsApplicantType;
     }
 
-    public ApplyForCosts(String appliedCostsType, String applyForCostsRespondentRole, String applyForCostsApplicantType, String applyForCostsCreationDate) {
+    public ApplyForCosts(String appliedCostsType, String applyForCostsRespondentRole, String applyForCostsApplicantType, String applyForCostsCreationDate ) {
         this.appliedCostsType = appliedCostsType;
         this.applyForCostsRespondentRole = applyForCostsRespondentRole;
         this.applyForCostsApplicantType = applyForCostsApplicantType;

@@ -449,6 +449,10 @@ public enum AsylumCaseDefinition {
     ADD_EVIDENCE_FOR_COSTS_LIST(
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
 
+    DECIDE_COSTS_APPLICATION_LIST(
+        "decideCostsApplicationList", new TypeReference<DynamicList>(){}
+    )
+
     ;
 
 

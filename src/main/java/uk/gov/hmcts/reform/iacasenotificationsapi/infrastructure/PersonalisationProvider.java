@@ -376,4 +376,14 @@ public class PersonalisationProvider {
             .build();
     }
 
+    public Map<String, String> getDecideCostsPersonalisation(AsylumCase asylumCase) {
+        String costsDecision = getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST).getApplyForCostsDecision();
+
+        return ImmutableMap
+            .<String, String>builder()
+            .put("costsDecisionType", costsDecision)
+            .build();
+
+    }
+
 }

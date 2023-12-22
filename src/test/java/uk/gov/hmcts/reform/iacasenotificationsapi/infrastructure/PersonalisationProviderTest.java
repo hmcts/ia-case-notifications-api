@@ -90,6 +90,8 @@ class PersonalisationProviderTest {
     private final String recipient = "recipient";
     private final String applyForCostsCreationDate = "2023-11-24";
 
+    private static String homeOffice = "Home office";
+
     private PersonalisationProvider personalisationProvider;
 
     @BeforeEach
@@ -359,6 +361,15 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation = personalisationProvider.getApplyToCostsCreationDate(asylumCase);
 
         assertEquals("24 Nov 2023", personalisation.get("creationDate"));
+    }
+
+    @Test
+    void should_return_decide_for_costs_when_all_information_given() {
+        DynamicList dynamicList = new DynamicList(new Value("1", "Costs 8, Wasted costs, 15 Nov 2023"), List.of(new Value("1", "Costs 8, Wasted costs, 15 Nov 2023")));
+        when(asylumCase.read(DECIDE_COSTS_APPLICATION_LIST)).thenReturn(Optional.of(dynamicList));
+        Map<String, String> personalisation = personalisationProvider.getDecideCostsPersonalisation(asylumCase);
+
+        assertEquals("Wasted", personalisation.get("costsDecisionType"));
     }
 
     @Test

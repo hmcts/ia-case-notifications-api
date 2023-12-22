@@ -1479,6 +1479,7 @@ security:
       - "transferOutOfAda"
       - "reviewHearingRequirements"
       - "editAppeal"
+      - "decideCostsApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
