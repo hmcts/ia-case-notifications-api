@@ -191,9 +191,17 @@ public class NotificationHandlerConfiguration {
         @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN,
+            (callbackStage, callback) -> {
+                YesOrNo isIntegrated = callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .read(IS_INTEGRATED, YesOrNo.class)
+                    .orElse(YesOrNo.NO);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN
+                    && isIntegrated.equals(NO);
+            },
             notificationGenerators
         );
     }
