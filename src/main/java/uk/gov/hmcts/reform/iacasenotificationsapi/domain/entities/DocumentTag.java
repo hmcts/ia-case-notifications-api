@@ -72,6 +72,7 @@ public enum DocumentTag {
     HOME_OFFICE_NON_STANDARD_DIRECTION_LETTER("homeOfficeNonStandardDirectionToHOLetter"),
     INTERNAL_HO_CHANGE_DIRECTION_DUE_DATE_LETTER("internalHoChangeDirectionDueDateLetter"),
     INTERNAL_REINSTATE_APPEAL_LETTER("internalReinstateAppealLetter"),
+    INTERNAL_ADJOURN_HEARING_WITHOUT_DATE("internalAdjournHearingWithoutDate"),
 
     @JsonEnumDefaultValue
     NONE("");

@@ -583,6 +583,8 @@ govnotify:
         email: 392d06fa-2e1d-4b03-b86a-e21c1a0f60f3
       adminOfficer:
         email: 8a87904f-5a67-4a79-a56a-8450b7829f9b
+      detentionEngagementTeam:
+        email: b1c38360-82de-4aa7-bbe1-a395d73376b5
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1153,6 +1155,7 @@ govnotify:
     addEvidenceForCosts:
       otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
+
 
 
   bail:
