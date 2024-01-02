@@ -4768,7 +4768,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList( decideCostsRespondentAndApplicantPersonilsation),
+            newArrayList(decideCostsRespondentAndApplicantPersonilsation),
             notificationSender,
             notificationIdAppender)
         );

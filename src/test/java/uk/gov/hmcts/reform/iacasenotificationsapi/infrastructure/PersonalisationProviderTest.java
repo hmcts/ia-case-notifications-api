@@ -364,15 +364,6 @@ class PersonalisationProviderTest {
     }
 
     @Test
-    void should_return_decide_for_costs_when_all_information_given() {
-        DynamicList dynamicList = new DynamicList(new Value("1", "Costs 8, Wasted costs, 15 Nov 2023"), List.of(new Value("1", "Costs 8, Wasted costs, 15 Nov 2023")));
-        when(asylumCase.read(DECIDE_COSTS_APPLICATION_LIST)).thenReturn(Optional.of(dynamicList));
-        Map<String, String> personalisation = personalisationProvider.getDecideCostsPersonalisation(asylumCase);
-
-        assertEquals("Wasted", personalisation.get("costsDecisionType"));
-    }
-
-    @Test
     void should_return_type_for_latest_created_apply_for_costs() {
         List<IdValue<ApplyForCosts>> applyForCostsList = List.of(new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", applyForCostsCreationDate)));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));

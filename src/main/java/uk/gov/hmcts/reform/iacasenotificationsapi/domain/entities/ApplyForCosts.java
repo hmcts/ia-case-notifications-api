@@ -34,7 +34,7 @@ public class ApplyForCosts {
         this.applyForCostsApplicantType = applyForCostsApplicantType;
     }
 
-    public ApplyForCosts(String appliedCostsType, String applyForCostsRespondentRole, String applyForCostsApplicantType, String applyForCostsCreationDate ) {
+    public ApplyForCosts(String appliedCostsType, String applyForCostsRespondentRole, String applyForCostsApplicantType, String applyForCostsCreationDate) {
         this.appliedCostsType = appliedCostsType;
         this.applyForCostsRespondentRole = applyForCostsRespondentRole;
         this.applyForCostsApplicantType = applyForCostsApplicantType;
@@ -47,5 +47,4 @@ public class ApplyForCosts {
         this.applyForCostsRespondentRole = applyForCostsRespondentRole;
         this.appliedCostsType = appliedCostsType;
     }
-
 }
