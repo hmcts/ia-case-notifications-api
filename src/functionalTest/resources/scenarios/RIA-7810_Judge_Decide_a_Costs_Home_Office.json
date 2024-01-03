@@ -1,10 +1,10 @@
 {
-  "description": "RIA-7808: Home office lart has created the costings and a judge had  to costs which notifies legal rep",
+  "description": "RIA-7810: Home office lart has created the costings and a judge had  to costs which notifies legal rep",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 7808,
+      "id": 7810,
       "eventId": "decideCostsApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -81,7 +81,7 @@
     },
     "notifications": [
       {
-        "reference": "7808__DECIDE_A_COSTS_EMAIL",
+        "reference": "7810__DECIDE_A_COSTS_EMAIL",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: Costs application decided"
       }
