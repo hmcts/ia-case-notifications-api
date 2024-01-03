@@ -44,7 +44,6 @@ class DecideCostsRespondentAndApplicantPersonilsationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
 
-    private static final String applyForCostsDecision = "unreasonable";
     private Long caseId = 12345L;
     private final String decideCostsNotificationId = "decideCostsNotificationId";
     private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
@@ -55,10 +54,9 @@ class DecideCostsRespondentAndApplicantPersonilsationTest {
     private String appellantFamilyName = "someAppellantFamilyName";
     private static String homeOffice = "Home office";
     private String customerServicesTelephone = "555 555 555";
-    private static String unreasonableCostsType = "Unreasonable costs";
     private String customerServicesEmail = "cust.services@example.com";
     private String homeOfficeReferenceNumber = "A1234567/001";
-    private String costDecisionType = "someCostsDecisionType";
+
     private DecideCostsRespondentAndApplicantPersonilsation decideCostsRespondentAndApplicantPersonilsation;
 
     @BeforeEach
