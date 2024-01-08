@@ -337,7 +337,7 @@ public class PersonalisationProvider {
     }
 
     public Map<String, String> getHomeOfficeRecipientHeader(AsylumCase asylumCase) {
-        final String homeOffice = "Home office";
+        final String homeOffice = "Home Office";
 
         return ImmutableMap
             .<String, String>builder()

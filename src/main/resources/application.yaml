@@ -1150,8 +1150,11 @@ govnotify:
     addEvidenceForCosts:
       otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
-
-
+    considerMakingCostOrder:
+      legalRep:
+        email: 99271f8e-06de-469f-9725-297dd5b32279
+      homeOffice:
+        email: fa7244ce-55a9-499a-bfef-cf701517f7a1
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1476,6 +1479,7 @@ security:
       - "transferOutOfAda"
       - "reviewHearingRequirements"
       - "editAppeal"
+      - "considerMakingCostsOrder"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
