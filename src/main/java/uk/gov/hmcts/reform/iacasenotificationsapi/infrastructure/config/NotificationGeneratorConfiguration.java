@@ -2248,7 +2248,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalAdjournHearingWithoutDateNotificationGenerator")
-    public List<NotificationGenerator> adjournHearingWithoutDateNotificationGenerator(
+    public List<NotificationGenerator> internalAdjournHearingWithoutDateNotificationGenerator(
         DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -4838,13 +4838,27 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("additionalEvidenceSubmittedOtherPartyGenerator")
-    public List<NotificationGenerator> additionalEvidenceSubmittedLrGenerator(
+    public List<NotificationGenerator> additionalEvidenceSubmittedOtherPartyGenerator(
         AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation additionalEvidenceSubmittedOtherPartyNotificationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
             newArrayList(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation),
+            notificationSender,
+            notificationIdAppender)
+        );
+    }
+
+    @Bean("considerMakingCostOrderNotificationGenerator")
+    public List<NotificationGenerator> considerMakingCostOrderNotificationGenerator(
+        ConsiderMakingCostOrderLegalRepPersonalisation considerMakingCostOrderLegalRepPersonalisation,
+        ConsiderMakingCostOrderHoPersonalisation considerMakingCostOrderHoPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+            newArrayList(considerMakingCostOrderLegalRepPersonalisation, considerMakingCostOrderHoPersonalisation),
             notificationSender,
             notificationIdAppender)
         );

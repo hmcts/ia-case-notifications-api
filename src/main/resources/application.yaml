@@ -1155,8 +1155,11 @@ govnotify:
     addEvidenceForCosts:
       otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
-
-
+    considerMakingCostOrder:
+      legalRep:
+        email: 99271f8e-06de-469f-9725-297dd5b32279
+      homeOffice:
+        email: fa7244ce-55a9-499a-bfef-cf701517f7a1
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1165,7 +1168,6 @@ govnotify:
       submitApplication:
         email: 5f30774f-00fb-4c03-b010-e5a8afaa5f05
         sms: 64ac7c79-682f-4bd7-9847-bfd21240e8c6
-
       submitApplicationWithoutLR:
         email: 4888954b-446a-4e84-95cf-58340a66550b
       uploadBailSummary:
@@ -1482,6 +1484,7 @@ security:
       - "transferOutOfAda"
       - "reviewHearingRequirements"
       - "editAppeal"
+      - "considerMakingCostsOrder"
       - "decideCostsApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
@@ -1603,7 +1606,6 @@ lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
 upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
 applyForCostsHomeOfficeEmailAddress: ${HO_APPLY_FOR_COSTS_EMAIL:ho-apply-for-costs@example.com}
-
 
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
