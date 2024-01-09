@@ -5201,6 +5201,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> decideCostsNotificationHandler(
+        @Qualifier("decideCostsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent().equals(DECIDE_COSTS_APPLICATION)
+                       && !isInternalCase(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> notificationsTurnedOnLegalRepNotificationHandler(
         @Qualifier("notificationsTurnedOnLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 

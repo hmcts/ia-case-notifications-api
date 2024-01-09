@@ -17,6 +17,7 @@ public class ApplyForCosts {
     private String loggedUserRole;
     private String appliedCostsType;
     private String applyForCostsCreationDate;
+    private String applyForCostsDecision;
 
     public ApplyForCosts() {
         // noop -- for deserializer
@@ -46,5 +47,4 @@ public class ApplyForCosts {
         this.applyForCostsRespondentRole = applyForCostsRespondentRole;
         this.appliedCostsType = appliedCostsType;
     }
-
 }

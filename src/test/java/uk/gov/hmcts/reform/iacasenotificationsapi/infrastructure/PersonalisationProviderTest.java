@@ -90,6 +90,8 @@ class PersonalisationProviderTest {
     private final String recipient = "recipient";
     private final String applyForCostsCreationDate = "2023-11-24";
 
+    private static String homeOffice = "Home office";
+
     private PersonalisationProvider personalisationProvider;
 
     @BeforeEach
