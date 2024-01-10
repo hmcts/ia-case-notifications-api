@@ -1,9 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
+
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @Service
@@ -46,6 +47,12 @@ public class HearingDetailsFinder {
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingDate is not present"));
     }
 
+    public String getBailHearingDateTime(BailCase bailCase) {
+        return bailCase
+            .read(LISTING_HEARING_DATE, String.class)
+            .orElseThrow(() -> new IllegalStateException("listHearingDate is not present"));
+    }
+
     private HearingCentre getHearingCentre(AsylumCase asylumCase) {
         HearingCentre hearingCentre =
             asylumCase
@@ -72,6 +79,15 @@ public class HearingDetailsFinder {
         } else {
             return getHearingCentreAddress(asylumCase);
         }
+    }
+
+    public String getBailHearingCentreLocation(BailCase bailCase) {
+        BailHearingLocation hearingLocation =
+            bailCase
+                .read(LISTING_LOCATION, BailHearingLocation.class)
+                .orElseThrow(() -> new IllegalStateException("listingLocation is not present"));
+
+        return hearingLocation.getDescription();
     }
 
 }
