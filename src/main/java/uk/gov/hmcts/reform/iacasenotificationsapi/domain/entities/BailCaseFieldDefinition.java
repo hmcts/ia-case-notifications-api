@@ -292,7 +292,13 @@ public enum BailCaseFieldDefinition {
     ADMIN_SELECT_IMA_STATUS(
         "adminSelectImaStatus", new TypeReference<YesOrNo>() {}),
     HO_SELECT_IMA_STATUS(
-        "hoSelectImaStatus", new TypeReference<YesOrNo>() {});
+        "hoSelectImaStatus", new TypeReference<YesOrNo>() {}),
+    LISTING_EVENT(
+        "listingEvent", new TypeReference<ListingEvent>(){}),
+    LISTING_HEARING_DATE(
+        "listingHearingDate", new TypeReference<String>(){}),
+    LISTING_LOCATION(
+        "listingLocation", new TypeReference<BailHearingLocation>(){});
 
     private final String value;
     private final TypeReference typeReference;

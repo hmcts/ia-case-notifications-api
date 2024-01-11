@@ -6,7 +6,7 @@
     "credentials": "SystemUser",
     "input": {
       "id": 8112,
-      "eventId": "sendUploadBailSummaryDirection",
+      "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
         "template": "minimal-bail-application-submitted-direction-sent.json",

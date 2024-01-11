@@ -990,7 +990,19 @@ govnotify:
         email: 4a724840-8e62-489b-bc69-43a0be3ff12d
       sendUploadBailSummaryDirection:
         email: 12eec4f2-7261-4640-b18b-93666bde0b54
-
+      caseListing:
+        initial:
+          withLegalRep:
+            email: 0a6a204d-fcf6-463a-942d-b9d697048552
+          withoutLegalRep:
+            email: 4f724d31-98c4-43f6-9cef-f4bdda1a99fd
+          sms: 5c3d605c-3138-405d-ad47-a27388ff97f2
+        relisting:
+          withLegalRep:
+            email: ad4fd40e-22fc-4c6e-ae95-163f1ab1d4f0
+          withoutLegalRep:
+            email: a0f2751f-7e3f-4529-9714-6acbce5b0904
+          sms: 3e591016-42d8-4083-b81a-30756a1c4ca8
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -1148,6 +1160,8 @@ security:
       - "maintainBailCaseLinks"
       - "decisionWithoutHearing"
       - "recordTheDecision"
+      - "recordAdjournmentDetails"
+      - "caseListing"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1202,8 +1216,9 @@ security:
       - "endAppealAutomatically"
       - "updatePaymentStatus"
       - "listCase"
-      - "sendBailDirection"
-      - "sendUploadBailSummaryDirection"
+      - "recordAdjournmentDetails"
+      - "editCaseListing"
+      - "caseListing"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"
