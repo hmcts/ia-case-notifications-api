@@ -5263,6 +5263,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> additionalEvidenceSubmittedSubmitterHandler(
+            @Qualifier("additionalEvidenceSubmittedSubmitterGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent().equals(ADD_EVIDENCE_FOR_COSTS)
+                            && !isInternalCase(asylumCase);
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> considerMakingCostOrderNotificationHandler(
         @Qualifier("considerMakingCostOrderNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
