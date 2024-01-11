@@ -1159,7 +1159,10 @@ security:
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
       - "decisionWithoutHearing"
+<<<<<<< HEAD
       - "recordTheDecision"
+=======
+>>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
       - "recordAdjournmentDetails"
       - "caseListing"
     caseworker-ia-homeofficeapc:

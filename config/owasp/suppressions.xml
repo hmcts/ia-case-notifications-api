@@ -25,4 +25,18 @@
             a version of JSON that is newer than version 20230618</notes>
         <cve>CVE-2023-5072</cve>
     </suppress>
+    <suppress until="2024-03-31">
+        <cve>CVE-2023-34055</cve>
+        <cve>CVE-2023-46589</cve>
+        <cve>CVE-2023-33202</cve>
+        <cve>CVE-2023-6481</cve>
+        <cve>CVE-2023-6378</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2023-5072</cve>
+        <cve>CVE-2023-44487</cve>
+        <cve>CVE-2023-42794</cve>
+        <cve>CVE-2023-42795</cve>
+        <cve>CVE-2023-45648</cve>
+    </suppress>
 </suppressions>
