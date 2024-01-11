@@ -286,7 +286,13 @@ public enum BailCaseFieldDefinition {
     BAIL_DIRECTION_EDIT_DATE_DUE(
             "bailDirectionEditDateDue", new TypeReference<String>(){}),
     LAST_MODIFIED_DIRECTION(
-            "lastModifiedDirection", new TypeReference<Direction>(){})
+            "lastModifiedDirection", new TypeReference<Direction>(){}),
+    LISTING_EVENT(
+        "listingEvent", new TypeReference<ListingEvent>(){}),
+    LISTING_HEARING_DATE(
+        "listingHearingDate", new TypeReference<String>(){}),
+    LISTING_LOCATION(
+        "listingLocation", new TypeReference<BailHearingLocation>(){}),
     ;
 
     private final String value;

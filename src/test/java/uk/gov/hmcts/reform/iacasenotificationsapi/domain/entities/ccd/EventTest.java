@@ -107,7 +107,7 @@ public class EventTest {
         assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
         assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
         assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
-        assertEquals("sendUploadBailSummaryDirection", Event.SEND_UPLOAD_BAIL_SUMMARY_DIRECTION.toString());
+        assertEquals("caseListing", CASE_LISTING.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
     }
 
