@@ -4850,6 +4850,19 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("additionalEvidenceSubmittedSubmitterGenerator")
+    public List<NotificationGenerator> additionalEvidenceSubmittedSubmitterGenerator(
+            AddEvidenceForCostsSubmittedSubmitterPersonalisation addEvidenceForCostsSubmittedSubmitterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Collections.singletonList(new EmailNotificationGenerator(
+                newArrayList(addEvidenceForCostsSubmittedSubmitterPersonalisation),
+                notificationSender,
+                notificationIdAppender)
+        );
+    }
+
     @Bean("considerMakingCostOrderNotificationGenerator")
     public List<NotificationGenerator> considerMakingCostOrderNotificationGenerator(
         ConsiderMakingCostOrderLegalRepPersonalisation considerMakingCostOrderLegalRepPersonalisation,
@@ -4863,4 +4876,6 @@ public class NotificationGeneratorConfiguration {
             notificationIdAppender)
         );
     }
+
 }
+

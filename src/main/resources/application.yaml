@@ -1155,6 +1155,8 @@ govnotify:
     addEvidenceForCosts:
       otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
+      submitter:
+        email: d926132c-0bc3-4fa3-ab32-74708ef98b11
     considerMakingCostOrder:
       legalRep:
         email: 99271f8e-06de-469f-9725-297dd5b32279
