@@ -33,7 +33,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DecideCostsRespondentAndApplicantPersonilsationTest {
+class DecideCostsRespondentAndApplicantPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -57,11 +57,11 @@ class DecideCostsRespondentAndApplicantPersonilsationTest {
     private String customerServicesEmail = "cust.services@example.com";
     private String homeOfficeReferenceNumber = "A1234567/001";
 
-    private DecideCostsRespondentAndApplicantPersonilsation decideCostsRespondentAndApplicantPersonilsation;
+    private DecideCostsRespondentAndApplicantPersonalisation decideCostsRespondentAndApplicantPersonalisation;
 
     @BeforeEach
     void setup() {
-        decideCostsRespondentAndApplicantPersonilsation = new DecideCostsRespondentAndApplicantPersonilsation(
+        decideCostsRespondentAndApplicantPersonalisation = new DecideCostsRespondentAndApplicantPersonalisation(
             decideCostsNotificationId,
             homeOfficeEmailAddress,
             emailAddressFinder,
@@ -85,13 +85,13 @@ class DecideCostsRespondentAndApplicantPersonilsationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(decideCostsNotificationId, decideCostsRespondentAndApplicantPersonilsation.getTemplateId(asylumCase));
+        assertEquals(decideCostsNotificationId, decideCostsRespondentAndApplicantPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_DECIDE_A_COSTS_EMAIL",
-            decideCostsRespondentAndApplicantPersonilsation.getReferenceId(caseId));
+            decideCostsRespondentAndApplicantPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
@@ -101,18 +101,18 @@ class DecideCostsRespondentAndApplicantPersonilsationTest {
         when(asylumCase.read(DECIDE_COSTS_APPLICATION_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Tribunal")) {
-            assertTrue(decideCostsRespondentAndApplicantPersonilsation.getRecipientsList(asylumCase).isEmpty());
+            assertTrue(decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase).isEmpty());
         } else if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
-            assertTrue(decideCostsRespondentAndApplicantPersonilsation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
+            assertTrue(decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         } else {
-            assertTrue(decideCostsRespondentAndApplicantPersonilsation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
+            assertTrue(decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         }
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> decideCostsRespondentAndApplicantPersonilsation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> decideCostsRespondentAndApplicantPersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -126,7 +126,7 @@ class DecideCostsRespondentAndApplicantPersonilsationTest {
         decideCostsResult.put("costsDecisionType", "someCostsDecisionType");
         when(personalisationProvider.getDecideCostsPersonalisation(asylumCase)).thenReturn(decideCostsResult);
 
-        Map<String, String> personalisation = decideCostsRespondentAndApplicantPersonilsation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = decideCostsRespondentAndApplicantPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));

@@ -4779,12 +4779,12 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("decideCostsNotificationGenerator")
     public List<NotificationGenerator> decideCostsNotificationGenerator(
-        DecideCostsRespondentAndApplicantPersonilsation decideCostsRespondentAndApplicantPersonilsation,
+        DecideCostsRespondentAndApplicantPersonalisation decideCostsRespondentAndApplicantPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Collections.singletonList(new EmailNotificationGenerator(
-            newArrayList(decideCostsRespondentAndApplicantPersonilsation),
+            newArrayList(decideCostsRespondentAndApplicantPersonalisation),
             notificationSender,
             notificationIdAppender)
         );
