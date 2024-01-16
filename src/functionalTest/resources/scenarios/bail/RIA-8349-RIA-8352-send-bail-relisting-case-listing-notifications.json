@@ -50,7 +50,7 @@
         {
           "reference": "8352_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
           "recipient": "{$bailHomeOfficeEmailAddress}",
-          "subject": "Bail application: Bail hearing listed",
+          "subject": "Bail application: Updated Bail hearing",
           "body": [
             "1650-6221-2061-5101",
             "John Smith",
@@ -60,7 +60,7 @@
         {
           "reference": "8352_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
           "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "subject": "Bail application: Bail hearing listed",
+          "subject": "Bail application: Updated Bail hearing",
           "body": [
             "1650-6221-2061-5101",
             "John Smith",
@@ -70,7 +70,7 @@
         {
           "reference": "8352_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
           "recipient": "{$TEST_CITIZEN_MOBILE}",
-          "subject": "Bail application: Bail hearing listed",
+          "subject": "Bail application: Updated Bail hearing",
           "body": [
             "1650-6221-2061-5101",
             "John Smith"
