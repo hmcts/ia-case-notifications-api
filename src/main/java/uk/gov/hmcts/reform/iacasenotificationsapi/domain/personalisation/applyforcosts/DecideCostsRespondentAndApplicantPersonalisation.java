@@ -20,7 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class DecideCostsRespondentAndApplicantPersonilsation implements EmailNotificationPersonalisation {
+public class DecideCostsRespondentAndApplicantPersonalisation implements EmailNotificationPersonalisation {
 
     private final String decideCostsNotificationForRespondentTemplateId;
     private final String homeOfficeEmailAddress;
@@ -28,7 +28,7 @@ public class DecideCostsRespondentAndApplicantPersonilsation implements EmailNot
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public DecideCostsRespondentAndApplicantPersonilsation(
+    public DecideCostsRespondentAndApplicantPersonalisation(
         @Value("${govnotify.template.decideCostsApplication.respondent.email}") String decideCostsNotificationForRespondentTemplateId,
         @Value("${applyForCostsHomeOfficeEmailAddress}") String homeOfficeEmailAddress,
         EmailAddressFinder emailAddressFinder,
