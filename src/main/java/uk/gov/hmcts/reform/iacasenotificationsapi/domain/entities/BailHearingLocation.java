@@ -7,21 +7,29 @@ import java.util.Optional;
 
 public enum BailHearingLocation {
 
-    BIRMINGHAM("birminghamPrioryCourts", "Birmingham (Priory Courts)"),
+    MANCHESTER("manchester", "Manchester"),
+    BIRMINGHAM("birmingham", "Birmingham"),
     BRADFORD("bradford", "Bradford"),
-    FIELD_HOUSE("fieldHouse", "Field House"),
-    GLASGOW("glasgowTribunalsCentre", "Glasgow (Tribunals Centre)"),
+    COVENTRY("coventry", "Coventry Magistrates Court"),
+    GLASGOW_TRIBUNAL_CENTRE("glasgowTribunalsCentre", "Glasgow"),
     HARMONDSWORTH("harmondsworth", "Harmondsworth"),
-    MANCHESTER("manchesterPiccadilly", "Manchester – Piccadilly"),
-    NEWCASTLE("newcastleCfctc", "Newcastle (CFCTC)"),
-    NEWPORT("newportColumbusHouse", "Newport - Columbus House"),
-    NORTH_SHIELDS("northShieldsKingsCourt", "North Shields - Kings Court"),
-    NOTTINGHAM("nottinghamCivilJusticeCentre", "Nottingham - Civil Justice Centre"),
-    STOKE("stokeBennetHouse", "Stoke - Bennet House"),
+    HATTON_CROSS("hattonCross", "Hatton Cross"),
+    HENDON("hendon", "Hendon"),
+    NEWCASTLE("newcastle", "Newcastle Civil & Family Courts and Tribunals Centre"),
+    NEWPORT("newport", "Newport"),
     TAYLOR_HOUSE("taylorHouse", "Taylor House"),
-    YARLSWOOD("yarlsWood", "Yarl's Wood"),
-    VIDEO_HEARING("videoHearing", "Video hearing"),
-    TELEPHONE_HEARING("telephoneHearing", "Telephone hearing");
+    YARLS_WOOD("yarlsWood", "Yarl's Wood"),
+    BRADFORD_KEIGHLEY("bradfordKeighley", "Bradford & Keighley"),
+    MCC_MINSHULL("mccMinshull", "MCC Minshull st"),
+    MCC_CROWN_SQUARE("mccCrownSquare", "MCC Crown Square"),
+    NOTTINGHAM("nottingham", "Nottingham Justice Centre"),
+    MANCHESTER_MAGS("manchesterMags", "Manchester Mags"),
+    NTH_TYNE_MAGS("nthTyneMags", "NTH Tyne Mags"),
+    LEEDS_MAGS("leedsMags", "Leeds Mags"),
+    BELFAST("belfast", "Belfast"),
+    ALLOA_SHERRIF("alloaSherrif", "Alloa Sherrif Court"),
+    REMOTE_HEARING("remoteHearing", "Remote"),
+    DECISION_WITHOUT_HEARING("decisionWithoutHearing", "Decision without hearing");
 
     @JsonValue
     private final String value;
