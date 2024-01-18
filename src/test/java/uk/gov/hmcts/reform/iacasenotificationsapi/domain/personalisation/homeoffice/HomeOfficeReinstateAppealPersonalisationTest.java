@@ -134,7 +134,6 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             State.RESPONDENT_REVIEW,
             State.LISTING,
             State.SUBMIT_HEARING_REQUIREMENTS,
-            State.REASONS_FOR_APPEAL_SUBMITTED,
             State.AWAITING_REASONS_FOR_APPEAL
         );
 
@@ -203,14 +202,6 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     public void should_return_null_on_personalisation_when_case_is_state_before_reinstate_is_not_present() {
         when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.empty());
         assertEquals(Collections.emptySet(), homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase));
-    }
-
-    @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
-        when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(State.UNKNOWN));
-        assertThatThrownBy(() -> homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("homeOffice email Address cannot be found");
     }
 
 

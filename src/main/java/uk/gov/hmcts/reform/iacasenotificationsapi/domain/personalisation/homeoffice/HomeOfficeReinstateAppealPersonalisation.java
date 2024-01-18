@@ -101,7 +101,6 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
                     State.RESPONDENT_REVIEW,
                     State.SUBMIT_HEARING_REQUIREMENTS,
                     State.AWAITING_REASONS_FOR_APPEAL,
-                    State.REASONS_FOR_APPEAL_SUBMITTED,
                     State.LISTING).contains(stateBeforeEndAppeal)) {
             return Collections.singleton(lartHomeOfficeEmailAddress);
         } else {
