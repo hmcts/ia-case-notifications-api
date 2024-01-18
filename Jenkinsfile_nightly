@@ -14,6 +14,7 @@ properties([
 ])
 
 @Library("Infrastructure")
+import uk.gov.hmcts.contino.GradleBuilder
 
 def type = "java"
 def product = "ia"
@@ -158,6 +159,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   ]
 }
 
+GradleBuilder builder = new GradleBuilder(this, product)
+
 withNightlyPipeline(type, product, component) {
   env.TEST_URL = params.URL_TO_TEST
   env.Rules = params.SecurityRules
@@ -182,18 +185,102 @@ withNightlyPipeline(type, product, component) {
    https://tools.hmcts.net/confluence/display/RBS/Fortify+Access+Tokens
    To access fortify, use MyApps (https://myapps.microsoft.com/)
 
-   The tokens must be stored as secrets in Azure (portal.azure.com) in the the ia-demo vault. Be advised that they may
+   The tokens must be stored as secrets in Azure (portal.azure.com) in the the ia-aat vault. Be advised that they may
    appear duplicated if you add them the first time, but they're not. Don't delete them or you'll need somebody else
    to recover them.
    */
+
   enableFortifyScan()
   enableMutationTest()
 
   enableSlackNotifications('#ia-tech')
   enableFullFunctionalTest()
 
+  afterAlways('DependencyCheckNightly') {
+    publishHTML([
+      allowMissing         : true,
+      alwaysLinkToLastBuild: true,
+      keepAll              : true,
+      reportDir            : "build/reports",
+      reportFiles          : 'dependency-check-report.html',
+      reportName           : 'Dependency Check Report'
+    ])
+  }
+
+  afterAlways('fortify-scan') {
+    publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "Fortify Scan",
+            reportFiles          : "FortifyScanReport.html",
+            reportName           : "Fortify Scan Report"
+    ]
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+  }
+
+  afterAlways('mutationTest') {
+    publishHTML([
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/pitest",
+            reportFiles          : 'index.html',
+            reportName           : 'Mutation Test Report'
+    ])
+  }
+
   afterAlways('fortify-scan') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+  }
+
+  before('fullFunctionalTest') {
+    try {
+      builder.gradle('test')
+      builder.gradle('integration')
+      builder.gradle('smoke')
+    } finally {
+      junit '**/test-results/**/*.xml'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/test",
+              reportFiles          : "index.html",
+              reportName           : "Unit Test Report"
+      ]
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/smoke",
+              reportFiles          : "index.html",
+              reportName           : "Smoke Test Report"
+      ]
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/integration",
+              reportFiles          : "index.html",
+              reportName           : "Integration Test Report"
+      ]
+    }
+  }
+
+  afterAlways('fullFunctionalTest') {
+    publishHTML([
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/tests/functional",
+            reportFiles          : 'index.html',
+            reportName           : 'Functional Test Report'
+    ])
+
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/build/reports/**/*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/**/*'
   }
 
 }

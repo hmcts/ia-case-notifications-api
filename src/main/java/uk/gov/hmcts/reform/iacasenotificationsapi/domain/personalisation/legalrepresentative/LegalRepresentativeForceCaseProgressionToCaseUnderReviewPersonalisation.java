@@ -2,6 +2,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -9,12 +14,12 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 
 @Service
 public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId;
+    private final String iaExUiFrontendUrl;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -23,9 +28,14 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
     private String nonAdaPrefix;
 
     public LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation(
-        @NotNull(message = "forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId cannot be null") @Value("${govnotify.template.forceCaseProgression.caseBuilding.to.caseUnderReview.legalRep.email}") String forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId) {
-
+        @NotNull(message = "forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId cannot be null")
+        @Value("${govnotify.template.forceCaseProgression.caseBuilding.to.caseUnderReview.legalRep.email}")
+            String forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId,
+        @Value("${iaExUiFrontendUrl}")
+            String iaExUiFrontendUrl
+    ) {
         this.forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId = forceCaseProgressionToCaseUnderReviewLegalRepresentativeTemplateId;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     @Override
@@ -45,10 +55,12 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         return ImmutableMap
             .<String, String>builder()
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .build();
     }
 }

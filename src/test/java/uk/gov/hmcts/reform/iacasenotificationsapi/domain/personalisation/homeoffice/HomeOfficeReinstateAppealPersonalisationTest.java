@@ -1,7 +1,28 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -15,29 +36,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REINSTATE_APPEAL_REASON;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STATE_BEFORE_END_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.ADJOURNED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.FTPA_DECIDED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.FTPA_SUBMITTED;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -71,6 +73,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
 
     private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private String endAppealHomeOfficeEmailAddress = "ho-end-appeal@example.com";
     private String homeOfficeHearingCentreEmail = "ho-taylorhouse@example.com";
 
     private String customerServicesTelephone = "555 555 555";
@@ -101,6 +104,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             homeOfficeReinstateAppealAfterListingTemplateId,
             apcPrivateBetaInboxHomeOfficeEmailAddress,
             lartHomeOfficeEmailAddress,
+            endAppealHomeOfficeEmailAddress,
             iaExUiFrontendUrl,
             customerServicesProvider,
             appealService,
@@ -108,12 +112,13 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address() {
+    public void should_return_given_email_address_when_appeal_before_listing_state() {
 
         List<State> apcEmail = newArrayList(
             State.APPEAL_SUBMITTED,
             State.AWAITING_RESPONDENT_EVIDENCE,
             State.PENDING_PAYMENT,
+            State.REASONS_FOR_APPEAL_SUBMITTED,
             State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED,
             State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS
         );
@@ -128,25 +133,15 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             State.AWAITING_REASONS_FOR_APPEAL
         );
 
-        List<State> pouEmail = newArrayList(
-            State.ADJOURNED,
-            State.PREPARE_FOR_HEARING,
-            State.FINAL_BUNDLING,
-            State.PRE_HEARING,
-            State.DECISION,
-            State.DECIDED,
-            State.FTPA_SUBMITTED,
-            State.FTPA_DECIDED
-        );
-
         Map<String, List<State>> states = new HashMap<>();
 
         states.put(apcPrivateBetaInboxHomeOfficeEmailAddress, apcEmail);
         states.put(lartHomeOfficeEmailAddress, lartEmail);
-        states.put(homeOfficeHearingCentreEmail, pouEmail);
 
         Set<String> emailAddresses = states.keySet();
 
+        when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.empty());
         for (String emailAddress : emailAddresses) {
             List<State> statesList = states.get(emailAddress);
             for (State state : statesList) {
@@ -154,6 +149,30 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
                 assertTrue(
                     homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase).contains(emailAddress));
             }
+        }
+    }
+
+    @Test
+    public void should_return_hearing_centre_homeOffice_email_address_when_appeal_is_listed() {
+        when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.BIRMINGHAM));
+
+        for (State state : State.values()) {
+            when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
+            Set<String> recipientsList = homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase);
+            assertTrue(recipientsList.contains(homeOfficeHearingCentreEmail));
+        }
+    }
+
+    @Test
+    public void should_return_default_email_address_when_appeal_hearing_centre_is_not_found() {
+        when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.empty());
+
+        for (State state : List.of(ADJOURNED, FTPA_SUBMITTED, FTPA_DECIDED, DECISION)) {
+            when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
+            Set<String> recipientsList = homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase);
+            assertTrue(recipientsList.contains(endAppealHomeOfficeEmailAddress));
         }
     }
 
