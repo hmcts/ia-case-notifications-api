@@ -1836,6 +1836,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceAipHandler(
+            @Qualifier("uploadAdditionalEvidenceAip") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceHomeOfficeHandler(
         @Qualifier("uploadAdditionalEvidenceHomeOffice") List<NotificationGenerator> notificationGenerator) {
 
@@ -2340,6 +2353,38 @@ public class NotificationHandlerConfiguration {
                 && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW,
             notificationGenerator
         );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> forceAppellantCaseToCaseUnderReviewEmailNotificationHandler(
+            @Qualifier("forceAppellantCaseToCaseUnderReviewEmailNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) -> {
+            AsylumCase caseData = callback.getCaseDetails().getCaseData();
+
+            return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW
+                    && isAipJourney(caseData)
+                    && isEmailPreferred(caseData);
+        };
+        return new NotificationHandler(function, notificationGenerators);
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> forceAppellantCaseToCaseUnderReviewSmsNotificationHandler(
+            @Qualifier("forceAppellantCaseToCaseUnderReviewSmsNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        BiPredicate<PreSubmitCallbackStage, Callback<AsylumCase>> function = (callbackStage, callback) -> {
+            AsylumCase caseData = callback.getCaseDetails().getCaseData();
+
+            return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_CASE_UNDER_REVIEW
+                    && isAipJourney(caseData)
+                    && isSmsPreferred(caseData));
+        };
+        return new NotificationHandler(function, notificationGenerators);
     }
 
     @Bean

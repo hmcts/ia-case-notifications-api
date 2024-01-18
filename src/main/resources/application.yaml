@@ -65,6 +65,14 @@ govnotify:
       caseBuilding.to.caseUnderReview:
         legalRep:
           email: 2b0f853d-1ef9-4d9c-ae26-b83b32efa2c9
+        respondent:
+          email: 6461398b-d3b2-4dbc-aac9-ef87f34a9833
+      caseBuilding.to.caseUnderReviewAiP:
+        appellant:
+          email: 1c0389ce-7ea6-4e3a-a3a8-efe3fcf499e9
+          sms: d19e0f56-6ea6-4d58-ae49-070b94f30489
+        respondent:
+          email: 6461398b-d3b2-4dbc-aac9-ef87f34a9833
       respondentReview.to.submitHearingRequirements:
         respondent:
           email: 7b597ead-8218-4227-8168-31d24a2824c5
@@ -437,6 +445,9 @@ govnotify:
         email: 397368d9-0a37-4611-8ba8-00762c4b6018
       homeOffice:
         email: 29ee6e6f-2a12-439a-bdd0-1cece51aa84e
+      appellant:
+        email: 64602a08-d39d-49fd-8043-08f5a9bb7a58
+        sms: c7c18cf5-619d-427e-b984-d161689baec4
     uploadedAdditionalEvidenceAfterListing:
       legalRep:
         email: 2f7f4021-a85c-4dfa-a177-c9c7f4be76f6
@@ -444,6 +455,9 @@ govnotify:
         email: 40ea5aed-cee6-4425-943b-7d3cf0a954a5
       homeOffice:
         email: 9fd3928e-a004-4572-8208-297df1cef925
+      appellant:
+        email: 770dbf2c-b8b4-4a63-9b46-5330c3aa6d76
+        sms: c7c18cf5-619d-427e-b984-d161689baec4
     uploadedAddendumEvidence:
       legalRep:
         email: 33309293-c535-415b-bd2f-08aec3161b76

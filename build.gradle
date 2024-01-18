@@ -206,7 +206,7 @@ jacocoTestReport {
 }
 
 pitest {
-    print('./gradlew --version'.execute().text.trim())
+    //print('./gradlew --version'.execute().text.trim())
     junit5PluginVersion = '1.1.2'
     targetClasses = ['uk.gov.hmcts.reform.iacasenotificationsapi.*']
     excludedClasses = [
@@ -373,6 +373,7 @@ dependencies {
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.83'
 
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.9'
+    implementation group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'
 
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
