@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
 
+import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
@@ -88,6 +89,21 @@ public class HearingDetailsFinder {
                 .orElseThrow(() -> new IllegalStateException("listingLocation is not present"));
 
         return hearingLocation.getDescription();
+    }
+
+    public String getBailHearingCentreAddress(BailCase bailCase) {
+        final BailHearingLocation listCaseHearingCentre =
+                bailCase
+                        .read(LISTING_LOCATION, BailHearingLocation.class)
+                        .orElseThrow(() -> new IllegalStateException("listingLocation is not present"));
+
+        final String hearingCentreAddress =
+                stringProvider
+                        .get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.getValue())
+                        .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
+
+        boolean isRemote = Stream.of("remoteHearing", "decisionWithoutHearing").anyMatch(listCaseHearingCentre.getValue()::equalsIgnoreCase);
+        return listCaseHearingCentre.getDescription() + (isRemote ? "" : "\n" + hearingCentreAddress);
     }
 
 }

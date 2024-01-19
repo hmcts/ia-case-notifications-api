@@ -29,7 +29,8 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
     private String mobileNumber = "07781122334";
     private final String bailReferenceNumber = "someReferenceNumber";
     private String bailHearingDateTime = "2024-01-01T10:29:00.000";
-    private String bailHearingLocationName = "Glasgow (Tribunals Centre)";
+    private String bailHearingLocationName = "Yarl’s Wood\n" +
+            "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
     private String hearingDate = "2024-01-21";
     private String hearingTime = "10:29";
     @Mock
@@ -48,7 +49,7 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
         when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class)).thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
         when(bailCase.read(LISTING_HEARING_DATE, String.class)).thenReturn(Optional.of(bailHearingDateTime));
         when(hearingDetailsFinder.getBailHearingDateTime(bailCase)).thenReturn(bailHearingDateTime);
-        when(hearingDetailsFinder.getBailHearingCentreLocation(bailCase)).thenReturn(bailHearingLocationName);
+        when(hearingDetailsFinder.getBailHearingCentreAddress(bailCase)).thenReturn(bailHearingLocationName);
         when(dateTimeExtractor.extractHearingDate(bailHearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(bailHearingDateTime)).thenReturn(hearingTime);
 
