@@ -194,3 +194,6 @@ java:
           alias: IA_CONFIG_VALIDATOR_SECRET
         - name: home-office-apply-for-costs-email
           alias: HO_APPLY_FOR_COSTS_EMAIL
+        - name: bail-upper-tribunal-email
+          alias: IA_BAIL_UPPER_TRIBUNAL_EMAIL
+
