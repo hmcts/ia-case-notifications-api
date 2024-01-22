@@ -11,6 +11,7 @@ public enum RecordDecisionType {
 
     @JsonValue
     private final String value;
+
     RecordDecisionType(String value) {
         this.value = value;
     }

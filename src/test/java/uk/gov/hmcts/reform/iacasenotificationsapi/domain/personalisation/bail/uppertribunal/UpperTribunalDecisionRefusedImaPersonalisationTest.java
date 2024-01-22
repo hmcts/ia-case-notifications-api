@@ -30,7 +30,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
 
     private final String templateId = "someTemplateId";
-    private final String UpperTribunalEmailAddress = "upperTribunal@example.com";
+    private final String upperTribunalEmailAddress = "upperTribunal@example.com";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String legalRepReference = "someLegalRepReferenceNumber";
     private final String bailReferenceNumber = "someBailReferenceNumber";
@@ -55,7 +55,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
 
         upperTribunalDecisionRefusedImaPersonalisation = new UpperTribunalDecisionRefusedImaPersonalisation(
             templateId,
-            UpperTribunalEmailAddress,
+            upperTribunalEmailAddress,
             customerServicesProvider);
     }
 
@@ -75,7 +75,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     public void should_return_given_email_address() {
         assertTrue(
             upperTribunalDecisionRefusedImaPersonalisation.getRecipientsList(bailCase)
-                .contains(UpperTribunalEmailAddress));
+                .contains(upperTribunalEmailAddress));
     }
 
     @Test
@@ -108,7 +108,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_with_decision_Refused_Under_IMA() {
+    public void should_return_personalisation_with_decision_Refused_Under_Ima() {
         when(bailCase.read(RECORD_DECISION_TYPE, RecordDecisionType.class)).thenReturn(Optional.of(RecordDecisionType.REFUSED_UNDER_IMA));
 
         Map<String, String> personalisation =
