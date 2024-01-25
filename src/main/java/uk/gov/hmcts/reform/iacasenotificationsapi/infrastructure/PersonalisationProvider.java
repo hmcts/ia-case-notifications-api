@@ -172,7 +172,7 @@ public class PersonalisationProvider {
     }
 
     /**
-     * If the Display fields are present then that means the adjustments must already be granted and commented by LO.
+     * If the Display fields are present then that means the adjustments must already be granted and responded by LO.
      * If no Display fields are present then we try to fetch the Response fields as there could be older cases
      * which haven't had the Granted/Refused fields.
      * If no Response fields are present then no adjustments are required.
