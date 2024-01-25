@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal.UpperTribunalApplicationEndedImaPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal.UpperTribunalDecisionRefusedImaPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
@@ -464,6 +465,21 @@ public class BailNotificationGeneratorConfiguration {
         return List.of(
             new BailEmailNotificationGenerator(
                 newArrayList(upperTribunalDecisionRefusedImaPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("endApplicationNotificationForUtGenerator")
+    public List<BailNotificationGenerator> endApplicationNotificationForUtGenerator(
+        UpperTribunalApplicationEndedImaPersonalisation upperTribunalApplicationEndedImaPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(upperTribunalApplicationEndedImaPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
