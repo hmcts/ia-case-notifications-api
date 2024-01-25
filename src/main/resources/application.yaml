@@ -291,16 +291,16 @@ govnotify:
             email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
       caseEdited:
         homeOffice:
-          email: 0f1f382e-f62a-4fed-b9ed-ffdcee555a03
+          email: 071cc334-89f7-4bce-bf88-637057f4811a
         caseOfficer:
           email: 513c5d12-7e26-4430-8560-d3a42a2d5df0
         legalRep:
-          email: 6a4155a9-9b59-4db8-ac28-fe440f90242c
+          email: f3cb29a5-5367-4a1e-a600-6573fc2aeb01
         appellant:
           email: 524ad0a6-ad22-4d65-84a9-a566ee1c6981
       caseEditedRemoteHearing:
         legalRep:
-          email: 2cb4adf3-24da-4795-93b3-379f08b01300
+          email: c102060b-d556-4a93-8d9d-6b1ede8f2a22
     appealOutcomeAllowed:
       homeOffice:
         email: 0e8c3a70-4ba3-442b-8b12-235ee69a8d20
