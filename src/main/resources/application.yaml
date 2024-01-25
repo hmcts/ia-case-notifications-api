@@ -260,22 +260,22 @@ govnotify:
           email: e79249e2-ecbf-4d2b-8458-006285613402
     caseEdited:
       homeOffice:
-        email: b4cfdb17-6130-4f52-aec4-f3571e030790
+        email: f7dd3520-e2ff-4675-ba3c-22bf341df88f
       caseOfficer:
         email: fec967bf-79f6-4683-b908-d1eea3cc591e
       legalRep:
-        email: 60adb2b5-7a46-43bb-a03b-218b342e3d77
+        email: b5e7e77e-bacc-409d-984d-e45f27a0121d
       appellant:
         email: 11254ed3-abfb-4fd2-a2bf-8453f470321a
         sms: 7d23fda4-9ff7-4642-aa97-1a8a3ccafaba
     caseEditedNoChange:
       legalRep:
-        email: 9bdfb1cb-c5a8-45b8-8f6c-b81d3d331db6
+        email: 64e9db05-1cb2-4541-a7ca-905b635f3819
       homeOffice:
-        email: 7f36a473-948f-4ccf-a76a-122a36237d29
+        email: 0b42ea0c-0255-4da7-8fac-2c643adbb5c3
     caseEditedRemoteHearing:
       legalRep:
-        email: 9fa63eec-3827-4cc5-b399-2469dd7034f6
+        email: 3b724765-d3cb-45b6-8f30-f325df6bb16c
     listAssistHearing:
       caseListed:
         caseOfficer:
