@@ -1160,7 +1160,6 @@ security:
       - "maintainBailCaseLinks"
       - "decisionWithoutHearing"
       - "recordTheDecision"
-      - "recordAdjournmentDetails"
       - "caseListing"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
@@ -1216,7 +1215,6 @@ security:
       - "endAppealAutomatically"
       - "updatePaymentStatus"
       - "listCase"
-      - "recordAdjournmentDetails"
       - "editCaseListing"
       - "caseListing"
     caseworker-ia-homeofficebail:
