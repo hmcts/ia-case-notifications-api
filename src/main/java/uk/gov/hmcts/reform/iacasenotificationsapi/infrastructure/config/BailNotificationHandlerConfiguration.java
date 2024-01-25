@@ -509,6 +509,27 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> endApplicationNotificationForUtHandler(
+        @Qualifier("endApplicationNotificationForUtGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.END_APPLICATION);
+
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return callback.getEvent() == Event.END_APPLICATION && hasImaStatus(bailCase);
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
@@ -525,6 +546,10 @@ public class BailNotificationHandlerConfiguration {
 
     private static boolean isHoFlagged(BailCase bailCase) {
         return bailCase.read(HO_SELECT_IMA_STATUS, YesOrNo.class).orElse(NO).equals(YES);
+    }
+
+    private static boolean hasImaStatus(BailCase bailCase) {
+        return bailCase.read(HAS_IMA_STATUS, YesOrNo.class).orElse(NO).equals(YES);
     }
 
 }
