@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
@@ -34,7 +36,11 @@ public class SmsNotificationGenerator implements NotificationGenerator {
         personalisationList.forEach(personalisation -> {
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createSms(personalisation, asylumCase, referenceId, callback);
-            notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+            notificationIdAppender.appendAll(
+                asylumCase,
+                referenceId,
+                notificationIds.stream().filter(StringUtils::isNotBlank).collect(Collectors.toList())
+            );
         });
     }
 

@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -286,19 +287,18 @@ public class NotificationSenderHelperTest {
                     reference
             );
 
-        assertThatThrownBy(() ->
-                senderHelper.sendSms(
-                        templateId,
-                        phoneNumber,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                )
-        ).isExactlyInstanceOf(NotificationServiceResponseException.class)
-                .hasMessage("Failed to send sms using GovNotify")
-                .hasCause(underlyingException);
+        String actualNotificationId = senderHelper.sendSms(
+            templateId,
+            phoneNumber,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        );
+
+        assertNotNull(actualNotificationId);
+        assertTrue(actualNotificationId.isEmpty());
 
     }
 }
