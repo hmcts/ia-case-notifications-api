@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -155,13 +154,8 @@ public class PersonalisationProvider {
                     ""));
 
         } else {
-            buildHearingRequirementFieldWithNoSubmitHearingRequirementsAvailable(asylumCase, caseListingValues);
-        }
-    }
 
-    private static void buildHearingRequirementFieldWithNoSubmitHearingRequirementsAvailable(AsylumCase asylumCase,
-                                                                                              Builder<String, String> caseListingValues) {
-        caseListingValues
+            caseListingValues
                 .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
                         "No special adjustments are being made to accommodate vulnerabilities"))
                 .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
@@ -174,83 +168,8 @@ public class PersonalisationProvider {
                         "No other adjustments are being made"))
                 .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
                         ""));
-    }
 
-    public static void buildHearingRequirementsFieldsWithRequestedAndGranted(AsylumCase asylumCase, Builder<String, String> caseListingValues) {
-
-        final Optional<YesOrNo> isSubmitRequirementsAvailable = asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE);
-
-        if (isSubmitRequirementsAvailable.isPresent() && isSubmitRequirementsAvailable.get() == YesOrNo.YES) {
-
-            String vulnerabilitiesMessage = constructHearingReqTribunalResponse(asylumCase,
-                    PHYSICAL_OR_MENTAL_HEALTH_ISSUES,
-                    IS_VULNERABILITIES_ALLOWED,
-                    VULNERABILITIES_TRIBUNAL_RESPONSE,
-                    "No special adjustments are being made to accommodate vulnerabilities");
-
-            String multimediaEvidenceMessage = constructHearingReqTribunalResponse(asylumCase,
-                    MULTIMEDIA_EVIDENCE,
-                    IS_MULTIMEDIA_ALLOWED,
-                    MULTIMEDIA_TRIBUNAL_RESPONSE,
-                    "No multimedia equipment is being provided");
-
-            String singleSexCourtMessage = constructHearingReqTribunalResponse(asylumCase,
-                    SINGLE_SEX_COURT,
-                    IS_SINGLE_SEX_COURT_ALLOWED,
-                    SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
-                    "The court will not be single sex");
-
-            String inCameraCourtMessage = constructHearingReqTribunalResponse(asylumCase,
-                    IN_CAMERA_COURT,
-                    IS_IN_CAMERA_COURT_ALLOWED,
-                    IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
-                    "The hearing will be held in public court");
-
-            String additionalRequestsMessage = constructHearingReqTribunalResponse(asylumCase,
-                    ADDITIONAL_REQUESTS,
-                    IS_ADDITIONAL_ADJUSTMENTS_ALLOWED,
-                    ADDITIONAL_TRIBUNAL_RESPONSE,
-                    "No other adjustments are being made");
-
-            caseListingValues
-                    .put("hearingRequirementVulnerabilities", vulnerabilitiesMessage)
-                    .put("hearingRequirementMultimedia", multimediaEvidenceMessage)
-                    .put("hearingRequirementSingleSexCourt", singleSexCourtMessage)
-                    .put("hearingRequirementInCameraCourt", inCameraCourtMessage)
-                    .put("hearingRequirementOther", additionalRequestsMessage)
-                    .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                            ""));
-        } else {
-            buildHearingRequirementFieldWithNoSubmitHearingRequirementsAvailable(asylumCase, caseListingValues);
         }
-    }
-
-    private static String constructHearingReqTribunalResponse(AsylumCase asylumCase,
-                                                              AsylumCaseDefinition isHearingRequirementRequested,
-                                                              AsylumCaseDefinition isHearingRequirementGranted,
-                                                              AsylumCaseDefinition hearingReqTribunalResponse,
-                                                              String defaultMessage
-    ) {
-
-        boolean isHearingReqRequested = asylumCase.read(isHearingRequirementRequested, YesOrNo.class)
-                .map(isHearingReqNeeded -> YES == isHearingReqNeeded).orElse(false);
-
-        boolean isHearingReqGranted = asylumCase.read(isHearingRequirementGranted, String.class)
-                .map(hearingReqDecision -> CASE_GRANTED.equals(hearingReqDecision))
-                .orElse(false);
-
-        StringBuilder message = new StringBuilder();
-        if (isHearingReqRequested) {
-            if (isHearingReqGranted) {
-                message.append("Request Granted - ");
-            } else {
-                message.append("Request Refused - ");
-            }
-            message.append(readStringCaseField(asylumCase, hearingReqTribunalResponse, ""));
-        } else {
-            message.append(defaultMessage);
-        }
-        return message.toString();
     }
 
     /**

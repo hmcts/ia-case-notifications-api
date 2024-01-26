@@ -82,7 +82,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
             .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
-        PersonalisationProvider.buildHearingRequirementsFieldsWithRequestedAndGranted(asylumCase, listCaseFields);
+        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
 
         return listCaseFields.build();
 
