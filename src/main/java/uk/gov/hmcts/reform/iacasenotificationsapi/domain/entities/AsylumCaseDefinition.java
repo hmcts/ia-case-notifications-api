@@ -165,7 +165,6 @@ public enum AsylumCaseDefinition {
 
     SUBSCRIPTIONS(
             "subscriptions", new TypeReference<List<IdValue<Subscriber>>>(){}),
-
     VULNERABILITIES_TRIBUNAL_RESPONSE(
         "vulnerabilitiesTribunalResponse", new TypeReference<String>(){}),
 

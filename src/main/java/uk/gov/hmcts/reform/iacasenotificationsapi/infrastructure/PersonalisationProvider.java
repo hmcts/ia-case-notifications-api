@@ -156,17 +156,17 @@ public class PersonalisationProvider {
 
             caseListingValues
                     .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
-                            "No special adjustments are being made to accommodate vulnerabilities"))
+                        "No special adjustments are being made to accommodate vulnerabilities"))
                     .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
-                            "No multimedia equipment is being provided"))
+                        "No multimedia equipment is being provided"))
                     .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
-                            "The court will not be single sex"))
+                        "The court will not be single sex"))
                     .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
-                            "The hearing will be held in public court"))
+                        "The hearing will be held in public court"))
                     .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
-                            "No other adjustments are being made"))
+                        "No other adjustments are being made"))
                     .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                            ""));
+                        ""));
 
         }
     }
