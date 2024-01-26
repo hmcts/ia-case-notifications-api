@@ -166,43 +166,17 @@ public enum AsylumCaseDefinition {
     SUBSCRIPTIONS(
             "subscriptions", new TypeReference<List<IdValue<Subscriber>>>(){}),
 
-    PHYSICAL_OR_MENTAL_HEALTH_ISSUES(
-            "physicalOrMentalHealthIssues",  new TypeReference<YesOrNo>(){}),
-
-    IS_VULNERABILITIES_ALLOWED(
-            "isVulnerabilitiesAllowed", new TypeReference<String>() {}),
-
     VULNERABILITIES_TRIBUNAL_RESPONSE(
         "vulnerabilitiesTribunalResponse", new TypeReference<String>(){}),
 
-    MULTIMEDIA_EVIDENCE("multimediaEvidence", new TypeReference<YesOrNo>(){}),
-
-    IS_MULTIMEDIA_ALLOWED(
-            "isMultimediaAllowed", new TypeReference<String>() {}),
-
     MULTIMEDIA_TRIBUNAL_RESPONSE(
-            "multimediaTribunalResponse", new TypeReference<String>(){}),
-
-    SINGLE_SEX_COURT("singleSexCourt", new TypeReference<YesOrNo>(){}),
-
-    IS_SINGLE_SEX_COURT_ALLOWED(
-            "isSingleSexCourtAllowed", new TypeReference<String>() {}),
+        "multimediaTribunalResponse", new TypeReference<String>(){}),
 
     SINGLE_SEX_COURT_TRIBUNAL_RESPONSE(
-            "singleSexCourtTribunalResponse", new TypeReference<String>(){}),
-
-    IN_CAMERA_COURT("inCameraCourt", new TypeReference<YesOrNo>(){}),
-
-    IS_IN_CAMERA_COURT_ALLOWED(
-            "isInCameraCourtAllowed", new TypeReference<String>() {}),
+        "singleSexCourtTribunalResponse", new TypeReference<String>(){}),
 
     IN_CAMERA_COURT_TRIBUNAL_RESPONSE(
         "inCameraCourtTribunalResponse", new TypeReference<String>(){}),
-
-    ADDITIONAL_REQUESTS("additionalRequests", new TypeReference<YesOrNo>(){}),
-
-    IS_ADDITIONAL_ADJUSTMENTS_ALLOWED(
-            "isAdditionalAdjustmentsAllowed", new TypeReference<String>() {}),
 
     ADDITIONAL_TRIBUNAL_RESPONSE(
         "additionalTribunalResponse", new TypeReference<String>(){}),

@@ -29,7 +29,6 @@ public class PersonalisationProvider {
     private static final String APPELLANT_GIVEN_NAMES_CONST = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_CONST = "appellantFamilyName";
     private static final String ASYLUM_NOT_NULL_MESSAGE = "asylumCase must not be null";
-    public static String CASE_GRANTED =  "Granted";
     private final String iaExUiFrontendUrl;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
@@ -156,18 +155,18 @@ public class PersonalisationProvider {
         } else {
 
             caseListingValues
-                .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
-                        "No special adjustments are being made to accommodate vulnerabilities"))
-                .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
-                        "No multimedia equipment is being provided"))
-                .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
-                        "The court will not be single sex"))
-                .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
-                        "The hearing will be held in public court"))
-                .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
-                        "No other adjustments are being made"))
-                .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                        ""));
+                    .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
+                            "No special adjustments are being made to accommodate vulnerabilities"))
+                    .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
+                            "No multimedia equipment is being provided"))
+                    .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
+                            "The court will not be single sex"))
+                    .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
+                            "The hearing will be held in public court"))
+                    .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
+                            "No other adjustments are being made"))
+                    .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
+                            ""));
 
         }
     }
