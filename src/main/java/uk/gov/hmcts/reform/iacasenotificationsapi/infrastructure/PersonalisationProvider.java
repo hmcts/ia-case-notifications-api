@@ -131,15 +131,25 @@ public class PersonalisationProvider {
         if (isSubmitRequirementsAvailable.isPresent() && isSubmitRequirementsAvailable.get() == YesOrNo.YES) {
 
             caseListingValues
-                .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, VULNERABILITIES_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementVulnerabilities", generateAdjustmentOutput(asylumCase,
+                    VULNERABILITIES_DECISION_FOR_DISPLAY,
+                    VULNERABILITIES_TRIBUNAL_RESPONSE,
                     "No special adjustments are being made to accommodate vulnerabilities"))
-                .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, MULTIMEDIA_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementMultimedia", generateAdjustmentOutput(asylumCase,
+                    MULTIMEDIA_DECISION_FOR_DISPLAY,
+                    MULTIMEDIA_TRIBUNAL_RESPONSE,
                     "No multimedia equipment is being provided"))
-                .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementSingleSexCourt", generateAdjustmentOutput(asylumCase,
+                    SINGLE_SEX_COURT_DECISION_FOR_DISPLAY,
+                    SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
                     "The court will not be single sex"))
-                .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementInCameraCourt", generateAdjustmentOutput(asylumCase,
+                    IN_CAMERA_COURT_DECISION_FOR_DISPLAY,
+                    IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
                     "The hearing will be held in public court"))
-                .put("hearingRequirementOther", readStringCaseField(asylumCase, ADDITIONAL_TRIBUNAL_RESPONSE,
+                .put("hearingRequirementOther", generateAdjustmentOutput(asylumCase,
+                    OTHER_DECISION_FOR_DISPLAY,
+                    ADDITIONAL_TRIBUNAL_RESPONSE,
                     "No other adjustments are being made"))
                 .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
                     ""));
@@ -241,6 +251,24 @@ public class PersonalisationProvider {
             message.append(defaultMessage);
         }
         return message.toString();
+    }
+
+    /**
+     * If the Display fields are present then that means the adjustments must be already granted/refused and responded by LO.
+     * If no Display fields are present then we try to fetch the Response fields as there could be older cases
+     * which haven't had the Granted/Refused fields in place.
+     * If no Response fields are present then no adjustments are required.
+     */
+    private static String generateAdjustmentOutput(AsylumCase asylumCase, AsylumCaseDefinition displayField,
+                                            AsylumCaseDefinition responseField, String noAdjustmentRequiredText) {
+
+        String defaultOutput = readStringCaseField(asylumCase, responseField, noAdjustmentRequiredText);
+
+        if (asylumCase.read(displayField, String.class).isPresent()) {
+            return "Request " + readStringCaseField(asylumCase, displayField, defaultOutput);
+        } else {
+            return defaultOutput;
+        }
     }
 
     public Map<String, String> getNonStandardDirectionPersonalisation(Callback<AsylumCase> callback) {

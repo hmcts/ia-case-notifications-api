@@ -407,7 +407,25 @@ public enum AsylumCaseDefinition {
             "isIntegrated", new TypeReference<YesOrNo>(){}),
 
     CASE_LINKS(
-            "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){})
+            "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){}),
+
+    REMOTE_HEARING_DECISION_FOR_DISPLAY(
+        "remoteHearingDecisionForDisplay", new TypeReference<String>() {}),
+
+    MULTIMEDIA_DECISION_FOR_DISPLAY(
+        "multimediaDecisionForDisplay", new TypeReference<String>() {}),
+
+    SINGLE_SEX_COURT_DECISION_FOR_DISPLAY(
+        "singleSexCourtDecisionForDisplay", new TypeReference<String>() {}),
+
+    IN_CAMERA_COURT_DECISION_FOR_DISPLAY(
+        "inCameraCourtDecisionForDisplay", new TypeReference<String>() {}),
+
+    VULNERABILITIES_DECISION_FOR_DISPLAY(
+        "vulnerabilitiesDecisionForDisplay", new TypeReference<String>() {}),
+
+    OTHER_DECISION_FOR_DISPLAY(
+        "otherDecisionForDisplay", new TypeReference<String>() {}),
     ;
 
     private final String value;
