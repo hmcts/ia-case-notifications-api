@@ -14,7 +14,7 @@
           "bailHearingCentre": "newport",
           "applicantHasMobile": "Yes",
           "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
-          "hasImaStatus": "Yes"
+          "hoSelectImaStatus": "Yes"
         }
       }
     }

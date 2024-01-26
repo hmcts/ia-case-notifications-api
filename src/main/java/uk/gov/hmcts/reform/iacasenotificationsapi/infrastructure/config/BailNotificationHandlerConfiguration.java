@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -549,7 +550,10 @@ public class BailNotificationHandlerConfiguration {
     }
 
     private static boolean hasImaStatus(BailCase bailCase) {
-        return bailCase.read(HAS_IMA_STATUS, YesOrNo.class).orElse(NO).equals(YES);
+        YesOrNo adminStatus = bailCase.read(ADMIN_SELECT_IMA_STATUS, YesOrNo.class).orElse(NO);
+        Optional<YesOrNo> hoStatus = bailCase.read(HO_SELECT_IMA_STATUS, YesOrNo.class);
+
+        return hoStatus.isPresent() && hoStatus.get().equals(YES) || hoStatus.isEmpty() && adminStatus.equals(YES);
     }
 
 }
