@@ -496,14 +496,12 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                             && callback.getEvent() == Event.RECORD_THE_DECISION);
+                    && callback.getEvent() == Event.RECORD_THE_DECISION);
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return (
-                        callback.getEvent() == Event.RECORD_THE_DECISION
+                    return callback.getEvent() == Event.RECORD_THE_DECISION
                             && (isHoFlagged(bailCase))
-                            && (imaFeatureToggleIsOn(bailCase))
-                    );
+                            && (imaFeatureToggleIsOn(bailCase));
                 } else {
                     return false;
                 }
