@@ -499,8 +499,11 @@ public class BailNotificationHandlerConfiguration {
                                              && callback.getEvent() == Event.RECORD_THE_DECISION);
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return (callback.getEvent() == Event.RECORD_THE_DECISION
-                            && (isHoFlagged(bailCase)));
+                    return (
+                        callback.getEvent() == Event.RECORD_THE_DECISION
+                            && (isHoFlagged(bailCase))
+                            && (imaFeatureToggleIsOn(bailCase))
+                    );
                 } else {
                     return false;
                 }
@@ -521,7 +524,9 @@ public class BailNotificationHandlerConfiguration {
 
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return callback.getEvent() == Event.END_APPLICATION && hasImaStatus(bailCase);
+                    return callback.getEvent() == Event.END_APPLICATION
+                        && hasImaStatus(bailCase)
+                        && imaFeatureToggleIsOn(bailCase);
                 } else {
                     return false;
                 }
@@ -554,6 +559,10 @@ public class BailNotificationHandlerConfiguration {
         Optional<YesOrNo> hoStatus = bailCase.read(HO_SELECT_IMA_STATUS, YesOrNo.class);
 
         return hoStatus.isPresent() && hoStatus.get().equals(YES) || hoStatus.isEmpty() && adminStatus.equals(YES);
+    }
+
+    private static boolean imaFeatureToggleIsOn(BailCase bailCase) {
+        return bailCase.read(IS_IMA_ENABLED, YesOrNo.class).orElse(NO).equals(YES);
     }
 
 }
