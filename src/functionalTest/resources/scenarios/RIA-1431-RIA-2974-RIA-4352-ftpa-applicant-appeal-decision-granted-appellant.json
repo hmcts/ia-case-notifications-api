@@ -1,21 +1,19 @@
 {
-  "description": "RIA-2975-RIA-3003-RIA-3754  FTPA Applicant Application Decision Granted Respondent (Taylor House hearing centre)",
-  "launchDarklyKey": "tcw-notifications-feature:true",
+  "description": "RIA-1432-RIA-2974-RIA-3754-RIA-4352 FTPA Applicant Application Decision Granted Appellant",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1010,
-      "eventId": "residentJudgeFtpaDecision",
+      "id": 143223754,
+      "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
-          "ftpaRespondentDecisionOutcomeType": "reheardRule32",
-          "ftpaApplicantType": "respondent",
-          "listCaseHearingCentre": "taylorHouse",
+          "ftpaAppellantDecisionOutcomeType": "granted",
+          "ftpaApplicantType": "appellant",
           "ariaListingReference": "987654321",
           "notificationsSent": []
         }
@@ -30,15 +28,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1010_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "143223754_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1010_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+            "id": "143223754_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1010_FTPA_APPLICATION_DECISION_CASE_OFFICER",
+            "id": "143223754_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,9 +44,9 @@
     },
     "notifications": [
       {
-        "reference": "1010_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "143223754_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
           "PA/12345/2019",
           "A1234567",
@@ -57,9 +55,9 @@
         ]
       },
       {
-        "reference": "1010_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "143223754_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
           "PA/12345/2019",
           "CASE001",
@@ -68,13 +66,14 @@
         ]
       },
       {
-        "reference": "1010_FTPA_APPLICATION_DECISION_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
+        "reference": "143223754_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
+        "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
+        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
           "PA/12345/2019",
           "987654321",
-          "Talha Awan"
+          "Talha Awan",
+          "You must create a bundle for the Upper Tribunal. Follow these steps to do this:"
         ]
       }
     ]
