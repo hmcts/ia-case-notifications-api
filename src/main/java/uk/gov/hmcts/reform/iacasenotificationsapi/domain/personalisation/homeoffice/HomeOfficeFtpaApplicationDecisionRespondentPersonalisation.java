@@ -72,13 +72,13 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
         } else if (ftpaDecisionOutcomeType.isPresent() && ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())) {
             return applicationRefusedGrantedApplicantHomeOfficeTemplateId;
         } else if (ftpaDecisionOutcomeType.isPresent() && (ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                                           || ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))) {
+                                                           || ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE31.toString()))) {
             return applicationReheardApplicantHomeHomeOfficeTemplateId;
         } else if (ftpaDecisionOutcomeType.isPresent() && ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString())) {
-            FtpaDecisionOutcomeType ftpaDecisionRemade = asylumCase
-                .read(FTPA_RESPONDENT_DECISION_REMADE_RULE_32, FtpaDecisionOutcomeType.class)
+            String ftpaDecisionRemade = asylumCase
+                .read(FTPA_RESPONDENT_DECISION_REMADE_RULE_32, String.class)
                 .orElseThrow(() -> new IllegalStateException("ftpaDecisionRemade is not present"));
-            if (ftpaDecisionRemade.toString().equals(FtpaDecisionOutcomeType.FTPA_ALLOWED.toString())) {
+            if (ftpaDecisionRemade.equals(FtpaDecisionOutcomeType.FTPA_ALLOWED.toString())) {
                 return applicationAllowedHomeOfficeTemplateId;
             }
             return applicationDismissedHomeOfficeTemplateId;

@@ -227,10 +227,10 @@ public enum AsylumCaseDefinition {
         "ftpaRespondentRjDecisionOutcomeType", new TypeReference<FtpaDecisionOutcomeType>(){}),
 
     FTPA_APPELLANT_DECISION_REMADE_RULE_32(
-        "ftpaAppellantDecisionRemadeRule32", new TypeReference<FtpaDecisionOutcomeType>(){}),
+        "ftpaAppellantDecisionRemadeRule32", new TypeReference<String>(){}),
 
     FTPA_RESPONDENT_DECISION_REMADE_RULE_32(
-        "ftpaRespondentDecisionRemadeRule32", new TypeReference<FtpaDecisionOutcomeType>(){}),
+        "ftpaRespondentDecisionRemadeRule32", new TypeReference<String>(){}),
 
     FTPA_APPELLANT_SUBMITTED(
         "ftpaAppellantSubmitted", new TypeReference<YesOrNo>(){}),

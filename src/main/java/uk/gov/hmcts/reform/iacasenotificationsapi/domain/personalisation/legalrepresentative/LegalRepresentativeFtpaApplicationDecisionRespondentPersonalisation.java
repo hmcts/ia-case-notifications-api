@@ -59,7 +59,7 @@ public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
         } else if (ftpaDecisionOutcomeType.isPresent() && ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())) {
             return applicationRefusedGrantedOtherPartyLegalRepTemplateId;
         } else if (ftpaDecisionOutcomeType.isPresent() && (ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                   || ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))) {
+                   || ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE31.toString()))) {
             return applicationReheardOtherPartyLegalRepTemplateId;
         } else if (ftpaDecisionOutcomeType.isPresent() && ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString())) {
             FtpaDecisionOutcomeType ftpaDecisionRemade = asylumCase

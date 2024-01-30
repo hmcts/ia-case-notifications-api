@@ -153,7 +153,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
         "FTPA_REFUSED",
         "FTPA_NOT_ADMITTED",
         "FTPA_REHEARD35",
-        "FTPA_REHEARD32",
+        "FTPA_REMADE31",
         "FTPA_REMADE32",
         "FTPA_ALLOWED",
         "FTPA_DISMISSED"

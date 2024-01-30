@@ -2132,7 +2132,7 @@ public class NotificationHandlerConfiguration {
                 boolean isReheardDecisionOutcome = asylumCase
                     .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                     .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE31.toString()))
                     .orElse(false);
 
                 if (!isReheardDecisionOutcome) {
@@ -2140,7 +2140,7 @@ public class NotificationHandlerConfiguration {
                         .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
                             FtpaDecisionOutcomeType.class)
                         .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE31.toString()))
                         .orElse(false);
                 }
 
@@ -2408,14 +2408,14 @@ public class NotificationHandlerConfiguration {
                 boolean isReheardDecisionOutcome = asylumCase
                     .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                     .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE31.toString()))
                     .orElse(false);
                 if (!isReheardDecisionOutcome) {
                     isReheardDecisionOutcome = asylumCase
                         .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
                             FtpaDecisionOutcomeType.class)
                         .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE31.toString()))
                         .orElse(false);
                 }
 
