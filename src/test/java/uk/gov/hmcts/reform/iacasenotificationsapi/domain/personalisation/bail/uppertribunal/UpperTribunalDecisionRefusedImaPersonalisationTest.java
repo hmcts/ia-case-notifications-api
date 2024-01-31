@@ -114,7 +114,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         Map<String, String> personalisation =
             upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(" Refused under IMA", personalisation.get("decision"));
+        assertEquals(" Refused under IMA because 28 days have not expired since the date of detention", personalisation.get("decision"));
     }
 
     @Test
