@@ -72,6 +72,7 @@ public class EventTest {
         assertEquals("unlinkAppeal", Event.UNLINK_APPEAL.toString());
         assertEquals("leadershipJudgeFtpaDecision", Event.LEADERSHIP_JUDGE_FTPA_DECISION.toString());
         assertEquals("residentJudgeFtpaDecision", Event.RESIDENT_JUDGE_FTPA_DECISION.toString());
+        assertEquals("decideFtpaApplication", Event.DECIDE_FTPA_APPLICATION.toString());
         assertEquals("editDocuments", Event.EDIT_DOCUMENTS.toString());
         assertEquals("paymentAppeal", Event.PAYMENT_APPEAL.toString());
         assertEquals("requestResponseAmend", Event.REQUEST_RESPONSE_AMEND.toString());

@@ -69,6 +69,7 @@ public enum Event {
     EDIT_DOCUMENTS("editDocuments"),
     LEADERSHIP_JUDGE_FTPA_DECISION("leadershipJudgeFtpaDecision"),
     RESIDENT_JUDGE_FTPA_DECISION("residentJudgeFtpaDecision"),
+    DECIDE_FTPA_APPLICATION("decideFtpaApplication"),
     PAYMENT_APPEAL("paymentAppeal"),
     REQUEST_RESPONSE_AMEND("requestResponseAmend"),
     MARK_APPEAL_PAID("markAppealPaid"),

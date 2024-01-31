@@ -1168,6 +1168,7 @@ security:
       - "sendDirection"
       - "leadershipJudgeFtpaDecision"
       - "residentJudgeFtpaDecision"
+      - "decideFtpaApplication"
       - "linkAppeal"
       - "unlinkAppeal"
       - "updateHearingAdjustments"
