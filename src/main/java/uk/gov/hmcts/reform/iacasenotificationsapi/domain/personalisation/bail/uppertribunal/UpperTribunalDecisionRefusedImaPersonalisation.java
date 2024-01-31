@@ -61,7 +61,7 @@ public class UpperTribunalDecisionRefusedImaPersonalisation implements BailEmail
         switch (recordDecisionType) {
             case GRANTED -> decision = " Granted";
             case REFUSED -> decision = " Refused";
-            case REFUSED_UNDER_IMA -> decision = " Refused under IMA";
+            case REFUSED_UNDER_IMA -> decision = " Refused under IMA because 28 days have not expired since the date of detention";
             default -> throw new RequiredFieldMissingException("Conditional bail is not handled for IMA");
         }
 
