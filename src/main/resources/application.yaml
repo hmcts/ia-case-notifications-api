@@ -796,6 +796,10 @@ govnotify:
                 email: 850a3cff-a60c-4eec-9e94-a2dc42cfbaeb
               afterListing:
                 email: f5f65291-9440-4af7-897b-3c9fa957e51a
+        reheardUnderRule35:
+          appellant:
+            email: 47f31922-1e17-4be5-84c9-0d65340a8e18
+            sms: 24dd4193-554b-40be-a0b3-56b0f80e37ab
     decisionAndReasonsTemplateUploaded:
       admin:
         email: 489aadaf-2d48-4ea4-a388-bbc6d6942e91
@@ -1186,6 +1190,7 @@ security:
       - "maintainCaseLinks"
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
+      - "decideFtpaApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"

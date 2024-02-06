@@ -3734,6 +3734,31 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipReheardUnderRule35AppelantNotificationHandler(
+        @Qualifier("aipReheardUnderRule35AppelantNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isReheard35DecisionOutcome = asylumCase
+                    .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                    .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString()))
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                    && isAipJourney(asylumCase)
+                    && isReheard35DecisionOutcome;
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
 }
 
 
