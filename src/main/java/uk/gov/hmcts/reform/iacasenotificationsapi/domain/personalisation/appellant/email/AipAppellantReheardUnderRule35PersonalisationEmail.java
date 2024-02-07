@@ -28,7 +28,7 @@ public class AipAppellantReheardUnderRule35PersonalisationEmail implements Email
     private final String iaAipFrontendUrl;
 
     public AipAppellantReheardUnderRule35PersonalisationEmail(
-        @Value("${govnotify.template.decideAnApplication.reheardUnderRule35.appellant.email}") String aipAppellantReheardUnder35RuleEmailTemplateId,
+        @Value("${govnotify.template.decideFtpaApplication.reheardUnderRule35.appellant.email}") String aipAppellantReheardUnder35RuleEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         CustomerServicesProvider customerServicesProvider, RecipientsFinder recipientsFinder) {
         this.aipAppellantReheardUnder35RuleEmailTemplateId = aipAppellantReheardUnder35RuleEmailTemplateId;

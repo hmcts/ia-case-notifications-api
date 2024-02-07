@@ -24,7 +24,7 @@ public class AipAppellantReheardUnderRule35PersonalisationSms implements SmsNoti
     private final String iaAipFrontendUrl;
 
     public AipAppellantReheardUnderRule35PersonalisationSms(
-        @Value("govnotify.template.decideAnApplication.reheardUnderRule35.appellant.sms") String aipReheardUnder35RuleAppellantSmsTemplateId,
+        @Value("${govnotify.template.decideFtpaApplication.reheardUnderRule35.appellant.sms}") String aipReheardUnder35RuleAppellantSmsTemplateId,
         RecipientsFinder recipientsFinder,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
     ) {
