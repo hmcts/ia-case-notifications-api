@@ -3470,4 +3470,24 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator")
+    public List<NotificationGenerator> decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator(
+            LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation legalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation,
+            HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation,
+                                homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

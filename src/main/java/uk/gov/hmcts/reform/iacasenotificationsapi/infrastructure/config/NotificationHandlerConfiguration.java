@@ -2299,21 +2299,26 @@ public class NotificationHandlerConfiguration {
     private boolean isNotAdmittedOrRefusesOrRemade32Outcome(AsylumCase asylumCase,
                                                             AsylumCaseDefinition ftpaByWhoLjDecisionOutcomeType,
                                                             AsylumCaseDefinition ftpaByWhoRjDecisionOutcomeType) {
+        List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
+                FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString(),
+                FtpaDecisionOutcomeType.FTPA_REFUSED.toString()
+        ));
+
+        boolean isDlrmSetAsideEnabled = asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+        if (!isDlrmSetAsideEnabled) {
+            ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REMADE32.toString());
+        }
 
         boolean isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
             .read(ftpaByWhoLjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
-            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
+            .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
             .orElse(false);
 
         if (!isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome) {
             isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
                 .read(ftpaByWhoRjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
-                .map(
-                    decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
+                    .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                 .orElse(false);
         }
 
@@ -3813,6 +3818,23 @@ public class NotificationHandlerConfiguration {
             .orElse(false);
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipReheardUnderRule35AppelantNotificationHandler(
+            @Qualifier("decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                            && !isAipJourney(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
 }
 
 
