@@ -3807,8 +3807,8 @@ public class NotificationHandlerConfiguration {
 
         return asylumCase.read(ftpaApplicantType.equals("appellant")
                 ? FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE
-                : FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class).
-            map(decision -> ftpaDecisionOutcomeTypes
+                : FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+        .map(decision -> ftpaDecisionOutcomeTypes
                 .contains(decision.toString()))
             .orElse(false);
     }
