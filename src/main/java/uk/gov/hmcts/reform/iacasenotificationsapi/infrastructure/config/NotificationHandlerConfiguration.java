@@ -3800,18 +3800,17 @@ public class NotificationHandlerConfiguration {
             FtpaDecisionOutcomeType.FTPA_REMADE32.toString()
         );
 
-        boolean appellantDecisionOutcomeIsRule31Or32 = asylumCase
-            .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-            .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
-            .orElse(false);
+        final String ftpaApplicantType =
+            asylumCase
+                .read(FTPA_APPLICANT_TYPE, String.class)
+                .orElseThrow(() -> new IllegalStateException("FtpaApplicantType is not present"));
 
-        boolean respondentDecisionOutcomeIsRule31Or32 = asylumCase
-            .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-            .map(decision -> ftpaDecisionOutcomeTypes
-                    .contains(decision.toString()))
+        return asylumCase.read(ftpaApplicantType.equals("appellant")
+                ? FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE
+                : FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class).
+            map(decision -> ftpaDecisionOutcomeTypes
+                .contains(decision.toString()))
             .orElse(false);
-
-        return appellantDecisionOutcomeIsRule31Or32 || respondentDecisionOutcomeIsRule31Or32;
     }
 
 }
