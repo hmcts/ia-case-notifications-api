@@ -1,5 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
+import static java.util.Objects.requireNonNull;
+
+import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -7,14 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
-
 
 @Service
 public class HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation implements EmailNotificationPersonalisation {
@@ -27,7 +25,7 @@ public class HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation impleme
     public HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation(
             @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress,
             @NotNull(message = "ftpaApplicationDecidedRule31Rule32TemplateId cannot be null")
-            @Value("${govnotify.template.decideFtpaApplication.remadeRule31or32.email}") String ftpaApplicationDecidedRule31Rule32TemplateId,
+            @Value("${govnotify.template.decideFtpaApplication.remadeRule31or32.homeOffice}") String ftpaApplicationDecidedRule31Rule32TemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider
     ) {
@@ -38,7 +36,7 @@ public class HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation impleme
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
+    public String getTemplateId() {
         return ftpaApplicationDecidedRule31Rule32TemplateId;
     }
 

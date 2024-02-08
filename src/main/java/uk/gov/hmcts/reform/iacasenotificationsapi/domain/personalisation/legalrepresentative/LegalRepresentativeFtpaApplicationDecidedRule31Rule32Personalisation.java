@@ -1,18 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+
+import javax.validation.constraints.NotNull;
+import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-
-import javax.validation.constraints.NotNull;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-
 
 @Service
 public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation implements LegalRepresentativeEmailNotificationPersonalisation {
@@ -24,7 +22,7 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
 
     public LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation(
             @NotNull(message = "ftpaApplicationDecidedRule31Rule32TemplateId cannot be null")
-            @Value("${govnotify.template.decideFtpaApplication.remadeRule31or32.email}") String ftpaApplicationDecidedRule31Rule32TemplateId,
+            @Value("${govnotify.template.decideFtpaApplication.remadeRule31or32.legalRep}") String ftpaApplicationDecidedRule31Rule32TemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider
     ) {

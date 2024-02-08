@@ -23,6 +23,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_SET_ASIDE_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
@@ -2304,9 +2305,7 @@ public class NotificationHandlerConfiguration {
                 FtpaDecisionOutcomeType.FTPA_REFUSED.toString()
         ));
 
-        boolean isDlrmSetAsideEnabled = asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
-                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
-        if (!isDlrmSetAsideEnabled) {
+        if (!isDlrmSetAsideEnabled(asylumCase)) {
             ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REMADE32.toString());
         }
 
@@ -3829,11 +3828,18 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                            && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase)
+                            && isDlrmSetAsideEnabled(asylumCase)
                             && !isAipJourney(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
         );
+    }
+
+    private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
+        return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 }
 
