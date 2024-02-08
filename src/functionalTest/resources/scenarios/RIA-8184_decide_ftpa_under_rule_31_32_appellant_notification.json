@@ -1,0 +1,80 @@
+{
+  "description": "RIA-8184 Applicant FTPA application Judge decision under 31 rule (AIP journey)",
+  "launchDarklyKey": "dlrm-setaside-feature-flag:true",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Judge",
+    "input": {
+      "id": 8184,
+      "eventId": "decideFtpaApplication",
+      "state": "ftpaSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "journeyType": "aip",
+          "appellantInUk": "No",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ],
+          "currentCaseStateVisibleToJudge": "ftpaSubmitted",
+          "ftpaAppellantRjDecisionOutcomeType": "remadeRule32",
+          "ftpaApplicantType": "appellant",
+          "ariaListingReference": "987654321",
+          "notificationsSent": []
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_EMAIL",
+        "recipient": "{$TEST_CITIZEN_USERNAME}",
+        "subject": "Immigration and Asylum appeal: Your application was granted",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Talha Awan",
+          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided to review the appeal decision.\n\nSign in to your account to see reasons for this decision:",
+          "{$iaAipFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided to review the appeal decision.\n\nSign in to your account to see reasons for this decision:",
+          "{$iaAipFrontendUrl}"
+        ]
+      }
+    ]
+  }
+}

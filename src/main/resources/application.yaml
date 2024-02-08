@@ -909,6 +909,11 @@ govnotify:
           email: 63c30831-4dd0-4c0a-b70f-4c439dcc66ea
         afterListing:
           email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
+    decideFtpaApplication:
+      remadeRule31or32:
+        appellant:
+          email: d84a747f-64b9-4c98-bb8f-387ef920ba89
+          sms: 3f59be15-89e4-4241-9d6d-61a516dcd159
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
