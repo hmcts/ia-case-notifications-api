@@ -3818,7 +3818,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> aipReheardUnderRule35AppelantNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> decideFtpaApplicationLrHoRule31OrRule32NotificationHandler(
             @Qualifier("decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
