@@ -23,6 +23,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_SET_ASIDE_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
@@ -2299,21 +2300,24 @@ public class NotificationHandlerConfiguration {
     private boolean isNotAdmittedOrRefusesOrRemade32Outcome(AsylumCase asylumCase,
                                                             AsylumCaseDefinition ftpaByWhoLjDecisionOutcomeType,
                                                             AsylumCaseDefinition ftpaByWhoRjDecisionOutcomeType) {
+        List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
+                FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString(),
+                FtpaDecisionOutcomeType.FTPA_REFUSED.toString()
+        ));
+
+        if (!isDlrmSetAsideEnabled(asylumCase)) {
+            ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REMADE32.toString());
+        }
 
         boolean isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
             .read(ftpaByWhoLjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
-            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
+            .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
             .orElse(false);
 
         if (!isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome) {
             isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome = asylumCase
                 .read(ftpaByWhoRjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
-                .map(
-                    decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED.toString())
-                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REFUSED.toString())
-                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REMADE32.toString()))
+                    .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                 .orElse(false);
         }
 
@@ -3813,6 +3817,30 @@ public class NotificationHandlerConfiguration {
             .orElse(false);
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> decideFtpaApplicationLrHoRule31OrRule32NotificationHandler(
+            @Qualifier("decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                            && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase)
+                            && isDlrmSetAsideEnabled(asylumCase)
+                            && !isAipJourney(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
+        return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
 }
 
 

@@ -365,7 +365,10 @@ public enum AsylumCaseDefinition {
     APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
 
     CASE_LINKS(
-            "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){})
+            "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){}),
+
+    IS_DLRM_SET_ASIDE_ENABLED(
+            "isDlrmSetAsideEnabled", new TypeReference<YesOrNo>(){})
     ;
 
     private final String value;

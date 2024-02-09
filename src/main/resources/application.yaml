@@ -911,6 +911,10 @@ govnotify:
           email: a8cd0fdd-f73b-406d-b3fe-ddda49871598
     decideFtpaApplication:
       remadeRule31or32:
+        legalRep:
+          206cb8d2-a237-4b5d-9b49-74c9372838c3
+        homeOffice:
+          206cb8d2-a237-4b5d-9b49-74c9372838c3
         appellant:
           email: d84a747f-64b9-4c98-bb8f-387ef920ba89
           sms: 3f59be15-89e4-4241-9d6d-61a516dcd159
