@@ -3449,6 +3449,48 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipDisposeUnderRule31Or32AppelantNotificationGenerator")
+    public List<NotificationGenerator> aipDisposeUnderRule31Or32AppelantNotificationGenerator(
+        AipAppellantDisposeUnderRule31Or32PersonalisationEmail aipAppellantDisposeUnderRule31Or32PersonalisationEmail,
+        AipAppellantDisposeUnderRule31Or32PersonalisationSms aipAppellantDisposeUnderRule31Or32PersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(aipAppellantDisposeUnderRule31Or32PersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantDisposeUnderRule31Or32PersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator")
+    public List<NotificationGenerator> decideFtpaApplicationLrHoRule31OrRule32NotificationGenerator(
+            LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation legalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation,
+            HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation,
+                                homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("aipReheardUnderRule35AppelantNotificationGenerator")
     public List<NotificationGenerator> aipReheardUnderRule35AppelantNotificationGenerator(
         AipAppellantReheardUnderRule35PersonalisationEmail aipAppellantReheardUnderRule35PersonalisationEmail,
