@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7948 Internal non Ada submit appeal",
+  "description": "RIA-8602 Internal non-detained submit appeal",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
