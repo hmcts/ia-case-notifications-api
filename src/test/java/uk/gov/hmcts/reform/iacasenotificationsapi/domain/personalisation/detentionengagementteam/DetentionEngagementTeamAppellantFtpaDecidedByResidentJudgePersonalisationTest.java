@@ -9,6 +9,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.compareString
 import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.getDocumentWithMetadata;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesForInternalAppeal;
 
 import java.io.IOException;
@@ -109,11 +111,19 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         assertTrue(
                 detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+    }
+
+    @Test
+    void getRecipientsList_should_return_empty_set_if_not_in_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertEquals(Collections.emptySet(), detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import java.io.IOException;
 import java.util.*;
@@ -51,6 +52,10 @@ public class DetentionEngagementTeamLegalOfficerUploadAddendumEvidence implement
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (!isAppellantInDetention(asylumCase)) {
+            return Collections.emptySet();
+        }
+
         return detEmailService.getRecipientsList(asylumCase);
     }
 

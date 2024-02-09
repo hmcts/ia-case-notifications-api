@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATION_ATTACHMENT_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,6 +55,10 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (!isAppellantInDetention(asylumCase)) {
+            return Collections.emptySet();
+        }
+
         return detEmailService.getRecipientsList(asylumCase);
     }
 

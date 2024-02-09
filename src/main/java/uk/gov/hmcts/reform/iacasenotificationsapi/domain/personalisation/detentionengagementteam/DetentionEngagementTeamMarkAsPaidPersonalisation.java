@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DET_MARK_AS_PAID_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -46,6 +47,10 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisation implements EmailWi
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (!isAppellantInDetention(asylumCase)) {
+            return Collections.emptySet();
+        }
+
         return detEmailService.getRecipientsList(asylumCase);
     }
 
