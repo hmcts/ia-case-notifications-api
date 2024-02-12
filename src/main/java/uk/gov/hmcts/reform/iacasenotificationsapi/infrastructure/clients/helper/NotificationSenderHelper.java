@@ -89,6 +89,7 @@ public class NotificationSenderHelper {
                         return notificationId;
 
                     } catch (NotificationClientException e) {
+                        logger.error();
                         throw new NotificationServiceResponseException("Failed to send sms using GovNotify", e);
                     }
                 }
