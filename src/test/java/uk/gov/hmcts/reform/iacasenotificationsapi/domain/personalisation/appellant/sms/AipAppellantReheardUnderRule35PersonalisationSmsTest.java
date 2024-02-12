@@ -100,11 +100,7 @@ class AipAppellantReheardUnderRule35PersonalisationSmsTest {
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation = aipAppellantReheardUnderRule35PersonalisationSms.getPersonalisation(callback);
         assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-
-
     }
 
 }

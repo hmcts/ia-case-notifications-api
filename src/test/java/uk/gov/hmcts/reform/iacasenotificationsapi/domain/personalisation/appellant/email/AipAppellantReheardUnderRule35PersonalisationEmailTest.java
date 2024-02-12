@@ -112,8 +112,8 @@ class AipAppellantReheardUnderRule35PersonalisationEmailTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("Given names"));
-        assertEquals(appellantFamilyName, personalisation.get("Family name"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

@@ -64,8 +64,8 @@ public class AipAppellantReheardUnderRule35PersonalisationEmail implements Email
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("Given names", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("Family name", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
                 .build();
     }
