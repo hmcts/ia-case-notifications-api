@@ -3799,21 +3799,17 @@ public class NotificationHandlerConfiguration {
     }
 
     private boolean isFtpaDecisionOutcomeTypeUnderRule31OrRule32(AsylumCase asylumCase) {
-        List<String> ftpaDecisionOutcomeTypes = List.of(
+        List<String> rule31And32 = List.of(
             FtpaDecisionOutcomeType.FTPA_REMADE31.toString(),
             FtpaDecisionOutcomeType.FTPA_REMADE32.toString()
         );
 
-        final String ftpaApplicantType =
-            asylumCase
-                .read(FTPA_APPLICANT_TYPE, String.class)
-                .orElseThrow(() -> new IllegalStateException("FtpaApplicantType is not present"));
+        final String ftpaApplicantType = retrieveApplicantType(asylumCase);
 
-        return asylumCase.read(ftpaApplicantType.equals("appellant")
-                ? FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE
-                : FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-        .map(decision -> ftpaDecisionOutcomeTypes
-                .contains(decision.toString()))
+        Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = retrieveFtpaDecisionApplicantType(asylumCase, ftpaApplicantType);
+
+        return ftpaDecisionOutcomeType
+            .map(decision -> rule31And32.contains(decision.toString()))
             .orElse(false);
     }
 
@@ -3837,9 +3833,51 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipReheardUnderRule35AppelantNotificationHandler(
+        @Qualifier("aipReheardUnderRule35AppelantNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                    && isAipJourney(asylumCase)
+                    && isDlrmSetAsideEnabled(asylumCase)
+                    && isReheard35DecisionOutcome(asylumCase);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
                 .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private String retrieveApplicantType(AsylumCase asylumCase) {
+        return asylumCase.read(FTPA_APPLICANT_TYPE, String.class)
+            .orElseThrow(() -> new IllegalStateException("FtpaApplicantType is not present"));
+    }
+
+    private Optional<FtpaDecisionOutcomeType> retrieveFtpaDecisionApplicantType(AsylumCase asylumCase, String ftpaApplicantType) {
+        return asylumCase.read(ftpaApplicantType.equals("appellant")
+            ? FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE
+            : FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+    }
+
+    private boolean isReheard35DecisionOutcome(AsylumCase asylumCase) {
+        final String ftpaApplicantType = retrieveApplicantType(asylumCase);
+
+        Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = retrieveFtpaDecisionApplicantType(asylumCase, ftpaApplicantType);
+
+        return ftpaDecisionOutcomeType
+            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString()))
+            .orElse(false);
     }
 }
 

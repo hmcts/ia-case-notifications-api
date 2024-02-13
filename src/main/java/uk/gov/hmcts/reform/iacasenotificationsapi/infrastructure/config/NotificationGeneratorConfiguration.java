@@ -3490,4 +3490,26 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("aipReheardUnderRule35AppelantNotificationGenerator")
+    public List<NotificationGenerator> aipReheardUnderRule35AppelantNotificationGenerator(
+        AipAppellantReheardUnderRule35PersonalisationEmail aipAppellantReheardUnderRule35PersonalisationEmail,
+        AipAppellantReheardUnderRule35PersonalisationSms aipAppellantReheardUnderRule35PersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(aipAppellantReheardUnderRule35PersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantReheardUnderRule35PersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

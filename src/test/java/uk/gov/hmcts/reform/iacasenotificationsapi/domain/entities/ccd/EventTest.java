@@ -1,7 +1,31 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CHANGE_BAIL_DIRECTION_DUE_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CREATE_BAIL_CASE_LINK;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CUSTOMISE_HEARING_BUNDLE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_DOCUMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_PAYMENT_METHOD;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL_AUTOMATICALLY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPLICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MAKE_NEW_APPLICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MANAGE_FEE_UPDATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST_BAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REINSTATE_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_LEGAL_REPRESENTATIVE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_FEE_REMISSION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_BAIL_DIRECTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.STOP_LEGAL_REPRESENTING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SUBMIT_APPLICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPDATE_PAYMENT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_BAIL_SUMMARY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_DOCUMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_SIGNED_DECISION_NOTICE;
 
 import org.junit.jupiter.api.Test;
 
