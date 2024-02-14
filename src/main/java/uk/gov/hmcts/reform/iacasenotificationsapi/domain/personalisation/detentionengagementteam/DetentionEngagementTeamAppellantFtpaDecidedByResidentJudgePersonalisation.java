@@ -7,6 +7,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Documen
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import java.io.IOException;
 import java.util.*;
@@ -61,7 +62,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
+        if (!isAppellantInDetention(asylumCase) || detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
             return Collections.emptySet();
         }
 

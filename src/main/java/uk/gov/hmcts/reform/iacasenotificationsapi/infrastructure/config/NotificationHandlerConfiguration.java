@@ -98,8 +98,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && Event.CREATE_CASE_LINK.equals(callback.getEvent())
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
+                            && isInternalCase(asylumCase);
                 },
                 notificationGenerators
         );
@@ -130,8 +129,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && Event.MAINTAIN_CASE_LINKS.equals(callback.getEvent())
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
+                            && isInternalCase(asylumCase);
                 },
                 notificationGenerators
         );
@@ -774,7 +772,6 @@ public class NotificationHandlerConfiguration {
                         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                         return (callback.getEvent() == Event.LIST_CASE
                                 && isInternalCase(asylumCase)
-                                && isAppellantInDetention(asylumCase)
                                 && !isAcceleratedDetainedAppeal(asylumCase));
                     } else {
                         return false;
@@ -983,8 +980,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
+                            && isInternalCase(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -1136,7 +1132,6 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.SUBMIT_APPEAL
                             && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
                             && (isAcceleratedDetainedAppeal(asylumCase) || (!isAcceleratedDetainedAppeal(asylumCase) && isRpAndDcAppealType));
                 }, notificationGenerators,
                 getErrorHandler()
@@ -1692,8 +1687,7 @@ public class NotificationHandlerConfiguration {
                                     && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
                                     && callback.getCaseDetails().getState() != State.FTPA_DECIDED
                                     && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                                    && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData())
-                                    && AsylumCaseUtils.isAppellantInDetention(callback.getCaseDetails().getCaseData());
+                                    && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData());
                 },
                 notificationGenerators
         );
@@ -1923,8 +1917,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
-                && isInternalCase(callback.getCaseDetails().getCaseData())
-                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+                && isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2135,7 +2128,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                    && AsylumCaseUtils.isAppellantInDetention(callback.getCaseDetails().getCaseData())
                     && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
@@ -2221,8 +2213,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
+                            && isInternalCase(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -2455,8 +2446,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.DECISION_WITHOUT_HEARING
-                                && isInternalCase(asylumCase)
-                                && isAppellantInDetention(asylumCase);
+                                && isInternalCase(asylumCase);
                 },
                 notificationGenerator
         );
@@ -2534,8 +2524,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
-                    && isInternalCase(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                    && isInternalCase(asylumCase);
             },
             notificationGenerator
         );
@@ -2861,7 +2850,6 @@ public class NotificationHandlerConfiguration {
                     || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
                     && isRespondentApplication
                     && validDecisionOutcomeTypes.contains(decisionOutcomeType)
-                    && AsylumCaseUtils.isAppellantInDetention(asylumCase)
                     && AsylumCaseUtils.isInternalCase(asylumCase);
             },
             notificationGenerators
@@ -3233,7 +3221,6 @@ public class NotificationHandlerConfiguration {
                             && !paymentStatus.equals(Optional.empty())
                             && paymentStatus.get().equals(PaymentStatus.PAID)
                             && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
                             && !isAcceleratedDetainedAppeal(asylumCase);
                 }, notificationGenerators
         );
@@ -3423,7 +3410,6 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
-                                && isAppellantInDetention(callback.getCaseDetails().getCaseData())
                                 && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
@@ -3438,7 +3424,6 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
-                                && isAppellantInDetention(callback.getCaseDetails().getCaseData())
                                 && isApplicationCreatedByRespondent(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
@@ -4978,8 +4963,7 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == Event.EDIT_CASE_LISTING
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
+                            && isInternalCase(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -5083,8 +5067,7 @@ public class NotificationHandlerConfiguration {
                         return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
                                 && isAppellantFtpaApplication
-                                && isInternalCase(asylumCase)
-                                && isAppellantInDetention(asylumCase);
+                                && isInternalCase(asylumCase);
                     } else {
                         return false;
                     }
@@ -5207,8 +5190,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase);
+                            && isInternalCase(asylumCase);
 
                 }, notificationGenerators
         );
@@ -5224,8 +5206,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
-                       && isInternalCase(asylumCase)
-                       && isAppellantInDetention(asylumCase);
+                       && isInternalCase(asylumCase);
             }, notificationGenerators
         );
     }
@@ -5340,7 +5321,6 @@ public class NotificationHandlerConfiguration {
 
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
         return isInternalCase(asylumCase)
-                && isAppellantInDetention(asylumCase)
                 && directionFinder
                 .findFirst(asylumCase, DirectionTag.NONE)
                 .map(direction -> direction.getParties().equals(party))

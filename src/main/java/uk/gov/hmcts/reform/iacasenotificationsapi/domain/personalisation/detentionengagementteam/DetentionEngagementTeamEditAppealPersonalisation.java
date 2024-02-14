@@ -4,8 +4,10 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_EDIT_APPEAL_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
@@ -53,6 +55,10 @@ public class DetentionEngagementTeamEditAppealPersonalisation implements EmailWi
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (!isAppellantInDetention(asylumCase)) {
+            return Collections.emptySet();
+        }
+
         return detEmailService.getRecipientsList(asylumCase);
     }
 

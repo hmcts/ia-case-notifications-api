@@ -101,11 +101,19 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     @Test
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(
             detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+    }
+
+    @Test
+    void getRecipientsList_should_return_empty_set_if_not_in_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertEquals(Collections.emptySet(), detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test

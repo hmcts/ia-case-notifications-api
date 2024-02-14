@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesForInternalAppealByPost;
 
 import com.google.common.collect.ImmutableMap;
@@ -96,9 +98,18 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
     @Test
     public void should_return_given_recipient_email_id() {
         when(caseDetails.getState()).thenReturn(State.SUBMIT_HEARING_REQUIREMENTS);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
         assertEquals(Collections.singleton(detEmailAddress), detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getRecipientsList(asylumCase));
     }
+
+    @Test
+    void getRecipientsList_should_return_empty_set_if_not_in_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertEquals(Collections.emptySet(), detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getRecipientsList(asylumCase));
+    }
+
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
