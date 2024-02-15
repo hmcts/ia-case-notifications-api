@@ -90,6 +90,8 @@ class PersonalisationProviderTest {
     private final String recipient = "recipient";
     private final String applyForCostsCreationDate = "2023-11-24";
 
+    private final String applyForCostsDecision = "Order made";
+
     private static String homeOffice = "Home office";
 
     private PersonalisationProvider personalisationProvider;
@@ -393,5 +395,20 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation = personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST);
 
         assertEquals("Unreasonable", personalisation.get("appliedCostsType"));
+    }
+
+    @Test
+    void should_return_costs_decision_when_decideCostsApplicationList_is_present() {
+        List<IdValue<ApplyForCosts>> applyForCostsList = List.of(
+            new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", "costsType", applyForCostsCreationDate, applyForCostsDecision))
+        );
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+
+        DynamicList respondsToCostsList = new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")));
+        when(asylumCase.read(DECIDE_COSTS_APPLICATION_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
+
+        Map<String, String> personalisation = personalisationProvider.getDecideCostsPersonalisation(asylumCase);
+
+        assertEquals(applyForCostsDecision, personalisation.get("costsDecisionType"));
     }
 }

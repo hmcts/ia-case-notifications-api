@@ -377,7 +377,7 @@ public class PersonalisationProvider {
     }
 
     public Map<String, String> getDecideCostsPersonalisation(AsylumCase asylumCase) {
-        String costsDecision = getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST).getApplyForCostsDecision();
+        String costsDecision = getApplicationById(asylumCase, DECIDE_COSTS_APPLICATION_LIST).getApplyForCostsDecision();
 
         return ImmutableMap
             .<String, String>builder()
