@@ -2,29 +2,36 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.generateAppellantPinIfNotPresent;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicantAndRespondent;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -32,8 +39,12 @@ public class AsylumCaseUtilsTest {
 
     @Mock
     private AsylumCase asylumCase;
+    @Spy
+    private AsylumCase asylumCaseSpy;
     @Mock
     private Document document;
+    private final MockedStatic<AccessCodeGenerator> generatorMockedStatic = mockStatic(AccessCodeGenerator.class);
+
 
     private final String legalOfficerAddendumUploadedByLabel = "TCW";
     private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
@@ -62,6 +73,12 @@ public class AsylumCaseUtilsTest {
     );
 
     private final String legalRepEmailEjp = "legalRep@example.com";
+    private final String generatedCode = "12345";
+
+    @AfterEach
+    void tearDown() {
+        generatorMockedStatic.close();
+    }
 
     @Test
     void should_return_correct_value_for_det() {
@@ -307,5 +324,31 @@ public class AsylumCaseUtilsTest {
         assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
             .hasMessage("Correct respondent type is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void generateAppellantPin_return_existing_pin_if_present() {
+        PinInPostDetails existingPin = PinInPostDetails.builder()
+            .accessCode("123")
+            .expiryDate(LocalDate.now().plusDays(30).toString())
+            .pinUsed(YesOrNo.NO)
+            .build();
+
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class))
+            .thenReturn(Optional.of(existingPin));
+
+        assertEquals(existingPin, generateAppellantPinIfNotPresent(asylumCase));
+    }
+
+    @Test
+    void generateAppellantPin_generate_new_pin_if_not_present() {
+        generatorMockedStatic.when(() -> AccessCodeGenerator.generateAccessCode())
+            .thenReturn(generatedCode);
+
+        PinInPostDetails generatedPinDetails = generateAppellantPinIfNotPresent(asylumCaseSpy);
+
+        assertEquals(generatedCode, generatedPinDetails.getAccessCode());
+        assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());
+        assertEquals(NO, generatedPinDetails.getPinUsed());
     }
 }

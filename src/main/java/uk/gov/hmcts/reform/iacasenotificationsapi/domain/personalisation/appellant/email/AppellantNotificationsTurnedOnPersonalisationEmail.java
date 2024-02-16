@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
@@ -79,12 +80,8 @@ public class AppellantNotificationsTurnedOnPersonalisationEmail implements Email
             .put("dateOfBirth", formattedDateOfBirth)
             .put("linkToOnlineService", iaExUiFrontendUrl);
 
-        PinInPostDetails pip = asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(null);
-        if (pip != null) {
-            personalizationBuilder.put("securityCode", pip.getAccessCode());
-        } else {
-            personalizationBuilder.put("securityCode", "");
-        }
+        PinInPostDetails pip = AsylumCaseUtils.generateAppellantPinIfNotPresent(asylumCase);
+        personalizationBuilder.put("securityCode", pip.getAccessCode());
 
         return personalizationBuilder.build();
     }
