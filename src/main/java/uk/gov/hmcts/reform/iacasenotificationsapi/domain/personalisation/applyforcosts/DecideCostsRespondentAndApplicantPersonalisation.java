@@ -2,14 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyf
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.HOME_OFFICE;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -49,13 +47,7 @@ public class DecideCostsRespondentAndApplicantPersonalisation implements EmailNo
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        ImmutablePair<String, String> applicantAndRespondent = getApplicantAndRespondent(asylumCase, func -> retrieveLatestApplyForCosts(asylumCase));
-        if (applicantAndRespondent.getLeft().equals(HOME_OFFICE)) {
-            return Collections.singleton(homeOfficeEmailAddress);
-        } else {
-
-            return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
-        }
+        return new HashSet<>(Arrays.asList(homeOfficeEmailAddress, emailAddressFinder.getLegalRepEmailAddress(asylumCase)));
     }
 
     @Override

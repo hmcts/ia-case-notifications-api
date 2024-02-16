@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -97,16 +98,9 @@ class DecideCostsRespondentAndApplicantPersonalisationTest {
     @ParameterizedTest
     @MethodSource("appliesForCostsProvider")
     void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList respondsToCostsList) {
-        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
-        when(asylumCase.read(DECIDE_COSTS_APPLICATION_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
-
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Tribunal")) {
-            assertTrue(decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase).isEmpty());
-        } else if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
-            assertTrue(decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
-        } else {
-            assertTrue(decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
-        }
+        Set<String> recipientsSet = decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase);
+        assertTrue(recipientsSet.contains(legalRepEmailAddress));
+        assertTrue(recipientsSet.contains(homeOfficeEmailAddress));
     }
 
     @Test
