@@ -1166,6 +1166,9 @@ govnotify:
           email: e686c287-9ef0-4a84-96f0-be4daed26430
         afterListing:
           email: bc327677-eef1-4863-94cc-5c964ff9eb9d
+      appellant:
+        email: adcc0312-3cca-479b-b44e-bcfd94dacb75
+        sms: 92000405-ea87-4c1e-8076-80639dc3988d
     addEvidenceForCosts:
       otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
