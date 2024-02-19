@@ -2182,6 +2182,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
                        || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
                        && isReheardDecisionOutcome
+                       && !isDlrmSetAsideEnabled(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
             },
