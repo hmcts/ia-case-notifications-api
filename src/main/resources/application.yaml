@@ -85,6 +85,9 @@ govnotify:
         legalRep:
           email: 2eb76b2a-959a-4d52-a33d-47a550fb7b33
           sms: 95b47695-5378-4ea3-99cd-255826215d2f
+        remission:
+          email: a052fbe6-232d-4815-9032-6d4e6f36c4c4
+          sms: 188b659f-49d6-4bf2-ab7d-ce08a9724836
       caseOfficer:
         email: f90aa4d9-159d-4423-ab96-73a1e23c92d4
       homeOffice:

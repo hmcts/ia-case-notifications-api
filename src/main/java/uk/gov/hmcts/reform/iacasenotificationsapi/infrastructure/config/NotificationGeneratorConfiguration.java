@@ -3512,4 +3512,26 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("appelantSubmittedWithRemissionRequestNotificationGenerator")
+    public List<NotificationGenerator> appelantSubmittedWithRemissionRequestNotificationGenerator(
+        AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail,
+        AppellantSubmittedWithRemissionRequestPersonalisationSms appellantSubmittedWithRemissionRequestPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmittedWithRemissionRequestPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmittedWithRemissionRequestPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

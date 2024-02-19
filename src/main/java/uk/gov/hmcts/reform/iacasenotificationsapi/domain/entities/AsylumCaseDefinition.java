@@ -368,7 +368,10 @@ public enum AsylumCaseDefinition {
             "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){}),
 
     IS_DLRM_SET_ASIDE_ENABLED(
-            "isDlrmSetAsideEnabled", new TypeReference<YesOrNo>(){})
+            "isDlrmSetAsideEnabled", new TypeReference<YesOrNo>(){}),
+
+    IS_DLRM_FEE_REMISSION_ENABLED(
+            "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){})
     ;
 
     private final String value;
