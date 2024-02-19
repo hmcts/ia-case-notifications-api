@@ -85,7 +85,7 @@ public class CcdScenarioRunnerTest {
         if (scenarioPattern == null) {
             scenarioPattern = "*.json";
         } else {
-            scenarioPattern = "*" + "RIA-8053-appeal-submitted-with-remission-aip-notification" + "*.json";
+            scenarioPattern = "*" + scenarioPattern + "*.json";
         }
 
         Collection<String> scenarioSources = StringResourceLoader
