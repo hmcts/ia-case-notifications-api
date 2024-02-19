@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7662 Send notification to LR when turn on notification event completed by admin or legal officer",
+  "description": "RIA-7662 RIA-7663 Send notification to LR and Appellant when turn on notification event completed by admin or legal officer",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -22,7 +22,15 @@
           "legalRepCompanyEjp": "Legal company",
           "legalRepGivenNameEjp": "John",
           "legalRepFamilyNameEjp": "Smith",
-          "legalRepReferenceEjp": "TEST7662"
+          "legalRepReferenceEjp": "TEST7662",
+          "email": "appellant@test.com",
+          "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+          "ccdReferenceNumberForDisplay": "refNumber",
+          "appellantPinInPost": {
+            "accessCode": "AI123BX",
+            "expiryDate": "01/01/2022",
+            "pinUsed": "No"
+          }
         }
       }
     }
@@ -46,6 +54,7 @@
         "legalRepGivenNameEjp": "John",
         "legalRepFamilyNameEjp": "Smith",
         "legalRepReferenceEjp": "TEST7662",
+        "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
         "notificationsSent": [
           {
             "id": "7662_TURN_ON_NOTIFICATIONS_RESPONDENT",
@@ -53,6 +62,14 @@
           },
           {
             "id": "7662_NOTIFICATIONS_TURNED_ON",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7662_APPELLANT_NOTIFICATIONS_TURNED_ON",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7662_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -75,13 +92,31 @@
       },
       {
         "reference": "7662_NOTIFICATIONS_TURNED_ON",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "recipient": "ia.legalrep.a.ccd@gmail.com",
         "subject": "Immigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
         "body": [
           "HMCTS reference: PA/12345/2018",
           "Your reference: TEST7662",
           "Appellant name: Talha Awan",
           "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "7662_APPELLANT_NOTIFICATIONS_TURNED_ON",
+        "recipient": "appellant@test.com",
+        "subject": "Immigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
+        "body": [
+          "Appeal reference: PA/12345/2018",
+          "Home Office reference: 123456789"
+        ]
+      },
+      {
+        "reference": "7662_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "Appeal reference: PA/12345/2018",
+          "Home Office reference: 123456789"
         ]
       }
     ]

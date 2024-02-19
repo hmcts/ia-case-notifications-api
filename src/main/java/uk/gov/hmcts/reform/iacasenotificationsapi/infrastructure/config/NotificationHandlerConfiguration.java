@@ -5242,8 +5242,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> notificationsTurnedOnLegalRepNotificationHandler(
-        @Qualifier("notificationsTurnedOnLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> notificationsTurnedOnAppellantAndLegalRepNotificationHandler(
+        @Qualifier("notificationsTurnedOnAppellantAndLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {

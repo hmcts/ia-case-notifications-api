@@ -4860,21 +4860,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("notificationsTurnedOnLegalRepNotificationGenerator")
-    public List<NotificationGenerator> turnOnNotificationLegalRepNotificationGenerator(
+    @Bean("notificationsTurnedOnAppellantAndLegalRepNotificationGenerator")
+    public List<NotificationGenerator> turnOnNotificationAppellantAndLegalRepNotificationGenerator(
         LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation,
+        AppellantNotificationsTurnedOnPersonalisationEmail appellantNotificationsTurnedOnPersonalisationEmail,
+        AppellantNotificationsTurnedOnPersonalisationSms appellantNotificationsTurnedOnPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return Arrays.asList(
             new EmailNotificationGenerator(
-              newArrayList(
-                  legalRepresentativeNotificationsTurnedOnPersonalisation
-              ),
-              notificationSender,
-              notificationIdAppender
-          )
-      );
+                newArrayList(legalRepresentativeNotificationsTurnedOnPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailNotificationGenerator(
+                newArrayList(appellantNotificationsTurnedOnPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantNotificationsTurnedOnPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
     }
 
     @Bean("respondToCostsNotificationGenerator")

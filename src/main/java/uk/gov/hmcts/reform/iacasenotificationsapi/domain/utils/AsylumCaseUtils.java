@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingExc
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
 public class AsylumCaseUtils {
 
@@ -186,6 +188,18 @@ public class AsylumCaseUtils {
             return false;
         }
         throw new IllegalStateException(INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE);
+    }
+
+    public static PinInPostDetails generateAppellantPinIfNotPresent(AsylumCase asylumCase) {
+        if (!asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isPresent()) {
+            asylumCase.write(APPELLANT_PIN_IN_POST, PinInPostDetails.builder()
+                .accessCode(AccessCodeGenerator.generateAccessCode())
+                .expiryDate(LocalDate.now().plusDays(30).toString())
+                .pinUsed(YesOrNo.NO)
+                .build());
+        }
+
+        return asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).get();
     }
 
 }
