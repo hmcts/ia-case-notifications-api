@@ -199,7 +199,8 @@ public class AsylumCaseUtils {
                 .build());
         }
 
-        return asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).get();
+        return asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class)
+            .orElseThrow(() -> new IllegalStateException("Failed to generate appellantPinInPost."));
     }
 
 }
