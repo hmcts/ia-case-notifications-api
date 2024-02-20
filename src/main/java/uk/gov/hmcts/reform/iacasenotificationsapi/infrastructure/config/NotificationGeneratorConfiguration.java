@@ -3512,4 +3512,21 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+
+    @Bean("respondentReheardUnderRule35NotificationGenerator")
+    public List<NotificationGenerator> respondentReheardUnderRule35NotificationGenerator(
+            RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentReheardUnderRule35PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }
