@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8053 Appeal submitted with remission - AiP notification",
+  "description": "RIA-8053 Appeal submitted with remission and dlrm fee remission feature flag enabled - AiP notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
@@ -103,8 +103,7 @@
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
-          "Appeal an immigration or asylum decision: Appeal an",
-          "immigration or asylum decision: Appeal reference:",
+          "Appeal an immigration or asylum decision: Appeal reference:",
           "PA/12345/2019",
           "",
           "Your appeal details have been sent to the Tribunal.",
@@ -117,8 +116,7 @@
           "be by {$TODAY+14|d MMM yyyy} but it might",
           "take longer than that.",
           "",
-          "Sign in to your account to see the details of your",
-          "appeal: {$iaAipFrontendUrl}"
+          "Sign in to your account to see the details of your"
         ]
       }
     ]

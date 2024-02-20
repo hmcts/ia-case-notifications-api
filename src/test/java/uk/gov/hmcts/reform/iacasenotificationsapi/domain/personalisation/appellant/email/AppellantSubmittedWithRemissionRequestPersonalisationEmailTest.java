@@ -113,7 +113,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantSubmittedWithRemissionRequestPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -137,7 +137,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantSubmittedWithRemissionRequestPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
