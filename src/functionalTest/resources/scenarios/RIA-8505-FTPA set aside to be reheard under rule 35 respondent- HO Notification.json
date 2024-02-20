@@ -14,7 +14,7 @@
           "appealOutOfCountry": "No",
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "listCaseHearingCentre": "birmingham",
-          "ftpaAppellantRjDecisionOutcomeType": "reheardRule35",
+          "ftpaRespondentRjDecisionOutcomeType": "reheardRule35",
           "ftpaApplicantType": "respondent",
           "ariaListingReference": "987654321"
         }
