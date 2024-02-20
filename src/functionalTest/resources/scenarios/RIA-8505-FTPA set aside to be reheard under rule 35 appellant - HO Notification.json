@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8505 FTPA set aside to be reheard under rule 35 - HO Notification",
+  "description": "RIA-8505 FTPA set aside to be reheard under rule 35 appellant - HO Notification",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "Judge",
@@ -15,7 +15,7 @@
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "listCaseHearingCentre": "birmingham",
           "ftpaAppellantRjDecisionOutcomeType": "reheardRule35",
-          "ftpaApplicantType": "respondent",
+          "ftpaApplicantType": "appellant",
           "ariaListingReference": "987654321"
         }
       }
