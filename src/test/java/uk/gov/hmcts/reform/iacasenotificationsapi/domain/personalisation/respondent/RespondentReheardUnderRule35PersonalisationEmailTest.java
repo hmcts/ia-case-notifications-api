@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,7 +63,7 @@ class RespondentReheardUnderRule35PersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
-            respondentReheardUnderRule35PersonalisationEmail = new RespondentReheardUnderRule35PersonalisationEmail(
+        respondentReheardUnderRule35PersonalisationEmail = new RespondentReheardUnderRule35PersonalisationEmail(
             respondentReheardUnder35RuleEmailTemplateId,
             exUiFrontendUrl,
             customerServicesProvider,
