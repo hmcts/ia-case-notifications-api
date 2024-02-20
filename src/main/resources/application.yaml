@@ -1167,8 +1167,12 @@ govnotify:
         afterListing:
           email: bc327677-eef1-4863-94cc-5c964ff9eb9d
       appellant:
-        email: adcc0312-3cca-479b-b44e-bcfd94dacb75
-        sms: 92000405-ea87-4c1e-8076-80639dc3988d
+        represented:
+          email: adcc0312-3cca-479b-b44e-bcfd94dacb75
+          sms: 92000405-ea87-4c1e-8076-80639dc3988d
+        unrepresented:
+          email: 548f4dd4-6b5b-4566-bed7-7551dc6217ea
+          sms: 47197298-3ef7-4c69-b24f-c22fe550bb8f
     addEvidenceForCosts:
       otherParty:
         email: 00d05601-19cb-4f9b-909a-b23ee3961be8
