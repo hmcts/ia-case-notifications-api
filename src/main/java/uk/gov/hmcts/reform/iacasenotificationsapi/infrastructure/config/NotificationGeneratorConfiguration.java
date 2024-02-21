@@ -4848,6 +4848,8 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentTurnOnNotificationsNotificationGenerator")
     public List<NotificationGenerator> respondentTurnOnNotificationsNotificationGenerator(
             RespondentTurnOnNotificationsPersonalisation respondentTurnOnNotificationsPersonalisation,
+            AppellantNotificationsTurnedOnPersonalisationEmail appellantNotificationsTurnedOnPersonalisationEmail,
+            AppellantNotificationsTurnedOnPersonalisationSms appellantNotificationsTurnedOnPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
@@ -4856,6 +4858,16 @@ public class NotificationGeneratorConfiguration {
                         newArrayList(Collections.singleton(respondentTurnOnNotificationsPersonalisation)),
                         notificationSender,
                         notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                    newArrayList(appellantNotificationsTurnedOnPersonalisationEmail),
+                    notificationSender,
+                    notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                    newArrayList(appellantNotificationsTurnedOnPersonalisationSms),
+                    notificationSender,
+                    notificationIdAppender
                 )
         );
     }

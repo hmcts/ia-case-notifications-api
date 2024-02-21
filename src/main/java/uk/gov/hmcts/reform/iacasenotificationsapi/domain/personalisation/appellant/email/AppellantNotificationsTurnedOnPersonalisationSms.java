@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,29 +24,38 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @Service
 public class AppellantNotificationsTurnedOnPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String appellantTransferredToFirstTierBeforeListingSmsTemplateId;
+    private final String representedAppellantTransferredToFirstTierSmsTemplateId;
+
+    private final String unrepresentedAppellantTransferredToFirstTierSmsTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaExUiFrontendUrl;
 
     public AppellantNotificationsTurnedOnPersonalisationSms(
-        @Value("${govnotify.template.turnOnNotifications.appellant.sms}") String appellantTransferredToFirstTierBeforeListingSmsTemplateId,
+        @Value("${govnotify.template.turnOnNotifications.appellant.represented.sms}") String representedAppellantTransferredToFirstTierSmsTemplateId,
+        @Value("${govnotify.template.turnOnNotifications.appellant.unrepresented.sms}") String unrepresentedAppellantTransferredToFirstTierSmsTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.appellantTransferredToFirstTierBeforeListingSmsTemplateId =
-            appellantTransferredToFirstTierBeforeListingSmsTemplateId;
+        this.representedAppellantTransferredToFirstTierSmsTemplateId =
+            representedAppellantTransferredToFirstTierSmsTemplateId;
+        this.unrepresentedAppellantTransferredToFirstTierSmsTemplateId =
+            unrepresentedAppellantTransferredToFirstTierSmsTemplateId;
         this.customerServicesProvider = customerServicesProvider;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appellantTransferredToFirstTierBeforeListingSmsTemplateId;
+        if (isLegalRepEjp(asylumCase)) {
+            return representedAppellantTransferredToFirstTierSmsTemplateId;
+        }
+        return unrepresentedAppellantTransferredToFirstTierSmsTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         return asylumCase.read(MOBILE_NUMBER, String.class)
+            .filter(number -> !number.isBlank())
             .map(number -> Collections.singleton(number))
             .orElse(Collections.emptySet());
     }

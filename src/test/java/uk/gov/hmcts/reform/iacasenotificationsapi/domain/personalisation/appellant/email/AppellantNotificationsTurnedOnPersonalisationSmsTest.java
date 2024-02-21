@@ -38,7 +38,8 @@ class AppellantNotificationsTurnedOnPersonalisationSmsTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PinInPostDetails pinInPostDetails;
-    private final String templateId = "templateId";
+    private final String representedTemplateId = "representedTemplateId";
+    private final String unrepresentedTemplateId = "unrepresentedTemplateId";
     private final Long caseId = 12345L;
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "appealReferenceNumber";
@@ -76,15 +77,24 @@ class AppellantNotificationsTurnedOnPersonalisationSmsTest {
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
 
         appellantNotificationsTurnedOnPersonalisationSms = new AppellantNotificationsTurnedOnPersonalisationSms(
-            templateId,
+            representedTemplateId,
+            unrepresentedTemplateId,
             iaExUiFrontendUrl,
             customerServicesProvider
         );
     }
 
     @Test
-    public void should_return_given_template_id() {
-        assertEquals(templateId,
+    public void should_return_represented_template_id() {
+        assertEquals(representedTemplateId,
+            appellantNotificationsTurnedOnPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_unrepresented_template_id() {
+        when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.empty());
+
+        assertEquals(unrepresentedTemplateId,
             appellantNotificationsTurnedOnPersonalisationSms.getTemplateId(asylumCase));
     }
 

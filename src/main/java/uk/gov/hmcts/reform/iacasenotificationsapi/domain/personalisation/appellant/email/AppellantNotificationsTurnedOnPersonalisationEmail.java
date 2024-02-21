@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,23 +24,32 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @Service
 public class AppellantNotificationsTurnedOnPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String appellantTransferredToFirstTierBeforeListingTemplateId;
+    private final String representedAppellantTransferredToFirstTierEmailTemplateId;
+    private final String unrepresentedAppellantTransferredToFirstTierEmailTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaExUiFrontendUrl;
 
     public AppellantNotificationsTurnedOnPersonalisationEmail(
-        @Value("${govnotify.template.turnOnNotifications.appellant.email}") String appellantTransferredToFirstTierBeforeListingTemplateId,
+        @Value("${govnotify.template.turnOnNotifications.appellant.represented.email}") String representedAppellantTransferredToFirstTierEmailTemplateId,
+        @Value("${govnotify.template.turnOnNotifications.appellant.unrepresented.email}") String unrepresentedAppellantTransferredToFirstTierEmailTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.appellantTransferredToFirstTierBeforeListingTemplateId = appellantTransferredToFirstTierBeforeListingTemplateId;
+        this.representedAppellantTransferredToFirstTierEmailTemplateId =
+            representedAppellantTransferredToFirstTierEmailTemplateId;
+        this.unrepresentedAppellantTransferredToFirstTierEmailTemplateId =
+            unrepresentedAppellantTransferredToFirstTierEmailTemplateId;
         this.customerServicesProvider = customerServicesProvider;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appellantTransferredToFirstTierBeforeListingTemplateId;
+        if (isLegalRepEjp(asylumCase)) {
+            return representedAppellantTransferredToFirstTierEmailTemplateId;
+        }
+
+        return unrepresentedAppellantTransferredToFirstTierEmailTemplateId;
     }
 
     @Override
@@ -82,6 +92,7 @@ public class AppellantNotificationsTurnedOnPersonalisationEmail implements Email
 
         PinInPostDetails pip = AsylumCaseUtils.generateAppellantPinIfNotPresent(asylumCase);
         personalizationBuilder.put("securityCode", pip.getAccessCode());
+        personalizationBuilder.put("validDate", defaultDateFormat(pip.getExpiryDate()));
 
         return personalizationBuilder.build();
     }

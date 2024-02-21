@@ -39,7 +39,8 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PinInPostDetails pinInPostDetails;
-    private final String templateId = "templateId";
+    private final String representedTemplateId = "representedTemplateId";
+    private final String unrepresentedTemplateId = "unrepresentedTemplateId";
     private final Long caseId = 12345L;
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "appealReferenceNumber";
@@ -55,6 +56,8 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
     private final String customerServicesTelephone = "customerServicesTelephone";
     private final String customerServicesEmail = "customerServicesEmail";
     private final String securityCode = "securityCode";
+    private final String validDate = "2024-03-01";
+    private final String expectedValidDate = "1 Mar 2024";
 
     private AppellantNotificationsTurnedOnPersonalisationEmail appellantNotificationsTurnedOnPersonalisationEmail;
 
@@ -71,17 +74,27 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumberForDisplay));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
+        when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
 
         appellantNotificationsTurnedOnPersonalisationEmail = new AppellantNotificationsTurnedOnPersonalisationEmail(
-            templateId,
+            representedTemplateId,
+            unrepresentedTemplateId,
             iaExUiFrontendUrl,
             customerServicesProvider
         );
     }
 
     @Test
-    public void should_return_given_template_id() {
-        assertEquals(templateId,
+    public void should_return_represented_template_id() {
+        assertEquals(representedTemplateId,
+            appellantNotificationsTurnedOnPersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_unrepresented_template_id() {
+        when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.empty());
+
+        assertEquals(unrepresentedTemplateId,
             appellantNotificationsTurnedOnPersonalisationEmail.getTemplateId(asylumCase));
     }
 
@@ -136,6 +149,7 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
         assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
         assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
         assertEquals(securityCode, personalisation.get("securityCode"));
+        assertEquals(expectedValidDate, personalisation.get("validDate"));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
