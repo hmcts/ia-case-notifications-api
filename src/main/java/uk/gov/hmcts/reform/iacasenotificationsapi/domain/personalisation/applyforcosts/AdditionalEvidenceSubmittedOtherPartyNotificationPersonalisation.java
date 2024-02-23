@@ -2,7 +2,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyf
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADD_EVIDENCE_FOR_COSTS_LIST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
 
 import java.util.Collections;
 import java.util.Map;
@@ -54,11 +58,16 @@ public class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation im
             return Collections.emptySet();
         }
 
-        if (isLoggedUserIsHomeOffice(asylumCase, getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))) {
+        if (toLegalRep(asylumCase)) {
             return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
         } else {
             return Collections.singleton(homeOfficeEmailAddress);
         }
+    }
+
+    private static boolean toLegalRep(AsylumCase asylumCase) {
+        return isLoggedUserIsHomeOffice(asylumCase,
+            getAppById -> AsylumCaseUtils.getApplicationById(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST));
     }
 
     @Override
@@ -70,13 +79,33 @@ public class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation im
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+        String listingReferenceLine = "";
+        String legalRepReferenceLine = "";
+        String hoReferenceLine = "";
+
+        if(toLegalRep(asylumCase)) {
+            listingReferenceLine = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
+                .map(ref -> "\nListing reference: " + ref)
+                .orElse("");
+
+            legalRepReferenceLine = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)
+                .map(ref -> "\nYour reference: " + ref)
+                .orElse("");
+        } else {
+            hoReferenceLine = asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)
+                .map(ref -> "\nHome Office reference: " + ref)
+                .orElse("");
+        }
+
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
             .putAll(personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.retrieveSelectedApplicationId(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
-            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""));
+            .put("ariaListingReference", listingReferenceLine)
+            .put("legalRepReferenceNumber", legalRepReferenceLine)
+            .put("homeOfficeReferenceNumber", hoReferenceLine);
 
         return personalisationBuilder.build();
     }
