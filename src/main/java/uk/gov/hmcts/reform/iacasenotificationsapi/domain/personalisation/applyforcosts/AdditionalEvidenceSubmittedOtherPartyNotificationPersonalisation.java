@@ -16,7 +16,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -83,7 +82,7 @@ public class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation im
         String legalRepReferenceLine = "";
         String hoReferenceLine = "";
 
-        if(toLegalRep(asylumCase)) {
+        if (toLegalRep(asylumCase)) {
             listingReferenceLine = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
                 .map(ref -> "\nListing reference: " + ref)
                 .orElse("");

@@ -83,7 +83,7 @@ public class AddEvidenceForCostsSubmittedSubmitterPersonalisation implements Ema
         String legalRepReferenceLine = "";
         String hoReferenceLine = "";
 
-        if(toLegalRep(asylumCase)) {
+        if (toLegalRep(asylumCase)) {
             listingReferenceLine = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
                 .map(ref -> "\nListing reference: " + ref)
                 .orElse("");
