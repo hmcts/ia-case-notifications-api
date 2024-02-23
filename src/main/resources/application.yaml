@@ -1151,10 +1151,10 @@ govnotify:
       respondent:
         email: 4cc2a1cc-b89d-46f2-8f79-dcd663ef14a0
     decideCostsApplication:
-      applicant:
+      homeOffice:
         email: 390843b2-0cab-4860-8e12-be98b9db2ca4
-      respondent:
-        email: 390843b2-0cab-4860-8e12-be98b9db2ca4
+      legalRep:
+        email: ec2e4278-9638-499c-b2cb-0ac6307e6071
     turnOnNotifications:
       homeOffice:
         beforeListing:

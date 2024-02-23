@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7810: Home office lart has created the costings and a judge had  to costs which notifies legal rep",
+  "description": "RIA-7810: Decide a costs - Notifications to applicant and respondent",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -46,14 +46,30 @@
             }
           ],
           "legalRepName": "Fake Org Ltd",
-          "respondToCostsList": {
+          "appliesForCosts": [
+            {
+              "id": "11",
+              "value": {
+                "appliedCostsType": "Unreasonable costs",
+                "respondentToCostsOrder": "Legal representative",
+                "applyForCostsHearingType": "No",
+                "scheduleOfCostsDocuments": [],
+                "applyForCostsCreationDate": "{$TODAY}",
+                "applyForCostsApplicantType": "Home office",
+                "argumentsAndEvidenceDetails": "",
+                "applyForCostsHearingTypeExplanation": "",
+                "applyForCostsDecision": "Order made"
+              }
+            }
+          ],
+          "decideCostsApplicationList": {
             "value": {
               "code": "11",
               "label": "Costs 5, Wasted costs, 22 Nov 2023"
             },
             "list_items": [
               {
-                "code": "15",
+                "code": "11",
                 "label": "Costs 1, Wasted costs, 22 Nov 2023"
               }
             ]
@@ -81,9 +97,26 @@
     },
     "notifications": [
       {
-        "reference": "7810__DECIDE_A_COSTS_EMAIL",
+        "reference": "7810__DECIDE_A_COSTS_EMAIL_TO_HO",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: Costs application decided"
+        "subject": "Immigration and Asylum appeal: Costs application decided",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "987654321",
+          "Talha Awan"
+        ]
+      },
+      {
+        "reference": "7810__DECIDE_A_COSTS_EMAIL_TO_LR",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: Costs application decided",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "987654321",
+          "Talha Awan"
+        ]
       }
     ]
   }
