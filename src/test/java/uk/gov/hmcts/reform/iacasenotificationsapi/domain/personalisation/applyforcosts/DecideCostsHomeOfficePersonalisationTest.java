@@ -34,7 +34,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DecideCostsRespondentAndApplicantPersonalisationTest {
+class DecideCostsHomeOfficePersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -58,11 +58,11 @@ class DecideCostsRespondentAndApplicantPersonalisationTest {
     private String customerServicesEmail = "cust.services@example.com";
     private String homeOfficeReferenceNumber = "A1234567/001";
 
-    private DecideCostsRespondentAndApplicantPersonalisation decideCostsRespondentAndApplicantPersonalisation;
+    private DecideCostsHomeOfficePersonalisation decideCostsHomeOfficePersonalisation;
 
     @BeforeEach
     void setup() {
-        decideCostsRespondentAndApplicantPersonalisation = new DecideCostsRespondentAndApplicantPersonalisation(
+        decideCostsHomeOfficePersonalisation = new DecideCostsHomeOfficePersonalisation(
             decideCostsNotificationId,
             homeOfficeEmailAddress,
             emailAddressFinder,
@@ -70,43 +70,40 @@ class DecideCostsRespondentAndApplicantPersonalisationTest {
             personalisationProvider
         );
 
-        Map<String, String> decideCostsRespondentAndApplicantPersonalisationTemplate = new HashMap<>();
-
-        decideCostsRespondentAndApplicantPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
-        decideCostsRespondentAndApplicantPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
-        decideCostsRespondentAndApplicantPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
+        Map<String, String> appellantCredentialsMap = new HashMap<>();
+        appellantCredentialsMap.put("appellantGivenNames", appellantGivenNames);
+        appellantCredentialsMap.put("appellantFamilyName", appellantFamilyName);
 
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(decideCostsRespondentAndApplicantPersonalisationTemplate);
+        when(personalisationProvider.getAppellantCredentials(asylumCase)).thenReturn(appellantCredentialsMap);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(decideCostsNotificationId, decideCostsRespondentAndApplicantPersonalisation.getTemplateId(asylumCase));
+        assertEquals(decideCostsNotificationId, decideCostsHomeOfficePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_DECIDE_A_COSTS_EMAIL",
-            decideCostsRespondentAndApplicantPersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_DECIDE_A_COSTS_EMAIL_TO_HO",
+            decideCostsHomeOfficePersonalisation.getReferenceId(caseId));
     }
 
-    @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
-    void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList respondsToCostsList) {
-        Set<String> recipientsSet = decideCostsRespondentAndApplicantPersonalisation.getRecipientsList(asylumCase);
-        assertTrue(recipientsSet.contains(legalRepEmailAddress));
+    @Test
+    void should_return_given_email_address() {
+        Set<String> recipientsSet = decideCostsHomeOfficePersonalisation.getRecipientsList(asylumCase);
         assertTrue(recipientsSet.contains(homeOfficeEmailAddress));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> decideCostsRespondentAndApplicantPersonalisation.getPersonalisation((AsylumCase) null))
+        assertThatThrownBy(() -> decideCostsHomeOfficePersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -120,7 +117,7 @@ class DecideCostsRespondentAndApplicantPersonalisationTest {
         decideCostsResult.put("costsDecisionType", "someCostsDecisionType");
         when(personalisationProvider.getDecideCostsPersonalisation(asylumCase)).thenReturn(decideCostsResult);
 
-        Map<String, String> personalisation = decideCostsRespondentAndApplicantPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = decideCostsHomeOfficePersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
@@ -130,6 +127,7 @@ class DecideCostsRespondentAndApplicantPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("someCostsDecisionType", personalisation.get("costsDecisionType"));
+
     }
 
     static Stream<Arguments> appliesForCostsProvider() {
