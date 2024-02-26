@@ -16,7 +16,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 @Service
 public class EmailAddressFinder {
 
-    private String listCaseHearingCentreIsNotPresent = "listCaseHearingCentre is not present";
+    public static final String NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING = "No email address for decisions made without hearing";
+
+    private final String listCaseHearingCentreIsNotPresent = "listCaseHearingCentre is not present";
     private final String noEmailAddressDecisionWithoutHearing = "No email address for decisions made without hearing";
     private final Map<HearingCentre, String> hearingCentreEmailAddresses;
     private final Map<HearingCentre, String> homeOfficeEmailAddresses;
