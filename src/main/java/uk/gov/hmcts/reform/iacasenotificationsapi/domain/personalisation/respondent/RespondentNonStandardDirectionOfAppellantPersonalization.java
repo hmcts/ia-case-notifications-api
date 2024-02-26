@@ -68,7 +68,7 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
         return asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
             .map(currentState -> {
                 if (Arrays.asList(
-                        State.APPEAL_SUBMITTED,
+                    State.APPEAL_SUBMITTED,
                     State.PENDING_PAYMENT,
                     State.AWAITING_RESPONDENT_EVIDENCE,
                     State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
@@ -95,7 +95,7 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
                     State.ADJOURNED
                 ).contains(currentState) && appealService.isAppealListed(asylumCase)) {
                     final Optional<HearingCentre> maybeCaseIsListed = asylumCase
-                            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+                        .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
                     if (maybeCaseIsListed.isPresent()) {
                         return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
@@ -118,7 +118,7 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         String listingReferenceLine = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-                .map(ref -> "\nListing reference: " + ref)
+            .map(ref -> "\nListing reference: " + ref)
             .orElse("");
 
         final Direction direction =
