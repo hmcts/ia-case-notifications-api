@@ -3864,14 +3864,14 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                RemissionType remissionType = asylumCase
-                    .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
+                AppealType appealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class).orElse(RP);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isAipJourney(asylumCase)
                     && isDlrmFeeRemissionEnabled(asylumCase)
-                    && remissionType != NO_REMISSION;
+                    && (appealType == PA || appealType == EA || appealType == HU || appealType == EU);
 
             },
             notificationGenerators,
