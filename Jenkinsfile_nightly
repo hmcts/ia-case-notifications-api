@@ -27,7 +27,7 @@ def product = "ia"
 def component = "case-notifications-api"
 
 def secrets = [
-'ia-${env}': [
+    'ia-${env}': [
 
         secret('ia-gov-notify-key', 'IA_GOV_NOTIFY_KEY'),
         secret('ia-bail-gov-notify-key', 'IA_BAIL_GOV_NOTIFY_KEY'),

@@ -78,7 +78,7 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     public void setUp() {
 
         when((emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)))
-                .thenReturn(homeOfficeHearingCentreEmail);
+            .thenReturn(homeOfficeHearingCentreEmail);
 
         when(emailAddressFinder.getListCaseFtpaHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeFtpaEmailAddress);
 
