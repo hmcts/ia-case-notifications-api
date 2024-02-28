@@ -14,6 +14,7 @@
           "isRemissionsEnabled": "Yes",
           "journeyType": "aip",
           "remissionType":"noRemission",
+          "remissionOption":"noneOfTheseStatements",
           "appealType":"refusalOfEu",
           "eaHuAppealTypePaymentOption": "payLater",
           "subscriptions": [
@@ -42,6 +43,7 @@
         "hearingCentre": "taylorHouse",
         "isRemissionsEnabled": "Yes",
         "remissionType":"noRemission",
+        "remissionOption":"noneOfTheseStatements",
         "appealType":"refusalOfEu",
         "eaHuAppealTypePaymentOption": "payLater",
         "notificationsSent": []
