@@ -302,7 +302,8 @@ public enum AsylumCaseDefinition {
 
     REMISSION_TYPE(
         "remissionType", new TypeReference<RemissionType>(){}),
-
+    REMISSION_OPTION(
+        "remissionOption", new TypeReference<RemissionOption>(){}),
     REMISSION_CLAIM(
         "remissionClaim", new TypeReference<String>(){}),
 
