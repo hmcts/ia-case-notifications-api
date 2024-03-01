@@ -104,7 +104,7 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_personalisation_first_check_when_all_information_given() {
 
-        DynamicList dynamicList = new DynamicList(new Value("ALLOWED", "Yes, change decision to Dismissed"),
+        DynamicList dynamicList = new DynamicList(new Value("allowed", "Yes, change decision to Dismissed"),
                 List.of(
                         new Value("ALLOWED", "Yes, change decision to Dismissed"),
                         new Value("DISMISSED", "No")));
@@ -156,7 +156,7 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_personalisation_both_checks_when_all_information_given() {
 
-        DynamicList dynamicList = new DynamicList(new Value("ALLOWED", "Yes, change decision to Dismissed"),
+        DynamicList dynamicList = new DynamicList(new Value("allowed", "Yes, change decision to Dismissed"),
                 List.of(
                         new Value("ALLOWED", "Yes, change decision to Dismissed"),
                         new Value("DISMISSED", "No")));
