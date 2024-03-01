@@ -103,6 +103,7 @@ public enum Event {
     CREATE_BAIL_CASE_LINK("createBailCaseLink"),
     MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
     DECIDE_FTPA_APPLICATION("decideFtpaApplication"),
+    UPDATE_TRIBUNAL_DECISION("updateTribunalDecision"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
