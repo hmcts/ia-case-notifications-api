@@ -577,7 +577,7 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
-            @Bean
+    @Bean
     public PreSubmitCallbackHandler<BailCase> endApplicationNotificationForUtHandler(
         @Qualifier("endApplicationNotificationForUtGenerator") List<BailNotificationGenerator> bailNotificationGenerators
 
