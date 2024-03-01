@@ -452,7 +452,6 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-<<<<<<< HEAD
     @Bean("upperTribunalDecisionRefusedImaNotificationGenerator")
     public List<BailNotificationGenerator> upperTribunalDecisionRefusedImaNotificationGenerator(
         UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation,
@@ -468,8 +467,6 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
     @Bean("caseListingBailSummaryDirectionNotificationGenerator")
     public List<BailNotificationGenerator> caseListingBailSummaryDirectionNotificationGenerator(
         HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
@@ -478,9 +475,8 @@ public class BailNotificationGeneratorConfiguration {
 
         return List.of(
             new BailEmailNotificationGenerator(
-<<<<<<< HEAD
-        newArrayList(homeOfficeUploadBailSummaryDirectionPersonalisation),
-            notificationSender,
+                newArrayList(homeOfficeUploadBailSummaryDirectionPersonalisation),
+                notificationSender,
                 notificationIdAppender
             )
         );
@@ -495,39 +491,11 @@ public class BailNotificationGeneratorConfiguration {
         return List.of(
             new BailEmailNotificationGenerator(
                 newArrayList(upperTribunalApplicationEndedImaPersonalisation),
-=======
-                newArrayList(homeOfficeUploadBailSummaryDirectionPersonalisation),
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
                 notificationSender,
                 notificationIdAppender
             )
         );
     }
-
-<<<<<<< HEAD
-    @Bean("sendUploadSummaryDirectionNotificationGenerator")
-    public List<BailNotificationGenerator> sendUploadSummaryDirectionNotificationGenerator(
-            HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
-=======
-    @Bean("caseListingNotificationGenerator")
-    public List<BailNotificationGenerator> caseListingNotificationGenerator(
-            HomeOfficeBailCaseListingPersonalisation homeOfficeBailCaseListingPersonalisation,
-            LegalRepresentativeBailCaseListingPersonalisation legalRepresentativeBailCaseListingPersonalisation,
-            ApplicantBailCaseListingPersonalisationSms applicantBailCaseListingPersonalisationSms,
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-            new BailEmailNotificationGenerator(
-<<<<<<< HEAD
-                newArrayList(homeOfficeUploadBailSummaryDirectionPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
 
     @Bean("caseListingNotificationGenerator")
     public List<BailNotificationGenerator> caseListingNotificationGenerator(
@@ -539,8 +507,6 @@ public class BailNotificationGeneratorConfiguration {
 
         return List.of(
             new BailEmailNotificationGenerator(
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
                 newArrayList(homeOfficeBailCaseListingPersonalisation,
                     legalRepresentativeBailCaseListingPersonalisation),
                 notificationSender,

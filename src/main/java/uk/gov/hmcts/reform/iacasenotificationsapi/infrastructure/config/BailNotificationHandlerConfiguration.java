@@ -1,11 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
-<<<<<<< HEAD
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
 
 import java.util.List;
 import java.util.Optional;
@@ -494,7 +491,6 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
-<<<<<<< HEAD
     public PreSubmitCallbackHandler<BailCase> upperTribunalDecisionRefusedImaNotificationHandler(
         @Qualifier("upperTribunalDecisionRefusedImaNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators) {
         return new BailNotificationHandler(
@@ -515,29 +511,9 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<BailCase> bailCaseListingBailSummaryDirectionNotificationHandler(
-    @Qualifier("caseListingBailSummaryDirectionNotificationGenerator")
-        List<BailNotificationGenerator> bailNotificationGenerators) {
-        return new BailNotificationHandler(
-            (callbackStage, callback) -> {
-                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                             && callback.getEvent() == Event.CASE_LISTING);
-                if (isAllowedBailCase) {
-                    BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return (callback.getEvent() == Event.CASE_LISTING
-                            && isInitialListing(bailCase));
-                } else {
-                    return false;
-                }
-            },
-            bailNotificationGenerators,
-            getErrorHandler()
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<BailCase> endApplicationNotificationForUtHandler(
-        @Qualifier("endApplicationNotificationForUtGenerator") List<BailNotificationGenerator> bailNotificationGenerators) {
+        @Qualifier("endApplicationNotificationForUtGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -556,12 +532,6 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<BailCase> sendUploadSummaryDirectionNotificationHandler(
-        @Qualifier("sendUploadSummaryDirectionNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators) {
-        return new BailNotificationHandler(
-            (callbackStage, callback) -> {
-                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-=======
     public PreSubmitCallbackHandler<BailCase> bailCaseListingBailSummaryDirectionNotificationHandler(
         @Qualifier("caseListingBailSummaryDirectionNotificationGenerator")
         List<BailNotificationGenerator> bailNotificationGenerators
@@ -591,7 +561,6 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
                                              && callback.getEvent() == Event.CASE_LISTING);
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
@@ -606,30 +575,6 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
-<<<<<<< HEAD
-        @Bean
-        public PreSubmitCallbackHandler<BailCase> bailCaseListingNotificationHandler(
-        @Qualifier("caseListingNotificationGenerator")
-            List<BailNotificationGenerator> bailNotificationGenerators) {
-            return new BailNotificationHandler(
-                (callbackStage, callback) -> {
-                    boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                                 && callback.getEvent() == Event.CASE_LISTING);
-                    if (isAllowedBailCase) {
-                        BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return (callback.getEvent() == Event.CASE_LISTING
-                                && isLegallyRepresented(bailCase));
-                    } else {
-                        return false;
-                    }
-                },
-                bailNotificationGenerators,
-                getErrorHandler()
-            );
-        }
-
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
     @Bean
     public PreSubmitCallbackHandler<BailCase> bailCaseListingWithoutLegalRepNotificationHandler(
         @Qualifier("caseListingNotificationGeneratorWithoutLegalRep")
@@ -666,7 +611,6 @@ public class BailNotificationHandlerConfiguration {
         return (bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class).orElse(NO)) == YES;
     }
 
-<<<<<<< HEAD
     private static boolean isHoFlagged(BailCase bailCase) {
         return bailCase.read(HO_SELECT_IMA_STATUS, YesOrNo.class).orElse(NO).equals(YES);
     }
@@ -678,11 +622,7 @@ public class BailNotificationHandlerConfiguration {
         return hoStatus.isPresent() && hoStatus.get().equals(YES) || hoStatus.isEmpty() && adminStatus.equals(YES);
     }
 
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
     private boolean isInitialListing(BailCase bailCase) {
         return (bailCase.read(LISTING_EVENT, ListingEvent.class).orElse(ListingEvent.INITIAL)) == ListingEvent.INITIAL;
     }
 }
-
-

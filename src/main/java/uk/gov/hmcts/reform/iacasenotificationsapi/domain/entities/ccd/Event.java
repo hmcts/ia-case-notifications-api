@@ -102,11 +102,8 @@ public enum Event {
     MAINTAIN_CASE_LINKS("maintainCaseLinks"),
     CREATE_BAIL_CASE_LINK("createBailCaseLink"),
     MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
-<<<<<<< HEAD
     RECORD_THE_DECISION("recordTheDecision"),
     SEND_UPLOAD_BAIL_SUMMARY_DIRECTION("sendUploadBailSummaryDirection"),
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
     CASE_LISTING("caseListing"),
 
     @JsonEnumDefaultValue

@@ -287,26 +287,18 @@ public enum BailCaseFieldDefinition {
             "bailDirectionEditDateDue", new TypeReference<String>(){}),
     LAST_MODIFIED_DIRECTION(
             "lastModifiedDirection", new TypeReference<Direction>(){}),
-<<<<<<< HEAD
     DECISION_GRANTED_OR_REFUSED(
         "decisionGrantedOrRefused", new TypeReference<String>(){}),
     ADMIN_SELECT_IMA_STATUS(
         "adminSelectImaStatus", new TypeReference<YesOrNo>() {}),
     HO_SELECT_IMA_STATUS(
         "hoSelectImaStatus", new TypeReference<YesOrNo>() {}),
-=======
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
     LISTING_EVENT(
         "listingEvent", new TypeReference<ListingEvent>(){}),
     LISTING_HEARING_DATE(
         "listingHearingDate", new TypeReference<String>(){}),
     LISTING_LOCATION(
-<<<<<<< HEAD
         "listingLocation", new TypeReference<BailHearingLocation>(){});
-=======
-        "listingLocation", new TypeReference<BailHearingLocation>(){}),
-    ;
->>>>>>> c66e3dd6 (RIA-8349 RIA-8352 Bail case listing notifications (#1059))
 
     private final String value;
     private final TypeReference typeReference;
