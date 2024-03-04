@@ -11,7 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isDlrmSetAsideEnabled": "Yes",
-          "ariaListingReference": "LP/12345/2019"
+          "updateTribunalDecisionList": "underRule31"
         }
       }
     }
@@ -23,7 +23,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isDlrmSetAsideEnabled": "Yes",
-        "ariaListingReference": "LP/12345/2019",
+        "updateTribunalDecisionList": "underRule31",
         "notificationsSent": [
           {
             "id": "8243_LEGAL_REPRESENTATIVE_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",

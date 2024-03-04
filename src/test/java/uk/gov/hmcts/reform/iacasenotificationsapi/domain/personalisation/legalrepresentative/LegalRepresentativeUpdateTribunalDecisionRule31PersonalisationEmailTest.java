@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Value;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.List;
@@ -42,18 +41,14 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private final String legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId = "legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId";
-    private final String legalRepresentativeUpdateTribunalDecisionRule31AfterListingEmailTemplateId = "legalRepresentativeUpdateTribunalDecisionRule31AfterListingEmailTemplateId";
     private String exUiFrontendUrl = "http://localhost";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String listingReferenceNumber = "someListingReferenceNumber";
     private String legalRepReferenceNumber = "someLRReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
-    @Mock
-    AppealService appealService;
     private LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail;
 
     @BeforeEach
@@ -67,24 +62,20 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BIRMINGHAM));
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(listingReferenceNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail = new LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail(
             legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId,
-            legalRepresentativeUpdateTribunalDecisionRule31AfterListingEmailTemplateId,
             exUiFrontendUrl,
-            appealService,
             customerServicesProvider
         );
     }
 
     @Test
     void should_return_given_template_id() {
-        when(appealService.isAppealListed(asylumCase)).thenReturn(true);
 
-        assertEquals(legalRepresentativeUpdateTribunalDecisionRule31AfterListingEmailTemplateId, legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals(legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId, legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
@@ -104,10 +95,10 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_personalisation_first_check_when_all_information_given() {
 
-        DynamicList dynamicList = new DynamicList(new Value("allowed", "Yes, change decision to Dismissed"),
+        DynamicList dynamicList = new DynamicList(new Value("dismissed", "Yes, change decision to Dismissed"),
                 List.of(
-                        new Value("ALLOWED", "Yes, change decision to Dismissed"),
-                        new Value("DISMISSED", "No")));
+                        new Value("DISMISSED", "Yes, change decision to Dismissed"),
+                        new Value("ALLOWED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
@@ -116,7 +107,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(listingReferenceNumber, personalisation.get("ariaListingReference"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
@@ -142,7 +132,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(listingReferenceNumber, personalisation.get("ariaListingReference"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
@@ -168,7 +157,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(listingReferenceNumber, personalisation.get("ariaListingReference"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));

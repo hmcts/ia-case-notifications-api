@@ -3837,7 +3837,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
-                            && isDlrmSetAsideEnabled(asylumCase)
+                            && !isAipJourney(asylumCase)
                             && isRule31ReasonUpdatingDecision(asylumCase);
 
                 },

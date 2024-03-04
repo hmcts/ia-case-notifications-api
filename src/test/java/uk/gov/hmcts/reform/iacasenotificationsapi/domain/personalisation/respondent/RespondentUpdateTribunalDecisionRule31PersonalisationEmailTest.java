@@ -106,10 +106,10 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_personalisation_first_check_when_all_information_given() {
 
-        DynamicList dynamicList = new DynamicList(new Value("allowed", "Yes, change decision to Dismissed"),
+        DynamicList dynamicList = new DynamicList(new Value("dismissed", "Yes, change decision to Dismissed"),
                 List.of(
-                        new Value("ALLOWED", "Yes, change decision to Dismissed"),
-                        new Value("DISMISSED", "No")));
+                        new Value("DISMISSED", "Yes, change decision to Dismissed"),
+                        new Value("ALLOWED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
@@ -131,9 +131,9 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_personalisation_second_check_when_all_information_given() {
 
-        DynamicList dynamicList = new DynamicList(new Value("DISMISSED", "No"),
+        DynamicList dynamicList = new DynamicList(new Value("dismissed", "No"),
                 List.of(
-                        new Value("ALLOWED", "Yes, change decision to Dismissed"),
+                        new Value("ALLOWED", "Yes, change decision to Allowed"),
                         new Value("DISMISSED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
@@ -156,10 +156,10 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_personalisation_both_checks_when_all_information_given() {
 
-        DynamicList dynamicList = new DynamicList(new Value("allowed", "Yes, change decision to Dismissed"),
+        DynamicList dynamicList = new DynamicList(new Value("dismissed", "Yes, change decision to Dismissed"),
                 List.of(
-                        new Value("ALLOWED", "Yes, change decision to Dismissed"),
-                        new Value("DISMISSED", "No")));
+                        new Value("DISMISSED", "Yes, change decision to Dismissed"),
+                        new Value("ALLOWED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));

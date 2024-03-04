@@ -61,17 +61,17 @@ public class RespondentUpdateTribunalDecisionRule31PersonalisationEmail implemen
         String firstBulletPoint = "";
         String bothChanges = "no";
 
-        boolean firstCheck = asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class).map(list -> list.getValue().getCode().equals("allowed")).orElse(false);
+        boolean firstCheck = asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class).map(list -> list.getValue().getLabel().contains("Yes")).orElse(false);
         boolean secondCheck = asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class).map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
 
-        if(firstCheck){
+        if (firstCheck) {
 
             firstBulletPoint = "the appeal decision has been changed";
 
-            if(secondCheck){
+            if (secondCheck) {
                 bothChanges = "yes";
             }
-        }else if(secondCheck){
+        } else if (secondCheck) {
             firstBulletPoint = "a new Decision and Reasons document is available to view in the documents tab";
         }
 
