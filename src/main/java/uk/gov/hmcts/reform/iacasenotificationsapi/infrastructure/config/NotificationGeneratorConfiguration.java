@@ -3551,4 +3551,25 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("aipAppellantRecordRemissionDecisionNotificationGenerator")
+    public List<NotificationGenerator> aipAppellantRecordRemissionDecisionNotificationGenerator(
+            AipAppellantRecordRemissionDecisionPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail,
+            AipAppellantRecordRemissionDecisionPersonalisationSms aipAppellantRecordRemissionDecisionPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(aipAppellantRecordRemissionDecisionPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(aipAppellantRecordRemissionDecisionPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

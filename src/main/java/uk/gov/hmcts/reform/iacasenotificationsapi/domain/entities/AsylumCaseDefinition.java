@@ -372,7 +372,10 @@ public enum AsylumCaseDefinition {
             "isDlrmSetAsideEnabled", new TypeReference<YesOrNo>(){}),
 
     IS_DLRM_FEE_REMISSION_ENABLED(
-            "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){})
+            "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){}),
+
+    CCD_REFERENCE_NUMBER_FOR_DISPLAY(
+            "ccdReferenceNumberForDisplay", new TypeReference<String>(){}),
     ;
 
     private final String value;
