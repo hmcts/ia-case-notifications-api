@@ -784,7 +784,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> submitAppealAipNotificationHandler(
         @Qualifier("submitAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
@@ -793,11 +792,23 @@ public class NotificationHandlerConfiguration {
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == NO).orElse(false);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                RemissionOption remissionOption = asylumCase
+                    .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isAipJourney(asylumCase)
                        && isAppealOnTime
-                       && !isEaHuEuAppeal(asylumCase);
+                       && !isEaHuEuAppeal(asylumCase)
+                       && !isDlrmFeeRemissionEnabled(asylumCase))
+                    || (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && isAipJourney(asylumCase)
+                        && isAppealOnTime
+                        && !isEaHuEuAppeal(asylumCase)
+                        && isDlrmFeeRemissionEnabled(asylumCase)
+                        && remissionOption == RemissionOption.NO_REMISSION
+                    );
             }, notificationGenerators
         );
     }
@@ -913,7 +924,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> submitAppealOutOfTimeAipNotificationHandler(
         @Qualifier("submitAppealOutOfTimeAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
@@ -922,11 +932,23 @@ public class NotificationHandlerConfiguration {
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                RemissionOption remissionOption = asylumCase
+                    .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
+
+                return ((callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isAipJourney(asylumCase)
                        && isOutOfTimeAppeal
-                       && !isEaHuEuAppeal(asylumCase);
+                       && !isEaHuEuAppeal(asylumCase)
+                       && !isDlrmFeeRemissionEnabled(asylumCase))
+                    ||
+                    (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && isAipJourney(asylumCase)
+                        && isOutOfTimeAppeal
+                        && !isEaHuEuAppeal(asylumCase)
+                        && isDlrmFeeRemissionEnabled(asylumCase)
+                        && remissionOption == RemissionOption.NO_REMISSION));
             }, notificationGenerators
         );
     }
