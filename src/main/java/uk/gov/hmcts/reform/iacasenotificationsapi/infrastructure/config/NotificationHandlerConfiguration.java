@@ -948,9 +948,7 @@ public class NotificationHandlerConfiguration {
                         && isOutOfTimeAppeal
                         && !isEaHuEuAppeal(asylumCase)
                         && isDlrmFeeRemissionEnabled(asylumCase)
-                        && remissionOption == RemissionOption.NO_REMISSION
-                    )
-                );
+                        && remissionOption == RemissionOption.NO_REMISSION));
             }, notificationGenerators
         );
     }
