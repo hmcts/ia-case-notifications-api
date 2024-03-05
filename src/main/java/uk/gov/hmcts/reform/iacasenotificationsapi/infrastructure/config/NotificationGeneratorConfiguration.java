@@ -3549,6 +3549,25 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("updateTribunalDecisionRule32NotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule32NotificationGenerator(
+            RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+            LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+                                legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("appelantSubmittedWithRemissionRequestNotificationGenerator")
     public List<NotificationGenerator> appelantSubmittedWithRemissionRequestNotificationGenerator(
         AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail,
