@@ -3869,6 +3869,26 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule32NotificationHandler(
+            @Qualifier("updateTribunalDecisionRule32NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && !isAipJourney(asylumCase)
+                            && isRule32ReasonUpdatingDecision(asylumCase);
+
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appelantSubmittedWithRemissionRequestNotificationHandler(
         @Qualifier("appelantSubmittedWithRemissionRequestNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -3946,6 +3966,12 @@ public class NotificationHandlerConfiguration {
 
         return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
                 .map(reason -> reason.equals("underRule31")).orElse(false);
+    }
+
+    private boolean isRule32ReasonUpdatingDecision(AsylumCase asylumCase) {
+
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
+                .map(reason -> reason.equals("underRule32")).orElse(false);
     }
 }
 
