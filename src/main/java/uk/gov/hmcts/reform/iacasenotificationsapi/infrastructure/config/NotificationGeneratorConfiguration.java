@@ -3514,16 +3514,18 @@ public class NotificationGeneratorConfiguration {
     }
 
 
-    @Bean("respondentReheardUnderRule35NotificationGenerator")
-    public List<NotificationGenerator> respondentReheardUnderRule35NotificationGenerator(
+    @Bean("decideFtpaApplicationReheardUnderRule35NotificationGenerator")
+    public List<NotificationGenerator> decideFtpaApplicationReheardUnderRule35NotificationGenerator(
             RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail,
+            LegalRepresentativeReheardUnderRule35Personalisation legalRepresentativeReheardUnderRule35Personalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(respondentReheardUnderRule35PersonalisationEmail),
+                        newArrayList(respondentReheardUnderRule35PersonalisationEmail,
+                            legalRepresentativeReheardUnderRule35Personalisation),
                         notificationSender,
                         notificationIdAppender
                 )

@@ -927,6 +927,8 @@ govnotify:
           sms: 24dd4193-554b-40be-a0b3-56b0f80e37ab
         respondent:
           email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
+        legalRep:
+          email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
