@@ -372,7 +372,15 @@ public enum AsylumCaseDefinition {
             "isDlrmSetAsideEnabled", new TypeReference<YesOrNo>(){}),
 
     IS_DLRM_FEE_REMISSION_ENABLED(
-            "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){})
+            "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){}),
+    UPDATE_TRIBUNAL_DECISION_AND_REASONS(
+            "updateTribunalDecisionAndReasons", new TypeReference<YesOrNo>(){}),
+    UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK(
+            "updateTribunalDecisionAndReasonsFinalCheck", new TypeReference<YesOrNo>(){}),
+    UPDATE_TRIBUNAL_DECISION_LIST(
+            "updateTribunalDecisionList", new TypeReference<String>(){}),
+    TYPES_OF_UPDATE_TRIBUNAL_DECISION(
+            "typesOfUpdateTribunalDecision", new TypeReference<DynamicList>(){}),
     ;
 
     private final String value;

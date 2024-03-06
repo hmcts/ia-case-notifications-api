@@ -929,6 +929,17 @@ govnotify:
           email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
         legalRep:
           email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
+    updateTribunalDecision:
+      rule31:
+        legalrep:
+          email: da39849d-58cd-4e91-ab79-ea3083acd753
+        respondent:
+          email: 41da27eb-91be-4b8d-821a-1ba8c480b3ef
+      rule32:
+        legalrep:
+          email: 6b948ce8-b9aa-4b36-aa21-9b4c0ba6ff6e
+        respondent:
+          email: 7fffa448-51ad-462c-b6dd-9c5a3a3dd8b4
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1208,6 +1219,7 @@ security:
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
       - "decideFtpaApplication"
+      - "updateTribunalDecision"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"

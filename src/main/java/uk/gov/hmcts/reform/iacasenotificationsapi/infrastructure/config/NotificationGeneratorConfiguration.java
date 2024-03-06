@@ -3532,6 +3532,44 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("updateTribunalDecisionRule31NotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule31NotificationGenerator(
+            RespondentUpdateTribunalDecisionRule31PersonalisationEmail respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+            LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+                                legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("updateTribunalDecisionRule32NotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule32NotificationGenerator(
+            RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+            LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+                                legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("appelantSubmittedWithRemissionRequestNotificationGenerator")
     public List<NotificationGenerator> appelantSubmittedWithRemissionRequestNotificationGenerator(
         AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail,
