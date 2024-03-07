@@ -10,12 +10,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.Headers;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -191,7 +186,13 @@ public class CcdScenarioRunnerTest {
 
                     Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
-
+                    if (Objects.equals(description, "RIA-4559 Send reinstate appeal notification (After Listing) - AIP")) {
+                        System.out.println(actualResponse.get("notifications"));
+                        ArrayList<Map<String, Object>> string = (ArrayList<Map<String, Object>>) actualResponse.get("notifications");
+                        for (Map<String, Object> stringObjectMap : string) {
+                            System.out.println(stringObjectMap.get("recipient"));
+                        }
+                    }
                     verifiers.forEach(verifier ->
                             verifier.verify(
                                     testCaseId,
