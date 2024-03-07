@@ -3570,6 +3570,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("updateTribunalDecisionRule32AipNotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule32AipNotificationGenerator(
+            AppellantUpdateTribunalDecisionRule32PersonalisationEmail appellantUpdateTribunalDecisionRule32PersonalisationEmail,
+            AppellantUpdateTribunalDecisionRule32PersonalisationSms appellantUpdateTribunalDecisionRule32PersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantUpdateTribunalDecisionRule32PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUpdateTribunalDecisionRule32PersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("appelantSubmittedWithRemissionRequestNotificationGenerator")
     public List<NotificationGenerator> appelantSubmittedWithRemissionRequestNotificationGenerator(
         AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail,
