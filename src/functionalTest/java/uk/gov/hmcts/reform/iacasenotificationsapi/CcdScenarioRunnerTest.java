@@ -189,13 +189,8 @@ public class CcdScenarioRunnerTest {
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
                     if (Objects.equals(description, "RIA-4559 Send reinstate appeal notification (After Listing) - AIP")) {
                         System.out.println("----------------------------------------------------");
-                        System.out.println(actualResponse);
-                        for ( String key : actualResponse.keySet() ) {
-                            System.out.println( key );
-                        }
-                        for ( Object value : actualResponse.values() ) {
-                            System.out.println( value );
-                        }
+                        System.out.println(actualResponse.get("notificationsSent"));
+                        System.out.println(System.getenv("TEST_CITIZEN_USERNAME"));
                         System.out.println("----------------------------------------------------");
                     }
                     verifiers.forEach(verifier ->
