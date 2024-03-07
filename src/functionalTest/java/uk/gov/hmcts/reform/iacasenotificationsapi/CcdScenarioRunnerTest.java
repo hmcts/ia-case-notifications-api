@@ -157,7 +157,7 @@ public class CcdScenarioRunnerTest {
 
                     final String requestUri = MapValueExtractor.extract(scenario, "request.uri");
                     int expectedStatus;
-                    if (scenarioFeature != null && launchDarklyFeature == false) {
+                    if (scenarioFeature != null && !launchDarklyFeature) {
                         expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200, launchDarklyFeature);
                     } else {
                         expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200);
@@ -188,11 +188,15 @@ public class CcdScenarioRunnerTest {
                     Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
                     Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
                     if (Objects.equals(description, "RIA-4559 Send reinstate appeal notification (After Listing) - AIP")) {
-                        System.out.println(actualResponse.get("notifications"));
-                        ArrayList<Map<String, Object>> string = (ArrayList<Map<String, Object>>) actualResponse.get("notifications");
-                        for (Map<String, Object> stringObjectMap : string) {
-                            System.out.println(stringObjectMap.get("recipient"));
+                        System.out.println("----------------------------------------------------");
+                        System.out.println(actualResponse);
+                        for ( String key : actualResponse.keySet() ) {
+                            System.out.println( key );
                         }
+                        for ( Object value : actualResponse.values() ) {
+                            System.out.println( value );
+                        }
+                        System.out.println("----------------------------------------------------");
                     }
                     verifiers.forEach(verifier ->
                             verifier.verify(
@@ -235,7 +239,7 @@ public class CcdScenarioRunnerTest {
             String source
     ) throws IOException {
         Map<String, Object> data = MapSerializer.deserialize(source);
-        mapValueExpander.expandValues(data);
+        MapValueExpander.expandValues(data);
         return data;
     }
 
