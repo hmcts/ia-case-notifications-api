@@ -3889,6 +3889,28 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule32AipNotificationHandler(
+            @Qualifier("updateTribunalDecisionRule32AipNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && isAipJourney(asylumCase)
+                            && isRule32ReasonUpdatingDecision(asylumCase);
+
+                    return res;
+
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appelantSubmittedWithRemissionRequestNotificationHandler(
         @Qualifier("appelantSubmittedWithRemissionRequestNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
