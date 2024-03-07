@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import feign.RetryableException;
 import io.restassured.RestAssured;
 import io.restassured.http.Headers;
@@ -202,7 +203,7 @@ public class CcdScenarioRunnerTest {
                             )
                     );
                     break;
-                } catch (Error | RetryableException e) {
+                } catch (Error | FeignException e) {
                     System.out.println("Scenario failed with error " + e.getMessage());
                     if (i == maxRetries - 1) {
                         this.failedScenarios.add(description);
