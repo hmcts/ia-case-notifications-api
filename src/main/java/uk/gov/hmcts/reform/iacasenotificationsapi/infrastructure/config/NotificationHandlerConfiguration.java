@@ -2442,17 +2442,23 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
+                    FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()
+                ));
+
+                if (!isDlrmSetAsideEnabled(asylumCase)) {
+                    ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString());
+                }
+
                 boolean isReheardDecisionOutcome = asylumCase
                     .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                    .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                    .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                     .orElse(false);
                 if (!isReheardDecisionOutcome) {
                     isReheardDecisionOutcome = asylumCase
                         .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
                             FtpaDecisionOutcomeType.class)
-                        .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                        .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                         .orElse(false);
                 }
 
@@ -3911,8 +3917,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentReheardUnderRule35NotificationHandler(
-            @Qualifier("respondentReheardUnderRule35NotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> decideFtpaApplicationReheardUnderRule35NotificationHandler(
+            @Qualifier("decideFtpaApplicationReheardUnderRule35NotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
