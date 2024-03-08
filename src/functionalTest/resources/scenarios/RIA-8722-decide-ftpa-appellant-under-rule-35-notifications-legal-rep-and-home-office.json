@@ -59,7 +59,7 @@
         "subject": "Immigration and Asylum appeal: Application decided",
         "body": [
           "PA/12345/2019",
-          "A1234567",
+          "CASE001",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
