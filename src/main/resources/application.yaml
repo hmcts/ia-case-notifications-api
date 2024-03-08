@@ -928,7 +928,7 @@ govnotify:
         respondent:
           email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
         legalRep:
-          email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
+          email: ce51c82d-a084-4d0f-9163-c642240cb209
     updateTribunalDecision:
       rule31:
         legalrep:
