@@ -6,39 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.HU;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.PA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_COMPLETED_STAGES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_RECORDED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HAS_SERVICE_REQUEST_ALREADY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_APPEAL_DECIDED_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_DECIDED_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REMISSION_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_SET_ASIDE_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.OUT_OF_TIME_DECISION_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PAYMENT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_OPTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBMIT_NOTIFICATION_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType.IN_TIME;
@@ -784,7 +752,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> submitAppealAipNotificationHandler(
         @Qualifier("submitAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
@@ -793,11 +760,23 @@ public class NotificationHandlerConfiguration {
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == NO).orElse(false);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                RemissionOption remissionOption = asylumCase
+                    .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isAipJourney(asylumCase)
                        && isAppealOnTime
-                       && !isEaHuEuAppeal(asylumCase);
+                       && !isEaHuEuAppeal(asylumCase)
+                       && !isDlrmFeeRemissionEnabled(asylumCase))
+                    || (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && isAipJourney(asylumCase)
+                        && isAppealOnTime
+                        && !isEaHuEuAppeal(asylumCase)
+                        && isDlrmFeeRemissionEnabled(asylumCase)
+                        && remissionOption == RemissionOption.NO_REMISSION
+                    );
             }, notificationGenerators
         );
     }
@@ -913,7 +892,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> submitAppealOutOfTimeAipNotificationHandler(
         @Qualifier("submitAppealOutOfTimeAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
@@ -922,11 +900,23 @@ public class NotificationHandlerConfiguration {
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                RemissionOption remissionOption = asylumCase
+                    .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
+
+                return ((callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isAipJourney(asylumCase)
                        && isOutOfTimeAppeal
-                       && !isEaHuEuAppeal(asylumCase);
+                       && !isEaHuEuAppeal(asylumCase)
+                       && !isDlrmFeeRemissionEnabled(asylumCase))
+                    ||
+                    (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && isAipJourney(asylumCase)
+                        && isOutOfTimeAppeal
+                        && !isEaHuEuAppeal(asylumCase)
+                        && isDlrmFeeRemissionEnabled(asylumCase)
+                        && remissionOption == RemissionOption.NO_REMISSION));
             }, notificationGenerators
         );
     }
@@ -2452,17 +2442,23 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
+                    FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()
+                ));
+
+                if (!isDlrmSetAsideEnabled(asylumCase)) {
+                    ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString());
+                }
+
                 boolean isReheardDecisionOutcome = asylumCase
                     .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                    .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                    .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                     .orElse(false);
                 if (!isReheardDecisionOutcome) {
                     isReheardDecisionOutcome = asylumCase
                         .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
                             FtpaDecisionOutcomeType.class)
-                        .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
-                                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                        .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                         .orElse(false);
                 }
 
@@ -3859,6 +3855,68 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule31NotificationHandler(
+            @Qualifier("updateTribunalDecisionRule31NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && !isAipJourney(asylumCase)
+                            && isRule31ReasonUpdatingDecision(asylumCase);
+
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule32NotificationHandler(
+            @Qualifier("updateTribunalDecisionRule32NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && !isAipJourney(asylumCase)
+                            && isRule32ReasonUpdatingDecision(asylumCase);
+
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule32AipNotificationHandler(
+            @Qualifier("updateTribunalDecisionRule32AipNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && isAipJourney(asylumCase)
+                            && isRule32ReasonUpdatingDecision(asylumCase);
+
+                    return res;
+
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appelantSubmittedWithRemissionRequestNotificationHandler(
         @Qualifier("appelantSubmittedWithRemissionRequestNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -3881,8 +3939,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> respondentReheardUnderRule35NotificationHandler(
-            @Qualifier("respondentReheardUnderRule35NotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> decideFtpaApplicationReheardUnderRule35NotificationHandler(
+            @Qualifier("decideFtpaApplicationReheardUnderRule35NotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -3949,6 +4007,18 @@ public class NotificationHandlerConfiguration {
         return ftpaDecisionOutcomeType
             .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString()))
             .orElse(false);
+    }
+
+    private boolean isRule31ReasonUpdatingDecision(AsylumCase asylumCase) {
+
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
+                .map(reason -> reason.equals("underRule31")).orElse(false);
+    }
+
+    private boolean isRule32ReasonUpdatingDecision(AsylumCase asylumCase) {
+
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
+                .map(reason -> reason.equals("underRule32")).orElse(false);
     }
 }
 

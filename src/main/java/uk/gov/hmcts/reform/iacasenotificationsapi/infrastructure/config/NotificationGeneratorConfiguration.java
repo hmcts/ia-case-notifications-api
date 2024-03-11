@@ -3514,16 +3514,78 @@ public class NotificationGeneratorConfiguration {
     }
 
 
-    @Bean("respondentReheardUnderRule35NotificationGenerator")
-    public List<NotificationGenerator> respondentReheardUnderRule35NotificationGenerator(
+    @Bean("decideFtpaApplicationReheardUnderRule35NotificationGenerator")
+    public List<NotificationGenerator> decideFtpaApplicationReheardUnderRule35NotificationGenerator(
             RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail,
+            LegalRepresentativeReheardUnderRule35Personalisation legalRepresentativeReheardUnderRule35Personalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(respondentReheardUnderRule35PersonalisationEmail),
+                        newArrayList(respondentReheardUnderRule35PersonalisationEmail,
+                            legalRepresentativeReheardUnderRule35Personalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("updateTribunalDecisionRule31NotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule31NotificationGenerator(
+            RespondentUpdateTribunalDecisionRule31PersonalisationEmail respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+            LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+                                legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("updateTribunalDecisionRule32NotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule32NotificationGenerator(
+            RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+            LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+                                legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("updateTribunalDecisionRule32AipNotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule32AipNotificationGenerator(
+            AppellantUpdateTribunalDecisionRule32PersonalisationEmail appellantUpdateTribunalDecisionRule32PersonalisationEmail,
+            AppellantUpdateTribunalDecisionRule32PersonalisationSms appellantUpdateTribunalDecisionRule32PersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantUpdateTribunalDecisionRule32PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUpdateTribunalDecisionRule32PersonalisationSms),
                         notificationSender,
                         notificationIdAppender
                 )
