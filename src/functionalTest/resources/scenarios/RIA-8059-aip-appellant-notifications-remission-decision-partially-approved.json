@@ -15,6 +15,7 @@
           "remittedAmount": "10000",
           "amountLeftToPay": "4000",
           "ccdReferenceNumberForDisplay": "1111222233334444",
+          "isDlrmFeeRemissionEnabled": "Yes",
           "subscriptions": [
             {
               "id": "1",
@@ -56,6 +57,10 @@
         ],
         "notificationsSent": [
           {
+            "id": "8059_REMISSION_DECISION_PARTIALLY_APPROVED_ADMIN_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
             "id": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
@@ -68,13 +73,23 @@
     },
     "notifications": [
       {
+        "reference": "8059_REMISSION_DECISION_PARTIALLY_APPROVED_ADMIN_OFFICER",
+        "recipient": "{$FEES_ADMIN_OFFICER_EMAIL}",
+        "subject": "Immigration and Asylum appeal: Remission application partially approved",
+        "body": [
+          "PA/12345/2019",
+          "Pablo Jimenez",
+          "{$iaExUiFrontendUrl}"
+        ]
+      },
+      {
         "reference": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your request for support to pay the fee has been decided",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Talha Awan",
+          "Pablo Jimenez",
           "40.00",
           "{$iaAipFrontendUrl}",
           "1111222233334444",

@@ -12,6 +12,7 @@
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "remissionDecision": "rejected",
+          "isDlrmFeeRemissionEnabled": "Yes",
           "subscriptions": [
             {
               "id": "1",
@@ -68,7 +69,7 @@
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Talha Awan",
+          "Pablo Jimenez",
           "{$iaAipFrontendUrl}",
           "{$TODAY+14|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
