@@ -3978,6 +3978,25 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule31AipNotificationHandler(
+            @Qualifier("updateTribunalDecisionRule31AipNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && isAipJourney(asylumCase)
+                            && isRule31ReasonUpdatingDecision(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
                 .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
