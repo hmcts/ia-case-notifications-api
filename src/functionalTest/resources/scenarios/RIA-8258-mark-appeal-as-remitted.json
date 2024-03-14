@@ -11,10 +11,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "isDlrmSetAsideEnabled": "Yes",
           "listCaseHearingCentre": "taylorHouse",
           "legalRepresentativeEmailAddress": "sample@mail.com",
-          "updateTribunalDecisionList": "underRule32",
           "sourceOfRemittal": "Upper Tribunal"
         }
       }

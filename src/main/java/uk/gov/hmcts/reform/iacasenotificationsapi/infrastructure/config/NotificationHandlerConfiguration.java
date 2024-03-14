@@ -4004,7 +4004,10 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
                 return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && !isAipJourney(asylumCase)
                     && callback.getEvent() == Event.MARK_APPEAL_AS_REMITTED);
             }, notificationGenerators,
             getErrorHandler()
