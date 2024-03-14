@@ -387,6 +387,8 @@ public enum AsylumCaseDefinition {
             "typesOfUpdateTribunalDecision", new TypeReference<DynamicList>(){}),
     UPDATED_APPEAL_DECISION(
             "updatedAppealDecision", new TypeReference<String>(){}),
+    SOURCE_OF_REMITTAL(
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
     ;
 
     private final String value;

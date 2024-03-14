@@ -960,6 +960,11 @@ govnotify:
         appellant:
             email: 7baedad6-6aeb-45b5-ae00-420ff2b80bba
             sms: 5ad1fc01-101a-4dbc-84d1-191cc6b715f5
+    markAppealAsRemitted:
+      legalRep:
+        email: 0e8e1bc7-feea-4b7d-9cd8-09606ca0bcf9
+      homeOffice:
+        email: 0d55ec2a-b33c-478e-b467-4291b0f66563
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1190,6 +1195,7 @@ security:
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
       - "decisionWithoutHearing"
+      - "markAppealAsRemitted"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
