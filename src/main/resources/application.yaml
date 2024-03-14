@@ -1084,6 +1084,7 @@ security:
       - "asyncStitchingComplete"
       - "uploadAddendumEvidenceLegalRep"
       - "applyForFTPAAppellant"
+      - "requestFeeRemission"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
