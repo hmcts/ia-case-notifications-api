@@ -3659,26 +3659,4 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
-
-    @Bean("markAppealAsRemittedLrAndHoNotificationGenerator")
-    public List<NotificationGenerator> markAppealAsRemittedLrAndHoNotificationGenerator(
-        LegalRepresentativeMarkAppealAsRemittedPersonalisation legalRepresentativeMarkAppealAsRemittedPersonalisation,
-        HomeOfficeMarkAppealAsRemittedPersonalisation homeOfficeMarkAppealAsRemittedPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeMarkAppealAsRemittedPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new EmailNotificationGenerator(
-                newArrayList(homeOfficeMarkAppealAsRemittedPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
 }
