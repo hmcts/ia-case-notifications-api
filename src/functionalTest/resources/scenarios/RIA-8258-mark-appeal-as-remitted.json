@@ -1,6 +1,6 @@
 {
   "description": "RIA-8258: Mark appeal as remitted",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "enabled": "dlrm-remitted-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
