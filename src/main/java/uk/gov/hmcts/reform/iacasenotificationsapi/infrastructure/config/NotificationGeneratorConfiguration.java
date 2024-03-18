@@ -3660,10 +3660,12 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("markAppealAsRemittedLrAndHoNotificationGenerator")
-    public List<NotificationGenerator> markAppealAsRemittedLrAndHoNotificationGenerator(
+    @Bean("markAppealAsRemittedNotificationGenerator")
+    public List<NotificationGenerator> markAppealAsRemittedNotificationGenerator(
         LegalRepresentativeMarkAppealAsRemittedPersonalisation legalRepresentativeMarkAppealAsRemittedPersonalisation,
         HomeOfficeMarkAppealAsRemittedPersonalisation homeOfficeMarkAppealAsRemittedPersonalisation,
+        AppellantMarkAppealAsRemittedPersonalisationEmail appellantMarkAppealAsRemittedPersonalisationEmail,
+        AppellantMarkAppealAsRemittedPersonalisationSms appellantMarkAppealAsRemittedPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3676,6 +3678,16 @@ public class NotificationGeneratorConfiguration {
             ),
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeMarkAppealAsRemittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailNotificationGenerator(
+                newArrayList(appellantMarkAppealAsRemittedPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantMarkAppealAsRemittedPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )

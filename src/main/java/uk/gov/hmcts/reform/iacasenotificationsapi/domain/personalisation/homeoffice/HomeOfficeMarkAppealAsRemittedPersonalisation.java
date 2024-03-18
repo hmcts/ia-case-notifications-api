@@ -40,10 +40,7 @@ public class HomeOfficeMarkAppealAsRemittedPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        boolean isAip = asylumCase.read(JOURNEY_TYPE, JourneyType.class)
-            .map(type -> type == AIP).orElse(false);
-
-        return isAip ? Collections.emptySet() : Collections.singleton(upperTribunalNoticesEmailAddress);
+        return Collections.singleton(upperTribunalNoticesEmailAddress);
     }
 
     @Override
