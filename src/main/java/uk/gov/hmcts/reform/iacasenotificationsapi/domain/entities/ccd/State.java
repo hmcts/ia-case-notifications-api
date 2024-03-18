@@ -38,7 +38,6 @@ public enum State {
     APPEAL_TAKEN_OFFLINE("appealTakenOffline"),
     REMITTED("remitted"),
 
-
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 
