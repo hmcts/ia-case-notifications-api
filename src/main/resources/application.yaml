@@ -42,7 +42,10 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}/o/jwks
-
+  cache:
+    cache-names: userInfoCache
+    caffeine:
+      spec: expireAfterAccess=3600s
 featureFlag:
   homeOfficeGovNotifyEnabled: ${IA_HOME_OFFICE_GOV_NOTIFY_ENABLED:true}
 
@@ -249,33 +252,33 @@ govnotify:
       caseOfficer:
         email: 8bac3c7d-5fb7-4777-add3-5d7ade17ee71
       homeOffice:
-        email: 621d266e-a0a0-498d-800e-0f13dd8357b8
+        email: 28ead93d-2683-4594-94e9-2095749aaae0
       legalRep:
-        email: 84dbdaba-df43-4096-9b16-5817ba3e002c
+        email: 7497d265-ba27-43e8-8f18-9fed697c4822
       appellant:
         email: f55d3aa3-fe59-48f8-9d53-adc43ad95e14
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
       remoteHearing:
         legalRep:
-          email: e79249e2-ecbf-4d2b-8458-006285613402
+          email: 69fa0d2c-4714-4d28-8bb6-10fffb28bae7
     caseEdited:
       homeOffice:
-        email: b4cfdb17-6130-4f52-aec4-f3571e030790
+        email: f7dd3520-e2ff-4675-ba3c-22bf341df88f
       caseOfficer:
         email: fec967bf-79f6-4683-b908-d1eea3cc591e
       legalRep:
-        email: 60adb2b5-7a46-43bb-a03b-218b342e3d77
+        email: b5e7e77e-bacc-409d-984d-e45f27a0121d
       appellant:
         email: 11254ed3-abfb-4fd2-a2bf-8453f470321a
         sms: 7d23fda4-9ff7-4642-aa97-1a8a3ccafaba
     caseEditedNoChange:
       legalRep:
-        email: 9bdfb1cb-c5a8-45b8-8f6c-b81d3d331db6
+        email: 64e9db05-1cb2-4541-a7ca-905b635f3819
       homeOffice:
-        email: 7f36a473-948f-4ccf-a76a-122a36237d29
+        email: 0b42ea0c-0255-4da7-8fac-2c643adbb5c3
     caseEditedRemoteHearing:
       legalRep:
-        email: 9fa63eec-3827-4cc5-b399-2469dd7034f6
+        email: 3b724765-d3cb-45b6-8f30-f325df6bb16c
     listAssistHearing:
       caseListed:
         caseOfficer:
@@ -291,16 +294,16 @@ govnotify:
             email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
       caseEdited:
         homeOffice:
-          email: 0f1f382e-f62a-4fed-b9ed-ffdcee555a03
+          email: 071cc334-89f7-4bce-bf88-637057f4811a
         caseOfficer:
           email: 513c5d12-7e26-4430-8560-d3a42a2d5df0
         legalRep:
-          email: 6a4155a9-9b59-4db8-ac28-fe440f90242c
+          email: f3cb29a5-5367-4a1e-a600-6573fc2aeb01
         appellant:
           email: 524ad0a6-ad22-4d65-84a9-a566ee1c6981
       caseEditedRemoteHearing:
         legalRep:
-          email: 2cb4adf3-24da-4795-93b3-379f08b01300
+          email: c102060b-d556-4a93-8d9d-6b1ede8f2a22
     appealOutcomeAllowed:
       homeOffice:
         email: 0e8c3a70-4ba3-442b-8b12-235ee69a8d20
@@ -396,6 +399,9 @@ govnotify:
         email: 1ab1df2c-fbd7-4904-a2bb-325eeee05644
       homeOffice:
         email: b5e98804-54bf-43fb-ba3d-a033d0be99c3
+      appellant:
+        email: 64602a08-d39d-49fd-8043-08f5a9bb7a58
+        sms: c7c18cf5-619d-427e-b984-d161689baec4
     uploadedAdditionalEvidenceAfterListing:
       legalRep:
         email: 03abe2a5-5581-4bed-996a-6d19de352c4c
@@ -403,6 +409,9 @@ govnotify:
         email: 8fff07bc-8f5c-4c3e-a8ce-1c7580dcc61e
       homeOffice:
         email: 5dadb06a-bf59-4d75-a8a0-84aa0f6bf24f
+      appellant:
+        email: 770dbf2c-b8b4-4a63-9b46-5330c3aa6d76
+        sms: c7c18cf5-619d-427e-b984-d161689baec4
     uploadedAddendumEvidence:
       legalRep:
         email: 51dad728-a4d3-4ae8-9a4b-2f955b0d5b41
@@ -960,10 +969,12 @@ govnotify:
       endApplication:
         sms: fbb7895c-891a-4e7a-89c3-bd822e3c0071
         email: e70e45e1-5609-430a-9c29-e0bb539e5efa
+        utEmail: b86b25b3-d51d-4ae7-ac8f-6bb8351e834e
       endApplicationLR:
         email: 52894473-9ded-40f8-9696-e19661fc4f44
       endApplicationWithoutLR:
         email: 93beafd6-7e2e-4e45-a4ea-c424ffa54521
+        utEmail: 6b3c8ee8-f234-4a4e-abd6-8be4386c1e47
       uploadDocument:
         email: 2b975611-7b5b-4c92-a231-406e6e64e4ba
       uploadDocumentWithoutLR:
@@ -1024,6 +1035,10 @@ govnotify:
           withoutLegalRep:
             email: a0f2751f-7e3f-4529-9714-6acbce5b0904
           sms: 3e591016-42d8-4083-b81a-30756a1c4ca8
+      decisionRefusedIma:
+        email: 4a724840-8e62-489b-bc69-43a0be3ff12d
+
+
 
 notificationSender.deduplicateSendsWithinSeconds: 60
 
@@ -1183,6 +1198,7 @@ security:
       - "decisionWithoutHearing"
       - "recordAdjournmentDetails"
       - "caseListing"
+      - "recordTheDecision"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1231,6 +1247,7 @@ security:
       - "maintainCaseLinks"
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
+      - "recordTheDecision"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
@@ -1362,6 +1379,7 @@ paymentExceptionsAdminOfficerEmailAddress: ${PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EM
 apcHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_APC}
 lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
 upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
+bailUpperTribunalEmailAddress: ${IA_BAIL_UPPER_TRIBUNAL_EMAIL:upper-tribunal-bail-alar@example.com}
 
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}

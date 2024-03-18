@@ -64,6 +64,7 @@ public class HomeOfficeListCasePersonalisationTest {
     private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
     private String requirementsInCamera = "someRequirementsInCamera";
     private String requirementsOther = "someRequirementsOther";
+    private String videoHearingSuitability = "someVideoHearingSuitability";
 
     private String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
     private String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
@@ -207,6 +208,28 @@ public class HomeOfficeListCasePersonalisationTest {
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+    }
+
+    @Test
+    public void should_return_personalisation_with_requested_and_granted_hearing_requirement() {
+
+        when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.YES));
+
+        when(asylumCase.read(VULNERABILITIES_DECISION_FOR_DISPLAY, String.class)).thenReturn(Optional.of("Refused - Refused to vulnerabilities"));
+        when(asylumCase.read(MULTIMEDIA_DECISION_FOR_DISPLAY, String.class)).thenReturn(Optional.of("Refused - Refused to multimedia"));
+        when(asylumCase.read(SINGLE_SEX_COURT_DECISION_FOR_DISPLAY, String.class)).thenReturn(Optional.of("Granted - Granted to single sex court"));
+        when(asylumCase.read(IN_CAMERA_COURT_DECISION_FOR_DISPLAY, String.class)).thenReturn(Optional.of("Granted - Granted to camera court"));
+        when(asylumCase.read(ADDITIONAL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.of(videoHearingSuitability));
+
+        Map<String, String> personalisation = homeOfficeListCasePersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals("Request Refused - Refused to vulnerabilities", personalisation.get("hearingRequirementVulnerabilities"));
+        assertEquals("Request Refused - Refused to multimedia", personalisation.get("hearingRequirementMultimedia"));
+        assertEquals("Request Granted - Granted to single sex court", personalisation.get("hearingRequirementSingleSexCourt"));
+        assertEquals("Request Granted - Granted to camera court", personalisation.get("hearingRequirementInCameraCourt"));
+        assertEquals("No other adjustments are being made", personalisation.get("hearingRequirementOther"));
+        assertEquals(videoHearingSuitability, personalisation.get("remoteVideoCallTribunalResponse"));
     }
 
     @Test

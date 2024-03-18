@@ -38,7 +38,7 @@ class HearingDetailsFinderTest {
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String hearingCentreName = "some hearing centre name";
-    private String bailHearingLocationName = "Glasgow (Tribunals Centre)";
+    private String bailHearingLocationName = "Glasgow";
     private String hearingCentreAddress = "some hearing centre address";
     private String hearingDateTime = "2019-08-27T14:25:15.000";
     private String bailHearingDateTime = "2024-01-01T10:29:00.000";
@@ -90,7 +90,7 @@ class HearingDetailsFinderTest {
 
     @Test
     void should_return_given_bail_hearing_location_name() {
-        when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class)).thenReturn(Optional.of(BailHearingLocation.GLASGOW));
+        when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class)).thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
         assertEquals(bailHearingLocationName, hearingDetailsFinder.getBailHearingCentreLocation(bailCase));
     }
 
