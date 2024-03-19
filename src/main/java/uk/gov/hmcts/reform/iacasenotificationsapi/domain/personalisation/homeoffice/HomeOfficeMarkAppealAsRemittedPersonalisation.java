@@ -4,14 +4,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SourceOfRemittal;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -40,10 +37,7 @@ public class HomeOfficeMarkAppealAsRemittedPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        boolean isAip = asylumCase.read(JOURNEY_TYPE, JourneyType.class)
-            .map(type -> type == AIP).orElse(false);
-
-        return isAip ? Collections.emptySet() : Collections.singleton(upperTribunalNoticesEmailAddress);
+        return Collections.singleton(upperTribunalNoticesEmailAddress);
     }
 
     @Override

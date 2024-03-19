@@ -3998,8 +3998,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> markAppealAsRemittedLrAndHoNotificationHandler(
-        @Qualifier("markAppealAsRemittedLrAndHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> markAppealAsRemittedNotificationHandler(
+        @Qualifier("markAppealAsRemittedNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
