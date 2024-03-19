@@ -47,8 +47,8 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSmsTe
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
-
-    private AppellantSubmittedWithRemissionRequestPersonalisationSms appellantSubmittedWithRemissionRequestPersonalisationSms;
+    
+    private AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms;
 
     @BeforeEach
     public void setup() {
@@ -56,23 +56,21 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSmsTe
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
-        appellantSubmittedWithRemissionRequestPersonalisationSms = new AppellantSubmittedWithRemissionRequestPersonalisationSms(
+        appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms = new AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms(
             emailTemplateId,
-            14,
             iaAipFrontendUrl,
-            recipientsFinder,
-            systemDateProvider);
+            recipientsFinder);
     }
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantSubmittedWithRemissionRequestPersonalisationSms.getTemplateId());
+        assertEquals(emailTemplateId, appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
-            appellantSubmittedWithRemissionRequestPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_SUBMITTED_WITH_REMISSION_MARK_APPEAL_AS_PAID_AIP_SMS",
+            appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -90,7 +88,7 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSmsTe
         when(asylumCase.read(SUBSCRIPTIONS))
             .thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
 
-        assertTrue(appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(asylumCase)
+        assertTrue(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms.getRecipientsList(asylumCase)
             .contains(mockedAppellantMobilePhone));
     }
 
@@ -99,7 +97,7 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSmsTe
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(null))
+        assertThatThrownBy(() -> appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -108,32 +106,23 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSmsTe
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
-        final String dueDate = LocalDate.now().plusDays(14)
-            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-        when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
-
         Map<String, String> personalisation =
-            appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
+            appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(dueDate, personalisation.get("appealSubmittedDaysAfter"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
     }
 
     @Test
     public void should_return_personalisation_when_only_mandatory_information_given() {
-        final String dueDate = LocalDate.now().plusDays(14)
-            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-        when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
+            appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(dueDate, personalisation.get("appealSubmittedDaysAfter"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }
