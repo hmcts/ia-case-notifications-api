@@ -3635,6 +3635,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("updateTribunalDecisionRule31AipNotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule31AipNotificationGenerator(
+            RespondentUpdateTribunalDecisionRule31PersonalisationEmail respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+            AppellantUpdateTribunalDecisionRule31PersonalisationEmail appellantUpdateTribunalDecisionRule31PersonalisationEmail,
+            AppellantUpdateTribunalDecisionRule31PersonalisationSms appellantUpdateTribunalDecisionRule31PersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+                                appellantUpdateTribunalDecisionRule31PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantUpdateTribunalDecisionRule31PersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator")
     public List<NotificationGenerator> appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator(
         AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail,

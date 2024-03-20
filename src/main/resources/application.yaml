@@ -948,6 +948,13 @@ govnotify:
           email: da39849d-58cd-4e91-ab79-ea3083acd753
         respondent:
           email: 41da27eb-91be-4b8d-821a-1ba8c480b3ef
+        appellant:
+          emailUpdatedDecision: 86fa3afc-a886-4e8c-8101-c40e5f908357
+          emailUpdatedDocument: f1cc5830-ae63-4dc6-a270-770121dfd110
+          emailUpdatedBoth: a9cbada5-89e8-479d-906a-9d1bf1433d1d
+          smsUpdatedDecision: f281b2ee-91a9-4c4c-a47f-b48f2d36cb42
+          smsUpdatedDocument: 308e47c0-38aa-4664-917b-9a25de7fcc6d
+          smsUpdatedBoth: d6d4985f-cf1a-4c23-9915-ff1da99390a2
       rule32:
         legalrep:
           email: 6b948ce8-b9aa-4b36-aa21-9b4c0ba6ff6e
