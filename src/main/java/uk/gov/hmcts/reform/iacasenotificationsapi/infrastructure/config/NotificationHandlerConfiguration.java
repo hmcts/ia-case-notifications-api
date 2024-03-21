@@ -2172,8 +2172,8 @@ public class NotificationHandlerConfiguration {
                 }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
-                       || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                       && (callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                       || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
                        && isReheardDecisionOutcome
                        && !isDlrmSetAsideEnabled(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
@@ -2463,8 +2463,8 @@ public class NotificationHandlerConfiguration {
                 }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
-                       || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                       && (callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                       || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
                        && isReheardDecisionOutcome
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
