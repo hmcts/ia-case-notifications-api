@@ -59,6 +59,7 @@ public enum Event {
     FORCE_CASE_TO_CASE_UNDER_REVIEW("forceCaseToCaseUnderReview"),
     FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS("forceCaseToSubmitHearingRequirements"),
     ADJOURN_HEARING_WITHOUT_DATE("adjournHearingWithoutDate"),
+    RECORD_ADJOURNMENT_DETAILS("recordAdjournmentDetails"),
     RESTORE_STATE_FROM_ADJOURN("restoreStateFromAdjourn"),
     REQUEST_CMA_REQUIREMENTS("requestCmaRequirements"),
     SUBMIT_CMA_REQUIREMENTS("submitCmaRequirements"),
@@ -102,6 +103,7 @@ public enum Event {
     MAINTAIN_CASE_LINKS("maintainCaseLinks"),
     CREATE_BAIL_CASE_LINK("createBailCaseLink"),
     MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
+    CASE_LISTING("caseListing"),
     RECORD_THE_DECISION("recordTheDecision"),
 
     @JsonEnumDefaultValue

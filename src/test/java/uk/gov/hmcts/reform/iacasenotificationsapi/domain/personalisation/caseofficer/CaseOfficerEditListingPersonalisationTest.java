@@ -38,6 +38,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String listCaseHearingCentreEmailAddress = "listCaseHearingCentre@example.com";
@@ -59,13 +60,14 @@ class CaseOfficerEditListingPersonalisationTest {
 
         caseOfficerEditListingPersonalisation = new CaseOfficerEditListingPersonalisation(
             templateId,
+            listAssistHearingTemplateId,
             emailAddressFinder,
             personalisationProvider);
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, caseOfficerEditListingPersonalisation.getTemplateId());
+        assertEquals(templateId, caseOfficerEditListingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

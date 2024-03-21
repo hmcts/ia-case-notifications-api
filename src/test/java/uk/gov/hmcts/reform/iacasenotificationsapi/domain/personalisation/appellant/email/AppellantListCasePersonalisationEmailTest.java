@@ -46,6 +46,7 @@ public class AppellantListCasePersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String listAssistHEaringTemplateId = "listAssistHearingTemplateId";
     private String iaAipFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String hearingCentreAddress = "some hearing centre address";
@@ -92,6 +93,7 @@ public class AppellantListCasePersonalisationEmailTest {
 
         appellantListCasePersonalisationEmail = new AppellantListCasePersonalisationEmail(
             templateId,
+                listAssistHEaringTemplateId,
                 iaAipFrontendUrl,
                 dateTimeExtractor,
                 customerServicesProvider,

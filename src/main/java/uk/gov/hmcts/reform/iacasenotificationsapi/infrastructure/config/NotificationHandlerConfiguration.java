@@ -191,9 +191,17 @@ public class NotificationHandlerConfiguration {
         @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN,
+            (callbackStage, callback) -> {
+                YesOrNo isIntegrated = callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .read(IS_INTEGRATED, YesOrNo.class)
+                    .orElse(YesOrNo.NO);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN
+                    && isIntegrated.equals(NO);
+            },
             notificationGenerators
         );
     }
@@ -1909,15 +1917,74 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateHandler(
-        @Qualifier("adjournHearingWithoutDateNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateNonIntegratedHandler(
+        @Qualifier("adjournHearingWithoutDateNonIntegratedNotificationGenerator")
             List<NotificationGenerator> notificationGenerator) {
 
         // RIA-3631 adjournHearingWithoutDate
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE,
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                     && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                                     && !isListAssistIntegrated(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateIntegratedHandler(
+        @Qualifier("adjournHearingWithoutDateIntegratedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                     && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                                     && isListAssistIntegrated(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> recordAdjournmentDetailsNonIntegratedHandler(
+        @Qualifier("recordAdjournmentDetailsNonIntegratedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean cannotRelistCaseImmediately =
+                        asylumCase.read(RELIST_CASE_IMMEDIATELY, YesOrNo.class)
+                            .map(relistCaseImmediately -> relistCaseImmediately == NO)
+                            .orElse(false);
+
+                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_ADJOURNMENT_DETAILS
+                            && cannotRelistCaseImmediately
+                            && !isListAssistIntegrated(callback.getCaseDetails().getCaseData()));
+                },
+                notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> recordAdjournmentDetailsIntegratedHandler(
+        @Qualifier("recordAdjournmentDetailsIntegratedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean cannotRelistCaseImmediately =
+                    asylumCase.read(RELIST_CASE_IMMEDIATELY, YesOrNo.class)
+                        .map(relistCaseImmediately -> relistCaseImmediately == NO)
+                        .orElse(false);
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.RECORD_ADJOURNMENT_DETAILS
+                        && cannotRelistCaseImmediately
+                        && isListAssistIntegrated(callback.getCaseDetails().getCaseData()));
+            },
             notificationGenerator
         );
     }
@@ -3621,6 +3688,12 @@ public class NotificationHandlerConfiguration {
         return asylumCase
                 .read(JOURNEY_TYPE, JourneyType.class)
                 .map(type -> type == AIP).orElse(false);
+    }
+
+    private boolean isListAssistIntegrated(AsylumCase asylumCase) {
+        return asylumCase.read(IS_INTEGRATED, YesOrNo.class)
+            .map(isIntegrated -> isIntegrated == YES)
+            .orElse(false);
     }
 
     private boolean hasRepEmail(AsylumCase asylumCase) {

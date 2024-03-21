@@ -11,6 +11,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 public class HomeOfficeListCasePersonalisation implements EmailNotificationPersonalisation {
 
     private final String homeOfficeCaseListedTemplateId;
+    private final String listAssistHearingHomeOfficeCaseListedTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final EmailAddressFinder emailAddressFinder;
@@ -26,6 +28,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     public HomeOfficeListCasePersonalisation(
         @Value("${govnotify.template.caseListed.homeOffice.email}") String homeOfficeCaseListedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseListed.homeOffice.email}") String listAssistHearingHomeOfficeCaseListedTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         EmailAddressFinder emailAddressFinder,
@@ -33,6 +36,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
         HearingDetailsFinder hearingDetailsFinder
     ) {
         this.homeOfficeCaseListedTemplateId = homeOfficeCaseListedTemplateId;
+        this.listAssistHearingHomeOfficeCaseListedTemplateId = listAssistHearingHomeOfficeCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.emailAddressFinder = emailAddressFinder;
@@ -41,8 +45,9 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
     }
 
     @Override
-    public String getTemplateId() {
-        return homeOfficeCaseListedTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+                ? listAssistHearingHomeOfficeCaseListedTemplateId : homeOfficeCaseListedTemplateId;
     }
 
     @Override

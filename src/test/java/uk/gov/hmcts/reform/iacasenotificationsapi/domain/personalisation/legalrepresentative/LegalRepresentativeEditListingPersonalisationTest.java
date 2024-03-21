@@ -39,6 +39,8 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
     private String templateIdRemoteHearing = "remoteTemplateId";
+    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private String listAssistHearingTemplateIdRemoteHearing = "listAssistHearingRemoteTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String legalRepEmailAddress = "legalRep@example.com";
     private String hearingCentreAddress = "some hearing centre address";
@@ -72,6 +74,8 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         legalRepresentativeEditListingPersonalisation = new LegalRepresentativeEditListingPersonalisation(
             templateId,
             templateIdRemoteHearing,
+            listAssistHearingTemplateId,
+            listAssistHearingTemplateIdRemoteHearing,
             personalisationProvider,
             customerServicesProvider
         );

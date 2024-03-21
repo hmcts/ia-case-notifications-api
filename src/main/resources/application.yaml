@@ -252,33 +252,58 @@ govnotify:
       caseOfficer:
         email: 8bac3c7d-5fb7-4777-add3-5d7ade17ee71
       homeOffice:
-        email: 621d266e-a0a0-498d-800e-0f13dd8357b8
+        email: 28ead93d-2683-4594-94e9-2095749aaae0
       legalRep:
-        email: 84dbdaba-df43-4096-9b16-5817ba3e002c
+        email: 7497d265-ba27-43e8-8f18-9fed697c4822
       appellant:
         email: f55d3aa3-fe59-48f8-9d53-adc43ad95e14
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
       remoteHearing:
         legalRep:
-          email: e79249e2-ecbf-4d2b-8458-006285613402
+          email: 69fa0d2c-4714-4d28-8bb6-10fffb28bae7
     caseEdited:
       homeOffice:
-        email: b4cfdb17-6130-4f52-aec4-f3571e030790
+        email: f7dd3520-e2ff-4675-ba3c-22bf341df88f
       caseOfficer:
         email: fec967bf-79f6-4683-b908-d1eea3cc591e
       legalRep:
-        email: 60adb2b5-7a46-43bb-a03b-218b342e3d77
+        email: b5e7e77e-bacc-409d-984d-e45f27a0121d
       appellant:
         email: 11254ed3-abfb-4fd2-a2bf-8453f470321a
         sms: 7d23fda4-9ff7-4642-aa97-1a8a3ccafaba
     caseEditedNoChange:
       legalRep:
-        email: 9bdfb1cb-c5a8-45b8-8f6c-b81d3d331db6
+        email: 64e9db05-1cb2-4541-a7ca-905b635f3819
       homeOffice:
-        email: 7f36a473-948f-4ccf-a76a-122a36237d29
+        email: 0b42ea0c-0255-4da7-8fac-2c643adbb5c3
     caseEditedRemoteHearing:
       legalRep:
-        email: 9fa63eec-3827-4cc5-b399-2469dd7034f6
+        email: 3b724765-d3cb-45b6-8f30-f325df6bb16c
+    listAssistHearing:
+      caseListed:
+        caseOfficer:
+          email: ddb88c55-c97e-45df-a6b1-dc92fd0433b3
+        homeOffice:
+          email: 9e7b4606-78c1-41dd-b294-5eb432a6b92f
+        legalRep:
+          email: 59000d04-4a97-45ae-8a1e-036ca9faa9b5
+        appellant:
+          email: 398c92a5-10db-43d9-980b-2de2981d22f7
+        remoteHearing:
+          legalRep:
+            email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
+      caseEdited:
+        homeOffice:
+          email: 071cc334-89f7-4bce-bf88-637057f4811a
+        caseOfficer:
+          email: 513c5d12-7e26-4430-8560-d3a42a2d5df0
+        legalRep:
+          email: f3cb29a5-5367-4a1e-a600-6573fc2aeb01
+        appellant:
+          email: 524ad0a6-ad22-4d65-84a9-a566ee1c6981
+      caseEditedRemoteHearing:
+        legalRep:
+          email: c102060b-d556-4a93-8d9d-6b1ede8f2a22
     appealOutcomeAllowed:
       homeOffice:
         email: 0e8c3a70-4ba3-442b-8b12-235ee69a8d20
@@ -510,6 +535,15 @@ govnotify:
         email: f5e4cbca-4fc8-4e39-bb92-9fe915aa8c61
       adminOfficer:
         email: 5469078a-4ccf-4579-b72b-37900e091455
+    recordAdjournmentDetails:
+      respondent:
+        email: 85442b94-d5ed-4542-b483-94556cc4e3bb
+      caseOfficer:
+        email: ea5abf36-c37b-4d9d-88ff-ef9cda6fd3cf
+      legalRep:
+        email: 153cab2a-0533-424f-bcaf-41b916d06321
+      adminOfficer:
+        email: 6c007d84-488d-498a-9d53-85ba5e008d31
     reListCase:
       adminOfficer:
         email: efec8c6f-38ea-46b6-ad00-9e6870935a4b
@@ -986,6 +1020,21 @@ govnotify:
         email: 8a745ed0-63f0-4a35-8cf0-f2ed4f962daf
       nocChangedLRForApplicant:
         sms: 8141263c-c1f1-4f86-a164-ab48df561dbe
+      sendUploadBailSummaryDirection:
+        email: 12eec4f2-7261-4640-b18b-93666bde0b54
+      caseListing:
+        initial:
+          withLegalRep:
+            email: 0a6a204d-fcf6-463a-942d-b9d697048552
+          withoutLegalRep:
+            email: 4f724d31-98c4-43f6-9cef-f4bdda1a99fd
+          sms: 5c3d605c-3138-405d-ad47-a27388ff97f2
+        relisting:
+          withLegalRep:
+            email: ad4fd40e-22fc-4c6e-ae95-163f1ab1d4f0
+          withoutLegalRep:
+            email: a0f2751f-7e3f-4529-9714-6acbce5b0904
+          sms: 3e591016-42d8-4083-b81a-30756a1c4ca8
       decisionRefusedIma:
         email: 4a724840-8e62-489b-bc69-43a0be3ff12d
 
@@ -1115,6 +1164,7 @@ security:
       - "decisionWithoutHearing"
       - "createCaseLink"
       - "maintainCaseLinks"
+      - "recordAdjournmentDetails"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -1146,6 +1196,8 @@ security:
       - "createBailCaseLink"
       - "maintainBailCaseLinks"
       - "decisionWithoutHearing"
+      - "recordAdjournmentDetails"
+      - "caseListing"
       - "recordTheDecision"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
@@ -1200,6 +1252,10 @@ security:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
       - "updatePaymentStatus"
+      - "listCase"
+      - "recordAdjournmentDetails"
+      - "editCaseListing"
+      - "caseListing"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"
@@ -1242,6 +1298,16 @@ hearingCentreEmailAddresses:
   hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
+  harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:hc-harmondsworth@example.com}
+  hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:hc-hendon@example.com}
+  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:hc-yarls-wood@example.com}
+  bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:hc-bradford-keighley@example.com}
+  mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:hc-mcc-minshull@example.com}
+  mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:hc-mcc-crown-square@example.com}
+  manchesterMags: ${IA_HOME_OFFICE_MANCHESTER_MAGS_EMAIL:hc-manchester-mags@example.com}
+  nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:hc-nth-tyne-mags@example.com}
+  leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:hc-leeds-mags@example.com}
+  alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
@@ -1266,6 +1332,16 @@ homeOfficeEmailAddresses:
   hattonCross: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-hatton-cross@example.com}
   glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
+  harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-harmondsworth@example.com}
+  hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
+  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:ho-yarls-wood@example.com}
+  bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
+  mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
+  mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:ho-mcc-crown-square@example.com}
+  manchesterMags: ${IA_HOME_OFFICE_MANCHESTER_MAGS_EMAIL:ho-manchester-mags@example.com}
+  nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:ho-nth-tyne-mags@example.com}
+  leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:ho-leeds-mags@example.com}
+  alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:ho-alloa-sherrif@example.com}
 
 homeOfficeFtpaEmailAddresses:
   bradford: ${IA_FTPA_HOME_OFFICE_BRADFORD_EMAIL:ho-ftpa-bradford@example.com}
