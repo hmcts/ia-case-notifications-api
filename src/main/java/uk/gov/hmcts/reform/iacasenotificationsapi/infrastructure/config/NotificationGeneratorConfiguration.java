@@ -3592,8 +3592,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("appelantSubmittedWithRemissionRequestNotificationGenerator")
-    public List<NotificationGenerator> appelantSubmittedWithRemissionRequestNotificationGenerator(
+    @Bean("appellantSubmittedWithRemissionRequestNotificationGenerator")
+    public List<NotificationGenerator> appellantSubmittedWithRemissionRequestNotificationGenerator(
         AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail,
         AppellantSubmittedWithRemissionRequestPersonalisationSms appellantSubmittedWithRemissionRequestPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -3657,6 +3657,28 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator")
+    public List<NotificationGenerator> appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator(
+        AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail,
+        AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }
