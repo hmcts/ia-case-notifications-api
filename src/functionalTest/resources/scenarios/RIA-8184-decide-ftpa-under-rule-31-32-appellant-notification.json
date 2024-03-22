@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8184 Applicant FTPA application Judge decision under 31 rule (AIP journey)",
+  "description": "RIA-8184 Appellant FTPA application Judge decision under 32 rule (AIP journey)",
   "launchDarklyKey": "dlrm-setaside-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -11,6 +11,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "isDlrmSetAsideEnabled": "Yes",
           "journeyType": "aip",
           "appellantInUk": "No",
           "subscriptions": [
@@ -27,6 +28,7 @@
           ],
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaAppellantRjDecisionOutcomeType": "remadeRule32",
+          "ftpaAppellantDecisionRemadeRule32": "allowed",
           "ftpaApplicantType": "appellant",
           "ariaListingReference": "987654321",
           "notificationsSent": []
@@ -56,12 +58,13 @@
       {
         "reference": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Your application was granted",
+        "subject": "Immigration and Asylum appeal: Application decided",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "Talha Awan",
-          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided to review the appeal decision.\n\nSign in to your account to see reasons for this decision:",
+          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided to review the appeal decision.",
+          "Sign in to your account to see reasons for this decision:",
           "{$iaAipFrontendUrl}"
         ]
       },

@@ -1,5 +1,5 @@
 {
-  "description": "RIA-3855 FTPA submitted Respondent FTPA Decision home office notification failed (Judge)",
+  "description": "RIA-8101 FTPA submitted Respondent FTPA Decision home office notification failed (Judge)",
   "launchDarklyKey": "dlrm-setaside-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -68,17 +68,6 @@
           "PA/12345/2019",
           "987654321",
           "Talha Awan"
-        ]
-      },
-      {
-        "reference": "3855_FTPA_DECISION_HO_NOTIFICATION_FAILED_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.bradford}",
-        "subject": "Immigration and Asylum appeal: A notification to the respondent has failed",
-        "body": [
-          "PA/12345/2019",
-          "987654321",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
         ]
       }
     ]
