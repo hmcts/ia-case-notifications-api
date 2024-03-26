@@ -3576,6 +3576,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("updateTribunalDecisionRule32AipNotificationGenerator")
     public List<NotificationGenerator> updateTribunalDecisionRule32AipNotificationGenerator(
+            RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail,
             AppellantUpdateTribunalDecisionRule32PersonalisationEmail appellantUpdateTribunalDecisionRule32PersonalisationEmail,
             AppellantUpdateTribunalDecisionRule32PersonalisationSms appellantUpdateTribunalDecisionRule32PersonalisationSms,
             GovNotifyNotificationSender notificationSender,
@@ -3584,7 +3585,9 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(appellantUpdateTribunalDecisionRule32PersonalisationEmail),
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+                                appellantUpdateTribunalDecisionRule32PersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
                 ),
