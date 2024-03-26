@@ -3451,6 +3451,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("aipDisposeUnderRule31Or32AppelantNotificationGenerator")
     public List<NotificationGenerator> aipDisposeUnderRule31Or32AppelantNotificationGenerator(
+        HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
         AipAppellantDisposeUnderRule31Or32PersonalisationEmail aipAppellantDisposeUnderRule31Or32PersonalisationEmail,
         AipAppellantDisposeUnderRule31Or32PersonalisationSms aipAppellantDisposeUnderRule31Or32PersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -3459,7 +3460,10 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(aipAppellantDisposeUnderRule31Or32PersonalisationEmail),
+                newArrayList(
+                    homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
+                    aipAppellantDisposeUnderRule31Or32PersonalisationEmail
+                ),
                 notificationSender,
                 notificationIdAppender
             ),
