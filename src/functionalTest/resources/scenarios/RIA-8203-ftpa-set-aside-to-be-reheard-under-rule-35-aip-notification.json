@@ -20,7 +20,7 @@
           "journeyType": "aip",
           "appealOutOfCountry": "No",
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
-          "listCaseHearingCentre": "birmingham",
+          "listCaseHearingCentre": "glasgow",
           "ftpaAppellantRjDecisionOutcomeType": "reheardRule35",
           "ftpaApplicantType": "appellant",
           "ariaListingReference": "987654321",
@@ -55,7 +55,7 @@
         "journeyType": "aip",
         "appealOutOfCountry": "No",
         "currentCaseStateVisibleToJudge": "ftpaSubmitted",
-        "listCaseHearingCentre": "birmingham",
+        "listCaseHearingCentre": "glasgow",
         "ftpaAppellantRjDecisionOutcomeType": "reheardRule35",
         "ftpaApplicantType": "appellant",
         "ariaListingReference": "987654321",
@@ -73,7 +73,15 @@
         ],
         "notificationsSent": [
           {
+            "id": "8203_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
             "id": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -89,6 +97,29 @@
           "A1234567",
           "Pablo Jimenez",
           "{$iaAipFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      },
+      {
+        "reference": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided that the appeal should be heard again by the First-tier Tribunal.\n\nSign in to your account to see reasons for the decision:",
+          "{$iaAipFrontendUrl}"
+        ]
+      },
+      {
+        "reference": "8203_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+        "recipient": "{$homeOfficeFtpaEmailAddresses.glasgow}",
+        "subject": "Immigration and Asylum appeal: Application decided",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Pablo Jimenez",
+          "{$iaExUiFrontendUrl}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
