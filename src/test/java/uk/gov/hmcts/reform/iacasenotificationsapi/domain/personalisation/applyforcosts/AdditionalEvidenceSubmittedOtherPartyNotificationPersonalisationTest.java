@@ -56,6 +56,10 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private String homeOfficeReferenceNumber = "A1234567/001";
+    private String expectedLegalRepRefNumber = "\nYour reference: someLegalRepRefNumber";
+    private String expectedHomeOfficeReferenceNumber = "\nHome Office reference: A1234567/001";
+    private String ariaReferenceNumber = "ariaReferenceNumber";
+    private String expectedAriaReferenceNumber = "\nListing reference: ariaReferenceNumber";
     private AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation additionalEvidenceSubmittedOtherPartyNotificationPersonalisation;
 
     @BeforeEach
@@ -80,6 +84,7 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaReferenceNumber));
     }
 
     @Test
@@ -118,15 +123,16 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @MethodSource("appliesForCostsProvider")
-    public void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList) {
+    @MethodSource("appliesForCostsProviderWithJudge")
+    public void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList addEvidenceToCostsList) {
         when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.get(0).getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
         when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.get(0).getId()));
+        when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
+        when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(addEvidenceToCostsList));
 
         Map<String, String> personalisation = additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(applyForCostsList.get(0).getId(), personalisation.get("applicationId"));
@@ -135,18 +141,15 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
 
         if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals("Home office")) {
             assertEquals("Wasted", personalisation.get("appliedCostsType"));
+            assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+            assertEquals(expectedLegalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+            assertEquals(expectedAriaReferenceNumber, personalisation.get("ariaListingReference"));
         } else {
             assertEquals("Unreasonable", personalisation.get("appliedCostsType"));
+            assertEquals(expectedHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+            assertEquals("", personalisation.get("legalRepReferenceNumber"));
+            assertEquals("", personalisation.get("ariaListingReference"));
         }
-    }
-
-    static Stream<Arguments> appliesForCostsProvider() {
-        return Stream.of(
-            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Legal representative", "Unreasonable costs"))),
-                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
-            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts(homeOffice, "Wasted costs"))),
-                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
-        );
     }
 
     static Stream<Arguments> appliesForCostsProviderWithJudge() {
