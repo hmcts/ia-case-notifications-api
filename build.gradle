@@ -384,9 +384,20 @@ dependencies {
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
+    implementation(group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '4.0.0') {
+        exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
+    }
+    implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.8') {
+        exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
+    }
+    implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap' , version: '3.1.7') {
+        exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
+    }
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.74'
 
     implementation 'ch.qos.logback:logback-classic:1.2.13'
     implementation 'ch.qos.logback:logback-core:1.2.13'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
 
     implementation group: 'uk.gov.service.notify', name: 'notifications-java-client', version: '3.19.2-RELEASE'
 
