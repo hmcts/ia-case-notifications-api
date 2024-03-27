@@ -2920,11 +2920,9 @@ public class NotificationHandlerConfiguration {
     ) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.REQUEST_FEE_REMISSION;
-            },
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                   && !isAipJourney(callback.getCaseDetails().getCaseData())
+                   && callback.getEvent() == Event.REQUEST_FEE_REMISSION,
             notificationGenerators
         );
     }
