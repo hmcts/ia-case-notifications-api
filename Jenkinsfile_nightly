@@ -15,7 +15,8 @@ properties([
             booleanParam(name: 'skipIntegrationTests', defaultValue: false, description: 'Tick the checkbox to skip Integration Tests stage'),
             booleanParam(name: 'skipFortifyScan', defaultValue: false, description: 'Tick the checkbox to skip Fortify Scan stage'),
             booleanParam(name: 'skipSecurityScan', defaultValue: false, description: 'Tick the checkbox to skip Security Scan stage'),
-            booleanParam(name: 'skipFullFunctionalTests', defaultValue: false, description: 'Tick the checkbox to skip Full Functional Tests stage'),
+            booleanParam(name: 'skipMutationTests', defaultValue: false, description: 'Tick the checkbox to skip Mutation Tests stage'),
+                booleanParam(name: 'skipFullFunctionalTests', defaultValue: false, description: 'Tick the checkbox to skip Full Functional Tests stage'),
     ])
 ])
 
@@ -148,6 +149,7 @@ def secrets = [
         secret('bail-hearing-centre-yarlswood-email', 'IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL'),
 
         secret('bail-home-office-email', 'IA_BAIL_HOME_OFFICE_EMAIL'),
+        secret('bail-upper-tribunal-email', 'IA_BAIL_UPPER_TRIBUNAL_EMAIL'),
         secret('unrepresented-ada-det-email', 'IA_UNREPRESENTED_ADA_DET_EMAIL'),
         secret('bail-test-applicant-mobile', 'IA_TEST_APPLICANT_MOBILE'),
 
