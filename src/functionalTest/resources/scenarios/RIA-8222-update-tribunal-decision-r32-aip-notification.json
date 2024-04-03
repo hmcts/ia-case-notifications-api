@@ -12,6 +12,7 @@
         "replacements": {
           "journeyType": "aip",
           "isDlrmSetAsideEnabled": "Yes",
+          "listCaseHearingCentre": "taylorHouse",
           "updateTribunalDecisionList": "underRule32",
           "subscriptions": [
             {
@@ -37,6 +38,7 @@
       "replacements": {
         "journeyType": "aip",
         "isDlrmSetAsideEnabled": "Yes",
+        "listCaseHearingCentre": "taylorHouse",
         "updateTribunalDecisionList": "underRule32",
         "subscriptions": [
           {
