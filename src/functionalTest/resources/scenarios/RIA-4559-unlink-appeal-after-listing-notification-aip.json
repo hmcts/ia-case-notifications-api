@@ -1,5 +1,6 @@
 {
   "description": "RIA-4559 unlink appeal (after listing) - AIP",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

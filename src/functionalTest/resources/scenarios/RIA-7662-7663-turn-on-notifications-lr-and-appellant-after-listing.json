@@ -1,5 +1,6 @@
 {
   "description": "RIA-7662 and RIA-7663 Send notification to LR and Appellant when turn on notification event completed by admin or legal officer after listing",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

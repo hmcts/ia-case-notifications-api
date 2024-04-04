@@ -1,5 +1,6 @@
 {
   "description": "RIA-7795-RIA-7796: Legal rep responds to costs and notifies home office and receives notification as well",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

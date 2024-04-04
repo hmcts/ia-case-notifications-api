@@ -1,5 +1,6 @@
 {
   "description": "RIA-8602 Internal non-detained submit appeal",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

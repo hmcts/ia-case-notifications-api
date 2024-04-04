@@ -1,5 +1,6 @@
 {
   "description": "RIA-7329 Internal appellant's FTPA decided by RJ as granted for ADA case",
+  "disabled": true,
   "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",

@@ -1,5 +1,6 @@
 {
   "description": "RIA-7808: Home office lart adds evidence to costs which notifies legal rep",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
