@@ -1,6 +1,5 @@
 {
   "description": "RIA-7329 Internal appellant's FTPA decided by RJ as granted for ADA case",
-  "disabled": true,
   "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -80,7 +79,7 @@
         ]
       },
       {
-        "reference": "7329_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+        "reference": "7329_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
         "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
         "subject": "Accelerated detained appeal: application to appeal to Upper Tribunal granted",
         "body": [

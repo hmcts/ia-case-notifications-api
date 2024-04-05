@@ -1,6 +1,5 @@
 {
   "description": "RIA-7323 Internal non-Ada Hearing adjourned without a date.",
-  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

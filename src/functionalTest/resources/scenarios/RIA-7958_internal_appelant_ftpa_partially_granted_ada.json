@@ -1,6 +1,5 @@
 {
   "description": "RIA-7958 Internal appellant's FTPA partially granted by RJ as granted for ADA case",
-  "disabled": true,
   "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -58,17 +57,27 @@
         "ftpaAppellantRjDecisionOutcomeType": "partiallyGranted",
         "notificationsSent": [
           {
-            "id": "7958_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "7958_INTERNAL_APPELLANT_FTPA_DECIDED_BY_RESIDENT_JUDGE_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7958_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
     },
     "notifications": [
+      {
+        "reference": "7958_INTERNAL_APPELLANT_FTPA_DECIDED_BY_RESIDENT_JUDGE_DET",
+        "recipient": "det-irc-brookhouse@example.com",
+        "subject": "ADA – SERVE IN PERSON: FTPA decided",
+        "body": [
+          "Home Office reference: A1234567",
+          "HMCTS reference: PA/12345/2019",
+          "Appellant name: Talha Awan"
+        ]
+      },
       {
         "reference": "7958_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
         "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
@@ -78,16 +87,6 @@
           "Listing reference: ",
           "Appellant name: Talha Awan",
           "{$iaExUiFrontendUrl}"
-        ]
-      },
-      {
-        "reference": "7958_INTERNAL_APPELLANT_FTPA_DECIDED_BY_RESIDENT_JUDGE_DET",
-        "recipient": "det-irc-brookhouse@example.com",
-        "subject": "ADA – SERVE IN PERSON: FTPA decided",
-        "body": [
-          "Home Office reference: A1234567",
-          "HMCTS reference: PA/12345/2019",
-          "Appellant name: Talha Awan"
         ]
       }
     ]

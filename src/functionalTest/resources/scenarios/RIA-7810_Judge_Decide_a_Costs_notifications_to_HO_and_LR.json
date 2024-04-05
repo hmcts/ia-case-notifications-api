@@ -1,6 +1,5 @@
 {
   "description": "RIA-7810: Decide a costs - Notifications to applicant and respondent",
-  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -23,9 +22,10 @@
           },
           "appliesForCosts": [
             {
-              "id": "1",
+              "id": "11",
               "value": {
-                "appliedCostsType": "Unreasonable costs",
+                "applyForCostsRespondentRole": "Legal representative",
+                "appliedCostsType": "Wasted costs",
                 "respondentToCostsOrder": "Legal representative",
                 "applyForCostsHearingType": "No",
                 "scheduleOfCostsDocuments": [],
@@ -98,24 +98,22 @@
     },
     "notifications": [
       {
-        "reference": "7810__DECIDE_A_COSTS_EMAIL_TO_HO",
+        "reference": "7810_DECIDE_A_COSTS_EMAIL_TO_HO",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: Costs application decided",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "987654321",
           "Talha Awan"
         ]
       },
       {
-        "reference": "7810__DECIDE_A_COSTS_EMAIL_TO_LR",
+        "reference": "7810_DECIDE_A_COSTS_EMAIL_TO_LR",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Costs application decided",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "987654321",
           "Talha Awan"
         ]
       }

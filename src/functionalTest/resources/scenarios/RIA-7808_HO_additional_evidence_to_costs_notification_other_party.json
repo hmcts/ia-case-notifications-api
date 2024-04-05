@@ -1,6 +1,5 @@
 {
   "description": "RIA-7808: Home office lart adds evidence to costs which notifies legal rep",
-  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
@@ -37,6 +36,7 @@
             {
               "id": "1",
               "value": {
+                "applyForCostsRespondentRole": "Home office",
                 "appliedCostsType": "Unreasonable costs",
                 "loggedUserRole": "Home office",
                 "applyForCostsHearingType": "No",
