@@ -65,4 +65,4 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
                     .orElse(""))
                 .build();
     }
-    }
+}
