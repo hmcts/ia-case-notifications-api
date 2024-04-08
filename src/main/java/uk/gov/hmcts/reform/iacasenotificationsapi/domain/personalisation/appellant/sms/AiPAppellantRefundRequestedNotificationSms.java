@@ -17,53 +17,53 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
-    @Service
-    public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificationPersonalisation {
+@Service
+public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificationPersonalisation {
 
-        private final String refundRequestedAipSmsTemplateId;
-        private final RecipientsFinder recipientsFinder;
-        private final String iaAipFrontendUrl;
+    private final String refundRequestedAipSmsTemplateId;
+    private final RecipientsFinder recipientsFinder;
+    private final String iaAipFrontendUrl;
 
-        public AiPAppellantRefundRequestedNotificationSms(
-            @Value("${govnotify.template.requestFeeRemission.appellant.sms}") String refundRequestedAipSmsTemplateId,
-            RecipientsFinder recipientsFinder,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
-        ) {
-            this.refundRequestedAipSmsTemplateId = refundRequestedAipSmsTemplateId;
-            this.recipientsFinder = recipientsFinder;
-            this.iaAipFrontendUrl = iaAipFrontendUrl;
-        }
-
-        @Override
-        public String getTemplateId() {
-            return refundRequestedAipSmsTemplateId;
-        }
-
-        @Override
-        public Set<String> getRecipientsList(AsylumCase asylumCase) {
-            return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
-        }
-
-        @Override
-        public String getReferenceId(Long caseId) {
-            return caseId + "_REFUND_REQUESTED_AIP_NOTIFICATION_SMS";
-        }
-
-        @Override
-        public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
-            requireNonNull(callback, "callback must not be null");
-
-            AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-            return
-                ImmutableMap
-                    .<String, String>builder()
-                    .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                    .put("linkToService", iaAipFrontendUrl)
-                    .put("14 days after refund request sent", asylumCase.read(AsylumCaseDefinition.REQUEST_FEE_REMISSION_DATE, String.class)
-                        .map(date -> LocalDate.parse(date).plusDays(14).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
-                        .orElse(""))
-                    .build();
-        }
+    public AiPAppellantRefundRequestedNotificationSms(
+        @Value("${govnotify.template.requestFeeRemission.appellant.sms}") String refundRequestedAipSmsTemplateId,
+        RecipientsFinder recipientsFinder,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
+    ) {
+        this.refundRequestedAipSmsTemplateId = refundRequestedAipSmsTemplateId;
+        this.recipientsFinder = recipientsFinder;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
     }
+
+    @Override
+    public String getTemplateId() {
+        return refundRequestedAipSmsTemplateId;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+    }
+
+    @Override
+    public String getReferenceId(Long caseId) {
+        return caseId + "_REFUND_REQUESTED_AIP_NOTIFICATION_SMS";
+    }
+
+    @Override
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "callback must not be null");
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+        return
+            ImmutableMap
+                .<String, String>builder()
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("linkToService", iaAipFrontendUrl)
+                .put("14 days after refund request sent", asylumCase.read(AsylumCaseDefinition.REQUEST_FEE_REMISSION_DATE, String.class)
+                    .map(date -> LocalDate.parse(date).plusDays(14).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                    .orElse(""))
+                .build();
+    }
+}
 
