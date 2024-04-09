@@ -4,18 +4,16 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
 public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificationPersonalisation {
@@ -23,15 +21,21 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
     private final String refundRequestedAipSmsTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
+    private final SystemDateProvider systemDateProvider;
+    private final int daysToWaitAfterSubmittingAppealRemission;
 
     public AiPAppellantRefundRequestedNotificationSms(
         @Value("${govnotify.template.requestFeeRemission.appellant.sms}") String refundRequestedAipSmsTemplateId,
         RecipientsFinder recipientsFinder,
-        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
+        SystemDateProvider systemDateProvider
     ) {
         this.refundRequestedAipSmsTemplateId = refundRequestedAipSmsTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
+        this.systemDateProvider = systemDateProvider;
     }
 
     @Override
@@ -53,6 +57,8 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
+        final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
+
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         return
@@ -60,9 +66,7 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
-                .put("14 days after refund request sent", asylumCase.read(AsylumCaseDefinition.REQUEST_FEE_REMISSION_DATE, String.class)
-                    .map(date -> LocalDate.parse(date).plusDays(14).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
-                    .orElse(""))
+                .put("14 days after refund request sent", refundRequestDueDate)
                 .build();
     }
 }

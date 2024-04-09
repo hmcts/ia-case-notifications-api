@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -46,6 +46,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String refundDateMock = "12/03/2024";
     private int daysToAskReinstate = 14;
+    private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private AiPAppellantRefundRequestedNotificationSms aipAppellantRefundRequestedNotificationSms;
 
     @BeforeEach
@@ -60,7 +61,9 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
         aipAppellantRefundRequestedNotificationSms = new AiPAppellantRefundRequestedNotificationSms(
             refundRequestedAipSmsTemplateId,
             recipientsFinder,
-            iaAipFrontendUrl
+            iaAipFrontendUrl,
+            14,
+            systemDateProvider
         );
     }
 
@@ -112,7 +115,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(LocalDate.parse(endAppealDate).plusDays(daysToAskReinstate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("14 days after refund request sent"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
 
 
     }

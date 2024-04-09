@@ -6,8 +6,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -19,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +48,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
     private String refundDateMock = "12/03/2024";
-    private int daysToAskReinstate = 14;
+    private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail;
 
     @BeforeEach
@@ -67,8 +65,11 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
 
         aipAppellantRefundRequestedNotificationEmail = new AiPAppellantRefundRequestedNotificationEmail(
             refundRequestedAipEmailTemplateId,
+
             iaAipFrontendUrl,
-            recipientsFinder
+            14,
+            recipientsFinder,
+            systemDateProvider
         );
     }
 
@@ -106,17 +107,14 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        String endAppealDate = LocalDate.now().toString();
-        when(asylumCase.read(AsylumCaseDefinition.REQUEST_FEE_REMISSION_DATE, String.class)).thenReturn(Optional.of(endAppealDate));
-
         Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(LocalDate.parse(endAppealDate).plusDays(daysToAskReinstate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("14 days after refund request sent"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
 
     }
 }

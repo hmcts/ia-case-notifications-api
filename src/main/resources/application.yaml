@@ -1380,6 +1380,7 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
+  afterSubmittingAppealRemission: 14
 
 appellantDaysToAskReinstate: 14
 

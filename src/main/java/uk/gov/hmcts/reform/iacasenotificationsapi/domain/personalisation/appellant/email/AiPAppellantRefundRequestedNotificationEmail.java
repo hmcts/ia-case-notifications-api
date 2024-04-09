@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,21 +12,28 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
 public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotificationPersonalisation {
     private final String refundRequestedAipEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
+    private final SystemDateProvider systemDateProvider;
+    private final int daysToWaitAfterSubmittingAppealRemission;
 
     public AiPAppellantRefundRequestedNotificationEmail(
         @Value("${govnotify.template.requestFeeRemission.appellant.email}") String refundRequestedAipEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        RecipientsFinder recipientsFinder
+        @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
+        RecipientsFinder recipientsFinder,
+        SystemDateProvider systemDateProvider
     ) {
         this.refundRequestedAipEmailTemplateId = refundRequestedAipEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
+        this.systemDateProvider = systemDateProvider;
 
     }
 
@@ -52,17 +57,17 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+        final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
+
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
-                .put("14 days after refund request sent", asylumCase.read(AsylumCaseDefinition.REQUEST_FEE_REMISSION_DATE, String.class)
-                    .map(date -> LocalDate.parse(date).plusDays(14).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
-                    .orElse(""))
+                .put("14 days after refund request sent", refundRequestDueDate)
                 .build();
     }
 }
