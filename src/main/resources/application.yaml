@@ -960,6 +960,12 @@ govnotify:
         appellant:
             email: 7baedad6-6aeb-45b5-ae00-420ff2b80bba
             sms: 5ad1fc01-101a-4dbc-84d1-191cc6b715f5
+    recordRefundDecision:
+      appellant:
+        approved:
+          email: c9d2a883-5dc5-432c-a012-24a33c48f68a
+          sms: 5b8bd583-1eb1-4f25-83e0-d91326c05e0a
+
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

@@ -3969,7 +3969,28 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                             && isAipJourney(asylumCase)
-                            && isDlrmFeeRemissionEnabled(asylumCase);
+                            && isDlrmFeeRemissionEnabled(asylumCase)
+                            && !isLateRemissionRequest(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipAppellantRecordRefundDecisionNotificationHandler(
+            @Qualifier("aipAppellantRecordRefundDecisionNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                            && isAipJourney(asylumCase)
+                            && isDlrmFeeRefundEnabled(asylumCase)
+                            && isLateRemissionRequest(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -4003,6 +4024,16 @@ public class NotificationHandlerConfiguration {
     private boolean isDlrmFeeRemissionEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_FEE_REMISSION_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private boolean isDlrmFeeRefundEnabled(AsylumCase asylumCase) {
+        return asylumCase.read(IS_DLRM_FEE_REFUND_ENABLED, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private boolean isLateRemissionRequest(AsylumCase asylumCase) {
+        return asylumCase.read(IS_LATE_REMISSION_REQUEST, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 
     private String retrieveApplicantType(AsylumCase asylumCase) {
