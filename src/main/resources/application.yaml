@@ -968,7 +968,12 @@ govnotify:
         approved:
           email: c9d2a883-5dc5-432c-a012-24a33c48f68a
           sms: 5b8bd583-1eb1-4f25-83e0-d91326c05e0a
-
+        partiallyApproved:
+          email: f6e15d1f-aa25-43a6-aa67-0ad50d4bf952
+          sms: 890584f2-f5a7-4bf8-bc8e-39c447884b69
+        rejected:
+          email: 50e2aede-5faf-4182-809c-f4736f54c2c0
+          sms: 0c79aca1-c7ad-4ff3-8c65-455db50e3b5f
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -32,7 +34,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 class AppellantRecordRefundDecisionPersonalisationEmailTest {
 
     private Long caseId = 12345L;
-    private String appellantRemissionApprovedTemplateId = "aipAppellantRemissionApprovedTemplateId";
+    private String appellantRefundApprovedTemplateId = "appellantRefundApprovedTemplateId";
+    private String appellantRefundPartiallyApprovedTemplateId = "appellantRefundPartiallyApprovedTemplateId";
+    private String appellantRefundRejectedTemplateId = "appellantRefundRejectedTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String appellantEmail = "example@example.com";
     private String appealReferenceNumber = "appealReferenceNumber";
@@ -67,7 +71,9 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantRecordRefundDecisionPersonalisationEmail = new AppellantRecordRefundDecisionPersonalisationEmail(
-            appellantRemissionApprovedTemplateId,
+            appellantRefundApprovedTemplateId,
+            appellantRefundPartiallyApprovedTemplateId,
+            appellantRefundRejectedTemplateId,
             iaAipFrontendUrl,
             daysAfterRefundDecision,
             customerServicesProvider,
@@ -76,12 +82,23 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
         );
     }
 
-    @Test
-    void should_return_approved_template_id() {
-        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
+    @ParameterizedTest
+    @EnumSource(
+            value = RemissionDecision.class,
+            names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
+    void should_return_approved_template_id(RemissionDecision remissionDecision) {
 
-        assertEquals(appellantRemissionApprovedTemplateId, appellantRecordRefundDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
 
+        switch (remissionDecision) {
+            case APPROVED ->
+                    assertEquals(appellantRefundApprovedTemplateId, appellantRecordRefundDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            case PARTIALLY_APPROVED ->
+                    assertEquals(appellantRefundPartiallyApprovedTemplateId, appellantRecordRefundDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            case REJECTED ->
+                    assertEquals(appellantRefundRejectedTemplateId, appellantRecordRefundDecisionPersonalisationEmail.getTemplateId(asylumCase));
+            default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
+        }
     }
 
     @Test
@@ -126,7 +143,7 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
         assertEquals(systemDateProvider.dueDate(daysAfterRefundDecision), personalisation.get("14DaysAfterRefundDecision"));
-        assertEquals(amountRemitted, personalisation.get("refundAmount"));
+        assertEquals("40.00", personalisation.get("refundAmount"));
 
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

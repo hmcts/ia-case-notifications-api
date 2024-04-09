@@ -2758,7 +2758,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                       && isPartiallyApproved;
+                       && isPartiallyApproved
+                       && !isAipJourney(asylumCase);
             },
             notificationGenerators
         );
@@ -2783,7 +2784,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                       && isRejected;
+                       && isRejected
+                       && !isAipJourney(asylumCase);
             },
             notificationGenerators
         );

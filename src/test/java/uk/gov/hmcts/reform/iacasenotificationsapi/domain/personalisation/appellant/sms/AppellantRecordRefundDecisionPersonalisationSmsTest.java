@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -30,13 +32,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 class AppellantRecordRefundDecisionPersonalisationSmsTest {
 
     private Long caseId = 12345L;
-    private String apellantRemissionApprovedTemplateId = "aipAppellantRemissionApprovedTemplateId";
+    private String appellantRefundApprovedTemplateId = "appellantRefundApprovedTemplateId";
+    private String appellantRefundPartiallyApprovedTemplateId = "appellantRefundPartiallyApprovedTemplateId";
+    private String appellantRefundRejectedTemplateId = "appellantRefundRejectedTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String appellantMobile = "07781122334";
     private String appealReferenceNumber = "appealReferenceNumber";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer@example.com";
     private int daysAfterRefundDecision = 14;
     private String amountRemitted = "4000";
 
@@ -57,7 +58,9 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
         when(asylumCase.read(AMOUNT_REMITTED, String.class)).thenReturn(Optional.of(amountRemitted));
 
         appellantRecordRefundDecisionPersonalisationSms = new AppellantRecordRefundDecisionPersonalisationSms(
-            apellantRemissionApprovedTemplateId,
+            appellantRefundApprovedTemplateId,
+            appellantRefundPartiallyApprovedTemplateId,
+            appellantRefundRejectedTemplateId,
             iaAipFrontendUrl,
             daysAfterRefundDecision,
             recipientsFinder,
@@ -65,11 +68,22 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
         );
     }
 
-    @Test
-    void should_return_approved_template_id() {
-        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
+    @ParameterizedTest
+    @EnumSource(
+            value = RemissionDecision.class,
+            names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
+    void should_return_approved_template_id(RemissionDecision remissionDecision) {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
 
-        assertEquals(apellantRemissionApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+        switch (remissionDecision) {
+            case APPROVED ->
+                    assertEquals(appellantRefundApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+            case PARTIALLY_APPROVED ->
+                    assertEquals(appellantRefundPartiallyApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+            case REJECTED ->
+                    assertEquals(appellantRefundRejectedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+            default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
+        }
     }
 
     @Test
@@ -111,6 +125,6 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
         assertEquals(systemDateProvider.dueDate(daysAfterRefundDecision), personalisation.get("14DaysAfterRefundDecision"));
-        assertEquals(amountRemitted, personalisation.get("refundAmount"));
+        assertEquals("40.00", personalisation.get("refundAmount"));
     }
 }
