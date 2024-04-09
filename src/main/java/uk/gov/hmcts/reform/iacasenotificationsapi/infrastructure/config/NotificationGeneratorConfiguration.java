@@ -3680,4 +3680,27 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("appellantRefundRequestedAipNotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule31AipNotificationGenerator(
+        AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail,
+        AiPAppellantRefundRequestedNotificationSms aipAppellantRefundRequestedNotificationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    aipAppellantRefundRequestedNotificationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantRefundRequestedNotificationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

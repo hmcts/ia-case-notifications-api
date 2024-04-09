@@ -839,6 +839,9 @@ govnotify:
         email: acb036e5-47a3-454f-a24b-4755bf7e258c
       adminOfficer:
         email: 701597ee-27da-42e1-888f-ff8d461174ac
+      appellant:
+        email: 8ff8227a-82c2-4a36-8469-2e948ed50c50
+        sms: e2a60fc6-da83-4d39-94fc-2fc7c3a610a2
     nocRequestDecision:
       legalRep:
         beforeListing:
@@ -1383,6 +1386,7 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
+  afterSubmittingAppealRemission: 14
 
 appellantDaysToAskReinstate: 14
 
