@@ -1,11 +1,10 @@
 {
   "description": "RIA-7323 Internal non-Ada Hearing adjourned without a date.",
-  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7323,
+      "id": 73230,
       "eventId": "adjournHearingWithoutDate",
       "state": "decision",
       "caseData": {
@@ -45,7 +44,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7323_INTERNAL_DETAINED_ADJOURN_HEARING_WITHOUT_DATE_DET",
+            "id": "73230_INTERNAL_DETAINED_ADJOURN_HEARING_WITHOUT_DATE_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -53,9 +52,9 @@
     },
     "notifications": [
       {
-        "reference": "7323_INTERNAL_DETAINED_ADJOURN_HEARING_WITHOUT_DATE_DET",
+        "reference": "73230_INTERNAL_DETAINED_ADJOURN_HEARING_WITHOUT_DATE_DET",
         "recipient": "det-irc-brookhouse@example.com",
-        "subject": "IAFT - SERVE IN PERSON: Hearing adjourned without a date",
+        "subject": "IAFT – SERVE IN PERSON: Hearing adjourned without a date",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",

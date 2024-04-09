@@ -1,6 +1,5 @@
 {
   "description": "RIA-7733-RIA-7734: Legal rep applies for costs and notifies home office",
-  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
@@ -23,6 +22,7 @@
             {
               "id": "1",
               "value": {
+                "applyForCostsRespondentRole": "Home office",
                 "appliedCostsType": "Unreasonable costs",
                 "respondentToCostsOrder": "Home office",
                 "applyForCostsHearingType": "No",
@@ -76,7 +76,7 @@
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
           "Date application was made: 24 Nov 2023",
-          "Application type: Unreasonable Cost application"
+          "Application type: Unreasonable Costs application"
         ]
       },
       {
@@ -89,7 +89,7 @@
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
           "Date application was made: 24 Nov 2023",
-          "Application type: Unreasonable Cost application"
+          "Application type: Unreasonable Costs application"
         ]
       }
     ]
