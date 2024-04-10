@@ -61,7 +61,7 @@ public class AppellantRecordRefundDecisionPersonalisationSms implements SmsNotif
         RemissionDecision remissionDecision = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                 .orElseThrow(() -> new IllegalStateException("Remission decision not found"));
 
-        return switch (remissionDecision){
+        return switch (remissionDecision) {
             case APPROVED -> appellantRefundApprovedTemplateId;
             case PARTIALLY_APPROVED -> appellantRefundPartiallyApprovedTemplateId;
             case REJECTED -> appellantRefundRejectedTemplateId;
