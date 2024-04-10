@@ -374,6 +374,12 @@ public enum AsylumCaseDefinition {
     IS_DLRM_FEE_REMISSION_ENABLED(
             "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){}),
 
+    IS_DLRM_FEE_REFUND_ENABLED(
+            "isDlrmFeeRefundEnabled", new TypeReference<YesOrNo>(){}),
+
+    IS_LATE_REMISSION_REQUEST(
+            "isLateRemissionRequest", new TypeReference<YesOrNo>(){}),
+
     CCD_REFERENCE_NUMBER_FOR_DISPLAY(
             "ccdReferenceNumberForDisplay", new TypeReference<String>(){}),
 
