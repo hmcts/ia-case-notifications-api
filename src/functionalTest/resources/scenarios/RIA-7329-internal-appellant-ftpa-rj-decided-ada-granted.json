@@ -79,7 +79,7 @@
         ]
       },
       {
-        "reference": "7329_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+        "reference": "7329_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
         "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
         "subject": "Accelerated detained appeal: application to appeal to Upper Tribunal granted",
         "body": [

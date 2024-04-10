@@ -696,7 +696,7 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
-    
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
         @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
@@ -2905,7 +2905,7 @@ public class NotificationHandlerConfiguration {
         boolean isGrantedOrPartiallyGrantedOutcome = asylumCase
             .read(ftpaByWhoLjDecisionOutcomeType, FtpaDecisionOutcomeType.class)
             .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
+                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
             .orElse(false);
 
         if (!isGrantedOrPartiallyGrantedOutcome) {
@@ -2913,7 +2913,7 @@ public class NotificationHandlerConfiguration {
                 .read(ftpaByWhoRjDecisionOutcomeType,
                     FtpaDecisionOutcomeType.class)
                 .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())
-                                 || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
+                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED.toString()))
                 .orElse(false);
         }
 
@@ -2923,7 +2923,7 @@ public class NotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationHandler(
         @Qualifier("ftpaApplicationDecisionGrantedOrPartiallyGrantedRespondentNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+        List<NotificationGenerator> notificationGenerators) {
 
         // RIA-3631
         return new NotificationHandler(
@@ -2932,14 +2932,14 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                           || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                       && isGrantedOrPartiallyGrantedOutcome(asylumCase,
+                    && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
+                    || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
+                    && isGrantedOrPartiallyGrantedOutcome(asylumCase,
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase)
-                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                    && !AsylumCaseUtils.isInternalCase(asylumCase)
+                    && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
-                       && !isAipJourney(asylumCase);
+                    && !isAipJourney(asylumCase);
             },
             notificationGenerators
         );
