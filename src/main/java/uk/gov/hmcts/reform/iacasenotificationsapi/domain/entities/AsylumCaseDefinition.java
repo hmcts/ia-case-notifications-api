@@ -395,6 +395,8 @@ public enum AsylumCaseDefinition {
             "updatedAppealDecision", new TypeReference<String>(){}),
     REQUEST_FEE_REMISSION_DATE(
         "requestFeeRemissionDate", new TypeReference<String>(){}),
+    REMISSION_REJECTED_DATE_PLUS_14DAYS(
+        "remissionRejectedDatePlus14days", new TypeReference<String>(){}),
     ;
 
     private final String value;

@@ -106,7 +106,7 @@ govnotify:
         approved:
           email: 252ce51b-69c3-4441-8a85-3c4179eebfbb
         partiallyApproved:
-          email: 717b0290-36eb-4adf-a4c5-baacf59d379d
+          email: ce04b98a-5958-4dfb-8c7f-abc97b70a323
         rejected:
           email: bd1bc55d-cece-4aff-b38a-a72e506f662a
       adminOfficer:
