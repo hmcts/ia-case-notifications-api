@@ -2804,9 +2804,11 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
 
                 Optional<List<String>> completedStages = asylumCase.read(FEE_UPDATE_COMPLETED_STAGES);
-                boolean isRefundInstructed = completedStages.isPresent()
-                                             && completedStages.get().get(completedStages.get().size() - 1)
-                                                 .equals("feeUpdateRefundInstructed");
+                boolean isRefundInstructed = false;
+                if (completedStages.isPresent() && !completedStages.get().isEmpty()) {
+                    isRefundInstructed = completedStages.get().get(completedStages.get().size() - 1)
+                        .equals("feeUpdateRefundInstructed");
+                }
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.MANAGE_FEE_UPDATE
