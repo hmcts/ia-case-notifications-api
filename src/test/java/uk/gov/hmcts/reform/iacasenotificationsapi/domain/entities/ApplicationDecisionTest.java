@@ -11,6 +11,7 @@ public class ApplicationDecisionTest {
 
         assertEquals("Refused", ApplicationDecision.REFUSED.toString());
         assertEquals("Granted", ApplicationDecision.GRANTED.toString());
-        assertEquals(2, ApplicationDecision.values().length);
+        assertEquals("RefusedUnderIma", ApplicationDecision.REFUSED_UNDER_IMA.toString());
+        assertEquals(3, ApplicationDecision.values().length);
     }
 }

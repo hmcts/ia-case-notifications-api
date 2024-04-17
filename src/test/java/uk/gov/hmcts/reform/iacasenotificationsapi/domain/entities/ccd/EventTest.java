@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CASE_LISTING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CHANGE_BAIL_DIRECTION_DUE_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CREATE_BAIL_CASE_LINK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CUSTOMISE_HEARING_BUNDLE;
@@ -15,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST_BAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_THE_DECISION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REINSTATE_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_LEGAL_REPRESENTATIVE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_REPRESENTATION;
@@ -132,11 +134,13 @@ public class EventTest {
         assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
         assertEquals("decideFtpaApplication", Event.DECIDE_FTPA_APPLICATION.toString());
         assertEquals("updateTribunalDecision", Event.UPDATE_TRIBUNAL_DECISION.toString());
+        assertEquals("caseListing", CASE_LISTING.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
+        assertEquals("recordTheDecision", RECORD_THE_DECISION.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(101, Event.values().length);
+        assertEquals(104, Event.values().length);
     }
 }

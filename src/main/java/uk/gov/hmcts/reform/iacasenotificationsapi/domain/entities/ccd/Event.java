@@ -104,6 +104,9 @@ public enum Event {
     MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
     DECIDE_FTPA_APPLICATION("decideFtpaApplication"),
     UPDATE_TRIBUNAL_DECISION("updateTribunalDecision"),
+    RECORD_THE_DECISION("recordTheDecision"),
+    SEND_UPLOAD_BAIL_SUMMARY_DIRECTION("sendUploadBailSummaryDirection"),
+    CASE_LISTING("caseListing"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
