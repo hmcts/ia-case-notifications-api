@@ -116,6 +116,8 @@ public enum Event {
     CONSIDER_MAKING_COSTS_ORDER("considerMakingCostsOrder"),
     DECIDE_COSTS_APPLICATION("decideCostsApplication"),
     RECORD_THE_DECISION("recordTheDecision"),
+    SEND_UPLOAD_BAIL_SUMMARY_DIRECTION("sendUploadBailSummaryDirection"),
+    CASE_LISTING("caseListing"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
