@@ -3713,7 +3713,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("appellantRefundRequestedAipNotificationGenerator")
-    public List<NotificationGenerator> updateTribunalDecisionRule31AipNotificationGenerator(
+    public List<NotificationGenerator> appellantRefundRequestedAipNotificationGenerator(
         AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail,
         AiPAppellantRefundRequestedNotificationSms aipAppellantRefundRequestedNotificationSms,
         GovNotifyNotificationSender notificationSender,
