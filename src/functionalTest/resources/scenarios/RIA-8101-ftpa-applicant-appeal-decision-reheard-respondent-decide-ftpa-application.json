@@ -1,19 +1,18 @@
 {
-  "description": "RIA-3651 FTPA Applicant Application Decision Reheard Rule 35 Respondent (Taylor House hearing centre)",
+  "description": "RIA-8101 FTPA Applicant Application Decision Granted Respondent (Taylor House hearing centre)",
   "launchDarklyKey": "dlrm-setaside-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 36514,
+      "id": 1010,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "isReheardAppealEnabled": "Yes",
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
-          "ftpaRespondentDecisionOutcomeType": "reheardRule35",
+          "ftpaRespondentDecisionOutcomeType": "reheardRule32",
           "ftpaApplicantType": "respondent",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "987654321",
@@ -30,15 +29,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "36514_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "1010_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "36514_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "36514_FTPA_APPLICATION_DECISION_CASE_OFFICER",
+            "id": "1010_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,7 +41,7 @@
     },
     "notifications": [
       {
-        "reference": "36514_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "1010_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -57,7 +52,7 @@
         ]
       },
       {
-        "reference": "36514_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1010_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -65,17 +60,6 @@
           "CASE001",
           "987654321",
           "Talha Awan"
-        ]
-      },
-      {
-        "reference": "36514_FTPA_APPLICATION_DECISION_CASE_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
-        "body": [
-          "PA/12345/2019",
-          "987654321",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
         ]
       }
     ]

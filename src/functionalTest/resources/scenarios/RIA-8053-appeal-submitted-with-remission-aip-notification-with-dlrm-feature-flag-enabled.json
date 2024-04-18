@@ -105,8 +105,7 @@
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
-          "Appeal an immigration or asylum decision: Appeal reference:",
-          "PA/12345/2019",
+          "Appeal reference: PA/12345/2019",
           "",
           "Your appeal details have been sent to the Tribunal.",
           "There is a fee for this appeal. You told the Tribunal",
