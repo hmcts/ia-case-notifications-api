@@ -36,6 +36,7 @@
             {
               "id": "1",
               "value": {
+                "applyForCostsRespondentRole": "Home office",
                 "appliedCostsType": "Unreasonable costs",
                 "loggedUserRole": "Home office",
                 "applyForCostsHearingType": "No",

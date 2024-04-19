@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7948,
+      "id": 86020,
       "eventId": "submitAppeal",
       "state": "appealStarted",
       "caseData": {
@@ -30,7 +30,7 @@
         "appealType": "deprivation",
         "notificationsSent": [
           {
-            "id": "7948_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "86020_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "7948_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "86020_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "apc_privatebetainbox@example.com",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

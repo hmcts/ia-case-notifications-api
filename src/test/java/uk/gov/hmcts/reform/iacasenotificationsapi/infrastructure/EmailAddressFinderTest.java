@@ -68,7 +68,7 @@ public class EmailAddressFinderTest {
         given(adminEmailAddresses.get(HearingCentre.GLASGOW_TRIBUNAL_CENTRE)).willReturn("glasgowedets@example.com");
         given(adminEmailAddresses.get(HearingCentre.BELFAST)).willReturn("glasgowedets@example.com");
         given(adminEmailAddresses.get(HearingCentre.HARMONDSWORTH)).willReturn("harmondsworthedets@example.com");
-        given(adminEmailAddresses.get(HearingCentre.YARLSWOOD)).willReturn("yarlswoodedets@example.com");
+        given(adminEmailAddresses.get(HearingCentre.YARLS_WOOD)).willReturn("yarlswoodedets@example.com");
 
         emailAddressFinder = new EmailAddressFinder(
             hearingCentreEmailAddresses,
@@ -169,7 +169,7 @@ public class EmailAddressFinderTest {
         "GLASGOW_TRIBUNAL_CENTRE,glasgowedets@example.com",
         "BELFAST,glasgowedets@example.com",
         "HARMONDSWORTH,harmondsworthedets@example.com",
-        "YARLSWOOD,yarlswoodedets@example.com"
+        "YARLS_WOOD,yarlswoodedets@example.com"
     })
     public void should_return_correct_admin_email_address_from_lookup_map(String hearingCentre, String mappedEmail) {
         // Given

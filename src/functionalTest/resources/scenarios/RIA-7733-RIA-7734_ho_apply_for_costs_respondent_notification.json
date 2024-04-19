@@ -30,6 +30,7 @@
                 "scheduleOfCostsDocuments": [],
                 "applyForCostsCreationDate": "2023-11-24",
                 "applyForCostsApplicantType": "Home office",
+                "applyForCostsRespondentRole": "Legal representative",
                 "argumentsAndEvidenceDetails": "",
                 "argumentsAndEvidenceDocuments": [
                   {
@@ -78,7 +79,7 @@
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
           "Date application was made: 24 Nov 2023",
-          "Application type: Unreasonable Cost application"
+          "Application type: Unreasonable Costs application"
         ]
       },
       {
@@ -91,7 +92,7 @@
           "Appellant name: Talha Awan",
           "The online service: {$iaExUiFrontendUrl}",
           "Date application was made: 24 Nov 2023",
-          "Application type: Unreasonable Cost application"
+          "Application type: Unreasonable Costs application"
         ]
       }
     ]

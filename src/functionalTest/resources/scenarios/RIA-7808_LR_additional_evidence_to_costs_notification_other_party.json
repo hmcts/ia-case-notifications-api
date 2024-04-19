@@ -36,6 +36,7 @@
             {
               "id": "1",
               "value": {
+                "applyForCostsRespondentRole": "Legal representative",
                 "appliedCostsType": "Unreasonable costs",
                 "loggedUserRole": "Legal representative",
                 "applyForCostsHearingType": "No",
