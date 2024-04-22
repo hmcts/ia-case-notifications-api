@@ -127,6 +127,9 @@ public enum AsylumCaseDefinition {
     LIST_CASE_HEARING_CENTRE(
             "listCaseHearingCentre",  new TypeReference<HearingCentre>(){}),
 
+    LIST_CASE_HEARING_CENTRE_ADDRESS(
+        "listCaseHearingCentreAddress",  new TypeReference<String>(){}),
+
     APPEAL_REVIEW_OUTCOME(
         "appealReviewOutcome", new TypeReference<AppealReviewOutcome>(){}),
 

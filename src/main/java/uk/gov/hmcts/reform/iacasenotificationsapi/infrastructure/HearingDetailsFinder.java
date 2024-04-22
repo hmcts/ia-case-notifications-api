@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.AsylumCaseUtils.isIntegrated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
 
@@ -23,12 +24,11 @@ public class HearingDetailsFinder {
         final HearingCentre listCaseHearingCentre =
                 getHearingCentre(asylumCase);
 
-        final String hearingCentreAddress =
-                stringProvider
-                    .get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
-                    .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
-
-        return hearingCentreAddress;
+        return isIntegrated(asylumCase)
+            ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
+            .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"))
+            : stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
+            .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {
@@ -78,7 +78,10 @@ public class HearingDetailsFinder {
         if (hearingCentre == HearingCentre.REMOTE_HEARING) {
             return "Remote hearing";
         } else {
-            return getHearingCentreAddress(asylumCase);
+            return isIntegrated(asylumCase)
+                ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
+                .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"))
+                : getHearingCentreAddress(asylumCase);
         }
     }
 
