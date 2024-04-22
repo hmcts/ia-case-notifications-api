@@ -3065,6 +3065,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("manageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
+    public List<NotificationGenerator> manageFeeUpdateAdditionalPaymentRequestedNotificationHandler(
+        LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCanProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCanProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCanProceed legalRepresentativeRecordOutOfTimeDecisionCanProceed,

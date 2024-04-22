@@ -870,6 +870,8 @@ govnotify:
       legalRep:
         refundInstructed:
           email: d8c58492-350b-4191-847a-739502c6d800
+        additionalPayment:
+          email: 1ceb95bc-0026-4dea-9843-ee1355676861
     recordOutOfTimeDecision:
       legalRep:
         canProceed:
@@ -1394,6 +1396,9 @@ appellantDaysToWait:
   afterSubmittingAppealRemission: 14
 
 appellantDaysToAskReinstate: 14
+
+legalRepDaysToWait:
+  afterManageFeeUpdate: 14
 
 ftpaOutOfCountryDays: 28
 ftpaInCountryDays: 14
