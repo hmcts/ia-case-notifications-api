@@ -3703,4 +3703,21 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("legalRepRemissionPaymentReminderEmailNotificationGenerator")
+    public List<NotificationGenerator> legalRepRemissionPaymentReminderEmailNotificationGenerator(
+        LegalRepRemissionPaymentReminderPersonalisation legalRepRemissionPaymentReminderPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepRemissionPaymentReminderPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

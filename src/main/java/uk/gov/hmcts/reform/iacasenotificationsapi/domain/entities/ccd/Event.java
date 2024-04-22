@@ -105,6 +105,8 @@ public enum Event {
     DECIDE_FTPA_APPLICATION("decideFtpaApplication"),
     UPDATE_TRIBUNAL_DECISION("updateTribunalDecision"),
 
+    RECORD_REMISSION_REMINDER("recordRemissionReminder"),
+
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 
