@@ -44,7 +44,7 @@
         "subject": "Immigration and Asylum appeal: Appeal fee changed",
         "body": [
           "PA/12345/2019",
-          "A1234567",
+          "CASE001",
           "Talha Awan",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
