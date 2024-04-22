@@ -3469,6 +3469,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("aipDisposeUnderRule31Or32AppelantNotificationGenerator")
     public List<NotificationGenerator> aipDisposeUnderRule31Or32AppelantNotificationGenerator(
+        HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
         AipAppellantDisposeUnderRule31Or32PersonalisationEmail aipAppellantDisposeUnderRule31Or32PersonalisationEmail,
         AipAppellantDisposeUnderRule31Or32PersonalisationSms aipAppellantDisposeUnderRule31Or32PersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -3477,7 +3478,10 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(aipAppellantDisposeUnderRule31Or32PersonalisationEmail),
+                newArrayList(
+                    homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
+                    aipAppellantDisposeUnderRule31Or32PersonalisationEmail
+                ),
                 notificationSender,
                 notificationIdAppender
             ),
@@ -3511,6 +3515,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("aipReheardUnderRule35AppelantNotificationGenerator")
     public List<NotificationGenerator> aipReheardUnderRule35AppelantNotificationGenerator(
+        RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail,
         AipAppellantReheardUnderRule35PersonalisationEmail aipAppellantReheardUnderRule35PersonalisationEmail,
         AipAppellantReheardUnderRule35PersonalisationSms aipAppellantReheardUnderRule35PersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -3519,7 +3524,8 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(aipAppellantReheardUnderRule35PersonalisationEmail),
+                newArrayList(respondentReheardUnderRule35PersonalisationEmail,
+                        aipAppellantReheardUnderRule35PersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             ),
@@ -3590,6 +3596,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("updateTribunalDecisionRule32AipNotificationGenerator")
     public List<NotificationGenerator> updateTribunalDecisionRule32AipNotificationGenerator(
+            RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail,
             AppellantUpdateTribunalDecisionRule32PersonalisationEmail appellantUpdateTribunalDecisionRule32PersonalisationEmail,
             AppellantUpdateTribunalDecisionRule32PersonalisationSms appellantUpdateTribunalDecisionRule32PersonalisationSms,
             GovNotifyNotificationSender notificationSender,
@@ -3598,7 +3605,9 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(appellantUpdateTribunalDecisionRule32PersonalisationEmail),
+                        newArrayList(
+                                respondentUpdateTribunalDecisionRule32PersonalisationEmail,
+                                appellantUpdateTribunalDecisionRule32PersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
                 ),
@@ -3610,8 +3619,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("appelantSubmittedWithRemissionRequestNotificationGenerator")
-    public List<NotificationGenerator> appelantSubmittedWithRemissionRequestNotificationGenerator(
+    @Bean("appellantSubmittedWithRemissionRequestNotificationGenerator")
+    public List<NotificationGenerator> appellantSubmittedWithRemissionRequestNotificationGenerator(
         AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail,
         AppellantSubmittedWithRemissionRequestPersonalisationSms appellantSubmittedWithRemissionRequestPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
@@ -3699,8 +3708,30 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator")
+    public List<NotificationGenerator> appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator(
+        AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail,
+        AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("appellantRefundRequestedAipNotificationGenerator")
-    public List<NotificationGenerator> updateTribunalDecisionRule31AipNotificationGenerator(
+    public List<NotificationGenerator> appellantRefundRequestedAipNotificationGenerator(
         AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail,
         AiPAppellantRefundRequestedNotificationSms aipAppellantRefundRequestedNotificationSms,
         GovNotifyNotificationSender notificationSender,
