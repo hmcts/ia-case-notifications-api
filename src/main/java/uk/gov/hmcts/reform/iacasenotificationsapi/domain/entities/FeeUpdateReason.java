@@ -24,4 +24,5 @@ public enum FeeUpdateReason {
     public String toString() {
         return value;
     }
+
 }
