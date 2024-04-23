@@ -210,5 +210,4 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
             "someDirectionType"
         );
     }
-
 }
