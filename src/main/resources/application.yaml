@@ -88,6 +88,9 @@ govnotify:
         remission:
           email: a052fbe6-232d-4815-9032-6d4e6f36c4c4
           sms: 188b659f-49d6-4bf2-ab7d-ce08a9724836
+        paid:
+          email: 4d2ef4b6-86bf-4c4c-ac87-d505a00ca93d
+          sms: e0a89f69-df00-4ab0-88d2-f6a4c619946a
       caseOfficer:
         email: f90aa4d9-159d-4423-ab96-73a1e23c92d4
       homeOffice:
@@ -876,6 +879,9 @@ govnotify:
       legalRep:
         refundInstructed:
           email: d8c58492-350b-4191-847a-739502c6d800
+      appellant:
+        email: b3181829-da2c-4526-9c84-ba0130274a27
+        sms: 97ac746b-1e37-4b17-873f-2f010548b7f8
     recordOutOfTimeDecision:
       legalRep:
         canProceed:
@@ -1400,6 +1406,7 @@ appellantDaysToWait:
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
   afterSubmittingAppealRemission: 14
+  afterNotificationSent: 14
 
 appellantDaysToAskReinstate: 14
 
