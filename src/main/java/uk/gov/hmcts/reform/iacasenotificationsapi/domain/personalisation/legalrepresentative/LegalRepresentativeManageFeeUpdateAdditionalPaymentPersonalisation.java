@@ -2,10 +2,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
 import com.google.common.collect.ImmutableMap;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -75,21 +73,12 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation 
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
-                .put("originalFee", formatToGbp(asylumCase, FEE_AMOUNT_GBP))
-                .put("newFee", formatToGbp(asylumCase, NEW_FEE_AMOUNT))
-                .put("additionalFee", formatToGbp(asylumCase, MANAGE_FEE_REQUESTED_AMOUNT))
+                .put("originalFee", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("newFee", convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
+                .put("additionalFee", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
                 .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).get().getNormalizedValue())
                 .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("dueDate", dueDate)
                 .build();
-    }
-
-    private String formatToGbp(AsylumCase asylumCase, AsylumCaseDefinition caseField) {
-        String amount = asylumCase.read(caseField, String.class).orElse("");
-
-        BigDecimal amountFormattedInGbp = new BigDecimal(String.valueOf(Double.parseDouble(amount) / 100))
-            .setScale(2, RoundingMode.DOWN);
-
-        return amountFormattedInGbp.toString();
     }
 }
