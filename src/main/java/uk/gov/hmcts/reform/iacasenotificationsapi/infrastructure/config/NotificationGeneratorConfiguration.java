@@ -3734,4 +3734,25 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("aipManageFeeUpdatePaymentInstructedNotificationGenerator")
+    public List<NotificationGenerator> aipManageFeeUpdatePaymentInstructedNotificationGenerator(
+        AipAppellantManageFeeUpdatePersonalisationEmail aipAppellantManageFeeUpdatePersonalisationEmail,
+        AipAppellantManageFeeUpdatePersonalisationSms aipAppellantManageFeeUpdatePersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(aipAppellantManageFeeUpdatePersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantManageFeeUpdatePersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
