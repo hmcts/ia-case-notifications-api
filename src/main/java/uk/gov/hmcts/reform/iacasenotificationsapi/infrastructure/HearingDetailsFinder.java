@@ -4,9 +4,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.AsylumCaseUtils.
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingLocation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @Service
@@ -24,11 +29,14 @@ public class HearingDetailsFinder {
         final HearingCentre listCaseHearingCentre =
                 getHearingCentre(asylumCase);
 
-        return isIntegrated(asylumCase)
-            ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
-            .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"))
-            : stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
-            .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
+        Optional<String> refDataAddress = asylumCase
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
+
+        if (isIntegrated(asylumCase) && refDataAddress.isPresent())  {
+            return refDataAddress.get();
+        }
+        return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
+                .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {

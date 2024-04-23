@@ -13,6 +13,7 @@
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
+          "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "isIntegrated": "Yes",
           "subscriptions": [
@@ -93,7 +94,7 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Harmondsworth"
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
         ]
       },
       {
@@ -104,7 +105,7 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Harmondsworth"
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
         ]
       }
     ]

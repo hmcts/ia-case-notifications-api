@@ -14,6 +14,7 @@
           "ariaListingReference": "LP/12345/2023",
           "hearingCentre": "birmingham",
           "listCaseHearingCentre": "remoteHearing",
+          "listCaseHearingCentreAddress": "Birmingham Civil and Family Justice Centre, Priory Courts, 33 Bull Street, B4 6DS",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "remoteVideoCallTribunalResponse": "Some tribunal response",
@@ -25,6 +26,7 @@
         "replacements": {
           "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "remoteHearing",
+          "listCaseHearingCentreAddress": "Birmingham Civil and Family Justice Centre, Priory Courts, 33 Bull Street, B4 6DS",
           "listCaseHearingDate": "2023-09-02T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "isIntegrated": "Yes"
@@ -41,6 +43,7 @@
         "appealReferenceNumber": "PA/12345/2023",
         "hearingCentre": "birmingham",
         "listCaseHearingCentre": "remoteHearing",
+        "listCaseHearingCentreAddress": "Birmingham Civil and Family Justice Centre, Priory Courts, 33 Bull Street, B4 6DS",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
