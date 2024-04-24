@@ -4043,6 +4043,24 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantRefundRequestedAipNotificationHandler(
+        @Qualifier("appellantRefundRequestedAipNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.REQUEST_FEE_REMISSION
+                       && isAipJourney(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> legalRepRemissionPaymentReminderEmailNotificationHandler(
         @Qualifier("legalRepRemissionPaymentReminderEmailNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
