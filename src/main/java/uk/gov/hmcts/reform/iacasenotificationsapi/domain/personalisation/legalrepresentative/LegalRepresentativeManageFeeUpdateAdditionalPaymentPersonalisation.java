@@ -5,20 +5,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String manageFeeUpdateAdditionalPaymentTemplateId;
     private final String iaExUiFrontendUrl;
@@ -44,13 +41,6 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation 
     @Override
     public String getTemplateId() {
         return manageFeeUpdateAdditionalPaymentTemplateId;
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(asylumCase
-            .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
-            .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")));
     }
 
     @Override
