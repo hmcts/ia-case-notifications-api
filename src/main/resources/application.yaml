@@ -873,6 +873,8 @@ govnotify:
       legalRep:
         refundInstructed:
           email: d8c58492-350b-4191-847a-739502c6d800
+        additionalPayment:
+          email: 1ceb95bc-0026-4dea-9843-ee1355676861
       appellant:
         email: b3181829-da2c-4526-9c84-ba0130274a27
         sms: 97ac746b-1e37-4b17-873f-2f010548b7f8
@@ -1401,6 +1403,9 @@ appellantDaysToWait:
   afterNotificationSent: 14
 
 appellantDaysToAskReinstate: 14
+
+legalRepDaysToWait:
+  afterManageFeeUpdate: 14
 
 ftpaOutOfCountryDays: 28
 ftpaInCountryDays: 14

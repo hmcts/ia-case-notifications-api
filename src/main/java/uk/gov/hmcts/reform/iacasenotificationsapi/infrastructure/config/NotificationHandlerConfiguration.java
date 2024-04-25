@@ -2822,6 +2822,33 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> manageFeeUpdateAdditionalPaymentRequestedNotificationHandler(
+        @Qualifier("manageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                boolean additionalPaymentRequested = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
+                    .map(action -> ADDITIONAL_PAYMENT == action)
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.MANAGE_FEE_UPDATE
+                       && additionalPaymentRequested
+                       && !isAipJourney(asylumCase)
+                       && isDlrmFeeRefundEnabled(asylumCase);
+            },
+            notificationGenerators
+        );
+
+    }
+
+    @Bean
     public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionLrNotificationHandler(
         @Qualifier("nocRequestDecisionLrNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
