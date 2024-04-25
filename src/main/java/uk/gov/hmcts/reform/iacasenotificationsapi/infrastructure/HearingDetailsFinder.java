@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.AsylumCaseUtils.isIntegrated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
 
@@ -35,7 +36,7 @@ public class HearingDetailsFinder {
         Optional<String> refDataAddress = asylumCase
             .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
-        if (isAppealsLocationReferenceDataEnabled() && refDataAddress.isPresent())  {
+        if (isIntegrated(asylumCase) && isAppealsLocationReferenceDataEnabled() && refDataAddress.isPresent())  {
             return refDataAddress.get();
         }
         return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
@@ -89,7 +90,7 @@ public class HearingDetailsFinder {
         if (hearingCentre == HearingCentre.REMOTE_HEARING) {
             return "Remote hearing";
         } else {
-            return isAppealsLocationReferenceDataEnabled()
+            return isAppealsLocationReferenceDataEnabled() && isIntegrated(asylumCase)
                 ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreAddress is not present"))
                 : getHearingCentreAddress(asylumCase);
