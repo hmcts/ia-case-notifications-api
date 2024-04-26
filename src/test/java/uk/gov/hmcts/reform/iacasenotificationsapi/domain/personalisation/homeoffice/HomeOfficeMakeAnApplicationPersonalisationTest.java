@@ -236,7 +236,8 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
             State.DECISION,
             State.DECIDED,
             State.FTPA_SUBMITTED,
-            State.FTPA_DECIDED
+            State.FTPA_DECIDED,
+            State.REMITTED
         );
 
         Map<String, List<State>> states = new HashMap<>();
@@ -301,7 +302,8 @@ public class HomeOfficeMakeAnApplicationPersonalisationTest {
             State.DECISION,
             State.DECIDED,
             State.FTPA_SUBMITTED,
-            State.FTPA_DECIDED
+            State.FTPA_DECIDED,
+            State.REMITTED
         );
 
         Map<String, List<State>> states = new HashMap<>();
