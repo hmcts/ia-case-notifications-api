@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.InterpreterLanguage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.refdata.CourtVenue;
 
 public enum BailCaseFieldDefinition {
     SENT_BY_CHECKLIST(
@@ -298,7 +299,13 @@ public enum BailCaseFieldDefinition {
     ADMIN_SELECT_IMA_STATUS(
         "adminSelectImaStatus", new TypeReference<YesOrNo>() {}),
     HO_SELECT_IMA_STATUS(
-        "hoSelectImaStatus", new TypeReference<YesOrNo>() {});
+        "hoSelectImaStatus", new TypeReference<YesOrNo>() {}),
+    IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED(
+            "isBailsLocationReferenceDataEnabled", new TypeReference<YesOrNo>() {}),
+    REF_DATA_LISTING_LOCATION_DETAIL(
+            "refDataListingLocationDetail", new TypeReference<CourtVenue>() {}),
+    IS_REMOTE_HEARING(
+            "isRemoteHearing", new TypeReference<YesOrNo>() {});;
 
 
     private final String value;
