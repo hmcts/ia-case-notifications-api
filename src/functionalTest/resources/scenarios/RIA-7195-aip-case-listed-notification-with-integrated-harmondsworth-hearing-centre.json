@@ -1,5 +1,6 @@
 {
   "description": "RIA-7195 AIP Send case listed notification with isIntegrated field (Harmondsworth hearing centre)",
+  "enabled": "{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -12,6 +13,7 @@
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
           "hearingCentre": "harmondsworth",
+          "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
           "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
@@ -39,6 +41,7 @@
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
         "listCaseHearingCentre": "harmondsworth",
+        "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
         "hearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "subscriptions": [

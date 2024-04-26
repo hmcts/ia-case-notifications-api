@@ -1,34 +1,46 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.AsylumCaseUtils.isIntegrated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingLocation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @Service
 public class HearingDetailsFinder {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String APPEALS_LOCATION_REFERENCE_DATA = "appeals-location-reference-data";
 
     private final StringProvider stringProvider;
+    private final FeatureToggler featureToggler;
 
-    public HearingDetailsFinder(StringProvider stringProvider) {
+    public HearingDetailsFinder(StringProvider stringProvider, FeatureToggler featureToggler) {
         this.stringProvider = stringProvider;
+        this.featureToggler = featureToggler;
     }
 
     public String getHearingCentreAddress(AsylumCase asylumCase) {
         final HearingCentre listCaseHearingCentre =
                 getHearingCentre(asylumCase);
 
-        final String hearingCentreAddress =
-                stringProvider
-                    .get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
-                    .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
+        Optional<String> refDataAddress = asylumCase
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
-        return hearingCentreAddress;
+        if (isIntegrated(asylumCase) && isAppealsLocationReferenceDataEnabled() && refDataAddress.isPresent())  {
+            return refDataAddress.get();
+        }
+        return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
+                .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {
@@ -78,7 +90,10 @@ public class HearingDetailsFinder {
         if (hearingCentre == HearingCentre.REMOTE_HEARING) {
             return "Remote hearing";
         } else {
-            return getHearingCentreAddress(asylumCase);
+            return isAppealsLocationReferenceDataEnabled() && isIntegrated(asylumCase)
+                ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
+                .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreAddress is not present"))
+                : getHearingCentreAddress(asylumCase);
         }
     }
 
@@ -106,4 +121,7 @@ public class HearingDetailsFinder {
         return listCaseHearingCentre.getDescription() + (isRemote ? "" : "\n" + hearingCentreAddress);
     }
 
+    private boolean isAppealsLocationReferenceDataEnabled() {
+        return featureToggler.getValue(APPEALS_LOCATION_REFERENCE_DATA, false);
+    }
 }

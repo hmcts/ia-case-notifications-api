@@ -1,5 +1,6 @@
 {
   "description": "RIA-7195 edit case listing notification with isIntegrated field (Harmondsworth hearing centre)",
+  "enabled": "{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -13,6 +14,7 @@
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
+          "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "isIntegrated": "Yes"
@@ -22,6 +24,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "listCaseHearingCentre": "harmondsworth",
+          "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
           "listCaseHearingDate": "2023-09-02T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
         }
@@ -36,6 +39,7 @@
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
         "listCaseHearingCentre": "harmondsworth",
+        "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
@@ -63,7 +67,7 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Harmondsworth"
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
         ]
       },
       {
@@ -74,7 +78,7 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Harmondsworth"
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
         ]
       },
       {
@@ -85,7 +89,7 @@
           "PA/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Harmondsworth"
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
         ]
       }
     ]
