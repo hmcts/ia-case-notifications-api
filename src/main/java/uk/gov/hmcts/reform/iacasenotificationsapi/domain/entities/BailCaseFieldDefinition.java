@@ -305,7 +305,7 @@ public enum BailCaseFieldDefinition {
     REF_DATA_LISTING_LOCATION_DETAIL(
             "refDataListingLocationDetail", new TypeReference<CourtVenue>() {}),
     IS_REMOTE_HEARING(
-            "isRemoteHearing", new TypeReference<YesOrNo>() {});;
+            "isRemoteHearing", new TypeReference<YesOrNo>() {});
 
 
     private final String value;
