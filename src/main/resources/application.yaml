@@ -48,6 +48,7 @@ spring:
       spec: expireAfterAccess=3600s
 featureFlag:
   homeOfficeGovNotifyEnabled: ${IA_HOME_OFFICE_GOV_NOTIFY_ENABLED:true}
+  appealsLocationReferenceData: ${APPEALS_LOCATION_REFERENCE_DATA_ENABLED:true}
 
 govnotify:
   baseUrl: "https://api.notifications.service.gov.uk"

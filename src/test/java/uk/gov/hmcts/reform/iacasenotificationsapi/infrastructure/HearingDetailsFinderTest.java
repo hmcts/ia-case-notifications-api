@@ -4,10 +4,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingLocation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,18 +33,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 class HearingDetailsFinderTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String APPEALS_LOCATION_REFERENCE_DATA = "appeals-location-reference-data";
+
     @Mock
     AsylumCase asylumCase;
     @Mock
     BailCase bailCase;
     @Mock
     StringProvider stringProvider;
+    @Mock
+    FeatureToggler featureToggler;
     private HearingDetailsFinder hearingDetailsFinder;
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String hearingCentreName = "some hearing centre name";
     private String bailHearingLocationName = "Glasgow";
     private String hearingCentreAddress = "some hearing centre address";
+    private String hearingCentreRefDataAddress = "hearing centre address retrieved from ref data";
     private String hearingDateTime = "2019-08-27T14:25:15.000";
     private String bailHearingDateTime = "2024-01-01T10:29:00.000";
     private String hearingDate = "2019-08-27";
@@ -56,13 +66,23 @@ class HearingDetailsFinderTest {
             .thenReturn(Optional.of(hearingCentreName));
 
         hearingDetailsFinder = new HearingDetailsFinder(
-            stringProvider
-        );
+            stringProvider,
+            featureToggler);
     }
 
     @Test
     void should_return_given_hearing_centre_address() {
         assertEquals(hearingCentreAddress, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+    }
+
+    @Test
+    void should_return_given_hearing_centre_address_from_ref_data_if_location_ref_data_enabled() {
+        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(featureToggler.getValue(APPEALS_LOCATION_REFERENCE_DATA, false)).thenReturn(true);
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of(hearingCentreRefDataAddress));
+
+        assertEquals(hearingCentreRefDataAddress, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
     }
 
     @Test
