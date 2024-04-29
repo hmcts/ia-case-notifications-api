@@ -230,8 +230,8 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
             "ftpaSubmitted",
             "ftpaDecided",
             "adjourned",
-            "decision"
-
+            "decision",
+            "remitted"
         );
 
         Map<String, List<String>> states = new HashMap<>();
@@ -298,8 +298,8 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
             "ftpaSubmitted",
             "ftpaDecided",
             "adjourned",
-            "decision"
-
+            "decision",
+            "remitted"
         );
 
         Map<String, List<String>> states = new HashMap<>();
@@ -367,7 +367,8 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
             "ftpaSubmitted",
             "ftpaDecided",
             "adjourned",
-            "decision"
+            "decision",
+            "remitted"
         );
 
         Map<String, List<String>> states = new HashMap<>();
