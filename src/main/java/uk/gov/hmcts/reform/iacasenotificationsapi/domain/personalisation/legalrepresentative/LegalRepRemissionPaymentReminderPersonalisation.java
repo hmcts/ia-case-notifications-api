@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
 import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
@@ -54,11 +55,6 @@ public class LegalRepRemissionPaymentReminderPersonalisation implements LegalRep
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String amountLeftToPay = asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)
-            .orElseThrow(() -> new IllegalStateException("Amount left to pay is not present"));
-        BigDecimal amountLeftToPayInGbp = new BigDecimal(String.valueOf(Double.valueOf(amountLeftToPay) / 100))
-            .setScale(2, RoundingMode.DOWN);
-
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
@@ -66,7 +62,7 @@ public class LegalRepRemissionPaymentReminderPersonalisation implements LegalRep
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
-            .put("feeAmount", amountLeftToPayInGbp.toString())
+            .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class).orElse("")))
             .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("deadline", asylumCase.read(REMISSION_REJECTED_DATE_PLUS_14DAYS, String.class).orElse(""))
 
