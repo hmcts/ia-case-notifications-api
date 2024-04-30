@@ -4088,6 +4088,24 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepRemissionPaymentReminderEmailNotificationHandler(
+        @Qualifier("legalRepRemissionPaymentReminderEmailNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
+                       && isRemissionRejectedOrPartiallyApproved(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> aipManageFeeUpdatePaymentInstructedNotificationHandler(
         @Qualifier("aipManageFeeUpdatePaymentInstructedNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -4118,6 +4136,12 @@ public class NotificationHandlerConfiguration {
     private boolean isDlrmFeeRemissionEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_FEE_REMISSION_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private boolean isRemissionRejectedOrPartiallyApproved(AsylumCase asylumCase) {
+        return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+            .map(decision -> decision == RemissionDecision.REJECTED || decision == RemissionDecision.PARTIALLY_APPROVED)
+            .orElse(false);
     }
 
     private boolean isDlrmFeeRefundEnabled(AsylumCase asylumCase) {

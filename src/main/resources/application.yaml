@@ -131,6 +131,13 @@ govnotify:
       adminOfficer:
         email: e986a84b-1ac4-42b1-b581-32fb00f3cb2e
 
+    remissionDecisionReminder:
+      legalRep:
+        rejected:
+          email: 9059ed22-4845-4699-80c0-b7b2e0a4d414
+        partiallyApproved:
+          email: 56cac95c-a2e2-4c2d-8914-f1da32520bcd
+
     decisionHomeOfficeNotificationFailed:
       caseOfficer:
         email: a43092a3-3fe5-404e-8613-bc525e3da609
@@ -1182,6 +1189,7 @@ security:
       - "decisionWithoutHearing"
       - "createCaseLink"
       - "maintainCaseLinks"
+      - "recordRemissionReminder"
     caseworker-ia-admofficer:
       - "listCase"
       - "editCaseListing"
@@ -1267,6 +1275,7 @@ security:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
       - "updatePaymentStatus"
+      - "recordRemissionReminder"
     caseworker-ia-homeofficebail:
       - "submitApplication"
       - "uploadBailSummary"
