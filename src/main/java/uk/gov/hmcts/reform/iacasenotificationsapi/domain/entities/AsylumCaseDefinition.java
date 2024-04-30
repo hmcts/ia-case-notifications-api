@@ -124,6 +124,9 @@ public enum AsylumCaseDefinition {
     ARIA_LISTING_REFERENCE(
             "ariaListingReference",  new TypeReference<String>(){}),
 
+    IS_CASE_USING_LOCATION_REF_DATA(
+        "isCaseUsingLocationRefData", new TypeReference<YesOrNo>(){}),
+
     LIST_CASE_HEARING_CENTRE(
             "listCaseHearingCentre",  new TypeReference<HearingCentre>(){}),
 
