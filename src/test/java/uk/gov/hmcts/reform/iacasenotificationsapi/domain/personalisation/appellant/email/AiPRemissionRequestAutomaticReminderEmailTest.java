@@ -80,7 +80,7 @@ class AiPRemissionRequestAutomaticReminderEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_AIP_REMISSION_REMINDER_DECISION",
+        assertEquals(caseId + "_AIP_REMISSION_REMINDER_DECISION_EMAIL",
             aipRemissionRequestAutomaticReminderEmail.getReferenceId(caseId));
     }
 
