@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS;
@@ -28,7 +29,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingLocation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.refdata.CourtVenue;
 
@@ -37,7 +37,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.r
 class HearingDetailsFinderTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
-    private static final String APPEALS_LOCATION_REFERENCE_DATA = "appeals-location-reference-data";
 
     @Mock
     AsylumCase asylumCase;
@@ -45,8 +44,6 @@ class HearingDetailsFinderTest {
     BailCase bailCase;
     @Mock
     StringProvider stringProvider;
-    @Mock
-    FeatureToggler featureToggler;
     private HearingDetailsFinder hearingDetailsFinder;
     private CourtVenue hattonCross;
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -93,9 +90,7 @@ class HearingDetailsFinderTest {
                 "York House And Wellington House, 2-3 Dukes Green, Feltham, Middlesex",
                 "TW14 0LS");
 
-        hearingDetailsFinder = new HearingDetailsFinder(
-            stringProvider,
-            featureToggler);
+        hearingDetailsFinder = new HearingDetailsFinder(stringProvider);
     }
 
     @Test
@@ -106,7 +101,7 @@ class HearingDetailsFinderTest {
     @Test
     void should_return_given_hearing_centre_address_from_ref_data_if_location_ref_data_enabled() {
         when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(featureToggler.getValue(APPEALS_LOCATION_REFERENCE_DATA, false)).thenReturn(true);
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
             .thenReturn(Optional.of(hearingCentreRefDataAddress));
 

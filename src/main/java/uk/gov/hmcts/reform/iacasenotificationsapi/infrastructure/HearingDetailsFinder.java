@@ -30,11 +30,9 @@ public class HearingDetailsFinder {
     private static final String REMOTE_HEARING_LOCATION = "Cloud Video Platform (CVP)";
 
     private final StringProvider stringProvider;
-    private final FeatureToggler featureToggler;
 
-    public HearingDetailsFinder(StringProvider stringProvider, FeatureToggler featureToggler) {
+    public HearingDetailsFinder(StringProvider stringProvider) {
         this.stringProvider = stringProvider;
-        this.featureToggler = featureToggler;
     }
 
     public String getHearingCentreAddress(AsylumCase asylumCase) {
@@ -44,7 +42,7 @@ public class HearingDetailsFinder {
         Optional<String> refDataAddress = asylumCase
             .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
-        if (isIntegrated(asylumCase) && isAppealsLocationReferenceDataEnabled() && refDataAddress.isPresent())  {
+        if (isIntegrated(asylumCase) && isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
             return refDataAddress.get();
         }
         return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
@@ -98,7 +96,7 @@ public class HearingDetailsFinder {
         if (hearingCentre == HearingCentre.REMOTE_HEARING) {
             return "Remote hearing";
         } else {
-            return isAppealsLocationReferenceDataEnabled() && isIntegrated(asylumCase)
+            return isCaseUsingLocationRefData(asylumCase) && isIntegrated(asylumCase)
                 ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreAddress is not present"))
                 : getHearingCentreAddress(asylumCase);
@@ -129,8 +127,10 @@ public class HearingDetailsFinder {
         return listCaseHearingCentre.getDescription() + (isRemote ? "" : "\n" + hearingCentreAddress);
     }
 
-    private boolean isAppealsLocationReferenceDataEnabled() {
-        return featureToggler.getValue(APPEALS_LOCATION_REFERENCE_DATA, false);
+    private boolean isCaseUsingLocationRefData(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)
+            .map(yesOrNo -> yesOrNo.equals(YesOrNo.YES))
+            .orElse(false);
     }
 
     public String getListingLocationAddressFromRefDataOrCcd(BailCase bailCase) {
