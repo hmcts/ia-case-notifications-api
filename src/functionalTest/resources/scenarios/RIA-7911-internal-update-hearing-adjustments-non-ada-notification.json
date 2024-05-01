@@ -68,7 +68,7 @@
       {
         "reference": "79111_CHANGE_TO_HEARING_REQUIREMENTS_ADMIN_OFFICER",
         "recipient": "IACReformlisting@gmail.com",
-        "subject": "EXPECT FAILURE change to hearing requirements",
+        "subject": "Immigration and Asylum appeal: change to hearing requirements",
         "body": [
           "HMCTS reference: PA/12345/2019",
           "Listing reference: AA/12345/1234",
@@ -79,7 +79,7 @@
       {
         "reference": "79111_INTERNAL_HEARING_ADJUSTMENTS_CHANGED_DET",
         "recipient": "det-irc-brookhouse@example.com",
-        "subject": "SERVE IN PERSON: Hearing requirements changed",
+        "subject": "IAFT – SERVE IN PERSON: Hearing requirements changed",
         "body": [
           "HMCTS reference: PA/12345/2019",
           "Home Office reference: A1234567",
