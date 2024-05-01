@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingLocation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.refdata.CourtVenue;
@@ -26,7 +25,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.r
 public class HearingDetailsFinder {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
-    private static final String APPEALS_LOCATION_REFERENCE_DATA = "appeals-location-reference-data";
     private static final String REMOTE_HEARING_LOCATION = "Cloud Video Platform (CVP)";
 
     private final StringProvider stringProvider;
@@ -42,7 +40,7 @@ public class HearingDetailsFinder {
         Optional<String> refDataAddress = asylumCase
             .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
-        if (isIntegrated(asylumCase) && isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
+        if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
             return refDataAddress.get();
         }
         return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
@@ -129,7 +127,7 @@ public class HearingDetailsFinder {
 
     private boolean isCaseUsingLocationRefData(AsylumCase asylumCase) {
         return asylumCase.read(AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)
-            .map(yesOrNo -> yesOrNo.equals(YesOrNo.YES))
+            .map(yesOrNo -> yesOrNo.equals(YES))
             .orElse(false);
     }
 
