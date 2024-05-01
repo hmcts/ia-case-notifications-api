@@ -4106,6 +4106,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantInPersonRemissionPaymentReminderEmailNotificationHandler(
+        @Qualifier("appellantInPersonRemissionPaymentReminderEmailNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
+                       && isRemissionRejectedOrPartiallyApproved(asylumCase)
+                       && isAipJourney(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> aipManageFeeUpdatePaymentInstructedNotificationHandler(
         @Qualifier("aipManageFeeUpdatePaymentInstructedNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

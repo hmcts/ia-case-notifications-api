@@ -3790,4 +3790,27 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("appellantInPersonRemissionPaymentReminderEmailNotificationGenerator")
+    public List<NotificationGenerator> legalRepRemissionPaymentReminderEmailNotificationGenerator(
+        AipRemissionRequestAutomaticReminderEmail aipRemissionRequestAutomaticReminderEmail,
+        AipRemissionRequestAutomaticReminderSms aipRemissionRequestAutomaticReminderSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    aipRemissionRequestAutomaticReminderEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipRemissionRequestAutomaticReminderSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }

@@ -137,6 +137,14 @@ govnotify:
           email: 9059ed22-4845-4699-80c0-b7b2e0a4d414
         partiallyApproved:
           email: 56cac95c-a2e2-4c2d-8914-f1da32520bcd
+      appellant:
+        rejected:
+          email: c1f1e953-12e1-45ec-8508-9bed3799b49c
+          sms: ff5801f0-a1c4-417e-b56f-db52ff4a7ec4
+        partiallyApproved:
+          email: e1461a4c-9437-4ec9-8aae-dc3d1134e3b0
+          sms: f84000c5-7ba0-4bd9-bb64-437f4b51b878
+
 
     decisionHomeOfficeNotificationFailed:
       caseOfficer:
