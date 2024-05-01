@@ -61,4 +61,22 @@ public class GovNotifyNotificationSender implements NotificationSender {
                 LOG
         );
     }
+
+    @Override
+    public synchronized String sendLetter(
+        final String templateId,
+        final String address,
+        final Map<String, String> personalisation,
+        final String reference) {
+
+        return senderHelper.sendLetter(
+            templateId,
+            address,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        );
+    }
 }

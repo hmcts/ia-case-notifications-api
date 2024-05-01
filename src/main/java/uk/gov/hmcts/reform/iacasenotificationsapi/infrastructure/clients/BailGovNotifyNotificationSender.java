@@ -67,4 +67,22 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
                 LOG
         );
     }
+
+    @Override
+    public synchronized String sendLetter(
+        final String templateId,
+        final String address,
+        final Map<String, String> personalisation,
+        final String reference) {
+
+        return senderHelper.sendSms(
+            templateId,
+            address,
+            personalisation,
+            reference,
+            notificationBailClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        );
+    }
 }

@@ -23,6 +23,8 @@ class RetryableNotificationClientTest {
     @Mock
     private SendSmsResponse sendSmsResponse;
     @Mock
+    private SendLetterResponse sendLetterResponse;
+    @Mock
     private Notification notification;
 
     private RetryableNotificationClient retryableNotificationClient;
@@ -64,5 +66,16 @@ class RetryableNotificationClientTest {
         retryableNotificationClient.getNotificationById(anyString());
 
         verify(notificationClient, times(2)).getNotificationById(anyString());
+    }
+
+    @Test
+    void should_retry_once_when_sending_letter_failed() throws NotificationClientException {
+        when(notificationClient.sendLetter(anyString(),  anyMap(), anyString()))
+            .thenThrow(new NotificationClientException("some exception"))
+            .thenReturn(sendLetterResponse);
+
+        retryableNotificationClient.sendLetter(anyString(), anyMap(), anyString());
+
+        verify(notificationClient, times(2)).sendLetter(anyString(), anyMap(), anyString());
     }
 }
