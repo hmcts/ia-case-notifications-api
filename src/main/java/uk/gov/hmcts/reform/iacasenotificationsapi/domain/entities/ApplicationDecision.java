@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum ApplicationDecision {
 
     GRANTED("Granted"),
-    REFUSED("Refused");
+    REFUSED("Refused"),
+    REFUSED_UNDER_IMA("RefusedUnderIma");
 
     @JsonValue
     private final String value;
