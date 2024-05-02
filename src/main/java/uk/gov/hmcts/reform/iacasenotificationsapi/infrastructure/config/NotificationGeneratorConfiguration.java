@@ -5252,28 +5252,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator")
-    public List<NotificationGenerator> appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator(
-        AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail,
-        AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new SmsNotificationGenerator(
-                newArrayList(appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("appellantRefundRequestedAipNotificationGenerator")
     public List<NotificationGenerator> appellantRefundRequestedAipNotificationGenerator(
         AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail,

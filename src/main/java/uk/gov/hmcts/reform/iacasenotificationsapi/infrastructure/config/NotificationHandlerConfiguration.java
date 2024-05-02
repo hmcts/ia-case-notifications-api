@@ -4,6 +4,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.APPELLANT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.RESPONDENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAction.ADDITIONAL_PAYMENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
@@ -3531,7 +3532,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && !isInternalCase(asylumCase)
                        && isRejected
-                       && !isAipJourney(asylumCase);
+                        && !isAipJourney(asylumCase);
             },
             notificationGenerators
         );
@@ -5627,25 +5628,6 @@ public class NotificationHandlerConfiguration {
             },
             notificationGenerators,
             getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appellantSubmittedWithRemissionMarkAppealAsPaidNotificationHandler(
-            @Qualifier("appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.MARK_APPEAL_PAID
-                            && isAipJourney(asylumCase)
-                            && isDlrmFeeRemissionEnabled(asylumCase);
-                },
-                notificationGenerators,
-                getErrorHandler()
         );
     }
 
