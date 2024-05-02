@@ -5648,24 +5648,6 @@ public class NotificationHandlerConfiguration {
             getErrorHandler());
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appellantSubmittedWithRemissionMarkAppealAsPaidNotificationHandler(
-        @Qualifier("appellantSubmittedWithRemissionMarkAppealAsPaidNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.MARK_APPEAL_PAID
-                    && isAipJourney(asylumCase)
-                    && isDlrmFeeRemissionEnabled(asylumCase);
-            },
-            notificationGenerators,
-            getErrorHandler()
-        );
-    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule31AipNotificationHandler(
