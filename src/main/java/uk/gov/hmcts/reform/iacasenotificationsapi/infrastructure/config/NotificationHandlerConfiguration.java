@@ -5581,14 +5581,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isAipJourney(asylumCase)
-                            && isDlrmFeeRemissionEnabled(asylumCase)
-                            && !isLateRemissionRequest(asylumCase);
-                },
-                notificationGenerators,
-                getErrorHandler()
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && isAipJourney(asylumCase)
+                       && isDlrmFeeRemissionEnabled(asylumCase)
+                       && !isLateRemissionRequest(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 
