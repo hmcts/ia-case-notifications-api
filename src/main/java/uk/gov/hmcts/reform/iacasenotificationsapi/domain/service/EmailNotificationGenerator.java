@@ -2,12 +2,16 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.ApplicationContextProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder.NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING;
@@ -34,7 +38,11 @@ public class EmailNotificationGenerator implements NotificationGenerator {
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+        ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
+            .setCorrectEmail(asylumCase);
+
         personalisationList.forEach(personalisation -> {
+
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
             notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
@@ -45,8 +53,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final BaseNotificationPersonalisation personalisation,
         final AsylumCase asylumCase,
         final String referenceId,
-        final Callback<AsylumCase> callback
-    ) {
+        final Callback<AsylumCase> callback) {
 
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
@@ -58,7 +65,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
                 emailNotificationPersonalisation,
                 referenceId,
                 callback)
-            ).toList();
+            ).filter(StringUtils::isNotBlank).collect(Collectors.toList());
     }
 
     protected String sendEmail(

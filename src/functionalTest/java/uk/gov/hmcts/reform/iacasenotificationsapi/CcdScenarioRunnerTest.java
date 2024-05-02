@@ -10,7 +10,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.Headers;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -30,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
+import uk.gov.hmcts.reform.iacasenotificationsapi.fixtures.Fixture;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.AuthorizationHeadersProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.LaunchDarklyFunctionalTestClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.MapMerger;
@@ -57,6 +63,8 @@ public class CcdScenarioRunnerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private List<Verifier> verifiers;
+    @Autowired private List<Fixture> fixtures;
+
     private boolean haveAllPassed = true;
     private final ArrayList<String> failedScenarios = new ArrayList<>();
     @Autowired
@@ -73,6 +81,10 @@ public class CcdScenarioRunnerTest {
     public void scenarios_should_behave_as_specified() throws IOException {
         boolean launchDarklyFeature = false;
         loadPropertiesIntoMapValueExpander();
+
+        for (Fixture fixture : fixtures) {
+            fixture.prepare();
+        }
 
         assertFalse(
                 "Verifiers are configured",
@@ -93,7 +105,6 @@ public class CcdScenarioRunnerTest {
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
         System.out.println((char) 27 + "[33m" + "RUNNING " + scenarioSources.size() + " SCENARIOS");
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
-
         int maxRetries = 3;
         for (String scenarioSource : scenarioSources) {
             String description = "";
