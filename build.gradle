@@ -379,8 +379,6 @@ dependencies {
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.9'
     implementation (group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '6.0.0'){
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcutil-jdk15on"
     }
 
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
@@ -393,19 +391,13 @@ dependencies {
 
     implementation(group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '4.0.0') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcutil-jdk15on"
     }
 
     implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.8') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcutil-jdk15on:"
     }
     implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap' , version: '3.1.7') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
-        exclude group: "org.bouncycastle", module: "bcutil-jdk15on:"
     }
     implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.75'
 
