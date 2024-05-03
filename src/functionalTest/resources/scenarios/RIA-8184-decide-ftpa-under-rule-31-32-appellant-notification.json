@@ -85,14 +85,7 @@
       {
         "reference": "8184_FTPA_APPLICATION_DECISION_RULE31_RULE32_HOME_OFFICE",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
-        "subject": "Immigration and Asylum appeal: FTPA application decided",
-        "body": [
-          "PA/12345/2019",
-          "A1234567",
-          "Talha Awan",
-          "This application for permission to appeal to the Upper Tribunal has been removed from the FTPA process and will be decided separately.",
-          "{$iaExUiFrontendUrl}"
-        ]
+        "subject": "Immigration and Asylum appeal: FTPA application decided"
       }
     ]
   }
