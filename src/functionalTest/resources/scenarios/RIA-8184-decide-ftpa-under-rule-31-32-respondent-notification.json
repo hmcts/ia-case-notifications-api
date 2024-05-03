@@ -56,36 +56,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_EMAIL",
-        "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Application decided",
-        "body": [
-          "PA/12345/2019",
-          "A1234567",
-          "Talha Awan",
-          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided to review the appeal decision.",
-          "Sign in to your account to see reasons for this decision:",
-          "{$iaAipFrontendUrl}"
-        ]
-      },
-      {
-        "reference": "8184_AIP_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_SMS",
-        "recipient": "{$TEST_CITIZEN_MOBILE}",
-        "subject": "",
-        "body": [
-          "PA/12345/2019",
-          "A judge has reviewed the application for permission to appeal to the Upper Tribunal and decided to review the appeal decision.\n\nSign in to your account to see reasons for this decision:",
-          "{$iaAipFrontendUrl}"
-        ]
-      },
-      {
-        "reference": "8184_FTPA_APPLICATION_DECISION_RULE31_RULE32_HOME_OFFICE",
-        "recipient": "{$upperTribunalNoticesEmailAddress}",
-        "subject": "Immigration and Asylum appeal: FTPA application decided"
-      }
-    ]
+    }
   }
 }

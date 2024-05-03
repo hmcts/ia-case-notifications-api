@@ -37,18 +37,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "8160_FTPA_APPLICATION_DECISION_RULE31_RULE32_LEGAL_REPRESENTATIVE",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: FTPA application decided"
-      },
-      {
-        "reference": "8160_FTPA_APPLICATION_DECISION_RULE31_RULE32_HOME_OFFICE",
-        "recipient": "{$upperTribunalNoticesEmailAddress}",
-        "subject": "Immigration and Asylum appeal: FTPA application decided"
-      }
-    ]
+    }
   }
 }
