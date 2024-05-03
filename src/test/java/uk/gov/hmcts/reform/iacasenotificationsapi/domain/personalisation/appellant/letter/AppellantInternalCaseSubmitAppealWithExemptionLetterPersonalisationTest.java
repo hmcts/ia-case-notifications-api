@@ -22,7 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisationTest {
+class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -48,7 +48,7 @@ class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisationTest {
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
 
-    private AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation;
+    private AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -69,32 +69,32 @@ class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisationTest {
         when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
         when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
 
-        appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation = new AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation(
+        appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation = new AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation(
             letterTemplateId,
             customerServicesProvider);
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(ccdCaseId + "_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
-            appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation.getReferenceId(ccdCaseId));
+            appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_address_in_correct_format() {
-        assertTrue(appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
     }
@@ -103,7 +103,7 @@ class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            () -> appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
@@ -112,7 +112,7 @@ class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisationTest {
     void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-            appellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));

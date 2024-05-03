@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -10,18 +11,17 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation implements LetterNotificationPersonalisation {
+public class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation implements LetterNotificationPersonalisation {
 
     private final String appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation(
-        @Value("${govnotify.template.appealSubmitted.appellant.letter}") String appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId,
+    public AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation(
+        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withExemption}") String appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId = appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId;
@@ -67,28 +67,5 @@ public class AppellantInternalCaseSubmitAppealWithExceptionLetterPersonalisation
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
         }
         return personalizationBuilder.build();
-    }
-
-    private List<String> getAppellantAddressAsList(final AsylumCase asylumCase) {
-        AddressUk address = asylumCase
-            .read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)
-            .orElseThrow(() -> new IllegalStateException("appellantAddress is not present"));
-
-        List<String> appellantAddressAsList = new ArrayList<>();
-
-        appellantAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("appellantAddress line 1 is not present")));
-        String addressLine2 = address.getAddressLine2().orElse(null);
-        String addressLine3 = address.getAddressLine3().orElse(null);
-
-        if (addressLine2 != null) {
-            appellantAddressAsList.add(addressLine2);
-        }
-        if (addressLine3 != null) {
-            appellantAddressAsList.add(addressLine3);
-        }
-        appellantAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("appellantAddress postTown is not present")));
-        appellantAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("appellantAddress postCode is not present")));
-
-        return appellantAddressAsList;
     }
 }
