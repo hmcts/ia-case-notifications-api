@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -23,20 +24,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @Service
 public class HomeOfficeEditListingPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String homeOfficeCaseEditedTemplateId;
+    private final String homeOfficeCaseEditedNonAdaTemplateId;
+    private final String homeOfficeCaseEditedAdaTemplateId;
     private final String listAssistHearingHomeOfficeCaseEditedTemplateId;
+
     private final PersonalisationProvider personalisationProvider;
     private EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeEditListingPersonalisation(
-        @Value("${govnotify.template.caseEdited.homeOffice.email}") String homeOfficeCaseEditedTemplateId,
+        @Value("${govnotify.template.caseEdited.homeOffice.email.nonAda}") String homeOfficeCaseEditedNonAdaTemplateId,
+        @Value("${govnotify.template.caseEdited.homeOffice.email.ada}") String homeOfficeCaseEditedAdaTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         EmailAddressFinder emailAddressFinder,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.homeOfficeCaseEditedTemplateId = homeOfficeCaseEditedTemplateId;
+
+        this.homeOfficeCaseEditedNonAdaTemplateId = homeOfficeCaseEditedNonAdaTemplateId;
+        this.homeOfficeCaseEditedAdaTemplateId = homeOfficeCaseEditedAdaTemplateId;
         this.listAssistHearingHomeOfficeCaseEditedTemplateId = listAssistHearingHomeOfficeCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
@@ -45,8 +51,10 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-                ? listAssistHearingHomeOfficeCaseEditedTemplateId : homeOfficeCaseEditedTemplateId;
+        return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
+            ? homeOfficeCaseEditedAdaTemplateId
+            : asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
+            ? listAssistHearingHomeOfficeCaseEditedTemplateId : homeOfficeCaseEditedNonAdaTemplateId ;
     }
 
     @Override

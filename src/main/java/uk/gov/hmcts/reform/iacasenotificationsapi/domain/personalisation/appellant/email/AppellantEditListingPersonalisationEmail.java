@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -27,6 +28,10 @@ public class AppellantEditListingPersonalisationEmail implements EmailNotificati
     private final CustomerServicesProvider customerServicesProvider;
     private final RecipientsFinder recipientsFinder;
 
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public AppellantEditListingPersonalisationEmail(
         @Value("${govnotify.template.caseEdited.appellant.email}") String editListingAppellantEmailTemplateId,
@@ -68,6 +73,7 @@ public class AppellantEditListingPersonalisationEmail implements EmailNotificati
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .putAll(personalisationProvider.getPersonalisation(callback))
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()) ? adaPrefix : nonAdaPrefix)
             .put("hyperlink to service", iaAipFrontendUrl);
 
         return listCaseFields.build();

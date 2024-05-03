@@ -482,7 +482,7 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-      
+
     @Bean("caseListingNotificationGenerator")
     public List<BailNotificationGenerator> caseListingNotificationGenerator(
             HomeOfficeBailCaseListingPersonalisation homeOfficeBailCaseListingPersonalisation,
@@ -526,7 +526,7 @@ public class BailNotificationGeneratorConfiguration {
             )
         );
     }
-            
+
     @Bean("endApplicationNotificationForUtGenerator")
     public List<BailNotificationGenerator> endApplicationNotificationForUtGenerator(
         UpperTribunalApplicationEndedImaPersonalisation upperTribunalApplicationEndedImaPersonalisation,
