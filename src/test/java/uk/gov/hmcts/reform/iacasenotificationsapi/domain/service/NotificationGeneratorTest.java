@@ -30,6 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
@@ -46,6 +47,10 @@ public class NotificationGeneratorTest {
     @Mock
     SmsNotificationPersonalisation smsNotificationPersonalisation2;
     @Mock
+    LetterNotificationPersonalisation letterNotificationPersonalisation1;
+    @Mock
+    LetterNotificationPersonalisation letterNotificationPersonalisation2;
+    @Mock
     GovNotifyNotificationSender notificationSender;
     @Spy
     NotificationIdAppender notificationIdAppender;
@@ -59,6 +64,7 @@ public class NotificationGeneratorTest {
     private List<EmailNotificationPersonalisation> repEmailNotificationPersonalisationList;
     private List<EmailNotificationPersonalisation> aipEmailNotificationPersonalisationList;
     private List<SmsNotificationPersonalisation> aipSmsNotificationPersonalisationList;
+    private List<LetterNotificationPersonalisation> letterNotificationPersonalisationList;
 
     private NotificationGenerator notificationGenerator;
 
@@ -75,6 +81,9 @@ public class NotificationGeneratorTest {
 
     private String phoneNumber1 = "07123456789";
     private String phoneNumber2 = "07123456780";
+
+    private String address1 = "20_realstreet_London";
+    private String address2 = "80_realstreet_London";
 
     private Map<String, String> personalizationMap1 = emptyMap();
     private Map<String, String> personalizationMap2 = emptyMap();
@@ -120,6 +129,20 @@ public class NotificationGeneratorTest {
         when(notificationSender.sendSms(templateId2, phoneNumber2, personalizationMap2, refId2))
             .thenReturn(notificationId2);
 
+        when(letterNotificationPersonalisation1.getReferenceId(caseId)).thenReturn(refId1);
+        when(letterNotificationPersonalisation2.getReferenceId(caseId)).thenReturn(refId2);
+
+        when(letterNotificationPersonalisation1.getTemplateId()).thenReturn(templateId1);
+        when(letterNotificationPersonalisation2.getTemplateId()).thenReturn(templateId2);
+
+        when(letterNotificationPersonalisation1.getPersonalisation(callback)).thenReturn(personalizationMap1);
+        when(letterNotificationPersonalisation2.getPersonalisation(callback)).thenReturn(personalizationMap2);
+
+        when(notificationSender.sendLetter(templateId1, address1, personalizationMap1, refId1))
+            .thenReturn(notificationId1);
+        when(notificationSender.sendLetter(templateId2, address2, personalizationMap2, refId2))
+            .thenReturn(notificationId2);
+
         when(notificationIdAppender.append(notificationsSent, refId1, notificationId1)).thenReturn(notificationsSent);
         when(notificationIdAppender.append(notificationsSent, refId2, notificationId2)).thenReturn(notificationsSent);
 
@@ -129,6 +152,8 @@ public class NotificationGeneratorTest {
             newArrayList(emailNotificationPersonalisation, emailNotificationPersonalisation1);
         aipSmsNotificationPersonalisationList =
             newArrayList(smsNotificationPersonalisation1, smsNotificationPersonalisation2);
+        letterNotificationPersonalisationList =
+            newArrayList(letterNotificationPersonalisation1, letterNotificationPersonalisation2);
 
     }
 
@@ -198,6 +223,28 @@ public class NotificationGeneratorTest {
     }
 
     @Test
+    public void should_send_notification_for_each_letter_personalisation() {
+        notificationGenerator =
+            new LetterNotificationGenerator(letterNotificationPersonalisationList, notificationSender,
+                notificationIdAppender);
+
+        when(letterNotificationPersonalisation1.getRecipientsList(asylumCase)).thenReturn(singleton(address1));
+        when(letterNotificationPersonalisation2.getRecipientsList(asylumCase)).thenReturn(singleton(address2));
+
+        notificationGenerator.generate(callback);
+
+        verify(notificationSender).sendLetter(templateId1, address1, personalizationMap1, refId1);
+        verify(notificationSender).sendLetter(templateId2, address2, personalizationMap2, refId2);
+
+        verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
+        verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
+        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
+
+        verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+    }
+
+    @Test
     public void should_not_send_notification_when_email_personalisation_list_empty() {
         notificationGenerator = new EmailNotificationGenerator(emptyList(), notificationSender, notificationIdAppender);
         notificationGenerator.generate(callback);
@@ -234,6 +281,17 @@ public class NotificationGeneratorTest {
     @Test
     public void should_not_send_notification_when_sms_personalisation_list_empty() {
         notificationGenerator = new SmsNotificationGenerator(emptyList(), notificationSender, notificationIdAppender);
+        notificationGenerator.generate(callback);
+
+        verifyNoInteractions(notificationSender);
+        verifyNoInteractions(notificationIdAppender);
+
+        verify(asylumCase, times(0)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+    }
+
+    @Test
+    public void should_not_send_notification_when_letter_personalisation_list_empty() {
+        notificationGenerator = new LetterNotificationGenerator(emptyList(), notificationSender, notificationIdAppender);
         notificationGenerator.generate(callback);
 
         verifyNoInteractions(notificationSender);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendLetterResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
 import java.util.Map;
@@ -95,6 +96,45 @@ public class NotificationSenderHelper {
                     }
                     return Strings.EMPTY;
                 }
+        );
+    }
+
+    public String sendLetter(
+        String templateId,
+        String address,
+        Map<String, String> personalisation,
+        String reference,
+        RetryableNotificationClient notificationClient,
+        Integer deduplicateSendsWithinSeconds,
+        Logger logger
+    ) {
+        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
+        return recentDeliveryReceiptCache.get(
+            address + reference,
+            k -> {
+                try {
+                    logger.info("Attempting to send letter notification to GovNotify: {}", reference);
+
+                    SendLetterResponse response = notificationClient.sendLetter(
+                        templateId,
+                        personalisation,
+                        reference
+                    );
+
+                    String notificationId = response.getNotificationId().toString();
+
+                    logger.info("Successfully sent letter notification to GovNotify: {} ({})",
+                        reference,
+                        notificationId
+                    );
+
+                    return notificationId;
+
+                } catch (NotificationClientException e) {
+                    logger.error("Failed to send letter using GovNotify", reference, e);
+                }
+                return Strings.EMPTY;
+            }
         );
     }
 
