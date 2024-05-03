@@ -5374,7 +5374,6 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
                     && isAipJourney(asylumCase)
                     && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase);
-
             },
             notificationGenerators,
             getErrorHandler()
@@ -5593,6 +5592,35 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                     && isAipJourney(asylumCase)
                     && isRule31ReasonUpdatingDecision(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealWithExemptionAppellantLetterNotificationHandler(
+        @Qualifier("internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                boolean isRpOrDcAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == RP || type == DC).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && isInternalCase(asylumCase)
+                       && isRpOrDcAppealType
+                       && !isAppellantInDetention(asylumCase)
+                       && !isSubmissionOutOfTime(asylumCase)
+                       && appellantHasFixedAddress.equals(YES);
+
             },
             notificationGenerators,
             getErrorHandler()
