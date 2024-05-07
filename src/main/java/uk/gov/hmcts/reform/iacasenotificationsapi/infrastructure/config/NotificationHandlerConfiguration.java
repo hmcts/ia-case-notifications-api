@@ -2406,22 +2406,15 @@ public class NotificationHandlerConfiguration {
 
         // RIA-3631 adjournHearingWithoutDate
         return new NotificationHandler(
-<<<<<<< HEAD
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                      && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                                     && !isListAssistIntegrated(callback.getCaseDetails().getCaseData()),
-=======
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                && !isInternalCase(callback.getCaseDetails().getCaseData()),
->>>>>>> 5d4750d7f0084a077f593b838f3bd07176d7460f
+                                     && !isListAssistIntegrated(callback.getCaseDetails().getCaseData())
+                                     && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
 
     @Bean
-<<<<<<< HEAD
     public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateIntegratedHandler(
         @Qualifier("adjournHearingWithoutDateIntegratedNotificationGenerator")
             List<NotificationGenerator> notificationGenerator) {
@@ -2476,17 +2469,6 @@ public class NotificationHandlerConfiguration {
                         && cannotRelistCaseImmediately
                         && isListAssistIntegrated(callback.getCaseDetails().getCaseData()));
             },
-=======
-    public PreSubmitCallbackHandler<AsylumCase> internalAdjournHearingWithoutDateHandler(
-        @Qualifier("internalAdjournHearingWithoutDateNotificationGenerator")
-        List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                    && isInternalCase(callback.getCaseDetails().getCaseData()),
->>>>>>> 5d4750d7f0084a077f593b838f3bd07176d7460f
             notificationGenerator
         );
     }
