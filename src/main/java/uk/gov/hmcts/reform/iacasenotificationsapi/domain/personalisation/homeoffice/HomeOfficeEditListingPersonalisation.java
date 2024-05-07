@@ -54,7 +54,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
             ? homeOfficeCaseEditedAdaTemplateId
             : asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-            ? listAssistHearingHomeOfficeCaseEditedTemplateId : homeOfficeCaseEditedNonAdaTemplateId ;
+            ? listAssistHearingHomeOfficeCaseEditedTemplateId : homeOfficeCaseEditedNonAdaTemplateId;
     }
 
     @Override

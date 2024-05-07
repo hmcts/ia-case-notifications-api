@@ -597,6 +597,7 @@ public class BailNotificationHandlerConfiguration {
             getErrorHandler()
         );
     }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
