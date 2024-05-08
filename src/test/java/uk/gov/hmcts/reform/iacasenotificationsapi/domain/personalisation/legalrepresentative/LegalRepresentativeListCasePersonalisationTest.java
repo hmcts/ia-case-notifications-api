@@ -294,7 +294,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(asylumCase.read(IN_CAMERA_COURT_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ADDITIONAL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.of(videoHearingSuitability));
-
+        initializePrefixes(legalRepresentativeListCasePersonalisation);
         Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
 
         assertEquals("Request Granted - Granted to vulnerabilities", personalisation.get("hearingRequirementVulnerabilities"));

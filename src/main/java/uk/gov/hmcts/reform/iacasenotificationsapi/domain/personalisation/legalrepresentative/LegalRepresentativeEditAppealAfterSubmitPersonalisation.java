@@ -22,6 +22,11 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisation implements 
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
+
     public LegalRepresentativeEditAppealAfterSubmitPersonalisation(
         @Value("${govnotify.template.editAppealAfterSubmitBeforeListing.legalRep.email}")
             String editAppealAfterSubmitBeforeListingTemplateId,
@@ -53,8 +58,7 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisation implements 
 
         return ImmutableMap
             .<String, String>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal")
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
