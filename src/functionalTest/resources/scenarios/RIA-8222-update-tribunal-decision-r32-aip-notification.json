@@ -12,6 +12,7 @@
         "replacements": {
           "journeyType": "aip",
           "isDlrmSetAsideEnabled": "Yes",
+          "listCaseHearingCentre": "taylorHouse",
           "updateTribunalDecisionList": "underRule32",
           "subscriptions": [
             {
@@ -37,6 +38,7 @@
       "replacements": {
         "journeyType": "aip",
         "isDlrmSetAsideEnabled": "Yes",
+        "listCaseHearingCentre": "taylorHouse",
         "updateTribunalDecisionList": "underRule32",
         "subscriptions": [
           {
@@ -51,6 +53,10 @@
           }
         ],
         "notificationsSent": [
+          {
+            "id": "8222_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "8222_APPELLANT_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"

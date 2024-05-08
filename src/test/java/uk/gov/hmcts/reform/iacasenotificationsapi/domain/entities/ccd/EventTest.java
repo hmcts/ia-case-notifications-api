@@ -1,31 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CHANGE_BAIL_DIRECTION_DUE_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CREATE_BAIL_CASE_LINK;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CUSTOMISE_HEARING_BUNDLE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_DOCUMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_PAYMENT_METHOD;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL_AUTOMATICALLY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MAKE_NEW_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MANAGE_FEE_UPDATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST_BAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REINSTATE_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_LEGAL_REPRESENTATIVE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_REPRESENTATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_FEE_REMISSION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_BAIL_DIRECTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.STOP_LEGAL_REPRESENTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SUBMIT_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPDATE_PAYMENT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_BAIL_SUMMARY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_DOCUMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_SIGNED_DECISION_NOTICE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -130,14 +106,28 @@ public class EventTest {
         assertEquals("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS.toString());
         assertEquals("createBailCaseLink", CREATE_BAIL_CASE_LINK.toString());
         assertEquals("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString());
+        assertEquals("adaSuitabilityReview", ADA_SUITABILITY_REVIEW.toString());
+        assertEquals("transferOutOfAda", TRANSFER_OUT_OF_ADA.toString());
+        assertEquals("markAppealAsAda", MARK_APPEAL_AS_ADA.toString());
+        assertEquals("markAsReadyForUtTransfer", MARK_AS_READY_FOR_UT_TRANSFER.toString());
+        assertEquals("updateDetentionLocation", UPDATE_DETENTION_LOCATION.toString());
+        assertEquals("updateHearingAdjustments", UPDATE_HEARING_ADJUSTMENTS.toString());
+        assertEquals("applyForCosts", APPLY_FOR_COSTS.toString());
+        assertEquals("turnOnNotifications", TURN_ON_NOTIFICATIONS.toString());
+        assertEquals("respondToCosts", RESPOND_TO_COSTS.toString());
         assertEquals("decideFtpaApplication", Event.DECIDE_FTPA_APPLICATION.toString());
         assertEquals("updateTribunalDecision", Event.UPDATE_TRIBUNAL_DECISION.toString());
+        assertEquals("caseListing", CASE_LISTING.toString());
         assertEquals("markAppealAsRemitted", Event.MARK_APPEAL_AS_REMITTED.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
+        assertEquals("addEvidenceForCosts", ADD_EVIDENCE_FOR_COSTS.toString());
+        assertEquals("considerMakingCostsOrder", CONSIDER_MAKING_COSTS_ORDER.toString());
+        assertEquals("decideCostsApplication", DECIDE_COSTS_APPLICATION.toString());
+        assertEquals("recordTheDecision", RECORD_THE_DECISION.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(102, Event.values().length);
+        assertEquals(118, Event.values().length);
     }
 }
