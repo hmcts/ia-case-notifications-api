@@ -231,5 +231,4 @@ public class AsylumCaseUtils {
 
         return appellantAddressAsList;
     }
-
 }

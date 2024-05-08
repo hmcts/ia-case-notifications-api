@@ -126,6 +126,9 @@ govnotify:
           email: c6fb22e2-c3fa-41f6-a4de-b9f6a55aa417
         nonAdaInTimeDetainedOnly:
           email: 0e187f28-ee4e-4ef0-8218-0f922c433bf4
+    appealSubmittedWithRemission:
+      appellant:
+        letter: 34d347f7-5d5b-4c43-be9c-b494ceacdf9c
     remissionDecision:
       legalRep:
         approved:
@@ -1942,6 +1945,8 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
+  letter:
+    afterSubmitAppeal: 10
 
 appellantDaysToAskReinstate: 14
 
