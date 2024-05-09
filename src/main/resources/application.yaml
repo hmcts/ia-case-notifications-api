@@ -100,6 +100,7 @@ govnotify:
             withExemption: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
+            withRemission: 0080386f-f3ec-46da-bc29-4c33f8d4e254
         noHomeOfficeReference:
           email: b7207dc3-6947-4b8e-93cf-2f54a73b8296
         legalRep:
