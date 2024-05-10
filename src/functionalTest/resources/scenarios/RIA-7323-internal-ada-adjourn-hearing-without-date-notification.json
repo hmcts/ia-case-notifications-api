@@ -6,7 +6,7 @@
     "input": {
       "id": 7323,
       "eventId": "adjournHearingWithoutDate",
-      "state": "decision",
+      "state": "preHearing",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
