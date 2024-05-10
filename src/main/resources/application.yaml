@@ -298,9 +298,9 @@ govnotify:
       appellant:
         email: c87b9b3d-9054-4f75-a7df-aa53b317422d
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
-    remoteHearing:
-      legalRep:
-        email: 2bd64cd0-72a3-4c07-80c4-9a382e43eebe
+      remoteHearing:
+        legalRep:
+          email: 2bd64cd0-72a3-4c07-80c4-9a382e43eebe
       detentionEngagementTeam:
         nonAda:
           email: b7e398f0-4a1a-4e13-ae98-9569967e1a7d
@@ -729,6 +729,8 @@ govnotify:
       applicant:
         legalRep:
           email: 742bbd08-4bda-4e90-a261-778ca01b15b6
+        homeOffice:
+          email: 8dc2a7c2-9cbe-472f-b04a-c0bf2073a43e
         respondent:
           email: 732beeb3-63ea-4ede-a131-dc2c316c51d6
         citizen:
@@ -743,6 +745,8 @@ govnotify:
       applicant:
         legalRep:
           email: b1b3dab0-bc6a-4395-a42a-5cafaeccf759
+        homeOffice:
+          email: 9cd8317c-3c89-43cc-b106-5c44041e9298
         respondent:
           email: 52feff55-1be3-4a3b-9ad9-d33f288762f8
         citizen:
@@ -760,6 +764,8 @@ govnotify:
       applicant:
         legalRep:
           email: 29136fb1-5143-4106-b1e8-8d83042bb103
+        homeOffice:
+          email: fcbe9da1-628b-4661-9128-4e57f1f5e21d
         respondent:
           email: 0f746c17-06df-43e5-bc89-e7b2e8602666
         citizen:
