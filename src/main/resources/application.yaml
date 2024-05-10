@@ -1116,6 +1116,7 @@ security:
       - "createCaseLink"
       - "maintainCaseLinks"
     caseworker-ia-admofficer:
+      - "submitAppeal"
       - "listCase"
       - "editCaseListing"
       - "sendDecisionAndReasons"
