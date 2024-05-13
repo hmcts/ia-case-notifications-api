@@ -101,6 +101,7 @@ govnotify:
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
             withRemission: 0080386f-f3ec-46da-bc29-4c33f8d4e254
+            withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
         noHomeOfficeReference:
           email: b7207dc3-6947-4b8e-93cf-2f54a73b8296
         legalRep:
@@ -1948,6 +1949,7 @@ appellantDaysToWait:
   afterRemissionDecision: 14
   letter:
     afterSubmitAppeal: 10
+    afterSubmitAppealWithFee: 14
 
 appellantDaysToAskReinstate: 14
 

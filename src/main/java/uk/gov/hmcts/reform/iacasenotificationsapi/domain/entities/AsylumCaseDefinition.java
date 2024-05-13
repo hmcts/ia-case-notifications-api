@@ -465,7 +465,6 @@ public enum AsylumCaseDefinition {
         "decideCostsApplicationList", new TypeReference<DynamicList>(){}
     );
 
-
     private final String value;
     private final TypeReference typeReference;
 
