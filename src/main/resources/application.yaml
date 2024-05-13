@@ -83,6 +83,12 @@ govnotify:
       appellant:
         email: 4625616a-178b-45fb-aebf-8cb945369ae0
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
+        letter:
+          inTime:
+            withExemption: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+            withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
+          outOfTime:
+            withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
         noHomeOfficeReference:
           email: b7207dc3-6947-4b8e-93cf-2f54a73b8296
         legalRep:
@@ -1332,6 +1338,9 @@ appellantDaysToWait:
   afterClarifyingQuestionsAnswers: 5
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
+  letter:
+    afterSubmitAppeal: 10
+    afterSubmitAppealWithFee: 14
 
 appellantDaysToAskReinstate: 14
 

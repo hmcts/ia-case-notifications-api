@@ -373,6 +373,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_IN_DETENTION(
         "appellantInDetention", new TypeReference<YesOrNo>(){}),
 
+    CCD_REFERENCE_NUMBER_FOR_DISPLAY(
+        "ccdReferenceNumberForDisplay", new TypeReference<String>() {}),
+
 
     ;
 
