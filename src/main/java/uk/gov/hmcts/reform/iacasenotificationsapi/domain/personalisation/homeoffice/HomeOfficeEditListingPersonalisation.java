@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
@@ -28,19 +29,22 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     private final PersonalisationProvider personalisationProvider;
     private EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
+    private final HearingDetailsFinder hearingDetailsFinder;
 
     public HomeOfficeEditListingPersonalisation(
         @Value("${govnotify.template.caseEdited.homeOffice.email}") String homeOfficeCaseEditedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         EmailAddressFinder emailAddressFinder,
         PersonalisationProvider personalisationProvider,
-        CustomerServicesProvider customerServicesProvider
+        CustomerServicesProvider customerServicesProvider,
+        HearingDetailsFinder hearingDetailsFinder
     ) {
         this.homeOfficeCaseEditedTemplateId = homeOfficeCaseEditedTemplateId;
         this.listAssistHearingHomeOfficeCaseEditedTemplateId = listAssistHearingHomeOfficeCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
+        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -69,7 +73,9 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-            .putAll(personalisationProvider.getPersonalisation(callback));
+            .putAll(personalisationProvider.getPersonalisation(callback))
+            .put("hearingCentreAddress", hearingDetailsFinder
+                    .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
 
         return listCaseFields.build();
     }

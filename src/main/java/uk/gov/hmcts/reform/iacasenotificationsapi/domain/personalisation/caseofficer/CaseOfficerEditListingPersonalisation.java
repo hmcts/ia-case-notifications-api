@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
@@ -22,16 +24,19 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
     private final String listAssistHearingCaseOfficerCaseEditedTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
+    private final HearingDetailsFinder hearingDetailsFinder;
 
     public CaseOfficerEditListingPersonalisation(
             @Value("${govnotify.template.caseEdited.caseOfficer.email}") String caseOfficerCaseEditedTemplateId,
             @Value("${govnotify.template.listAssistHearing.caseEdited.caseOfficer.email}") String listAssistHearingCaseOfficerCaseEditedTemplateId,
             EmailAddressFinder emailAddressFinder,
-            PersonalisationProvider personalisationProvider) {
+            PersonalisationProvider personalisationProvider,
+            HearingDetailsFinder hearingDetailsFinder) {
         this.caseOfficerCaseEditedTemplateId = caseOfficerCaseEditedTemplateId;
         this.listAssistHearingCaseOfficerCaseEditedTemplateId = listAssistHearingCaseOfficerCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
+        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -54,7 +59,13 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        return personalisationProvider.getPersonalisation(callback);
+        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
+                .<String, String>builder()
+                .putAll(personalisationProvider.getPersonalisation(callback))
+                .put("hearingCentreAddress", hearingDetailsFinder
+                        .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
+
+        return listCaseFields.build();
 
     }
 }
