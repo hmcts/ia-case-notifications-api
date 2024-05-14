@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7948,
+      "id": 79481,
       "eventId": "submitAppeal",
       "state": "appealStarted",
       "caseData": {
@@ -37,9 +37,9 @@
     },
     "notifications": [
       {
-        "reference": "7948_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "79481_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "apc_privatebetainbox@example.com",
-        "subject": "Accelerated detained appeal: appeal submitted",
+        "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
           "HMCTS reference: PA/12345/2019",
           "Home Office reference: A1234567",
