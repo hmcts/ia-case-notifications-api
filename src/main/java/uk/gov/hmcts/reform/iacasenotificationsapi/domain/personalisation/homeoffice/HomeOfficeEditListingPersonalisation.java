@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
@@ -28,19 +30,22 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     private final PersonalisationProvider personalisationProvider;
     private EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
+    private final HearingDetailsFinder hearingDetailsFinder;
 
     public HomeOfficeEditListingPersonalisation(
         @Value("${govnotify.template.caseEdited.homeOffice.email}") String homeOfficeCaseEditedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         EmailAddressFinder emailAddressFinder,
         PersonalisationProvider personalisationProvider,
-        CustomerServicesProvider customerServicesProvider
+        CustomerServicesProvider customerServicesProvider,
+        HearingDetailsFinder hearingDetailsFinder
     ) {
         this.homeOfficeCaseEditedTemplateId = homeOfficeCaseEditedTemplateId;
         this.listAssistHearingHomeOfficeCaseEditedTemplateId = listAssistHearingHomeOfficeCaseEditedTemplateId;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
+        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -66,11 +71,12 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
-            .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-            .putAll(personalisationProvider.getPersonalisation(callback));
+        final Map<String, String> listCaseFields = new HashMap<>();
+        listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+        listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
+        listCaseFields.put("hearingCentreAddress", hearingDetailsFinder
+                .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
 
-        return listCaseFields.build();
+        return ImmutableMap.copyOf(listCaseFields);
     }
 }
