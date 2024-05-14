@@ -39,11 +39,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalre
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @Configuration
@@ -3446,6 +3442,29 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+        AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 }
