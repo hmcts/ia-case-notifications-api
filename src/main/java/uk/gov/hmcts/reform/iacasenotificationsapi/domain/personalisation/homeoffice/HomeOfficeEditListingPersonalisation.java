@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -70,13 +71,12 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
-            .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-            .putAll(personalisationProvider.getPersonalisation(callback))
-            .put("hearingCentreAddress", hearingDetailsFinder
-                    .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
+        final Map<String, String> listCaseFields = new HashMap<>();
+        listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+        listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
+        listCaseFields.put("hearingCentreAddress", hearingDetailsFinder
+                .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
 
-        return listCaseFields.build();
+        return ImmutableMap.copyOf(listCaseFields);
     }
 }
