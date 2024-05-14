@@ -62,7 +62,9 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
             Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT,
             Event.CREATE_BAIL_CASE_LINK,
             Event.MAINTAIN_BAIL_CASE_LINKS,
-            Event.RECORD_THE_DECISION
+            Event.RECORD_THE_DECISION,
+            Event.SEND_UPLOAD_BAIL_SUMMARY_DIRECTION,
+            Event.CASE_LISTING
         );
     }
 
@@ -74,7 +76,8 @@ public class NotificationHandler implements PreSubmitCallbackHandler<AsylumCase>
         }
 
         try {
-            notificationGenerators.forEach(notificationGenerator -> notificationGenerator.generate(callback));
+            notificationGenerators.forEach(
+                notificationGenerator -> notificationGenerator.generate(callback));
         } catch (Exception e) {
             if (errorHandling.isPresent()) {
                 errorHandling.get().accept(callback, e);
