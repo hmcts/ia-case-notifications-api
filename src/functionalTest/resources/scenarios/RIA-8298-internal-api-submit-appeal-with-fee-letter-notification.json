@@ -12,7 +12,6 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInDetention": "No",
-          "submissionOutOfTime": "Yes",
           "appellantHasFixedAddress": "Yes",
           "paymentStatus": "Payment pending",
           "appellantAddress": {
@@ -35,7 +34,6 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInDetention": "No",
-        "submissionOutOfTime": "Yes",
         "appellantHasFixedAddress": "Yes",
         "paymentStatus": "Payment pending",
         "appellantAddress": {
