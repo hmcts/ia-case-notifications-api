@@ -3447,7 +3447,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalSubmitAppealOutOfTimeWithRemissionAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithRemissionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
