@@ -57,7 +57,9 @@ public class LegalRepresentativeMarkAppealAsRemittedPersonalisation implements L
             .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("remittalSource", asylumCase.read(AsylumCaseDefinition.SOURCE_OF_REMITTAL, SourceOfRemittal.class).get().getValue());
+            .put("remittalSource", asylumCase.read(AsylumCaseDefinition.SOURCE_OF_REMITTAL, SourceOfRemittal.class)
+                    .orElseThrow(() -> new IllegalStateException("sourceOfRemittal is not present"))
+                    .getValue());
 
         return listCaseFields.build();
     }

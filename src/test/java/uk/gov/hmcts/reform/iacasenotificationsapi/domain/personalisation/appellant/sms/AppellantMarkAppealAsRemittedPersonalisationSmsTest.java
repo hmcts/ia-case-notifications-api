@@ -96,4 +96,12 @@ class AppellantMarkAppealAsRemittedPersonalisationSmsTest {
             .hasMessage("asylumCase must not be null");
     }
 
+    @Test
+    public void should_throw_error_if_remittal_source_missing() {
+        when(asylumCase.read(SOURCE_OF_REMITTAL, SourceOfRemittal.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> appellantMarkAppealAsRemittedPersonalisationSms.getPersonalisation(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("sourceOfRemittal is not present");
+    }
+
 }

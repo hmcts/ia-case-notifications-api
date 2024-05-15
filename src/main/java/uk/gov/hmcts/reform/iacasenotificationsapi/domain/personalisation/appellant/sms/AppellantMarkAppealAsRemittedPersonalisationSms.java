@@ -58,7 +58,9 @@ public class AppellantMarkAppealAsRemittedPersonalisationSms implements SmsNotif
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("remittalSource", asylumCase.read(AsylumCaseDefinition.SOURCE_OF_REMITTAL, SourceOfRemittal.class).get().getValue());
+            .put("remittalSource", asylumCase.read(AsylumCaseDefinition.SOURCE_OF_REMITTAL, SourceOfRemittal.class)
+                    .orElseThrow(() -> new IllegalStateException("sourceOfRemittal is not present"))
+                    .getValue());
 
         return listCaseFields.build();
     }
