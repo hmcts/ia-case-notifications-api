@@ -350,7 +350,7 @@ govnotify:
         legalRep:
           email: f3cb29a5-5367-4a1e-a600-6573fc2aeb01
         appellant:
-          email: 524ad0a6-ad22-4d65-84a9-a566ee1c6981
+          email: 77a6883d-2c3d-43a8-b637-4d95262ec494
       caseEditedRemoteHearing:
         legalRep:
           email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
@@ -1955,3 +1955,4 @@ ia:
 
 linksToForms:
   iaut1: ${IAUT1_FORM_URL:https://www.gov.uk/government/publications/form-iaut1-application-for-permission-to-appeal-from-first-tier-tribunal}
+

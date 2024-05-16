@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +44,8 @@ class CaseOfficerEditListingPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     PersonalisationProvider personalisationProvider;
+    @Mock
+    HearingDetailsFinder hearingDetailsFinder;
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
@@ -57,12 +60,14 @@ class CaseOfficerEditListingPersonalisationTest {
     private String appellantFamilyName = "appellantFamilyName";
     private String homeOfficeRefNumber = "homeOfficeRefNumber";
     private String hearingCentreName = "The Hearing Centre";
+    private String hearingCentreAddress = "hearingCentreAddress";
 
     private CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation;
 
     @BeforeEach
     public void setup() {
-
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(listCaseHearingCentreEmailAddress);
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
 
@@ -70,7 +75,8 @@ class CaseOfficerEditListingPersonalisationTest {
             templateId,
             listAssistHearingTemplateId,
             emailAddressFinder,
-            personalisationProvider);
+            personalisationProvider,
+            hearingDetailsFinder);
     }
 
     @Test
@@ -111,6 +117,8 @@ class CaseOfficerEditListingPersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithBlankValues());
+        when(hearingDetailsFinder.getHearingCentreLocation(callback.getCaseDetails().getCaseData()))
+                .thenReturn(hearingCentreAddress);
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
@@ -126,6 +134,8 @@ class CaseOfficerEditListingPersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
+        when(hearingDetailsFinder.getHearingCentreLocation(callback.getCaseDetails().getCaseData()))
+                .thenReturn(hearingCentreAddress);
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
