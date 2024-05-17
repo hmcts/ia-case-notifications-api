@@ -2761,7 +2761,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isRpAndDcAppealType
-                       && !isAcceleratedDetainedAppeal(asylumCase);
+                       && !isAcceleratedDetainedAppeal(asylumCase)
+                       && !isInternalCase(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
