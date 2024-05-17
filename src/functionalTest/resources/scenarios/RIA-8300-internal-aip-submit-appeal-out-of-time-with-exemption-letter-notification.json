@@ -10,6 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "appealType": "deprivation",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
           "submissionOutOfTime": "Yes",
@@ -32,6 +33,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appealType": "deprivation",
         "isAdmin": "Yes",
         "appellantInDetention": "No",
         "submissionOutOfTime": "Yes",

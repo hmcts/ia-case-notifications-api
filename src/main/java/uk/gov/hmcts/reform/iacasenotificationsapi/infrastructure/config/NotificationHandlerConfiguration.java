@@ -2195,7 +2195,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isRpAndDcAppealType;
+                       && isRpAndDcAppealType
+                       && !isInternalCase(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -3746,9 +3747,14 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
+                boolean isRpAndDcAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == RP || type == DC).orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
+                       && isRpAndDcAppealType
                        && !isAppellantInDetention(asylumCase)
                        && isSubmissionOutOfTime(asylumCase)
                        && appellantHasFixedAddress.equals(YES);
