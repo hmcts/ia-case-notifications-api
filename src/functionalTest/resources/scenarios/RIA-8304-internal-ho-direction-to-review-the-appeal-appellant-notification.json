@@ -1,0 +1,38 @@
+{
+  "description": "RIA-8304 - HO directed to review the appeal - Non Detained letter notification",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 8304,
+      "eventId": "requestResponseReview",
+      "state": "respondentReview",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "isAdmin": "Yes",
+          "appellantInDetention": "No",
+          "appealReviewOutcome": "decisionWithdrawn"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "isAdmin": "Yes",
+        "appellantInDetention": "No",
+        "appealReviewOutcome": "decisionWithdrawn",
+        "notificationsSent": [
+          {
+            "id": "8304_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}
