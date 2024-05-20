@@ -294,6 +294,9 @@ govnotify:
     hearingRequirementsDirection:
       legalRep:
         email: db70b725-e0d9-4af5-aa3a-00007766bc3b
+    requestRespondentReview:
+      appellant:
+        letter: c0fe7c11-ff2e-4d49-80dc-3a87fe5b4393
     submitCase:
       caseOfficer:
         email: 89662b5b-2f4e-4432-b256-13a6e1c702f6
@@ -1240,6 +1243,7 @@ govnotify:
         appellant:
           email: 7baedad6-6aeb-45b5-ae00-420ff2b80bba
           sms: 5ad1fc01-101a-4dbc-84d1-191cc6b715f5
+
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
