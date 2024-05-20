@@ -19,22 +19,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @Service
 public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation implements LetterNotificationPersonalisation{
-    private final String appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId;
+    private final String appellantInternalHomeOfficeUploadBundleLetter;
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation(
-        @Value("${govnotify.template.requestRespondentEvidenceDirection.appellant.letter}") String appellantInternalHomeOfficeBundleLetter,
-        CustomerServicesProvider customerServicesProvider,
+        @Value("${govnotify.template.requestRespondentEvidenceDirection.appellant.letter}") String appellantInternalHomeOfficeUploadBundleLetter,
+        CustomerServicesProvider customerServicesProvider
 
     ) {
-        this.appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId = appellantInternalHomeOfficeBundleLetter;
+        this.appellantInternalHomeOfficeUploadBundleLetter = appellantInternalHomeOfficeUploadBundleLetter;
         this.customerServicesProvider = customerServicesProvider;
 
     }
 
     @Override
     public String getTemplateId() {
-        return appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId;
+        return appellantInternalHomeOfficeUploadBundleLetter;
     }
 
     @Override
