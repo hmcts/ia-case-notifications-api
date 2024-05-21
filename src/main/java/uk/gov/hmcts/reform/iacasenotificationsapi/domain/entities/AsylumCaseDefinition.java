@@ -321,7 +321,8 @@ public enum AsylumCaseDefinition {
 
     REMISSION_TYPE(
         "remissionType", new TypeReference<RemissionType>(){}),
-
+    REMISSION_OPTION(
+        "remissionOption", new TypeReference<RemissionOption>(){}),
     REMISSION_CLAIM(
         "remissionClaim", new TypeReference<String>(){}),
 
@@ -391,6 +392,23 @@ public enum AsylumCaseDefinition {
 
     CASE_LINKS(
             "caseLinks", new TypeReference<List<IdValue<CaseLink>>>(){}),
+
+    IS_DLRM_SET_ASIDE_ENABLED(
+            "isDlrmSetAsideEnabled", new TypeReference<YesOrNo>(){}),
+
+    IS_DLRM_FEE_REMISSION_ENABLED(
+            "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){}),
+
+    UPDATE_TRIBUNAL_DECISION_AND_REASONS(
+            "updateTribunalDecisionAndReasons", new TypeReference<YesOrNo>(){}),
+    UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK(
+            "updateTribunalDecisionAndReasonsFinalCheck", new TypeReference<YesOrNo>(){}),
+    UPDATE_TRIBUNAL_DECISION_LIST(
+            "updateTribunalDecisionList", new TypeReference<String>(){}),
+    TYPES_OF_UPDATE_TRIBUNAL_DECISION(
+            "typesOfUpdateTribunalDecision", new TypeReference<DynamicList>(){}),
+    UPDATED_APPEAL_DECISION(
+            "updatedAppealDecision", new TypeReference<String>(){}),
 
     REMOTE_HEARING_DECISION_FOR_DISPLAY(
         "remoteHearingDecisionForDisplay", new TypeReference<String>() {}),
@@ -483,7 +501,10 @@ public enum AsylumCaseDefinition {
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
 
     DECIDE_COSTS_APPLICATION_LIST(
-        "decideCostsApplicationList", new TypeReference<DynamicList>(){});
+        "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
+
+    SOURCE_OF_REMITTAL(
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),;
 
 
     private final String value;

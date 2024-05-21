@@ -116,7 +116,10 @@ public class EventTest {
         assertEquals("applyForCosts", APPLY_FOR_COSTS.toString());
         assertEquals("turnOnNotifications", TURN_ON_NOTIFICATIONS.toString());
         assertEquals("respondToCosts", RESPOND_TO_COSTS.toString());
+        assertEquals("decideFtpaApplication", Event.DECIDE_FTPA_APPLICATION.toString());
+        assertEquals("updateTribunalDecision", Event.UPDATE_TRIBUNAL_DECISION.toString());
         assertEquals("caseListing", CASE_LISTING.toString());
+        assertEquals("markAppealAsRemitted", Event.MARK_APPEAL_AS_REMITTED.toString());
         assertEquals("unknown", Event.UNKNOWN.toString());
         assertEquals("addEvidenceForCosts", ADD_EVIDENCE_FOR_COSTS.toString());
         assertEquals("considerMakingCostsOrder", CONSIDER_MAKING_COSTS_ORDER.toString());
@@ -126,6 +129,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(116, Event.values().length);
+        assertEquals(119, Event.values().length);
     }
 }
