@@ -85,12 +85,6 @@ public class PersonalisationProvider {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
 
-        final String hearingCentreName =
-            hearingDetailsFinder.getHearingCentreName(asylumCase);
-
-        final String hearingCentreAddress =
-            hearingDetailsFinder.getHearingCentreAddress(asylumCase);
-
         final String hearingDateTime =
             hearingDetailsFinder.getHearingDateTime(asylumCase);
 
@@ -114,8 +108,8 @@ public class PersonalisationProvider {
             .put("oldHearingDate", oldHearingDate == null || oldHearingDate.isEmpty() ? "" : dateTimeExtractor.extractHearingDate(oldHearingDate))
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
             .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
-            .put("hearingCentreName", hearingCentreName)
-            .put(HEARING_CENTRE_ADDRESS_CONST, hearingCentreAddress);
+            .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
+            .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
         buildHearingRequirementsFields(asylumCase, caseListingValues);
 
