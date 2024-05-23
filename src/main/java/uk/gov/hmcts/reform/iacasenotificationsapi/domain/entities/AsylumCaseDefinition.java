@@ -490,6 +490,8 @@ public enum AsylumCaseDefinition {
         "manageFeeRequestedAmount", new TypeReference<String>(){}),
     FEE_UPDATE_TRIBUNAL_ACTION(
         "feeUpdateTribunalAction", new TypeReference<FeeTribunalAction>(){}),
+    SOURCE_OF_REMITTAL(
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
     ;
 
 
