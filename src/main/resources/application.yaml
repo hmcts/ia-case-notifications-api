@@ -432,6 +432,9 @@ govnotify:
       detentionEngagementTeam:
         nonAda:
           email: 9997718e-3be1-4ae8-a89d-892f827fcad4
+    caseListing:
+      appellant:
+        letter: a731e267-19f7-48b4-8071-9deb4c252837
     reviewHearingRequirements:
       adminOfficer:
         email: 0d387f6d-003d-4b0f-a027-271e4b95a3a4
