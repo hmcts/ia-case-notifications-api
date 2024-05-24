@@ -514,8 +514,7 @@ public class BailNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> upperTribunalDecisionRefusedImaNotificationHandler(
-        @Qualifier("upperTribunalDecisionRefusedImaNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
-    ) {
+        @Qualifier("upperTribunalDecisionRefusedImaNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -598,7 +597,7 @@ public class BailNotificationHandlerConfiguration {
             getErrorHandler()
         );
     }
-          
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
@@ -628,5 +627,3 @@ public class BailNotificationHandlerConfiguration {
         return (bailCase.read(LISTING_EVENT, ListingEvent.class).orElse(ListingEvent.INITIAL)) == ListingEvent.INITIAL;
     }
 }
-
-

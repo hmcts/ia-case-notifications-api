@@ -2,7 +2,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseof
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,11 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
     private final HearingDetailsFinder hearingDetailsFinder;
+
+    @Value("${govnotify.emailPrefix.ada}")
+    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public CaseOfficerEditListingPersonalisation(
             @Value("${govnotify.template.caseEdited.caseOfficer.email}") String caseOfficerCaseEditedTemplateId,
@@ -64,6 +71,9 @@ public class CaseOfficerEditListingPersonalisation implements EmailNotificationP
         listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
         listCaseFields.put("hearingCentreAddress", hearingDetailsFinder
                 .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
+        listCaseFields.put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                    ? adaPrefix
+                    : nonAdaPrefix);
 
         return ImmutableMap.copyOf(listCaseFields);
     }
