@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerUpperTribunalBundleFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerWithoutHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
@@ -4290,6 +4291,7 @@ public class NotificationGeneratorConfiguration {
         UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
         LegalRepresentativeMarkAsReadyForUtTransferPersonalisation legalRepresentativeMarkAsReadyForUtTransferPersonalisation,
         HomeOfficeMarkAppealReadyForUtTransferPersonalisation homeOfficeMarkAppealReadyForUtTransferPersonalisation,
+
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -5210,6 +5212,29 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator(
+        AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 }
