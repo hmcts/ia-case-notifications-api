@@ -5628,6 +5628,37 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOnTimeWithRemissionAppellantLetterNotificationHandler(
+        @Qualifier("internalSubmitAppealOnTimeWithRemissionAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                RemissionType remissionType = asylumCase
+                    .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
+
+                boolean isRemissionPresent = Arrays.asList(
+                    HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && isRemissionPresent
+                       && appellantHasFixedAddress.equals(YES)
+                       && !isSubmissionOutOfTime(asylumCase);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
