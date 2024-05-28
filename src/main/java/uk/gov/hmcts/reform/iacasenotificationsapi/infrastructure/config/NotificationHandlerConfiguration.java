@@ -4218,8 +4218,7 @@ public class NotificationHandlerConfiguration {
                         && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
                         && state != State.APPEAL_STARTED
                         && isEaHuEuAppeal(asylumCase)
-                        && !isRemissionRejectedAndPaymentChangedToCard(asylumCase)
-                );
+                        && !isRemissionRejectedAndPaymentChangedToCard(asylumCase));
             }, notificationGenerators
         );
     }
