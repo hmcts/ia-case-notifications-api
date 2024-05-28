@@ -24,7 +24,7 @@ public class AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation
 
     public AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation(
         @Value("${govnotify.template.appealSubmittedWithRemission.appellant.letter}") String appellantInternalCaseSubmitAppealWithRemissionLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppeal") int daysAfterSubmitAppeal,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterSubmitAppeal,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {

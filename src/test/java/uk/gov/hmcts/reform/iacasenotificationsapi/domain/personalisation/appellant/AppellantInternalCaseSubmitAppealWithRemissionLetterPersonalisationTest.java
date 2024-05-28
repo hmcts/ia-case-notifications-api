@@ -113,6 +113,7 @@ class AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisationTest {
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
+
     @Test
     void should_return_personalisation_when_all_information_given() {
 
