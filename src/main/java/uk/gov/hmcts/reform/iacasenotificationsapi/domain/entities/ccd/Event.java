@@ -103,6 +103,7 @@ public enum Event {
     MAINTAIN_CASE_LINKS("maintainCaseLinks"),
     CREATE_BAIL_CASE_LINK("createBailCaseLink"),
     MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
+
     ADA_SUITABILITY_REVIEW("adaSuitabilityReview"),
     TRANSFER_OUT_OF_ADA("transferOutOfAda"),
     MARK_APPEAL_AS_ADA("markAppealAsAda"),
@@ -116,6 +117,7 @@ public enum Event {
     ADD_EVIDENCE_FOR_COSTS("addEvidenceForCosts"),
     CONSIDER_MAKING_COSTS_ORDER("considerMakingCostsOrder"),
     DECIDE_COSTS_APPLICATION("decideCostsApplication"),
+
     RECORD_THE_DECISION("recordTheDecision"),
     SEND_UPLOAD_BAIL_SUMMARY_DIRECTION("sendUploadBailSummaryDirection"),
     CASE_LISTING("caseListing"),
