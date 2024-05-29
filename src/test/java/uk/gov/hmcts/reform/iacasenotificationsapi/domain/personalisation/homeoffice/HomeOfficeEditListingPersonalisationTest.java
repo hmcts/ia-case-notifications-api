@@ -95,10 +95,12 @@ class HomeOfficeEditListingPersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
+
         assertEquals(nonAdaTemplateId, homeOfficeEditListingPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertEquals(adaTemplateId, homeOfficeEditListingPersonalisation.getTemplateId(asylumCase));
+
     }
 
     @Test
