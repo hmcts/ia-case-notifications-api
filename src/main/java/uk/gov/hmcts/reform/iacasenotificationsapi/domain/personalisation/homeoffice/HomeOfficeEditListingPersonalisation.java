@@ -29,7 +29,6 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     private final String homeOfficeCaseEditedNonAdaTemplateId;
     private final String homeOfficeCaseEditedAdaTemplateId;
     private final String listAssistHearingHomeOfficeCaseEditedTemplateId;
-
     private final PersonalisationProvider personalisationProvider;
     private EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
@@ -60,6 +59,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
             ? homeOfficeCaseEditedAdaTemplateId
             : asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
             ? listAssistHearingHomeOfficeCaseEditedTemplateId : homeOfficeCaseEditedNonAdaTemplateId;
+
     }
 
     @Override

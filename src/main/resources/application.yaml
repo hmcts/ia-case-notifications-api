@@ -344,7 +344,7 @@ govnotify:
         email: 301cbbd7-09f5-46d3-9323-51dc2620ceda
     caseEditedRemoteHearing:
       legalRep:
-        email: 3b724765-d3cb-45b6-8f30-f325df6bb16c
+        email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     listAssistHearing:
       caseListed:
         caseOfficer:
@@ -1744,6 +1744,7 @@ homeOfficeEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:ho-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:ho-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:ho-alloa-sherrif@example.com}
+
 
 homeOfficeFtpaEmailAddresses:
   bradford: ${IA_FTPA_HOME_OFFICE_BRADFORD_EMAIL:ho-ftpa-bradford@example.com}

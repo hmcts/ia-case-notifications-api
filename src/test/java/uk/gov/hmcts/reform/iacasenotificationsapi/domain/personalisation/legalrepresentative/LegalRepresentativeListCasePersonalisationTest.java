@@ -308,7 +308,6 @@ public class LegalRepresentativeListCasePersonalisationTest {
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
-
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeListCasePersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());

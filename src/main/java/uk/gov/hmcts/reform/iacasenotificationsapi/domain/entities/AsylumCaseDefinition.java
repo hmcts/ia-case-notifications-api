@@ -501,10 +501,13 @@ public enum AsylumCaseDefinition {
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
 
     DECIDE_COSTS_APPLICATION_LIST(
+
         "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
 
     SOURCE_OF_REMITTAL(
-        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),;
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
+    ;
+
 
 
     private final String value;
