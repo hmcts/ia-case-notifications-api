@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
 public class LegalRepresentativeListCasePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {

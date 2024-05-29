@@ -485,11 +485,11 @@ public class BailNotificationGeneratorConfiguration {
 
     @Bean("caseListingNotificationGenerator")
     public List<BailNotificationGenerator> caseListingNotificationGenerator(
-            HomeOfficeBailCaseListingPersonalisation homeOfficeBailCaseListingPersonalisation,
-            LegalRepresentativeBailCaseListingPersonalisation legalRepresentativeBailCaseListingPersonalisation,
-            ApplicantBailCaseListingPersonalisationSms applicantBailCaseListingPersonalisationSms,
-            BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+        HomeOfficeBailCaseListingPersonalisation homeOfficeBailCaseListingPersonalisation,
+        LegalRepresentativeBailCaseListingPersonalisation legalRepresentativeBailCaseListingPersonalisation,
+        ApplicantBailCaseListingPersonalisationSms applicantBailCaseListingPersonalisationSms,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
