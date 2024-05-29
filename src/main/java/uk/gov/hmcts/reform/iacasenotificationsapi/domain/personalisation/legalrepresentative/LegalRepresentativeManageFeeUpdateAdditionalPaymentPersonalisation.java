@@ -66,7 +66,7 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation 
                 .put("originalFee", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
                 .put("newFee", convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
                 .put("additionalFee", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
-                .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).get().getNormalizedValue())
+                .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
                 .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("dueDate", dueDate)
                 .build();
