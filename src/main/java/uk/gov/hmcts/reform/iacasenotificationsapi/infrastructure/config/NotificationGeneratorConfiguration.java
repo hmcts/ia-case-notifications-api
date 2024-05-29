@@ -5280,7 +5280,8 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             ) {
                 @Override
-                public Message getSuccessMessage() {return new Message("success","body");
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
                 }
             }
         );

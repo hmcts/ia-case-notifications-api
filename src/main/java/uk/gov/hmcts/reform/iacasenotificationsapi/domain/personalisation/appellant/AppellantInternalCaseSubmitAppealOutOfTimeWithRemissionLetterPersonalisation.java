@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -24,7 +26,7 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
 
     public AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation(
         @Value("${govnotify.template.appealSubmitted.appellant.letter.outOfTime.withRemission}") String appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppeal") int daysAfterSubmitAppeal,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterSubmitAppeal,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
