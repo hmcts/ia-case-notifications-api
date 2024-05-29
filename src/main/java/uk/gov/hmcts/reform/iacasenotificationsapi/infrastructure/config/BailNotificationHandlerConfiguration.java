@@ -490,6 +490,27 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> bailCaseListingBailSummaryDirectionNotificationHandler(
+        @Qualifier("caseListingBailSummaryDirectionNotificationGenerator")
+        List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                             && callback.getEvent() == Event.CASE_LISTING);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return (callback.getEvent() == Event.CASE_LISTING
+                            && isInitialListing(bailCase));
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> upperTribunalDecisionRefusedImaNotificationHandler(
@@ -568,28 +589,6 @@ public class BailNotificationHandlerConfiguration {
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
                     return callback.getEvent() == Event.END_APPLICATION && hasImaStatus(bailCase);
-                } else {
-                    return false;
-                }
-            },
-            bailNotificationGenerators,
-            getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<BailCase> bailCaseListingBailSummaryDirectionNotificationHandler(
-        @Qualifier("caseListingBailSummaryDirectionNotificationGenerator")
-        List<BailNotificationGenerator> bailNotificationGenerators
-    ) {
-        return new BailNotificationHandler(
-            (callbackStage, callback) -> {
-                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                             && callback.getEvent() == Event.CASE_LISTING);
-                if (isAllowedBailCase) {
-                    BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return (callback.getEvent() == Event.CASE_LISTING
-                            && isInitialListing(bailCase));
                 } else {
                     return false;
                 }

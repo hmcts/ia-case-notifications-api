@@ -150,4 +150,3 @@ class LegalRepresentativeBailCaseListingPersonalisationTest {
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
     }
 }
-

@@ -301,14 +301,12 @@ public enum BailCaseFieldDefinition {
     HO_SELECT_IMA_STATUS(
         "hoSelectImaStatus", new TypeReference<YesOrNo>() {}),
 
-
     IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED(
             "isBailsLocationReferenceDataEnabled", new TypeReference<YesOrNo>() {}),
     REF_DATA_LISTING_LOCATION_DETAIL(
             "refDataListingLocationDetail", new TypeReference<CourtVenue>() {}),
     IS_REMOTE_HEARING(
             "isRemoteHearing", new TypeReference<YesOrNo>() {});
-
 
     private final String value;
     private final TypeReference typeReference;

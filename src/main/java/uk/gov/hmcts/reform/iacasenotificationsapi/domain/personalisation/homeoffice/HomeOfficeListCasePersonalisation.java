@@ -25,6 +25,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
     private final String homeOfficeCaseListedNonAdaTemplateId;
     private final String homeOfficeCaseListedAdaTemplateId;
     private final String listAssistHearingHomeOfficeCaseListedTemplateId;
+
     private final String iaExUiFrontendUrl;
     private final int appellantProvidingAppealArgumentDeadlineDelay;
     private final int respondentResponseToAppealArgumentDeadlineDelay;
