@@ -1381,8 +1381,6 @@ govnotify:
           sms: 3e591016-42d8-4083-b81a-30756a1c4ca8
       decisionRefusedIma:
         email: 4a724840-8e62-489b-bc69-43a0be3ff12d
-      sendUploadBailSummaryDirection:
-        email: 12eec4f2-7261-4640-b18b-93666bde0b54
       caseListing:
         initial:
           withLegalRep:
