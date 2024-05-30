@@ -463,7 +463,10 @@ public enum AsylumCaseDefinition {
 
     DECIDE_COSTS_APPLICATION_LIST(
         "decideCostsApplicationList", new TypeReference<DynamicList>(){}
-    );
+    ),
+
+    SOURCE_OF_REMITTAL(
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){});
 
     private final String value;
     private final TypeReference typeReference;
