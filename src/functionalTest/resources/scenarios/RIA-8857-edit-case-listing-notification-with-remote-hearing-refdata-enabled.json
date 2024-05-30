@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7195 edit case listing notification with isIntegrated field (Harmondsworth hearing centre)",
+  "description": "RIA-8857 edit case listing notification with remote hearing (Ref data enabled)",
   "enabled": "{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -63,7 +63,7 @@
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
-          "3 Sept 2023",
+          "3 Sep 2023",
           "14:25",
           "Remote hearing"
         ]
@@ -74,7 +74,7 @@
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
-          "3 Sept 2023",
+          "3 Sep 2023",
           "14:25",
           "Remote hearing"
         ]
@@ -85,7 +85,7 @@
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
-          "3 Sept 2023",
+          "3 Sep 2023",
           "14:25",
           "Remote hearing"
         ]
