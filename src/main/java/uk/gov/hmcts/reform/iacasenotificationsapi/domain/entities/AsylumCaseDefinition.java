@@ -468,7 +468,6 @@ public enum AsylumCaseDefinition {
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){});
 
-
     private final String value;
     private final TypeReference typeReference;
 

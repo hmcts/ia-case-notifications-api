@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
@@ -6,7 +6,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,19 +21,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId;
+public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implements LetterNotificationPersonalisation {
+    private final String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterSubmitAppeal;
 
-    public AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation(
-        @Value("${govnotify.template.appealSubmitted.appellant.letter.outOfTime.withRemission}") String appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterSubmitAppeal,
+    public AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation(
+        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
-        this.appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId = appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId;
+        this.appellantInternalCaseSubmitAppealWithFeeLetterTemplateId = appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
@@ -38,7 +41,7 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
 
     @Override
     public String getTemplateId() {
-        return appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId;
+        return appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_SUBMIT_APPEAL_OUT_OF_TIME_WITH_REMISSION_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_SUBMIT_APPEAL_WITH_FEE_APPELLANT_LETTER";
     }
 
     @Override
@@ -71,8 +74,9 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("onlineCaseReferenceNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class).orElse("")))
-            .put("tenDaysAfterSubmitDate", dueDate);
+            .put("fourteenDaysAfterSubmitDate", dueDate);
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
@@ -80,9 +84,3 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
         return personalizationBuilder.build();
     }
 }
-
-
-
-
-
-
