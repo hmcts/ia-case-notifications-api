@@ -482,6 +482,20 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("endApplicationNotificationForUtGenerator")
+    public List<BailNotificationGenerator> endApplicationNotificationForUtGenerator(
+        UpperTribunalApplicationEndedImaPersonalisation upperTribunalApplicationEndedImaPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(upperTribunalApplicationEndedImaPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 
     @Bean("caseListingNotificationGenerator")
     public List<BailNotificationGenerator> caseListingNotificationGenerator(
@@ -521,21 +535,6 @@ public class BailNotificationGeneratorConfiguration {
             ),
             new BailSmsNotificationGenerator(
                 newArrayList(applicantBailCaseListingPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("endApplicationNotificationForUtGenerator")
-    public List<BailNotificationGenerator> endApplicationNotificationForUtGenerator(
-        UpperTribunalApplicationEndedImaPersonalisation upperTribunalApplicationEndedImaPersonalisation,
-        BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-            new BailEmailNotificationGenerator(
-                newArrayList(upperTribunalApplicationEndedImaPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
