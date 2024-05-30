@@ -115,8 +115,8 @@ class HearingDetailsFinderTest {
         when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)).
-            thenReturn(Optional.of("testAddress"));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of("testAddress"));
 
         assertEquals("testAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
     }
@@ -165,8 +165,8 @@ class HearingDetailsFinderTest {
     void getHearingCentreName_should_return_refdata_address_if_remote_field_is_no_and_refdata_enabled() {
         when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)).
-            thenReturn(Optional.of("testAddress"));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of("testAddress"));
 
         assertEquals("testAddress", hearingDetailsFinder.getHearingCentreName(asylumCase));
     }
