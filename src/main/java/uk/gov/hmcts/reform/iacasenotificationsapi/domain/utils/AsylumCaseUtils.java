@@ -5,12 +5,15 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -230,5 +233,12 @@ public class AsylumCaseUtils {
         appellantAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("appellantAddress postCode is not present")));
 
         return appellantAddressAsList;
+    }
+
+    public static String convertAsylumCaseFeeValue(String amountFromAsylumCase) {
+        return StringUtils.isNotBlank(amountFromAsylumCase)
+            ? new BigDecimal(String.valueOf(Double.parseDouble(amountFromAsylumCase) / 100))
+            .setScale(2, RoundingMode.DOWN).toString()
+            : "";
     }
 }

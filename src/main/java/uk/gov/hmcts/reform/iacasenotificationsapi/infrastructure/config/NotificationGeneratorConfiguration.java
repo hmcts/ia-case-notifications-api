@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReviewHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerUpperTribunalBundleFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerWithoutHearingRequirementsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation;
@@ -5240,7 +5241,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalSubmitAppealOnTimeWithRemissionAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalSubmitAppealOnTimeWithExemptionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation appellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -5250,6 +5251,30 @@ public class NotificationGeneratorConfiguration {
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+
+    @Bean("internalSubmitAppealOutOfTimeWithRemissionAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationGenerator(
+        AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
