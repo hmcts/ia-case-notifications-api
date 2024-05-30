@@ -5705,8 +5705,7 @@ public class NotificationHandlerConfiguration {
             getErrorHandler()
         );
     }
-
-
+  
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
