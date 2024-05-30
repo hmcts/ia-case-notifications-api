@@ -5600,6 +5600,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> markAppealAsRemittedNotificationHandler(
+        @Qualifier("markAppealAsRemittedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.MARK_APPEAL_AS_REMITTED);
+            }, notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealWithExemptionAppellantLetterNotificationHandler(
         @Qualifier("internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
