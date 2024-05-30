@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8857 Case Listed with remote hearing (Refdata enabled)",
+  "description": "RIA-8857 Case Listed with non-remote hearing (Refdata enabled)",
   "enabled": "{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",

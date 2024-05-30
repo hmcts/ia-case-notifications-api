@@ -89,7 +89,7 @@ public class HearingDetailsFinder {
     }
 
     public String getHearingCentreLocation(AsylumCase asylumCase) {
-        if (isCaseUsingLocationRefData(asylumCase) && isIntegrated(asylumCase)) {
+        if (isCaseUsingLocationRefData(asylumCase)) {
             return getRefDataLocationValue(asylumCase);
         }
 
