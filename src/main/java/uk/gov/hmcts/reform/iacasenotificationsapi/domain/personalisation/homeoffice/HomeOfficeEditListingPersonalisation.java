@@ -29,7 +29,6 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     private final String homeOfficeCaseEditedNonAdaTemplateId;
     private final String homeOfficeCaseEditedAdaTemplateId;
     private final String listAssistHearingHomeOfficeCaseEditedTemplateId;
-
     private final PersonalisationProvider personalisationProvider;
     private EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
