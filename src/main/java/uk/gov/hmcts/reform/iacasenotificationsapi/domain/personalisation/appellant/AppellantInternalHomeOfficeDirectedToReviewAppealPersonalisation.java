@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -9,25 +10,32 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation implements LetterNotificationPersonalisation{
+public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalHomeOfficeDirectedToReviewAppealTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
+    private final DirectionFinder directionFinder;
 
     public AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
         @Value("${govnotify.template.requestRespondentReview.appellant.letter}") String appellantInternalHomeOfficeDirectedToReviewAppealTemplateId,
-        CustomerServicesProvider customerServicesProvider
-        ) {
+        CustomerServicesProvider customerServicesProvider,
+        DirectionFinder directionFinder) {
+
         this.appellantInternalHomeOfficeDirectedToReviewAppealTemplateId = appellantInternalHomeOfficeDirectedToReviewAppealTemplateId;
         this.customerServicesProvider = customerServicesProvider;
+        this.directionFinder = directionFinder;
 
     }
 
@@ -58,10 +66,16 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
 
         List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
 
-        String changeDirectionDueDate = asylumCase.read(AsylumCaseDefinition.SEND_DIRECTION_DATE_DUE, String.class).orElse("");
-        if (!changeDirectionDueDate.isBlank()) {
-            changeDirectionDueDate = LocalDate.parse(changeDirectionDueDate).format(DateTimeFormatter.ofPattern("d MMM uuuu"));
-        }
+        final Direction direction =
+            directionFinder
+                .findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)
+                .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_REVIEW + "' is not present"));
+
+        final String dueDate =
+            LocalDate
+                .parse(direction.getDateDue())
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -70,7 +84,7 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("directionDueDate", changeDirectionDueDate);
+            .put("directionDueDate", dueDate);
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
@@ -78,25 +92,3 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
         return personalizationBuilder.build();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
-
-

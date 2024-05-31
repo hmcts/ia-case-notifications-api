@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SEND_DIRECTION_DATE_DUE;
 
 import java.util.Map;
 import java.util.Optional;
@@ -17,12 +15,13 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
-
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -37,6 +36,10 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
     AddressUk appellantAddress;
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
@@ -45,17 +48,22 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
     private String addressLine1 = "50";
+    private String expectedDirectionDueDate = "27 Aug 2024";
+    private String directionDueDate = "2024-08-27";
+    private String directionExplanation = "someExplanation";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
     private String postCode = "XX1 2YY";
     private String postTown = "Town name";
-    private String directionDueDate = "2022-05-24";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
     private AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 
     @BeforeEach
     public void setup() {
+        when((direction.getDateDue())).thenReturn(directionDueDate);
+        when((direction.getExplanation())).thenReturn(directionExplanation);
+        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.of(direction));
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getId()).thenReturn(ccdCaseId);
@@ -75,7 +83,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
 
         appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation = new AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
             letterTemplateId,
-            customerServicesProvider);
+            customerServicesProvider, directionFinder);
     }
 
     @Test
@@ -115,8 +123,6 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        when(asylumCase.read(SEND_DIRECTION_DATE_DUE, String.class)).thenReturn(Optional.of(directionDueDate));
-
         Map<String, String> personalisation =
             appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
 
@@ -131,6 +137,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
 
     }
 }
