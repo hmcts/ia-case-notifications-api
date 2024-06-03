@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.AsylumCaseUtils.isIntegrated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_REMOTE_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
@@ -48,6 +47,9 @@ public class HearingDetailsFinder {
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {
+        if (isCaseUsingLocationRefData(asylumCase)) {
+            return getRefDataLocationValue(asylumCase);
+        }
 
         final HearingCentre hearingCentre =
             asylumCase
@@ -86,19 +88,32 @@ public class HearingDetailsFinder {
     }
 
     public String getHearingCentreLocation(AsylumCase asylumCase) {
+        if (isCaseUsingLocationRefData(asylumCase)) {
+            return getRefDataLocationValue(asylumCase);
+        }
+
         HearingCentre hearingCentre =
-                asylumCase
-                        .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class)
-                        .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
+            asylumCase
+                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
 
         if (hearingCentre == HearingCentre.REMOTE_HEARING) {
             return "Remote hearing";
         } else {
-            return isCaseUsingLocationRefData(asylumCase) && isIntegrated(asylumCase)
-                ? asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
-                .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreAddress is not present"))
-                : getHearingCentreAddress(asylumCase);
+            return getHearingCentreAddress(asylumCase);
         }
+    }
+
+    private String getRefDataLocationValue(AsylumCase asylumCase) {
+        YesOrNo isRemoteHearing = asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)
+            .orElseThrow(() -> new IllegalStateException("isRemoteHearing is not present"));
+
+        if (isRemoteHearing.equals(YES)) {
+            return "Remote hearing";
+        }
+
+        return asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
+            .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreAddress is not present"));
     }
 
     public String getBailHearingCentreLocation(BailCase bailCase) {

@@ -504,7 +504,10 @@ public enum AsylumCaseDefinition {
         "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
 
     SOURCE_OF_REMITTAL(
-        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),;
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
+
+    IS_REMOTE_HEARING(
+        "isRemoteHearing", new TypeReference<YesOrNo>(){});
 
 
     private final String value;
