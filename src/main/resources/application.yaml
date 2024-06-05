@@ -305,6 +305,9 @@ govnotify:
     hearingRequirementsDirection:
       legalRep:
         email: db70b725-e0d9-4af5-aa3a-00007766bc3b
+    requestRespondentReview:
+      appellant:
+        letter: c0fe7c11-ff2e-4d49-80dc-3a87fe5b4393
     submitCase:
       caseOfficer:
         email: 89662b5b-2f4e-4432-b256-13a6e1c702f6
