@@ -4789,6 +4789,7 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
+
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationHandler(
         @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

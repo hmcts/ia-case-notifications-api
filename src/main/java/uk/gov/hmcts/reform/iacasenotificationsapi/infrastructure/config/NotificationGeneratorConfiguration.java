@@ -5325,7 +5325,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean(  "internalSubmitAppealWithFeeAppellantLetterNotificationGenerator")
+    @Bean("internalSubmitAppealWithFeeAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation appellantInternalCaseSubmittedOnTimeWithFeePersonalisation,
         GovNotifyNotificationSender notificationSender,
