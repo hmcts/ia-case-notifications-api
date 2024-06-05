@@ -52,7 +52,7 @@ class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
-    private int daysAfterSubmitAppeal = 10;
+    private int daysAfterSubmitAppeal = 14;
     private String amountLeftToPay = "4000";
     private String amountLeftToPayInGbp = "40.00";
     private AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
