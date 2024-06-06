@@ -4790,6 +4790,7 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationHandler(
         @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
