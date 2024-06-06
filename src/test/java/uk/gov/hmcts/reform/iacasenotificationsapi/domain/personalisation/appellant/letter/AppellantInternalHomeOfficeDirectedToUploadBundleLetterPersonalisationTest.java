@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,13 +20,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
+
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
+class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -48,23 +49,24 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private String addressLine1 = "50";
     private String expectedDirectionDueDate = "27 Aug 2024";
     private String directionDueDate = "2024-08-27";
     private String directionExplanation = "someExplanation";
+    private String addressLine1 = "50";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
     private String postCode = "XX1 2YY";
     private String postTown = "Town name";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
-    private AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
+    private AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation;
 
     @BeforeEach
     public void setup() {
+
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when((direction.getExplanation())).thenReturn(directionExplanation);
-        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.of(direction));
+        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(direction));
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getId()).thenReturn(ccdCaseId);
@@ -82,32 +84,33 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
         when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
 
-        appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation = new AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
+        appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation = new AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation(
             letterTemplateId,
             customerServicesProvider, directionFinder);
+
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER",
-            appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getReferenceId(ccdCaseId));
+        assertEquals(ccdCaseId + "_INTERNAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER",
+            appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_address_in_correct_format() {
-        assertTrue(appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
     }
@@ -116,7 +119,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            () -> appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
@@ -125,7 +128,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-            appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
+            appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));

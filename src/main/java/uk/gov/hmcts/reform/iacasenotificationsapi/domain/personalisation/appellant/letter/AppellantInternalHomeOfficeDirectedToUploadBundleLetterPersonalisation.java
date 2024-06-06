@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
@@ -23,17 +23,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalHomeOfficeDirectedToReviewAppealTemplateId;
+public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation implements LetterNotificationPersonalisation{
+    private final String appellantInternalHomeOfficeUploadBundleLetter;
     private final CustomerServicesProvider customerServicesProvider;
     private final DirectionFinder directionFinder;
 
-    public AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
-        @Value("${govnotify.template.requestRespondentReview.appellant.letter}") String appellantInternalHomeOfficeDirectedToReviewAppealTemplateId,
+    public AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation(
+        @Value("${govnotify.template.requestRespondentEvidenceDirection.appellant.letter}") String appellantInternalHomeOfficeUploadBundleLetter,
         CustomerServicesProvider customerServicesProvider,
-        DirectionFinder directionFinder) {
+        DirectionFinder directionFinder
 
-        this.appellantInternalHomeOfficeDirectedToReviewAppealTemplateId = appellantInternalHomeOfficeDirectedToReviewAppealTemplateId;
+    ) {
+        this.appellantInternalHomeOfficeUploadBundleLetter = appellantInternalHomeOfficeUploadBundleLetter;
         this.customerServicesProvider = customerServicesProvider;
         this.directionFinder = directionFinder;
 
@@ -41,7 +42,7 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
 
     @Override
     public String getTemplateId() {
-        return appellantInternalHomeOfficeDirectedToReviewAppealTemplateId;
+        return appellantInternalHomeOfficeUploadBundleLetter;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER";
     }
 
     @Override
@@ -68,14 +69,13 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
 
         final Direction direction =
             directionFinder
-                .findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)
-                .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_REVIEW + "' is not present"));
+                .findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)
+                .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_EVIDENCE + "' is not present"));
 
         final String dueDate =
             LocalDate
                 .parse(direction.getDateDue())
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
