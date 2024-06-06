@@ -2,7 +2,7 @@
   "description": "RIA-8301 Send letter notification to appellant for Submit Appeal out of time with fee",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "AdminOfficer",
     "input": {
       "id": 8301,
       "eventId": "submitAppeal",
