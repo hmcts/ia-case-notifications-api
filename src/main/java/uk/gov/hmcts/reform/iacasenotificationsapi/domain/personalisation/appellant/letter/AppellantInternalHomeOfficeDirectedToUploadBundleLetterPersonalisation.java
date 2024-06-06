@@ -23,7 +23,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation implements LetterNotificationPersonalisation{
+public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalHomeOfficeUploadBundleLetter;
     private final CustomerServicesProvider customerServicesProvider;
     private final DirectionFinder directionFinder;
