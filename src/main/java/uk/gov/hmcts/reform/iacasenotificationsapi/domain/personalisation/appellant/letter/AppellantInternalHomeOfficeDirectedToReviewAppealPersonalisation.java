@@ -68,7 +68,7 @@ public class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation im
 
         final Direction direction =
             directionFinder
-                .findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)
+                .findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)
                 .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_REVIEW + "' is not present"));
 
         final String dueDate =
