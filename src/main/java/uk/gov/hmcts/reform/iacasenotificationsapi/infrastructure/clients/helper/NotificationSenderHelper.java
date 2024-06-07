@@ -2,8 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.NotificationServiceResponseException;
@@ -11,6 +10,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.Retryab
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class NotificationSenderHelper {
@@ -21,6 +23,46 @@ public class NotificationSenderHelper {
             String templateId,
             String emailAddress,
             Map<String, String> personalisation,
+            String reference,
+            RetryableNotificationClient notificationClient,
+            Integer deduplicateSendsWithinSeconds,
+            Logger logger
+    ) {
+        recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
+        return recentDeliveryReceiptCache.get(
+                emailAddress + reference,
+                k -> {
+                    try {
+                        logger.info("Attempting to send email notification to GovNotify: {}", reference);
+
+                        SendEmailResponse response = notificationClient.sendEmail(
+                                templateId,
+                                emailAddress,
+                                personalisation,
+                                reference
+                        );
+
+                        String notificationId = response.getNotificationId().toString();
+
+                        logger.info("Successfully sent email notification to GovNotify: {} ({})",
+                                reference,
+                                notificationId
+                        );
+
+                        return notificationId;
+
+                    } catch (NotificationClientException e) {
+                        logger.error("Failed to send sms using GovNotify for case reference {}", reference, e);
+                    }
+                    return Strings.EMPTY;
+                }
+        );
+    }
+
+    public String sendEmailWithLink(
+            String templateId,
+            String emailAddress,
+            Map<String, Object> personalisation,
             String reference,
             RetryableNotificationClient notificationClient,
             Integer deduplicateSendsWithinSeconds,
@@ -89,8 +131,9 @@ public class NotificationSenderHelper {
                         return notificationId;
 
                     } catch (NotificationClientException e) {
-                        throw new NotificationServiceResponseException("Failed to send sms using GovNotify", e);
+                        logger.error("Failed to send sms using GovNotify for case reference {}", reference, e);
                     }
+                    return Strings.EMPTY;
                 }
         );
     }
