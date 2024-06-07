@@ -448,8 +448,7 @@ public enum AsylumCaseDefinition {
     ADD_EVIDENCE_FOR_COSTS_LIST(
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
     DECIDE_COSTS_APPLICATION_LIST(
-        "decideCostsApplicationList", new TypeReference<DynamicList>(){}
-    ),
+        "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
     REQUEST_FEE_REMISSION_DATE(
@@ -466,6 +465,8 @@ public enum AsylumCaseDefinition {
         "manageFeeRequestedAmount", new TypeReference<String>(){}),
     FEE_UPDATE_TRIBUNAL_ACTION(
         "feeUpdateTribunalAction", new TypeReference<FeeTribunalAction>(){}),
+    IS_LATE_REMISSION_REQUEST(
+        "isLateRemissionRequest", new TypeReference<YesOrNo>(){}),
     ;
 
 

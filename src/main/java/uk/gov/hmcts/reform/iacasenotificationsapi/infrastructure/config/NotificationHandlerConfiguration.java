@@ -28,8 +28,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_APPELLANT_RESPONDENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REFUND_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REMISSION_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_SET_ASIDE_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_LATE_REMISSION_REQUEST;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
@@ -83,7 +85,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -5892,6 +5899,11 @@ public class NotificationHandlerConfiguration {
 
     private boolean isLateRemissionRequest(AsylumCase asylumCase) {
         return asylumCase.read(IS_LATE_REMISSION_REQUEST, YesOrNo.class)
+            .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private boolean isDlrmFeeRefundEnabled(AsylumCase asylumCase) {
+        return asylumCase.read(IS_DLRM_FEE_REFUND_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 }
