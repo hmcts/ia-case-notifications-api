@@ -462,15 +462,16 @@ public enum AsylumCaseDefinition {
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
 
     DECIDE_COSTS_APPLICATION_LIST(
-        "decideCostsApplicationList", new TypeReference<DynamicList>(){}
-    ),
+        "decideCostsApplicationList", new TypeReference<DynamicList>() {}),
+
+    SEND_DIRECTION_DATE_DUE(
+        "sendDirectionDateDue", new TypeReference<String>() {}),
 
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
 
     LETTER_BUNDLE_DOCUMENTS(
         "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){});
-
 
     private final String value;
     private final TypeReference typeReference;
