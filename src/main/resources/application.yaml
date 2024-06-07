@@ -999,6 +999,8 @@ govnotify:
       legalRep:
         refundInstructed:
           email: 68970ef0-72c7-4eea-957a-51d23c8e72b9
+      appellant:
+          letter: d74e5a52-8e4b-4ba3-8a16-fb495804e38d
     recordOutOfTimeDecision:
       legalRep:
         canProceed:
@@ -1968,6 +1970,7 @@ appellantDaysToWait:
   letter:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
+    afterManageFeeEvent: 14
 
 appellantDaysToAskReinstate: 14
 
