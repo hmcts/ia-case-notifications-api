@@ -466,7 +466,10 @@ public enum AsylumCaseDefinition {
     ),
 
     SOURCE_OF_REMITTAL(
-        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){});
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
+
+    LETTER_BUNDLE_DOCUMENTS(
+        "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){});
 
 
     private final String value;
