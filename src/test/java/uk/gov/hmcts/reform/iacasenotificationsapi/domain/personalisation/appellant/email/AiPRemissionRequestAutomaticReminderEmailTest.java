@@ -41,6 +41,7 @@ class AiPRemissionRequestAutomaticReminderEmailTest {
     private String appellantFamilyName = "FamilyName";
     private String amountLeftToPay = "4000";
     private String amountLeftToPayInGbp = "40.00";
+    private String feeAmount = "14000";
     private String someTestDateEmail = "14/14/2024";
     private AipRemissionRequestAutomaticReminderEmail aipRemissionRequestAutomaticReminderEmail;
 
@@ -89,6 +90,7 @@ class AiPRemissionRequestAutomaticReminderEmailTest {
 
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
         when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
+        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         Map<String, String> personalisation =
             aipRemissionRequestAutomaticReminderEmail.getPersonalisation(asylumCase);
@@ -101,5 +103,6 @@ class AiPRemissionRequestAutomaticReminderEmailTest {
         assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
         assertEquals(someTestDateEmail, personalisation.get("deadline"));
         assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
+        assertEquals("140.00", personalisation.get("feeAmountRejected"));
     }
 }

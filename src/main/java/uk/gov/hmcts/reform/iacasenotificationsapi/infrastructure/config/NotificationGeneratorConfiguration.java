@@ -5565,7 +5565,6 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeMarkAppealAsRemittedPersonalisation),
@@ -5655,6 +5654,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+
     @Bean("legalRepRemissionPaymentReminderEmailNotificationGenerator")
     public List<NotificationGenerator> legalRepRemissionPaymentReminderEmailNotificationGenerator(
         LegalRepRemissionPaymentReminderPersonalisation legalRepRemissionPaymentReminderPersonalisation,
@@ -5695,4 +5695,3 @@ public class NotificationGeneratorConfiguration {
         );
     }
 }
-

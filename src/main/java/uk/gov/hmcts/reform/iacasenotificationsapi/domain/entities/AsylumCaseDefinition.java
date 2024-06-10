@@ -1,10 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.ChangeOrganisationRequest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.caselinking.CaseLink;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
 
@@ -395,9 +399,22 @@ public enum AsylumCaseDefinition {
             "typesOfUpdateTribunalDecision", new TypeReference<DynamicList>(){}),
     UPDATED_APPEAL_DECISION(
             "updatedAppealDecision", new TypeReference<String>(){}),
+    REQUEST_FEE_REMISSION_DATE(
+        "requestFeeRemissionDate", new TypeReference<String>(){}),
+    REMISSION_REJECTED_DATE_PLUS_14DAYS(
+        "remissionRejectedDatePlus14days", new TypeReference<String>(){}),
+    FEE_AMOUNT_GBP(
+        "feeAmountGbp", new TypeReference<String>(){}),
+    NEW_FEE_AMOUNT(
+        "newFeeAmount", new TypeReference<String>(){}),
+    FEE_UPDATE_REASON(
+        "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
+    MANAGE_FEE_REQUESTED_AMOUNT(
+        "manageFeeRequestedAmount", new TypeReference<String>(){}),
+    FEE_UPDATE_TRIBUNAL_ACTION(
+        "feeUpdateTribunalAction", new TypeReference<FeeTribunalAction>(){}),
     IS_ACCELERATED_DETAINED_APPEAL(
         "isAcceleratedDetainedAppeal", new TypeReference<YesOrNo>(){}),
-
     SUITABILITY_REVIEW_DECISION(
         "suitabilityReviewDecision", new TypeReference<AdaSuitabilityReviewDecision>(){}),
     TRANSFER_OUT_OF_ADA_REASON(
@@ -451,20 +468,6 @@ public enum AsylumCaseDefinition {
         "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
-    REQUEST_FEE_REMISSION_DATE(
-        "requestFeeRemissionDate", new TypeReference<String>(){}),
-    REMISSION_REJECTED_DATE_PLUS_14DAYS(
-        "remissionRejectedDatePlus14days", new TypeReference<String>(){}),
-    FEE_AMOUNT_GBP(
-        "feeAmountGbp", new TypeReference<String>(){}),
-    NEW_FEE_AMOUNT(
-        "newFeeAmount", new TypeReference<String>(){}),
-    FEE_UPDATE_REASON(
-        "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
-    MANAGE_FEE_REQUESTED_AMOUNT(
-        "manageFeeRequestedAmount", new TypeReference<String>(){}),
-    FEE_UPDATE_TRIBUNAL_ACTION(
-        "feeUpdateTribunalAction", new TypeReference<FeeTribunalAction>(){}),
     IS_LATE_REMISSION_REQUEST(
         "isLateRemissionRequest", new TypeReference<YesOrNo>(){}),
     ;

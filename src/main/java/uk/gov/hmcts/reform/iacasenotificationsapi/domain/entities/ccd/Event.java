@@ -120,8 +120,8 @@ public enum Event {
     CASE_LISTING("caseListing"),
     DECIDE_FTPA_APPLICATION("decideFtpaApplication"),
     UPDATE_TRIBUNAL_DECISION("updateTribunalDecision"),
-    MARK_APPEAL_AS_REMITTED("markAppealAsRemitted"),
     RECORD_REMISSION_REMINDER("recordRemissionReminder"),
+    MARK_APPEAL_AS_REMITTED("markAppealAsRemitted"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
