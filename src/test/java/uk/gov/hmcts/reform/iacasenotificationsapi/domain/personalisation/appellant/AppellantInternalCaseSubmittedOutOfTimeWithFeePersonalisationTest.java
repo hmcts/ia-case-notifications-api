@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
 
 import java.util.Map;
 import java.util.Optional;
@@ -53,8 +53,8 @@ class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
     private String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private int daysAfterSubmitAppeal = 14;
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
+    private String amountLeftToPayInGbp = "140.00";
+    private String feeAmountGbp = "14000";
     private AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
 
     @BeforeEach
@@ -120,7 +120,7 @@ class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
+        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmountGbp));
 
         Map<String, String> personalisation =
             appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getPersonalisation(callback);
