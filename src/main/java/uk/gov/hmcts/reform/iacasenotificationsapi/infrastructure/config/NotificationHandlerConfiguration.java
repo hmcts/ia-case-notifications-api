@@ -5783,7 +5783,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internallManageFeeUpdateLetterNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> internalManageFeeUpdateLetterNotificationHandler(
         @Qualifier("internalManageFeeUpdateLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 

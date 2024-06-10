@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum  FeeUpdateReasons {
 
     DECISION_TYPE_CHANGED("decisionTypeChanged"),
-    APPEAL_NOT_VAILD("appealNotValid"),
+    APPEAL_NOT_VALID("appealNotValid"),
     FEE_REMISSION_CHANGED("feeRemissionChanged");
 
     @JsonValue

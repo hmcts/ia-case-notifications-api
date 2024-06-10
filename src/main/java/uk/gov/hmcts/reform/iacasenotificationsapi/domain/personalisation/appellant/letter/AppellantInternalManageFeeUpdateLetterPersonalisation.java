@@ -53,7 +53,7 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_MANAGE_FEE_UPDATE_APPELLANT_LETTER";
     }
 
     @Override
