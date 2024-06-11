@@ -471,7 +471,16 @@ public enum AsylumCaseDefinition {
         "feeAmountGbp", new TypeReference<String>(){}),
 
     SOURCE_OF_REMITTAL(
-        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){});
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
+
+    NEW_FEE_AMOUNT(
+        "newFeeAmount", new TypeReference<String>(){}),
+
+    PAID_AMOUNT(
+        "paidAmount", new TypeReference<String>(){}),
+
+    FEE_UPDATE_REASON(
+        "feeUpdateReason", new TypeReference<FeeUpdateReasons>(){});
 
     private final String value;
     private final TypeReference typeReference;
