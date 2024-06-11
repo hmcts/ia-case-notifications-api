@@ -467,6 +467,9 @@ public enum AsylumCaseDefinition {
     SEND_DIRECTION_DATE_DUE(
         "sendDirectionDateDue", new TypeReference<String>() {}),
 
+    FEE_AMOUNT_GBP(
+        "feeAmountGbp", new TypeReference<String>(){}),
+
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
 
