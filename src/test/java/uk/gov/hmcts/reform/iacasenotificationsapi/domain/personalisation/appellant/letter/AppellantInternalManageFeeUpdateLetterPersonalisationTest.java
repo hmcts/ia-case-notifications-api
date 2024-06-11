@@ -3,9 +3,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
@@ -40,10 +42,7 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
-    private String paidAmount = "14000";
-    private String newFeeAmount = "10000";
     private String referenceNumber = "1111222233334444";
-    private String feeUpdateReason = "some test reason";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
@@ -56,8 +55,8 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
     private String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private int afterManageFeeEvent = 14;
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
+    private String originalFeeTotal = "14000";
+    private String newFeeTotal = "10000";
     private AppellantInternalManageFeeUpdateLetterPersonalisation appellantInternalManageFeeUpdateLetterPersonalisation;
 
     @BeforeEach
@@ -71,12 +70,12 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(appellantAddress));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when(asylumCase.read(AsylumCaseDefinition.PAID_AMOUNT, String.class)).thenReturn(Optional.of(paidAmount));
-        when(asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
-        when(asylumCase.read(AsylumCaseDefinition.FEE_UPDATE_REASONS, String.class)).thenReturn(Optional.of(feeUpdateReason));
+        when(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(originalFeeTotal));
+        when(asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeTotal));
+        when(asylumCase.read(AsylumCaseDefinition.FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(FeeUpdateReason.DECISION_TYPE_CHANGED));
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(referenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
+        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
         when(appellantAddress.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(appellantAddress.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(appellantAddress.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -124,6 +123,29 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .hasMessage("callback must not be null");
     }
 
+    @Test
+    void should_return_personalisation_when_all_information_given() {
 
+        Map<String, String> personalisation =
+            appellantInternalManageFeeUpdateLetterPersonalisation.getPersonalisation(callback);
 
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals("140.00", personalisation.get("originalFeeTotal"));
+        assertEquals("100.00", personalisation.get("newFeeTotal"));
+        assertEquals("40.00", personalisation.get("feeDifference"));
+        assertEquals("Decision Type Changed", personalisation.get("feeUpdateReasonSelected"));
+        assertEquals(referenceNumber, personalisation.get("onlineCaseRefNumber"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("dueDate14Days"));
+        assertEquals(addressLine1, personalisation.get("address_line_1"));
+        assertEquals(addressLine2, personalisation.get("address_line_2"));
+        assertEquals(addressLine3, personalisation.get("address_line_3"));
+        assertEquals(postTown, personalisation.get("address_line_4"));
+        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+
+    }
 }

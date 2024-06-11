@@ -1,12 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +18,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,18 +72,21 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
         String newFeeTotal = asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class).orElse("");
         String feeDifference = calculateFeeDifference(originalFeeTotal, newFeeTotal);
 
+        String feeUpdateReason = formatFeeUpdateReason(asylumCase.read(AsylumCaseDefinition.FEE_UPDATE_REASON, FeeUpdateReason.class)
+            .orElseThrow(() -> new IllegalStateException("FeeUpdateReason is not present")));
+
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("originalFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
-            .put("newFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
+            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("originalFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class).orElse("")))
+            .put("newFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class).orElse("")))
             .put("feeDifference", feeDifference)
-            .put("feeUpdateReasonSelected", asylumCase.read(FEE_UPDATE_REASON, String.class).orElse(""))
-            .put("onlineCaseRefNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
+            .put("feeUpdateReasonSelected", feeUpdateReason)
+            .put("onlineCaseRefNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("dueDate14Days", dueDate);
 
         for (int i = 0; i < appellantAddress.size(); i++) {
@@ -97,14 +98,24 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
     private String calculateFeeDifference(String originalFeeTotal, String newFeeTotal) {
         try {
 
-            BigDecimal originalFee = new BigDecimal(originalFeeTotal);
-            BigDecimal newFee = new BigDecimal(newFeeTotal);
+            BigDecimal originalFee = new BigDecimal(String.valueOf(Double.parseDouble(originalFeeTotal) / 100));
+            BigDecimal newFee = new BigDecimal(String.valueOf(Double.parseDouble(newFeeTotal) / 100));
             BigDecimal difference = originalFee.subtract(newFee);
-            return difference.toString();
+            return difference.setScale(2, RoundingMode.DOWN).toString();
 
         } catch (NumberFormatException e) {
 
             return "0.00";
         }
+    }
+
+    public static String formatFeeUpdateReason(FeeUpdateReason feeUpdateReason) {
+        if (feeUpdateReason == null) {
+            throw new IllegalArgumentException("FeeUpdateReason must not be null");
+        }
+        String value = feeUpdateReason.getValue();
+        return Arrays.stream(value.split("(?=[A-Z])"))
+            .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+            .collect(Collectors.joining(" "));
     }
 }

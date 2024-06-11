@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum FeeUpdateReasons {
+public enum FeeUpdateReason {
     DECISION_TYPE_CHANGED("decisionTypeChanged"),
     APPEAL_NOT_VALID("appealNotValid"),
     FEE_REMISSION_CHANGED("feeRemissionChanged");
@@ -10,7 +10,7 @@ public enum FeeUpdateReasons {
     @JsonValue
     private String value;
 
-    FeeUpdateReasons(String value) {
+    FeeUpdateReason(String value) {
         this.value = value;
     }
 
