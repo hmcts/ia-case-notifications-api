@@ -241,4 +241,18 @@ public class AsylumCaseUtils {
             .setScale(2, RoundingMode.DOWN).toString()
             : "";
     }
+
+    public static String calculateFeeDifference(String originalFeeTotal, String newFeeTotal) {
+        try {
+
+            BigDecimal originalFee = new BigDecimal(String.valueOf(Double.parseDouble(originalFeeTotal) / 100));
+            BigDecimal newFee = new BigDecimal(String.valueOf(Double.parseDouble(newFeeTotal) / 100));
+            BigDecimal difference = originalFee.subtract(newFee);
+            return difference.setScale(2, RoundingMode.DOWN).toString();
+
+        } catch (NumberFormatException e) {
+
+            return "0.00";
+        }
+    }
 }

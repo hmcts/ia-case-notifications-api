@@ -474,7 +474,16 @@ public enum AsylumCaseDefinition {
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
 
     LETTER_BUNDLE_DOCUMENTS(
-        "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){});
+        "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    NEW_FEE_AMOUNT(
+        "newFeeAmount", new TypeReference<String>(){}),
+
+    PAID_AMOUNT(
+        "paidAmount", new TypeReference<String>(){}),
+
+    FEE_UPDATE_REASON(
+        "feeUpdateReason", new TypeReference<FeeUpdateReason>(){});
 
     private final String value;
     private final TypeReference typeReference;

@@ -1,9 +1,9 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,14 +19,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisationTest {
+class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
+
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -52,11 +53,10 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
-    private int daysAfterSubmitAppeal = 10;
-
-    private AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation;
+    private int daysAfterSubmitAppeal = 14;
+    private String amountLeftToPayInGbp = "140.00";
+    private String feeAmountGbp = "14000";
+    private AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -77,7 +77,7 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
         when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
         when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
 
-        appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation = new AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation(
+        appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation = new AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation(
             letterTemplateId,
             daysAfterSubmitAppeal,
             customerServicesProvider,
@@ -86,25 +86,25 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_SUBMIT_APPEAL_OUT_OF_TIME_WITH_REMISSION_APPELLANT_LETTER",
-            appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getReferenceId(ccdCaseId));
+        assertEquals(ccdCaseId + "_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
+            appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_address_in_correct_format() {
-        assertTrue(appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
     }
@@ -113,7 +113,7 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            () -> appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
@@ -121,12 +121,12 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
+        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmountGbp));
 
         Map<String, String> personalisation =
-            appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getPersonalisation(callback);
 
-        assertEquals(systemDateProvider.dueDate(10), personalisation.get("tenDaysAfterSubmitDate"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("fourteenDaysAfterSubmitDate"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));

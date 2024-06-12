@@ -28,9 +28,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReviewHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerUpperTribunalBundleFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerWithoutHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.*;
@@ -5402,6 +5400,29 @@ public class NotificationGeneratorConfiguration {
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internalManageFeeUpdateLetterNotificationGenerator")
+    public List<NotificationGenerator> internalManageFeeUpdateLetterAppellantLetterNotificationGenerator(
+        AppellantInternalManageFeeUpdateLetterPersonalisation appellantInternalManageFeeUpdateLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalManageFeeUpdateLetterPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
