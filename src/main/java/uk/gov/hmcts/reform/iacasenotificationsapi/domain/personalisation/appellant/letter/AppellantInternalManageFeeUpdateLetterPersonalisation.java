@@ -91,6 +91,7 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
         }
         return personalizationBuilder.build();
     }
+
     public static String formatFeeUpdateReason(FeeUpdateReason feeUpdateReason) {
         if (feeUpdateReason == null) {
             throw new IllegalArgumentException("FeeUpdateReason must not be null");
