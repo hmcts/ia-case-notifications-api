@@ -1,16 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
-
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -20,20 +10,31 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+
 @Service
-public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
+public class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation implements LetterNotificationPersonalisation {
+    private final String appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterSubmitAppeal;
 
-    public AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation(
-        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId,
+    public AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation(
+        @Value("${govnotify.template.appealSubmitted.appellant.letter.outOfTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId,
         @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
-        this.appellantInternalCaseSubmitAppealWithFeeLetterTemplateId = appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
+        this.appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId = appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
@@ -41,7 +42,7 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
 
     @Override
     public String getTemplateId() {
-        return appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
+        return appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_SUBMIT_APPEAL_WITH_FEE_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER";
     }
 
     @Override

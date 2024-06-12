@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper;
 
+import java.io.InputStream;
 import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,10 +10,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.NotificationServiceResponseException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
-import uk.gov.service.notify.NotificationClientException;
-import uk.gov.service.notify.SendEmailResponse;
-import uk.gov.service.notify.SendLetterResponse;
-import uk.gov.service.notify.SendSmsResponse;
+import uk.gov.service.notify.*;
 
 import java.util.Map;
 import java.util.UUID;
@@ -39,7 +37,8 @@ public class NotificationSenderHelperTest {
 
     @Mock
     private RetryableNotificationClient notificationClient;
-
+    @Mock
+    private InputStream stream;
     private NotificationSenderHelper senderHelper = new NotificationSenderHelper();
 
     private int deduplicateSendsWithinSeconds = 1;
@@ -420,6 +419,112 @@ public class NotificationSenderHelperTest {
             address,
             personalisation,
             reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        );
+
+        assertNotNull(actualNotificationId);
+        assertTrue(actualNotificationId.isEmpty());
+    }
+
+    @Test
+    public void should_not_send_duplicate_precompiled_leters_in_short_space_of_time() throws NotificationClientException {
+
+        final String otherReference = "1111_SOME_OTHER_NOTIFICATION";
+
+        final UUID expectedNotificationId = UUID.randomUUID();
+        final UUID expectedNotificationIdForOther = UUID.randomUUID();
+
+        LetterResponse letterResponse = mock(LetterResponse.class);
+        LetterResponse letterResponseForOther = mock(LetterResponse.class);
+
+        when(notificationClient.sendPrecompiledLetter(
+            reference,
+            stream
+        )).thenReturn(letterResponse);
+
+        when(notificationClient.sendPrecompiledLetter(
+            otherReference,
+            stream
+        )).thenReturn(letterResponseForOther);
+
+        when(letterResponse.getNotificationId()).thenReturn(expectedNotificationId);
+        when(letterResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
+
+        final String actualNotificationId1 =
+            senderHelper.sendPrecompiledLetter(
+                reference,
+                stream,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
+
+        final String actualNotificationId2 =
+            senderHelper.sendPrecompiledLetter(
+                reference,
+                stream,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
+
+        final String actualNotificationIdForOther =
+            senderHelper.sendPrecompiledLetter(
+                otherReference,
+                stream,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
+
+        assertEquals(expectedNotificationId.toString(), actualNotificationId1);
+        assertEquals(expectedNotificationId.toString(), actualNotificationId2);
+        assertEquals(expectedNotificationIdForOther.toString(), actualNotificationIdForOther);
+
+        try {
+            await().atMost(2, TimeUnit.SECONDS).until(() -> false);
+        } catch (ConditionTimeoutException e) {
+            assertTrue(true, "We expect this to timeout");
+        }
+
+        final String actualNotificationId3 =
+            senderHelper.sendPrecompiledLetter(
+                reference,
+                stream,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
+
+        assertEquals(expectedNotificationId.toString(), actualNotificationId3);
+
+        verify(notificationClient, times(2)).sendPrecompiledLetter(
+            reference,
+            stream
+        );
+
+        verify(notificationClient, times(1)).sendPrecompiledLetter(
+            otherReference,
+            stream
+        );
+    }
+
+    @Test
+    public void wrap_gov_notify_precompiled_letter_exceptions() throws NotificationClientException {
+        NotificationClientException underlyingException = mock(NotificationClientException.class);
+
+        doThrow(underlyingException)
+            .when(notificationClient)
+            .sendPrecompiledLetter(
+                reference,
+                stream
+            );
+
+        String actualNotificationId = senderHelper.sendPrecompiledLetter(
+            reference,
+            stream,
             notificationClient,
             deduplicateSendsWithinSeconds,
             LOG

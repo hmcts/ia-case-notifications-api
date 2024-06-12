@@ -467,8 +467,23 @@ public enum AsylumCaseDefinition {
     SEND_DIRECTION_DATE_DUE(
         "sendDirectionDateDue", new TypeReference<String>() {}),
 
+    FEE_AMOUNT_GBP(
+        "feeAmountGbp", new TypeReference<String>(){}),
+
     SOURCE_OF_REMITTAL(
-        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){});
+        "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
+
+    LETTER_BUNDLE_DOCUMENTS(
+        "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    NEW_FEE_AMOUNT(
+        "newFeeAmount", new TypeReference<String>(){}),
+
+    PAID_AMOUNT(
+        "paidAmount", new TypeReference<String>(){}),
+
+    FEE_UPDATE_REASON(
+        "feeUpdateReason", new TypeReference<FeeUpdateReason>(){});
 
     private final String value;
     private final TypeReference typeReference;
