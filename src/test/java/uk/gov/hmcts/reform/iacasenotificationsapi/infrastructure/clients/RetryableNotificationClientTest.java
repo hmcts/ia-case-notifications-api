@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +23,8 @@ class RetryableNotificationClientTest {
     private SendSmsResponse sendSmsResponse;
     @Mock
     private SendLetterResponse sendLetterResponse;
+    @Mock
+    private LetterResponse letterResponse;
     @Mock
     private Notification notification;
 
@@ -77,5 +78,18 @@ class RetryableNotificationClientTest {
         retryableNotificationClient.sendLetter(anyString(), anyMap(), anyString());
 
         verify(notificationClient, times(2)).sendLetter(anyString(), anyMap(), anyString());
+    }
+
+    @Test
+    void should_retry_once_when_sending_precompiled_letter_failed() throws NotificationClientException {
+        InputStream mockStream = mock(InputStream.class);
+
+        when(notificationClient.sendPrecompiledLetterWithInputStream(anyString(),  eq(mockStream)))
+            .thenThrow(new NotificationClientException("some exception"))
+            .thenReturn(letterResponse);
+
+        retryableNotificationClient.sendPrecompiledLetter("testReference",  mockStream);
+
+        verify(notificationClient, times(2)).sendPrecompiledLetterWithInputStream(anyString(), eq(mockStream));
     }
 }
