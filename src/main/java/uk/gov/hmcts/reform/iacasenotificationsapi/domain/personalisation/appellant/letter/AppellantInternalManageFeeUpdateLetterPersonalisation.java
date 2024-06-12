@@ -1,11 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
@@ -94,21 +91,6 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
         }
         return personalizationBuilder.build();
     }
-
-    private String calculateFeeDifference(String originalFeeTotal, String newFeeTotal) {
-        try {
-
-            BigDecimal originalFee = new BigDecimal(String.valueOf(Double.parseDouble(originalFeeTotal) / 100));
-            BigDecimal newFee = new BigDecimal(String.valueOf(Double.parseDouble(newFeeTotal) / 100));
-            BigDecimal difference = originalFee.subtract(newFee);
-            return difference.setScale(2, RoundingMode.DOWN).toString();
-
-        } catch (NumberFormatException e) {
-
-            return "0.00";
-        }
-    }
-
     public static String formatFeeUpdateReason(FeeUpdateReason feeUpdateReason) {
         if (feeUpdateReason == null) {
             throw new IllegalArgumentException("FeeUpdateReason must not be null");
