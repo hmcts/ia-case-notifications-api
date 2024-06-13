@@ -1,8 +1,9 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,17 +16,17 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
+
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
+class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -36,11 +37,8 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-    @Mock
     AddressUk appellantAddress;
+
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
@@ -48,22 +46,20 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
     private String addressLine1 = "50";
-    private String expectedDirectionDueDate = "27 Aug 2024";
-    private String directionDueDate = "2024-08-27";
-    private String directionExplanation = "someExplanation";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
     private String postCode = "XX1 2YY";
     private String postTown = "Town name";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
-    private AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
+    private final SystemDateProvider systemDateProvider = new SystemDateProvider();
+    private int daysAfterSubmitAppeal = 14;
+    private String amountLeftToPayInGbp = "140.00";
+    private String feeAmountGbp = "14000";
+    private AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
 
     @BeforeEach
     public void setup() {
-        when((direction.getDateDue())).thenReturn(directionDueDate);
-        when((direction.getExplanation())).thenReturn(directionExplanation);
-        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.of(direction));
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getId()).thenReturn(ccdCaseId);
@@ -81,32 +77,34 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
         when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
 
-        appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation = new AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
+        appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation = new AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation(
             letterTemplateId,
-            customerServicesProvider, directionFinder);
+            daysAfterSubmitAppeal,
+            customerServicesProvider,
+            systemDateProvider);
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER",
-            appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getReferenceId(ccdCaseId));
+        assertEquals(ccdCaseId + "_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
+            appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_address_in_correct_format() {
-        assertTrue(appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
     }
@@ -115,7 +113,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            () -> appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
@@ -123,9 +121,12 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        Map<String, String> personalisation =
-            appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
+        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmountGbp));
 
+        Map<String, String> personalisation =
+            appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getPersonalisation(callback);
+
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("fourteenDaysAfterSubmitDate"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
@@ -137,7 +138,6 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
-
+        assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
     }
 }

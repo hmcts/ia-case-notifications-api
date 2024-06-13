@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ public class GovNotifyNotificationSenderTest {
     private RetryableNotificationClient notificationClient;
 
     @Mock private NotificationSenderHelper senderHelper;
+    @Mock private InputStream stream;
 
     private String templateId = "a-b-c-d-e-f";
     private String emailAddress = "recipient@example.com";
@@ -182,6 +184,35 @@ public class GovNotifyNotificationSenderTest {
             address,
             personalisation,
             reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        );
+        assertEquals(expectedNotificationId.toString(), actualNotificationId);
+    }
+
+    @Test
+    public void should_send_precompiled_letter_using_gov_notify() throws NotificationClientException {
+
+        final UUID expectedNotificationId = UUID.randomUUID();
+
+        when(senderHelper.sendPrecompiledLetter(
+            reference,
+            stream,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        )).thenReturn(String.valueOf(expectedNotificationId));
+
+        String actualNotificationId =
+            govNotifyNotificationSender.sendPrecompiledLetter(
+                reference,
+                stream
+            );
+
+        verify(senderHelper, times(1)).sendPrecompiledLetter(
+            reference,
+            stream,
             notificationClient,
             deduplicateSendsWithinSeconds,
             LOG
