@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerUpperTribunalBundleFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerWithoutHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDecisionWithoutHearingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
@@ -2352,24 +2353,25 @@ public class NotificationGeneratorConfiguration {
     ) {
 
         return Arrays.asList(
-            new EmailNotificationGenerator(
-                    newArrayList(
-                        homeOfficeDecisionWithoutHearingPersonalisation,
-                        appellantAppealDecisionWithoutHearingPersonalisationEmail),
-                    notificationSender,
-                    notificationIdAppender
-            ),
-            new SmsNotificationGenerator(
-                newArrayList(appellantAppealDecisionWithoutHearingPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            )
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeDecisionWithoutHearingPersonalisation,
+                                appellantAppealDecisionWithoutHearingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(appellantAppealDecisionWithoutHearingPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
     @Bean("decisionWithoutHearingInternalNotificationGenerator")
     public List<NotificationGenerator> decisionWithoutHearingInternalNotificationGenerator(
             HomeOfficeDecisionWithoutHearingPersonalisation homeOfficeDecisionWithoutHearingPersonalisation,
+            AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -2377,6 +2379,13 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(homeOfficeDecisionWithoutHearingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalCaseDecisionWithoutHearingPersonalisation
+                        ),
                         notificationSender,
                         notificationIdAppender
                 )
