@@ -5827,7 +5827,26 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && appellantHasFixedAddress.equals(YES);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalEndAppealAppellantLetterNotificationHandler(
+        @Qualifier("internalEndAppealAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == END_APPEAL
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()

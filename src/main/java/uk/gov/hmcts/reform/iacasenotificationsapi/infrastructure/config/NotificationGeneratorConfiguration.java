@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAdjournHearingWithoutDatePersonalisation;
@@ -50,6 +51,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respond
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.uppertribunal.UpperTribunalMarkAsReadyForUtTransferPersonalisation;
 
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @Configuration
@@ -5461,5 +5463,29 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
-}
 
+    @Bean("internalEndAppealAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalEndAppealAppellantLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE;
+
+        return Collections.singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+}
