@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7929 Notification to Home Office when appeal is decided without hearing NON-ADA",
+  "description": "RIA-8340 Notification to Appellant when appeal is decided without hearing NON-ADA",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -13,7 +13,28 @@
           "ircName": "Brookhouse",
           "detentionFacility": "immigrationRemovalCentre",
           "isAcceleratedDetainedAppeal": "No",
-          "appellantInDetention": "Yes",
+          "appellantInDetention": "No",
+          "appellantHasFixedAddress": "Yes",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "explanation": "Test direction",
+                "parties": "legalRepresentative",
+                "dateDue": "{$TODAY+28}",
+                "dateSent": "{$TODAY}",
+                "tag": "requestResponseReview"
+              }
+            }
+          ],
           "ariaListingReference": "LP/12345/2019"
         }
       }
@@ -28,7 +49,28 @@
         "ircName": "Brookhouse",
         "detentionFacility": "immigrationRemovalCentre",
         "isAcceleratedDetainedAppeal": "No",
-        "appellantInDetention": "Yes",
+        "appellantInDetention": "No",
+        "appellantHasFixedAddress": "Yes",
+        "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
+        "directions": [
+          {
+            "id": "1",
+            "value": {
+              "explanation": "Test direction",
+              "parties": "legalRepresentative",
+              "dateDue": "{$TODAY+28}",
+              "dateSent": "{$TODAY}",
+              "tag": "requestResponseReview"
+            }
+          }
+        ],
         "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
           {
