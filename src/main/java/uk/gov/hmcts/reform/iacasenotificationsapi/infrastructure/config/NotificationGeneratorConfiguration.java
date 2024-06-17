@@ -2375,7 +2375,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("decisionWithoutHearingInternalNotificationGenerator")
     public List<NotificationGenerator> decisionWithoutHearingInternalNotificationGenerator(
             HomeOfficeDecisionWithoutHearingPersonalisation homeOfficeDecisionWithoutHearingPersonalisation,
-            AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -2383,13 +2382,6 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(homeOfficeDecisionWithoutHearingPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new LetterNotificationGenerator(
-                        newArrayList(
-                                appellantInternalCaseDecisionWithoutHearingPersonalisation
-                        ),
                         notificationSender,
                         notificationIdAppender
                 )
@@ -5498,6 +5490,29 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("internalDecisionWithoutHearingAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalDecisionWithoutHearingLetterAppellantNotificationGenerator(
+            AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalCaseDecisionWithoutHearingPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 }
