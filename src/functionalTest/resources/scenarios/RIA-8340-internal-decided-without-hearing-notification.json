@@ -1,18 +1,16 @@
 {
-  "description": "RIA-8340 Notification to Appellant when appeal is decided without hearing NON-ADA",
+  "description": "RIA-8340 Decision without hearing letter notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "CaseOfficer",
+    "credentials": "AdminOfficer",
     "input": {
       "id": 8340,
       "eventId": "decisionWithoutHearing",
-      "state": "submitHearingRequirements",
+      "state": "respondentReview",
       "caseData": {
-        "template": "minimal-internal-appeal-submitted.json",
+        "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "ircName": "Brookhouse",
-          "detentionFacility": "immigrationRemovalCentre",
-          "isAcceleratedDetainedAppeal": "No",
+          "isAdmin": "Yes",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
@@ -22,20 +20,7 @@
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
-          },
-          "directions": [
-            {
-              "id": "1",
-              "value": {
-                "explanation": "Test direction",
-                "parties": "legalRepresentative",
-                "dateDue": "{$TODAY+28}",
-                "dateSent": "{$TODAY}",
-                "tag": "requestResponseReview"
-              }
-            }
-          ],
-          "ariaListingReference": "LP/12345/2019"
+          }
         }
       }
     }
@@ -44,11 +29,9 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-internal-appeal-submitted.json",
+      "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "ircName": "Brookhouse",
-        "detentionFacility": "immigrationRemovalCentre",
-        "isAcceleratedDetainedAppeal": "No",
+        "isAdmin": "Yes",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
@@ -59,20 +42,11 @@
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
         },
-        "directions": [
-          {
-            "id": "1",
-            "value": {
-              "explanation": "Test direction",
-              "parties": "legalRepresentative",
-              "dateDue": "{$TODAY+28}",
-              "dateSent": "{$TODAY}",
-              "tag": "requestResponseReview"
-            }
-          }
-        ],
-        "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
+          {
+            "id": "8340_DECISION_WITHOUT_HEARING_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "8340_INTERNAL_DECISION_WITHOUT_HEARING_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
