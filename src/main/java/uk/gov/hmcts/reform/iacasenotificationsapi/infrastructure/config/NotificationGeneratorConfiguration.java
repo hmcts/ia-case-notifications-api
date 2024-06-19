@@ -5488,4 +5488,27 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalEndAppealAutomaticallyAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalEndAppealAutomaticallyAppellantLetterNotificationGenerator(
+        AppellantInternalCaseEndAppealAutomaticallyLetterPersonalisation appellantInternalCaseEndAppealAutomaticallyLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalCaseEndAppealAutomaticallyLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
 }
