@@ -1034,6 +1034,7 @@ govnotify:
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
         sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
+        letter: c8f81920-5b59-4db6-b565-d4c997181618
       detentionEngagementTeam:
         nonAda:
           email: 0eb6e602-b92d-4e28-93c1-9ab94d22387e
@@ -1973,6 +1974,7 @@ appellantDaysToWait:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
     afterManageFeeEvent: 14
+    toReinstateAppeal: 14
 
 appellantDaysToAskReinstate: 14
 
