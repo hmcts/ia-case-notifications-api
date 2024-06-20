@@ -5877,6 +5877,28 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDecisionWithoutHearingAppellantLetterNotificationHandler(
+            @Qualifier("internalDecisionWithoutHearingAppellantLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == DECISION_WITHOUT_HEARING
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && appellantHasFixedAddress.equals(YES);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEndAppealAutomaticallyAppellantLetterNotificationHandler(
         @Qualifier("internalEndAppealAutomaticallyAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
