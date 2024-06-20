@@ -10,10 +10,8 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SourceOfRemittal;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Collections;
@@ -29,6 +27,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SOURCE_OF_REMITTAL;
@@ -43,8 +42,6 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    @Mock
-    RecipientsFinder recipientsFinder;
 
     private AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail
         appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail;
@@ -83,8 +80,7 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServices);
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
-        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-            .thenReturn(Collections.singleton(appellantEmail));
+        when(asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)).thenReturn(Optional.ofNullable(appellantEmail));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
@@ -93,21 +89,17 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
         appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail = new AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail(
             templateId,
             iaAipFrontendUrl,
-            customerServicesProvider,
-            recipientsFinder);
+            customerServicesProvider);
     }
 
     @Test
-    public void should_return_given_email_sms() {
+    public void should_return_given_email() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
 
         assertEquals(Collections.singleton(appellantEmail),
             appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getRecipientsList(asylumCase));
 
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(REP));
-
-        assertEquals(Collections.emptySet(),
-            appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -118,7 +110,7 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPELLANT_MARK_APPEAL_AS_REMITTED_NON_DETAINED_NOTIFICATION",
+        assertEquals(caseId + "_APPELLANT_MARK_APPEAL_AS_REMITTED_NON_DETAINED_APPELLANT_EMAIL",
             appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getReferenceId(caseId));
     }
 

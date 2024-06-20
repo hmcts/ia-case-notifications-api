@@ -10,10 +10,8 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SourceOfRemittal;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -24,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_MOBILE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SOURCE_OF_REMITTAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
@@ -34,8 +33,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 class AppellantMarkAppealAsRemittedNonDetainedPersonalisationSmsTest {
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
 
     private AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms
         appellantMarkAppealAsRemittedNonDetainedPersonalisationSms;
@@ -58,17 +55,14 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(SOURCE_OF_REMITTAL, SourceOfRemittal.class)).thenReturn(Optional.of(sourceOfRemittal));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
-
-        when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-            .thenReturn(Collections.singleton(appellantMobileNumber));
+        when(asylumCase.read(INTERNAL_APPELLANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.ofNullable(appellantMobileNumber));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
 
         appellantMarkAppealAsRemittedNonDetainedPersonalisationSms = new AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms(
             templateId,
-            iaAipFrontendUrl,
-            recipientsFinder);
+            iaAipFrontendUrl);
     }
 
     @Test
@@ -79,9 +73,6 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationSmsTest {
             appellantMarkAppealAsRemittedNonDetainedPersonalisationSms.getRecipientsList(asylumCase));
 
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(REP));
-
-        assertEquals(Collections.emptySet(),
-            appellantMarkAppealAsRemittedNonDetainedPersonalisationSms.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -92,7 +83,7 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPELLANT_MARK_APPEAL_AS_REMITTED_NON_DETAINED_SMS",
+        assertEquals(caseId + "_APPELLANT_MARK_APPEAL_AS_REMITTED_NON_DETAINED_APPELLANT_SMS",
             appellantMarkAppealAsRemittedNonDetainedPersonalisationSms.getReferenceId(caseId));
     }
 

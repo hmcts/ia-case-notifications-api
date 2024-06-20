@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SourceOfRemittal;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -29,19 +28,16 @@ public class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail implem
     private final String appellantMarkAppealAsRemittedNonDetainedTemplateId;
     private final String iaAipFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
-    private final RecipientsFinder recipientsFinder;
 
     public AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail(
         @Value("${govnotify.template.markAppealAsRemitted.nonDetained.appellant.email}")
         String appellantMarkAppealAsRemittedNonDetainedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        CustomerServicesProvider customerServicesProvider,
-        RecipientsFinder recipientsFinder
+        CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantMarkAppealAsRemittedNonDetainedTemplateId = appellantMarkAppealAsRemittedNonDetainedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
-        this.recipientsFinder = recipientsFinder;
     }
 
     @Override

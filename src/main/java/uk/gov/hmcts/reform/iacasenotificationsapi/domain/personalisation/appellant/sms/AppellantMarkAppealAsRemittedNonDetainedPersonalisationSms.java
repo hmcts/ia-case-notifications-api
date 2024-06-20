@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SourceOfRemittal;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 import java.util.Collections;
@@ -24,17 +23,14 @@ public class AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms implemen
 
     private final String appellantMarkAppealAsRemittedNonDetainedTemplateId;
     private final String iaAipFrontendUrl;
-    private final RecipientsFinder recipientsFinder;
 
     public AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms(
         @Value("${govnotify.template.markAppealAsRemitted.nonDetained.appellant.sms}")
         String appellantMarkAppealAsRemittedTemplateId,
-        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        RecipientsFinder recipientsFinder
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl
     ) {
         this.appellantMarkAppealAsRemittedNonDetainedTemplateId = appellantMarkAppealAsRemittedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
-        this.recipientsFinder = recipientsFinder;
     }
 
     @Override
