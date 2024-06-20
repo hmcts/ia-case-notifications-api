@@ -5943,6 +5943,34 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalReinstateAppealAppellantLetterNotificationHandler(
+        @Qualifier("internalReinstateAppealAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean hasAppellantAddressInCountryOrOutOfCountry =
+                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
+                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
+                    || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == REINSTATE_APPEAL
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && hasAppellantAddressInCountryOrOutOfCountry;
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
