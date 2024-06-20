@@ -5899,6 +5899,34 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internaLateRemissionRefusedLetterNotificationHandler(
+        @Qualifier("internaLateRemissionRefusedLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> REJECTED == decision)
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == RECORD_REMISSION_DECISION
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && isRejected
+                       && appellantHasFixedAddress.equals(YES);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
