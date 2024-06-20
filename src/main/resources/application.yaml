@@ -1034,6 +1034,7 @@ govnotify:
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
         sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
+        letter: c8f81920-5b59-4db6-b565-d4c997181618
       detentionEngagementTeam:
         nonAda:
           email: 0eb6e602-b92d-4e28-93c1-9ab94d22387e
@@ -1043,6 +1044,7 @@ govnotify:
       appellant:
         email: 8f071df1-61e6-44f3-baae-58209d42ab62
         sms: 380ea39c-a4f7-43ed-99f1-cd9c78060070
+        letter: 620b880f-9d99-4ba9-b2e6-7c5fe317c6dc
     adaSuitabilityReview:
       legalRep:
         unsuitable:
@@ -1976,6 +1978,7 @@ appellantDaysToWait:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
     afterManageFeeEvent: 14
+    toReinstateAppeal: 14
 
 appellantDaysToAskReinstate: 14
 
