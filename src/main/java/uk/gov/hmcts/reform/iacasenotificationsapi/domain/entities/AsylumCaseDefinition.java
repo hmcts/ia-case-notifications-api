@@ -485,6 +485,24 @@ public enum AsylumCaseDefinition {
     FEE_UPDATE_REASON(
         "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
 
+    APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J(
+        "appellantHasFixedAddressAdminJ", new TypeReference<YesOrNo>(){}),
+
+    ADDRESS_LINE_1_ADMIN_J(
+        "addressLine1AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_2_ADMIN_J(
+        "addressLine2AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_3_ADMIN_J(
+        "addressLine3AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_4_ADMIN_J(
+        "addressLine4AdminJ", new TypeReference<String>(){}),
+
+    COUNTRY_ADMIN_J(
+        "countryAdminJ", new TypeReference<String>(){}),
+
     REMISSION_DECISION_REASON(
         "remissionDecisionReason", new TypeReference<String>(){});
 
