@@ -5980,7 +5980,12 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                boolean hasAppellantAddressInCountryOrOutOfCountry =
+                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
+                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
+                    || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
 
                 boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> REJECTED == decision)
@@ -5991,7 +5996,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRejected
-                       && appellantHasFixedAddress.equals(YES);
+                       && hasAppellantAddressInCountryOrOutOfCountry;
 
             },
             notificationGenerators,
