@@ -5953,17 +5953,11 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean hasAppellantAddressInCountryOrOutOfCountry =
-                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
-                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
-                    || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
-                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
-
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == REINSTATE_APPEAL
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry;
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
 
             },
             notificationGenerators,
@@ -5981,12 +5975,6 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean hasAppellantAddressInCountryOrOutOfCountry =
-                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
-                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
-                    || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
-                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
-
                 boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> REJECTED == decision)
                     .orElse(false);
@@ -5996,7 +5984,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRejected
-                       && hasAppellantAddressInCountryOrOutOfCountry;
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
 
             },
             notificationGenerators,

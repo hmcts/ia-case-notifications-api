@@ -157,8 +157,6 @@ govnotify:
           sms: 4bebbf93-8aef-47c0-b1a9-a89da915f9e5
           letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
 
-
-
     editPaymentMethod:
       adminOfficer:
         email: 7b6a238c-2fd5-4f29-afe0-a772fb0e9c27
