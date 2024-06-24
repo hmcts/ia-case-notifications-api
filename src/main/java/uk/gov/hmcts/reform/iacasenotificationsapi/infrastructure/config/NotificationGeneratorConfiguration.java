@@ -5488,4 +5488,29 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
+    public List<NotificationGenerator> internalCaseAdjournedWithoutTImeLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE;
+
+        return Collections.singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
 }

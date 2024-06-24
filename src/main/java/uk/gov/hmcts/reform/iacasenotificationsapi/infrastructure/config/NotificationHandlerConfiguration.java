@@ -2417,7 +2417,7 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateHandler(
         @Qualifier("adjournHearingWithoutDateNotificationGenerator")
             List<NotificationGenerator> notificationGenerator) {
-
+        System.out.println("adjournHearingWithoutDateNotificationGenerator sent");
         // RIA-3631 adjournHearingWithoutDate
         return new NotificationHandler(
             (callbackStage, callback) ->
@@ -2432,7 +2432,7 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> internalAdjournHearingWithoutDateHandler(
         @Qualifier("internalAdjournHearingWithoutDateNotificationGenerator")
         List<NotificationGenerator> notificationGenerator) {
-
+        System.out.println("internalAdjournHearingWithoutDateNotificationGenerator sent");
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -5869,6 +5869,27 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && appellantHasFixedAddress.equals(YES);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTImeLetterNotificationHandler(
+        @Qualifier("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                    && isInternalCase(asylumCase)
+                    && !isAppellantInDetention(asylumCase);
 
             },
             notificationGenerators,
