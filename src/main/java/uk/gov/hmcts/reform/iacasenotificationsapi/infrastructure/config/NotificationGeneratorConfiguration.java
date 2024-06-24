@@ -5590,4 +5590,27 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalReinstateAppealAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalReinstateAppealAppellantLetterNotificationGenerator(
+        AppellantInternalReinstateAppealLetterPersonalisation appellantInternalReinstateAppealLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalReinstateAppealLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
 }

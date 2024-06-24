@@ -820,6 +820,7 @@ govnotify:
           sms: 2f7ae47e-733a-4e1b-bb1d-e62101dd6844
         afterListing:
           email: c193b002-fdd4-4e51-8cdf-064942937ff9
+        letter: 99b483c6-2940-4c7f-8e8e-99b96046ac96
       detentionEngagementTeam:
         email:
           ada: 3e328516-5262-44b4-8a65-41dc795d669b
