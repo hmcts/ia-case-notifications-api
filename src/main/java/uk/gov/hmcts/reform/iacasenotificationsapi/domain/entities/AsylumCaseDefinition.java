@@ -347,8 +347,14 @@ public enum AsylumCaseDefinition {
     EMAIL(
         "email", new TypeReference<String>(){}),
 
+    INTERNAL_APPELLANT_EMAIL(
+        "internalAppellantEmail", new TypeReference<String>(){}),
+
     MOBILE_NUMBER(
         "mobileNumber", new TypeReference<String>(){}),
+
+    INTERNAL_APPELLANT_MOBILE_NUMBER(
+        "internalAppellantMobileNumber", new TypeReference<String>(){}),
 
     CONTACT_PREFERENCE(
         "contactPreference", new TypeReference<ContactPreference>(){}),

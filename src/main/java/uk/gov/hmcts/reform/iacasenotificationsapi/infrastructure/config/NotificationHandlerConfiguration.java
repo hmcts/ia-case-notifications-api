@@ -5636,7 +5636,27 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.MARK_APPEAL_AS_REMITTED);
+                    && callback.getEvent() == Event.MARK_APPEAL_AS_REMITTED
+                    && !isInternalCase(asylumCase));
+            }, notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> markAppealAsRemittedNonDetainedNotificationHandler(
+        @Qualifier("markAppealAsRemittedNonDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.MARK_APPEAL_AS_REMITTED
+                    && isInternalCase(asylumCase)
+                    && inCountryAppeal(asylumCase)
+                    && !isAppellantInDetention(asylumCase));
             }, notificationGenerators,
             getErrorHandler()
         );
