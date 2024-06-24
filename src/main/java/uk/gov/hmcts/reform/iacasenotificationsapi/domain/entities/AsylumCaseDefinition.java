@@ -510,7 +510,10 @@ public enum AsylumCaseDefinition {
         "countryAdminJ", new TypeReference<String>(){}),
 
     REMISSION_DECISION_REASON(
-        "remissionDecisionReason", new TypeReference<String>(){});
+        "remissionDecisionReason", new TypeReference<String>(){}),
+
+    LATE_REMISSION_TYPE(
+        "lateRemissionType", new TypeReference<RemissionType>(){});
 
     private final String value;
     private final TypeReference typeReference;

@@ -5999,12 +5999,15 @@ public class NotificationHandlerConfiguration {
                     .map(decision -> REJECTED == decision)
                     .orElse(false);
 
+                Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRejected
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                       && lateRemissionType.isPresent();
 
             },
             notificationGenerators,
