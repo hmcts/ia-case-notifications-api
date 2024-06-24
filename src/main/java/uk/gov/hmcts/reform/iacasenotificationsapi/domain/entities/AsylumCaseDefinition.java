@@ -508,7 +508,12 @@ public enum AsylumCaseDefinition {
 
     COUNTRY_ADMIN_J(
         "countryAdminJ", new TypeReference<String>(){}),
-    ;
+
+    REMISSION_DECISION_REASON(
+        "remissionDecisionReason", new TypeReference<String>(){}),
+
+    LATE_REMISSION_TYPE(
+        "lateRemissionType", new TypeReference<RemissionType>(){});
 
     private final String value;
     private final TypeReference typeReference;
