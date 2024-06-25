@@ -73,10 +73,12 @@ class DocumentTagTest {
         assertEquals("internalAdjournHearingWithoutDate", DocumentTag.INTERNAL_ADJOURN_HEARING_WITHOUT_DATE.toString());
         assertEquals("internalEndAppealLetterBundle", DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE.toString());
         assertEquals("internalCaseListedLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE.toString());
+        assertEquals("internalAdjournWithoutDateLetterBundle", DocumentTag.INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE.toString());
+
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(71, DocumentTag.values().length);
+        assertEquals(72, DocumentTag.values().length);
     }
 }
