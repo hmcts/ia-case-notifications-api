@@ -49,7 +49,7 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_LATE_REMISSION_OOC_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER";
     }
 
     @Override
