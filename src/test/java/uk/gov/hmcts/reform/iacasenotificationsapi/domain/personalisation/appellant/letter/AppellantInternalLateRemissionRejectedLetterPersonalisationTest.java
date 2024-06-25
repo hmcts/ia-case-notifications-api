@@ -94,7 +94,7 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_LATE_REMISSION_OOC_APPELLANT_LETTER",
+        assertEquals(ccdCaseId + "_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
             appellantInternalLateRemissionRejectedLetterPersonalisation.getReferenceId(ccdCaseId));
     }
 
