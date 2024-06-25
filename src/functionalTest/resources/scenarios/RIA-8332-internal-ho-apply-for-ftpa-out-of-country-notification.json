@@ -11,7 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantHasFixedAddress": "Yes",
+          "appellantHasFixedAddressAdminJ": "Yes",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "appellantInUk": "No",
@@ -44,15 +44,12 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInUk": "No",
-        "appellantHasFixedAddress": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "addressLine1AdminJ": "example 1",
+        "addressLine2AdminJ": "United Kingdom",
+        "addressLine3AdminJ": "NE21JX",
+        "addressLine4AdminJ": "Example Town",
+        "countryAdminJ": "5",
         "directions": [
           {
             "id": "1",

@@ -5804,8 +5804,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> AppellantInternalHomeOfficeApplyForFTPANonDetainedOrOOCAipNotificationHandler(
-        @Qualifier("AppellantInternalHomeOfficeApplyForFTPANonDetainedOrOOCAipNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocAipNotificationHandler(
+        @Qualifier("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -5813,12 +5813,8 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                YesOrNo appellantHasFixedAddress =  inCountryAppeal(asylumCase) ?
-                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO):
-                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class).orElse(NO);
-
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && appellantHasFixedAddress.equals(YES)
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                     && callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
                     && isInternalCase(asylumCase)
                     && (!isAppellantInDetention(asylumCase) || !inCountryAppeal(asylumCase));

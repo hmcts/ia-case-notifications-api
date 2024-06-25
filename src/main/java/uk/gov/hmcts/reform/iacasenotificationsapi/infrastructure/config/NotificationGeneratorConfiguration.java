@@ -5402,28 +5402,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("AppellantInternalHomeOfficeApplyForFTPANonDetainedOrOOCAipNotificationGenerator")
-    public List<NotificationGenerator> AppellantInternalHomeOfficeApplyForFTPANonDetainedOrOOCAipNotificationGenerator(
-        AppellantInternalHomeOfficeApplyForFTPANonDetainedAndOutOfCountryPersonalisation appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return Collections.singletonList(
-            new LetterNotificationGenerator(
-                newArrayList(
-                    appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
-                }
-            }
-        );
-    }
 
     @Bean("internalHomeOfficeUploadBundleAipNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
@@ -5658,4 +5636,27 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
+    public List<NotificationGenerator> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocLetterNotificationGenerator(
+        AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
 }

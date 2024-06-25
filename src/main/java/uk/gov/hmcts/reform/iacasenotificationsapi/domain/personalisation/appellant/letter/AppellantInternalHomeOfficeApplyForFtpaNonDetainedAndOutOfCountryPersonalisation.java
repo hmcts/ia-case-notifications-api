@@ -22,17 +22,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 
 @Service
-public class AppellantInternalHomeOfficeApplyForFTPANonDetainedAndOutOfCountryPersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalHomeOfficeApplyForFTPATemplateId;
+public class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation implements LetterNotificationPersonalisation {
+    private final String appellantInternalHomeOfficeApplyForFtpaTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final DirectionFinder directionFinder;
 
-    public AppellantInternalHomeOfficeApplyForFTPANonDetainedAndOutOfCountryPersonalisation(
-        @Value("${govnotify.template.ftpaSubmitted.nonDetainedAndOoc.homeOffice.letter}") String appellantInternalHomeOfficeApplyForFTPATemplateId,
+    public AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation(
+        @Value("${govnotify.template.ftpaSubmitted.nonDetainedAndOoc.homeOffice.letter}") String appellantInternalHomeOfficeApplyForFtpaTemplateId,
         CustomerServicesProvider customerServicesProvider,
         DirectionFinder directionFinder) {
 
-        this.appellantInternalHomeOfficeApplyForFTPATemplateId = appellantInternalHomeOfficeApplyForFTPATemplateId;
+        this.appellantInternalHomeOfficeApplyForFtpaTemplateId = appellantInternalHomeOfficeApplyForFtpaTemplateId;
         this.customerServicesProvider = customerServicesProvider;
         this.directionFinder = directionFinder;
 
@@ -40,7 +40,7 @@ public class AppellantInternalHomeOfficeApplyForFTPANonDetainedAndOutOfCountryPe
 
     @Override
     public String getTemplateId() {
-        return appellantInternalHomeOfficeApplyForFTPATemplateId;
+        return appellantInternalHomeOfficeApplyForFtpaTemplateId;
     }
 
     @Override
@@ -65,7 +65,10 @@ public class AppellantInternalHomeOfficeApplyForFTPANonDetainedAndOutOfCountryPe
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
+        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
+            getAppellantAddressAsList(asylumCase) :
+            getAppellantAddressAsListOoc(asylumCase);
+
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
