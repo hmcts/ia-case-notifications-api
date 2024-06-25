@@ -6037,6 +6037,35 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internaRemissionPartiallyGrantedOrRefusedLetterNotificationHandler(
+            @Qualifier("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                            .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+                            .orElse(false);
+
+                    Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == RECORD_REMISSION_DECISION
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && isRemissionPartiallyApprovedOrRejected
+                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                            && lateRemissionType.isEmpty();
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
