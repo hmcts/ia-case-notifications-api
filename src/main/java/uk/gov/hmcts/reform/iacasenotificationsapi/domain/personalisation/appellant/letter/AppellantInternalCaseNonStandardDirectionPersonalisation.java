@@ -11,7 +11,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Service
 public class AppellantInternalCaseNonStandardDirectionPersonalisation implements LetterNotificationPersonalisation {
@@ -44,8 +43,13 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return switch (isAppellantInUK(asylumCase)) {
+            case YES ->
+                    Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
+                            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+            case NO -> Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
+                    .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        };
     }
 
     @Override
@@ -62,7 +66,10 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
                         .getCaseDetails()
                         .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
+        List<String> appellantAddress = switch (isAppellantInUK(asylumCase)) {
+            case YES -> getAppellantAddressAsList(asylumCase);
+            case NO -> getAppellantAddressAsListOoc(asylumCase);
+        };
 
         Optional<Direction> direction = directionFinder.findFirst(asylumCase, DirectionTag.NONE);
 

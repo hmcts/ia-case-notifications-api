@@ -5936,6 +5936,7 @@ public class NotificationHandlerConfiguration {
                             && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
                             && isInternalCase(asylumCase)
                             && !isAppellantInDetention(asylumCase)
+                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                             && appellantHasFixedAddress.equals(YES);
                 },
                 notificationGenerators,

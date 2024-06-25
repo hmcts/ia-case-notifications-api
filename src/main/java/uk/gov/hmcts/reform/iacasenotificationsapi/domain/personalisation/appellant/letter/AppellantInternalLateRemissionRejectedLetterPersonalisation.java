@@ -1,20 +1,22 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
-
 import com.google.common.collect.ImmutableMap;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Service
 public class AppellantInternalLateRemissionRejectedLetterPersonalisation implements LetterNotificationPersonalisation {
@@ -36,9 +38,7 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-
-        return switch (isAppellantInUK) {
+        return switch (isAppellantInUK(asylumCase)) {
             case YES ->
                 Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
                     .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
@@ -61,9 +61,7 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
                 .getCaseDetails()
                 .getCaseData();
 
-        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-
-        List<String> appellantAddress = switch (isAppellantInUK) {
+        List<String> appellantAddress = switch (isAppellantInUK(asylumCase)) {
             case YES -> getAppellantAddressAsList(asylumCase);
             case NO -> getAppellantAddressAsListOoc(asylumCase);
         };
