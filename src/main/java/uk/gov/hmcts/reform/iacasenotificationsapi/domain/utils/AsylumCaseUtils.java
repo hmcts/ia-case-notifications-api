@@ -57,6 +57,10 @@ public class AsylumCaseUtils {
         return asylumCase.read(IS_ADMIN, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
     }
 
+    public static boolean inCountryAppeal(AsylumCase asylumCase) {
+        return asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(false);
+    }
+
     public static Optional<FtpaDecisionOutcomeType> getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
         Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
             .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
@@ -235,6 +239,44 @@ public class AsylumCaseUtils {
         return appellantAddressAsList;
     }
 
+    public static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
+
+        String oocAddressLine1 = asylumCase
+            .read(ADDRESS_LINE_1_ADMIN_J, String.class)
+            .orElseThrow(() -> new IllegalStateException("OOC Address line 1 is not present"));
+
+        String oocAddressLine2 = asylumCase
+            .read(ADDRESS_LINE_2_ADMIN_J, String.class)
+            .orElseThrow(() -> new IllegalStateException("OOC Address line 2 is not present"));
+
+        List<String> appellantAddressAsList = new ArrayList<>();
+
+        appellantAddressAsList.add(oocAddressLine1);
+        appellantAddressAsList.add(oocAddressLine2);
+
+        String oocAddressLine3 = asylumCase
+            .read(ADDRESS_LINE_3_ADMIN_J, String.class)
+            .orElse(null);
+
+        String oocAddressLine4 = asylumCase
+            .read(ADDRESS_LINE_4_ADMIN_J, String.class)
+            .orElse(null);
+
+        String oocAddressCountry = asylumCase
+            .read(COUNTRY_ADMIN_J, String.class)
+            .orElseThrow(() -> new IllegalStateException("OOC Address country is not present"));
+
+        if (oocAddressLine3 != null) {
+            appellantAddressAsList.add(oocAddressLine3);
+        }
+        if (oocAddressLine4 != null) {
+            appellantAddressAsList.add(oocAddressLine4);
+        }
+        appellantAddressAsList.add(oocAddressCountry);
+
+        return appellantAddressAsList;
+    }
+
     public static String convertAsylumCaseFeeValue(String amountFromAsylumCase) {
         return StringUtils.isNotBlank(amountFromAsylumCase)
             ? new BigDecimal(String.valueOf(Double.parseDouble(amountFromAsylumCase) / 100))
@@ -254,5 +296,12 @@ public class AsylumCaseUtils {
 
             return "0.00";
         }
+    }
+
+    public static boolean hasAppellantAddressInCountryOrOutOfCountry(AsylumCase asylumCase) {
+        return asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
+                   .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
+               || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+                   .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 }

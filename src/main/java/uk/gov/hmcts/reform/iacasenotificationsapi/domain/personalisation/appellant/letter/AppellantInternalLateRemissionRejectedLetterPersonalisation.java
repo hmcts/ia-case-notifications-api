@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -13,43 +12,44 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId;
+public class AppellantInternalLateRemissionRejectedLetterPersonalisation implements LetterNotificationPersonalisation {
+    private final String appellantInternalLateRemissionRequestOocLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final SystemDateProvider systemDateProvider;
-    private final int daysAfterSubmitAppeal;
 
-    public AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation(
-        @Value("${govnotify.template.appealSubmitted.appellant.letter.outOfTime.withRemission}") String appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterSubmitAppeal,
-        CustomerServicesProvider customerServicesProvider,
-        SystemDateProvider systemDateProvider
+    public AppellantInternalLateRemissionRejectedLetterPersonalisation(
+        @Value("${govnotify.template.remissionDecision.appellant.rejected.letter}") String appellantInternalLateRemissionRequestOocLetterTemplateId,
+        CustomerServicesProvider customerServicesProvider
     ) {
-        this.appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId = appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId;
+        this.appellantInternalLateRemissionRequestOocLetterTemplateId = appellantInternalLateRemissionRequestOocLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
-        this.systemDateProvider = systemDateProvider;
-        this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
     }
 
     @Override
     public String getTemplateId() {
-        return appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterTemplateId;
+        return appellantInternalLateRemissionRequestOocLetterTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
+
+        return switch (isAppellantInUK) {
+            case YES ->
+                Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
+                    .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+            case NO -> Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
+                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        };
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_SUBMIT_APPEAL_OUT_OF_TIME_WITH_REMISSION_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_LATE_REMISSION_OOC_APPELLANT_LETTER";
     }
 
     @Override
@@ -61,8 +61,12 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
-        final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
+        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
+
+        List<String> appellantAddress = switch (isAppellantInUK) {
+            case YES -> getAppellantAddressAsList(asylumCase);
+            case NO -> getAppellantAddressAsListOoc(asylumCase);
+        };
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -71,8 +75,7 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
-            .put("tenDaysAfterSubmitDate", dueDate);
+            .put("RemissionReasons", asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION_REASON, String.class).orElse(""));
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
@@ -80,9 +83,3 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPerson
         return personalizationBuilder.build();
     }
 }
-
-
-
-
-
-

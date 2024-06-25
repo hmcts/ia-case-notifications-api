@@ -155,6 +155,8 @@ govnotify:
         rejected:
           email: 5e23cb62-9c63-4fc2-8c04-cdb3adf69013
           sms: 4bebbf93-8aef-47c0-b1a9-a89da915f9e5
+          letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
+
     editPaymentMethod:
       adminOfficer:
         email: 7b6a238c-2fd5-4f29-afe0-a772fb0e9c27
@@ -820,6 +822,7 @@ govnotify:
           sms: 2f7ae47e-733a-4e1b-bb1d-e62101dd6844
         afterListing:
           email: c193b002-fdd4-4e51-8cdf-064942937ff9
+        letter: 99b483c6-2940-4c7f-8e8e-99b96046ac96
       detentionEngagementTeam:
         email:
           ada: 3e328516-5262-44b4-8a65-41dc795d669b
@@ -1034,6 +1037,7 @@ govnotify:
       appellant:
         email: 9dce71ff-5985-4bea-8958-b1dc155132dd
         sms: f1ce1bb3-ddef-4b6b-95d1-cf4809e2b9d9
+        letter: c8f81920-5b59-4db6-b565-d4c997181618
       detentionEngagementTeam:
         nonAda:
           email: 0eb6e602-b92d-4e28-93c1-9ab94d22387e
@@ -1043,6 +1047,7 @@ govnotify:
       appellant:
         email: 8f071df1-61e6-44f3-baae-58209d42ab62
         sms: 380ea39c-a4f7-43ed-99f1-cd9c78060070
+        letter: 620b880f-9d99-4ba9-b2e6-7c5fe317c6dc
     adaSuitabilityReview:
       legalRep:
         unsuitable:
@@ -1262,6 +1267,10 @@ govnotify:
         email: 0e8e1bc7-feea-4b7d-9cd8-09606ca0bcf9
       homeOffice:
         email: 0d55ec2a-b33c-478e-b467-4291b0f66563
+      nonDetained:
+        appellant:
+          email: 48a76c74-0109-4885-9a2e-b12d0cef34bc
+          sms: 47451541-24f7-4078-9a1f-432edd1adb06
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
@@ -1972,6 +1981,7 @@ appellantDaysToWait:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
     afterManageFeeEvent: 14
+    toReinstateAppeal: 14
 
 appellantDaysToAskReinstate: 14
 
