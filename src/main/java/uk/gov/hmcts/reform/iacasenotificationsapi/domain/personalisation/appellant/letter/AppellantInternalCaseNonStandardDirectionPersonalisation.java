@@ -5,37 +5,41 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 
 @Service
-public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalCaseDecisionWithoutHearingLetterTemplateId;
+public class AppellantInternalCaseNonStandardDirectionPersonalisation implements LetterNotificationPersonalisation {
+    private final String appellantInternalCaseNonStandardDirectionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
+    private final DirectionFinder directionFinder;
 
-    public AppellantInternalCaseDecisionWithoutHearingPersonalisation(
-            @Value("${govnotify.template.decisionWithoutHearing.appellant.letter}") String appellantInternalCaseDecisionWithoutHearingLetterTemplateId,
+    public AppellantInternalCaseNonStandardDirectionPersonalisation(
+            @Value("${govnotify.template.nonStandardDirectionInternal.appellant.letter}") String appellantInternalCaseNonStandardDirectionLetterTemplateId,
             CustomerServicesProvider customerServicesProvider,
-            SystemDateProvider systemDateProvider
+            DirectionFinder directionFinder
     ) {
-        this.appellantInternalCaseDecisionWithoutHearingLetterTemplateId = appellantInternalCaseDecisionWithoutHearingLetterTemplateId;
+        this.appellantInternalCaseNonStandardDirectionLetterTemplateId = appellantInternalCaseNonStandardDirectionLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
+        this.directionFinder = directionFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return appellantInternalCaseDecisionWithoutHearingLetterTemplateId;
+        return appellantInternalCaseNonStandardDirectionLetterTemplateId;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DECISION_WITHOUT_HEARING_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER";
     }
 
     @Override
@@ -60,13 +64,22 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
 
         List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
 
+        Optional<Direction> direction = directionFinder.findFirst(asylumCase, DirectionTag.NONE);
+
+        final String dueDate =
+                LocalDate
+                        .parse(direction.get().getDateDue())
+                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("directionExplanation", direction.get().getExplanation())
+                .put("directionDueDate", dueDate);
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));

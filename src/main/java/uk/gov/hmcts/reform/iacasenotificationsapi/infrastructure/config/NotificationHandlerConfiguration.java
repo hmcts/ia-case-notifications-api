@@ -5919,6 +5919,30 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalNonStandardDirectionAppellantLetterNotificationHandler(
+            @Qualifier("internalNonStandardDirectionAppellantLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SEND_DIRECTION
+                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && appellantHasFixedAddress.equals(YES);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEndAppealAutomaticallyAppellantLetterNotificationHandler(
         @Qualifier("internalEndAppealAutomaticallyAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
