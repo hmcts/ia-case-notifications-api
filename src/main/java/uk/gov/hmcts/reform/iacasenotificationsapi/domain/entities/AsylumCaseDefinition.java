@@ -347,8 +347,14 @@ public enum AsylumCaseDefinition {
     EMAIL(
         "email", new TypeReference<String>(){}),
 
+    INTERNAL_APPELLANT_EMAIL(
+        "internalAppellantEmail", new TypeReference<String>(){}),
+
     MOBILE_NUMBER(
         "mobileNumber", new TypeReference<String>(){}),
+
+    INTERNAL_APPELLANT_MOBILE_NUMBER(
+        "internalAppellantMobileNumber", new TypeReference<String>(){}),
 
     CONTACT_PREFERENCE(
         "contactPreference", new TypeReference<ContactPreference>(){}),
@@ -502,7 +508,12 @@ public enum AsylumCaseDefinition {
 
     COUNTRY_ADMIN_J(
         "countryAdminJ", new TypeReference<String>(){}),
-    ;
+
+    REMISSION_DECISION_REASON(
+        "remissionDecisionReason", new TypeReference<String>(){}),
+
+    LATE_REMISSION_TYPE(
+        "lateRemissionType", new TypeReference<RemissionType>(){});
 
     private final String value;
     private final TypeReference typeReference;

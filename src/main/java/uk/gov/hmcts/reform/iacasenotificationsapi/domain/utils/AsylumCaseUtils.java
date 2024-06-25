@@ -57,6 +57,10 @@ public class AsylumCaseUtils {
         return asylumCase.read(IS_ADMIN, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
     }
 
+    public static boolean inCountryAppeal(AsylumCase asylumCase) {
+        return asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(false);
+    }
+
     public static Optional<FtpaDecisionOutcomeType> getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
         Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
             .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
@@ -299,5 +303,12 @@ public class AsylumCaseUtils {
 
             return "0.00";
         }
+    }
+
+    public static boolean hasAppellantAddressInCountryOrOutOfCountry(AsylumCase asylumCase) {
+        return asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
+                   .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
+               || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+                   .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 }

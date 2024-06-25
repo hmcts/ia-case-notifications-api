@@ -5261,6 +5261,33 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("markAppealAsRemittedNonDetainedNotificationGenerator")
+    public List<NotificationGenerator> markAppealAsRemittedNonDetainedNotificationGenerator(
+        AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail,
+        AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms appellantMarkAppealAsRemittedNonDetainedPersonalisationSms,
+        HomeOfficeMarkAppealAsRemittedPersonalisation homeOfficeMarkAppealAsRemittedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantMarkAppealAsRemittedNonDetainedPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeMarkAppealAsRemittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation,
@@ -5493,6 +5520,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
+    public List<NotificationGenerator> internalCaseAdjournedWithoutTImeLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE;
+
+        return Collections.singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("internalDecisionWithoutHearingAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalDecisionWithoutHearingLetterAppellantNotificationGenerator(
             AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation,
@@ -5575,6 +5627,29 @@ public class NotificationGeneratorConfiguration {
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalReinstateAppealLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internaLateRemissionRefusedLetterNotificationGenerator")
+    public List<NotificationGenerator> internalLateRemissionRefusedAppellantLetterNotificationGenerator(
+        AppellantInternalLateRemissionRejectedLetterPersonalisation appellantInternalLateRemissionRejectedLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalLateRemissionRejectedLetterPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

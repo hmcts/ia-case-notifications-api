@@ -1,0 +1,63 @@
+{
+  "description": "RIA-8720: Mark appeal as remitted",
+  "enabled": "dlrm-remitted-feature-flag:true",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 8720,
+      "eventId": "recordRemissionDecision",
+      "state": "pendingPayment",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "homeOfficeDecisionDate": "{$TODAY-14}",
+          "isAdmin": "Yes",
+          "appellantInDetention": "No",
+          "appealType": "ageAssessment",
+          "isRemissionsEnabled": "Yes",
+          "remissionDecision": "rejected",
+          "appellantHasFixedAddress": "Yes",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          }
+        }
+      }
+    },
+    "expectation": {
+      "status": 200,
+      "errors": [],
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "isAdmin": "Yes",
+          "homeOfficeDecisionDate": "{$TODAY-14}",
+          "appealType": "ageAssessment",
+          "isRemissionsEnabled": "Yes",
+          "appellantInDetention": "No",
+          "remissionDecision": "rejected",
+          "appellantHasFixedAddress": "Yes",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street",
+            "notificationsSent": [
+              {
+                "id": "8258_LEGAL_REP_MARK_APPEAL_AS_REMITTED",
+                "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

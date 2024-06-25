@@ -376,4 +376,25 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)).thenReturn(Optional.of(NO));
         assertFalse(AsylumCaseUtils.isSubmissionOutOfTime(asylumCase));
     }
+
+    @Test
+    void should_return_true_if_in_country_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_true_if_ooc_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_false_if_neither_in_country_nor_ooc_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
 }
