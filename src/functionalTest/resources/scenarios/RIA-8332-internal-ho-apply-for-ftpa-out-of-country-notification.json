@@ -15,14 +15,11 @@
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "appellantInUk": "No",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "addressLine1AdminJ": "example 1",
+          "addressLine2AdminJ": "United Kingdom",
+          "addressLine3AdminJ": "NE21JX",
+          "addressLine4AdminJ": "Example Town",
+          "countryAdminJ": "5",
           "directions": [
             {
               "id": "1",

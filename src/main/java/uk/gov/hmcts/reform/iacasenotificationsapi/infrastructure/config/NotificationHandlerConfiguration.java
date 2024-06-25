@@ -5812,11 +5812,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
+
+                YesOrNo appellantHasFixedAddress =  inCountryAppeal(asylumCase) ?
+                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO):
+                    asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class).orElse(NO);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && appellantHasFixedAddress.equals(YES)
-                    &&  callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
+                    && callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
                     && isInternalCase(asylumCase)
                     && (!isAppellantInDetention(asylumCase) || !inCountryAppeal(asylumCase));
 
