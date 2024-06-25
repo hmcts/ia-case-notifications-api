@@ -1,5 +1,7 @@
 {
   "description": "RIA-8720 Late remission request rejected - Non Detained",
+  "disabled": true,
+  "launchDarklyKey": "remissions-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
