@@ -33,7 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
-
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
 
@@ -362,5 +361,26 @@ public class AsylumCaseUtilsTest {
     void submissionOutOfTime_should_return_false() {
         when(asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)).thenReturn(Optional.of(NO));
         assertFalse(AsylumCaseUtils.isSubmissionOutOfTime(asylumCase));
+    }
+
+    @Test
+    void should_return_true_if_in_country_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_true_if_ooc_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_false_if_neither_in_country_nor_ooc_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 }
