@@ -5867,7 +5867,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == END_APPEAL
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOoc(asylumCase);
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()

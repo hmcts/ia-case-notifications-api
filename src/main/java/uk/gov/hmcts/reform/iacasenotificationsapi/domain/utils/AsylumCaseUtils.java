@@ -239,13 +239,6 @@ public class AsylumCaseUtils {
         return appellantAddressAsList;
     }
 
-    public static boolean hasAppellantAddressInCountryOrOoc(AsylumCase asylumCase) {
-        return asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
-                   .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
-               || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
-                   .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
-    }
-
     public static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
 
         String oocAddressLine1 = asylumCase
