@@ -33,7 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
-
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
 
@@ -108,6 +107,20 @@ public class AsylumCaseUtilsTest {
     void isAdmin_should_return_false() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
         assertFalse(AsylumCaseUtils.isInternalCase(asylumCase));
+    }
+
+    @Test
+    void hasAppellantAddressInCountryOrOoc_should_return_true_for_in_country() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOoc(asylumCase));
+    }
+
+    @Test
+    void hasAppellantAddressInCountryOrOoc_should_return_true_for_out_of_country() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOoc(asylumCase));
     }
 
     @Test
