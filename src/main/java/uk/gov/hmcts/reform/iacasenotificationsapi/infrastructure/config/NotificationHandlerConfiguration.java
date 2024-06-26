@@ -5889,7 +5889,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == END_APPEAL
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase);
+                       && !isAppellantInDetention(asylumCase)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -6035,6 +6036,56 @@ public class NotificationHandlerConfiguration {
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTImeLetterNotificationHandler(
+        @Qualifier("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                    && isInternalCase(asylumCase)
+                    && !isAppellantInDetention(asylumCase);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internaRemissionPartiallyGrantedOrRefusedLetterNotificationHandler(
+            @Qualifier("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                            .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+                            .orElse(false);
+
+                    Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == RECORD_REMISSION_DECISION
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && isRemissionPartiallyApprovedOrRejected
+                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                            && lateRemissionType.isEmpty();
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 

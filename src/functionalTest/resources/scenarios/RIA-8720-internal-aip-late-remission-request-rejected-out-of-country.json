@@ -1,6 +1,7 @@
 {
-  "description": "RIA-8720: Mark appeal as remitted",
-  "enabled": "dlrm-remitted-feature-flag:true",
+  "description": "RIA-8720: Late remission request rejected",
+  "disabled": true,
+  "launchDarklyKey": "remissions-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -11,12 +12,19 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "homeOfficeDecisionDate": "{$TODAY-14}",
+          "homeOfficeDecisionDate": "2019-01-01",
+          "feeAmount": "14000",
+          "appealType": "refusalOfHumanRights",
+          "isDlrmFeeRemissionEnabled": "Yes",
+          "isRemissionsEnabled": "Yes",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
-          "appealType": "ageAssessment",
-          "isRemissionsEnabled": "Yes",
+          "submissionOutOfTime": "Yes",
           "remissionDecision": "rejected",
+          "lateRemissionType": "hoWaiverRemission",
+          "remissionClaim": "legalAid",
+          "legalAidAccountNumber": "1A234B",
+          "remissionDecisionReason": "Some reason",
           "appellantHasFixedAddress": "Yes",
           "appellantInUk": "No",
           "appellantHasFixedAddressAdminJ": "Yes",
@@ -33,12 +41,19 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "isAdmin": "Yes",
-          "homeOfficeDecisionDate": "{$TODAY-14}",
-          "appealType": "ageAssessment",
+          "homeOfficeDecisionDate": "2019-01-01",
+          "feeAmount": "14000",
+          "appealType": "refusalOfHumanRights",
+          "isDlrmFeeRemissionEnabled": "Yes",
           "isRemissionsEnabled": "Yes",
+          "isAdmin": "Yes",
           "appellantInDetention": "No",
+          "submissionOutOfTime": "Yes",
           "remissionDecision": "rejected",
+          "lateRemissionType": "hoWaiverRemission",
+          "remissionClaim": "legalAid",
+          "legalAidAccountNumber": "1A234B",
+          "remissionDecisionReason": "Some reason",
           "appellantHasFixedAddress": "Yes",
           "appellantInUk": "No",
           "appellantHasFixedAddressAdminJ": "Yes",
@@ -48,7 +63,7 @@
           "countryAdminJ": "Spain",
           "notificationsSent": [
             {
-              "id": "8258_LEGAL_REP_MARK_APPEAL_AS_REMITTED",
+              "id": "8720_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
               "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
             }
           ]

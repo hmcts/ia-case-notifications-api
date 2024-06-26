@@ -5402,7 +5402,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-
     @Bean("internalHomeOfficeUploadBundleAipNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
         AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation,
@@ -5503,6 +5502,31 @@ public class NotificationGeneratorConfiguration {
     ) {
 
         DocumentTag documentTag = DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE;
+
+        return Collections.singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
+    public List<NotificationGenerator> internalCaseAdjournedWithoutTImeLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE;
 
         return Collections.singletonList(
             new PrecompiledLetterNotificationGenerator(
@@ -5637,6 +5661,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+    public List<NotificationGenerator> internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator(
+            AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
     public List<NotificationGenerator> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocLetterNotificationGenerator(
         AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation,
@@ -5658,5 +5705,4 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
-
 }

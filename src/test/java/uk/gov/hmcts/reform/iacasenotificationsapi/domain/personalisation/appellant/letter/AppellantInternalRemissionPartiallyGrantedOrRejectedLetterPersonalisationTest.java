@@ -1,29 +1,39 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_DECISION;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
+class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -35,6 +45,8 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     AddressUk appellantAddress;
+    @Mock
+    SystemDateProvider systemDateProvider;
 
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
@@ -54,8 +66,14 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
     private String oocAddressLine2 = "Madrid";
     private String oocAddressLine3 = "28003";
     private String oocAddressCountry = "Spain";
+    private int daysAfterRemissionDecision = 14;
+    private String amountLeftToPay = "4000";
+    private String amountLeftToPayInGbp = "40.00";
+    private String originalFeeAmount = "18000";
+    private String originalFeeAmountInGbp = "180.00";
+    private String onlineCaseReferenceNumber = "1234 5678 9101 1121";
 
-    private AppellantInternalLateRemissionRejectedLetterPersonalisation appellantInternalLateRemissionRejectedLetterPersonalisation;
+    private AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -69,6 +87,7 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION_REASON, String.class)).thenReturn(Optional.of(remissionReasons));
+        when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(appellantAddress.getAddressLine1()).thenReturn(Optional.of(addressLine1));
@@ -80,32 +99,40 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
         when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.PARTIALLY_APPROVED));
+        final String dueDate = LocalDate.now().plusDays(daysAfterRemissionDecision)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
+        when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
+        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(originalFeeAmount));
 
-        appellantInternalLateRemissionRejectedLetterPersonalisation = new AppellantInternalLateRemissionRejectedLetterPersonalisation(
+        appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation = new AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation(
             letterTemplateId,
-            customerServicesProvider
+            daysAfterRemissionDecision,
+            customerServicesProvider,
+            systemDateProvider
             );
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalLateRemissionRejectedLetterPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
-            appellantInternalLateRemissionRejectedLetterPersonalisation.getReferenceId(ccdCaseId));
+        assertEquals(ccdCaseId + "_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER",
+            appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_address_in_correct_format() {
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
@@ -113,7 +140,7 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
     }
@@ -122,18 +149,21 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> appellantInternalLateRemissionRejectedLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            () -> appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
 
-    @Test
-    void should_return_personalisation_when_all_information_given_in_country() {
-
+    @ParameterizedTest
+    @EnumSource(
+            value = RemissionDecision.class,
+            names = {"PARTIALLY_APPROVED", "REJECTED"})
+    void should_return_personalisation_when_all_information_given_in_country(RemissionDecision remissionDecision) {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, String> personalisation =
-            appellantInternalLateRemissionRejectedLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -147,15 +177,26 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
+        if (remissionDecision == RemissionDecision.PARTIALLY_APPROVED) {
+            assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
+        } else {
+            assertEquals(originalFeeAmountInGbp, personalisation.get("feeAmount"));
+        }
+
+        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
     }
 
-    @Test
-    void should_return_personalisation_when_all_information_given_out_of_country() {
-
+    @ParameterizedTest
+    @EnumSource(
+            value = RemissionDecision.class,
+            names = {"PARTIALLY_APPROVED", "REJECTED"})
+    void should_return_personalisation_when_all_information_given_out_of_country(RemissionDecision remissionDecision) {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         Map<String, String> personalisation =
-            appellantInternalLateRemissionRejectedLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -168,5 +209,12 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
         assertEquals(oocAddressCountry, personalisation.get("address_line_4"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
+        if (remissionDecision == RemissionDecision.PARTIALLY_APPROVED) {
+            assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
+        } else {
+            assertEquals(originalFeeAmountInGbp, personalisation.get("feeAmount"));
+        }
+        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
     }
 }
