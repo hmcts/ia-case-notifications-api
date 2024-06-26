@@ -16,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -5795,6 +5796,28 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && appellantHasFixedAddress.equals(YES);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocAipNotificationHandler(
+        @Qualifier("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                    && callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
+                    && isInternalCase(asylumCase)
+                    && (!isAppellantInDetention(asylumCase) || !inCountryAppeal(asylumCase));
 
             },
             notificationGenerators,

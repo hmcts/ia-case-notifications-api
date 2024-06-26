@@ -1275,6 +1275,10 @@ govnotify:
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
+    ftpaSubmitted:
+      nonDetainedAndOoc:
+        homeOffice:
+          letter: 8458015d-e43e-4dfb-8683-293db32e4286
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
