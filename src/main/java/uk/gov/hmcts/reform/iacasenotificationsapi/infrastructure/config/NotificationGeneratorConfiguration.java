@@ -5639,7 +5639,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internaLateRemissionRefusedLetterNotificationGenerator")
+    @Bean("internalLateRemissionRefusedLetterNotificationGenerator")
     public List<NotificationGenerator> internalLateRemissionRefusedAppellantLetterNotificationGenerator(
         AppellantInternalLateRemissionRejectedLetterPersonalisation appellantInternalLateRemissionRejectedLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
@@ -5650,6 +5650,29 @@ public class NotificationGeneratorConfiguration {
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalLateRemissionRejectedLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internalMarkAsRemittedAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalMarkAsRemittedAppellantLetterNotificationGenerator(
+        AppellantInternalMarkAsRemittedLetterPersonalisation appellantInternalMarkAsRemittedLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalMarkAsRemittedLetterPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

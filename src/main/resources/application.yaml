@@ -1274,6 +1274,7 @@ govnotify:
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
+        letter: fb14e920-9834-4d11-91b7-bb38e7dfbb1e
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
