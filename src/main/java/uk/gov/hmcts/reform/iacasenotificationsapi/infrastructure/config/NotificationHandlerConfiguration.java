@@ -16,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -5803,6 +5804,28 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocAipNotificationHandler(
+        @Qualifier("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                    && callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
+                    && isInternalCase(asylumCase)
+                    && (!isAppellantInDetention(asylumCase) || !inCountryAppeal(asylumCase));
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationHandler(
         @Qualifier("internalSubmitAppealOutOfTimeWithExemptionAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -6034,6 +6057,35 @@ public class NotificationHandlerConfiguration {
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internaRemissionPartiallyGrantedOrRefusedLetterNotificationHandler(
+            @Qualifier("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                            .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+                            .orElse(false);
+
+                    Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == RECORD_REMISSION_DECISION
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && isRemissionPartiallyApprovedOrRejected
+                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                            && lateRemissionType.isEmpty();
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
