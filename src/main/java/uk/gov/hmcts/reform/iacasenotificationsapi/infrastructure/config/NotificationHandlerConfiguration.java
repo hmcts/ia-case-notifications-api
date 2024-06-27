@@ -6059,7 +6059,8 @@ public class NotificationHandlerConfiguration {
             getErrorHandler()
         );
     }
-  
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internaRemissionPartiallyGrantedOrRefusedLetterNotificationHandler(
             @Qualifier("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
