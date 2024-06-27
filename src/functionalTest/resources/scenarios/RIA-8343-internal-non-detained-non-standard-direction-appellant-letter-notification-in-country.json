@@ -6,17 +6,13 @@
     "input": {
       "id": 8343,
       "eventId": "sendDirection",
-      "state": "appealSubmitted",
+      "state": "decision",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "hearingCentre": "taylorHouse",
-          "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019",
-          "legalRepReferenceNumber": "REF54321",
-          "appealReferenceNumber": "PA/12345/2018",
           "ircName": "Brookhouse",
-          "isAdmin": "Yes",
+          "detentionFacility": "immigrationRemovalCentre",
+          "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
@@ -66,12 +62,6 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "hearingCentre": "taylorHouse",
-        "listCaseHearingCentre": "taylorHouse",
-        "ariaListingReference": "LP/12345/2019",
-        "legalRepReferenceNumber": "REF54321",
-        "appealReferenceNumber": "PA/12345/2018",
-        "isAdmin": "Yes",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
