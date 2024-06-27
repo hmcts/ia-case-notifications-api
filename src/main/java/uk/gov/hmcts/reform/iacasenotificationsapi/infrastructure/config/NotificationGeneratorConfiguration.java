@@ -35,7 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation;
@@ -5662,6 +5661,51 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+    public List<NotificationGenerator> internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator(
+            AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
+    public List<NotificationGenerator> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocLetterNotificationGenerator(
+        AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+  
     @Bean("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
     public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppelantLetterGenerator(
         AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation,
@@ -5684,4 +5728,5 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+  
 }
