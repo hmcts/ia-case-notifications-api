@@ -71,11 +71,14 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
             case NO -> getAppellantAddressAsListOoc(asylumCase);
         };
 
-        Optional<Direction> direction = directionFinder.findFirst(asylumCase, DirectionTag.NONE);
+        final Direction direction =
+                directionFinder
+                        .findFirst(asylumCase, DirectionTag.NONE)
+                        .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.NONE + "' is not present"));
 
         final String dueDate =
                 LocalDate
-                        .parse(direction.get().getDateDue())
+                        .parse(direction.getDateDue())
                         .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
@@ -85,7 +88,7 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("directionExplanation", direction.get().getExplanation())
+                .put("directionExplanation", direction.getExplanation())
                 .put("directionDueDate", dueDate);
 
         for (int i = 0; i < appellantAddress.size(); i++) {

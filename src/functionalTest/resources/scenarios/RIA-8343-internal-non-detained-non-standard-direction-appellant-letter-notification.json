@@ -14,15 +14,6 @@
           "detentionFacility": "immigrationRemovalCentre",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "No",
-          "appellantHasFixedAddress": "Yes",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "directions": [
             {
@@ -63,15 +54,6 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "appellantInDetention": "No",
-        "appellantHasFixedAddress": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
         "notificationsSent": [
           {
             "id": "8343_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
