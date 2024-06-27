@@ -8,7 +8,7 @@
       "eventId": "sendDirection",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "minimal-internal-appeal-submitted.json",
+        "template": "minimal-appeal-submitted.json",
         "replacements": {
           "hearingCentre": "taylorHouse",
           "listCaseHearingCentre": "taylorHouse",
@@ -16,7 +16,6 @@
           "legalRepReferenceNumber": "REF54321",
           "appealReferenceNumber": "PA/12345/2018",
           "ircName": "Brookhouse",
-          "detentionFacility": "immigrationRemovalCentre",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "No",
