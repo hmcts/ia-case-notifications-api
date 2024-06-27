@@ -14,11 +14,13 @@
           "detentionFacility": "immigrationRemovalCentre",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "No",
-          "appellantAddress": {
-            "Country": "Spain",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "appellantHasFixedAddress": "Yes",
+          "appellantInUk": "No",
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryAdminJ": "Spain",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "directions": [
             {
@@ -59,11 +61,13 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "appellantInDetention": "No",
-        "appellantAddress": {
-          "Country": "Spain",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantHasFixedAddress": "Yes",
+        "appellantInUk": "No",
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "addressLine1AdminJ": "Calle Toledo 32",
+        "addressLine2AdminJ": "Madrid",
+        "addressLine3AdminJ": "28003",
+        "countryAdminJ": "Spain",
         "notificationsSent": [
           {
             "id": "8343_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
