@@ -12,7 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInDetention": "No",
-          "appellantInUk": "Yes",
+          "appellantInUk": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantHasFixedAddressAdminJ": "Yes",
           "addressLine1AdminJ": "Calle Toledo 32",
@@ -36,7 +36,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInDetention": "No",
-        "appellantInUk": "Yes",
+        "appellantInUk": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantHasFixedAddressAdminJ": "Yes",
         "addressLine1AdminJ": "Calle Toledo 32",
