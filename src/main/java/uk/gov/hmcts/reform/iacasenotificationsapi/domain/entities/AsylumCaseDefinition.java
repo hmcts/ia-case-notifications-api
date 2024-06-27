@@ -513,7 +513,13 @@ public enum AsylumCaseDefinition {
         "remissionDecisionReason", new TypeReference<String>(){}),
 
     LATE_REMISSION_TYPE(
-        "lateRemissionType", new TypeReference<RemissionType>(){});
+        "lateRemissionType", new TypeReference<RemissionType>(){}),
+
+    FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT(
+        "ftpaAppellantDecisionRemadeRule32Text", new TypeReference<String>(){}),
+
+    FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT(
+        "ftpaRespondentDecisionRemadeRule32Text", new TypeReference<String>(){});
 
     private final String value;
     private final TypeReference typeReference;

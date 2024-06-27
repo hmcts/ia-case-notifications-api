@@ -6035,7 +6035,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internaLateRemissionRefusedLetterNotificationHandler(
-        @Qualifier("internaLateRemissionRefusedLetterNotificationGenerator")
+        @Qualifier("internalLateRemissionRefusedLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6064,8 +6064,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTImeLetterNotificationHandler(
-        @Qualifier("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTimeLetterNotificationHandler(
+        @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6110,6 +6110,47 @@ public class NotificationHandlerConfiguration {
                 },
                 notificationGenerators,
                 getErrorHandler()
+        );
+    }
+  
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseDisposeUnderRule31Or32AppelantLetterHandler(
+        @Qualifier("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                    && isInternalCase(asylumCase)
+                    && !isAppellantInDetention(asylumCase)
+                    && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalMarkAsRemittedAppellantLetterNotificationHandler(
+        @Qualifier("internalMarkAsRemittedAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == MARK_APPEAL_AS_REMITTED
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 
