@@ -6024,8 +6024,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
-    public List<NotificationGenerator> internaRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator(
+    @Bean("internalRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+    public List<NotificationGenerator> internalRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator(
             AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -6136,4 +6136,28 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalRespondentApplicationDecidedLetterGenerator")
+    public List<NotificationGenerator> internalRespondentApplicationDecidedLetterGenerator(
+            AppellantInternalRespondentApplicationDecidedLetterPersonalisation appellantInternalRespondentApplicationDecidedLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalRespondentApplicationDecidedLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
 }
