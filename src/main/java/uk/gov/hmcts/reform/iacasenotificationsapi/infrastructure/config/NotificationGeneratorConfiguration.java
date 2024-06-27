@@ -5638,7 +5638,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internaLateRemissionRefusedLetterNotificationGenerator")
+    @Bean("internalLateRemissionRefusedLetterNotificationGenerator")
     public List<NotificationGenerator> internalLateRemissionRefusedAppellantLetterNotificationGenerator(
         AppellantInternalLateRemissionRejectedLetterPersonalisation appellantInternalLateRemissionRejectedLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
@@ -5705,7 +5705,7 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
-  
+
     @Bean("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
     public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppelantLetterGenerator(
         AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation,
@@ -5728,5 +5728,27 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
-  
+
+    @Bean("internalMarkAsRemittedAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalMarkAsRemittedAppellantLetterNotificationGenerator(
+        AppellantInternalMarkAsRemittedLetterPersonalisation appellantInternalMarkAsRemittedLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalMarkAsRemittedLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
 }
