@@ -1279,6 +1279,10 @@ govnotify:
       nonDetainedAndOoc:
         homeOffice:
           letter: 8458015d-e43e-4dfb-8683-293db32e4286
+    generateHearingBundle:
+      nonDetainedAndOoc:
+        homeOffice:
+          email: 3b756f11-4c9c-4aac-9f39-b1d594a933b3
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

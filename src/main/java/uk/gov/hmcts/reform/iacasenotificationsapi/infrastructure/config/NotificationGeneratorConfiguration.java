@@ -5287,6 +5287,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("generateHearingBundleNonDetainedOrOocNotificationGenerator")
+    public List<NotificationGenerator> generateHearingBundleNonDetainedOrOocNotificationGenerator(
+        HomeOfficeGenerateHearingBundlePersonalisation homeOfficeGenerateHearingBundlePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeGenerateHearingBundlePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealWithExemptionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation,
