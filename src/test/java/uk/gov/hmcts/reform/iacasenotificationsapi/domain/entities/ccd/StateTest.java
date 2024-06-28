@@ -9,6 +9,7 @@ public class StateTest {
     @Test
     public void has_correct_values() {
         assertEquals("appealStarted", State.APPEAL_STARTED.toString());
+        assertEquals("appealStartedByAdmin", State.APPEAL_STARTED_BY_ADMIN.toString());
         assertEquals("appealSubmitted", State.APPEAL_SUBMITTED.toString());
         assertEquals("appealSubmittedOutOfTime", State.APPEAL_SUBMITTED_OUT_OF_TIME.toString());
         assertEquals("pendingPayment", State.PENDING_PAYMENT.toString());
@@ -36,10 +37,11 @@ public class StateTest {
         assertEquals("cmaAdjustmentsAgreed", State.CMA_ADJUSTMENTS_AGREED.toString());
         assertEquals("cmaListed", State.CMA_LISTED.toString());
         assertEquals("appealTakenOffline", State.APPEAL_TAKEN_OFFLINE.toString());
+        assertEquals("remitted", State.REMITTED.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(30, State.values().length);
+        assertEquals(32, State.values().length);
     }
 }
