@@ -11,7 +11,6 @@
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "ircName": "Brookhouse",
           "appellantInDetention": "No",
           "listCaseHearingCentre": "harmondsworth",
           "ariaListingReference": "LP/12345/2019",
@@ -28,7 +27,6 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInDetention": "No",
-        "ircName": "Brookhouse",
         "listCaseHearingCentre": "harmondsworth",
         "ariaListingReference": "LP/12345/2019",
         "appellantInUk": "Yes",
