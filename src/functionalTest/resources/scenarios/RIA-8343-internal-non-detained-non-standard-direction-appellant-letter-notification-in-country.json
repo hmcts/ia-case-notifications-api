@@ -6,13 +6,17 @@
     "input": {
       "id": 8343,
       "eventId": "sendDirection",
-      "state": "decision",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "hearingCentre": "taylorHouse",
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
+          "legalRepReferenceNumber": "REF54321",
+          "appealReferenceNumber": "PA/12345/2018",
           "ircName": "Brookhouse",
-          "detentionFacility": "immigrationRemovalCentre",
-          "isAcceleratedDetainedAppeal": "No",
+          "isAdmin": "Yes",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
@@ -62,6 +66,12 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "hearingCentre": "taylorHouse",
+        "listCaseHearingCentre": "taylorHouse",
+        "ariaListingReference": "LP/12345/2019",
+        "legalRepReferenceNumber": "REF54321",
+        "appealReferenceNumber": "PA/12345/2018",
+        "isAdmin": "Yes",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
@@ -73,6 +83,10 @@
           "AddressLine2": "Example Street"
         },
         "notificationsSent": [
+          {
+            "id": "8343_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "8343_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
