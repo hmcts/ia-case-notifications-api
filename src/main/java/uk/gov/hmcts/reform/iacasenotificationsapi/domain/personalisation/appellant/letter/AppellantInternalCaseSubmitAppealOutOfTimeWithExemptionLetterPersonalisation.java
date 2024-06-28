@@ -5,7 +5,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -43,10 +42,7 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPerson
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return inCountryAppeal(asylumCase) ? Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_"))) :
-            Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
