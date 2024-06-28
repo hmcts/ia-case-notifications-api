@@ -5534,8 +5534,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalCaseAdjournedWithoutTImeLetterNotificationGenerator")
-    public List<NotificationGenerator> internalCaseAdjournedWithoutTImeLetterNotificationGenerator(
+    @Bean("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
+    public List<NotificationGenerator> internalCaseAdjournedWithoutTimeLetterNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
@@ -5653,7 +5653,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internaLateRemissionRefusedLetterNotificationGenerator")
+    @Bean("internalLateRemissionRefusedLetterNotificationGenerator")
     public List<NotificationGenerator> internalLateRemissionRefusedAppellantLetterNotificationGenerator(
         AppellantInternalLateRemissionRejectedLetterPersonalisation appellantInternalLateRemissionRejectedLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
@@ -5709,6 +5709,52 @@ public class NotificationGeneratorConfiguration {
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
+    public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppelantLetterGenerator(
+        AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalCaseDisposeUnderRule31Or32Personalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internalMarkAsRemittedAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalMarkAsRemittedAppellantLetterNotificationGenerator(
+        AppellantInternalMarkAsRemittedLetterPersonalisation appellantInternalMarkAsRemittedLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalMarkAsRemittedLetterPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

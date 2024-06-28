@@ -1234,6 +1234,7 @@ govnotify:
         appellant:
           email: d84a747f-64b9-4c98-bb8f-387ef920ba89
           sms: 3f59be15-89e4-4241-9d6d-61a516dcd159
+          letter: 0eb26449-9557-4b1e-b79e-328d62a90754
       reheardUnderRule35:
         appellant:
           email: 47f31922-1e17-4be5-84c9-0d65340a8e18
@@ -1275,6 +1276,7 @@ govnotify:
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
+        letter: fb14e920-9834-4d11-91b7-bb38e7dfbb1e
     ftpaSubmitted:
       nonDetainedAndOoc:
         homeOffice:

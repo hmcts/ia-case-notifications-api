@@ -1,10 +1,10 @@
 {
-  "description": "RIA-8297 Send letter notification to appellant for Submit Appeal with exemption (internal case creation)",
+  "description": "RIA-9173 Send letter notification to appellant for Submit Appeal with exemption - OOC (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 8297,
+      "id": 9173,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -12,18 +12,14 @@
         "replacements": {
           "appealType": "deprivation",
           "isAdmin": "Yes",
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "appellantInUk": "No",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryAdminJ": "Spain",
           "appellantInDetention": "No",
-          "appellantInUk": "Yes",
-          "submissionOutOfTime": "No",
-          "appellantHasFixedAddress": "Yes",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          }
+          "submissionOutOfTime": "No"
         }
       }
     }
@@ -36,24 +32,21 @@
       "replacements": {
         "appealType": "deprivation",
         "isAdmin": "Yes",
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "appellantInUk": "No",
+        "addressLine1AdminJ": "Calle Toledo 32",
+        "addressLine2AdminJ": "Madrid",
+        "addressLine3AdminJ": "28003",
+        "countryAdminJ": "Spain",
         "appellantInDetention": "No",
         "submissionOutOfTime": "No",
-        "appellantHasFixedAddress": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
         "notificationsSent": [
           {
-            "id": "8297_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "9173_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8297_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
+            "id": "9173_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
