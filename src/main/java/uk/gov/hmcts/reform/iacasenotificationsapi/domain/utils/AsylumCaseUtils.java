@@ -8,11 +8,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
@@ -303,5 +301,12 @@ public class AsylumCaseUtils {
                    .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
                || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
                    .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    public static Set<String> getAppellantAddressInCountryOrOoc(final AsylumCase asylumCase) {
+        return inCountryAppeal(asylumCase) ? Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
+            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_"))) :
+            Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
+                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
     }
 }

@@ -1,11 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -43,8 +42,7 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPerson
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -61,7 +59,6 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPerson
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
         final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
@@ -72,6 +69,10 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPerson
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
+
+        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
+            getAppellantAddressAsList(asylumCase) :
+            getAppellantAddressAsListOoc(asylumCase);
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
