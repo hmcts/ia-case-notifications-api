@@ -1,6 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+
 import com.google.common.collect.ImmutableMap;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -38,13 +42,7 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return switch (isAppellantInUK(asylumCase)) {
-            case YES ->
-                Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-                    .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
-            case NO -> Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
-        };
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override

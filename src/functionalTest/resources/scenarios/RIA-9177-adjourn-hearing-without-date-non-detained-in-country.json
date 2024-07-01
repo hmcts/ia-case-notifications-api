@@ -1,20 +1,23 @@
 {
-  "description": "RIA-8297 Send letter notification to appellant for Submit Appeal with exemption (internal case creation)",
+  "description": "RIA-9177 Adjourn hearing without date for internal journey non-detained, in country",
+  "launchDarklyKey": "tcw-notifications-feature:true",
+  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 8297,
-      "eventId": "submitAppeal",
-      "state": "appealSubmitted",
+      "id": 9177,
+      "eventId": "adjournHearingWithoutDate",
+      "state": "preHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "appealType": "deprivation",
+          "adjournHearingWithoutDateReasons": "some reason",
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
-          "submissionOutOfTime": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
             "County": "",
@@ -34,10 +37,10 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealType": "deprivation",
+        "listCaseHearingCentre": "taylorHouse",
         "isAdmin": "Yes",
         "appellantInDetention": "No",
-        "submissionOutOfTime": "No",
+        "appellantInUk": "Yes",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
           "County": "",
@@ -49,15 +52,36 @@
         },
         "notificationsSent": [
           {
-            "id": "8297_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "9177_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8297_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
+            "id": "9177_ADJOURN_HEARING_WITHOUT_DATE_HO",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "9177_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
+        "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
+        "subject": "Immigration and Asylum appeal: Hearing adjourned",
+        "body": [
+          "PA/12345/2019",
+          "Talha Awan"
+        ]
+      },
+      {
+        "reference": "9177_ADJOURN_HEARING_WITHOUT_DATE_HO",
+        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
+        "subject": "Immigration and Asylum appeal: Hearing adjourned",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Talha Awan"
+        ]
+      }
+    ]
   }
 }
