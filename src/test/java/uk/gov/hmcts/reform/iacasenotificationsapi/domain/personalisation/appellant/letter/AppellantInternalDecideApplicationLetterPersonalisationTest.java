@@ -116,7 +116,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_REINSTATE_DECIDE_APPLICATION_LETTER",
+        assertEquals(ccdCaseId + "_INTERNAL_DECIDE_APPLICATION_LETTER",
             appellantInternalDecideApplicationLetterPersonalisation.getReferenceId(ccdCaseId));
     }
 
