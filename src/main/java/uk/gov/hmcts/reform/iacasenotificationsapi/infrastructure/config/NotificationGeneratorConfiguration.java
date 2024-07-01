@@ -5751,4 +5751,26 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalDecideApplicationAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalDecideApplicationAppellantLetterNotificationGenerator(
+        AppellantInternalDecideApplicationLetterPersonalisation appellantInternalDecideApplicationLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalDecideApplicationLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
 }
