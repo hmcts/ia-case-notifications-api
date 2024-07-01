@@ -11,6 +11,7 @@
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "appealType": "refusalOfHumanRights",
           "appellantHasFixedAddress": "Yes",
@@ -33,6 +34,7 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "appealType": "refusalOfHumanRights",
         "appellantHasFixedAddress": "Yes",
