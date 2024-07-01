@@ -17,6 +17,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -6122,6 +6123,26 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateHearingBundleNonDetainedOrOocNotificationHandler(
+        @Qualifier("generateHearingBundleNonDetainedOrOocNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == GENERATE_HEARING_BUNDLE
+                    && isInternalCase(asylumCase)
+                    && ((inCountryAppeal(asylumCase) && !isAppellantInDetention(asylumCase)) || !inCountryAppeal(asylumCase));
             },
             notificationGenerators,
             getErrorHandler()
