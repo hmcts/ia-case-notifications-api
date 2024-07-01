@@ -98,7 +98,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisation implements 
         return personalizationBuilder.build();
     }
 
-    Optional<MakeAnApplication> getMakeAnApplication(AsylumCase asylumCase) {
+    private Optional<MakeAnApplication> getMakeAnApplication(AsylumCase asylumCase) {
         String id = asylumCase.read(DECIDE_AN_APPLICATION_ID, String.class).orElse("");
         Optional<List<IdValue<MakeAnApplication>>> mayBeMakeAnApplications = asylumCase.read(MAKE_AN_APPLICATIONS);
 
