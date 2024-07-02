@@ -168,7 +168,7 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
     @EnumSource(
             value = MakeAnApplicationTypes.class,
             names = {"ADJOURN", "EXPEDITE", "TRANSFER", "TIME_EXTENSION", "JUDGE_REVIEW_LO",
-                    "LINK_OR_UNLINK", "REINSTATE", "WITHDRAW", "OTHER"})
+                     "LINK_OR_UNLINK", "REINSTATE", "WITHDRAW", "OTHER"})
     void should_return_personalisation_when_all_information_given_in_country_granted_application(MakeAnApplicationTypes applicationType) {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(makeAnApplication.getType()).thenReturn(applicationType.toString());
@@ -209,7 +209,7 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
     @EnumSource(
             value = MakeAnApplicationTypes.class,
             names = {"ADJOURN", "EXPEDITE", "TRANSFER", "TIME_EXTENSION", "JUDGE_REVIEW_LO",
-                    "LINK_OR_UNLINK", "REINSTATE", "WITHDRAW", "OTHER"})
+                     "LINK_OR_UNLINK", "REINSTATE", "WITHDRAW", "OTHER"})
     void should_return_personalisation_when_all_information_given_out_of_country_granted_application(MakeAnApplicationTypes applicationType) {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(makeAnApplication.getType()).thenReturn(applicationType.toString());
@@ -252,7 +252,7 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
     @EnumSource(
             value = MakeAnApplicationTypes.class,
             names = {"ADJOURN", "EXPEDITE", "TRANSFER", "TIME_EXTENSION", "JUDGE_REVIEW_LO",
-                    "LINK_OR_UNLINK", "REINSTATE", "WITHDRAW", "OTHER"})
+                     "LINK_OR_UNLINK", "REINSTATE", "WITHDRAW", "OTHER"})
     void should_return_personalisation_when_all_information_given_refused_application(MakeAnApplicationTypes applicationType) {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(makeAnApplication.getType()).thenReturn(applicationType.toString());
