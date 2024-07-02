@@ -1,17 +1,26 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_REMOTE_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.REF_DATA_LISTING_LOCATION_DETAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.refdata.CourtVenue;
 
 @Service
 public class HearingDetailsFinder {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String REMOTE_HEARING_LOCATION = "Cloud Video Platform (CVP)";
 
     private final StringProvider stringProvider;
 
@@ -104,6 +113,28 @@ public class HearingDetailsFinder {
 
         boolean isRemote = Stream.of("remoteHearing", "decisionWithoutHearing").anyMatch(listCaseHearingCentre.getValue()::equalsIgnoreCase);
         return listCaseHearingCentre.getDescription() + (isRemote ? "" : "\n" + hearingCentreAddress);
+    }
+
+    public String getListingLocationAddressFromRefDataOrCcd(BailCase bailCase) {
+        String hearingLocationAddress = getBailHearingCentreAddress(bailCase);
+        YesOrNo isBailsLocationRefDataEnabled = bailCase.read(IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED, YesOrNo.class)
+                .orElse(NO);
+
+        if (isBailsLocationRefDataEnabled == YES) {
+            if (bailCase.read(IS_REMOTE_HEARING, YesOrNo.class).orElse(NO) == YES) {
+                return REMOTE_HEARING_LOCATION;
+            } else {
+                Optional<CourtVenue> refDataListingLocationDetail = bailCase.read(REF_DATA_LISTING_LOCATION_DETAIL, CourtVenue.class);
+
+                if (refDataListingLocationDetail.isPresent()) {
+                    hearingLocationAddress = (refDataListingLocationDetail.get().getCourtName() + ", " +
+                            refDataListingLocationDetail.get().getCourtAddress() + ", " +
+                            refDataListingLocationDetail.get().getPostcode());
+
+                }
+            }
+        }
+        return hearingLocationAddress;
     }
 
 }
