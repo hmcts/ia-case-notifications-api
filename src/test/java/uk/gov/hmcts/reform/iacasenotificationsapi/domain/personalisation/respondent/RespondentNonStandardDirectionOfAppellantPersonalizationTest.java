@@ -65,7 +65,6 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     private String expectedDirectionDueDate = "27 Aug 2019";
     private String directionExplanation = "someExplanation";
     private String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
     private final String homeOfficeRefNumber = "homeOfficeReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
@@ -89,7 +88,6 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
@@ -232,10 +230,8 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
         initializePrefixes(respondentNonStandardDirectionOfAppellantPersonalization);
         Map<String, String> personalisation =
             respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase);
-        String listingReferenceLine = "\nListing reference: " + ariaListingReference;
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(listingReferenceLine, personalisation.get("listingReferenceLine"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -265,7 +261,6 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
             respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("listingReferenceLine"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
