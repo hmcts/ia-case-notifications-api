@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -41,8 +41,7 @@ public class AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -59,8 +58,11 @@ public class AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
         final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
+
+        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
+            getAppellantAddressAsList(asylumCase) :
+            getAppellantAddressAsListOoc(asylumCase);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()

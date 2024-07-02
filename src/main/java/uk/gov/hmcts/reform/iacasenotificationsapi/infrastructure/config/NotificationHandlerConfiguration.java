@@ -5756,7 +5756,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRemissionPresent
-                       && appellantHasFixedAddress.equals(YES)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && !isSubmissionOutOfTime(asylumCase);
 
             },
