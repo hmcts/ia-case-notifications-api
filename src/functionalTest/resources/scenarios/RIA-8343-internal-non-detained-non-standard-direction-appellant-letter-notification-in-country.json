@@ -10,13 +10,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "hearingCentre": "taylorHouse",
-          "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019",
-          "legalRepReferenceNumber": "REF54321",
-          "appealReferenceNumber": "PA/12345/2018",
-          "ircName": "Brookhouse",
           "isAdmin": "Yes",
+          "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
@@ -39,22 +34,6 @@
                 "tag": ""
               }
             }
-          ],
-          "notificationAttachmentDocuments": [
-            {
-              "id": "1",
-              "value": {
-                "tag": "internalNonStandardDirectionToAppellantLetter",
-                "document": {
-                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
-                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
-                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
-                },
-                "suppliedBy": "",
-                "description": "",
-                "dateUploaded": "{$TODAY}"
-              }
-            }
           ]
         }
       }
@@ -66,12 +45,8 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "hearingCentre": "taylorHouse",
-        "listCaseHearingCentre": "taylorHouse",
-        "ariaListingReference": "LP/12345/2019",
-        "legalRepReferenceNumber": "REF54321",
-        "appealReferenceNumber": "PA/12345/2018",
         "isAdmin": "Yes",
+        "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
