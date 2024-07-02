@@ -117,10 +117,6 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        String listingReferenceLine = asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-            .map(ref -> "\nListing reference: " + ref)
-            .orElse("");
-
         final Direction direction =
                 directionFinder
                         .findFirst(asylumCase, DirectionTag.NONE)
@@ -136,7 +132,6 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("listingReferenceLine", listingReferenceLine)
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
