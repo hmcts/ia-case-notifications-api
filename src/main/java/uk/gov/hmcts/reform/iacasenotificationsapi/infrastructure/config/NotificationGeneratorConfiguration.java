@@ -92,6 +92,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAddendumEvidencePersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAdditionalEvidencePersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDecisionWithoutHearingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseNonStandardDirectionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDisposeUnderRule31Or32Personalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseEndAppealAutomaticallyLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation;
@@ -5910,7 +5911,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalDecisionWithoutHearingAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalDecisionWithoutHearingLetterAppellantNotificationGenerator(
+    public List<NotificationGenerator> internalDecisionWithoutHearingAppellantLetterNotificationGenerator(
             AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -5920,6 +5921,29 @@ public class NotificationGeneratorConfiguration {
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalCaseDecisionWithoutHearingPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("internalNonStandardDirectionAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalNonStandardDirectionAppellantLetterNotificationGenerator(
+            AppellantInternalCaseNonStandardDirectionPersonalisation appellantInternalCaseNonStandardDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalCaseNonStandardDirectionPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender

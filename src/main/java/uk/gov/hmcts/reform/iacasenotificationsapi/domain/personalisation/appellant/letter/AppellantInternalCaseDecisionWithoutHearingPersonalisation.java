@@ -23,16 +23,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalCaseDecisionWithoutHearingLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final SystemDateProvider systemDateProvider;
 
     public AppellantInternalCaseDecisionWithoutHearingPersonalisation(
-            @Value("${govnotify.template.decisionWithoutHearing.appellant.letter}") String appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId,
+            @Value("${govnotify.template.decisionWithoutHearing.appellant.letter}") String appellantInternalCaseDecisionWithoutHearingLetterTemplateId,
             CustomerServicesProvider customerServicesProvider,
             SystemDateProvider systemDateProvider
     ) {
-        this.appellantInternalCaseDecisionWithoutHearingLetterTemplateId = appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId;
+        this.appellantInternalCaseDecisionWithoutHearingLetterTemplateId = appellantInternalCaseDecisionWithoutHearingLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
-        this.systemDateProvider = systemDateProvider;
     }
 
     @Override
