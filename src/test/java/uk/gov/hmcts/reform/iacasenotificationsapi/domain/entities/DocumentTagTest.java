@@ -71,10 +71,14 @@ class DocumentTagTest {
         assertEquals("homeOfficeNonStandardDirectionToHOLetter", DocumentTag.HOME_OFFICE_NON_STANDARD_DIRECTION_LETTER.toString());
         assertEquals("internalReinstateAppealLetter", DocumentTag.INTERNAL_REINSTATE_APPEAL_LETTER.toString());
         assertEquals("internalAdjournHearingWithoutDate", DocumentTag.INTERNAL_ADJOURN_HEARING_WITHOUT_DATE.toString());
+        assertEquals("internalEndAppealLetterBundle", DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE.toString());
+        assertEquals("internalCaseListedLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE.toString());
+        assertEquals("internalAdjournWithoutDateLetterBundle", DocumentTag.INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE.toString());
+
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(69, DocumentTag.values().length);
+        assertEquals(72, DocumentTag.values().length);
     }
 }
