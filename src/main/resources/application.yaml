@@ -890,6 +890,7 @@ govnotify:
             afterListing:
               email: 9bf51c1a-3d44-40fe-96e4-fa77bd04fb30
             sms: 38e8b40b-98b4-45ed-a1c4-45cd5f177dbf
+            letter: c980d4b2-80c6-4446-b55e-9a090225d8a3
         granted:
           applicant:
             legalRep:
