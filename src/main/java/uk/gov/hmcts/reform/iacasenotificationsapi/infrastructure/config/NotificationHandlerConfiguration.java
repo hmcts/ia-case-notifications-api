@@ -5774,7 +5774,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
                 RemissionType remissionType = asylumCase
                     .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
@@ -5787,7 +5786,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRemissionPresent
-                       && appellantHasFixedAddress.equals(YES)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && isSubmissionOutOfTime(asylumCase);
 
             },
