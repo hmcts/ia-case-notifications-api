@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8336 Send letter notification to appellant for decided application submitted by Respondent (Granted) - In country (internal case creation)",
+  "description": "RIA-8336 Send letter notification to appellant for decided application submitted by Respondent (Refused) - Out of country (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -12,16 +12,12 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInDetention": "No",
-          "appellantInUk": "Yes",
-          "appellantHasFixedAddress": "Yes",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "appellantInUk": "No",
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryAdminJ": "Spain",
           "decideAnApplicationId": "1",
           "makeAnApplications": [
             {
@@ -62,16 +58,12 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInDetention": "No",
-        "appellantInUk": "Yes",
-        "appellantHasFixedAddress": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantInUk": "No",
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "addressLine1AdminJ": "Calle Toledo 32",
+        "addressLine2AdminJ": "Madrid",
+        "addressLine3AdminJ": "28003",
+        "countryAdminJ": "Spain",
         "decideAnApplicationId": "1",
         "makeAnApplications": [
           {
