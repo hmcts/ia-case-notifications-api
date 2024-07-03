@@ -20,8 +20,8 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantInternalLateRemissionRejectedLetterPersonalisation(
-            @Value("${govnotify.template.remissionDecision.appellant.rejected.letter}") String appellantInternalLateRemissionRequestOocLetterTemplateId,
-            CustomerServicesProvider customerServicesProvider
+        @Value("${govnotify.template.remissionDecision.appellant.rejected.letter}") String appellantInternalLateRemissionRequestOocLetterTemplateId,
+        CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantInternalLateRemissionRequestOocLetterTemplateId = appellantInternalLateRemissionRequestOocLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
@@ -47,9 +47,9 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
         requireNonNull(callback, "callback must not be null");
 
         AsylumCase asylumCase =
-                callback
-                        .getCaseDetails()
-                        .getCaseData();
+            callback
+                .getCaseDetails()
+                .getCaseData();
 
         YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
 
@@ -59,13 +59,13 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
         };
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
-                .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("RemissionReasons", asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION_REASON, String.class).orElse(""));
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("RemissionReasons", asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION_REASON, String.class).orElse(""));
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
