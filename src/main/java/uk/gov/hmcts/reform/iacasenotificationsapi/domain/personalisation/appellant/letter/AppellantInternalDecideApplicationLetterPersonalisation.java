@@ -72,7 +72,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisation implements 
         MakeAnApplication application = getMakeAnApplication(asylumCase).orElseThrow(() -> new IllegalStateException("Decide application is missing"));
         String nextSteps = WhatHappensNextContentUtils.getWhatHappensNextContent(
             MakeAnApplicationTypes.from(application.getType()).orElseThrow(() -> new IllegalStateException("Invalid MakeAnApplicationType")),
-            true, application.getDecision());
+            true, application.getDecision(), null);
         if (nextSteps.equals("Unknown")) {
             throw new IllegalStateException("Invalid MakeAnApplicationType: Couldn't find next steps.");
         }

@@ -952,6 +952,8 @@ govnotify:
     decideARespondentApplication:
       detentionEngagementTeam:
         email: 9eb1f5c7-2a2a-4c0d-b152-c71fa5fc7227
+      appellant:
+        letter: 8a0363ff-067f-43de-a2f8-599eb4488424
     decisionAndReasonsTemplateUploaded:
       admin:
         email: 489aadaf-2d48-4ea4-a388-bbc6d6942e91
@@ -1999,6 +2001,9 @@ appellantDaysToWait:
     afterSubmitAppealWithFee: 14
     afterManageFeeEvent: 14
     toReinstateAppeal: 14
+    afterRespondentApplicationDecided:
+      inCountry: 14
+      outOfCountry: 28
 
 appellantDaysToAskReinstate: 14
 
