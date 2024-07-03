@@ -6158,6 +6158,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalUpdateTribunalDecisionRule31LetterNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateTribunalDecisionRule31LetterNotificationGenerator(
+        AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisation appellantInternalUpdateTribunalDecisionLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalUpdateTribunalDecisionLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("internalRespondentApplicationDecidedLetterGenerator")
     public List<NotificationGenerator> internalRespondentApplicationDecidedLetterGenerator(
             AppellantInternalRespondentApplicationDecidedLetterPersonalisation appellantInternalRespondentApplicationDecidedLetterPersonalisation,

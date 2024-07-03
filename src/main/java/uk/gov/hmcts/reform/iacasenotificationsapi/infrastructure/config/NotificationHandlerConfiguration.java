@@ -6197,6 +6197,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalUpdateTribunalDecisionRule31NotificationHandler(
+        @Qualifier("internalUpdateTribunalDecisionRule31LetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                    && isInternalCase(asylumCase)
+                    && isRule31ReasonUpdatingDecision(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> generateHearingBundleNonDetainedOrOocNotificationHandler(
         @Qualifier("generateHearingBundleNonDetainedOrOocNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
