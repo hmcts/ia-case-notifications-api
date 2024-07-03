@@ -43,13 +43,7 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return switch (isAppellantInUK(asylumCase)) {
-            case YES ->
-                    Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-                            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
-            case NO -> Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
-                    .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
-        };
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
