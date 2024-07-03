@@ -76,6 +76,7 @@ public enum DocumentTag {
     INTERNAL_END_APPEAL_LETTER_BUNDLE("internalEndAppealLetterBundle"),
     INTERNAL_CASE_LISTED_LETTER_BUNDLE("internalCaseListedLetterBundle"),
     INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE("internalAdjournWithoutDateLetterBundle"),
+    INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE("internalOutOfTimeDecisionLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

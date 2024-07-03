@@ -6162,4 +6162,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+
+    @Bean("internalOutOfTimeDecisionAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalOutOfTimeDecisionLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE;
+
+        return Collections.singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
 }
