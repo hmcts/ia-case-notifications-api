@@ -306,6 +306,8 @@ govnotify:
         email: f1d0d726-138c-4e73-ac56-aeefbe6c9611
       respondent:
         email: 03f9eaad-7d71-4563-a23a-821847303aae
+      appellant:
+        letter: 98a209f4-1b65-4fe0-9873-e483213a63c4
     hearingRequirementsDirection:
       legalRep:
         email: db70b725-e0d9-4af5-aa3a-00007766bc3b

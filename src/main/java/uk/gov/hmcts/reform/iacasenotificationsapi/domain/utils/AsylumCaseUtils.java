@@ -214,6 +214,10 @@ public class AsylumCaseUtils {
         return asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(NO).equals(YES);
     }
 
+    public static YesOrNo isAppellantInUK(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
+    }
+
     public static List<String> getAppellantAddressAsList(final AsylumCase asylumCase) {
         AddressUk address = asylumCase
             .read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)
