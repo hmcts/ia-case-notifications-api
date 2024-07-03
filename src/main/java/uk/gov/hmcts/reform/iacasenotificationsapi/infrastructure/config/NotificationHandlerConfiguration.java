@@ -5755,7 +5755,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRemissionPresent
-                       && appellantHasFixedAddress.equals(YES)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && !isSubmissionOutOfTime(asylumCase);
 
             },
@@ -5773,7 +5773,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
                 RemissionType remissionType = asylumCase
                     .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
@@ -5786,7 +5785,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRemissionPresent
-                       && appellantHasFixedAddress.equals(YES)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && isSubmissionOutOfTime(asylumCase);
 
             },
@@ -5950,6 +5949,29 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && !isAppellantInDetention(asylumCase)
                             && appellantHasFixedAddress.equals(YES);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalNonStandardDirectionAppellantLetterNotificationHandler(
+            @Qualifier("internalNonStandardDirectionAppellantLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SEND_DIRECTION
+                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -6200,6 +6222,27 @@ public class NotificationHandlerConfiguration {
                 },
                 notificationGenerators,
                 getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalOutOfTimeDecisionAppellantLetterNotificationHandler(
+        @Qualifier("internalOutOfTimeDecisionAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 

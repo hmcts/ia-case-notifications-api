@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "submissionOutOfTime": "No",
           "appellantHasFixedAddress": "Yes",
@@ -38,6 +39,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "submissionOutOfTime": "No",
         "appellantHasFixedAddress": "Yes",

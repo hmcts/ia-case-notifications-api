@@ -1,11 +1,11 @@
 {
-  "description": "RIA-8302 Send letter notification to appellant for Submit Appeal out of time with remission (internal case creation)",
+  "description": "RIA-8343 Send Non Standard Direction to Appellant In Country letter notification on Internal Non-Detained Appeal.",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "caseOfficer",
     "input": {
-      "id": 8302,
-      "eventId": "submitAppeal",
+      "id": 8343,
+      "eventId": "sendDirection",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -13,13 +13,7 @@
           "isAdmin": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "No",
-          "submissionOutOfTime": "Yes",
           "appellantHasFixedAddress": "Yes",
-          "isRemissionsEnabled": "Yes",
-          "remissionType":"hoWaiverRemission",
-          "remissionOption": "feeWaiverFromHo",
-          "appealType":"refusalOfEu",
-          "eaHuAppealTypePaymentOption": "payLater",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -27,7 +21,20 @@
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
-          }
+          },
+          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "explanation": "The non-standard direction explanation goes here",
+                "parties": "appellant",
+                "dateDue": "{$TODAY+14}",
+                "dateSent": "{$TODAY}",
+                "tag": ""
+              }
+            }
+          ]
         }
       }
     }
@@ -41,12 +48,7 @@
         "isAdmin": "Yes",
         "appellantInUk": "Yes",
         "appellantInDetention": "No",
-        "submissionOutOfTime": "Yes",
         "appellantHasFixedAddress": "Yes",
-        "isRemissionsEnabled": "Yes",
-        "remissionType":"hoWaiverRemission",
-        "remissionOption": "feeWaiverFromHo",
-        "appealType":"refusalOfEu",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
@@ -57,7 +59,11 @@
         },
         "notificationsSent": [
           {
-            "id": "8302_INTERNAL_SUBMIT_APPEAL_OUT_OF_TIME_WITH_REMISSION_APPELLANT_LETTER",
+            "id": "8343_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "8343_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
