@@ -1295,6 +1295,9 @@ govnotify:
       nonDetainedAndOoc:
         homeOffice:
           email: 3b756f11-4c9c-4aac-9f39-b1d594a933b3
+    editAppealPostSubmit:
+      appellant:
+        letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
