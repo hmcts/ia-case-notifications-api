@@ -157,6 +157,8 @@ govnotify:
           email: 5e23cb62-9c63-4fc2-8c04-cdb3adf69013
           sms: 4bebbf93-8aef-47c0-b1a9-a89da915f9e5
           letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
+          outOfTime:
+            letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
 
     editPaymentMethod:
       adminOfficer:
@@ -1295,6 +1297,9 @@ govnotify:
       nonDetainedAndOoc:
         homeOffice:
           email: 3b756f11-4c9c-4aac-9f39-b1d594a933b3
+    editAppealPostSubmit:
+      appellant:
+        letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

@@ -1,8 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
@@ -13,32 +14,26 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implements LetterNotificationPersonalisation {
-    private final String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
+public class AppellantInternalEditAppealPostSubmitLetterPersonalisation implements LetterNotificationPersonalisation {
+    private final String appellantInternalRemissionDecisionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final SystemDateProvider systemDateProvider;
-    private final int daysAfterSubmitAppeal;
 
-    public AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation(
-        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
-        CustomerServicesProvider customerServicesProvider,
-        SystemDateProvider systemDateProvider
+    public AppellantInternalEditAppealPostSubmitLetterPersonalisation(
+            @Value("${govnotify.template.editAppealPostSubmit.appellant.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
+            CustomerServicesProvider customerServicesProvider
     ) {
-        this.appellantInternalCaseSubmitAppealWithFeeLetterTemplateId = appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
+        this.appellantInternalRemissionDecisionLetterTemplateId = appellantInternalRemissionDecisionLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
-        this.systemDateProvider = systemDateProvider;
-        this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
     }
 
     @Override
     public String getTemplateId() {
-        return appellantInternalCaseSubmitAppealWithFeeLetterTemplateId;
+        return appellantInternalRemissionDecisionLetterTemplateId;
     }
 
     @Override
@@ -48,7 +43,7 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_SUBMIT_APPEAL_WITH_FEE_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_EDIT_APPEAL_POST_SUBMIT_APPELLANT_LETTER";
     }
 
     @Override
@@ -60,7 +55,12 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
                 .getCaseDetails()
                 .getCaseData();
 
-        final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
+        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
+
+        List<String> appellantAddress = switch (isAppellantInUK) {
+            case YES -> getAppellantAddressAsList(asylumCase);
+            case NO -> getAppellantAddressAsListOoc(asylumCase);
+        };
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -68,14 +68,7 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("onlineCaseReferenceNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
-            .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
-            .put("fourteenDaysAfterSubmitDate", dueDate);
-
-        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
-            getAppellantAddressAsList(asylumCase) :
-            getAppellantAddressAsListOoc(asylumCase);
+            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
