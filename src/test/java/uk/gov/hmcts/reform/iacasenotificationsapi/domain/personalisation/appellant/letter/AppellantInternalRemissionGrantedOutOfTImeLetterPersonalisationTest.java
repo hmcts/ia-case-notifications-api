@@ -29,7 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class appellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
+class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
