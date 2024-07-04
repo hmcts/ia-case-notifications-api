@@ -6167,6 +6167,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalEditAppealAfterSubmitLetterNotificationGenerator")
+    public List<NotificationGenerator> internalEditAppealAfterSubmitLetterNotificationGenerator(
+            AppellantInternalEditAppealPostSubmitLetterPersonalisation appellantInternalEditAppealPostSubmitLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalEditAppealPostSubmitLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
 
     @Bean("internalOutOfTimeDecisionAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalOutOfTimeDecisionLetterNotificationGenerator(

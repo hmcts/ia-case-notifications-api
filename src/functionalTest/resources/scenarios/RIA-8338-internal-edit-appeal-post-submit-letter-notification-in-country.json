@@ -1,21 +1,20 @@
 {
-  "description": "RIA-8298 Send letter notification to appellant for Submit Appeal within time with fee",
+  "description": "RIA-8338 Send letter notification to appellant for edit appeal post submit - In country (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "AdminOfficer",
     "input": {
-      "id": 8298,
-      "eventId": "submitAppeal",
+      "id": 8338,
+      "eventId": "editAppealAfterSubmit",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "isAdmin": "Yes",
-          "appellantInUk": "Yes",
           "appellantInDetention": "No",
-          "submissionOutOfTime": "No",
+          "appellantInUk": "Yes",
           "appellantHasFixedAddress": "Yes",
-          "paymentStatus": "Payment pending",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -35,11 +34,9 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantInUk": "Yes",
         "appellantInDetention": "No",
-        "submissionOutOfTime": "No",
+        "appellantInUk": "Yes",
         "appellantHasFixedAddress": "Yes",
-        "paymentStatus": "Payment pending",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
@@ -50,7 +47,11 @@
         },
         "notificationsSent": [
           {
-            "id": "8298_INTERNAL_SUBMIT_APPEAL_WITH_FEE_APPELLANT_LETTER",
+            "id": "8338_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "8338_INTERNAL_EDIT_APPEAL_POST_SUBMIT_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
