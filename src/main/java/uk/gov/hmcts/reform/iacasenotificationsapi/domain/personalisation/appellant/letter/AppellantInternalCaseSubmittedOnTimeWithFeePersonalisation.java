@@ -2,15 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.convertAsylumCaseFeeValue;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -46,8 +43,7 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -64,7 +60,6 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
         final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
@@ -77,6 +72,10 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
             .put("onlineCaseReferenceNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
             .put("fourteenDaysAfterSubmitDate", dueDate);
+
+        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
+            getAppellantAddressAsList(asylumCase) :
+            getAppellantAddressAsListOoc(asylumCase);
 
         for (int i = 0; i < appellantAddress.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
