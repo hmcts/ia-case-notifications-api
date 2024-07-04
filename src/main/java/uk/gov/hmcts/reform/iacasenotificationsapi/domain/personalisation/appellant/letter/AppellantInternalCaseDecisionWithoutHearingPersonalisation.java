@@ -17,7 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
 
 @Service
 public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implements LetterNotificationPersonalisation {
@@ -40,8 +41,7 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -58,7 +58,10 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
                         .getCaseDetails()
                         .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
+        List<String> appellantAddress = switch (isAppellantInUK(asylumCase)) {
+            case YES -> getAppellantAddressAsList(asylumCase);
+            case NO -> getAppellantAddressAsListOoc(asylumCase);
+        };
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
