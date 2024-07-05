@@ -6274,4 +6274,27 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalLateRemissionGrantedLetterNotificationGenerator")
+    public List<NotificationGenerator> internalLateRemissionGrantedLetterNotificationGenerator(
+            AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                            appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
 }
