@@ -5942,13 +5942,12 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == DECISION_WITHOUT_HEARING
-                            && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase)
-                            && appellantHasFixedAddress.equals(YES);
+                        && callback.getEvent() == DECISION_WITHOUT_HEARING
+                        && isInternalCase(asylumCase)
+                        && !isAppellantInDetention(asylumCase)
+                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
