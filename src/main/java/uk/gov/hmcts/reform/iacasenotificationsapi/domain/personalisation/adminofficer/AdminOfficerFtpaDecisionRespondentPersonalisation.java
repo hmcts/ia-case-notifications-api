@@ -66,9 +66,9 @@ public class AdminOfficerFtpaDecisionRespondentPersonalisation implements EmailN
         }
 
         if (ftpaDecisionOutcomeType.isPresent() && ftpaDecisionOutcomeType.get().toString().equals(FtpaDecisionOutcomeType.FTPA_GRANTED.toString())) {
-            return isInternalCase(asylumCase)? applicationGrantedAdminWithoutListingTemplateId : applicationGrantedAdminTemplateId;
+            return isInternalCase(asylumCase) ? applicationGrantedAdminWithoutListingTemplateId : applicationGrantedAdminTemplateId;
         } else {
-            return isInternalCase(asylumCase)? applicationPartiallyGrantedAdminWithoutListingTemplateId : applicationPartiallyGrantedAdminTemplateId;
+            return isInternalCase(asylumCase) ? applicationPartiallyGrantedAdminWithoutListingTemplateId : applicationPartiallyGrantedAdminTemplateId;
         }
     }
 

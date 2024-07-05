@@ -5736,7 +5736,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
                 boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
 
@@ -5746,7 +5745,7 @@ public class NotificationHandlerConfiguration {
                        && !isAppellantInDetention(asylumCase)
                        && !isSubmissionOutOfTime(asylumCase)
                        && isPaymentPending
-                       && appellantHasFixedAddress.equals(YES);
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
 
             },
             notificationGenerators,
@@ -6260,6 +6259,56 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalEditAppealAfterSubmitLetterNotificationHandler(
+            @Qualifier("internalEditAppealAfterSubmitLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                            && isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalRemissionRefusedOotLetterNotificationHandler(
+        @Qualifier("internalRemissionRefusedOotLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> APPROVED == decision)
+                    .orElse(false);
+
+                boolean isOutOfTimeAppeal = asylumCase
+                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                    .map(outOfTime -> outOfTime == YES).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == RECORD_REMISSION_DECISION
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && isApproved
+                       && isOutOfTimeAppeal
                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
