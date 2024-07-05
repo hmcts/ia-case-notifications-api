@@ -4817,7 +4817,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
                 boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
 
@@ -4827,7 +4826,7 @@ public class NotificationHandlerConfiguration {
                        && !isAppellantInDetention(asylumCase)
                        && isSubmissionOutOfTime(asylumCase)
                        && isPaymentPending
-                       && appellantHasFixedAddress.equals(YES);
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
 
             },
             notificationGenerators,
