@@ -209,6 +209,7 @@ public class CcdScenarioRunnerTest {
                     );
                     break;
                 } catch (Error | RetryableException e) {
+                    System.out.println("Scenario failed with error " + e.getMessage());
                     if (i == maxRetries - 1) {
                         this.failedScenarios.add(description);
                         this.haveAllPassed = false;
