@@ -100,10 +100,12 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
 
         assertThatThrownBy(() -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("appellantAddress is not present");
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("appellantAddress is not present");
     }
 
     @Test
@@ -116,9 +118,10 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given_in_country() {
+        inCountryDataSetup();
         Map<String, String> personalisation =
-                appellantInternalCaseDecisionWithoutHearingPersonalisation.getPersonalisation(callback);
+            appellantInternalCaseDecisionWithoutHearingPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -128,5 +131,40 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
         assertEquals(addressLine3, personalisation.get("address_line_3"));
         assertEquals(postTown, personalisation.get("address_line_4"));
         assertEquals(postCode, personalisation.get("address_line_5"));
+    }
+
+    @Test
+    void should_return_personalisation_when_all_information_given_out_of_country() {
+        outOfCountryDataSetup();
+        Map<String, String> personalisation =
+            appellantInternalCaseDecisionWithoutHearingPersonalisation.getPersonalisation(callback);
+
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(addressLine1, personalisation.get("address_line_1"));
+        assertEquals(addressLine2, personalisation.get("address_line_2"));
+        assertEquals(addressLine3, personalisation.get("address_line_3"));
+        assertEquals(postTown, personalisation.get("address_line_4"));
+        assertEquals(postCode, personalisation.get("address_line_5"));
+    }
+
+    private void outOfCountryDataSetup() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine1));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine2));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine3));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_4_ADMIN_J, String.class)).thenReturn(Optional.of(postTown));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(postCode));
+    }
+
+    private void inCountryDataSetup() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(appellantAddress));
+        when(appellantAddress.getAddressLine1()).thenReturn(Optional.of(addressLine1));
+        when(appellantAddress.getAddressLine2()).thenReturn(Optional.of(addressLine2));
+        when(appellantAddress.getAddressLine3()).thenReturn(Optional.of(addressLine3));
+        when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
+        when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
     }
 }

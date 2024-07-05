@@ -93,9 +93,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAdditionalEvidencePersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseAdjournedWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDecisionWithoutHearingPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseNonStandardDirectionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDisposeUnderRule31Or32Personalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseEndAppealAutomaticallyLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseNonStandardDirectionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation;
@@ -6226,6 +6226,29 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender,
                 documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("internalRemissionRefusedOotLetterNotificationGenerator")
+    public List<NotificationGenerator> internalRemissionRefusedOotLetterNotificationGenerator(
+        AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
                 @Override
                 public Message getSuccessMessage() {
                     return new Message("success","body");
