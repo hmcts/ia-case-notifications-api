@@ -643,6 +643,8 @@ govnotify:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
         admin:
           email: fce53459-8463-43a5-86ce-b160b4a26bb4
+        appellant:
+          letter: 9843c2a6-c416-4c19-9a73-563487bab982
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd

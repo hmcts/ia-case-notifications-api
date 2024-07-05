@@ -91,6 +91,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUpdateTribunalDecisionRule32PersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAddendumEvidencePersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAdditionalEvidencePersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseAdjournedWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDecisionWithoutHearingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseNonStandardDirectionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDisposeUnderRule31Or32Personalisation;
@@ -5888,21 +5889,18 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseAdjournedWithoutTimeLetterNotificationGenerator(
+        AppellantInternalCaseAdjournedWithoutDatePersonalisation internalCaseAdjournedWithoutDatePersonalisation,
         GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender,
-        DocumentDownloadClient documentDownloadClient
+        NotificationIdAppender notificationIdAppender
     ) {
-
-        DocumentTag documentTag = DocumentTag.INTERNAL_ADJOURN_WITHOUT_DATE_LETTER_BUNDLE;
-
         return Collections.singletonList(
-            new PrecompiledLetterNotificationGenerator(
+            new LetterNotificationGenerator(
                 newArrayList(
-                    documentTag
+                    internalCaseAdjournedWithoutDatePersonalisation
                 ),
                 notificationSender,
-                notificationIdAppender,
-                documentDownloadClient) {
+                notificationIdAppender
+            ) {
                 @Override
                 public Message getSuccessMessage() {
                     return new Message("success","body");
