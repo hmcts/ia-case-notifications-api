@@ -713,6 +713,8 @@ govnotify:
     applicationGranted:
       admin:
         email: 3c6c1ef6-e4a4-440c-9cbe-25fa0f3f000d
+        withoutListing:
+          email: 211ee637-14a7-47d3-8a62-80059425d286
       applicant:
         legalRep:
           email: 3b4d2ea8-b164-4f5a-918c-b03236b9d6c3
@@ -732,6 +734,8 @@ govnotify:
     applicationPartiallyGranted:
       admin:
         email: f5846789-5eb1-49d6-a500-dcab04695d5f
+        withoutListing:
+          email: ee13482d-8caa-4d0d-a67b-20a60f57bcba
       applicant:
         legalRep:
           email: 742bbd08-4bda-4e90-a261-778ca01b15b6
