@@ -1,31 +1,23 @@
 {
-  "description": "RIA-8720: Late remission request rejected",
-  "disabled": true,
-  "launchDarklyKey": "remissions-feature:true",
+  "description": "RIA-8720: Late remission request rejected OOC",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
       "id": 8720,
       "eventId": "recordRemissionDecision",
-      "state": "pendingPayment",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "homeOfficeDecisionDate": "2019-01-01",
-          "feeAmount": "14000",
           "appealType": "refusalOfHumanRights",
-          "isDlrmFeeRemissionEnabled": "Yes",
-          "isRemissionsEnabled": "Yes",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
-          "submissionOutOfTime": "Yes",
           "remissionDecision": "rejected",
           "lateRemissionType": "hoWaiverRemission",
           "remissionClaim": "legalAid",
           "legalAidAccountNumber": "1A234B",
           "remissionDecisionReason": "Some reason",
-          "appellantHasFixedAddress": "Yes",
           "appellantInUk": "No",
           "appellantHasFixedAddressAdminJ": "Yes",
           "addressLine1AdminJ": "Calle Toledo 32",
@@ -34,27 +26,22 @@
           "countryAdminJ": "Spain"
         }
       }
-    },
+    }
+  },
     "expectation": {
       "status": 200,
       "errors": [],
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "homeOfficeDecisionDate": "2019-01-01",
-          "feeAmount": "14000",
           "appealType": "refusalOfHumanRights",
-          "isDlrmFeeRemissionEnabled": "Yes",
-          "isRemissionsEnabled": "Yes",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
-          "submissionOutOfTime": "Yes",
           "remissionDecision": "rejected",
           "lateRemissionType": "hoWaiverRemission",
           "remissionClaim": "legalAid",
           "legalAidAccountNumber": "1A234B",
           "remissionDecisionReason": "Some reason",
-          "appellantHasFixedAddress": "Yes",
           "appellantInUk": "No",
           "appellantHasFixedAddressAdminJ": "Yes",
           "addressLine1AdminJ": "Calle Toledo 32",
@@ -71,4 +58,4 @@
       }
     }
   }
-}
+
