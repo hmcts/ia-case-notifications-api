@@ -159,6 +159,8 @@ govnotify:
           letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
           outOfTime:
             letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
+          onTime:
+            letter: 14fd949c-d879-4878-ae6d-844abce5baf3
         approvedOrPartiallyApproved:
           letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
 

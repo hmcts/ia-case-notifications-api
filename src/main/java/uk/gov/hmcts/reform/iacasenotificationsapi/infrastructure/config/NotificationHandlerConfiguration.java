@@ -6284,8 +6284,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalRemissionRefusedOotLetterNotificationHandler(
-        @Qualifier("internalRemissionRefusedOotLetterNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalRemissionGrantedOotLetterNotificationHandler(
+        @Qualifier("internalRemissionGrantedOotLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6340,6 +6340,37 @@ public class NotificationHandlerConfiguration {
                 },
                 notificationGenerators,
                 getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalRemissionGrantedInTimeLetterNotificationHandler(
+        @Qualifier("internalRemissionGrantedInTImeLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> APPROVED == decision)
+                    .orElse(false);
+
+                boolean isOutOfTimeAppeal = asylumCase
+                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                    .map(outOfTime -> outOfTime == YES).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == RECORD_REMISSION_DECISION
+                       && isInternalCase(asylumCase)
+                       && !isAppellantInDetention(asylumCase)
+                       && isApproved
+                       && !isOutOfTimeAppeal
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 
