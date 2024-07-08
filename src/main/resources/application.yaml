@@ -159,6 +159,8 @@ govnotify:
           letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
           outOfTime:
             letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
+        approvedOrPartiallyApproved:
+          letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
 
     editPaymentMethod:
       adminOfficer:
@@ -645,6 +647,8 @@ govnotify:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
         admin:
           email: fce53459-8463-43a5-86ce-b160b4a26bb4
+        appellant:
+          letter: 9843c2a6-c416-4c19-9a73-563487bab982
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
