@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8719 Send letter notification to appellant for late remission decision (approved) - In country (internal case creation)",
+  "description": "RIA-8719 Send letter notification to appellant for late remission decision (partially approved) - out of country (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
