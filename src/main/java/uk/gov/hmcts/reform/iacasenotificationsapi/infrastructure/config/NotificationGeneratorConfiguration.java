@@ -107,6 +107,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalLateRemissionRejectedLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalManageFeeUpdateLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalMarkAsRemittedLetterPersonalisation;
@@ -6272,6 +6273,29 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("internalLateRemissionGrantedLetterNotificationGenerator")
+    public List<NotificationGenerator> internalLateRemissionGrantedLetterNotificationGenerator(
+            AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                            appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 }
