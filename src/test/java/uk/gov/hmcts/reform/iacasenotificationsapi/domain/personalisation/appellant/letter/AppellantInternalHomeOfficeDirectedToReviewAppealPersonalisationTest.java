@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -58,6 +59,10 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     private String postTown = "Town name";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
+    private String oocAddressLine1 = "Calle Toledo 32";
+    private String oocAddressLine2 = "Madrid";
+    private String oocAddressLine3 = "28003";
+    private String oocAddressCountry = "Spain";
     private AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 
     @BeforeEach
@@ -81,6 +86,10 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         when(appellantAddress.getAddressLine3()).thenReturn(Optional.of(addressLine3));
         when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
         when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
+        when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressCountry));
 
         appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation = new AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
             letterTemplateId,
@@ -100,11 +109,16 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
 
     @Test
     void should_return_address_in_correct_format() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertTrue(appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertTrue(appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase))
@@ -122,7 +136,8 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, String> personalisation =
             appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
@@ -140,5 +155,26 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
 
+    }
+
+    @Test
+    void should_return_personalisation_when_all_information_given_out_of_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+
+        Map<String, String> personalisation =
+                appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
+
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
+        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
+        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
+        assertEquals(oocAddressCountry, personalisation.get("address_line_4"));
+        assertEquals(oocAddressCountry, personalisation.get("address_line_4"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 }
