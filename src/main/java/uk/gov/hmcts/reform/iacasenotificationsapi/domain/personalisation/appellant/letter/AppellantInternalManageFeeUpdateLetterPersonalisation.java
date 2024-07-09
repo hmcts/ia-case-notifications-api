@@ -3,19 +3,18 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.*;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
-import com.google.common.collect.ImmutableMap;
-import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
-
-import java.util.stream.Collectors;
 
 @Service
 public class AppellantInternalManageFeeUpdateLetterPersonalisation implements LetterNotificationPersonalisation {
@@ -44,8 +43,7 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -62,8 +60,11 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = getAppellantAddressAsList(asylumCase);
         final String dueDate = systemDateProvider.dueDate(afterManageFeeEvent);
+
+        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
+            getAppellantAddressAsList(asylumCase) :
+            getAppellantAddressAsListOoc(asylumCase);
 
         String originalFeeTotal = asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class).orElse("");
         String newFeeTotal = asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class).orElse("");
