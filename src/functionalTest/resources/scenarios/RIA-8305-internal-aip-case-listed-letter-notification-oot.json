@@ -1,10 +1,10 @@
 {
-  "description": "RIA-8305 Internal non-detained case listed letter + attachment bundle",
+  "description": "RIA-8305 Internal non-detained case listed letter + attachment bundle out of country",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8305,
+      "id": 83051,
       "eventId": "listCase",
       "state": "listing",
       "caseData": {
@@ -20,15 +20,12 @@
           "listCaseRequirementsSingleSexCourt": "something around SingleSexCourt",
           "listCaseRequirementsInCameraCourt": "something around InCameraCourt",
           "listCaseRequirementsOther": "something around Other",
-          "appellantHasFixedAddress": "Yes",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "appellantInUk": "No",
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryAdminJ": "Spain",
           "letterBundleDocuments": [
             {
               "id": "1",
@@ -65,15 +62,12 @@
         "listCaseRequirementsSingleSexCourt": "something around SingleSexCourt",
         "listCaseRequirementsInCameraCourt": "something around InCameraCourt",
         "listCaseRequirementsOther": "something around Other",
-        "appellantHasFixedAddress": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantInUk": "No",
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "addressLine1AdminJ": "Calle Toledo 32",
+        "addressLine2AdminJ": "Madrid",
+        "addressLine3AdminJ": "28003",
+        "countryAdminJ": "Spain",
         "letterBundleDocuments": [
           {
             "id": "1",
@@ -92,11 +86,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "8305_CASE_LISTED_HOME_OFFICE",
+            "id": "83051_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8305_INTERNAL_CASE_LISTED_LETTER_BUNDLE",
+            "id": "83051_INTERNAL_CASE_LISTED_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
