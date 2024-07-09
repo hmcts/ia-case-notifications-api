@@ -1,16 +1,17 @@
 {
-  "description": "RIA-8304 - HO directed to review the appeal - Non Detained letter notification",
+  "description": "RIA-8304 - HO directed to review the appeal - Non Detained letter notification - In country (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "CaseOfficer",
     "input": {
       "id": 8304,
-      "eventId": "submitAppeal",
-      "state": "appealSubmitted",
+      "eventId": "requestRespondentReview",
+      "state": "caseUnderReview",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
@@ -25,14 +26,16 @@
             {
               "id": "1",
               "value": {
-                "explanation": "Test direction",
-                "parties": "legalRepresentative",
-                "dateDue": "{$TODAY+28}",
+                "explanation": "Review the built case",
+                "parties": "respondent",
+                "dateDue": "{$TODAY+14}",
                 "dateSent": "{$TODAY}",
-                "tag": "requestResponseReview"
+                "tag": "respondentReview"
               }
             }
-          ]
+          ],
+          "notificationsSent": [],
+          "hearingCentre": "taylorHouse"
         }
       }
     }
@@ -44,6 +47,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
@@ -58,16 +62,20 @@
           {
             "id": "1",
             "value": {
-              "explanation": "Test direction",
-              "parties": "legalRepresentative",
-              "dateDue": "{$TODAY+28}",
+              "explanation": "Review the built case",
+              "parties": "respondent",
+              "dateDue": "{$TODAY+14}",
               "dateSent": "{$TODAY}",
-              "tag": "requestResponseReview"
+              "tag": "respondentReview"
             }
           }
-        ]
-      },
-      "notificationsSent": [
+        ],
+        "hearingCentre": "taylorHouse",
+        "notificationsSent": [
+          {
+            "id": "8304_RESPONDENT_REVIEW_DIRECTION",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
           {
             "id": "8304_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
@@ -76,3 +84,4 @@
       }
     }
   }
+}
