@@ -1,30 +1,26 @@
 {
-  "description": "RIA-8320 Appeal fee changed(Additional payment required) - Non Detained (by post) notification (internal case creation)",
+  "description": "RIA-9165 Appeal fee changed(Additional payment required) - Non Detained (by post) notification (internal case creation) - OOC",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8320,
+      "id": 9165,
       "eventId": "manageFeeUpdate",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantInUk": "Yes",
           "appellantInDetention": "No",
-          "appellantHasFixedAddress": "Yes",
           "newFeeAmount": "2000",
           "paymentStatus": "Paid",
           "feeUpdateReason": "appealNotValid",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          }
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "appellantInUk": "No",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryAdminJ": "Spain"
         }
       }
     }
@@ -36,23 +32,19 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantInUk": "Yes",
         "appellantInDetention": "No",
-        "appellantHasFixedAddress": "Yes",
         "newFeeAmount": "2000",
         "paymentStatus": "Paid",
         "feeUpdateReason": "appealNotValid",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "appellantInUk": "No",
+        "addressLine1AdminJ": "Calle Toledo 32",
+        "addressLine2AdminJ": "Madrid",
+        "addressLine3AdminJ": "28003",
+        "countryAdminJ": "Spain",
         "notificationsSent": [
           {
-            "id": "8320_INTERNAL_MANAGE_FEE_UPDATE_APPELLANT_LETTER",
+            "id": "9165_INTERNAL_MANAGE_FEE_UPDATE_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
