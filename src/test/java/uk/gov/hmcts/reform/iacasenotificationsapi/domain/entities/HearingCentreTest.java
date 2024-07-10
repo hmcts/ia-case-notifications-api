@@ -31,6 +31,8 @@ class HearingCentreTest {
         assertEquals("nthTyneMags", HearingCentre.NTH_TYNE_MAGS.toString());
         assertEquals("leedsMags", HearingCentre.LEEDS_MAGS.toString());
         assertEquals("alloaSherrif", HearingCentre.ALLOA_SHERRIF.toString());
+        assertEquals("arnhemHouse", HearingCentre.ARNHEM_HOUSE.toString());
+        assertEquals("crownHouse", HearingCentre.CROWN_HOUSE.toString());
         assertEquals("remoteHearing", HearingCentre.REMOTE_HEARING.toString());
         assertEquals("decisionWithoutHearing", HearingCentre.DECISION_WITHOUT_HEARING.toString());
 
@@ -61,12 +63,14 @@ class HearingCentreTest {
         assertEquals(HearingCentre.NTH_TYNE_MAGS, HearingCentre.from("nthTyneMags").get());
         assertEquals(HearingCentre.LEEDS_MAGS, HearingCentre.from("leedsMags").get());
         assertEquals(HearingCentre.ALLOA_SHERRIF, HearingCentre.from("alloaSherrif").get());
+        assertEquals(HearingCentre.ARNHEM_HOUSE, HearingCentre.from("arnhemHouse").get());
+        assertEquals(HearingCentre.CROWN_HOUSE, HearingCentre.from("crownHouse").get());
         assertEquals(HearingCentre.REMOTE_HEARING, HearingCentre.from("remoteHearing").get());
         assertEquals(HearingCentre.DECISION_WITHOUT_HEARING, HearingCentre.from("decisionWithoutHearing").get());
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(25, HearingCentre.values().length);
+        assertEquals(27, HearingCentre.values().length);
     }
 }
