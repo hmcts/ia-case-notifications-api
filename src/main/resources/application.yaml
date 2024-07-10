@@ -1710,6 +1710,8 @@ hearingCentreEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:hc-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:hc-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif@example.com}
+  arnhemHouse: ${IA_HEARING_CENTRE_ARNHEM_HOUSE_EMAIL:hc-arnhem-house@example.com}
+  crownHouse: ${IA_HEARING_CENTRE_CROWN_HOUSE_EMAIL:hc-crown-house@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:

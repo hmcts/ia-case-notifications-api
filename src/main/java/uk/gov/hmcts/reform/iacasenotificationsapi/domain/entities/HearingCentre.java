@@ -30,6 +30,8 @@ public enum HearingCentre {
     NTH_TYNE_MAGS("nthTyneMags"),
     LEEDS_MAGS("leedsMags"),
     ALLOA_SHERRIF("alloaSherrif"),
+    ARNHEM_HOUSE("arnhemHouse"),
+    CROWN_HOUSE("crownHouse"),
     REMOTE_HEARING("remoteHearing"),
     DECISION_WITHOUT_HEARING("decisionWithoutHearing");
 

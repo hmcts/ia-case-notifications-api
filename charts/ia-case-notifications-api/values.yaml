@@ -196,3 +196,7 @@ java:
           alias: IA_BAIL_UPPER_TRIBUNAL_EMAIL
         - name: home-office-apply-for-costs-email
           alias: HO_APPLY_FOR_COSTS_EMAIL
+        - name: hearing-centre-arnhem-house-email
+          alias: IA_HEARING_CENTRE_ARNHEM_HOUSE_EMAIL
+        - name: hearing-centre-crown-house-email
+          alias: IA_HEARING_CENTRE_CROWN_HOUSE_EMAIL
