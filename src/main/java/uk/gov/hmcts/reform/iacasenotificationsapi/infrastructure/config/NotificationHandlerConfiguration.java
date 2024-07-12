@@ -6208,7 +6208,9 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                     && isInternalCase(asylumCase)
-                    && isRule31ReasonUpdatingDecision(asylumCase);
+                    && isRule31ReasonUpdatingDecision(asylumCase)
+                    && !isAppellantInDetention(asylumCase)
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
