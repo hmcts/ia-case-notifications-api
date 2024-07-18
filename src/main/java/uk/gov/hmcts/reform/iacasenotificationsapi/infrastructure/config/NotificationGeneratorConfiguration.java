@@ -30,127 +30,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReviewHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerUpperTribunalBundleFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerWithoutHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipAppellantDisposeUnderRule31Or32PersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipAppellantNocRequestDecisionPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipAppellantRecordRemissionDecisionPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipAppellantReheardUnderRule35PersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantAppealDecisionWithoutHearingPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantAppealExitedOnlinePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantAppealOutcomePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantChangeHearingCentrePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantDecideAnApplicationPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantEditListingPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantEndAppealAutomaticallyPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantEndAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantFtpaApplicationDecisionPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantFtpaSubmittedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantHearingBundleReadyPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantLinkAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantListCasePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantListCmaPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantMakeAnApplicationPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantMarkAppealAsRemittedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantMarkAsReadyForUtTransferPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantNocRequestDecisionPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantNonStandardDirectionPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantNotificationsTurnedOnPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantNotificationsTurnedOnPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantReinstateAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRemoveDetainedStatusPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRemoveRepresentationPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestClarifyingQuestionsPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestCmaRequirementsPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestHearingRequirementsPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestReasonsForAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestRespondentEvidencePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestResponseAmendPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRequestResponseReviewPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRespondentFtpaSubmittedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRespondentReviewPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantReviewTimeExtensionGrantedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantReviewTimeExtensionRefusedPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealOutOfTimePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitCmaRequirementsPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitReasonsForAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmittedHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmittedWithRemissionRequestPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantTcwUploadAddendumEvidencePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUnlinkAppealPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUpdateTribunalDecisionRule31PersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUpdateTribunalDecisionRule32PersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAddendumEvidencePersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUploadAdditionalEvidencePersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipAppellantDisposeUnderRule31Or32PersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipAppellantNocRequestDecisionPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipAppellantRecordRemissionDecisionPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipAppellantReheardUnderRule35PersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantAppealDecisionWithoutHearingPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantAppealExitedOnlinePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantAppealOutcomePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantChangeDirectionDueDateOfAppellantPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantChangeHearingCentrePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantDecideAnApplicationPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantEditListingPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantEndAppealAutomaticallyPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantEndAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantFtpaApplicationDecisionPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantFtpaSubmittedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantHearingBundleReadyPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantLinkAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantListCasePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantListCmaPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantMakeAnApplicationPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantMarkAppealAsRemittedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantMarkAsReadyForUtTransferPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantNocRequestDecisionPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantNonStandardDirectionOfHomeOfficePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantNonStandardDirectionPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantReinstateAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRemoveDetainedStatusPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRemoveRepresentationPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestClarifyingQuestionsPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestCmaRequirementsPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestHearingRequirementsPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestReasonsForAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestRespondentEvidencePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestResponseAmendPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRequestResponseReviewPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRespondentFtpaSubmittedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRespondentReviewPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantReviewTimeExtensionGrantedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantReviewTimeExtensionRefusedPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealOutOfTimePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitClarifyingQuestionAnswersPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitCmaRequirementsPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitReasonsForAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmittedHearingRequirementsPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmittedWithRemissionRequestPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantTcwUploadAddendumEvidencePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantUnlinkAppealPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantUpdateTribunalDecisionRule31PersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantUpdateTribunalDecisionRule32PersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantUploadAddendumEvidencePersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantUploadAdditionalEvidencePersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.AddEvidenceForCostsSubmittedSubmitterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.ApplyForCostsApplicantPersonalisation;
@@ -6342,6 +6224,27 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("sendPaymentReminderInternalNotificationGenerator")
+    public List<NotificationGenerator> sendPaymentReminderInternalNotificationGenerator(
+        AppellantSendPaymentReminderPersonalisationEmail appellantSendPaymentReminderPersonalisationEmail,
+        AppellantSendPaymentReminderPersonalisationSms appellantSendPaymentReminderPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSendPaymentReminderPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSendPaymentReminderPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }
