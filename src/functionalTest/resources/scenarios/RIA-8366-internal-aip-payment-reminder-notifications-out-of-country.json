@@ -29,7 +29,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantInUk": "Yes",
+        "appellantInUk": "No",
         "appellantInDetention": "No",
         "paymentStatus": "Payment pending",
         "feeAmountGbp": "14000",
