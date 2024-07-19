@@ -23,7 +23,7 @@ public class HomeOfficeForceCaseToHearingPersonalisation implements BailEmailNot
 
     public HomeOfficeForceCaseToHearingPersonalisation(
         @NotNull(message = "bailDocumentDeletedTemplateId cannot be null")
-        @Value("${govnotify.bail.template.forceCaseToHearing.respondent.email}")
+        @Value("${govnotify.bail.template.forceCaseToHearing.respondent}")
             String homeOfficeEmailTemplateId,
         @Value("${bailHomeOfficeEmailAddress}")
              String bailHomeOfficeEmailAddress
