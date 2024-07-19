@@ -16,7 +16,8 @@ import java.util.stream.Stream;
 
 public class EventTest {
 
-    private static final String[] UNIQUE_EVENTS = {"addAppealResponse", "addEvidenceForCosts", "adjournHearingWithoutDate", "adaSuitabilityReview",
+    private static final String[] UNIQUE_EVENTS = {
+            "addAppealResponse", "addEvidenceForCosts", "adjournHearingWithoutDate", "adaSuitabilityReview",
             "applyForCosts", "applyForFTPAAppellant", "applyForFTPARespondent", "asyncStitchingComplete",
             "buildCase", "caseListing", "changeBailDirectionDueDate", "changeDirectionDueDate",
             "changeHearingCentre", "considerMakingCostsOrder", "createBailCaseLink", "createCaseLink",
