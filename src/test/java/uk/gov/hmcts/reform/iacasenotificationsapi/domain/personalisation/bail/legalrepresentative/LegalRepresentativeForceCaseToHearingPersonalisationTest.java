@@ -55,18 +55,18 @@ class LegalRepresentativeForceCaseToHearingPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_template_id() {
+    void should_return_given_template_id() {
         assertEquals(templateId, legalRepForceCaseToHearingPersonalisationTest.getTemplateId(bailCase));
     }
 
     @Test
-    public void should_return_given_reference_id() {
+    void should_return_given_reference_id() {
         assertEquals(caseId + "_LEGAL_REP_FORCE_CASE_TO_HEARING",
                 legalRepForceCaseToHearingPersonalisationTest.getReferenceId(caseId));
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
                 () -> legalRepForceCaseToHearingPersonalisationTest.getPersonalisation((BailCase) null))
@@ -75,7 +75,7 @@ class LegalRepresentativeForceCaseToHearingPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
+    void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
                 legalRepForceCaseToHearingPersonalisationTest.getPersonalisation(bailCase);
@@ -88,7 +88,7 @@ class LegalRepresentativeForceCaseToHearingPersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
+    void should_return_personalisation_when_all_mandatory_information_given() {
 
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());

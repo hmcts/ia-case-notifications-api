@@ -186,7 +186,7 @@ public class EventTest {
     }
 
     @Test
-    public void event_enum_should_contain_following_events() {
+    void event_enum_should_contain_following_events() {
         List<String> enumEvents = Arrays.stream(Event.values())
                 .map(Enum::toString)
                 .toList();
@@ -207,6 +207,6 @@ public class EventTest {
     private static List<String> findMissingEvents(List<String> enumEvents, List<String> testedEvents) {
         return enumEvents.stream()
                 .filter(e -> !testedEvents.contains(e))
-                .collect(Collectors.toList());
+                .toList();
     }
 }
