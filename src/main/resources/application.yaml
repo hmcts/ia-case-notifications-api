@@ -1318,6 +1318,9 @@ govnotify:
         email: 4a724840-8e62-489b-bc69-43a0be3ff12d
       sendUploadBailSummaryDirection:
         email: 12eec4f2-7261-4640-b18b-93666bde0b54
+      forceCaseToHearing:
+        legalRep: 6c5188d8-3099-474d-a649-3fcdd78fe4f9
+        respondent: 6dd70a4d-ac2d-4c57-8edd-63d80cc945fb
       caseListing:
         initial:
           withLegalRep:
@@ -1519,6 +1522,7 @@ security:
       - "recordOutOfTimeDecision"
       - "turnOnNotifications"
       - "caseListing"
+      - "forceCaseToHearing"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
@@ -1588,6 +1592,7 @@ security:
       - "editAppeal"
       - "considerMakingCostsOrder"
       - "decideCostsApplication"
+      - "forceCaseToHearing"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"

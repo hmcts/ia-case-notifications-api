@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ListingEvent;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
@@ -594,6 +595,19 @@ public class BailNotificationHandlerConfiguration {
             },
             bailNotificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> forceCaseToHearingNotificationHandler(
+            @Qualifier("forceCaseToHearingNotificationGenerator")
+            List<BailNotificationGenerator> notificationGenerator) {
+
+        return new BailNotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.FORCE_CASE_TO_HEARING,
+                notificationGenerator
         );
     }
 
