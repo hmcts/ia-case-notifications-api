@@ -6359,7 +6359,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalRemissionGrantedInTimeLetterNotificationHandler(
-        @Qualifier("internalRemissionGrantedInTImeLetterNotificationGenerator")
+        @Qualifier("internalRemissionGrantedInTimeLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6375,13 +6375,16 @@ public class NotificationHandlerConfiguration {
                     .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
+                Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isApproved
                        && !isOutOfTimeAppeal
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                       && lateRemissionType.isEmpty();
             },
             notificationGenerators,
             getErrorHandler()
