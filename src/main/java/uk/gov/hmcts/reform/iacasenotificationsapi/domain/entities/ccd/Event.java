@@ -52,6 +52,7 @@ public enum Event {
     MANAGE_FEE_UPDATE("manageFeeUpdate"),
     MARK_APPEAL_AS_ADA("markAppealAsAda"),
     MARK_APPEAL_AS_DETAINED("markAppealAsDetained"),
+    MARK_APPEAL_AS_REMITTED("markAppealAsRemitted"),
     MARK_APPEAL_PAID("markAppealPaid"),
     MARK_AS_READY_FOR_UT_TRANSFER("markAsReadyForUtTransfer"),
     MAINTAIN_BAIL_CASE_LINKS("maintainBailCaseLinks"),
