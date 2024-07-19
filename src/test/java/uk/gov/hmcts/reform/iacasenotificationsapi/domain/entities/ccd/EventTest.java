@@ -107,7 +107,7 @@ public class EventTest {
                 Arguments.of("markAppealAsAda", Event.MARK_APPEAL_AS_ADA),
                 Arguments.of("markAppealAsDetained", Event.MARK_APPEAL_AS_DETAINED),
                 Arguments.of("markAppealPaid", Event.MARK_APPEAL_PAID),
-                Arguments.of("markAppealRemitted", Event.MARK_APPEAL_AS_REMITTED),
+                Arguments.of("markAppealAsRemitted", Event.MARK_APPEAL_AS_REMITTED),
                 Arguments.of("markAsReadyForUtTransfer", Event.MARK_AS_READY_FOR_UT_TRANSFER),
                 Arguments.of("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS),
                 Arguments.of("maintainCaseLinks", Event.MAINTAIN_CASE_LINKS),
