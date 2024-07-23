@@ -347,8 +347,14 @@ public enum AsylumCaseDefinition {
     EMAIL(
         "email", new TypeReference<String>(){}),
 
+    INTERNAL_APPELLANT_EMAIL(
+        "internalAppellantEmail", new TypeReference<String>(){}),
+
     MOBILE_NUMBER(
         "mobileNumber", new TypeReference<String>(){}),
+
+    INTERNAL_APPELLANT_MOBILE_NUMBER(
+        "internalAppellantMobileNumber", new TypeReference<String>(){}),
 
     CONTACT_PREFERENCE(
         "contactPreference", new TypeReference<ContactPreference>(){}),
@@ -414,19 +420,13 @@ public enum AsylumCaseDefinition {
         "detentionFacility", new TypeReference<String>(){}),
 
     PREVIOUS_DETENTION_LOCATION(
-
             "previousDetentionLocation", new TypeReference<String>() {}),
-
-
     PRISON_NAME(
             "prisonName", new TypeReference<String>(){}),
-
     OTHER_DETENTION_FACILITY_NAME(
             "otherDetentionFacilityName", new TypeReference<OtherDetentionFacilityName>(){}),
-
     APPELLANT_IN_DETENTION(
             "appellantInDetention", new TypeReference<YesOrNo>(){}),
-
     IS_APPELLANT_RESPONDENT(
             "isAppellantRespondent", new TypeReference<String>(){}),
     IS_EJP(
@@ -468,13 +468,58 @@ public enum AsylumCaseDefinition {
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
 
     DECIDE_COSTS_APPLICATION_LIST(
-        "decideCostsApplicationList", new TypeReference<DynamicList>(){}
-    ),
+        "decideCostsApplicationList", new TypeReference<DynamicList>() {}),
+
+    SEND_DIRECTION_DATE_DUE(
+        "sendDirectionDateDue", new TypeReference<String>() {}),
+
+    FEE_AMOUNT_GBP(
+        "feeAmountGbp", new TypeReference<String>(){}),
 
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
-    ;
 
+    LETTER_BUNDLE_DOCUMENTS(
+        "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    NEW_FEE_AMOUNT(
+        "newFeeAmount", new TypeReference<String>(){}),
+
+    PAID_AMOUNT(
+        "paidAmount", new TypeReference<String>(){}),
+
+    FEE_UPDATE_REASON(
+        "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
+
+    APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J(
+        "appellantHasFixedAddressAdminJ", new TypeReference<YesOrNo>(){}),
+
+    ADDRESS_LINE_1_ADMIN_J(
+        "addressLine1AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_2_ADMIN_J(
+        "addressLine2AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_3_ADMIN_J(
+        "addressLine3AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_4_ADMIN_J(
+        "addressLine4AdminJ", new TypeReference<String>(){}),
+
+    COUNTRY_ADMIN_J(
+        "countryAdminJ", new TypeReference<String>(){}),
+
+    REMISSION_DECISION_REASON(
+        "remissionDecisionReason", new TypeReference<String>(){}),
+
+    LATE_REMISSION_TYPE(
+        "lateRemissionType", new TypeReference<RemissionType>(){}),
+
+    FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT(
+        "ftpaAppellantDecisionRemadeRule32Text", new TypeReference<String>(){}),
+
+    FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT(
+        "ftpaRespondentDecisionRemadeRule32Text", new TypeReference<String>(){});
 
     private final String value;
     private final TypeReference typeReference;
