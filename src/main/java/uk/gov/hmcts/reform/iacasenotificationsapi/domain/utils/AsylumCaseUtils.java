@@ -291,7 +291,7 @@ public class AsylumCaseUtils {
 
             BigDecimal originalFee = new BigDecimal(String.valueOf(Double.parseDouble(originalFeeTotal) / 100));
             BigDecimal newFee = new BigDecimal(String.valueOf(Double.parseDouble(newFeeTotal) / 100));
-            BigDecimal difference = originalFee.subtract(newFee);
+            BigDecimal difference = originalFee.subtract(newFee).abs();
             return difference.setScale(2, RoundingMode.DOWN).toString();
 
         } catch (NumberFormatException e) {
