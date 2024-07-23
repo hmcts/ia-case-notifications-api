@@ -6322,7 +6322,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalRemissionGrantedInTImeLetterNotificationGenerator")
+    @Bean("internalRemissionGrantedInTimeLetterNotificationGenerator")
     public List<NotificationGenerator> internalRemissionGrantedInTimeLetterNotificationGenerator(
         AppellantInternalRemissionGrantedInTImeLetterPersonalisation appellantInternalRemissionGrantedInTImeLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
