@@ -1541,6 +1541,7 @@ security:
       - "buildCase"
       - "listCase"
       - "turnOnNotifications"
+      - "updateTribunalDecision"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
