@@ -598,6 +598,19 @@ public class BailNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> forceCaseToHearingNotificationHandler(
+        @Qualifier("forceCaseToHearingNotificationGenerator")
+        List<BailNotificationGenerator> notificationGenerator) {
+
+        return new BailNotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING,
+            notificationGenerator
+        );
+    }
+
     private ErrorHandler<BailCase> getErrorHandler() {
         ErrorHandler<BailCase> errorHandler = (callback, e) -> {
             callback
