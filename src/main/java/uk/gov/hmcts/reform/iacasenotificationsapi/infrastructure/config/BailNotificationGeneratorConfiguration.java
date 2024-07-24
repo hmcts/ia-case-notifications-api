@@ -454,21 +454,6 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("upperTribunalDecisionRefusedImaNotificationGenerator")
-    public List<BailNotificationGenerator> upperTribunalDecisionRefusedImaNotificationGenerator(
-        UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation,
-        BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-            new BailEmailNotificationGenerator(
-                newArrayList(upperTribunalDecisionRefusedImaPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("caseListingBailSummaryDirectionNotificationGenerator")
     public List<BailNotificationGenerator> caseListingBailSummaryDirectionNotificationGenerator(
         HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
@@ -478,6 +463,21 @@ public class BailNotificationGeneratorConfiguration {
         return List.of(
             new BailEmailNotificationGenerator(
                 newArrayList(homeOfficeUploadBailSummaryDirectionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+  
+    @Bean("upperTribunalDecisionRefusedImaNotificationGenerator")
+    public List<BailNotificationGenerator> upperTribunalDecisionRefusedImaNotificationGenerator(
+        UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(upperTribunalDecisionRefusedImaPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -563,3 +563,5 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 }
+      
+     
