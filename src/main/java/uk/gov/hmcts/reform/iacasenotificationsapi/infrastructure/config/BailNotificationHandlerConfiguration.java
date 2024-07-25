@@ -601,32 +601,40 @@ public class BailNotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<BailCase> forceCaseToHearingNotificationHandler(
         @Qualifier("forceCaseToHearingNotificationGenerator")
-        List<BailNotificationGenerator> notificationGenerator) {
+        List<BailNotificationGenerator> bailNotificationGenerators) {
 
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
-                BailCase bailCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING
-                    && isLegallyRepresented(bailCase);
+                boolean validEvent = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING;
+                if (validEvent) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
             },
-            notificationGenerator
+            bailNotificationGenerators
         );
     }
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> forceCaseToHearingNotificationHandlerWithoutLegalRep(
         @Qualifier("forceCaseToHearingNotificationGeneratorWithoutLegalRep")
-        List<BailNotificationGenerator> notificationGenerator) {
+        List<BailNotificationGenerator> bailNotificationGenerators) {
 
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
-                BailCase bailCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING
-                    && !isLegallyRepresented(bailCase);
+                boolean validEvent = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING;
+                if (validEvent) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return !isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
             },
-            notificationGenerator
+            bailNotificationGenerators
         );
     }
 
