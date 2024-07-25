@@ -16,6 +16,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Colnbrook",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

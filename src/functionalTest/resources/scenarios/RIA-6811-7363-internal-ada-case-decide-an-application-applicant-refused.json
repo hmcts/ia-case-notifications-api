@@ -19,6 +19,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "decideAnApplicationId": "1",
           "appellantInDetention": "Yes",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

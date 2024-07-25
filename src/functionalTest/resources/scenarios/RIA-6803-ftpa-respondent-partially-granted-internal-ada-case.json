@@ -1,5 +1,5 @@
 {
-  "description": "RIA-6803  Respondent FTPA Application is partiallygranted for internal ADA case",
+  "description": "RIA-6803 Respondent FTPA Application is partiallygranted for internal ADA case",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -21,6 +21,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "ftpaRespondentRjDecisionOutcomeType": "partiallyGranted",
           "ftpaApplicantType": "respondent",
+          "appelantsRepresentation": "Yes",
           "ftpaRespondentDecisionDocument": [
             {
               "id": "docId",

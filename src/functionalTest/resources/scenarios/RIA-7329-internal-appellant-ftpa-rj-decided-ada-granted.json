@@ -20,6 +20,8 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "ftpaApplicantType": "appellant",
           "ftpaAppellantRjDecisionOutcomeType": "granted",
+          "appelantsRepresentation": "Yes",
+          "appellantInDetention": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

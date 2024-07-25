@@ -15,6 +15,7 @@
           "ircName": "Brookhouse",
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "appelantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "listCaseHearingCentre": "bradford",
           "ariaListingReference" : "LP/12345/2019",
