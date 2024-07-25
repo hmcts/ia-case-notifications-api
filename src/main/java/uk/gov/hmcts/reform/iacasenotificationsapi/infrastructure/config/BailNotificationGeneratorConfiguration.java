@@ -562,6 +562,24 @@ public class BailNotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("forceCaseToHearingNotificationGeneratorWithoutLegalRep")
+    public List<BailNotificationGenerator> forceCaseToHearingNotificationGeneratorWithoutLegalRep(
+        HomeOfficeForceCaseToHearingPersonalisation respondentForceCaseToHearingPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+            new BailEmailNotificationGenerator(
+                newArrayList(
+                    respondentForceCaseToHearingPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
       
      

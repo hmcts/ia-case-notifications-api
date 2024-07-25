@@ -604,9 +604,28 @@ public class BailNotificationHandlerConfiguration {
         List<BailNotificationGenerator> notificationGenerator) {
 
         return new BailNotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING,
+            (callbackStage, callback) -> {
+                BailCase bailCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING
+                    && isLegallyRepresented(bailCase);
+            },
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> forceCaseToHearingNotificationHandlerWithoutLegalRep(
+        @Qualifier("forceCaseToHearingNotificationGeneratorWithoutLegalRep")
+        List<BailNotificationGenerator> notificationGenerator) {
+
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                BailCase bailCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.FORCE_CASE_TO_HEARING
+                    && !isLegallyRepresented(bailCase);
+            },
             notificationGenerator
         );
     }

@@ -20,7 +20,7 @@ public class LegalRepresentativeForceCaseToHearingPersonalisation implements Leg
 
     public LegalRepresentativeForceCaseToHearingPersonalisation(
         @NotNull(message = "bailDocumentDeletedTemplateId cannot be null")
-        @Value("${govnotify.bail.template.forceCaseToHearing.legalRep}")
+        @Value("${govnotify.bail.template.forceCaseToHearing.withLegalRep.legalRep}")
             String legalRepEmailTemplateId) {
         this.legalRepEmailTemplateId = legalRepEmailTemplateId;
     }
