@@ -4,13 +4,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_REMOTE_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_LOCATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.REF_DATA_LISTING_LOCATION_DETAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingLocation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
@@ -33,6 +38,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.r
 class HearingDetailsFinderTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -46,6 +52,7 @@ class HearingDetailsFinderTest {
     private String hearingCentreName = "some hearing centre name";
     private String bailHearingLocationName = "Glasgow";
     private String hearingCentreAddress = "some hearing centre address";
+    private String hearingCentreRefDataAddress = "hearing centre address retrieved from ref data";
     private String hearingDateTime = "2019-08-27T14:25:15.000";
     private String bailHearingDateTime = "2024-01-01T10:29:00.000";
     private String hearingDate = "2019-08-27";
@@ -83,14 +90,40 @@ class HearingDetailsFinderTest {
                 "Y",
                 "York House And Wellington House, 2-3 Dukes Green, Feltham, Middlesex",
                 "TW14 0LS");
-        hearingDetailsFinder = new HearingDetailsFinder(
-            stringProvider
-        );
+
+        hearingDetailsFinder = new HearingDetailsFinder(stringProvider);
     }
 
     @Test
     void should_return_given_hearing_centre_address() {
         assertEquals(hearingCentreAddress, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+    }
+
+    @Test
+    void getHearingCentreLocation_should_return_remote_hearing_if_remote_field_is_yes_and_refdata_enabled() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+        assertEquals("Remote hearing", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getHearingCentreLocation_should_return_refdata_address_if_remote_field_is_no_and_refdata_enabled() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of("testAddress"));
+
+        assertEquals("testAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void should_return_given_hearing_centre_address_from_ref_data_if_location_ref_data_enabled() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of(hearingCentreRefDataAddress));
+
+        assertEquals(hearingCentreRefDataAddress, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
     }
 
     @Test
@@ -114,6 +147,24 @@ class HearingDetailsFinderTest {
         assertThatThrownBy(() -> hearingDetailsFinder.getHearingCentreName(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("listCaseHearingCentreName is not present");
+    }
+
+    @Test
+    void getHearingCentreName_should_return_remote_hearing_if_remote_field_is_yes_and_refdata_enabled() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+        assertEquals("Remote hearing", hearingDetailsFinder.getHearingCentreName(asylumCase));
+    }
+
+    @Test
+    void getHearingCentreName_should_return_refdata_address_if_remote_field_is_no_and_refdata_enabled() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of("testAddress"));
+
+        assertEquals("testAddress", hearingDetailsFinder.getHearingCentreName(asylumCase));
     }
 
     @Test
@@ -209,12 +260,12 @@ class HearingDetailsFinderTest {
 
 
         assertEquals("Glasgow\nIAC Glasgow, " +
-                "1st Floor, " +
-                "The Glasgow Tribunals Centre, " +
-                "Atlantic Quay, " +
-                "20 York Street, " +
-                "Glasgow, " +
-                "G2 8GT",
+                        "1st Floor, " +
+                        "The Glasgow Tribunals Centre, " +
+                        "Atlantic Quay, " +
+                        "20 York Street, " +
+                        "Glasgow, " +
+                        "G2 8GT",
                 hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
 
