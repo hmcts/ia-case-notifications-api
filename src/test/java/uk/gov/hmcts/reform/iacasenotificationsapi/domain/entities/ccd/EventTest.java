@@ -12,17 +12,17 @@ public class EventTest {
 
     @ParameterizedTest
     @EnumSource(value = Event.class, names = { "APPLY_FOR_FTPA_APPELLANT", "APPLY_FOR_FTPA_RESPONDENT" }, mode = EXCLUDE)
-    public void has_correct_values(Event event) {
+    void has_correct_values(Event event) {
         assertEquals(convertToCamelCase(event.name()), event.toString());
     }
 
     @Test
-    public void exclusions_have_correct_values() {
+    void exclusions_have_correct_values() {
         assertEquals("applyForFTPAAppellant", APPLY_FOR_FTPA_APPELLANT.toString());
         assertEquals("applyForFTPARespondent", APPLY_FOR_FTPA_RESPONDENT.toString());
     }
 
-    public static String convertToCamelCase(String snakeCase) {
+    private static String convertToCamelCase(String snakeCase) {
         String[] words = snakeCase.split("_");
         StringBuilder camelCase = new StringBuilder();
         camelCase.append(words[0].toLowerCase());
@@ -34,7 +34,7 @@ public class EventTest {
     }
 
     @Test
-    public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
+    void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
         assertEquals(120, Event.values().length);
     }
 }
