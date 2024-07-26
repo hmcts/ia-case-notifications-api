@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailChangeTribunalCentrePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailNocChangedLrPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailStopLegalRepresentingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer.email.AdminOfficerBailSummaryUploadedPersonalisation;
@@ -535,6 +536,21 @@ public class BailNotificationGeneratorConfiguration {
             ),
             new BailSmsNotificationGenerator(
                 newArrayList(applicantBailCaseListingPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("bailChangeTribunalCentreNotificationGenerator")
+    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGenerator(
+        AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new BailEmailNotificationGenerator(
+                newArrayList(adminOfficerBailChangeTribunalCentrePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
