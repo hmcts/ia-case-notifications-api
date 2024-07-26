@@ -313,8 +313,8 @@ public class AsylumCaseUtils {
             Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
                 .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
     }
-    public static boolean isDecisionWithoutHearingAppeal(AsylumCase asylumCase) {
 
+    public static boolean isDecisionWithoutHearingAppeal(AsylumCase asylumCase) {
         return asylumCase.read(IS_DECISION_WITHOUT_HEARING, YesOrNo.class)
             .map(yesOrNo -> YES == yesOrNo).orElse(false);
     }
