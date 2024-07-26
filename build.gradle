@@ -232,11 +232,7 @@ project.tasks['pitest'].group = "Verification"
 
 project.ext {
     pacticipant = 'ia_caseNotificationsApi'
-    pacticipantVersion = getCheckedOutGitCommitHash()
-}
-
-def getCheckedOutGitCommitHash() {
-    'git rev-parse --verify --short HEAD'.execute().text.trim()
+    pacticipantVersion = System.env.GIT_COMMIT.substring(0,9)
 }
 
 task runContractTests(type: Test, description: 'Runs contract tests.', group: 'Verification') {
@@ -383,8 +379,6 @@ dependencies {
 
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
-//    implementation group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: versions.reformHealthStarter
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
