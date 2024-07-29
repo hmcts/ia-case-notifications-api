@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -19,6 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
+@Slf4j
 public class RespondentNonStandardDirectionPersonalisation implements EmailNotificationPersonalisation {
 
     public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
@@ -81,6 +84,15 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        Optional<State> state = asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class);
+        Optional<HearingCentre> listHearingCentre = asylumCase
+                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+        Optional<HearingCentre> hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class);
+
+        log.info("Recipients list for case state: {}, listCaseHearingCentre: {}, hearingCentre: {} ",
+                state.isPresent() ? state.get() : "",
+                listHearingCentre.isPresent() ? listHearingCentre.get().getValue() : "",
+                hearingCentre.isPresent() ? hearingCentre.get().getValue() : "");
 
         return asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
             .map(currentState -> {
