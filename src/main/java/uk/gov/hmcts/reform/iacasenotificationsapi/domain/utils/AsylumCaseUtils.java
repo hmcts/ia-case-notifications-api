@@ -210,6 +210,12 @@ public class AsylumCaseUtils {
             .orElseThrow(() -> new IllegalStateException("Failed to generate appellantPinInPost."));
     }
 
+    public static boolean isDecisionWithoutHearingAppeal(AsylumCase asylumCase) {
+
+        return asylumCase.read(IS_DECISION_WITHOUT_HEARING, YesOrNo.class)
+            .map(yesOrNo -> YES == yesOrNo).orElse(false);
+    }
+
     public static boolean isSubmissionOutOfTime(AsylumCase asylumCase) {
         return asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(NO).equals(YES);
     }
