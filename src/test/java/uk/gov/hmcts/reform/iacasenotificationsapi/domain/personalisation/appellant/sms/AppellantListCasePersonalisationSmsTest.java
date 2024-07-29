@@ -9,6 +9,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -46,6 +48,7 @@ public class AppellantListCasePersonalisationSmsTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String legallyReppedTemplateId = "legallyReppedTemplateId";
     private String iaAipFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String hearingCentreAddress = "some hearing centre address";
@@ -82,17 +85,27 @@ public class AppellantListCasePersonalisationSmsTest {
 
         appellantListCasePersonalisationSms = new AppellantListCasePersonalisationSms(
             templateId,
-                iaAipFrontendUrl,
-                dateTimeExtractor,
-                hearingDetailsFinder,
-                recipientsFinder
-                );
+            legallyReppedTemplateId,
+            iaAipFrontendUrl,
+            dateTimeExtractor,
+            hearingDetailsFinder,
+            recipientsFinder
+        );
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_CASE_LISTED_AIP_APPELLANT_SMS",
-                appellantListCasePersonalisationSms.getReferenceId(caseId));
+            appellantListCasePersonalisationSms.getReferenceId(caseId));
+    }
+
+    @Test
+    public void should_return_correct_template_id() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        assertEquals(templateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
+
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        assertEquals(legallyReppedTemplateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
     }
 
 
@@ -100,21 +113,21 @@ public class AppellantListCasePersonalisationSmsTest {
     public void should_throw_exception_on_recipients_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         assertThatThrownBy(() -> appellantListCasePersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+            .isExactlyInstanceOf(NullPointerException.class)
+            .hasMessage("asylumCase must not be null");
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantListCasePersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
