@@ -8,46 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.APPELLANT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.RESPONDENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECIDE_AN_APPLICATION_ID;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_COMPLETED_STAGES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_RECORDED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_TRIBUNAL_ACTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HAS_SERVICE_REQUEST_ALREADY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_APPEAL_DECIDED_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_DECIDED_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_APPELLANT_RESPONDENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REFUND_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REMISSION_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_SET_ASIDE_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_LATE_REMISSION_REQUEST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MAKE_AN_APPLICATIONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.OUT_OF_TIME_DECISION_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PAYMENT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_OPTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBMIT_NOTIFICATION_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.UPDATE_TRIBUNAL_DECISION_LIST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAction.ADDITIONAL_PAYMENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
@@ -300,9 +261,17 @@ public class NotificationHandlerConfiguration {
         @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN,
+            (callbackStage, callback) -> {
+                YesOrNo isIntegrated = callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .read(IS_INTEGRATED, YesOrNo.class)
+                    .orElse(YesOrNo.NO);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.RESTORE_STATE_FROM_ADJOURN
+                    && isIntegrated.equals(NO);
+            },
             notificationGenerators
         );
     }
@@ -2514,21 +2483,79 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateHandler(
-        @Qualifier("adjournHearingWithoutDateNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateNonIntegratedHandler(
+        @Qualifier("adjournHearingWithoutDateNonIntegratedNotificationGenerator")
             List<NotificationGenerator> notificationGenerator) {
 
         // RIA-3631 adjournHearingWithoutDate
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                && !isInternalCase(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                     && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                                     && !isListAssistIntegrated(callback.getCaseDetails().getCaseData())
+                                     && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateIntegratedHandler(
+        @Qualifier("adjournHearingWithoutDateIntegratedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                     && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                                     && isListAssistIntegrated(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> recordAdjournmentDetailsNonIntegratedHandler(
+        @Qualifier("recordAdjournmentDetailsNonIntegratedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean cannotRelistCaseImmediately =
+                        asylumCase.read(RELIST_CASE_IMMEDIATELY, YesOrNo.class)
+                            .map(relistCaseImmediately -> relistCaseImmediately == NO)
+                            .orElse(false);
+
+                    return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_ADJOURNMENT_DETAILS
+                            && cannotRelistCaseImmediately
+                            && !isListAssistIntegrated(callback.getCaseDetails().getCaseData()));
+                },
+                notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> recordAdjournmentDetailsIntegratedHandler(
+        @Qualifier("recordAdjournmentDetailsIntegratedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean cannotRelistCaseImmediately =
+                    asylumCase.read(RELIST_CASE_IMMEDIATELY, YesOrNo.class)
+                        .map(relistCaseImmediately -> relistCaseImmediately == NO)
+                        .orElse(false);
+
+                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.RECORD_ADJOURNMENT_DETAILS
+                        && cannotRelistCaseImmediately
+                        && isListAssistIntegrated(callback.getCaseDetails().getCaseData()));
+            },
+            notificationGenerator
+        );
+    }
+
     public PreSubmitCallbackHandler<AsylumCase> internalAdjournHearingWithoutDateHandler(
         @Qualifier("internalAdjournHearingWithoutDateNotificationGenerator")
         List<NotificationGenerator> notificationGenerator) {
@@ -4644,6 +4671,12 @@ public class NotificationHandlerConfiguration {
         return asylumCase
                 .read(JOURNEY_TYPE, JourneyType.class)
                 .map(type -> type == AIP).orElse(false);
+    }
+
+    private boolean isListAssistIntegrated(AsylumCase asylumCase) {
+        return asylumCase.read(IS_INTEGRATED, YesOrNo.class)
+            .map(isIntegrated -> isIntegrated == YES)
+            .orElse(false);
     }
 
     private boolean hasRepEmail(AsylumCase asylumCase) {
