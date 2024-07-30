@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Collections;
@@ -70,7 +70,7 @@ public class AppellantListCasePersonalisationSmsTest {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
-
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
@@ -111,10 +111,6 @@ public class AppellantListCasePersonalisationSmsTest {
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
-
-        when(recipientsFinder.findAll(null, NotificationType.SMS))
-            .thenThrow(new NullPointerException("asylumCase must not be null"));
-
         assertThatThrownBy(() -> appellantListCasePersonalisationSms.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
@@ -128,6 +124,24 @@ public class AppellantListCasePersonalisationSmsTest {
 
         assertTrue(appellantListCasePersonalisationSms.getRecipientsList(asylumCase)
             .contains(mockedAppellantMobilePhone));
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
+    }
+
+    @Test
+    public void should_return_given_mobile_mobile_list_from_sms_in_asylum_case_if_repped() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS))
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+
+        assertTrue(appellantListCasePersonalisationSms.getRecipientsList(asylumCase)
+            .contains(mockedAppellantMobilePhone));
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(1)).findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Test

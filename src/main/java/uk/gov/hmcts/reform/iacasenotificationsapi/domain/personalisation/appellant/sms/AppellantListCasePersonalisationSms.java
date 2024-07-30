@@ -53,7 +53,10 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        return isAipJourney(asylumCase) ?
+            recipientsFinder.findAll(asylumCase, NotificationType.SMS) :
+            recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Override

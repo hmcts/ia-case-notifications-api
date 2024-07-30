@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
@@ -85,7 +85,7 @@ public class AppellantListCasePersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
@@ -142,14 +142,27 @@ public class AppellantListCasePersonalisationEmailTest {
 
         assertTrue(appellantListCasePersonalisationEmail.getRecipientsList(asylumCase)
             .contains(mockedAppellantEmailAddress));
+        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    public void should_return_given_email_address_list_from_email_in_asylum_case_if_repped() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL))
+            .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+        assertTrue(appellantListCasePersonalisationEmail.getRecipientsList(asylumCase)
+            .contains(mockedAppellantEmailAddress));
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(1)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
+    }
 
-        when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-            .thenThrow(new NullPointerException("asylumCase must not be null"));
-
+    @Test
+    public void should_throw_exception_on_recipients_when_case_is_null() {
         assertThatThrownBy(() -> appellantListCasePersonalisationEmail.getRecipientsList(null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");

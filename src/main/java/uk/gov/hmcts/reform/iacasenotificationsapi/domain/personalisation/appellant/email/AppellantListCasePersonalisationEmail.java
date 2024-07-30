@@ -78,7 +78,10 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        return isAipJourney(asylumCase) ?
+            recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
+            recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
     }
 
     @Override
