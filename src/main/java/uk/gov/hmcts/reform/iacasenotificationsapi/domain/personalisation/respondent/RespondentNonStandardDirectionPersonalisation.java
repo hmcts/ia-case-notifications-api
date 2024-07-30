@@ -84,15 +84,18 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Optional<State> state = asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class);
+        State state = asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
+                .orElse(State.UNKNOWN);
+        String caseId = asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)
+                .orElseThrow(() -> new IllegalStateException("Case ID for the appeal is not present"));
         Optional<HearingCentre> listHearingCentre = asylumCase
                 .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
         Optional<HearingCentre> hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class);
 
-        log.info("Recipients list for case state: {}, listCaseHearingCentre: {}, hearingCentre: {} ",
-                state.isPresent() ? state.get() : "",
-                listHearingCentre.isPresent() ? listHearingCentre.get().getValue() : "",
-                hearingCentre.isPresent() ? hearingCentre.get().getValue() : "");
+        log.info("Recipients list for case appealReference: {}, state: {}, listCaseHearingCentre: {}, hearingCentre: {} ",
+                caseId, state,
+                listHearingCentre.isPresent() ? listHearingCentre.get().getValue() : "'MISSING'",
+                hearingCentre.isPresent() ? hearingCentre.get().getValue() : "'MISSING'");
 
         return asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
             .map(currentState -> {
