@@ -24,8 +24,8 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisation implements Bail
 
     public AdminOfficerBailChangeTribunalCentrePersonalisation(
             @NotNull(message = "changeTribunalCentreAdminOfficerTemplateId cannot be null")
-            @Value("${govnotify.bail.template.changeTribunalCentre.withLegalRep.email}") String changeTribunalCentreAdminOfficerTemplateId,
-            @Value("${govnotify.bail.template.changeTribunalCentre.withoutLegalRep.email}") String changeTribunalCentreAdminOfficerWithoutLrTemplateId,
+            @Value("${govnotify.bail.template.changeTribunalCentre.adminOfficer.withLegalRep.email}") String changeTribunalCentreAdminOfficerTemplateId,
+            @Value("${govnotify.bail.template.changeTribunalCentre.adminOfficer.withoutLegalRep.email}") String changeTribunalCentreAdminOfficerWithoutLrTemplateId,
             EmailAddressFinder emailAddressFinder
     ) {
         this.changeTribunalCentreAdminOfficerTemplateId = changeTribunalCentreAdminOfficerTemplateId;

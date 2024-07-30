@@ -600,14 +600,42 @@ public class BailNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandler(
-        @Qualifier("bailChangeTribunalCentreNotificationGenerator")
+    public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandlerWithoutLegalRep(
+        @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
         List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
-            (callbackStage, callback) -> (
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE),
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return !isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandlerWithLegalRep(
+        @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
+        List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
+            },
             bailNotificationGenerators,
             getErrorHandler()
         );
