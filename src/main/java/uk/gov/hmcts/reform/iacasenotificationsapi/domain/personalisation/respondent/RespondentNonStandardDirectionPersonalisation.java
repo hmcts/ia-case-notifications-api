@@ -147,7 +147,9 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
                 }
-                throw new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
+                log.info("Getting Home Office recipients' email address failed for appeal: {}, state: {} ",
+                        caseId, state);
+                throw new IllegalStateException("1 - " + CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
             })
             .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
     }
