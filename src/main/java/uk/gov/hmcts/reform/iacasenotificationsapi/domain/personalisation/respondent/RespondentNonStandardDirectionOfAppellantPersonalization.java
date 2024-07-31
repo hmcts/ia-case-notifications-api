@@ -91,6 +91,7 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
                            && !appealService.isAppealListed(asylumCase)) {
                     return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                 } else if (Arrays.asList(
+                    State.LISTING,
                     State.PREPARE_FOR_HEARING,
                     State.FINAL_BUNDLING,
                     State.PRE_HEARING,
