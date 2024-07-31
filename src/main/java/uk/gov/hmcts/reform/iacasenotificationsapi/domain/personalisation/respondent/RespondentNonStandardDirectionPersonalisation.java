@@ -144,7 +144,7 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                     if (maybeCaseIsListed.isPresent()) {
                         return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
                     } else {
-                        return  Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
+                        return Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
                 }
                 log.info("Getting Home Office recipients' email address failed for appeal: {}, state: {} ",
