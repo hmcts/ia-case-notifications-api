@@ -110,6 +110,18 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
+    void isAriaMigrated_should_return_true() {
+        when(asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(AsylumCaseUtils.isAriaMigrated(asylumCase));
+    }
+
+    @Test
+    void isAriaMigrated_should_return_false() {
+        when(asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class)).thenReturn(Optional.of(NO));
+        assertFalse(AsylumCaseUtils.isAriaMigrated(asylumCase));
+    }
+
+    @Test
     void isAipJourney_should_return_true() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         assertTrue(AsylumCaseUtils.isAipJourney(asylumCase));

@@ -1638,6 +1638,7 @@ security:
       - "turnOnNotifications"
       - "caseListing"
       - "markAppealAsRemitted"
+      - "progressMigratedCase"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
