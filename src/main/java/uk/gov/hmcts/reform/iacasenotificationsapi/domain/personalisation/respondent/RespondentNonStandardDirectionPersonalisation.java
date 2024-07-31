@@ -135,7 +135,8 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         State.DECIDED,
                         State.ENDED,
                         State.APPEAL_TAKEN_OFFLINE,
-                        State.REMITTED
+                        State.REMITTED,
+                        State.LISTING
                 ).contains(currentState) && appealService.isAppealListed(asylumCase)) {
                     final Optional<HearingCentre> maybeCaseIsListed = asylumCase
                             .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
