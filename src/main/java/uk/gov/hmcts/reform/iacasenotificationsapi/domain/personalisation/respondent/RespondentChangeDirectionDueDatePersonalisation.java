@@ -8,7 +8,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -21,7 +20,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-@Slf4j
 public class RespondentChangeDirectionDueDatePersonalisation implements EmailNotificationPersonalisation {
 
     public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
@@ -79,18 +77,6 @@ public class RespondentChangeDirectionDueDatePersonalisation implements EmailNot
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        State state = asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
-                .orElse(State.UNKNOWN);
-        String caseId = asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)
-                .orElse("EMPTY");
-        Optional<HearingCentre> listHearingCentre = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
-        Optional<HearingCentre> hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class);
-
-        log.info("Recipients list for case appealReference: {}, state: {}, listCaseHearingCentre: {}, hearingCentre: {} ",
-                caseId, state,
-                listHearingCentre.isPresent() ? listHearingCentre.get().getValue() : "'MISSING'",
-                hearingCentre.isPresent() ? hearingCentre.get().getValue() : "'MISSING'");
 
         return asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
             .map(currentState -> {

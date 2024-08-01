@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
-@Slf4j
 public class RespondentNonStandardDirectionPersonalisation implements EmailNotificationPersonalisation {
 
     public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
@@ -84,18 +83,6 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        State state = asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
-                .orElse(State.UNKNOWN);
-        String caseId = asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)
-                .orElse("EMPTY");
-        Optional<HearingCentre> listHearingCentre = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
-        Optional<HearingCentre> hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class);
-
-        log.info("Recipients list for case appealReference: {}, state: {}, listCaseHearingCentre: {}, hearingCentre: {} ",
-                caseId, state,
-                listHearingCentre.isPresent() ? listHearingCentre.get().getValue() : "'MISSING'",
-                hearingCentre.isPresent() ? hearingCentre.get().getValue() : "'MISSING'");
 
         return asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class)
             .map(currentState -> {
@@ -147,8 +134,6 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         return Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
                 }
-                log.info("Getting Home Office recipients' email address failed for appeal: {}, state: {} ",
-                        caseId, state);
                 throw new IllegalStateException("1 - " + CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
             })
             .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
