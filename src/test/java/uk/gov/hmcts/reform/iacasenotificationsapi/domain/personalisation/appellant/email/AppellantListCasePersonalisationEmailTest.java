@@ -86,6 +86,7 @@ public class AppellantListCasePersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
@@ -186,6 +187,7 @@ public class AppellantListCasePersonalisationEmailTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -211,6 +213,7 @@ public class AppellantListCasePersonalisationEmailTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -240,10 +243,20 @@ public class AppellantListCasePersonalisationEmailTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+    }
+
+    @Test
+    void should_throw_personalisation_when_no_hearing_centre() {
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(
+            () -> appellantListCasePersonalisationEmail.getPersonalisation(asylumCase))
+            .isExactlyInstanceOf(IllegalArgumentException.class)
+            .hasMessage("No hearing centre present");
     }
 }

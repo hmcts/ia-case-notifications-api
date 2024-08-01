@@ -52,7 +52,6 @@ public class AppellantListCasePersonalisationSmsTest {
     private String iaAipFrontendUrl = "http://somefrontendurl";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String hearingCentreAddress = "some hearing centre address";
-
     private String hearingDateTime = "2019-08-27T14:25:15.000";
     private String hearingDate = "2019-08-27";
     private String hearingTime = "14:25";
@@ -71,6 +70,7 @@ public class AppellantListCasePersonalisationSmsTest {
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
@@ -154,6 +154,7 @@ public class AppellantListCasePersonalisationSmsTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -169,6 +170,7 @@ public class AppellantListCasePersonalisationSmsTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -185,7 +187,18 @@ public class AppellantListCasePersonalisationSmsTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+    }
+
+
+    @Test
+    void should_throw_personalisation_when_no_hearing_centre() {
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(
+            () -> appellantListCasePersonalisationSms.getPersonalisation(asylumCase))
+            .isExactlyInstanceOf(IllegalArgumentException.class)
+            .hasMessage("No hearing centre present");
     }
 }

@@ -6,7 +6,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
@@ -92,8 +92,9 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
-        final Builder<String, String> listCaseFields = ImmutableMap
+        HearingCentre hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class).orElseThrow(
+            () -> new IllegalArgumentException("No hearing centre present"));
+        return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
@@ -105,9 +106,10 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
             .put("Hyperlink to service", iaAipFrontendUrl)
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+            .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase))
+            .put("tribunalCentre", hearingCentre.getValue())
+            .build();
 
-        return listCaseFields.build();
 
     }
 }
