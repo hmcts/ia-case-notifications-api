@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -264,8 +265,8 @@ public class AsylumCaseUtils {
             .read(ADDRESS_LINE_4_ADMIN_J, String.class)
             .orElse(null);
 
-        String oocAddressCountry = asylumCase
-            .read(COUNTRY_ADMIN_J, String.class)
+        Nationality oocAddressCountry = asylumCase
+            .read(COUNTRY_OOC_ADMIN_J, Nationality.class)
             .orElseThrow(() -> new IllegalStateException("OOC Address country is not present"));
 
         if (oocAddressLine3 != null) {
@@ -274,7 +275,7 @@ public class AsylumCaseUtils {
         if (oocAddressLine4 != null) {
             appellantAddressAsList.add(oocAddressLine4);
         }
-        appellantAddressAsList.add(oocAddressCountry);
+        appellantAddressAsList.add(oocAddressCountry.toString());
 
         return appellantAddressAsList;
     }

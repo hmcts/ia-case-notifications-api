@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplicationTypes;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
@@ -58,7 +60,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     private String oocAddressLine1 = "Calle Toledo 32";
     private String oocAddressLine2 = "Madrid";
     private String oocAddressLine3 = "28003";
-    private String oocAddressCountry = "Spain";
+    private Nationality oocAddressCountry = Nationality.ES;
     private String decisionMaker = "Legal Officer";
     private String reinstateReason = "Example reason";
     private String customerServicesTelephone = "555 555 555";
@@ -97,7 +99,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
-        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, Nationality.class)).thenReturn(Optional.of(oocAddressCountry));
 
         makeAnApplication.setDecisionMaker(decisionMaker);
         makeAnApplication.setDecisionReason(decisionReason);
@@ -182,7 +184,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
         assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
         assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(oocAddressCountry, personalisation.get("address_line_4"));
+        assertEquals(oocAddressCountry.toString(), personalisation.get("address_line_4"));
         assertEquals(decisionMaker, personalisation.get("decisionMaker"));
         assertEquals("grant", personalisation.get("decision"));
         assertEquals("Adjourn", personalisation.get("applicationType"));

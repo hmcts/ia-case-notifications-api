@@ -16,7 +16,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryAdminJ": "Spain",
+          "countryOocAdminJ": "ES",
           "directions": [
             {
               "id": "1",
@@ -47,7 +47,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryAdminJ": "Spain",
+        "countryOocAdminJ": "ES",
         "directions": [
           {
             "id": "1",

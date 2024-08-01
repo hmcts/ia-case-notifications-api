@@ -18,7 +18,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryAdminJ": "Spain",
+          "countryOocAdminJ": "ES",
           "updateTribunalDecisionList": "underRule31",
           "listCaseHearingCentre": "taylorHouse",
           "typesOfUpdateTribunalDecision": {
@@ -58,7 +58,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryAdminJ": "Spain",
+        "countryOocAdminJ": "ES",
         "notificationsSent": [
           {
             "id": "83342_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",

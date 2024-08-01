@@ -188,7 +188,7 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine3));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_4_ADMIN_J, String.class)).thenReturn(Optional.of(postTown));
-        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(postCode));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, String.class)).thenReturn(Optional.of(postCode));
     }
 
     private void inCountryDataSetup() {
