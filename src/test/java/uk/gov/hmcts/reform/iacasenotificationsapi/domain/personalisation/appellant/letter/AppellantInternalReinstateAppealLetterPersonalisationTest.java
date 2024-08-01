@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -52,7 +54,7 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
     private String oocAddressLine1 = "Calle Toledo 32";
     private String oocAddressLine2 = "Madrid";
     private String oocAddressLine3 = "28003";
-    private Nationality oocAddressCountry = Nationality.ES;
+    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private String decisionMaker = "Legal Officer";
     private String reinstateReason = "Example reason";
     private String customerServicesTelephone = "555 555 555";
@@ -81,7 +83,8 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
-        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, Nationality.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
         when(asylumCase.read(AsylumCaseDefinition.REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.of(decisionMaker));
         when(asylumCase.read(AsylumCaseDefinition.REINSTATE_APPEAL_REASON, String.class)).thenReturn(Optional.of(reinstateReason));
 
@@ -175,7 +178,7 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
         assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
         assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
         assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(oocAddressCountry.toString(), personalisation.get("address_line_4"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
         assertEquals(LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("reinstateAppealDate"));
         assertEquals(decisionMaker, personalisation.get("decisionMaker"));
         assertEquals(reinstateReason, personalisation.get("reinstateReason"));

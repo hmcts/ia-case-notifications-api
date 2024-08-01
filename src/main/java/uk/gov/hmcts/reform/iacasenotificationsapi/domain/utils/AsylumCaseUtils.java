@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
@@ -265,9 +266,9 @@ public class AsylumCaseUtils {
             .read(ADDRESS_LINE_4_ADMIN_J, String.class)
             .orElse(null);
 
-        Nationality oocAddressCountry = asylumCase
-            .read(COUNTRY_OOC_ADMIN_J, Nationality.class)
-            .orElseThrow(() -> new IllegalStateException("OOC Address country is not present"));
+        Nationality  oocAddressCountry = Nationality.valueOf(asylumCase
+            .read(COUNTRY_OOC_ADMIN_J, NationalityFieldValue.class)
+            .orElseThrow(() -> new IllegalStateException("OOC Address country is not present")).getCode());
 
         if (oocAddressLine3 != null) {
             appellantAddressAsList.add(oocAddressLine3);
