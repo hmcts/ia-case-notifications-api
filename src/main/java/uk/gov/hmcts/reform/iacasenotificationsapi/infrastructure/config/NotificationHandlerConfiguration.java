@@ -5809,12 +5809,40 @@ public class NotificationHandlerConfiguration {
                 boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && !isSubmissionOutOfTime(asylumCase)
-                       && isPaymentPending
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                    && callback.getEvent() == Event.SUBMIT_APPEAL
+                    && isInternalCase(asylumCase)
+                    && !isAriaMigrated(asylumCase)
+                    && !isAppellantInDetention(asylumCase)
+                    && !isSubmissionOutOfTime(asylumCase)
+                    && isPaymentPending
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalProgressMigratedCaseWithFeeAppellantLetterNotificationHandler(
+        @Qualifier("internalProgressMigratedCaseWithFeeAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.PROGRESS_MIGRATED_CASE
+                    && isInternalCase(asylumCase)
+                    && isAriaMigrated(asylumCase)
+                    && !isAppellantInDetention(asylumCase)
+                    && !isSubmissionOutOfTime(asylumCase)
+                    && isPaymentPending
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
 
             },
             notificationGenerators,

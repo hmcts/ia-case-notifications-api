@@ -443,6 +443,8 @@ public enum AsylumCaseDefinition {
             "transferOutOfAdaReason", new TypeReference<String>(){}),
     IS_ADMIN(
         "isAdmin", new TypeReference<YesOrNo>() {}),
+    IS_ARIA_MIGRATED(
+        "isAriaMigrated", new TypeReference<YesOrNo>() {}),
     UT_APPEAL_REFERENCE_NUMBER(
         "utAppealReferenceNumber", new TypeReference<String>() {}),
     NOTIFICATION_ATTACHMENT_DOCUMENTS(
