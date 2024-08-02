@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J;
@@ -12,7 +13,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COUNTRY_ADMIN_J;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_DATE;
@@ -30,6 +30,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -73,7 +75,7 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
     private String oocAddressLine1 = "Calle Toledo 32";
     private String oocAddressLine2 = "Madrid";
     private String oocAddressLine3 = "28003";
-    private String oocAddressCountry = "Spain";
+    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private String hearingDateTime = "2019-08-27T14:25:15.000";
     private String hearingDate = "2019-08-27";
     private final String listCaseHearingCentre = HearingCentre.BIRMINGHAM.toString();
@@ -153,7 +155,7 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(oocAddressLine1, fieldValuesMap.get("address_line_1"));
         assertEquals(oocAddressLine2, fieldValuesMap.get("address_line_2"));
         assertEquals(oocAddressLine3, fieldValuesMap.get("address_line_3"));
-        assertEquals(oocAddressCountry, fieldValuesMap.get("address_line_4"));
+        assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_4"));
     }
 
     void dataSetupOoc() {
@@ -161,7 +163,8 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         when(asylumCase.read(ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
-        when(asylumCase.read(COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
     }
 
     @Test

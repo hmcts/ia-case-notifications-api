@@ -24,7 +24,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryAdminJ": "Spain"
+          "countryOocAdminJ": "ES"
         }
       }
     }
@@ -49,7 +49,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryAdminJ": "Spain",
+        "countryOocAdminJ": "ES",
           "notificationsSent": [
             {
               "id": "87192_INTERNAL_LATE_REMISSION_PARTIALLY_OR_GRANTED_APPELLANT_LETTER",

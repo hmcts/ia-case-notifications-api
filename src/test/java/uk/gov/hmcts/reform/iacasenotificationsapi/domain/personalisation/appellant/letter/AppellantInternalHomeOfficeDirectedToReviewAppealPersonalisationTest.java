@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
@@ -19,6 +20,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -62,7 +65,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     private String oocAddressLine1 = "Calle Toledo 32";
     private String oocAddressLine2 = "Madrid";
     private String oocAddressLine3 = "28003";
-    private String oocAddressCountry = "Spain";
+    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 
     @BeforeEach
@@ -89,7 +92,8 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
-        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
 
         appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation = new AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation(
             letterTemplateId,
@@ -171,8 +175,7 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
         assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
         assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(oocAddressCountry, personalisation.get("address_line_4"));
-        assertEquals(oocAddressCountry, personalisation.get("address_line_4"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));

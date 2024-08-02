@@ -23,7 +23,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryAdminJ": "Spain"
+          "countryOocAdminJ": "ES"
         }
       }
     }
@@ -46,7 +46,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryAdminJ": "Spain",
+        "countryOocAdminJ": "ES",
         "notificationsSent": [
           {
             "id": "9163_INTERNAL_SUBMIT_APPEAL_WITH_REMISSION_APPELLANT_LETTER",
