@@ -78,6 +78,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantRespondentReviewPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantReviewTimeExtensionGrantedPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantReviewTimeExtensionRefusedPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSendPaymentReminderPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealOutOfTimePersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitAppealPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantSubmitClarifyingQuestionAnswersPersonalisationEmail;
@@ -138,6 +139,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantRespondentReviewPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantReviewTimeExtensionGrantedPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantReviewTimeExtensionRefusedPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSendPaymentReminderPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealOutOfTimePersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitAppealPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantSubmitClarifyingQuestionAnswersPersonalisationSms;
@@ -6413,6 +6415,27 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("sendPaymentReminderInternalNotificationGenerator")
+    public List<NotificationGenerator> sendPaymentReminderInternalNotificationGenerator(
+        AppellantSendPaymentReminderPersonalisationEmail appellantSendPaymentReminderPersonalisationEmail,
+        AppellantSendPaymentReminderPersonalisationSms appellantSendPaymentReminderPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantSendPaymentReminderPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantSendPaymentReminderPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }
