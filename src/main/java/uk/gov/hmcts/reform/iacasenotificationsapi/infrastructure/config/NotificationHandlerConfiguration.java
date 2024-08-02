@@ -5253,6 +5253,45 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAppellantFtpaDecidedNotificationHandler(
+        @Qualifier("internalAppellantFtpaDecidedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                if (!callback.getEvent().equals(DECIDE_FTPA_APPLICATION)) {
+                    return false;
+                }
+
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isAppellantFtpaApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
+                    .map(applicantType -> APPELLANT == applicantType).orElse(false);
+
+                if (!isAppellantFtpaApplication) {
+                    return false;
+                }
+
+                Optional<FtpaDecisionOutcomeType> ftpaAppellantDecisionOutcomeType = asylumCase
+                    .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
+
+                if (ftpaAppellantDecisionOutcomeType.isEmpty()) {
+                    throw new RequiredFieldMissingException("FTPA decision not found");
+                }
+
+                if (List.of(FTPA_GRANTED, FTPA_PARTIALLY_GRANTED, FTPA_REFUSED, FTPA_REHEARD35).contains(ftpaAppellantDecisionOutcomeType.get())) {
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                        && isAppellantFtpaApplication
+                        && isInternalCase(asylumCase);
+                } else {
+                    return false;
+                }
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalUpdateHearingAdjustmentsNotificationHandler(
         @Qualifier("internalUpdateHearingAdjustmentsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 

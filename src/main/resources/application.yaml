@@ -636,6 +636,9 @@ govnotify:
     ftpaDecidedByResidentJudge:
       detentionEngagementTeam:
         email: e1bf96d6-505f-4fcc-bc90-12ad29065bb9
+    ftpaDecided:
+      detentionEngagementTeam:
+        email: 4b074680-e30c-4221-a28a-4279fb002a42
     respondentReview:
       legalRep:
         email: ed2d12f7-c5d0-40c1-a603-3a9f3dd1a95b
