@@ -1207,17 +1207,24 @@ public class NotificationGeneratorConfiguration {
         LegalRepresentativeEditListingNoChangePersonalisation legalRepresentativeEditListingNoChangePersonalisation,
         HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation,
         CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation,
+        AppellantEditListingPersonalisationEmail appellantEditListingPersonalisationEmail,
+        AppellantEditListingPersonalisationSms appellantEditListingPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         // RIA-3631 - editCaseListing
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ? newArrayList(homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation)
-            : newArrayList(legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation);
+            ? newArrayList(homeOfficeEditListingPersonalisation, legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, homeOfficeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation, appellantEditListingPersonalisationEmail)
+            : newArrayList(legalRepresentativeEditListingPersonalisation, legalRepresentativeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation, appellantEditListingPersonalisationEmail);
 
         return Arrays.asList(
             new EditListingEmailNotificationGenerator(
                 personalisations,
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantEditListingPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
