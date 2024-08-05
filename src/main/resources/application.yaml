@@ -163,6 +163,12 @@ govnotify:
           email: e1461a4c-9437-4ec9-8aae-dc3d1134e3b0
           sms: f84000c5-7ba0-4bd9-bb64-437f4b51b878
 
+    refundConfirmation:
+      legalRep:
+        inCountry:
+          email: 9059ed22-4845-4699-80c0-b7b2e0a4d414
+        ooc:
+          email: 9059ed22-4845-4699-80c0-b7b2e0a4d414
 
     decisionHomeOfficeNotificationFailed:
       caseOfficer:
