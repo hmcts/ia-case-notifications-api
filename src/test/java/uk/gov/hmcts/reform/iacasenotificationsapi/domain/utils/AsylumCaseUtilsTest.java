@@ -33,7 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
-
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
 
@@ -108,6 +107,18 @@ public class AsylumCaseUtilsTest {
     void isAdmin_should_return_false() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
         assertFalse(AsylumCaseUtils.isInternalCase(asylumCase));
+    }
+
+    @Test
+    void isAriaMigrated_should_return_true() {
+        when(asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(AsylumCaseUtils.isAriaMigrated(asylumCase));
+    }
+
+    @Test
+    void isAriaMigrated_should_return_false() {
+        when(asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class)).thenReturn(Optional.of(NO));
+        assertFalse(AsylumCaseUtils.isAriaMigrated(asylumCase));
     }
 
     @Test
@@ -350,5 +361,38 @@ public class AsylumCaseUtilsTest {
         assertEquals(generatedCode, generatedPinDetails.getAccessCode());
         assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());
         assertEquals(NO, generatedPinDetails.getPinUsed());
+    }
+
+    @Test
+    void submissionOutOfTime_should_return_true() {
+        when(asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(AsylumCaseUtils.isSubmissionOutOfTime(asylumCase));
+    }
+
+    @Test
+    void submissionOutOfTime_should_return_false() {
+        when(asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)).thenReturn(Optional.of(NO));
+        assertFalse(AsylumCaseUtils.isSubmissionOutOfTime(asylumCase));
+    }
+
+    @Test
+    void should_return_true_if_in_country_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_true_if_ooc_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_false_if_neither_in_country_nor_ooc_is_present() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 }
