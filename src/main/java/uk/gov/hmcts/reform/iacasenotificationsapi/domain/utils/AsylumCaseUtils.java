@@ -281,6 +281,67 @@ public class AsylumCaseUtils {
         return appellantAddressAsList;
     }
 
+    public static List<String> getLegalRepresentativeAddressAsList(final AsylumCase asylumCase) {
+        AddressUk address = asylumCase
+            .read(LEGAL_REP_ADDRESS_UK, AddressUk.class)
+            .orElseThrow(() -> new IllegalStateException("legalRepAddressUK is not present"));
+
+        List<String> legalRepAddressAsList = new ArrayList<>();
+
+        legalRepAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("legalRepAddress line 1 is not present")));
+        String addressLine2 = address.getAddressLine2().orElse(null);
+        String addressLine3 = address.getAddressLine3().orElse(null);
+
+        if (addressLine2 != null) {
+            legalRepAddressAsList.add(addressLine2);
+        }
+        if (addressLine3 != null) {
+            legalRepAddressAsList.add(addressLine3);
+        }
+        legalRepAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("legalRepAddress postTown is not present")));
+        legalRepAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("legalRepAddress postCode is not present")));
+
+        return legalRepAddressAsList;
+    }
+
+    public static List<String> getLegalRepresentativeAddressOocAsList(final AsylumCase asylumCase) {
+
+        String addressLine1 = asylumCase
+            .read(OOC_ADDRESS_LINE_1, String.class)
+            .orElseThrow(() -> new IllegalStateException("Ooc Legal Rep Address line 1 is not present"));
+
+        String addressLine2 = asylumCase
+            .read(OOC_ADDRESS_LINE_2, String.class)
+            .orElseThrow(() -> new IllegalStateException("Ooc Legal Rep Address line 2 is not present"));
+
+        List<String> legalRepAddressAsList = new ArrayList<>();
+
+        legalRepAddressAsList.add(addressLine1);
+        legalRepAddressAsList.add(addressLine2);
+
+        String addressLine3 = asylumCase
+            .read(OOC_ADDRESS_LINE_3, String.class)
+            .orElse(null);
+
+        String addressLine4 = asylumCase
+            .read(OOC_ADDRESS_LINE_4, String.class)
+            .orElse(null);
+
+        String  oocAddressCountry = asylumCase
+            .read(OOC_COUNTRY_LINE, String.class)
+            .orElseThrow(() -> new IllegalStateException("OOC Address country is not present"));
+
+        if (addressLine3 != null) {
+            legalRepAddressAsList.add(addressLine3);
+        }
+        if (addressLine4 != null) {
+            legalRepAddressAsList.add(addressLine4);
+        }
+        legalRepAddressAsList.add(oocAddressCountry);
+
+        return legalRepAddressAsList;
+    }
+
     public static String convertAsylumCaseFeeValue(String amountFromAsylumCase) {
         return StringUtils.isNotBlank(amountFromAsylumCase)
             ? new BigDecimal(String.valueOf(Double.parseDouble(amountFromAsylumCase) / 100))
@@ -316,9 +377,38 @@ public class AsylumCaseUtils {
                 .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
     }
 
+    public static Set<String> getLegalRepAddressInCountryOrOoc(final AsylumCase asylumCase) {
+        return inCountryAppeal(asylumCase) ? Collections.singleton(getLegalRepresentativeAddressAsList(asylumCase).stream()
+            .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_"))) :
+            Collections.singleton(getLegalRepresentativeAddressOocAsList(asylumCase).stream()
+                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+    }
+
     public static boolean isDecisionWithoutHearingAppeal(AsylumCase asylumCase) {
         return asylumCase.read(IS_DECISION_WITHOUT_HEARING, YesOrNo.class)
             .map(yesOrNo -> YES == yesOrNo).orElse(false);
+    }
+
+    public static boolean hasBeenSubmittedByAppellantInternalCase(AsylumCase asylumCase) {
+        return asylumCase.read(APPELLANTS_REPRESENTATION, String.class)
+            .map(yesOrNo -> YES.getId() == yesOrNo).orElse(false);
+    }
+
+    public static List<String> getAppellantOrLegalRepAddressLetterPersonalisation(AsylumCase asylumCase) {
+        boolean appellantRepresentation = hasBeenSubmittedByAppellantInternalCase(asylumCase);
+        List<String> address;
+        // Internal appellant no representation - use appellant address
+        if (appellantRepresentation) {
+            address =  inCountryAppeal(asylumCase) ?
+                getAppellantAddressAsList(asylumCase) :
+                getAppellantAddressAsListOoc(asylumCase);
+        // Internal appellant has representation - use legal rep address
+        } else {
+            address =  inCountryAppeal(asylumCase) ?
+                getLegalRepresentativeAddressAsList(asylumCase) :
+                getLegalRepresentativeAddressOocAsList(asylumCase);
+        }
+        return address;
     }
 
 }

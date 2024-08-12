@@ -5787,8 +5787,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && isRpOrDcAppealType
                        && !isAppellantInDetention(asylumCase)
-                       && !isSubmissionOutOfTime(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isSubmissionOutOfTime(asylumCase);
 
             },
             notificationGenerators,
