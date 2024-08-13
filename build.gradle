@@ -385,7 +385,6 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
 
-
     implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.8') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
     }
