@@ -511,6 +511,12 @@ public enum AsylumCaseDefinition {
 
     IS_LATE_REMISSION_REQUEST(
         "isLateRemissionRequest", new TypeReference<YesOrNo>(){}),
+
+    PREVIOUS_DECISION_HEARING_FEE_OPTION(
+        "previousDecisionHearingFeeOption", new TypeReference<String>(){}),
+
+    DECISION_HEARING_FEE_OPTION(
+        "decisionHearingFeeOption", new TypeReference<String>(){}),
     ;
 
 

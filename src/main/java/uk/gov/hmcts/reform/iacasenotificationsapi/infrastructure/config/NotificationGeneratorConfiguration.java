@@ -5437,4 +5437,21 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("legalRepRefundConfirmationPersonalisationEmailNotificationGenerator")
+    public List<NotificationGenerator> legalRepRefundConfirmationPersonalisationEmailNotificationGenerator(
+        LegalRepRefundConfirmationPersonalisation legalRepRefundConfirmationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepRefundConfirmationPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
