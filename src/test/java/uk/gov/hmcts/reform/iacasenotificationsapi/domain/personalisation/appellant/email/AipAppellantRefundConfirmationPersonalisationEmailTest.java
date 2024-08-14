@@ -29,7 +29,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 class AipAppellantRefundConfirmationPersonalisationEmailTest {
 
     private Long caseId = 12345L;
-    private String refundConfirmationTemplateId = "refundConfirmationTemplateId";
+    private String refundConfirmationInCountryTemplateId = "refundConfirmationInCountryTemplateId";
+    private String refundConfirmationOutOfCountryTemplateId = "refundConfirmationOutOfCountryTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String appealReferenceNumber = "appealReferenceNumber";
     private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
@@ -68,7 +69,8 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         aipAppellantRefundConfirmationPersonalisationEmail = new AipAppellantRefundConfirmationPersonalisationEmail(
-            refundConfirmationTemplateId,
+            refundConfirmationInCountryTemplateId,
+            refundConfirmationOutOfCountryTemplateId,
             iaAipFrontendUrl,
             daysAfterRemissionDecision,
             customerServicesProvider,
@@ -78,8 +80,12 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_approved_template_id() {
-        assertTrue(aipAppellantRefundConfirmationPersonalisationEmail.getTemplateId(asylumCase).contains(refundConfirmationTemplateId));
+    void should_return_correct_template_id_with_or_without_home_office_reference() {
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        assertTrue(aipAppellantRefundConfirmationPersonalisationEmail.getTemplateId(asylumCase).contains(refundConfirmationInCountryTemplateId));
+
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        assertTrue(aipAppellantRefundConfirmationPersonalisationEmail.getTemplateId(asylumCase).contains(refundConfirmationOutOfCountryTemplateId));
     }
 
     @Test

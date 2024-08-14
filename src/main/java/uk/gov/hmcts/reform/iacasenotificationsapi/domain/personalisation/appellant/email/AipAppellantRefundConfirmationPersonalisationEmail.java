@@ -20,7 +20,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @Service
 public class AipAppellantRefundConfirmationPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String aipAppellantRefundConfirmationTemplateId;
+    private final String aipAppellantRefundConfirmationInCountryTemplateId;
+    private final String aipAppellantRefundConfirmationOutOfCountryTemplateId;
     private final String iaAipFrontendUrl;
     private final int daysAfterNotificationSent;
     private final CustomerServicesProvider customerServicesProvider;
@@ -28,14 +29,16 @@ public class AipAppellantRefundConfirmationPersonalisationEmail implements Email
     private final SystemDateProvider systemDateProvider;
 
     public AipAppellantRefundConfirmationPersonalisationEmail(
-        @Value("${govnotify.template.refundConfirmation.appellant.email}") String aipAppellantRefundConfirmationTemplateId,
+        @Value("${govnotify.template.refundConfirmation.appellant.inCountry.email}") String aipAppellantRefundConfirmationInCountryTemplateId,
+        @Value("${govnotify.template.refundConfirmation.appellant.outOfCountry.email}") String aipAppellantRefundConfirmationOutOfCountryTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterNotificationSent}") int daysAfterNotificationSent,
         CustomerServicesProvider customerServicesProvider,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
-        this.aipAppellantRefundConfirmationTemplateId = aipAppellantRefundConfirmationTemplateId;
+        this.aipAppellantRefundConfirmationInCountryTemplateId = aipAppellantRefundConfirmationInCountryTemplateId;
+        this.aipAppellantRefundConfirmationOutOfCountryTemplateId = aipAppellantRefundConfirmationOutOfCountryTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysAfterNotificationSent = daysAfterNotificationSent;
         this.customerServicesProvider = customerServicesProvider;
@@ -50,7 +53,11 @@ public class AipAppellantRefundConfirmationPersonalisationEmail implements Email
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return aipAppellantRefundConfirmationTemplateId;
+        if (asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).isPresent()) {
+            return  aipAppellantRefundConfirmationInCountryTemplateId;
+        } else {
+            return  aipAppellantRefundConfirmationOutOfCountryTemplateId;
+        }
     }
 
     @Override

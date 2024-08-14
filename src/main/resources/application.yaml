@@ -1327,8 +1327,11 @@ govnotify:
       legalRep:
         email: 28b12dcc-d365-43be-a918-0b1fe654323e
       appellant:
-        email: df941fa9-e41a-4ab2-8c0f-7a7ec5d7d924
         sms: 0a039334-5604-4f8a-b38b-0c1df140cb9c
+        inCountry:
+          email: df941fa9-e41a-4ab2-8c0f-7a7ec5d7d924
+        outOfCountry:
+          email: 3a4ab356-65df-4afb-ac49-4993d88b9bd7
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
