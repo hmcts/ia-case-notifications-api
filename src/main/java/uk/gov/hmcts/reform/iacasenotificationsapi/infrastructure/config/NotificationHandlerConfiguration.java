@@ -5886,8 +5886,26 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REFUND_CONFIRMATION
-                    && !isAipJourney(asylumCase);
+                       && callback.getEvent() == Event.REFUND_CONFIRMATION
+                       && !isAipJourney(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipRefundConfirmationNotificationHandler(
+        @Qualifier("aipRefundConfirmationNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.REFUND_CONFIRMATION
+                       && isAipJourney(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
