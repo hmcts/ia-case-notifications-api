@@ -5454,4 +5454,25 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("aipRefundConfirmationNotificationGenerator")
+    public List<NotificationGenerator> aipRefundConfirmationNotificationGenerator(
+        AipAppellantRefundConfirmationPersonalisationEmail aipAppellantRefundConfirmationPersonalisationEmail,
+        AipAppellantRefundConfirmationPersonalisationSms aipAppellantRefundConfirmationPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(aipAppellantRefundConfirmationPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantRefundConfirmationPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
