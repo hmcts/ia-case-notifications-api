@@ -209,4 +209,14 @@ public class AsylumCaseUtils {
             .map(yesOrNo -> YES == yesOrNo).orElse(false);
     }
 
+    public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {
+        if ("decisionWithHearing".equals(decisionHearingFeeOption)) {
+            return "decision with hearing";
+        } else if ("decisionWithoutHearing".equals(decisionHearingFeeOption)) {
+            return "decision without hearing";
+        } else {
+            return "";
+        }
+    }
+
 }

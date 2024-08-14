@@ -108,8 +108,8 @@ class LegalRepRefundConfirmationPersonalisationTest {
         assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(withHearing, personalisation.get("previousDecisionHearingFeeOption"));
-        assertEquals(withoutHearing, personalisation.get("updatedDecisionHearingFeeOption"));
+        assertEquals("decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
+        assertEquals("decision without hearing", personalisation.get("updatedDecisionHearingFeeOption"));
         assertEquals("80.00", personalisation.get("newFee"));
         assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
