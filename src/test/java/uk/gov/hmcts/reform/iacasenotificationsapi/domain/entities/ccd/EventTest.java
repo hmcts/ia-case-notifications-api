@@ -164,10 +164,11 @@ public class EventTest {
         assertEquals("decideCostsApplication", DECIDE_COSTS_APPLICATION.toString());
         assertEquals("recordTheDecision", RECORD_THE_DECISION.toString());
         assertEquals("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString());
+        assertEquals("refundConfirmation", Event.REFUND_CONFIRMATION.toString());
     }
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(120, Event.values().length);
+        assertEquals(121, Event.values().length);
     }
 }
