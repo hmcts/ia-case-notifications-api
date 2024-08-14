@@ -211,9 +211,9 @@ public class AsylumCaseUtils {
 
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {
         if ("decisionWithHearing".equals(decisionHearingFeeOption)) {
-            return "decision with hearing";
+            return "Decision with hearing";
         } else if ("decisionWithoutHearing".equals(decisionHearingFeeOption)) {
-            return "decision without hearing";
+            return "Decision without hearing";
         } else {
             return "";
         }
