@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ad
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre.email.HearingCentreSubmitApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeForceCaseToHearingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.LegalRepresentativeBailChangeTribunalCentrePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal.UpperTribunalApplicationEndedImaPersonalisation;
@@ -540,36 +542,74 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
-    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep(
-        AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
-        BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+    @Bean("forceCaseToHearingNotificationGenerator")
+    public List<BailNotificationGenerator> forceCaseToHearingNotificationGenerator(
+            HomeOfficeForceCaseToHearingPersonalisation respondentForceCaseToHearingPersonalisation,
+            LegalRepresentativeForceCaseToHearingPersonalisation legalRepForceCaseToHearingPersonalisation,
+            BailGovNotifyNotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender
+    ) {
 
-        return List.of(
+        return Collections.singletonList(
+                new BailEmailNotificationGenerator(
+                        newArrayList(
+                                legalRepForceCaseToHearingPersonalisation,
+                                respondentForceCaseToHearingPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("forceCaseToHearingNotificationGeneratorWithoutLegalRep")
+    public List<BailNotificationGenerator> forceCaseToHearingNotificationGeneratorWithoutLegalRep(
+        HomeOfficeForceCaseToHearingPersonalisation respondentForceCaseToHearingPersonalisation,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
             new BailEmailNotificationGenerator(
-                newArrayList(adminOfficerBailChangeTribunalCentrePersonalisation),
+                newArrayList(
+                    respondentForceCaseToHearingPersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
             )
         );
     }
 
-    @Bean("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
-    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithLegalRep(
-        AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
-        LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation,
-        BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+    @Bean("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
+    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep(
+            AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
+            BailGovNotifyNotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
 
         return List.of(
-            new BailEmailNotificationGenerator(
-                newArrayList(
-                    adminOfficerBailChangeTribunalCentrePersonalisation,
-                    legalRepresentativeBailChangeTribunalCentrePersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
+                new BailEmailNotificationGenerator(
+                        newArrayList(adminOfficerBailChangeTribunalCentrePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
+    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithLegalRep(
+            AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
+            LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation,
+            BailGovNotifyNotificationSender notificationSender,
+            BailNotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new BailEmailNotificationGenerator(
+                        newArrayList(
+                                adminOfficerBailChangeTribunalCentrePersonalisation,
+                                legalRepresentativeBailChangeTribunalCentrePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 }
