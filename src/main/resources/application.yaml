@@ -1323,6 +1323,9 @@ govnotify:
         rejected:
           email: 50e2aede-5faf-4182-809c-f4736f54c2c0
           sms: 0c79aca1-c7ad-4ff3-8c65-455db50e3b5f
+    refundConfirmation:
+      legalRep:
+        email: 28b12dcc-d365-43be-a918-0b1fe654323e
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1610,6 +1613,7 @@ security:
       - "turnOnNotifications"
       - "caseListing"
       - "markAppealAsRemitted"
+      - "refundConfirmation"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
