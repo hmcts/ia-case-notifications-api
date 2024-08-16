@@ -4485,15 +4485,10 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
 
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
                 final String stitchStatus = getStitchStatus(callback);
 
-                return
-                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                    && callback.getCaseDetails().getState() == State.FTPA_DECIDED
-                    && stitchStatus.equalsIgnoreCase("FAILED");
+                log.info("Accessing the upperTribunalBundleFailedNotificationGenerator with stitch status " + stitchStatus);
+                return true;
             },
             notificationGenerators
         );
