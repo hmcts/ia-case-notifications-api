@@ -395,4 +395,18 @@ public class AsylumCaseUtilsTest {
         String feeDifference = AsylumCaseUtils.calculateFeeDifference(originalFeeTotal, newFeeTotal);
         assertEquals(expectedDifference, feeDifference);
     }
+
+    @Test
+    void should_return_true_rule_31_is_present() {
+        Mockito.when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class))
+            .thenReturn(Optional.of("underRule31"));
+        assertTrue(AsylumCaseUtils.isRule31ReasonUpdatingDecision(asylumCase));
+    }
+
+    @Test
+    void should_return_true_rule_32_is_present() {
+        Mockito.when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class))
+            .thenReturn(Optional.of("underRule32"));
+        assertTrue(AsylumCaseUtils.isRule32ReasonUpdatingDecision(asylumCase));
+    }
 }

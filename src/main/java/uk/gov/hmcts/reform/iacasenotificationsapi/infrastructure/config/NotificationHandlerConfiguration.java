@@ -6503,6 +6503,23 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedupdateTribunalDecisionNotificationHandler(
+        @Qualifier("updateTribunalDecisionInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callback.getEvent() == UPDATE_TRIBUNAL_DECISION
+                       && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && isInternalCase(asylumCase)
+                       && isAppellantInDetention(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
@@ -6532,18 +6549,6 @@ public class NotificationHandlerConfiguration {
         return ftpaDecisionOutcomeType
             .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString()))
             .orElse(false);
-    }
-
-    private boolean isRule31ReasonUpdatingDecision(AsylumCase asylumCase) {
-
-        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
-            .map(reason -> reason.equals("underRule31")).orElse(false);
-    }
-
-    private boolean isRule32ReasonUpdatingDecision(AsylumCase asylumCase) {
-
-        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
-            .map(reason -> reason.equals("underRule32")).orElse(false);
     }
 
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
