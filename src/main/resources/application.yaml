@@ -1332,6 +1332,11 @@ govnotify:
         appellant:
           email: 7baedad6-6aeb-45b5-ae00-420ff2b80bba
           sms: 5ad1fc01-101a-4dbc-84d1-191cc6b715f5
+      detentionEngagementTeam:
+        decisionAndReasonsUpdated:
+          email: e15e0225-9405-48c5-93b8-83c6c9dda21b
+        decisionAndReasonsNotUpdated:
+          email: e8b19b1e-8ccf-43c1-bcfa-a31e1c24a0ff
     markAppealAsRemitted:
       legalRep:
         email: 0e8e1bc7-feea-4b7d-9cd8-09606ca0bcf9
