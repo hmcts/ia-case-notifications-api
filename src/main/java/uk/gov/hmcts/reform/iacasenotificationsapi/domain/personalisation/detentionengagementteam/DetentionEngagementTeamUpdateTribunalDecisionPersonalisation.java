@@ -59,10 +59,10 @@ public class DetentionEngagementTeamUpdateTribunalDecisionPersonalisation implem
 
         boolean newDecisionAndReasonsUploadCheck = asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class).map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
 
-        if(newDecisionAndReasonsUploadCheck) {
-            return  internalDetainedUpdateTribunalDecisionTemplateId;
+        if (newDecisionAndReasonsUploadCheck) {
+            return internalDetainedUpdateTribunalDecisionTemplateId;
         } else {
-            return  internalDetainedUpdateTribunalDecisionWithoutDecisionAndReasonsTemplateId;
+            return internalDetainedUpdateTribunalDecisionWithoutDecisionAndReasonsTemplateId;
         }
     }
 
