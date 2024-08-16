@@ -4479,6 +4479,10 @@ public class NotificationHandlerConfiguration {
 
                 final String stitchStatus = getStitchStatus(callback);
 
+                log.info("Entering notification handler config with values: event "
+                        + callback.getEvent() + "and state " + callback.getCaseDetails().getState()
+                        + " stitch status " + stitchStatus);
+
                 return
                     callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
