@@ -1743,16 +1743,7 @@ public class NotificationHandlerConfiguration {
     }
 
     private String getStitchStatus(Callback<AsylumCase> callback) {
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        Optional<List<IdValue<Bundle>>> maybeCaseBundles = asylumCase.read(AsylumCaseDefinition.CASE_BUNDLES);
-
-        final List<Bundle> caseBundles = maybeCaseBundles.isPresent() ? maybeCaseBundles.get()
-            .stream()
-            .map(IdValue::getValue)
-            .collect(Collectors.toList()) : Collections.emptyList();
-
-        return caseBundles.isEmpty() ? "" : caseBundles.get(0).getStitchStatus().orElse("");
+        return "FAILED";
     }
 
     @Bean
@@ -4485,10 +4476,15 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
 
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
                 final String stitchStatus = getStitchStatus(callback);
 
-                log.info("Accessing the upperTribunalBundleFailedNotificationGenerator with stitch status " + stitchStatus);
-                return true;
+                return
+                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                    && callback.getCaseDetails().getState() == State.FTPA_DECIDED
+                    && stitchStatus.equalsIgnoreCase("FAILED");
             },
             notificationGenerators
         );
