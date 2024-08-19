@@ -139,6 +139,34 @@ public class HearingDetailsFinder {
         boolean isRemote = Stream.of("remoteHearing", "decisionWithoutHearing").anyMatch(listCaseHearingCentre.getValue()::equalsIgnoreCase);
         return listCaseHearingCentre.getDescription() + (isRemote ? "" : "\n" + hearingCentreAddress);
     }
+  
+    private boolean isCaseUsingLocationRefData(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)
+            .map(yesOrNo -> yesOrNo.equals(YES))
+            .orElse(false);
+    }
+
+    public String getListingLocationAddressFromRefDataOrCcd(BailCase bailCase) {
+        String hearingLocationAddress = getBailHearingCentreAddress(bailCase);
+        YesOrNo isBailsLocationRefDataEnabled = bailCase.read(IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED, YesOrNo.class)
+                .orElse(NO);
+
+        if (isBailsLocationRefDataEnabled == YES) {
+            if (bailCase.read(IS_REMOTE_HEARING, YesOrNo.class).orElse(NO) == YES) {
+                return REMOTE_HEARING_LOCATION;
+            } else {
+                Optional<CourtVenue> refDataListingLocationDetail = bailCase.read(REF_DATA_LISTING_LOCATION_DETAIL, CourtVenue.class);
+
+                if (refDataListingLocationDetail.isPresent()) {
+                    hearingLocationAddress = (refDataListingLocationDetail.get().getCourtName() + ", " +
+                            refDataListingLocationDetail.get().getCourtAddress() + ", " +
+                            refDataListingLocationDetail.get().getPostcode());
+
+                }
+            }
+        }
+        return hearingLocationAddress;
+    }
 
     private boolean isCaseUsingLocationRefData(AsylumCase asylumCase) {
         return asylumCase.read(AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)
