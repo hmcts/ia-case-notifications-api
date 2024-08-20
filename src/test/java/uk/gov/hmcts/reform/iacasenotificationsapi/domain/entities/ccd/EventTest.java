@@ -1,49 +1,20 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.ADA_SUITABILITY_REVIEW;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.ADD_EVIDENCE_FOR_COSTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.APPLY_FOR_COSTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CASE_LISTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CHANGE_BAIL_DIRECTION_DUE_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CONSIDER_MAKING_COSTS_ORDER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CREATE_BAIL_CASE_LINK;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CUSTOMISE_HEARING_BUNDLE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECIDE_COSTS_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_APPLICATION_AFTER_SUBMIT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_DOCUMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_PAYMENT_METHOD;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL_AUTOMATICALLY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MAKE_NEW_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MANAGE_FEE_UPDATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MARK_APPEAL_AS_ADA;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MARK_AS_READY_FOR_UT_TRANSFER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.NOC_REQUEST_BAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_THE_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REINSTATE_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_LEGAL_REPRESENTATIVE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_REPRESENTATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_FEE_REMISSION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESPOND_TO_COSTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_BAIL_DIRECTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.STOP_LEGAL_REPRESENTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SUBMIT_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.TRANSFER_OUT_OF_ADA;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.TURN_ON_NOTIFICATIONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPDATE_DETENTION_LOCATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPDATE_HEARING_ADJUSTMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPDATE_PAYMENT_STATUS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_BAIL_SUMMARY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_DOCUMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_SIGNED_DECISION_NOTICE;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 public class EventTest {
+
+    @ParameterizedTest
+    @EnumSource(value = Event.class, names = { "APPLY_FOR_FTPA_APPELLANT", "APPLY_FOR_FTPA_RESPONDENT" }, mode = EXCLUDE)
+    public void has_correct_values(Event event) {
+        assertEquals(convertToCamelCase(event.name()), event.toString());
+    }
 
     @Test
     public void has_correct_values() {
@@ -163,12 +134,30 @@ public class EventTest {
         assertEquals("considerMakingCostsOrder", CONSIDER_MAKING_COSTS_ORDER.toString());
         assertEquals("decideCostsApplication", DECIDE_COSTS_APPLICATION.toString());
         assertEquals("recordTheDecision", RECORD_THE_DECISION.toString());
+        assertEquals("changeTribunalCentre", CHANGE_TRIBUNAL_CENTRE.toString());
         assertEquals("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString());
         assertEquals("refundConfirmation", Event.REFUND_CONFIRMATION.toString());
     }
 
     @Test
+    public void exclusions_have_correct_values() {
+        assertEquals("applyForFTPAAppellant", APPLY_FOR_FTPA_APPELLANT.toString());
+        assertEquals("applyForFTPARespondent", APPLY_FOR_FTPA_RESPONDENT.toString());
+    }
+
+    private static String convertToCamelCase(String snakeCase) {
+        String[] words = snakeCase.split("_");
+        StringBuilder camelCase = new StringBuilder();
+        camelCase.append(words[0].toLowerCase());
+        for (int i = 1; i < words.length; i++) {
+            camelCase.append(words[i].substring(0, 1).toUpperCase());
+            camelCase.append(words[i].substring(1).toLowerCase());
+        }
+        return camelCase.toString();
+    }
+
+    @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(121, Event.values().length);
+        assertEquals(123, Event.values().length);
     }
 }
