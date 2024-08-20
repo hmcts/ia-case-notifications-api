@@ -130,9 +130,9 @@ public class NotificationGeneratorTest {
         when(smsNotificationPersonalisation1.getPersonalisation(callback)).thenReturn(personalizationMap1);
         when(smsNotificationPersonalisation2.getPersonalisation(callback)).thenReturn(personalizationMap2);
 
-        when(notificationSender.sendSms(templateId1, phoneNumber1, personalizationMap1, refId1))
+        when(notificationSender.sendSms(templateId1, phoneNumber1, personalizationMap1, refId1, callback))
             .thenReturn(notificationId1);
-        when(notificationSender.sendSms(templateId2, phoneNumber2, personalizationMap2, refId2))
+        when(notificationSender.sendSms(templateId2, phoneNumber2, personalizationMap2, refId2, callback))
             .thenReturn(notificationId2);
 
         when(notificationIdAppender.append(notificationsSent, refId1, notificationId1)).thenReturn(notificationsSent);
@@ -206,8 +206,8 @@ public class NotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1);
-        verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2);
+        verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1, callback);
+        verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2, callback);
 
         verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);

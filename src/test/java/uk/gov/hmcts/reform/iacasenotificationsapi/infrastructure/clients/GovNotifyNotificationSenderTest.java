@@ -9,11 +9,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Map;
 import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -27,8 +30,11 @@ public class GovNotifyNotificationSenderTest {
     @Mock
     private RetryableNotificationClient notificationClient;
 
-    @Mock private NotificationSenderHelper senderHelper;
+    @Mock
+    private NotificationSenderHelper<AsylumCase> senderHelper;
 
+    @Mock
+    private Callback<AsylumCase> callback;
     private String templateId = "a-b-c-d-e-f";
     private String emailAddress = "recipient@example.com";
     private String phoneNumber = "07123456789";
@@ -54,13 +60,13 @@ public class GovNotifyNotificationSenderTest {
         final UUID expectedNotificationId = UUID.randomUUID();
 
         when(senderHelper.sendEmail(
-                templateId,
-                emailAddress,
-                personalisation,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
@@ -72,13 +78,13 @@ public class GovNotifyNotificationSenderTest {
             );
 
         verify(senderHelper, times(1)).sendEmail(
-                templateId,
-                emailAddress,
-                personalisation,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);
@@ -90,13 +96,14 @@ public class GovNotifyNotificationSenderTest {
         final UUID expectedNotificationId = UUID.randomUUID();
 
         when(senderHelper.sendSms(
-                templateId,
-                phoneNumber,
-                personalisation,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+            templateId,
+            phoneNumber,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG,
+            callback
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
@@ -104,17 +111,19 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 phoneNumber,
                 personalisation,
-                reference
+                reference,
+                callback
             );
 
         verify(senderHelper, times(1)).sendSms(
-                templateId,
-                phoneNumber,
-                personalisation,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+            templateId,
+            phoneNumber,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG,
+            callback
         );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);
@@ -126,31 +135,31 @@ public class GovNotifyNotificationSenderTest {
         final UUID expectedNotificationId = UUID.randomUUID();
 
         when(senderHelper.sendEmailWithLink(
-                templateId,
-                emailAddress,
-                personalisationWithLink,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+            templateId,
+            emailAddress,
+            personalisationWithLink,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
-                govNotifyNotificationSender.sendEmailWithLink(
-                        templateId,
-                        emailAddress,
-                        personalisationWithLink,
-                        reference
-                );
-
-        verify(senderHelper, times(1)).sendEmailWithLink(
+            govNotifyNotificationSender.sendEmailWithLink(
                 templateId,
                 emailAddress,
                 personalisationWithLink,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+                reference
+            );
+
+        verify(senderHelper, times(1)).sendEmailWithLink(
+            templateId,
+            emailAddress,
+            personalisationWithLink,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);

@@ -7,13 +7,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.StoredNotification;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.NotificationServiceResponseException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -22,12 +29,15 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +48,10 @@ public class NotificationSenderHelperTest {
 
     @Mock
     private RetryableNotificationClient notificationClient;
+    @Mock private Callback<AsylumCase> asylumCallback;
+    @Mock private CaseDetails<AsylumCase> asylumCaseDetails;
+    @Mock private AsylumCase asylumCase;
+    @Mock private StoredNotification storedNotificationMock;
 
     private NotificationSenderHelper senderHelper = new NotificationSenderHelper();
 
@@ -215,7 +229,8 @@ public class NotificationSenderHelperTest {
                         reference,
                         notificationClient,
                         deduplicateSendsWithinSeconds,
-                        LOG
+                        LOG,
+                    asylumCallback
                 );
 
         final String actualNotificationId2 =
@@ -226,7 +241,8 @@ public class NotificationSenderHelperTest {
                         reference,
                         notificationClient,
                         deduplicateSendsWithinSeconds,
-                        LOG
+                        LOG,
+                    asylumCallback
                 );
 
         final String actualNotificationIdForOther =
@@ -237,7 +253,8 @@ public class NotificationSenderHelperTest {
                         otherReference,
                         notificationClient,
                         deduplicateSendsWithinSeconds,
-                        LOG
+                        LOG,
+                    asylumCallback
                 );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -258,7 +275,8 @@ public class NotificationSenderHelperTest {
                         reference,
                         notificationClient,
                         deduplicateSendsWithinSeconds,
-                        LOG
+                        LOG,
+                    asylumCallback
                 );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -280,8 +298,12 @@ public class NotificationSenderHelperTest {
 
     @Test
     public void wrap_gov_notify_sms_exceptions() throws NotificationClientException {
+        when(asylumCallback.getCaseDetails()).thenReturn(asylumCaseDetails);
+        when(asylumCaseDetails.getCaseData()).thenReturn(asylumCase);
+        List<IdValue<StoredNotification>> someList = List.of(new IdValue<>("some-id", storedNotificationMock));
+        when(asylumCase.read(NOTIFICATIONS)).thenReturn(Optional.of(someList));
         NotificationClientException underlyingException = mock(NotificationClientException.class);
-
+        when(underlyingException.getMessage()).thenReturn("some-error-message");
         doThrow(underlyingException)
             .when(notificationClient)
             .sendSms(
@@ -298,12 +320,13 @@ public class NotificationSenderHelperTest {
             reference,
             notificationClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            asylumCallback
         );
 
         assertNotNull(actualNotificationId);
         assertTrue(actualNotificationId.isEmpty());
-
+        verify(asylumCase).write(eq(NOTIFICATIONS), anyList());
     }
 
     @Test

@@ -509,7 +509,8 @@ public enum AsylumCaseDefinition {
     IS_REMOTE_HEARING(
         "isRemoteHearing", new TypeReference<YesOrNo>(){}),
 
-    IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){});
+    IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){}),
+    NOTIFICATIONS("notifications", new TypeReference<List<IdValue<StoredNotification>>>(){});
 
 
     private final String value;
