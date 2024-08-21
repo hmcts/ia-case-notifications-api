@@ -3713,16 +3713,14 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PostSubmitCallbackHandler<AsylumCase> removeRepresentativeAppellantSmsNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> removeRepresentativeAppellantSmsNotificationHandler(
         @Qualifier("removeRepresentativeAppellantSmsNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
-        return new PostSubmitNotificationHandler(
-            (callbackStage, callback) -> {
-                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                       && callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE
-                       && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent();
-            },
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE
+                && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent(),
             notificationGenerators
         );
     }
