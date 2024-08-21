@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isEjpCase;
 
@@ -150,7 +151,7 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
                 .put("companyName", hasNoc ? "" : asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse(""))
                 .put("companyAddress", hasNoc ? "" : companyAddress)
                 .put("legalRepName", hasNoc ? "" : legalRepName)
-                .put("legalRepEmail", hasNoc ? "" : asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse(""))
+                .put("legalRepEmail", hasNoc ? "" : getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase))
                 .put("legalRepReference", hasNoc ? "" : asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .build();
     }
