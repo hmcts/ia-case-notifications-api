@@ -557,7 +557,14 @@ public enum AsylumCaseDefinition {
         "ftpaAppellantDecisionRemadeRule32Text", new TypeReference<String>(){}),
 
     FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT(
-        "ftpaRespondentDecisionRemadeRule32Text", new TypeReference<String>(){});
+        "ftpaRespondentDecisionRemadeRule32Text", new TypeReference<String>(){}),
+
+    //Paper journey legal representative email
+    LEGAL_REP_EMAIL(
+        "legalRepEmail", new TypeReference<String>(){}),
+
+    APPELANTS_REPRESENTATION(
+        "appelantsRepresentation", new TypeReference<YesOrNo>(){});
 
     private final String value;
     private final TypeReference typeReference;

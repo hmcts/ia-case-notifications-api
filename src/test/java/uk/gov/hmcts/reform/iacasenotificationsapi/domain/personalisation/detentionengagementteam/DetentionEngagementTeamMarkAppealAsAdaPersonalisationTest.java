@@ -46,7 +46,6 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     AsylumCase asylumCase;
     private final String templateId = "someTemplateId";
     private final String adaPrefix = "Accelerated detained appeal";
-    private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -68,7 +67,6 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
         appelantInfo.put("appealReferenceNumber", appealReferenceNumber);
 
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(markAsAdaLetterJsonDocument);
 
         List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
