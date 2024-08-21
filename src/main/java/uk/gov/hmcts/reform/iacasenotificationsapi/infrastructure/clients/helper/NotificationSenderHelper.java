@@ -1,7 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -28,6 +31,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS;
 
+@Slf4j
 @Component
 public class NotificationSenderHelper<T extends CaseData> {
 
@@ -147,14 +151,17 @@ public class NotificationSenderHelper<T extends CaseData> {
 
                     } catch (NotificationClientException e) {
                         logger.error("Failed to send sms using GovNotify for case reference {}", reference, e);
-                        String errorMessage = e.getMessage();
                         AsylumCase asylumCase = (AsylumCase) callback.getCaseDetails().getCaseData();
                         Optional<List<IdValue<StoredNotification>>> maybeExistingNotifications =
                             asylumCase.read(NOTIFICATIONS);
                         List<IdValue<StoredNotification>> allNotifications = maybeExistingNotifications.orElse(emptyList());
+
+                        String errorMessage = e.getMessage();
                         StoredNotification storedNotification = getFailedNotification(errorMessage, reference,
                             "sms", phoneNumber);
                         allNotifications = append(storedNotification, allNotifications);
+
+
                         asylumCase.write(NOTIFICATIONS, allNotifications);
                     }
                     return Strings.EMPTY;
@@ -179,16 +186,17 @@ public class NotificationSenderHelper<T extends CaseData> {
         ZonedDateTime zonedSentAt = ZonedDateTime.now()
             .withZoneSameInstant(ZoneId.of("Europe/London"));
         String sentAt = zonedSentAt.toLocalDateTime().toString();
-        String subject = "N/A";
+        List<String> errorMessages = extractErrorMessages(errorMessage);
         return StoredNotification.builder()
             .notificationId("N/A")
             .notificationDateSent(sentAt)
             .notificationSentTo(sentTo)
-            .notificationBody(errorMessage)
+            .notificationBody("N/A")
             .notificationMethod(method)
             .notificationStatus("Failed")
             .notificationReference(reference)
-            .notificationSubject(subject)
+            .notificationSubject(reference)
+            .notificationErrorMessage(String.join("; ", errorMessages))
             .build();
     }
 
@@ -214,5 +222,26 @@ public class NotificationSenderHelper<T extends CaseData> {
         }
 
         return allItems;
+    }
+
+    public static List<String> extractErrorMessages(String exceptionMessage) {
+        List<String> messages = new ArrayList<>();
+        try {
+            String jsonPart = exceptionMessage.substring(exceptionMessage.indexOf("{"));
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(jsonPart);
+
+            JsonNode errorsNode = rootNode.path("errors");
+            if (errorsNode.isArray()) {
+                for (JsonNode errorNode : errorsNode) {
+                    String message = errorNode.path("message").asText();
+                    messages.add(message);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Extracting error messages failed: " + e.getMessage());
+        }
+        return messages;
     }
 }

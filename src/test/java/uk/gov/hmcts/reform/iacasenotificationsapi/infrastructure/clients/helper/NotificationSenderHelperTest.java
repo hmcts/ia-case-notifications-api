@@ -48,12 +48,16 @@ public class NotificationSenderHelperTest {
 
     @Mock
     private RetryableNotificationClient notificationClient;
-    @Mock private Callback<AsylumCase> asylumCallback;
-    @Mock private CaseDetails<AsylumCase> asylumCaseDetails;
-    @Mock private AsylumCase asylumCase;
-    @Mock private StoredNotification storedNotificationMock;
+    @Mock
+    private Callback<AsylumCase> asylumCallback;
+    @Mock
+    private CaseDetails<AsylumCase> asylumCaseDetails;
+    @Mock
+    private AsylumCase asylumCase;
+    @Mock
+    private StoredNotification storedNotificationMock;
 
-    private NotificationSenderHelper senderHelper = new NotificationSenderHelper();
+    private NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<AsylumCase>();
 
     private int deduplicateSendsWithinSeconds = 1;
     private String templateId = "a-b-c-d-e-f";
@@ -76,54 +80,54 @@ public class NotificationSenderHelperTest {
         SendEmailResponse sendEmailResponseForOther = mock(SendEmailResponse.class);
 
         when(notificationClient.sendEmail(
-                templateId,
-                emailAddress,
-                personalisation,
-                reference
+            templateId,
+            emailAddress,
+            personalisation,
+            reference
         )).thenReturn(sendEmailResponse);
 
         when(notificationClient.sendEmail(
-                templateId,
-                otherEmailAddress,
-                personalisation,
-                otherReference
+            templateId,
+            otherEmailAddress,
+            personalisation,
+            otherReference
         )).thenReturn(sendEmailResponseForOther);
 
         when(sendEmailResponse.getNotificationId()).thenReturn(expectedNotificationId);
         when(sendEmailResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
 
         final String actualNotificationId1 =
-                senderHelper.sendEmail(
-                        templateId,
-                        emailAddress,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
         final String actualNotificationId2 =
-                senderHelper.sendEmail(
-                        templateId,
-                        emailAddress,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
         final String actualNotificationIdForOther =
-                senderHelper.sendEmail(
-                        templateId,
-                        otherEmailAddress,
-                        personalisation,
-                        otherReference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmail(
+                templateId,
+                otherEmailAddress,
+                personalisation,
+                otherReference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -137,30 +141,30 @@ public class NotificationSenderHelperTest {
         }
 
         final String actualNotificationId3 =
-                senderHelper.sendEmail(
-                        templateId,
-                        emailAddress,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmail(
+                templateId,
+                emailAddress,
+                personalisation,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
 
         verify(notificationClient, times(2)).sendEmail(
-                templateId,
-                emailAddress,
-                personalisation,
-                reference
+            templateId,
+            emailAddress,
+            personalisation,
+            reference
         );
 
         verify(notificationClient, times(1)).sendEmail(
-                templateId,
-                otherEmailAddress,
-                personalisation,
-                otherReference
+            templateId,
+            otherEmailAddress,
+            personalisation,
+            otherReference
         );
     }
 
@@ -172,20 +176,20 @@ public class NotificationSenderHelperTest {
         doThrow(underlyingException)
             .when(notificationClient)
             .sendEmail(
-                    templateId,
-                    emailAddress,
-                    personalisation,
-                    reference
-            );
-
-        String actualNotificationId = senderHelper.sendEmail(
                 templateId,
                 emailAddress,
                 personalisation,
-                reference,
-                notificationClient,
-                deduplicateSendsWithinSeconds,
-                LOG
+                reference
+            );
+
+        String actualNotificationId = senderHelper.sendEmail(
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         );
 
         assertNotNull(actualNotificationId);
@@ -205,57 +209,57 @@ public class NotificationSenderHelperTest {
         SendSmsResponse sendSmsResponseForOther = mock(SendSmsResponse.class);
 
         when(notificationClient.sendSms(
-                templateId,
-                phoneNumber,
-                personalisation,
-                reference
+            templateId,
+            phoneNumber,
+            personalisation,
+            reference
         )).thenReturn(sendSmsResponse);
 
         when(notificationClient.sendSms(
-                templateId,
-                otherPhoneNumber,
-                personalisation,
-                otherReference
+            templateId,
+            otherPhoneNumber,
+            personalisation,
+            otherReference
         )).thenReturn(sendSmsResponseForOther);
 
         when(sendSmsResponse.getNotificationId()).thenReturn(expectedNotificationId);
         when(sendSmsResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
 
         final String actualNotificationId1 =
-                senderHelper.sendSms(
-                        templateId,
-                        phoneNumber,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG,
-                    asylumCallback
-                );
+            senderHelper.sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG,
+                asylumCallback
+            );
 
         final String actualNotificationId2 =
-                senderHelper.sendSms(
-                        templateId,
-                        phoneNumber,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG,
-                    asylumCallback
-                );
+            senderHelper.sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG,
+                asylumCallback
+            );
 
         final String actualNotificationIdForOther =
-                senderHelper.sendSms(
-                        templateId,
-                        otherPhoneNumber,
-                        personalisation,
-                        otherReference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG,
-                    asylumCallback
-                );
+            senderHelper.sendSms(
+                templateId,
+                otherPhoneNumber,
+                personalisation,
+                otherReference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG,
+                asylumCallback
+            );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
         assertEquals(expectedNotificationId.toString(), actualNotificationId2);
@@ -268,31 +272,31 @@ public class NotificationSenderHelperTest {
         }
 
         final String actualNotificationId3 =
-                senderHelper.sendSms(
-                        templateId,
-                        phoneNumber,
-                        personalisation,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG,
-                    asylumCallback
-                );
+            senderHelper.sendSms(
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG,
+                asylumCallback
+            );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
 
         verify(notificationClient, times(2)).sendSms(
-                templateId,
-                phoneNumber,
-                personalisation,
-                reference
+            templateId,
+            phoneNumber,
+            personalisation,
+            reference
         );
 
         verify(notificationClient, times(1)).sendSms(
-                templateId,
-                otherPhoneNumber,
-                personalisation,
-                otherReference
+            templateId,
+            otherPhoneNumber,
+            personalisation,
+            otherReference
         );
     }
 
@@ -307,10 +311,10 @@ public class NotificationSenderHelperTest {
         doThrow(underlyingException)
             .when(notificationClient)
             .sendSms(
-                    templateId,
-                    phoneNumber,
-                    personalisation,
-                    reference
+                templateId,
+                phoneNumber,
+                personalisation,
+                reference
             );
 
         String actualNotificationId = senderHelper.sendSms(
@@ -342,54 +346,54 @@ public class NotificationSenderHelperTest {
         SendEmailResponse sendEmailResponseForOther = mock(SendEmailResponse.class);
 
         when(notificationClient.sendEmail(
-                templateId,
-                emailAddress,
-                personalisationWithLink,
-                reference
+            templateId,
+            emailAddress,
+            personalisationWithLink,
+            reference
         )).thenReturn(sendEmailResponse);
 
         when(notificationClient.sendEmail(
-                templateId,
-                otherEmailAddress,
-                personalisationWithLink,
-                otherReference
+            templateId,
+            otherEmailAddress,
+            personalisationWithLink,
+            otherReference
         )).thenReturn(sendEmailResponseForOther);
 
         when(sendEmailResponse.getNotificationId()).thenReturn(expectedNotificationId);
         when(sendEmailResponseForOther.getNotificationId()).thenReturn(expectedNotificationIdForOther);
 
         final String actualNotificationId1 =
-                senderHelper.sendEmailWithLink(
-                        templateId,
-                        emailAddress,
-                        personalisationWithLink,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmailWithLink(
+                templateId,
+                emailAddress,
+                personalisationWithLink,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
         final String actualNotificationId2 =
-                senderHelper.sendEmailWithLink(
-                        templateId,
-                        emailAddress,
-                        personalisationWithLink,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmailWithLink(
+                templateId,
+                emailAddress,
+                personalisationWithLink,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
         final String actualNotificationIdForOther =
-                senderHelper.sendEmailWithLink(
-                        templateId,
-                        otherEmailAddress,
-                        personalisationWithLink,
-                        otherReference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmailWithLink(
+                templateId,
+                otherEmailAddress,
+                personalisationWithLink,
+                otherReference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId1);
@@ -403,30 +407,30 @@ public class NotificationSenderHelperTest {
         }
 
         final String actualNotificationId3 =
-                senderHelper.sendEmailWithLink(
-                        templateId,
-                        emailAddress,
-                        personalisationWithLink,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                );
+            senderHelper.sendEmailWithLink(
+                templateId,
+                emailAddress,
+                personalisationWithLink,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
 
         verify(notificationClient, times(2)).sendEmail(
-                templateId,
-                emailAddress,
-                personalisationWithLink,
-                reference
+            templateId,
+            emailAddress,
+            personalisationWithLink,
+            reference
         );
 
         verify(notificationClient, times(1)).sendEmail(
-                templateId,
-                otherEmailAddress,
-                personalisationWithLink,
-                otherReference
+            templateId,
+            otherEmailAddress,
+            personalisationWithLink,
+            otherReference
         );
     }
 
@@ -436,27 +440,101 @@ public class NotificationSenderHelperTest {
         NotificationClientException underlyingException = mock(NotificationClientException.class);
 
         doThrow(underlyingException)
-                .when(notificationClient)
-                .sendEmail(
-                        templateId,
-                        emailAddress,
-                        personalisationWithLink,
-                        reference);
+            .when(notificationClient)
+            .sendEmail(
+                templateId,
+                emailAddress,
+                personalisationWithLink,
+                reference);
 
         assertThatThrownBy(() ->
-                senderHelper.sendEmailWithLink(
-                        templateId,
-                        emailAddress,
-                        personalisationWithLink,
-                        reference,
-                        notificationClient,
-                        deduplicateSendsWithinSeconds,
-                        LOG
-                )
+            senderHelper.sendEmailWithLink(
+                templateId,
+                emailAddress,
+                personalisationWithLink,
+                reference,
+                notificationClient,
+                deduplicateSendsWithinSeconds,
+                LOG
+            )
         ).isExactlyInstanceOf(NotificationServiceResponseException.class)
-                .hasMessage("Failed to send email using GovNotify")
-                .hasCause(underlyingException);
+            .hasMessage("Failed to send email using GovNotify")
+            .hasCause(underlyingException);
 
     }
 
+    @Test
+    void testExtractErrorMessages_ValidInput() {
+        String exceptionMessage = "Status code: 400 {\"errors\":[{\"error\":\"InvalidPhoneError\",\"message\":\"Not a UK mobile number\"}],\"status_code\":400}";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Not a UK mobile number", result.get(0));
+    }
+
+    @Test
+    void testExtractErrorMessages_MultipleErrors() {
+        String exceptionMessage = "Status code: 400 {\"errors\":[{\"error\":\"InvalidPhoneError\",\"message\":\"Not a UK mobile number\"}," +
+            "{\"error\":\"InvalidEmailError\",\"message\":\"Not a valid email address\"}],\"status_code\":400}";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Not a UK mobile number", result.get(0));
+        assertEquals("Not a valid email address", result.get(1));
+    }
+
+    @Test
+    void testExtractErrorMessages_EmptyErrorsArray() {
+        String exceptionMessage = "Status code: 400 {\"errors\":[],\"status_code\":400}";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testExtractErrorMessages_NoErrorsField() {
+        String exceptionMessage = "";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testExtractErrorMessages_InvalidJson() {
+        String exceptionMessage = "Status code: 400 {\"errors\":";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testExtractErrorMessages_InvalidJsonFormat_NoCurlyBrace() {
+        String exceptionMessage = "Status code: 400 Invalid JSON";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testExtractErrorMessages_JsonWithoutMessageField() {
+        String exceptionMessage = "Status code: 400 {\"errors\":[{\"error\":\"InvalidPhoneError\"}],\"status_code\":400}";
+
+        List<String> result = NotificationSenderHelper.extractErrorMessages(exceptionMessage);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("", result.get(0));
+    }
 }
