@@ -578,10 +578,12 @@ public enum AsylumCaseDefinition {
         "oocCountryLine", new TypeReference<String>(){}),
 
     APPELLANTS_REPRESENTATION(
-        "appellantsRepresentation", new TypeReference<String>(){}),
+        "appellantsRepresentation", new TypeReference<YesOrNo>(){}),
 
     LEGAL_REP_HAS_ADDRESS(
         "legalRepHasAddress", new TypeReference<YesOrNo>(){}),
+    LEGAL_REP_EMAIL(
+        "legalRepEmail", new TypeReference<String>(){}),
     ;
 
     private final String value;

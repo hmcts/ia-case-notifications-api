@@ -4626,8 +4626,8 @@ public class NotificationHandlerConfiguration {
     }
 
     private boolean hasRepEmail(AsylumCase asylumCase) {
-        return asylumCase
-            .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).isPresent();
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ? asylumCase.read(LEGAL_REP_EMAIL, String.class).isPresent()
+            : asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).isPresent();
     }
 
     private boolean isSmsPreferred(AsylumCase asylumCase) {

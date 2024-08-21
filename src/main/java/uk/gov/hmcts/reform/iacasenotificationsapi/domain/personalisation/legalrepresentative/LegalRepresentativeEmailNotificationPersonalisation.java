@@ -4,6 +4,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_EMAIL_EJP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isEjpCase;
 
 import java.util.Collections;
@@ -39,8 +40,6 @@ public interface LegalRepresentativeEmailNotificationPersonalisation extends Ema
                 .orElseThrow(() -> new IllegalStateException("legalRepEmailEjp is not present")));
         }
 
-        return Collections.singleton(asylumCase
-            .read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
-            .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")));
+        return Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
     }
 }
