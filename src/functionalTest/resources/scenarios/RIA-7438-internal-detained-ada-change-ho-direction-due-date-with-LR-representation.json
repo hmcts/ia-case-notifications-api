@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7438 internal detained change of HO direction due date (ADA)",
+  "description": "RIA-7438 internal detained change of HO direction due date (ADA) with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -22,7 +22,8 @@
           "directionEditParties": "respondent",
           "currentCaseStateVisibleToLegalRepresentative": "appealSubmitted",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -69,7 +70,7 @@
     "notifications": [
       {
         "reference": "7438_INTERNAL_DET_CHANGE_HO_DIRECTION_DUE_DATE_EMAIL",
-        "recipient": "det-irc-brookhouse@example.com",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "ADA – SERVE BY POST: Direction due date changed",
         "body": [
           "Home Office reference: A1234567",

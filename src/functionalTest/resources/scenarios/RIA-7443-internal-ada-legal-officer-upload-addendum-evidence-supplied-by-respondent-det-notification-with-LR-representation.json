@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7443 Internal Legal Officer upload addendum evidence DET notification - ADA",
+  "description": "RIA-7443 Internal Legal Officer upload addendum evidence DET notification - ADA with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -16,7 +16,8 @@
           "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "addendumEvidenceDocuments": [
             {
               "id": "1",
@@ -106,6 +107,14 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7443_INTERNAL_DETAINED_LEGAL_OFFICER_UPLOAD_ADDITIONAL_EVIDENCE_DET_EMAIL",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "ADA – SERVE IN PERSON: New evidence",
+        "body": []
+      }
+    ]
   }
 }

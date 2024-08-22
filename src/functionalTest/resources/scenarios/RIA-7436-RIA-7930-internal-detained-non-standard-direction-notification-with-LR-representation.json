@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7436 RIA-7434 RIA-7930 Send Non Standard Direction to Appellant and Respondent on Internal Detained Appeal.",
+  "description": "RIA-7436 RIA-7434 RIA-7930 Send Non Standard Direction to Appellant and Respondent on Internal Detained Appeal with LR representation.",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
@@ -15,7 +15,8 @@
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "directions": [
             {
               "id": "1",
@@ -65,6 +66,14 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7436_INTERNAL_NON_STANDARD_DIRECTION_DET",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "IAFT - SERVE BY POST: Direction for the appellant",
+        "body": []
+      }
+    ]
   }
 }
