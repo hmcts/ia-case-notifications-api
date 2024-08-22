@@ -52,6 +52,7 @@ public enum DocumentTag {
     INTERNAL_DECIDE_HOME_OFFICE_APPLICATION_LETTER("internalDecideHomeOfficeApplicationLetter"),
     INTERNAL_DET_MARK_AS_ADA_LETTER("internalDetMarkAsAdaLetter"),
     INTERNAL_DETAINED_EDIT_CASE_LISTING_LETTER("internalDetainedEditCaseListingLetter"),
+    INTERNAL_DETAINED_MANAGE_FEE_UPDATE_LETTER("internalDetainedManageFeeUpdateLetter"),
     INTERNAL_APPLY_FOR_FTPA_RESPONDENT("internalApplyForFtpaRespondent"),
     INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER("internalFtpaSubmittedAppellantLetter"),
     INTERNAL_DETAINED_TRANSFER_OUT_OF_ADA_LETTER("internalDetainedTransferOutOfAdaLetter"),
