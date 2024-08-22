@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7417: internal ada edit appeal notification to DET",
+  "description": "RIA-7417: internal ada edit appeal notification to DET with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -17,7 +17,8 @@
           "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -75,6 +76,14 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7417_INTERNAL_DET_EDIT_APPEAL_EMAIL",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "ADA - SERVE BY POST: Appeal edited",
+        "body": []
+      }
+    ]
   }
 }

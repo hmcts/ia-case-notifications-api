@@ -1,26 +1,26 @@
 {
-  "description": "RIA-7377 RIA-7928 Internal Ada maintain case unlink appeal notification to DET and HO",
+  "description": "RIA-7373 Send mark appeal as ada notifications to DET with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7377,
-      "eventId": "maintainCaseLinks",
-      "state": "*",
+      "id": 7373,
+      "eventId": "markAppealAsAda",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "isAdmin": "Yes",
+          "appellantInDetention": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
-          "isAdmin": "Yes",
-          "isAcceleratedDetainedAppeal": "Yes",
-          "appellantInDetention": "Yes",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "maintainCaseUnlinkAppealLetter",
+                "tag": "internalDetMarkAsAdaLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -44,15 +44,23 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7377_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "7377_CASE_UNLINK_APPEAL_HOME_OFFICE",
+            "id": "7373_INTERNAL_MARK_APPEAL_AS_ADA",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
-      }
+      },
+      "notifications": [
+        {
+          "reference": "7373_INTERNAL_MARK_APPEAL_AS_ADA",
+          "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "subject": "ADA - SERVE BY POST: Appeal now ADA",
+          "body": [
+            "Home Office reference: A1234567",
+            "HMCTS reference: PA/12345/2019",
+            "Appellant name: Talha Awan"
+          ]
+        }
+      ]
     }
   }
 }
