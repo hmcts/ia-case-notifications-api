@@ -22,7 +22,8 @@
           "directionEditParties": "appellantAndRespondent",
           "currentCaseStateVisibleToLegalRepresentative": "submitHearingRequirements",
           "currentCaseStateVisibleToHomeOfficeAll": "submitHearingRequirements",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -69,7 +70,7 @@
     "notifications": [
       {
         "reference": "74702_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
-        "recipient": "det-irc-brookhouse@example.com",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "ADA – SERVE BY POST: Direction due date changed",
         "body": [
           "Home Office reference: A1234567",

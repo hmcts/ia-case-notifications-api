@@ -1,10 +1,10 @@
 {
-  "description": "RIA-7470 only appellant and respondent as party - notification of change direction due date (ADA)",
+  "description": "RIA-7470 only appellant as party - notification of change direction due date (ADA) with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 74702,
+      "id": 7470,
       "eventId": "changeDirectionDueDate",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -19,10 +19,11 @@
           "ariaListingReference": "LP/12345/2019",
           "directionEditExplanation": "Amending the direction due date.",
           "directionEditDateDue": "{$TODAY+5}",
-          "directionEditParties": "appellantAndRespondent",
+          "directionEditParties": "appellant",
           "currentCaseStateVisibleToLegalRepresentative": "submitHearingRequirements",
           "currentCaseStateVisibleToHomeOfficeAll": "submitHearingRequirements",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -57,10 +58,10 @@
         "ariaListingReference": "LP/12345/2019",
         "directionEditExplanation": "Amending the direction due date.",
         "directionEditDateDue": "{$TODAY+5}",
-        "directionEditParties": "appellantAndRespondent",
+        "directionEditParties": "appellant",
         "notificationsSent": [
           {
-            "id": "74702_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
+            "id": "7470_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -68,8 +69,8 @@
     },
     "notifications": [
       {
-        "reference": "74702_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
-        "recipient": "det-irc-brookhouse@example.com",
+        "reference": "7470_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "ADA – SERVE BY POST: Direction due date changed",
         "body": [
           "Home Office reference: A1234567",
