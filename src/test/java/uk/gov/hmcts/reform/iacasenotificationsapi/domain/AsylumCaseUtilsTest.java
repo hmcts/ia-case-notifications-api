@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -45,31 +46,31 @@ public class AsylumCaseUtilsTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "Yes", "No" })
-    void should_get_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(String appellantsRepresentation) {
+    @EnumSource(value = YesOrNo.class, names = {"YES","NO"})
+    void should_get_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(YesOrNo appellantsRepresentation) {
         String legalRepEmail = "legal@rep.email";
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, String.class)).thenReturn(Optional.of(appellantsRepresentation));
-        if (appellantsRepresentation.equals("Yes")) {
-            when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
-        } else {
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(appellantsRepresentation));
+        if (appellantsRepresentation.equals(YES)) {
             when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
+        } else {
+            when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
         }
         assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
         assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "Yes", "No" })
-    void should_throw_an_exception_when_getting_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(String appellantsRepresentation) {
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, String.class)).thenReturn(Optional.of(appellantsRepresentation));
+    @ValueSource(strings = { "YES", "NO" })
+    void should_throw_an_exception_when_getting_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(YesOrNo appellantsRepresentation) {
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(appellantsRepresentation));
         IllegalStateException thrown = assertThrows(
             IllegalStateException.class,
             () -> getLegalRepEmailInternalOrLegalRepJourney(asylumCase)
         );
-        if (appellantsRepresentation.equals("Yes")) {
-            assertEquals("legalRepEmail is not present", thrown.getMessage());
-        } else {
+        if (appellantsRepresentation.equals(YES)) {
             assertEquals("legalRepresentativeEmailAddress is not present", thrown.getMessage());
+        } else {
+            assertEquals("legalRepEmail is not present", thrown.getMessage());
         }
     }
 }
