@@ -17,6 +17,7 @@
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "isAppellantRespondent": "The appellant",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

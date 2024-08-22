@@ -15,6 +15,7 @@
           "ircName": "Brookhouse",
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

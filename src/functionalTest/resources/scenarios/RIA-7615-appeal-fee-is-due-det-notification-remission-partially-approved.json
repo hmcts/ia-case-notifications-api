@@ -21,6 +21,7 @@
           "remissionDecision": "partiallyApproved",
           "remittedAmount": "40",
           "amountLeftToPay": "100",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

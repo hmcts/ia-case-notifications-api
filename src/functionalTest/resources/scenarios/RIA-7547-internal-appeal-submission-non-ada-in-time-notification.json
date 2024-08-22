@@ -15,6 +15,7 @@
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "submissionOutOfTime": "No",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

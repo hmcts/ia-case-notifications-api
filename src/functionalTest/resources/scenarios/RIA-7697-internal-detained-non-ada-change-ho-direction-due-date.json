@@ -1,4 +1,4 @@
-{
+ {
   "description": "RIA-7697 internal detained change of HO direction due date (non-ADA)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -21,6 +21,7 @@
           "directionEditParties": "respondent",
           "currentCaseStateVisibleToLegalRepresentative": "appealSubmitted",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

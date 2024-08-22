@@ -16,6 +16,7 @@
           "isAcceleratedDetainedAppeal": "No",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

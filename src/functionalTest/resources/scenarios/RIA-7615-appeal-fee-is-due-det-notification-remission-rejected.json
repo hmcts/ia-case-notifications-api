@@ -18,6 +18,7 @@
           "isRemissionsEnabled": "Yes",
           "remissionType":"hoWaiverRemission",
           "remissionDecision": "rejected",
+          "appelantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
