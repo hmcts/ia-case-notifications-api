@@ -18,7 +18,8 @@
           "isAcceleratedDetainedAppeal": "No",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -68,7 +69,7 @@
     "notifications": [
       {
         "reference": "7947_INTERNAL_DET_MARK_APPEAL_AS_PAID_EMAIL",
-        "recipient": "det-irc-brookhouse@example.com",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "IAFT – SERVE BY POST: Fee payment confirmation",
         "body": [
           "Home Office reference: A1234567",

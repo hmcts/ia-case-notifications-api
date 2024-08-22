@@ -22,7 +22,8 @@
           "legalRepFamilyNameEjp": "Smith",
           "legalRepReferenceEjp": "TEST7516",
           "isLegallyRepresentedEjp": "Yes",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "directions": [
             {
               "id": "1",
@@ -72,6 +73,14 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7516_INTERNAL_DET_REQUEST_RESPONDENT_EVIDENCE_EMAIL",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "IAFT - SERVE BY POST: Home Office directed to upload bundle",
+        "body": []
+      }
+    ]
   }
 }

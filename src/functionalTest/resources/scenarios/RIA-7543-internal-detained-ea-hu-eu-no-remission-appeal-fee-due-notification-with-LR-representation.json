@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7543 - Internal detained (non-ada) HU/EU/EA no remission appeal fee is due notification with letter attached",
+  "description": "RIA-7543 - Internal detained (non-ada) HU/EU/EA no remission appeal fee is due notification with letter attached with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -17,7 +17,8 @@
           "remissionType": "noRemission",
           "appealType": "refusalOfHumanRights",
           "appealSubmissionDate": "{$TODAY}",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -58,6 +59,14 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "7543_INTERNAL_DETAINED_APPEAL_FEE_DUE_DET",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "IAFT – SERVE IN PERSON: Appeal fee is due",
+        "body": []
+      }
+    ]
   }
 }
