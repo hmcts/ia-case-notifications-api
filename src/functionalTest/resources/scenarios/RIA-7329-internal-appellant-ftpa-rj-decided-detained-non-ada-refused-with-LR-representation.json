@@ -16,7 +16,7 @@
           "ftpaApplicantType": "appellant",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
           "appellantInDetention": "Yes",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {

@@ -16,7 +16,7 @@
           "ftpaApplicantType": "appellant",
           "appellantInDetention": "Yes",
           "ftpaAppellantRjDecisionOutcomeType": "granted",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

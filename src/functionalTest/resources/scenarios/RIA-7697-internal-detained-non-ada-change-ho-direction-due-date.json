@@ -21,7 +21,7 @@
           "directionEditParties": "respondent",
           "currentCaseStateVisibleToLegalRepresentative": "appealSubmitted",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

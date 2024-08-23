@@ -20,7 +20,7 @@
           "suitabilityReviewDecision": "suitable",
           "listCaseHearingDate": "2023-05-01T13:30:15.000",
           "listCaseHearingCentre": "harmondsworth",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "tribunalDocuments": [
             {

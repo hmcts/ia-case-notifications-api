@@ -16,7 +16,7 @@
           "ftpaApplicantType": "appellant",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
           "appellantInDetention": "Yes",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

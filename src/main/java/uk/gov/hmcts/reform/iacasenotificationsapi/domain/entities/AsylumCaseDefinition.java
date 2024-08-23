@@ -563,8 +563,8 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_EMAIL(
         "legalRepEmail", new TypeReference<String>(){}),
 
-    APPELANTS_REPRESENTATION(
-        "appelantsRepresentation", new TypeReference<YesOrNo>(){});
+    APPELLANTS_REPRESENTATION(
+        "appellantsRepresentation", new TypeReference<YesOrNo>(){});
 
     private final String value;
     private final TypeReference typeReference;

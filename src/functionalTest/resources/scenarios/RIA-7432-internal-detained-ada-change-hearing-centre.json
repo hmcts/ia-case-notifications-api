@@ -16,7 +16,7 @@
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "listCaseHearingCentre": "harmondsworth",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

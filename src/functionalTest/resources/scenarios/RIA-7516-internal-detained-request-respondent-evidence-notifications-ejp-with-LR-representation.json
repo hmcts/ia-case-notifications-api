@@ -22,7 +22,7 @@
           "legalRepFamilyNameEjp": "Smith",
           "legalRepReferenceEjp": "TEST7516",
           "isLegallyRepresentedEjp": "Yes",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "directions": [
             {

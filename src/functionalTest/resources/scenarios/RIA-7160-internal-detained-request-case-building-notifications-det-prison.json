@@ -14,7 +14,7 @@
           "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "notificationAttachmentDocuments": [

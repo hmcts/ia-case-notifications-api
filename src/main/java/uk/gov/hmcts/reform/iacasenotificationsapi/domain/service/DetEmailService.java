@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELANTS_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IRC_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
@@ -47,7 +47,7 @@ public class DetEmailService {
             return Collections.emptySet();
         }
 
-        YesOrNo appellantsRepresentation = asylumCase.read(APPELANTS_REPRESENTATION, YesOrNo.class).orElse(NO);
+        YesOrNo appellantsRepresentation = asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(NO);
 
         if (isInternalCase(asylumCase) && NO.equals(appellantsRepresentation)) {
             return Collections.singleton(emailAddressFinder.getLegalRepPaperJourneyEmailAddress(asylumCase));

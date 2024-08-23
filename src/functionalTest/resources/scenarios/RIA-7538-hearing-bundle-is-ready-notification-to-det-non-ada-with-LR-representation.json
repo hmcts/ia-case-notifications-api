@@ -16,7 +16,7 @@
           "isAcceleratedDetainedAppeal": "No",
           "listCaseHearingCentre": "harmondsworth",
           "ariaListingReference": "LP/12345/2019",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {

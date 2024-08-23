@@ -17,7 +17,7 @@
           "remissionType": "noRemission",
           "appealType": "refusalOfHumanRights",
           "appealSubmissionDate": "{$TODAY}",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

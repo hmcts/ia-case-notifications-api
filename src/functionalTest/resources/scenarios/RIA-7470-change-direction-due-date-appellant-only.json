@@ -22,7 +22,7 @@
           "directionEditParties": "appellant",
           "currentCaseStateVisibleToLegalRepresentative": "submitHearingRequirements",
           "currentCaseStateVisibleToHomeOfficeAll": "submitHearingRequirements",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

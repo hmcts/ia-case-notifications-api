@@ -16,7 +16,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "ftpaApplicantType": "appellant",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "appellantInDetention": "Yes",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [

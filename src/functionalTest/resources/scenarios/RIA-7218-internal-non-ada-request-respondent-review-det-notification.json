@@ -12,7 +12,7 @@
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
-          "appelantsRepresentation": "Yes",
+          "appellantsRepresentation": "Yes",
           "directions": [
             {
               "id": "1",

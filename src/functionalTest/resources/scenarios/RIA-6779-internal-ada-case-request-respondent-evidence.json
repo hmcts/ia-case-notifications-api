@@ -51,7 +51,7 @@
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "appellantInDetention": "Yes",
-          "appelantsRepresentation": "Yes"
+          "appellantsRepresentation": "Yes"
         }
       }
     }

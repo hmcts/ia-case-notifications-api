@@ -21,7 +21,7 @@
           "remissionDecision": "partiallyApproved",
           "remittedAmount": "40",
           "amountLeftToPay": "100",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {

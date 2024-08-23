@@ -21,7 +21,7 @@
           "directionEditParties": "appellant",
           "currentCaseStateVisibleToLegalRepresentative": "submitHearingRequirements",
           "currentCaseStateVisibleToHomeOfficeAll": "submitHearingRequirements",
-          "appelantsRepresentation": "No",
+          "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
