@@ -112,10 +112,10 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
 
     @Test
     void should_return_given_template_id() {
-        if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.APPROVED))) {
-            assertEquals(approvedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));}
-        else if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.PARTIALLY_APPROVED))) {
-            assertEquals(partiallyApprovedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());}
+        if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.APPROVED)))
+            assertEquals(approvedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));
+        else if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.PARTIALLY_APPROVED)))
+            assertEquals(partiallyApprovedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());
     }
 
     @Test
