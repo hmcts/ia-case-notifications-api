@@ -58,7 +58,7 @@
       {
         "reference": "7692_INTERNAL_DET_UPLOAD_ADDITIONAL_EVIDENCE_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE BY POST: Respondent application decided",
+        "subject": "IAFT – SERVE BY POST: New evidence received",
         "body": []
       }
     ]

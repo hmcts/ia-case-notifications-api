@@ -114,7 +114,7 @@
       {
         "reference": "68112_DECIDE_AN_APPLICATION_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE IN PERSON: Application decided",
+        "subject": "IAFT – SERVE IN PERSON: Application decided",
         "body": []
       }
     ]

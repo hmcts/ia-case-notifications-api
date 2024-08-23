@@ -112,7 +112,7 @@
       {
         "reference": "7711_INTERNAL_DETAINED_LEGAL_OFFICER_UPLOAD_ADDITIONAL_EVIDENCE_DET_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE IN PERSON: New evidence",
+        "subject": "IAFT – SERVE IN PERSON: New evidence",
         "body": []
       }
     ]

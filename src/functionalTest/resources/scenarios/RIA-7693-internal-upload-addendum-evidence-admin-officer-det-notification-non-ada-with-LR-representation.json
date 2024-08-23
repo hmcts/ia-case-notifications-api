@@ -61,7 +61,7 @@
       {
         "reference": "7693_INTERNAL_DET_UPLOAD_ADDENDUM_EVIDENCE_ADMIN_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE BY POST: New evidence received",
+        "subject": "IAFT – SERVE BY POST: New evidence received",
         "body": []
       }
     ]

@@ -74,7 +74,7 @@
       {
         "reference": "7278_REQUEST_RESPONSE_AMEND_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "ADA – SERVE IN PERSON: The Home Office has been directed to amend the Home Office Response",
+        "subject": "ADA – SERVE BY POST: The Home Office has been directed to amend the Home Office Response",
         "body": []
       }
     ]

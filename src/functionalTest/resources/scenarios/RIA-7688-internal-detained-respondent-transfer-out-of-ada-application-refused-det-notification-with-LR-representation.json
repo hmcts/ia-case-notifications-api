@@ -15,7 +15,8 @@
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "decideAnApplicationId": "1",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

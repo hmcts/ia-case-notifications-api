@@ -60,7 +60,7 @@
       {
         "reference": "7555_INTERNAL_DETAINED_REVIEW_HOME_OFFICE_RESPONSE_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE BY POST: Outcome of Home Office review",
+        "subject": "IAFT – SERVE BY POST: Outcome of Home Office review",
         "body": []
       }
     ]

@@ -15,7 +15,8 @@
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
-          "appelantsRepresentation": "Yes",
+          "appelantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -58,7 +59,7 @@
       {
         "reference": "7694_INTERNAL_DET_MAINTAIN_CASE_LINK_APPEAL_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE BY POST: Appeal linked",
+        "subject": "IAFT – SERVE BY POST: Appeal linked",
         "body": []
       }
     ]

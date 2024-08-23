@@ -74,7 +74,7 @@
       {
         "reference": "7466_INTERNAL_DET_HOME_OFFICE_UPLOAD_ADDITIONAL_EVIDENCE_DET_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE IN PERSON: New evidence",
+        "subject": "IAFT – SERVE IN PERSON: New evidence",
         "body": []
       }
     ]

@@ -71,7 +71,7 @@
       {
         "reference": "7436_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT – SERVE IN PERSON: Direction sent to respondent",
+        "subject": "IAFT – SERVE BY POST: Direction sent to respondent",
         "body": []
       }
     ]
