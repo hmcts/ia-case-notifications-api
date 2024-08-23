@@ -3,8 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -16,9 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.lenient;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.AsylumCaseUtils.isIntegrated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_EMAIL;
@@ -46,31 +47,44 @@ public class AsylumCaseUtilsTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = {"YES","NO"})
-    void should_get_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(YesOrNo appellantsRepresentation) {
+    @CsvSource({
+        "YES, NO",
+        "YES, YES",
+        "NO, NO",
+        "NO, YES"
+    })
+    void should_get_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(YesOrNo appellantsRepresentation, YesOrNo isAdmin) {
         String legalRepEmail = "legal@rep.email";
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(appellantsRepresentation));
-        if (appellantsRepresentation.equals(YES)) {
-            when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
-        } else {
+        lenient().when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(appellantsRepresentation));
+        lenient().when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
+        if (appellantsRepresentation.equals(NO) && isAdmin.equals(YES)) {
             when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
+        } else {
+            when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
         }
         assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
         assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "YES", "NO" })
-    void should_throw_an_exception_when_getting_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(YesOrNo appellantsRepresentation) {
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(appellantsRepresentation));
+    @CsvSource({
+        "YES, NO",
+        "YES, YES",
+        "NO, NO",
+        "NO, YES"
+    })
+    void should_throw_an_exception_when_getting_repEmail_for_internal_and_non_internal_cases_and_appellant_representation(YesOrNo appellantsRepresentation, YesOrNo isAdmin) {
+        lenient().when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(appellantsRepresentation));
+        lenient().when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
         IllegalStateException thrown = assertThrows(
             IllegalStateException.class,
             () -> getLegalRepEmailInternalOrLegalRepJourney(asylumCase)
         );
-        if (appellantsRepresentation.equals(YES)) {
-            assertEquals("legalRepresentativeEmailAddress is not present", thrown.getMessage());
-        } else {
+        if (appellantsRepresentation.equals(NO) && isAdmin.equals(YES)) {
             assertEquals("legalRepEmail is not present", thrown.getMessage());
+
+        } else {
+            assertEquals("legalRepresentativeEmailAddress is not present", thrown.getMessage());
         }
     }
 }

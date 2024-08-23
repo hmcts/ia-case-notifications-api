@@ -317,13 +317,13 @@ public class AsylumCaseUtils {
     }
 
     public static String getLegalRepEmailInternalOrLegalRepJourney(final AsylumCase asylumCase) {
-        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ? asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"))
-            : asylumCase.read(LEGAL_REP_EMAIL, String.class).orElseThrow(() -> new IllegalStateException("legalRepEmail is not present"));
+        return isInternalCase(asylumCase) && !hasBeenSubmittedByAppellantInternalCase(asylumCase) ? asylumCase.read(LEGAL_REP_EMAIL, String.class).orElseThrow(() -> new IllegalStateException("legalRepEmail is not present"))
+            : asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
     }
 
     public static String getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(final AsylumCase asylumCase) {
-        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ? asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse("")
-            : asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("");
+        return isInternalCase(asylumCase) && !hasBeenSubmittedByAppellantInternalCase(asylumCase) ? asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("")
+            : asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse("");
     }
 
     public static boolean isDecisionWithoutHearingAppeal(AsylumCase asylumCase) {
