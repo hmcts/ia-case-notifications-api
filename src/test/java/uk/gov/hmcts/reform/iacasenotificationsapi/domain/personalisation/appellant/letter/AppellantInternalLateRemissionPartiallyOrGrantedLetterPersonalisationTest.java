@@ -111,19 +111,32 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
     }
 
     @Test
-    void should_return_given_template_id() {
-        if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.APPROVED))) {
-            assertEquals(approvedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));
-        }
-        else if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.PARTIALLY_APPROVED))) {
-            assertEquals(partiallyApprovedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());
-        }
-        else if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.REJECTED))){
-            assertEquals(null, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());
-        }
-        else if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), null)){
-            assertEquals(null, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());
-        }
+    void should_return_approved_template_id_for_approved_remission_decision() {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
+        assertEquals(approvedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_partially_approved_template_id_for_partially_approved_remission_decision() {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.PARTIALLY_APPROVED));
+        assertEquals(partiallyApprovedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_null_template_id_for_rejected_remission_decision() {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.REJECTED));
+        String templateId = appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase);
+        assertEquals(null, templateId);
+    }
+
+    @Test
+    void should_throw_exception_when_remission_decision_is_not_present() {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->
+                appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("Remission decision not found");
     }
 
     @Test
