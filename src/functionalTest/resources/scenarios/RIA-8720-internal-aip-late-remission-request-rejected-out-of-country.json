@@ -12,6 +12,7 @@
         "replacements": {
           "appealType": "refusalOfHumanRights",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "remissionDecision": "rejected",
           "lateRemissionType": "hoWaiverRemission",
@@ -36,6 +37,7 @@
         "replacements": {
           "appealType": "refusalOfHumanRights",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "remissionDecision": "rejected",
           "lateRemissionType": "hoWaiverRemission",

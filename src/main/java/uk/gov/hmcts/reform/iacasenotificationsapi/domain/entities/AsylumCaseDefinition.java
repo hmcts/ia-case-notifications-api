@@ -578,7 +578,10 @@ public enum AsylumCaseDefinition {
         "oocCountryLine", new TypeReference<String>(){}),
 
     APPELLANTS_REPRESENTATION(
-        "appellantsRepresentation", new TypeReference<String>(){}),
+        "appellantsRepresentation", new TypeReference<YesOrNo>(){}),
+
+    OOC_LR_COUNTRY_ADMIN_J(
+        "oocLrCountryAdminJ", new TypeReference<NationalityFieldValue>(){}),
 
     LEGAL_REP_HAS_ADDRESS(
         "legalRepHasAddress", new TypeReference<YesOrNo>(){}),

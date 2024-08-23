@@ -38,7 +38,8 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getAppellantAddressInCountryOrOoc(asylumCase);
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -55,11 +56,6 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
                         .getCaseDetails()
                         .getCaseData();
 
-        List<String> appellantAddress = switch (isAppellantInUK(asylumCase)) {
-            case YES -> getAppellantAddressAsList(asylumCase);
-            case NO -> getAppellantAddressAsListOoc(asylumCase);
-        };
-
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -68,8 +64,10 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
 
-        for (int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
+        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
         return personalizationBuilder.build();
     }

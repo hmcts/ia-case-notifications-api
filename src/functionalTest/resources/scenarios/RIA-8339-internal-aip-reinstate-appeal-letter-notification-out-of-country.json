@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "stateBeforeEndAppeal": "appealSubmitted",
           "reinstateAppealDate": "{$TODAY}",
@@ -33,6 +34,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "stateBeforeEndAppeal": "appealSubmitted",
         "reinstateAppealDate": "{$TODAY}",

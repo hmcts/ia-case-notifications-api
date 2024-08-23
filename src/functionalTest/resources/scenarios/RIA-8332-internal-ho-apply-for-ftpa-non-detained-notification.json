@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantHasFixedAddress": "Yes",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
@@ -46,6 +47,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {

@@ -17,6 +17,7 @@
           "appealReferenceNumber": "PA/12345/2018",
           "ircName": "Brookhouse",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "No",
           "appellantHasFixedAddressAdminJ": "Yes",

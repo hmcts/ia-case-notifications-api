@@ -11,6 +11,7 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "No",
           "appellantHasFixedAddress": "No",
@@ -49,6 +50,7 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "appellantInUk": "No",
         "updateTribunalDecisionList": "underRule31",

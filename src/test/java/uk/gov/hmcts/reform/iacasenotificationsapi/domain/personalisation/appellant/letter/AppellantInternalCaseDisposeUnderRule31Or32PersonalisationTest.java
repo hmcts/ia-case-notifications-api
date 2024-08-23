@@ -43,7 +43,7 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
-    AddressUk appellantAddress;
+    AddressUk address;
 
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
@@ -74,17 +74,17 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(appellantAddress));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(appellantAddress.getAddressLine1()).thenReturn(Optional.of(addressLine1));
-        when(appellantAddress.getAddressLine2()).thenReturn(Optional.of(addressLine2));
-        when(appellantAddress.getAddressLine3()).thenReturn(Optional.of(addressLine3));
-        when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
-        when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
+        when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
+        when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
+        when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
+        when(address.getPostCode()).thenReturn(Optional.of(postCode));
+        when(address.getPostTown()).thenReturn(Optional.of(postTown));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
@@ -111,12 +111,24 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
 
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_cannot_find_address_for_legalRep_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_UK, AddressUk.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertThatThrownBy(() -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("legalRepAddressUK is not present");
     }
 
     @Test
@@ -157,9 +169,9 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
 
     @ParameterizedTest
     @MethodSource("getTestSource")
-    void should_return_personalisation_when_all_information_given_in_country(ApplicantType appelantType, YesOrNo appellantInUk) {
-
-        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(appelantType));
+    void should_return_personalisation_when_all_information_given_appellant_in_country(ApplicantType appellantType, YesOrNo appellantInUk) {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(appellantType));
         when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT, String.class)).thenReturn(Optional.of("test1"));
         when(asylumCase.read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT, String.class)).thenReturn(Optional.of("test2"));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(appellantInUk));
@@ -187,7 +199,62 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
-        if (appelantType == APPELLANT) {
+        if (appellantType == APPELLANT) {
+            assertEquals("your", personalisation.get("applicant"));
+            assertEquals("test1", personalisation.get("ftpaDisposedReason"));
+        } else {
+            assertEquals("the Home Office's", personalisation.get("applicant"));
+            assertEquals("test2", personalisation.get("ftpaDisposedReason"));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getTestSource")
+    void should_return_personalisation_when_all_information_given_legalRep_in_country(ApplicantType appellantType, YesOrNo legalRepInUk) {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(appellantType));
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT, String.class)).thenReturn(Optional.of("test1"));
+        when(asylumCase.read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT, String.class)).thenReturn(Optional.of("test2"));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(legalRepInUk));
+
+        if (legalRepInUk == YesOrNo.YES) {
+            when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_UK, AddressUk.class)).thenReturn(Optional.of(address));
+            when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
+            when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
+            when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
+            when(address.getPostCode()).thenReturn(Optional.of(postCode));
+            when(address.getPostTown()).thenReturn(Optional.of(postTown));
+        } else {
+            when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_1, String.class)).thenReturn(Optional.of(oocAddressLine1));
+            when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_2, String.class)).thenReturn(Optional.of(oocAddressLine2));
+            when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_3, String.class)).thenReturn(Optional.of(oocAddressLine3));
+            when(asylumCase.read(AsylumCaseDefinition.OOC_LR_COUNTRY_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
+        }
+
+        Map<String, String> personalisation =
+            appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation(callback);
+
+        if (legalRepInUk == YesOrNo.YES) {
+            assertEquals(addressLine1, personalisation.get("address_line_1"));
+            assertEquals(addressLine2, personalisation.get("address_line_2"));
+            assertEquals(addressLine3, personalisation.get("address_line_3"));
+            assertEquals(postTown, personalisation.get("address_line_4"));
+            assertEquals(postCode, personalisation.get("address_line_5"));
+        } else {
+            assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
+            assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
+            assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
+            assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+        }
+
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+
+        if (appellantType == APPELLANT) {
             assertEquals("your", personalisation.get("applicant"));
             assertEquals("test1", personalisation.get("ftpaDisposedReason"));
         } else {

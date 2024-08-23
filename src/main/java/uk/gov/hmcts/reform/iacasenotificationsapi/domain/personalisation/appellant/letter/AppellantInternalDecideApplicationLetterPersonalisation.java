@@ -3,9 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECIDE_AN_APPLICATION_ID;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MAKE_AN_APPLICATIONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
@@ -45,7 +44,8 @@ public class AppellantInternalDecideApplicationLetterPersonalisation implements 
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getAppellantAddressInCountryOrOoc(asylumCase);
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -61,13 +61,6 @@ public class AppellantInternalDecideApplicationLetterPersonalisation implements 
             callback
                 .getCaseDetails()
                 .getCaseData();
-
-        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-
-        List<String> appellantAddress = switch (isAppellantInUK) {
-            case YES -> getAppellantAddressAsList(asylumCase);
-            case NO -> getAppellantAddressAsListOoc(asylumCase);
-        };
 
         MakeAnApplication application = getMakeAnApplication(asylumCase).orElseThrow(() -> new IllegalStateException("Decide application is missing"));
         String nextSteps = WhatHappensNextContentUtils.getWhatHappensNextContent(
@@ -92,8 +85,10 @@ public class AppellantInternalDecideApplicationLetterPersonalisation implements 
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
 
-        for (int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
+        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
         return personalizationBuilder.build();
     }

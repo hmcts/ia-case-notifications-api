@@ -47,7 +47,8 @@ public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonali
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getAppellantAddressInCountryOrOoc(asylumCase);
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -64,12 +65,7 @@ public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonali
                 .getCaseDetails()
                 .getCaseData();
 
-        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-
-        List<String> appellantAddress = switch (isAppellantInUK) {
-            case YES -> getAppellantAddressAsList(asylumCase);
-            case NO -> getAppellantAddressAsListOoc(asylumCase);
-        };
+        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         final String dueDate = systemDateProvider.dueDate(daysAfterRemissionDecision);
 
@@ -87,8 +83,8 @@ public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonali
             .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("payByDeadline", dueDate);
 
-        for (int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
         return personalizationBuilder.build();
     }

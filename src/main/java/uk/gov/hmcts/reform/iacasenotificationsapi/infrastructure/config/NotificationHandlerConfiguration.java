@@ -4915,8 +4915,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isSubmissionOutOfTime(asylumCase)
-                       && isPaymentPending
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && isPaymentPending;
 
             },
             notificationGenerators,
@@ -5829,8 +5828,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && !isSubmissionOutOfTime(asylumCase)
-                       && isPaymentPending
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && isPaymentPending;
 
             },
             notificationGenerators,
@@ -5860,7 +5858,6 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRemissionPresent
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && !isSubmissionOutOfTime(asylumCase);
 
             },
@@ -5890,7 +5887,6 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRemissionPresent
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && isSubmissionOutOfTime(asylumCase);
 
             },
@@ -5912,8 +5908,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == REQUEST_RESPONDENT_REVIEW
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -5931,7 +5926,6 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                     && callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
                     && isInternalCase(asylumCase)
                     && (!isAppellantInDetention(asylumCase) || !inCountryAppeal(asylumCase));
@@ -5961,8 +5955,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && isRpAndDcAppealType
                        && !isAppellantInDetention(asylumCase)
-                       && isSubmissionOutOfTime(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && isSubmissionOutOfTime(asylumCase);
 
             },
             notificationGenerators,
@@ -5983,8 +5976,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == MANAGE_FEE_UPDATE
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -6025,8 +6017,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == REQUEST_RESPONDENT_EVIDENCE
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isAppellantInDetention(asylumCase);
 
             },
             notificationGenerators,
@@ -6047,8 +6038,7 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == DECISION_WITHOUT_HEARING
                         && isInternalCase(asylumCase)
-                        && !isAppellantInDetention(asylumCase)
-                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                        && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -6070,8 +6060,7 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.SEND_DIRECTION
                             && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase)
-                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -6092,8 +6081,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == END_APPEAL_AUTOMATICALLY
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -6134,8 +6122,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == REINSTATE_APPEAL
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isAppellantInDetention(asylumCase);
 
             },
             notificationGenerators,
@@ -6164,7 +6151,6 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isRejected
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && lateRemissionType.isPresent();
 
             },
@@ -6215,7 +6201,6 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && !isAppellantInDetention(asylumCase)
                             && isRemissionPartiallyApprovedOrRejected
-                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                             && lateRemissionType.isEmpty();
                 },
                 notificationGenerators,
@@ -6276,8 +6261,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == MARK_APPEAL_AS_REMITTED
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -6297,8 +6281,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                     && isInternalCase(asylumCase)
                     && isRule31ReasonUpdatingDecision(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                    && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -6337,7 +6320,6 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                             && isInternalCase(asylumCase)
                             && !isAppellantInDetention(asylumCase)
-                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                             && isApplicationCreatedByRespondent(asylumCase);
                 },
                 notificationGenerators,
@@ -6377,8 +6359,7 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase)
-                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -6408,8 +6389,7 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
                        && isApproved
-                       && isOutOfTimeAppeal
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && isOutOfTimeAppeal;
             },
             notificationGenerators,
             getErrorHandler()
@@ -6437,7 +6417,6 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && !isAppellantInDetention(asylumCase)
                             && isRemissionPartiallyApprovedOrApproved
-                            && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                             && lateRemissionType.isPresent();
                 },
                 notificationGenerators,
@@ -6471,7 +6450,6 @@ public class NotificationHandlerConfiguration {
                        && !isAppellantInDetention(asylumCase)
                        && isApproved
                        && !isOutOfTimeAppeal
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
                        && lateRemissionType.isEmpty();
             },
             notificationGenerators,

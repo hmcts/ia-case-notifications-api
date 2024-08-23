@@ -46,7 +46,8 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getAppellantAddressInCountryOrOoc(asylumCase);
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -63,10 +64,7 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> appellantAddress = switch (isAppellantInUK(asylumCase)) {
-            case YES -> getAppellantAddressAsList(asylumCase);
-            case NO -> getAppellantAddressAsListOoc(asylumCase);
-        };
+        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         final Direction direction =
             directionFinder
@@ -87,8 +85,8 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("directionDueDate", dueDate);
 
-        for (int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
         return personalizationBuilder.build();
     }

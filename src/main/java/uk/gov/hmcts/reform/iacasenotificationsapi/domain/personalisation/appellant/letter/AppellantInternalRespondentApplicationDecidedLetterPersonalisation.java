@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -58,15 +57,8 @@ public class AppellantInternalRespondentApplicationDecidedLetterPersonalisation 
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-
-        return switch (isAppellantInUK) {
-            case YES ->
-                Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-                    .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
-            case NO -> Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
-        };
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -84,11 +76,6 @@ public class AppellantInternalRespondentApplicationDecidedLetterPersonalisation 
                 .getCaseData();
 
         YesOrNo isAppellantInUK = asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-
-        List<String> appellantAddress = switch (isAppellantInUK) {
-            case YES -> getAppellantAddressAsList(asylumCase);
-            case NO -> getAppellantAddressAsListOoc(asylumCase);
-        };
 
         Optional<MakeAnApplication> makeAnApplicationOptional = makeAnApplicationService.getMakeAnApplication(asylumCase, true);
         MakeAnApplication application = makeAnApplicationOptional.orElseThrow(() -> new RequiredFieldMissingException("Application is missing."));
@@ -116,8 +103,10 @@ public class AppellantInternalRespondentApplicationDecidedLetterPersonalisation 
             .put("applicationReason", application.getDecisionReason())
             .put("nextStep", nextSteps);
 
-        for (int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
+        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
         return personalizationBuilder.build();
     }
