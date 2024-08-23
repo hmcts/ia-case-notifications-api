@@ -103,7 +103,7 @@
       {
         "reference": "7688_DECIDE_A_RESPONDENT_APPLICATION_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT - SERVE BY POST: Respondent application decided",
+        "subject": "IAFT – SERVE BY POST: Respondent application decided",
         "body": []
       }
     ]

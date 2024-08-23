@@ -103,7 +103,7 @@
       {
         "reference": "7366_DECIDE_A_RESPONDENT_APPLICATION_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "ADA – SERVE IN PERSON: Respondent application decided",
+        "subject": "ADA – SERVE BY POST: Respondent application decided",
         "body": []
       }
     ]
