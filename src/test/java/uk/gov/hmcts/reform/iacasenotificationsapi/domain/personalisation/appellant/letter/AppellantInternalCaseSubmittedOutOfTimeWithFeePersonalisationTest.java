@@ -221,7 +221,7 @@ class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given_legalRep_out_of_country() {
-       legalRepOutOfCountryDataSetup();
+        legalRepOutOfCountryDataSetup();
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmountGbp));
         Map<String, String> personalisation =
             appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getPersonalisation(callback);

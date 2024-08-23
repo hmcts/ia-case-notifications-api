@@ -560,7 +560,7 @@ public enum AsylumCaseDefinition {
         "ftpaRespondentDecisionRemadeRule32Text", new TypeReference<String>(){}),
 
     LEGAL_REP_ADDRESS_UK(
-        "legalRepAddressUK", new TypeReference<AddressUk>(){}),
+        "legalRepAddressUk", new TypeReference<AddressUk>(){}),
 
     OOC_ADDRESS_LINE_1(
         "oocAddressLine1", new TypeReference<String>(){}),

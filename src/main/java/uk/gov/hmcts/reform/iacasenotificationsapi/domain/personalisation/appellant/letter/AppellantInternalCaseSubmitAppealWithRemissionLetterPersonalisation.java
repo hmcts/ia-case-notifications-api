@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsListOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
