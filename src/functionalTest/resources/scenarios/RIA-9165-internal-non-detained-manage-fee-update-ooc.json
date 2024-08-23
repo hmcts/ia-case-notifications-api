@@ -10,6 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "appellantsRepresentation": "Yes",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
           "newFeeAmount": "2000",
@@ -31,6 +32,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appellantsRepresentation": "Yes",
         "isAdmin": "Yes",
         "appellantInDetention": "No",
         "newFeeAmount": "2000",
