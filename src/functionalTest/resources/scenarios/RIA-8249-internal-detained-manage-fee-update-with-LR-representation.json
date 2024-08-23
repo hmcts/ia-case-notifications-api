@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8249 Manage Fee Update notification (internal case creation) for Detained",
+  "description": "RIA-8249 Manage Fee Update notification (internal case creation) for Detained with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -71,6 +71,14 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "8249_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "IAFT – SERVE IN PERSON: Appeal fee changed",
+        "body": []
+      }
+    ]
   }
 }

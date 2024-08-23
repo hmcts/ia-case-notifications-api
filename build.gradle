@@ -232,7 +232,7 @@ project.tasks['pitest'].group = "Verification"
 
 project.ext {
     pacticipant = 'ia_caseNotificationsApi'
-    pacticipantVersion = System.env.GIT_COMMIT.substring(0,9)
+//    pacticipantVersion = System.env.GIT_COMMIT.substring(0,9)
 }
 
 task runContractTests(type: Test, description: 'Runs contract tests.', group: 'Verification') {
@@ -262,7 +262,7 @@ pact {
     publish {
         pactDirectory = 'pacts'
         tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
-        version = project.pacticipantVersion
+//        version = project.pacticipantVersion
     }
 }
 
