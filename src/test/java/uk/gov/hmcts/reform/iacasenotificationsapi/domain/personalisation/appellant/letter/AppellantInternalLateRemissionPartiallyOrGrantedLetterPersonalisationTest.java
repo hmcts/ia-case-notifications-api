@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -49,7 +50,8 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
     SystemDateProvider systemDateProvider;
 
     private Long ccdCaseId = 12345L;
-    private String letterTemplateId = "someLetterTemplateId";
+    private String approvedLetterTemplateId = "someLetterTemplateId";
+    private String partiallyApprovedLetterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
@@ -100,7 +102,8 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         when(asylumCase.read(AMOUNT_REMITTED, String.class)).thenReturn(Optional.of(refundFeeAmount));
 
         appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation = new AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation(
-            letterTemplateId,
+            approvedLetterTemplateId,
+            partiallyApprovedLetterTemplateId,
             daysAfterRemissionDecision,
             customerServicesProvider,
             systemDateProvider
@@ -109,7 +112,13 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());
+        if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.APPROVED)))
+        {
+            assertEquals(approvedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));
+        }
+        else if (Objects.equals(asylumCase.read(REMISSION_DECISION, RemissionDecision.class), Optional.of(RemissionDecision.PARTIALLY_APPROVED))) {
+            assertEquals(partiallyApprovedLetterTemplateId, appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId());
+        }
     }
 
     @Test
