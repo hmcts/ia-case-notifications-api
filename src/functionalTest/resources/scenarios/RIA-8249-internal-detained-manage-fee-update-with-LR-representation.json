@@ -22,7 +22,8 @@
           "isDlrmSetAsideEnabled": "Yes",
           "paymentDate": "10 Oct 2000",
           "feeAmountGbp": "14000",
-          "appellantsRepresentation": "Yes",
+          "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "feeUpdateRecorded": {
             "values": [
               "feeUpdateRecorded"
