@@ -206,6 +206,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detenti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamDecideAnApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamEditAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamEditCaseListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamManageFeeUpdatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamEndAppealAutomaticallyPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamEndAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamFtpaSubmittedPersonalisation;
@@ -5022,6 +5023,21 @@ public class NotificationGeneratorConfiguration {
                 ),
                 new EmailNotificationGenerator(
                         newArrayList(Collections.singleton(homeOfficeEditListingPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("internalDetainedManageFeeUpdateNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedManageFeeUpdateNotificationGenerator(
+            DetentionEngagementTeamManageFeeUpdatePersonalisation detentionEngagementTeamManageFeeUpdatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamManageFeeUpdatePersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )

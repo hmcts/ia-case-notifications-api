@@ -12,6 +12,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -24,6 +26,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,6 +59,7 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
     private final String addressLine2 = "Building name";
     private final String addressLine3 = "Street name";
     private final String postCode = "XX1 2YY";
+    private NationalityFieldValue oocCountry = mock(NationalityFieldValue.class);
     private final String postTown = "Town name";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "example@example.com";
@@ -103,7 +107,7 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
     @Test
     void should_return_address_in_correct_format_out_of_country() {
         outOfCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
@@ -162,7 +166,7 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         assertEquals(addressLine2, personalisation.get("address_line_2"));
         assertEquals(addressLine3, personalisation.get("address_line_3"));
         assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -174,7 +178,8 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(addressLine3));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_4_ADMIN_J, String.class)).thenReturn(Optional.of(postTown));
-        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_ADMIN_J, String.class)).thenReturn(Optional.of(postCode));
+        when(asylumCase.read(AsylumCaseDefinition.COUNTRY_OOC_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocCountry));
+        when(oocCountry.getCode()).thenReturn(Nationality.ES.name());
     }
 
     private void inCountryDataSetup() {

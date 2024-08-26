@@ -17,7 +17,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryAdminJ": "Spain",
+          "countryOocAdminJ": "ES",
           "appellantInDetention": "No",
           "submissionOutOfTime": "Yes"
         }
@@ -37,7 +37,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryAdminJ": "Spain",
+        "countryOocAdminJ": "ES",
         "appellantInDetention": "No",
         "submissionOutOfTime": "Yes",
         "notificationsSent": [
