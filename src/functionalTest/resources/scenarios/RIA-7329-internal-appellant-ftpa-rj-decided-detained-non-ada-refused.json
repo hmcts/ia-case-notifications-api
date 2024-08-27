@@ -15,8 +15,6 @@
           "ircName": "Brookhouse",
           "ftpaApplicantType": "appellant",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
-          "appellantInDetention": "Yes",
-          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

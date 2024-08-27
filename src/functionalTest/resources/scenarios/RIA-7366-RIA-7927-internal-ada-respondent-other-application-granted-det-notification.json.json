@@ -1,10 +1,10 @@
 {
-  "description": "RIA-7688: internal detained non-ada case home office (Adjourn) application decided (Granted) with LR representation",
+  "description": "RIA-7366 and 7927: internal ada case home office (other) application decided (Granted)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7688,
+      "id": 7366,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -13,10 +13,8 @@
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
-          "isAcceleratedDetainedAppeal": "No",
+          "isAcceleratedDetainedAppeal": "Yes",
           "decideAnApplicationId": "1",
-          "appellantsRepresentation": "No",
-          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -37,9 +35,9 @@
             {
               "id": "1",
               "value": {
-                "type": "Adjourn",
-                "details": "",
-                "evidence": [
+                "type":"Other",
+                "details":"",
+                "evidence":[
                   {
                     "id": "1",
                     "value": {
@@ -49,13 +47,13 @@
                     }
                   }
                 ],
-                "applicant": "Respondent",
-                "date": "",
-                "decision": "Granted",
-                "state": "caseBuilding",
-                "applicantRole": "caseworker-ia-homeofficeapc",
-                "decisionReason": "A reason for the decision",
-                "decisionDate": "{$TODAY}",
+                "applicant":"Respondent",
+                "date":"",
+                "decision":"Granted",
+                "state":"caseBuilding",
+                "applicantRole":"caseworker-ia-homeofficeapc",
+                "decisionReason":"A reason for the decision",
+                "decisionDate":"{$TODAY}",
                 "decisionMaker": "Tribunal Caseworker"
               }
             }
@@ -73,14 +71,8 @@
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
         "appellantInDetention": "Yes",
-        "isAcceleratedDetainedAppeal": "No",
+        "isAcceleratedDetainedAppeal": "Yes",
         "decideAnApplicationId": "1",
-        "notificationsSent": [
-          {
-            "id": "7688_DECIDE_A_RESPONDENT_APPLICATION_DET",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }
-        ],
         "notificationAttachmentDocuments": [
           {
             "id": "1",
@@ -96,16 +88,19 @@
               "dateUploaded": "{$TODAY}"
             }
           }
+        ],
+        "notificationsSent":[
+          {
+            "id":"7366_DECIDE_A_RESPONDENT_APPLICATION_DET",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id":"7366_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "7688_DECIDE_A_RESPONDENT_APPLICATION_DET",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "IAFT – SERVE BY POST: Respondent application decided",
-        "body": []
-      }
-    ]
+    }
   }
 }
+

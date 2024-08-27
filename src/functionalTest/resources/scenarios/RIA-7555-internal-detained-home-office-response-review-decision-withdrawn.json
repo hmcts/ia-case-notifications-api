@@ -15,7 +15,6 @@
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "appealReviewOutcome": "decisionWithdrawn",
-          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

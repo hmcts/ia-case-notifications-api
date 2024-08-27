@@ -19,7 +19,6 @@
           "isAcceleratedDetainedAppeal": "No",
           "ftpaApplicantType": "respondent",
           "ftpaRespondentRjDecisionOutcomeType": "granted",
-          "appellantsRepresentation": "Yes",
           "ftpaRespondentDecisionDocument": [
             {
               "id": "docId",
