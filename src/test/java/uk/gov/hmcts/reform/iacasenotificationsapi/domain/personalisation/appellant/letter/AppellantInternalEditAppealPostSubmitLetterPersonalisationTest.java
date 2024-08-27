@@ -135,7 +135,7 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
     @Test
     void should_throw_exception_when_cannot_find_address_for_legalRep_in_country() {
         legalRepInCountryDataSetup();
-        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_UK, AddressUk.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
@@ -246,7 +246,7 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_UK, AddressUk.class)).thenReturn(Optional.of(address));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(address));
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));

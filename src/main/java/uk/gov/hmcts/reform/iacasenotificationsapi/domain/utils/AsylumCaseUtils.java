@@ -61,7 +61,7 @@ public class AsylumCaseUtils {
         return asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(false);
     }
 
-    public static boolean legalRepinCountryAppeal(AsylumCase asylumCase) {
+    public static boolean legalRepInCountryAppeal(AsylumCase asylumCase) {
         return asylumCase.read(LEGAL_REP_HAS_ADDRESS, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(false);
     }
 
@@ -287,7 +287,7 @@ public class AsylumCaseUtils {
 
     public static List<String> getLegalRepresentativeAddressAsList(final AsylumCase asylumCase) {
         AddressUk address = asylumCase
-            .read(LEGAL_REP_ADDRESS_UK, AddressUk.class)
+            .read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)
             .orElseThrow(() -> new IllegalStateException("legalRepAddressUK is not present"));
 
         List<String> legalRepAddressAsList = new ArrayList<>();
@@ -382,7 +382,7 @@ public class AsylumCaseUtils {
     }
 
     public static Set<String> getLegalRepAddressInCountryOrOoc(final AsylumCase asylumCase) {
-        return legalRepinCountryAppeal(asylumCase) ? Collections.singleton(getLegalRepresentativeAddressAsList(asylumCase).stream()
+        return legalRepInCountryAppeal(asylumCase) ? Collections.singleton(getLegalRepresentativeAddressAsList(asylumCase).stream()
             .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_"))) :
             Collections.singleton(getLegalRepresentativeAddressOocAsList(asylumCase).stream()
                 .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
@@ -408,7 +408,7 @@ public class AsylumCaseUtils {
                 getAppellantAddressAsListOoc(asylumCase);
         // Internal appellant has representation - use legal rep address
         } else {
-            address =  legalRepinCountryAppeal(asylumCase) ?
+            address =  legalRepInCountryAppeal(asylumCase) ?
                 getLegalRepresentativeAddressAsList(asylumCase) :
                 getLegalRepresentativeAddressOocAsList(asylumCase);
         }
