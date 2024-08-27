@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
@@ -21,26 +22,36 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Service
 public class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation implements LetterNotificationPersonalisation {
 
-    private final String appellantInternalRemissionDecisionLetterTemplateId;
+    private final String appellantInternalRemissionDecisionApprovedLetterTemplateId;
+    private final String appellantInternalRemissionDecisionPartiallyApprovedLetterTemplateId;
     private final int daysAfterRemissionDecision;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
 
     public AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation(
-        @Value("${govnotify.template.remissionDecision.appellant.approvedOrPartiallyApproved.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
-        @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
-        CustomerServicesProvider customerServicesProvider,
-        SystemDateProvider systemDateProvider
+            @Value("${govnotify.template.remissionDecision.appellant.approvedOrPartiallyApproved.approved.letter}") String appellantInternalRemissionDecisionApprovedLetterTemplateId,
+            @Value("${govnotify.template.remissionDecision.appellant.approvedOrPartiallyApproved.partiallyApproved.letter}") String appellantInternalRemissionDecisionPartiallyApprovedLetterTemplateId,
+            @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
+            CustomerServicesProvider customerServicesProvider,
+            SystemDateProvider systemDateProvider
     ) {
-        this.appellantInternalRemissionDecisionLetterTemplateId = appellantInternalRemissionDecisionLetterTemplateId;
+        this.appellantInternalRemissionDecisionApprovedLetterTemplateId = appellantInternalRemissionDecisionApprovedLetterTemplateId;
+        this.appellantInternalRemissionDecisionPartiallyApprovedLetterTemplateId = appellantInternalRemissionDecisionPartiallyApprovedLetterTemplateId;
         this.daysAfterRemissionDecision = daysAfterRemissionDecision;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
     }
 
     @Override
-    public String getTemplateId() {
-        return appellantInternalRemissionDecisionLetterTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        RemissionDecision remissionDecision = asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION, RemissionDecision.class)
+                .orElseThrow(() -> new IllegalStateException("Remission decision not found"));
+
+        return switch (remissionDecision) {
+            case APPROVED -> appellantInternalRemissionDecisionApprovedLetterTemplateId;
+            case PARTIALLY_APPROVED -> appellantInternalRemissionDecisionPartiallyApprovedLetterTemplateId;
+            case REJECTED -> null;
+        };
     }
 
     @Override
@@ -70,7 +81,6 @@ public class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisati
         };
 
         final String dueDate = systemDateProvider.dueDate(daysAfterRemissionDecision);
-
         String refundAmount = asylumCase.read(AsylumCaseDefinition.AMOUNT_REMITTED, String.class).orElse("");
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
@@ -89,4 +99,3 @@ public class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisati
         return personalizationBuilder.build();
     }
 }
-
