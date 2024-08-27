@@ -22,7 +22,6 @@
           "isDlrmSetAsideEnabled": "Yes",
           "paymentDate": "10 Oct 2000",
           "feeAmountGbp": "14000",
-          "appellantsRepresentation": "Yes",
           "feeUpdateRecorded": {
             "values": [
               "feeUpdateRecorded"

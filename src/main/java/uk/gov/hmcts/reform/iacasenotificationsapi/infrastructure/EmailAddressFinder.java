@@ -69,12 +69,6 @@ public class EmailAddressFinder {
             .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
     }
 
-    public String getLegalRepPaperJourneyEmailAddress(AsylumCase asylumCase) {
-        return asylumCase
-            .read(LEGAL_REP_EMAIL, String.class)
-            .orElseThrow(() -> new IllegalStateException("Paper journey legalRepEmail is not present"));
-    }
-
     public String getListCaseHomeOfficeEmailAddress(AsylumCase asylumCase) {
         if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
             return getHomeOfficeEmailAddress(asylumCase);
