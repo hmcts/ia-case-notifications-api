@@ -1,25 +1,31 @@
 {
-  "description": "RIA-7366 and 7927: internal ada case home office (other) application decided (Refused)",
+  "description": "RIA-6811, 7363: internal ada case decideAnApplication event (Granted) with LR representation",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7366,
+      "id": 68111,
       "eventId": "decideAnApplication",
-      "state": "appealSubmitted",
+      "state": "caseBuilding",
       "caseData": {
-        "template": "minimal-internal-appeal-submitted.json",
+        "template": "minimal-appeal-submitted.json",
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "appellantGivenNames": "Test",
+          "appellantFamilyName": "User",
+          "appealType": "refusalOfEu",
+          "isAdmin": "Yes",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "decideAnApplicationId": "1",
+          "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalDecideHomeOfficeApplicationLetter",
+                "tag": "internalDecideAnAppellantApplicationLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -47,11 +53,11 @@
                     }
                   }
                 ],
-                "applicant":"Respondent",
+                "applicant":"",
                 "date":"",
-                "decision":"Refused",
+                "decision":"Granted",
                 "state":"caseBuilding",
-                "applicantRole":"caseworker-ia-homeofficeapc",
+                "applicantRole":"caseworker-ia-admofficer",
                 "decisionReason":"A reason for the decision",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Tribunal Caseworker"
@@ -66,18 +72,30 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-internal-appeal-submitted.json",
+      "template": "minimal-appeal-submitted.json",
       "replacements": {
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
-	    "appellantInDetention": "Yes",
+        "appellantGivenNames": "Test",
+        "appellantFamilyName": "User",
+        "appealType": "refusalOfEu",
+        "isAdmin": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
         "decideAnApplicationId": "1",
+        "notificationsSent":[
+          {
+            "id":"68111_DECIDE_AN_APPLICATION_DET",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id":"68111_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }],
         "notificationAttachmentDocuments": [
           {
             "id": "1",
             "value": {
-              "tag": "internalDecideHomeOfficeApplicationLetter",
+              "tag": "internalDecideAnAppellantApplicationLetter",
               "document": {
                 "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                 "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -88,19 +106,16 @@
               "dateUploaded": "{$TODAY}"
             }
           }
-        ],
-        "notificationsSent":[
-          {
-            "id":"7366_DECIDE_A_RESPONDENT_APPLICATION_DET",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id":"7366_DECIDE_AN_APPLICATION_HOME_OFFICE",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "68111_DECIDE_AN_APPLICATION_DET",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "ADA – SERVE IN PERSON: Application decided",
+        "body": []
+      }
+    ]
   }
 }
-

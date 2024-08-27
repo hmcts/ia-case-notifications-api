@@ -14,7 +14,9 @@
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "ftpaApplicantType": "appellant",
+          "appellantInDetention": "Yes",
           "ftpaAppellantRjDecisionOutcomeType": "granted",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
