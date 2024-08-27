@@ -1,10 +1,10 @@
 {
-  "description": "RIA-3800 Notification of manage fee update for refund instructed",
+  "description": "RIA-9234 Notification of manage fee update for refund instructed for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 3800,
+      "id": 92349,
       "eventId": "manageFeeUpdate",
       "state": "appealSubmitted",
       "caseData": {

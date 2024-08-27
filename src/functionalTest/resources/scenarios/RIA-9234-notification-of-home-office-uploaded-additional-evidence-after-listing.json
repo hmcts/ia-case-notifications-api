@@ -1,11 +1,11 @@
 {
-  "description": "RIA-2045-RIA-2936 Notification of home office uploaded additional evidence (after listing)",
+  "description": "RIA-9234 Notification of home office uploaded additional evidence (after listing) for admin and represented cases",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 2045,
+      "id": 923410,
       "eventId": "uploadAdditionalEvidenceHomeOffice",
       "state": "prepareForHearing",
       "caseData": {

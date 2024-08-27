@@ -1,11 +1,11 @@
 {
-  "description": "RIA-9234 decide FTPA Appellant application decision under 35 rule - Notifications to HO and LR",
+  "description": "RIA-9234 decide FTPA Appellant application decision under 35 rule - Notifications to HO and LR for admin and represented cases",
   "launchDarklyKey": "dlrm-setaside-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 8722,
+      "id": 92344,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {

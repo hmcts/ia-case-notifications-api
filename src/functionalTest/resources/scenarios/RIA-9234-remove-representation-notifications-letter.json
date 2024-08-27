@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Send remove representation notification to legal rep, case officer and home office and appellant (email and letter)",
+  "description": "RIA-9234 Send remove representation notification to legal rep, case officer and home office and appellant (email and letter) for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 6043,
+      "id": 923413,
       "eventId": "removeRepresentation",
       "state": "appealSubmitted",
       "caseData": {

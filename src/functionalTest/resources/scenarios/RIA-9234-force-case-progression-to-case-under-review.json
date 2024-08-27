@@ -1,10 +1,10 @@
 {
-  "description": "RIA-2775 Force case progression to case under review",
+  "description": "RIA-9234 Force case progression to case under review for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 92348,
       "eventId": "forceCaseToCaseUnderReview",
       "state": "caseBuilding",
       "caseData": {

@@ -1,12 +1,12 @@
 {
-  "description": "RIA-9234 Record adjournment details (List Assist integrated: Notification excluding Admin)",
+  "description": "RIA-9234 Record adjournment details (List Assist integrated: Notification excluding Admin) for admin and represented cases",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 34536,
+      "id": 923412,
       "eventId": "recordAdjournmentDetails",
       "state": "prepareForHearing",
       "caseData": {

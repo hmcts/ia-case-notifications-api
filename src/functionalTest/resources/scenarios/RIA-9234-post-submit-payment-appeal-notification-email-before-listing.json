@@ -1,10 +1,10 @@
 {
-  "description": "RIA-4467 Post-submit payment paid notifications to LR (PA / Pay by card after submitting the appeal) - before listing",
+  "description": "RIA-9234 Post-submit payment paid notifications to LR (PA / Pay by card after submitting the appeal) - before listing for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 4467,
+      "id": 923411,
       "eventId": "paymentAppeal",
       "state": "awaitingRespondentEvidence",
       "caseData": {

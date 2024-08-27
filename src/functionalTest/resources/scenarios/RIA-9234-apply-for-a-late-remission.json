@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Legal rep apply for a late remission",
+  "description": "RIA-9234 Legal rep apply for a late remission for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3218,
+      "id": 92342,
       "eventId": "requestFeeRemission",
       "state": "appealSubmitted",
       "caseData": {

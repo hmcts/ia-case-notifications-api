@@ -336,9 +336,4 @@ public class AsylumCaseUtils {
             .map(yesOrNo -> Objects.equals(NO, yesOrNo)).orElse(false);
     }
 
-    public static boolean hasBeenSubmittedByAppellantInternalCase(AsylumCase asylumCase) {
-        return asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
-            .map(yesOrNo -> Objects.equals(YES, yesOrNo)).orElse(false);
-    }
-
 }

@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Request case edit legal representative",
+  "description": "RIA-9234 Request case edit legal representative for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1011,
+      "id": 923415,
       "eventId": "requestCaseEdit",
       "state": "caseUnderReview",
       "caseData": {

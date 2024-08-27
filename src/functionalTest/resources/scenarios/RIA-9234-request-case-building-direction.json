@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Send Legal Representative review direction",
+  "description": "RIA-9234 Send Legal Representative review direction for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1789,
+      "id": 923414,
       "eventId": "requestCaseBuilding",
       "state": "awaitingRespondentEvidence",
       "caseData": {

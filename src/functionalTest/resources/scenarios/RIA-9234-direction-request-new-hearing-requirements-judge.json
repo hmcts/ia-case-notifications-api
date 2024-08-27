@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 direction to legal rep (by judge) to submit new hearing requirements",
+  "description": "RIA-9234 direction to legal rep (by judge) to submit new hearing requirements for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 3652,
+      "id": 92347,
       "eventId": "requestNewHearingRequirements",
       "state": "ftpaDecided",
       "caseData": {

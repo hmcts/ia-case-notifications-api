@@ -1,12 +1,12 @@
 {
-  "description": "RIA-9234 Adjourn hearing without date - (Home Office notification disabled) (List Assist non-integrated: Notifications including Admin)",
+  "description": "RIA-9234 Adjourn hearing without date - (Home Office notification disabled) (List Assist non-integrated: Notifications including Admin) for admin and represented cases",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "disabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 3631678,
+      "id": 92341,
       "eventId": "adjournHearingWithoutDate",
       "state": "preHearing",
       "caseData": {

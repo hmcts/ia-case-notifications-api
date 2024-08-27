@@ -1,11 +1,11 @@
 {
-  "description": "RIA-9234 Send direction when Request response amend event is triggered",
+  "description": "RIA-9234 Send direction when Request response amend event is triggered for admin and represented cases",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1003,
+      "id": 923416,
       "eventId": "requestResponseAmend",
       "state": "respondentReview",
       "caseData": {
