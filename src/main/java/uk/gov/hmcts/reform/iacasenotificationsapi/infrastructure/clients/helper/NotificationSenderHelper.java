@@ -44,7 +44,8 @@ public class NotificationSenderHelper<T extends CaseData> {
             String reference,
             RetryableNotificationClient notificationClient,
             Integer deduplicateSendsWithinSeconds,
-            Logger logger
+            Logger logger,
+            Callback<T> callback
     ) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
         return recentDeliveryReceiptCache.get(
@@ -71,6 +72,7 @@ public class NotificationSenderHelper<T extends CaseData> {
 
                     } catch (NotificationClientException e) {
                         logger.error("Failed to send email using GovNotify for case reference {}", reference, e);
+                        storeFailedNotification(callback, e, reference, "email", emailAddress);
                     }
                     return Strings.EMPTY;
                 }
@@ -151,18 +153,7 @@ public class NotificationSenderHelper<T extends CaseData> {
 
                     } catch (NotificationClientException e) {
                         logger.error("Failed to send sms using GovNotify for case reference {}", reference, e);
-                        AsylumCase asylumCase = (AsylumCase) callback.getCaseDetails().getCaseData();
-                        Optional<List<IdValue<StoredNotification>>> maybeExistingNotifications =
-                            asylumCase.read(NOTIFICATIONS);
-                        List<IdValue<StoredNotification>> allNotifications = maybeExistingNotifications.orElse(emptyList());
-
-                        String errorMessage = e.getMessage();
-                        StoredNotification storedNotification = getFailedNotification(errorMessage, reference,
-                            "sms", phoneNumber);
-                        allNotifications = append(storedNotification, allNotifications);
-
-
-                        asylumCase.write(NOTIFICATIONS, allNotifications);
+                        storeFailedNotification(callback, e, reference, "sms", phoneNumber);
                     }
                     return Strings.EMPTY;
                 }
@@ -179,6 +170,20 @@ public class NotificationSenderHelper<T extends CaseData> {
         }
 
         return recentDeliveryReceiptCache;
+    }
+
+    private void storeFailedNotification(Callback<T> callback, NotificationClientException e,
+                                         String reference, String method, String phoneNumber) {
+        AsylumCase asylumCase = (AsylumCase) callback.getCaseDetails().getCaseData();
+        Optional<List<IdValue<StoredNotification>>> maybeExistingNotifications =
+            asylumCase.read(NOTIFICATIONS);
+        List<IdValue<StoredNotification>> allNotifications = maybeExistingNotifications.orElse(emptyList());
+
+        String errorMessage = e.getMessage();
+        StoredNotification storedNotification = getFailedNotification(errorMessage, reference,
+            method, phoneNumber);
+        allNotifications = append(storedNotification, allNotifications);
+        asylumCase.write(NOTIFICATIONS, allNotifications);
     }
 
     private static StoredNotification getFailedNotification(String errorMessage, String reference, String method,

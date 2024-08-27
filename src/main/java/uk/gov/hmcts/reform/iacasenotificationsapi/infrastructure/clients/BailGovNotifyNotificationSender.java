@@ -39,7 +39,8 @@ public class BailGovNotifyNotificationSender implements NotificationSender<BailC
         String templateId,
         String emailAddress,
         Map<String, String> personalisation,
-        String reference
+        String reference,
+        Callback<BailCase> callback
     ) {
         return senderHelper.sendEmail(
                 templateId,
@@ -48,7 +49,8 @@ public class BailGovNotifyNotificationSender implements NotificationSender<BailC
                 reference,
                 notificationBailClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                callback
         );
     }
 

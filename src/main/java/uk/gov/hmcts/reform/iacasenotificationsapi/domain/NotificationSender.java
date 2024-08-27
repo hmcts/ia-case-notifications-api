@@ -12,7 +12,8 @@ public interface NotificationSender<T extends CaseData> {
         String templateId,
         String emailAddress,
         Map<String, String> personalisation,
-        String reference
+        String reference,
+        Callback<T> callback
     );
 
     String sendSms(

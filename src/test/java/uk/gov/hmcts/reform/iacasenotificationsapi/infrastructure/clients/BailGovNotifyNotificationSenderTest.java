@@ -65,7 +65,8 @@ public class BailGovNotifyNotificationSenderTest {
             reference,
             notificationBailClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            callback
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
@@ -73,7 +74,8 @@ public class BailGovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                callback
             );
 
         verify(senderHelper, times(1)).sendEmail(
@@ -83,7 +85,8 @@ public class BailGovNotifyNotificationSenderTest {
             reference,
             notificationBailClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            callback
         );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);

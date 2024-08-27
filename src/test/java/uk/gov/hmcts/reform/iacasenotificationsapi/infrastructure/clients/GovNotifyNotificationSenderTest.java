@@ -66,7 +66,8 @@ public class GovNotifyNotificationSenderTest {
             reference,
             notificationClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            callback
         )).thenReturn(String.valueOf(expectedNotificationId));
 
         String actualNotificationId =
@@ -74,7 +75,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 emailAddress,
                 personalisation,
-                reference
+                reference,
+                callback
             );
 
         verify(senderHelper, times(1)).sendEmail(
@@ -84,7 +86,8 @@ public class GovNotifyNotificationSenderTest {
             reference,
             notificationClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            callback
         );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId);

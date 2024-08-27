@@ -104,7 +104,8 @@ public class NotificationSenderHelperTest {
                 reference,
                 notificationClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                asylumCallback
             );
 
         final String actualNotificationId2 =
@@ -115,7 +116,8 @@ public class NotificationSenderHelperTest {
                 reference,
                 notificationClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                asylumCallback
             );
 
         final String actualNotificationIdForOther =
@@ -126,7 +128,8 @@ public class NotificationSenderHelperTest {
                 otherReference,
                 notificationClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                asylumCallback
             );
 
 
@@ -148,7 +151,8 @@ public class NotificationSenderHelperTest {
                 reference,
                 notificationClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                asylumCallback
             );
 
         assertEquals(expectedNotificationId.toString(), actualNotificationId3);
@@ -181,7 +185,8 @@ public class NotificationSenderHelperTest {
                 personalisation,
                 reference
             );
-
+        when(asylumCallback.getCaseDetails()).thenReturn(asylumCaseDetails);
+        when(asylumCaseDetails.getCaseData()).thenReturn(asylumCase);
         String actualNotificationId = senderHelper.sendEmail(
             templateId,
             emailAddress,
@@ -189,7 +194,8 @@ public class NotificationSenderHelperTest {
             reference,
             notificationClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            asylumCallback
         );
 
         assertNotNull(actualNotificationId);

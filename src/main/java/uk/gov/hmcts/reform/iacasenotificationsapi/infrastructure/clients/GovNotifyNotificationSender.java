@@ -33,7 +33,8 @@ public class GovNotifyNotificationSender implements NotificationSender<AsylumCas
         String templateId,
         String emailAddress,
         Map<String, String> personalisation,
-        String reference
+        String reference,
+        Callback<AsylumCase> callback
     ) {
         return senderHelper.sendEmail(
                 templateId,
@@ -42,7 +43,9 @@ public class GovNotifyNotificationSender implements NotificationSender<AsylumCas
                 reference,
                 notificationClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                callback
+
         );
     }
 
