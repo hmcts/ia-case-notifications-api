@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -197,7 +198,7 @@ public class NotificationSenderHelper<T extends CaseData> {
             .notificationDateSent(sentAt)
             .notificationSentTo(sentTo)
             .notificationBody("N/A")
-            .notificationMethod(method)
+            .notificationMethod(StringUtils.capitalize(method))
             .notificationStatus("Failed")
             .notificationReference(reference)
             .notificationSubject(reference)
