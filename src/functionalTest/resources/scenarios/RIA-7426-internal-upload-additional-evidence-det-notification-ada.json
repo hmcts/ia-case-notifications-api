@@ -14,6 +14,7 @@
           "ircName": "Brookhouse",
           "isAcceleratedDetainedAppeal": "Yes",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
