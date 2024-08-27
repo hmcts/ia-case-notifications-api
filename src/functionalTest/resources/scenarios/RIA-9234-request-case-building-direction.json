@@ -53,7 +53,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "1789_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
+            "id": "923414_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -61,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "1789_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
+        "reference": "923414_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: review Build your case direction",
         "body": [

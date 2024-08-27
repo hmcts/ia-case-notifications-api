@@ -1,11 +1,11 @@
 {
-  "description": "RIA-9234 Send hearing requirements agreed notification to legal rep and home office (Bradford hearing centre) with LO reviewed hearing requirements",
+  "description": "RIA-9234 Send hearing requirements agreed notification to legal rep and home office (Bradford hearing centre) with LO reviewed hearing requirements for admin and represented cases",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1333,
+      "id": 923418,
       "eventId": "reviewHearingRequirements",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -40,11 +40,11 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1333_HEARING_REQUIREMENTS_AGREED_LEGAL_REPRESENTATIVE",
+            "id": "923418_HEARING_REQUIREMENTS_AGREED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1333_HEARING_REQUIREMENTS_AGREED_HOME_OFFICE",
+            "id": "923418_HEARING_REQUIREMENTS_AGREED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -58,7 +58,7 @@
     },
     "notifications": [
       {
-        "reference": "1333_HEARING_REQUIREMENTS_AGREED_LEGAL_REPRESENTATIVE",
+        "reference": "923418_HEARING_REQUIREMENTS_AGREED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Accelerated detained appeal: hearing requirements agreed",
         "body": [
@@ -76,7 +76,7 @@
         ]
       },
       {
-        "reference": "1333_HEARING_REQUIREMENTS_AGREED_HOME_OFFICE",
+        "reference": "923418_HEARING_REQUIREMENTS_AGREED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.bradford}",
         "subject": "Accelerated detained appeal: hearing requirements agreed",
         "body": [

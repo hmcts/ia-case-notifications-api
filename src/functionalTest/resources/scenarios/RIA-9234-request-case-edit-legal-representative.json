@@ -38,7 +38,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1011_LEGAL_REPRESENTATIVE_REQUEST_CASE_EDIT",
+            "id": "923415_LEGAL_REPRESENTATIVE_REQUEST_CASE_EDIT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,7 +46,7 @@
     },
     "notifications": [
       {
-        "reference": "1011_LEGAL_REPRESENTATIVE_REQUEST_CASE_EDIT",
+        "reference": "923415_LEGAL_REPRESENTATIVE_REQUEST_CASE_EDIT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: edit your case direction",
         "body": [

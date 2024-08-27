@@ -1,11 +1,11 @@
 {
-  "description": "RIA-9234 Send transfer out of ada notifications to LR and HO before listing",
+  "description": "RIA-9234 Send transfer out of ada notifications to LR and HO before listing for admin and represented cases",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 6588,
+      "id": 923427,
       "eventId": "transferOutOfAda",
       "state": "appealSubmitted",
       "caseData": {
@@ -33,11 +33,11 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "6588_TRANSFER_OUT_OF_ADA_LEGAL_REP",
+            "id": "923427_TRANSFER_OUT_OF_ADA_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6588_TRANSFER_OUT_OF_ADA_HOME_OFFICE",
+            "id": "923427_TRANSFER_OUT_OF_ADA_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

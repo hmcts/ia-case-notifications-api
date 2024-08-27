@@ -33,7 +33,7 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "3800_LEGAL_REPRESENTATIVE_REFUND_INSTRUCTED",
+            "id": "92349_LEGAL_REPRESENTATIVE_REFUND_INSTRUCTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -41,7 +41,7 @@
     },
     "notifications": [
       {
-        "reference": "3800_LEGAL_REPRESENTATIVE_REFUND_INSTRUCTED",
+        "reference": "92349_LEGAL_REPRESENTATIVE_REFUND_INSTRUCTED",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Refund instructed",
         "body": [

@@ -31,11 +31,11 @@
         "hearingCentre": "northShields",
         "notificationsSent": [
           {
-            "id": "1003_CASE_SUBMITTED_LEGAL_REPRESENTATIVE",
+            "id": "92343_CASE_SUBMITTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_CASE_SUBMITTED_CASE_OFFICER",
+            "id": "92343_CASE_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -43,7 +43,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_CASE_SUBMITTED_LEGAL_REPRESENTATIVE",
+        "reference": "92343_CASE_SUBMITTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Appeal Skeleton Argument submitted",
         "body": [
@@ -52,7 +52,7 @@
         ]
       },
       {
-        "reference": "1003_CASE_SUBMITTED_CASE_OFFICER",
+        "reference": "92343_CASE_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.northShields}",
         "subject": "Immigration and Asylum appeal: Appeal Skeleton Argument submitted",
         "body": [

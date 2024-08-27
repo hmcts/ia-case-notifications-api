@@ -53,11 +53,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1003_REQUEST_RESPONDENT_AMEND_DIRECTION",
+            "id": "923416_REQUEST_RESPONDENT_AMEND_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_REQUEST_RESPONDENT_AMEND_DIRECTION_LEGAL_REPRESENTATIVE",
+            "id": "923416_REQUEST_RESPONDENT_AMEND_DIRECTION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -65,7 +65,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_REQUEST_RESPONDENT_AMEND_DIRECTION",
+        "reference": "923416_REQUEST_RESPONDENT_AMEND_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [
@@ -80,7 +80,7 @@
         ]
       },
       {
-        "reference": "1003_REQUEST_RESPONDENT_AMEND_DIRECTION_LEGAL_REPRESENTATIVE",
+        "reference": "923416_REQUEST_RESPONDENT_AMEND_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: direction sent to the Home Office",
         "body": [

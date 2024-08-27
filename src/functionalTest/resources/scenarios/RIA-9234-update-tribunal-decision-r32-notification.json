@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Update Tribunal Decision Rule 32 Notification",
+  "description": "RIA-9234 Update Tribunal Decision Rule 32 Notification for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 8221,
+      "id": 923431,
       "eventId": "updateTribunalDecision",
       "state": "ftpaDecided",
       "caseData": {
@@ -36,11 +36,11 @@
         "updateTribunalDecisionList": "underRule32",
         "notificationsSent": [
           {
-            "id": "8221_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
+            "id": "923431_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8221_LEGAL_REPRESENTATIVE_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
+            "id": "923431_LEGAL_REPRESENTATIVE_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

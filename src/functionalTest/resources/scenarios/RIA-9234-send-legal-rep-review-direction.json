@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Send Legal Representative review direction",
+  "description": "RIA-9234 Send Legal Representative review direction for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 923424,
       "eventId": "addAppealResponse",
       "state": "respondentReview",
       "caseData": {
@@ -52,7 +52,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "1234_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
+            "id": "923424_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -61,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "1234_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
+        "reference": "923424_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: review Home Office response direction",
         "body": [

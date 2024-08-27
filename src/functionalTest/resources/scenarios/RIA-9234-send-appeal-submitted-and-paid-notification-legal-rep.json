@@ -1,11 +1,11 @@
 {
-  "description": "RIA-9243 Post-submit pay for appeal notifications to LR, CO and HO for admin and represented cases",
+  "description": "RIA-9234 Post-submit pay for appeal notifications to LR, CO and HO for admin and represented cases",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 4467,
+      "id": 923419,
       "eventId": "payForAppeal",
       "state": "pendingPayment",
       "caseData": {

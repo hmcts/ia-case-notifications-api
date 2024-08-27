@@ -1,10 +1,10 @@
 {
-  "description": "RIA-9234 Send build case direction notification",
+  "description": "RIA-9234 Send build case direction notification for admin and represented cases",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 923422,
       "eventId": "uploadRespondentEvidence",
       "state": "caseBuilding",
       "caseData": {
@@ -53,7 +53,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "1234_BUILD_CASE_DIRECTION",
+            "id": "923422_BUILD_CASE_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -61,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "1234_BUILD_CASE_DIRECTION",
+        "reference": "923422_BUILD_CASE_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: review Build your case direction",
         "body": [

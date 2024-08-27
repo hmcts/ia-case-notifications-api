@@ -34,15 +34,15 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "34536_LEGAL_REPRESENTATIVE_RECORD_ADJOURNMENT_DETAILS",
+            "id": "923412_LEGAL_REPRESENTATIVE_RECORD_ADJOURNMENT_DETAILS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34536_RESPONDENT_RECORD_ADJOURNMENT_DETAILS",
+            "id": "923412_RESPONDENT_RECORD_ADJOURNMENT_DETAILS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34536_CASE_OFFICER_RECORD_ADJOURNMENT_DETAILS",
+            "id": "923412_CASE_OFFICER_RECORD_ADJOURNMENT_DETAILS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -50,7 +50,7 @@
     },
     "notifications": [
       {
-        "reference": "34536_LEGAL_REPRESENTATIVE_RECORD_ADJOURNMENT_DETAILS",
+        "reference": "923412_LEGAL_REPRESENTATIVE_RECORD_ADJOURNMENT_DETAILS",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
@@ -60,7 +60,7 @@
         ]
       },
       {
-        "reference": "34536_RESPONDENT_RECORD_ADJOURNMENT_DETAILS",
+        "reference": "923412_RESPONDENT_RECORD_ADJOURNMENT_DETAILS",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
@@ -70,7 +70,7 @@
         ]
       },
       {
-        "reference": "34536_CASE_OFFICER_RECORD_ADJOURNMENT_DETAILS",
+        "reference": "923412_CASE_OFFICER_RECORD_ADJOURNMENT_DETAILS",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [

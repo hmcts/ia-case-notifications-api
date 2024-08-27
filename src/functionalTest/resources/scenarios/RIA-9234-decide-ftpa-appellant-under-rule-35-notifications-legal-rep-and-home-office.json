@@ -32,11 +32,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "8722_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+            "id": "92344_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8722_LEGAL_REP_REHEARD_UNDER_RULE_35_EMAIL",
+            "id": "92344_LEGAL_REP_REHEARD_UNDER_RULE_35_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "8722_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+        "reference": "92344_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
         "recipient": "{$homeOfficeFtpaEmailAddresses.glasgow}",
         "subject": "Immigration and Asylum appeal: Application decided",
         "body": [
@@ -57,7 +57,7 @@
         ]
       },
       {
-        "reference": "8722_LEGAL_REP_REHEARD_UNDER_RULE_35_EMAIL",
+        "reference": "92344_LEGAL_REP_REHEARD_UNDER_RULE_35_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Application decided",
         "body": [
