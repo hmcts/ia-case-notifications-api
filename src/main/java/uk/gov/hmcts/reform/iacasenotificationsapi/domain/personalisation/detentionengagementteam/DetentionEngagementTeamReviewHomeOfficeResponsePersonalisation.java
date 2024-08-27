@@ -2,12 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REVIEW_OUTCOME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -56,7 +56,12 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation impl
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return detEmailService.getRecipientsList(asylumCase);
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
+            return Collections.emptySet();
+        }
+
+        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
     }
 
     @Override
