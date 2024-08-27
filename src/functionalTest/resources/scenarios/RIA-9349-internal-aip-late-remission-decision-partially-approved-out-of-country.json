@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8719 Send letter notification to appellant for late remission decision (partially approved) - out of country (internal case creation)",
+  "description": "RIA-9349 Send letter notification to appellant for late remission decision (partially approved) - out of country (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -13,6 +13,7 @@
           "amountRemitted": "14000",
           "appealType": "refusalOfHumanRights",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "remissionDecision": "partiallyApproved",
           "lateRemissionType": "hoWaiverRemission",
@@ -38,6 +39,7 @@
         "amountRemitted": "14000",
         "appealType": "refusalOfHumanRights",
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "remissionDecision": "partiallyApproved",
         "lateRemissionType": "hoWaiverRemission",
