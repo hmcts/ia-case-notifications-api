@@ -242,7 +242,7 @@ public class NotificationSenderHelper<T extends CaseData> {
             if (errorsNode.isArray()) {
                 for (JsonNode errorNode : errorsNode) {
                     String message = errorNode.path("message").asText();
-                    messages.add(message);
+                    messages.add(StringUtils.capitalize(message));
                 }
             }
         } catch (Exception e) {
