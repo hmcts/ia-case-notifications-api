@@ -583,7 +583,7 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_HAS_ADDRESS(
         "legalRepHasAddress", new TypeReference<YesOrNo>(){}),
     
-  //Paper journey legal representative email
+    //Paper journey legal representative email
     LEGAL_REP_EMAIL(
         "legalRepEmail", new TypeReference<String>(){}),
 
