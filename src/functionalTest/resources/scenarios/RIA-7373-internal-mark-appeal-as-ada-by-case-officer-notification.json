@@ -14,6 +14,7 @@
           "appellantInDetention": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

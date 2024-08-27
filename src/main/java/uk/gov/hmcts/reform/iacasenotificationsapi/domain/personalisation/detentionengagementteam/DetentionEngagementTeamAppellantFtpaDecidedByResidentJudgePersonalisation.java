@@ -1,16 +1,18 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_APPELLANT_FTPA_DECIDED_LETTER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -61,12 +63,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (!isAppellantInDetention(asylumCase) || detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-
-        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        return detEmailService.getRecipientsList(asylumCase);
     }
 
     @Override

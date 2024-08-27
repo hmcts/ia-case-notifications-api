@@ -167,7 +167,10 @@ govnotify:
           onTime:
             letter: 14fd949c-d879-4878-ae6d-844abce5baf3
         approvedOrPartiallyApproved:
-          letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
+          approved:
+            letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
+          partiallyApproved:
+            letter: 7e81f236-db91-4f42-b3b2-a7e56edf5957
 
     editPaymentMethod:
       adminOfficer:
