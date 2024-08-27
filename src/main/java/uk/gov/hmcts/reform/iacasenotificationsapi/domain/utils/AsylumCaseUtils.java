@@ -103,6 +103,16 @@ public class AsylumCaseUtils {
             .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
     }
 
+    public static DocumentWithMetadata getdecisionAndReasonsLetterForNotification(AsylumCase asylumCase, DocumentTag documentTag) {
+        Optional<List<IdValue<DocumentWithMetadata>>> optionalNotificationLetters = asylumCase.read(FINAL_DECISION_AND_REASONS_DOCUMENTS);
+        return optionalNotificationLetters
+            .orElse(Collections.emptyList())
+            .stream()
+            .map(IdValue::getValue)
+            .filter(d -> d.getTag() == documentTag)
+            .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
+    }
+
     private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {
         return asylumCase.read(field, String.class)
             .orElseThrow(() -> new RequiredFieldMissingException(field.name() + " is missing"));
@@ -319,6 +329,18 @@ public class AsylumCaseUtils {
     public static boolean isDecisionWithoutHearingAppeal(AsylumCase asylumCase) {
         return asylumCase.read(IS_DECISION_WITHOUT_HEARING, YesOrNo.class)
             .map(yesOrNo -> YES == yesOrNo).orElse(false);
+    }
+
+    public static boolean isRule31ReasonUpdatingDecision(AsylumCase asylumCase) {
+
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
+            .map(reason -> reason.equals("underRule31")).orElse(false);
+    }
+
+    public static boolean isRule32ReasonUpdatingDecision(AsylumCase asylumCase) {
+
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
+            .map(reason -> reason.equals("underRule32")).orElse(false);
     }
 
 }

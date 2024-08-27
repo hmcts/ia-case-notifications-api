@@ -78,6 +78,10 @@ public enum DocumentTag {
     INTERNAL_CASE_LISTED_LETTER_BUNDLE("internalCaseListedLetterBundle"),
     INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE("internalEditCaseListingLetterBundle"),
     INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE("internalOutOfTimeDecisionLetter"),
+    INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_R31_LETTER("internalUpdateTribunalDecisionR31Letter"),
+    INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_R32_LETTER("internalUpdateTribunalDecisionR32Letter"),
+    UPDATED_DECISION_AND_REASONS_COVER_LETTER("updatedDecisionAndReasonsCoverLetter"),
+    UPDATED_FINAL_DECISION_AND_REASONS_PDF("updatedFinalDecisionAndReasonsPdf"),
 
     @JsonEnumDefaultValue
     NONE("");
