@@ -577,15 +577,18 @@ public enum AsylumCaseDefinition {
     OOC_COUNTRY_LINE(
         "oocCountryLine", new TypeReference<String>(){}),
 
-    APPELLANTS_REPRESENTATION(
-        "appellantsRepresentation", new TypeReference<YesOrNo>(){}),
-
     OOC_LR_COUNTRY_ADMIN_J(
         "oocLrCountryAdminJ", new TypeReference<NationalityFieldValue>(){}),
 
     LEGAL_REP_HAS_ADDRESS(
         "legalRepHasAddress", new TypeReference<YesOrNo>(){}),
-    ;
+    
+  //Paper journey legal representative email
+    LEGAL_REP_EMAIL(
+        "legalRepEmail", new TypeReference<String>(){}),
+
+    APPELLANTS_REPRESENTATION(
+        "appellantsRepresentation", new TypeReference<YesOrNo>(){});
 
     private final String value;
     private final TypeReference typeReference;

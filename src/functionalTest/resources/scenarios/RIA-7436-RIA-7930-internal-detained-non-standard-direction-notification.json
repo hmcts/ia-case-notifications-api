@@ -15,6 +15,7 @@
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
+          "appellantsRepresentation": "Yes",
           "directions": [
             {
               "id": "1",
