@@ -50,8 +50,7 @@
           "appellantFamilyName": "User",
           "isAdmin": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
-          "appellantInDetention": "Yes",
-          "appellantsRepresentation": "Yes"
+          "appellantInDetention": "Yes"
         }
       }
     }

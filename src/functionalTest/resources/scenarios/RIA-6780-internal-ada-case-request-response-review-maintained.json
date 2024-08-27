@@ -20,8 +20,6 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "appealReviewOutcome": "decisionMaintained",
           "listCaseHearingDate": "2024-05-03T14:25:15.000",
-          "appellantsRepresentation": "Yes",
-          "appellantInDetention": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "docId",
