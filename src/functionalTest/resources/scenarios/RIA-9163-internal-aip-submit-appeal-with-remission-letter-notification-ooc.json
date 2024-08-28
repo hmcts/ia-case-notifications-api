@@ -10,6 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "appellantsRepresentation": "Yes",
           "isAdmin": "Yes",
           "appellantInUk": "No",
           "appellantInDetention": "No",
@@ -34,6 +35,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appellantsRepresentation": "Yes",
         "isAdmin": "Yes",
         "appellantInUk": "No",
         "appellantInDetention": "No",

@@ -43,7 +43,8 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getAppellantAddressInCountryOrOoc(asylumCase);
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -73,12 +74,10 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
             .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
             .put("fourteenDaysAfterSubmitDate", dueDate);
 
-        List<String> appellantAddress =  inCountryAppeal(asylumCase) ?
-            getAppellantAddressAsList(asylumCase) :
-            getAppellantAddressAsListOoc(asylumCase);
+        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
-        for (int i = 0; i < appellantAddress.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), appellantAddress.get(i));
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
         return personalizationBuilder.build();
     }

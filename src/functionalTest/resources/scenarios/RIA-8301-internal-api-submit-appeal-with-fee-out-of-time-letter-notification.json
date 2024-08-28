@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInUk": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "submissionOutOfTime": "Yes",
           "appellantHasFixedAddress": "Yes",
@@ -36,6 +37,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInUk": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "submissionOutOfTime": "Yes",
         "appellantHasFixedAddress": "Yes",

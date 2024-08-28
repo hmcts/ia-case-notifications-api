@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8331 Internal non-detained case listed letter",
+  "description": "RIA-8331 Internal non-detained case listed letter - out of time",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "No",
           "listCaseHearingCentre": "bradford",
@@ -38,6 +39,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInUk": "No",
         "appellantInDetention": "No",
         "listCaseHearingCentre": "bradford",

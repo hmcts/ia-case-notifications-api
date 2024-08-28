@@ -4,21 +4,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADJOURN_HEARING_WITHOUT_DATE_REASONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +46,7 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
     AddressUk address;
     @Mock
     private HearingDetailsFinder hearingDetailsFinder;
+    private Long ccdCaseId = 12345L;
     private final String customerServicesTelephone = "0300 123 1711";
     private String customerServicesEmail = "example@example.com";
     private String appellantGivenNames = "John";
@@ -109,7 +100,14 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(templateName, internalCaseAdjournedWithoutDatePersonalisation.getTemplateId());
     }
 
-    void dataSetup() {
+    @Test
+    void should_return_given_reference_id() {
+        Assertions.assertEquals(ccdCaseId + "_INTERNAL_CASE_AJOURN_WITHOUT_DATE_APPELLANT_LETTER",
+            internalCaseAdjournedWithoutDatePersonalisation.getReferenceId(ccdCaseId));
+    }
+
+    void appellantInCountryDataSetup() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
@@ -119,9 +117,20 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         when(address.getPostTown()).thenReturn(Optional.of(postTown));
     }
 
+    void legalRepInCountryDataSetup() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(address));
+        when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
+        when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
+        when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
+        when(address.getPostCode()).thenReturn(Optional.of(postCode));
+        when(address.getPostTown()).thenReturn(Optional.of(postTown));
+    }
+
     @Test
-    void should_populate_template_correctly() {
-        dataSetup();
+    void should_populate_template_correctly_appellant_in_country() {
+        appellantInCountryDataSetup();
         fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
         assertEquals(appealReferenceNumber, fieldValuesMap.get("appealReferenceNumber"));
         assertEquals(appellantGivenNames, fieldValuesMap.get("appellantGivenNames"));
@@ -140,8 +149,28 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
     }
 
     @Test
-    void should_populate_template_correctly_out_of_country() {
-        dataSetupOoc();
+    void should_populate_template_correctly_legalRep_in_country() {
+        legalRepInCountryDataSetup();
+        fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
+        assertEquals(appealReferenceNumber, fieldValuesMap.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, fieldValuesMap.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, fieldValuesMap.get("appellantFamilyName"));
+        assertEquals(homeOfficeReferenceNumber, fieldValuesMap.get("homeOfficeReferenceNumber"));
+        assertEquals(customerServicesTelephone, fieldValuesMap.get("customerServicesTelephone"));
+        assertEquals(customerServicesEmail, fieldValuesMap.get("customerServicesEmail"));
+        assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
+        assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
+        assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
+        assertEquals(addressLine1, fieldValuesMap.get("address_line_1"));
+        assertEquals(addressLine2, fieldValuesMap.get("address_line_2"));
+        assertEquals(addressLine3, fieldValuesMap.get("address_line_3"));
+        assertEquals(postTown, fieldValuesMap.get("address_line_4"));
+        assertEquals(postCode, fieldValuesMap.get("address_line_5"));
+    }
+
+    @Test
+    void should_populate_template_correctly_appellant_out_of_country() {
+        appellantOocDataSetupOoc();
         fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
         assertEquals(appealReferenceNumber, fieldValuesMap.get("appealReferenceNumber"));
         assertEquals(appellantGivenNames, fieldValuesMap.get("appellantGivenNames"));
@@ -158,7 +187,27 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_4"));
     }
 
-    void dataSetupOoc() {
+    @Test
+    void should_populate_template_correctly_legalRep_out_of_country() {
+        legalRepOocDataSetupOoc();
+        fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
+        assertEquals(appealReferenceNumber, fieldValuesMap.get("appealReferenceNumber"));
+        assertEquals(appellantGivenNames, fieldValuesMap.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, fieldValuesMap.get("appellantFamilyName"));
+        assertEquals(homeOfficeReferenceNumber, fieldValuesMap.get("homeOfficeReferenceNumber"));
+        assertEquals(customerServicesTelephone, fieldValuesMap.get("customerServicesTelephone"));
+        assertEquals(customerServicesEmail, fieldValuesMap.get("customerServicesEmail"));
+        assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
+        assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
+        assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
+        assertEquals(oocAddressLine1, fieldValuesMap.get("address_line_1"));
+        assertEquals(oocAddressLine2, fieldValuesMap.get("address_line_2"));
+        assertEquals(oocAddressLine3, fieldValuesMap.get("address_line_3"));
+        assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_4"));
+    }
+
+    void appellantOocDataSetupOoc() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
@@ -167,14 +216,36 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
     }
 
+    void legalRepOocDataSetupOoc() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(OOC_ADDRESS_LINE_1, String.class)).thenReturn(Optional.of(oocAddressLine1));
+        when(asylumCase.read(OOC_ADDRESS_LINE_2, String.class)).thenReturn(Optional.of(oocAddressLine2));
+        when(asylumCase.read(OOC_ADDRESS_LINE_3, String.class)).thenReturn(Optional.of(oocAddressLine3));
+        when(asylumCase.read(AsylumCaseDefinition.OOC_LR_COUNTRY_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
+    }
+
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> internalCaseAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_cannot_find_address_for_legalRep_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> internalCaseAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("legalRepAddressUK is not present");
     }
 
     @Test

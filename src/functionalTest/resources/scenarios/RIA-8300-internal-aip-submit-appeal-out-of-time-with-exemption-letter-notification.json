@@ -12,6 +12,7 @@
         "replacements": {
           "appealType": "deprivation",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "submissionOutOfTime": "Yes",
@@ -36,6 +37,7 @@
       "replacements": {
         "appealType": "deprivation",
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "submissionOutOfTime": "Yes",

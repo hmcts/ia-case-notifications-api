@@ -11,6 +11,7 @@
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
           "appellantHasFixedAddress": "Yes",
@@ -53,6 +54,7 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "appellantInUk": "Yes",
         "appellantHasFixedAddress": "Yes",

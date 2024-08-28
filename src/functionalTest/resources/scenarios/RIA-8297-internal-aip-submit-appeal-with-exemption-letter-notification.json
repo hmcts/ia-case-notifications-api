@@ -2,7 +2,7 @@
   "description": "RIA-8297 Send letter notification to appellant for Submit Appeal with exemption (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "LegalRepresentative",
+    "credentials": "AdminOfficer",
     "input": {
       "id": 8297,
       "eventId": "submitAppeal",
@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appealType": "deprivation",
+          "appellantsRepresentation": "Yes",
           "isAdmin": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
@@ -35,6 +36,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "appealType": "deprivation",
+        "appellantsRepresentation": "Yes",
         "isAdmin": "Yes",
         "appellantInDetention": "No",
         "submissionOutOfTime": "No",

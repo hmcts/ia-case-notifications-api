@@ -47,7 +47,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
-    AddressUk appellantAddress;
+    AddressUk address;
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
@@ -87,16 +87,16 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(appellantAddress));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-        when(appellantAddress.getAddressLine1()).thenReturn(Optional.of(addressLine1));
-        when(appellantAddress.getAddressLine2()).thenReturn(Optional.of(addressLine2));
-        when(appellantAddress.getAddressLine3()).thenReturn(Optional.of(addressLine3));
-        when(appellantAddress.getPostCode()).thenReturn(Optional.of(postCode));
-        when(appellantAddress.getPostTown()).thenReturn(Optional.of(postTown));
+        when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
+        when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
+        when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
+        when(address.getPostCode()).thenReturn(Optional.of(postCode));
+        when(address.getPostTown()).thenReturn(Optional.of(postTown));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, String.class)).thenReturn(Optional.of(oocAddressLine3));
@@ -125,8 +125,8 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     }
 
     @Test
-    void should_return_address_in_correct_format() {
-
+    void should_return_appellant_address_in_correct_format() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
 
@@ -135,13 +135,36 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     }
 
     @Test
+    void should_return_legalRep_address_in_correct_format() {
+        legalRepInCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+
+        legalRepOutOfCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Townname_Spain"));
+    }
+
+    @Test
     void should_throw_exception_when_cannot_find_address_for_appellant_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_cannot_find_address_for_legalRep_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertThatThrownBy(() -> appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("legalRepAddressUK is not present");
     }
 
     @Test
@@ -154,7 +177,8 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given_in_country() {
+    void should_return_personalisation_when_all_information_given_appellant_in_country() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         Map<String, String> personalisation =
             appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
@@ -175,7 +199,8 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given_ooc() {
+    void should_return_personalisation_when_all_information_given_appellant_ooc() {
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         Map<String, String> personalisation =
             appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
@@ -194,5 +219,71 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
     }
 
+    @Test
+    void should_return_personalisation_when_all_information_given_legalRep_in_country() {
+        legalRepInCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        Map<String, String> personalisation =
+            appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(addressLine1, personalisation.get("address_line_1"));
+        assertEquals(addressLine2, personalisation.get("address_line_2"));
+        assertEquals(addressLine3, personalisation.get("address_line_3"));
+        assertEquals(postTown, personalisation.get("address_line_4"));
+        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertEquals(decisionMaker, personalisation.get("decisionMaker"));
+        assertEquals("grant", personalisation.get("decision"));
+        assertEquals("Adjourn", personalisation.get("applicationType"));
+        assertEquals(decisionReason, personalisation.get("decisionReason"));
+        assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
+    }
 
+    @Test
+    void should_return_personalisation_when_all_information_given_legalRep_ooc() {
+        legalRepOutOfCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        Map<String, String> personalisation =
+            appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
+        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
+        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
+        assertEquals(postTown, personalisation.get("address_line_4"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertEquals(decisionMaker, personalisation.get("decisionMaker"));
+        assertEquals("grant", personalisation.get("decision"));
+        assertEquals("Adjourn", personalisation.get("applicationType"));
+        assertEquals(decisionReason, personalisation.get("decisionReason"));
+        assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
+    }
+
+    private void legalRepOutOfCountryDataSetup() {
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_1, String.class)).thenReturn(Optional.of(oocAddressLine1));
+        when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_2, String.class)).thenReturn(Optional.of(oocAddressLine2));
+        when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_3, String.class)).thenReturn(Optional.of(oocAddressLine3));
+        when(asylumCase.read(AsylumCaseDefinition.OOC_ADDRESS_LINE_4, String.class)).thenReturn(Optional.of(postTown));
+        when(asylumCase.read(AsylumCaseDefinition.OOC_LR_COUNTRY_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
+        when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
+    }
+
+    private void legalRepInCountryDataSetup() {
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(address));
+        when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
+        when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
+        when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
+        when(address.getPostCode()).thenReturn(Optional.of(postCode));
+        when(address.getPostTown()).thenReturn(Optional.of(postTown));
+    }
 }

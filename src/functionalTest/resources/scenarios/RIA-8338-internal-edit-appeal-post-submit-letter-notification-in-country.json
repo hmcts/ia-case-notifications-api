@@ -12,6 +12,7 @@
         "replacements": {
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
           "appellantHasFixedAddress": "Yes",
@@ -34,6 +35,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "No",
         "appellantInUk": "Yes",
         "appellantHasFixedAddress": "Yes",
