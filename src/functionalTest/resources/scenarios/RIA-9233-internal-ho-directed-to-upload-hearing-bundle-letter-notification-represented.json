@@ -1,5 +1,5 @@
 {
-  "description": "RIA-9233 - HO directed to review the appeal - Non Detained letter notification",
+  "description": "RIA-9233 - HO directed to review the appeal - Non Detained letter notification - represented",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "legalRepHasAddress": "Yes",
@@ -47,6 +48,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
+        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "legalRepHasAddress": "Yes",
