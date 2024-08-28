@@ -79,11 +79,12 @@ class DocumentTagTest {
         assertEquals("internalUpdateTribunalDecisionR32Letter", DocumentTag.INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_R32_LETTER.toString());
         assertEquals("updatedDecisionAndReasonsCoverLetter", DocumentTag.UPDATED_DECISION_AND_REASONS_COVER_LETTER.toString());
         assertEquals("updatedFinalDecisionAndReasonsPdf", DocumentTag.UPDATED_FINAL_DECISION_AND_REASONS_PDF.toString());
+        assertEquals("internalDetainedManageFeeUpdateLetter", DocumentTag.INTERNAL_DETAINED_MANAGE_FEE_UPDATE_LETTER.toString());
 
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(77, DocumentTag.values().length);
+        assertEquals(78, DocumentTag.values().length);
     }
 }

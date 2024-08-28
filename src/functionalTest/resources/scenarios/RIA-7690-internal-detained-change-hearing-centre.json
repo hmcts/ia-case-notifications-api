@@ -15,6 +15,7 @@
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
           "listCaseHearingCentre": "harmondsworth",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

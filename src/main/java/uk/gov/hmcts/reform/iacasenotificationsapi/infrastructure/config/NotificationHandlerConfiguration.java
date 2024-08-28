@@ -5146,6 +5146,23 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedManageFeeUpdateNotificationHandler(
+            @Qualifier("internalDetainedManageFeeUpdateNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callback.getEvent() == MANAGE_FEE_UPDATE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isAppellantInDetention(asylumCase)
+                            && isInternalCase(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> respondentTurnOnNotificationsNotificationHandler(
             @Qualifier("respondentTurnOnNotificationsNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
