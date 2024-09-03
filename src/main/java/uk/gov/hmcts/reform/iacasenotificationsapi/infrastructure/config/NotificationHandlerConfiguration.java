@@ -83,7 +83,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && Event.CREATE_CASE_LINK.equals(callback.getEvent())
                        && isRepJourney(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -114,7 +114,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && Event.MAINTAIN_CASE_LINKS.equals(callback.getEvent())
                        && isRepJourney(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -238,7 +238,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.END_APPEAL
                         && isRepJourney(asylumCase)
-                        && !isInternalCase(asylumCase);
+                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
 
@@ -362,7 +362,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
                        && isRepJourney(asylumCase)
-                        && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -428,7 +428,7 @@ public class NotificationHandlerConfiguration {
                        && isRespondent
                        && !isOneOfHomeOfficeApiNotifications(callback)
                        && isRepJourney(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -541,7 +541,7 @@ public class NotificationHandlerConfiguration {
                        && isRespondent
                        && isOneOfHomeOfficeApiNotifications(callback)
                        && isRepJourney(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -594,7 +594,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isLegalRepresentative
                        && isRepJourney(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -621,7 +621,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                        && isRespondent
                        && isRepJourney(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -1580,7 +1580,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.EDIT_CASE_LISTING
                 && isRepJourney(callback.getCaseDetails().getCaseData())
-                && !isInternalCase(callback.getCaseDetails().getCaseData())
+                && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
             && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -1594,7 +1594,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_CASE_LISTING
-                    && !isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
                     && isRepJourney(callback.getCaseDetails().getCaseData())
             && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
@@ -2038,22 +2038,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE
-                        && isRepJourney(asylumCase)
-                        && !isInternalCase(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalAppealExitedOnlineNotificationHandler(
-        @Qualifier("internalAppealExitedOnlineNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REMOVE_APPEAL_FROM_ONLINE
-                    && isInternalCase(asylumCase);
+                        && isRepJourney(asylumCase);
             },
             notificationGenerators
         );
@@ -2083,7 +2068,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.CHANGE_HEARING_CENTRE
                         && isRepJourney(asylumCase)
-                        && !isInternalCase(asylumCase);
+                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
                         notificationGenerator
         );
@@ -2131,7 +2116,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
                 && !isAipJourney(callback.getCaseDetails().getCaseData())
-                && !AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+                && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2613,7 +2598,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
                     && isRepJourney(asylumCase)
-                    && !AsylumCaseUtils.isInternalCase(asylumCase);
+                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerator
         );
@@ -3540,7 +3525,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                 && isRepJourney(callback.getCaseDetails().getCaseData())
-                && !isInternalCase(callback.getCaseDetails().getCaseData()),
+                && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -4584,7 +4569,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
                         && isRepJourney(asylumCase)
-                        && !isInternalCase(asylumCase);
+                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             }, notificationGenerators
         );
     }
