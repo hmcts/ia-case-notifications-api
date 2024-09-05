@@ -9,11 +9,11 @@
       "eventId": "markAppealAsAda",
       "state": "appealSubmitted",
       "caseData": {
-        "isAdmin": "Yes",
-        "appellantsRepresentation": "No",
-        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "isAcceleratedDetainedAppeal": "Yes",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
         }

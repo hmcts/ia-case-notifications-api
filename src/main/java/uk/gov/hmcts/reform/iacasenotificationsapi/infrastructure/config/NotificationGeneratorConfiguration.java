@@ -2058,6 +2058,7 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerInternal(
         HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
         DetentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation,
+        LegalRepresentativeUploadAddendumEvidencePersonalisation legalRepresentativeUploadAddendumEvidencePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -2065,7 +2066,8 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    homeOfficeUploadAddendumEvidencePersonalisation),
+                    homeOfficeUploadAddendumEvidencePersonalisation,
+                    legalRepresentativeUploadAddendumEvidencePersonalisation),
                 notificationSender,
                 notificationIdAppender
             ),
@@ -3589,6 +3591,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("internalMakeAnApplicationNotificationGenerator")
     public List<NotificationGenerator> internalMakeAnApplicationNotificationHandler(
         HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+        LegalRepresentativeMakeAnApplicationPersonalisation legalRepresentativeMakeApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3596,7 +3599,8 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    homeOfficeMakeAnApplicationPersonalisation
+                    homeOfficeMakeAnApplicationPersonalisation,
+                    legalRepresentativeMakeApplicationPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

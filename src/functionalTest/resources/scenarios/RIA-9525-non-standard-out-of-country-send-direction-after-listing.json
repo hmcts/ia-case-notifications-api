@@ -89,7 +89,7 @@
       },
       {
         "reference": "9187_LEGAL_REP_NON_STANDARD_DIRECTION",
-        "recipient": "RIA-9187-test-case-1@example.com",
+        "recipient": "ia-law-firm-a@fake.hmcts.net",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [
           "PA/12345/2019",

@@ -1961,7 +1961,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
                         && isRepJourney(callback.getCaseDetails().getCaseData())
-                        && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                        && !isInternalCase(callback.getCaseDetails().getCaseData()),
         notificationGenerator
         );
     }
@@ -3493,7 +3493,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.MAKE_AN_APPLICATION
                     && isRepJourney(asylumCase)
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );

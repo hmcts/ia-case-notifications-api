@@ -111,6 +111,21 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
+    void isNotInternalOrIsInternalWithLegalRepresentation_should_return_true() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertTrue(AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation(asylumCase));
+    }
+
+    @Test
+    void isNotInternalOrIsInternalWithLegalRepresentation_should_return_false() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+        assertFalse(AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation(asylumCase));
+    }
+
+    @Test
     void isAipJourney_should_return_true() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         assertTrue(AsylumCaseUtils.isAipJourney(asylumCase));
