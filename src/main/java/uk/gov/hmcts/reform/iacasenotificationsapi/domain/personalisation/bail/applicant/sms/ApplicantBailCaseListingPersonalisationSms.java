@@ -27,7 +27,7 @@ public class ApplicantBailCaseListingPersonalisationSms implements ApplicantBail
     public ApplicantBailCaseListingPersonalisationSms(
         @Value("${govnotify.bail.template.caseListing.initial.sms}") String caseListingInitialApplicantSmsTemplateId,
         @Value("${govnotify.bail.template.caseListing.relisting.sms}") String caseListingRelistingApplicantSmsTemplateId,
-        @Value("${govnotify.bail.template.conditionalBailRelisting.relisting.sms}") String caseListingConditionalBailRelistingApplicantSmsTemplateId,
+        @Value("${govnotify.bail.template.caseListing.conditionalBailRelisting.sms}") String caseListingConditionalBailRelistingApplicantSmsTemplateId,
         HearingDetailsFinder hearingDetailsFinder,
         DateTimeExtractor dateTimeExtractor) {
         this.caseListingInitialApplicantSmsTemplateId = caseListingInitialApplicantSmsTemplateId;
