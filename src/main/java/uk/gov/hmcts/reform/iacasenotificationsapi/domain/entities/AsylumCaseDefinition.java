@@ -441,6 +441,8 @@ public enum AsylumCaseDefinition {
         "feeAmountGbp", new TypeReference<String>(){}),
     NEW_FEE_AMOUNT(
         "newFeeAmount", new TypeReference<String>(){}),
+    PREVIOUS_FEE_AMOUNT_GBP(
+        "previousFeeAmountGbp", new TypeReference<String>(){}),
     FEE_UPDATE_REASON(
         "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
     MANAGE_FEE_REQUESTED_AMOUNT(
