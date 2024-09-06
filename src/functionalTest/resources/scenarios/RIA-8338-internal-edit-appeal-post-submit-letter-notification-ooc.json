@@ -19,7 +19,8 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryOocAdminJ": "ES"
+          "countryOocAdminJ": "ES",
+          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net"
         }
       }
     }
@@ -42,6 +43,10 @@
         "notificationsSent": [
           {
             "id": "83382_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "83382_EDIT_APPEAL_AFTER_SUBMIT_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {

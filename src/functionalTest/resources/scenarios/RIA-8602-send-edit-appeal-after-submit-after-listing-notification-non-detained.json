@@ -14,7 +14,8 @@
           "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
-          "appellantInDetention": "No"
+          "appellantInDetention": "No",
+          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net"
         }
       }
     }
