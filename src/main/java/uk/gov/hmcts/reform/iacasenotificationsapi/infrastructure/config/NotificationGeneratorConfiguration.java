@@ -2993,6 +2993,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("editAppealAfterSubmitInternalCaseNotificationGenerator")
     public List<NotificationGenerator> editAppealAfterSubmitInternalCaseNotificationGenerator(
+        LegalRepresentativeEditAppealAfterSubmitPersonalisation legalRepresentativeEditAppealAfterSubmitPersonalisation,
         RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
         DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
@@ -3001,7 +3002,9 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    respondentEditAppealAfterSubmitPersonalisation
+                    respondentEditAppealAfterSubmitPersonalisation,
+                    legalRepresentativeEditAppealAfterSubmitPersonalisation
+
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -3544,6 +3547,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("reinstateAppealInternalNotificationGenerator")
     public List<NotificationGenerator> reinstateAppealInternalNotificationHandler(
             HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            LegalRepresentativeReinstateAppealPersonalisation legalRepresentativeReinstateAppealPersonalisation,
             DetentionEngagementTeamReinstateAppealPersonalisation detentionEngagementTeamReinstateAppealPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -3551,7 +3555,8 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    homeOfficeReinstateAppealPersonalisation
+                    homeOfficeReinstateAppealPersonalisation,
+                    legalRepresentativeReinstateAppealPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -3634,6 +3639,7 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
             DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
             HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+            LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
