@@ -1,11 +1,11 @@
 {
-  "description": "RIA-3690 appeal with remission approved, for PA appeal notification",
+  "description": "RIA-9525 appeal with remission approved, for PA appeal notification for admin and represented cases",
   "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 3690,
+      "id": 95254,
       "eventId": "recordRemissionDecision",
       "state": "payOffline",
       "caseData": {
@@ -33,11 +33,11 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "3690_REMISSION_DECISION_APPROVED_ADMIN_OFFICER",
+            "id": "95254_REMISSION_DECISION_APPROVED_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3690_REMISSION_DECISION_APPROVED_LEGAL_REPRESENTATIVE",
+            "id": "95254_REMISSION_DECISION_APPROVED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -45,7 +45,7 @@
     },
     "notifications": [
       {
-        "reference": "3690_REMISSION_DECISION_APPROVED_ADMIN_OFFICER",
+        "reference": "95254_REMISSION_DECISION_APPROVED_ADMIN_OFFICER",
         "recipient": "{$FEES_ADMIN_OFFICER_EMAIL}",
         "subject": "Immigration and Asylum appeal: Remission application approved",
         "body": [
@@ -55,7 +55,7 @@
         ]
       },
       {
-        "reference": "3690_REMISSION_DECISION_APPROVED_LEGAL_REPRESENTATIVE",
+        "reference": "95254_REMISSION_DECISION_APPROVED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Remission application approved",
         "body": [

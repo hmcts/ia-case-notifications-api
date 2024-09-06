@@ -30,6 +30,7 @@
         "listCaseHearingCentre": "taylorHouse",
         "ariaListingReference": "LP/12345/2019",
         "appellantInDetention": "No",
+        "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
         "notificationsSent": [
           {
             "id": "1234_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",

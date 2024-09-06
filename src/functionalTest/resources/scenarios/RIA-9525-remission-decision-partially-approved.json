@@ -1,11 +1,11 @@
 {
-  "description": "RIA-3690 Notification of remission decision partially approved",
+  "description": "RIA-9525 Notification of remission decision partially approved for admin and represented cases",
   "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 3690,
+      "id": 952526,
       "eventId": "recordRemissionDecision",
       "state": "pendingPayment",
       "caseData": {
@@ -32,11 +32,11 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "3690_REMISSION_DECISION_PARTIALLY_APPROVED_ADMIN_OFFICER",
+            "id": "952526_REMISSION_DECISION_PARTIALLY_APPROVED_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3690_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE",
+            "id": "952526_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "3690_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE",
+        "reference": "952526_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Remission application partially approved",
         "body": [
@@ -58,7 +58,7 @@
         ]
       },
       {
-        "reference": "3690_REMISSION_DECISION_PARTIALLY_APPROVED_ADMIN_OFFICER",
+        "reference": "952526_REMISSION_DECISION_PARTIALLY_APPROVED_ADMIN_OFFICER",
         "recipient": "{$FEES_ADMIN_OFFICER_EMAIL}",
         "subject": "Immigration and Asylum appeal: Remission application partially approved",
         "body": [

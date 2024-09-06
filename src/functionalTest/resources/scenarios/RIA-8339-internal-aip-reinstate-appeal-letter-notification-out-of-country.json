@@ -47,6 +47,7 @@
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
         "countryOocAdminJ": "ES",
+        "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
         "notificationsSent": [
           {
             "id": "8339_REINSTATE_APPEAL_HOME_OFFICE",

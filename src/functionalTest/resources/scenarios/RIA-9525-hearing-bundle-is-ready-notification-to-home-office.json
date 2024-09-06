@@ -1,11 +1,11 @@
 {
-  "description": "RIA-2923 Hearing bundle is ready notification to home office",
+  "description": "RIA-9525 Hearing bundle is ready notification to home office for admin and represented cases",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 2923,
+      "id": 952513,
       "eventId": "asyncStitchingComplete",
       "state": "preHearing",
       "caseData": {
@@ -41,11 +41,11 @@
         "legalRepReferenceNumber": "REF54321",
         "notificationsSent": [
           {
-            "id": "2923_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+            "id": "952513_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2923_HEARING_BUNDLE_IS_READY_LEGAL_REP",
+            "id": "952513_HEARING_BUNDLE_IS_READY_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -53,7 +53,7 @@
     },
     "notifications": [
       {
-        "reference": "2923_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+        "reference": "952513_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: hearing bundle is ready",
         "body": [
@@ -67,7 +67,7 @@
         ]
       },
       {
-        "reference": "2923_HEARING_BUNDLE_IS_READY_LEGAL_REP",
+        "reference": "952513_HEARING_BUNDLE_IS_READY_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: hearing bundle is ready",
         "body": [

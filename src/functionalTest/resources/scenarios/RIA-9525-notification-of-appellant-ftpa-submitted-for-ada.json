@@ -1,11 +1,11 @@
 {
-  "description": "RIA-1373-RIA-2936-RIA-3742 Notification of appellant ftpa application submitted",
+  "description": "RIA-9525 Notification of appellant ftpa application submitted for admin and represented cases",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 1373,
+      "id": 952521,
       "eventId": "applyForFTPAAppellant",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -32,11 +32,11 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1373_FTPA_SUBMITTED_LEGAL_REP",
+            "id": "952521_FTPA_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1373_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "952521_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "1373_FTPA_SUBMITTED_LEGAL_REP",
+        "reference": "952521_FTPA_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -58,7 +58,7 @@
         ]
       },
       {
-        "reference": "1373_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+        "reference": "952521_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
         "recipient": "{$homeOfficeFtpaEmailAddresses.harmondsworth}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

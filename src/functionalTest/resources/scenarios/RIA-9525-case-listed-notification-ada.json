@@ -1,11 +1,11 @@
 {
-  "description": "RIA-6556 Send case listed notification to case officer, legal rep and home office for ADA appeal",
+  "description": "RIA-9525 Send case listed notification to case officer, legal rep and home office for ADA appeal for admin and represented cases",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 6556,
+      "id": 95255,
       "eventId": "listCase",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -62,15 +62,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "6556_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
+            "id": "95255_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6556_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "95255_CASE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6556_CASE_LISTED_HOME_OFFICE",
+            "id": "95255_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -40,6 +40,7 @@
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
         "countryOocAdminJ": "ES",
+        "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
         "notificationsSent": [
           {
             "id": "83382_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",

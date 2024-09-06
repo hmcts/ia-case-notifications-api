@@ -15,6 +15,7 @@
           "listCaseHearingCentre": "remoteHearing",
           "hearingCentre": "taylorHouse",
           "decideAnApplicationId": "1",
+          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
           "makeAnApplications": [
               {
               "id": "1",
