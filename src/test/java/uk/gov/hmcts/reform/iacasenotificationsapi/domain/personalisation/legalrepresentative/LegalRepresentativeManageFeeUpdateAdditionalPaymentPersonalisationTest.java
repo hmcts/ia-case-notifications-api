@@ -61,8 +61,8 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
         Mockito.when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         Mockito.when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
-        Mockito.when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(originalFee));
-        Mockito.when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFee));
+        Mockito.when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(originalFee));
+        Mockito.when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(newFee));
         Mockito.when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of(additionalAmount));
         Mockito.when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(feeUpdateReason));
         Mockito.when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))

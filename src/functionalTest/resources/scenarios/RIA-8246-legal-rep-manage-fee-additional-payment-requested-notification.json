@@ -15,7 +15,7 @@
           "feeUpdateReason": "appealWithdrawn",
           "feeUpdateTribunalAction": "additionalPayment",
           "feeAmountGbp": "8000",
-          "newFeeAmount": "14000",
+          "previousFeeAmountGbp": "14000",
           "manageFeeRequestedAmount": "6000",
           "isDlrmFeeRefundEnabled": "Yes",
           "notificationsSent": []
