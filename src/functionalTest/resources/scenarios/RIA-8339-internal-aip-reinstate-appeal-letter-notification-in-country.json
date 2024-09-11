@@ -19,7 +19,6 @@
           "reinstatedDecisionMaker": "Admin Officer",
           "appellantInUk": "Yes",
           "appellantHasFixedAddress": "Yes",
-          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -46,7 +45,6 @@
         "reinstateAppealReason": "Test reason",
         "reinstatedDecisionMaker": "Admin Officer",
         "appellantHasFixedAddress": "Yes",
-        "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",

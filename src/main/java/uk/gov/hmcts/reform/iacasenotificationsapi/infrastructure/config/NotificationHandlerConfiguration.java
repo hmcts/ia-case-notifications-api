@@ -2829,7 +2829,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isRpAndDcAppealType
                        && !isAcceleratedDetainedAppeal(asylumCase)
-                       && !isInternalCase(asylumCase);
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -4713,7 +4713,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && !isInternalCase(asylumCase)
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
                        && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                        && (isPaAppealType
                            && paAppealTypePaymentOption.equals("payNow"))

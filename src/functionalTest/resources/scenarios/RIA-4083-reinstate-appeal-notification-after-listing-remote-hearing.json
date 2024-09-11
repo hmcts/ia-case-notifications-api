@@ -16,8 +16,7 @@
           "stateBeforeEndAppeal": "prepareForHearing",
           "reinstateAppealDate": "{$TODAY}",
           "reinstateAppealReason": "Withdraw",
-          "reinstatedDecisionMaker": "Admin Officer",
-          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net"
+          "reinstatedDecisionMaker": "Admin Officer"
         }
       }
     }
@@ -35,7 +34,6 @@
         "reinstateAppealDate": "{$TODAY}",
         "reinstateAppealReason": "Withdraw",
         "reinstatedDecisionMaker": "Admin Officer",
-        "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
         "notificationsSent": [
           {
             "id": "31550_REINSTATE_APPEAL_LEGAL_REP",
