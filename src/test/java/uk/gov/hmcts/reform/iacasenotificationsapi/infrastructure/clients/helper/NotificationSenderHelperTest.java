@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper
 import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -29,8 +30,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -56,6 +56,8 @@ public class NotificationSenderHelperTest {
     private AsylumCase asylumCase;
     @Mock
     private StoredNotification storedNotificationMock;
+    @Mock
+    private StoredNotification storedNotificationMock2;
 
     private NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<AsylumCase>();
 
@@ -307,10 +309,15 @@ public class NotificationSenderHelperTest {
     }
 
     @Test
-    public void wrap_gov_notify_sms_exceptions() throws NotificationClientException {
+    public void wrap_gov_notify_sms_exceptions_and_sort_notifications_list() throws NotificationClientException {
         when(asylumCallback.getCaseDetails()).thenReturn(asylumCaseDetails);
         when(asylumCaseDetails.getCaseData()).thenReturn(asylumCase);
-        List<IdValue<StoredNotification>> someList = List.of(new IdValue<>("some-id", storedNotificationMock));
+        List<IdValue<StoredNotification>> someList = List.of(
+            new IdValue<>("some-id", storedNotificationMock),
+            new IdValue<>("some-id-2", storedNotificationMock2)
+        );
+        when(storedNotificationMock.getNotificationDateSent()).thenReturn("2024-01-01T00:00:00");
+        when(storedNotificationMock2.getNotificationDateSent()).thenReturn("2024-01-01T00:05:00");
         when(asylumCase.read(NOTIFICATIONS)).thenReturn(Optional.of(someList));
         NotificationClientException underlyingException = mock(NotificationClientException.class);
         when(underlyingException.getMessage()).thenReturn("some-error-message");
@@ -322,6 +329,7 @@ public class NotificationSenderHelperTest {
                 personalisation,
                 reference
             );
+        ArgumentCaptor<List<IdValue<StoredNotification>>> captor = ArgumentCaptor.forClass(List.class);
 
         String actualNotificationId = senderHelper.sendSms(
             templateId,
@@ -336,7 +344,12 @@ public class NotificationSenderHelperTest {
 
         assertNotNull(actualNotificationId);
         assertTrue(actualNotificationId.isEmpty());
-        verify(asylumCase).write(eq(NOTIFICATIONS), anyList());
+        verify(asylumCase).write(eq(NOTIFICATIONS), captor.capture());
+        List<IdValue<StoredNotification>> capturedList = captor.getValue();
+        assertNotNull(capturedList);
+        assertEquals(3, capturedList.size());
+        assertEquals(capturedList.get(1).getValue(), storedNotificationMock2);
+        assertEquals(capturedList.get(2).getValue(), storedNotificationMock);
     }
 
     @Test
