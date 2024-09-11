@@ -35,6 +35,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.ErrorHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PostSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
@@ -1742,7 +1743,16 @@ public class NotificationHandlerConfiguration {
     }
 
     private String getStitchStatus(Callback<AsylumCase> callback) {
-        return "FAILED";
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+        Optional<List<IdValue<Bundle>>> maybeCaseBundles = asylumCase.read(AsylumCaseDefinition.CASE_BUNDLES);
+
+        final List<Bundle> caseBundles = maybeCaseBundles.isPresent() ? maybeCaseBundles.get()
+            .stream()
+            .map(IdValue::getValue)
+            .collect(Collectors.toList()) : Collections.emptyList();
+
+        return caseBundles.isEmpty() ? "" : caseBundles.get(0).getStitchStatus().orElse("");
     }
 
     @Bean
@@ -4474,8 +4484,6 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
-
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 final String stitchStatus = getStitchStatus(callback);
 

@@ -56,7 +56,7 @@ public class AdminOfficerUpperTribunalBundleFailedPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_recipients_list() {
+    void should_return_given_recipients_list() {
         Set<String> recipients = adminOfficerUpperTribunalBundleFailedPersonalisation.getRecipientsList(asylumCase);
         assertEquals(Collections.singleton(adminOfficeEmailAddress), recipients);
     }
