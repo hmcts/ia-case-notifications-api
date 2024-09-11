@@ -20,12 +20,10 @@ import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Collections.emptyList;
@@ -184,7 +182,8 @@ public class NotificationSenderHelper<T extends CaseData> {
         StoredNotification storedNotification = getFailedNotification(errorMessage, reference,
             method, phoneNumber);
         allNotifications = append(storedNotification, allNotifications);
-        asylumCase.write(NOTIFICATIONS, allNotifications);
+        List<IdValue<StoredNotification>> sortedNotifications = sortNotificationsByDate(allNotifications);
+        asylumCase.write(NOTIFICATIONS, sortedNotifications);
     }
 
     private static StoredNotification getFailedNotification(String errorMessage, String reference, String method,
@@ -249,5 +248,14 @@ public class NotificationSenderHelper<T extends CaseData> {
             log.warn("Extracting error messages failed: " + e.getMessage());
         }
         return messages;
+    }
+
+    private List<IdValue<StoredNotification>> sortNotificationsByDate(List<IdValue<StoredNotification>> allNotifications) {
+        List<IdValue<StoredNotification>> mutableNotifications = new ArrayList<>(allNotifications);
+        mutableNotifications.sort(Comparator.comparing(notification ->
+                LocalDateTime.parse(notification.getValue().getNotificationDateSent()),
+            Comparator.reverseOrder()
+        ));
+        return mutableNotifications;
     }
 }
