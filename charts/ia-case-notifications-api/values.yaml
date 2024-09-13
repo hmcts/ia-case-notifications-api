@@ -56,6 +56,26 @@ java:
           alias: IA_HEARING_CENTRE_HATTON_CROSS_EMAIL
         - name: hearing-centre-glasgow-email
           alias: IA_HEARING_CENTRE_GLASGOW_EMAIL
+        - name: hearing-centre-harmondsworth-email
+          alias: IA_HEARING_CENTRE_HARMONDSWORTH_EMAIL
+        - name: hearing-centre-hendon-email
+          alias: IA_HEARING_CENTRE_HENDON_EMAIL
+        - name: hearing-centre-yarls-wood-email
+          alias: IA_HEARING_CENTRE_YARLS_WOOD_EMAIL
+        - name: hearing-centre-bradford-keighley-email
+          alias: IA_HEARING_CENTRE_BRADFORD_KEIGHLEY_EMAIL
+        - name: hearing-centre-mcc-minshull-email
+          alias: IA_HEARING_CENTRE_MCC_MINSHULL_EMAIL
+        - name: hearing-centre-mcc-crown-square-email
+          alias: IA_HEARING_CENTRE_MCC_CROWN_SQUARE_EMAIL
+        - name: hearing-centre-manchester-mags-email
+          alias: IA_HEARING_CENTRE_MANCHESTER_MAGS_EMAIL
+        - name: hearing-centre-nth-tyne-mags-email
+          alias: IA_HEARING_CENTRE_NTH_TYNE_MAGS_EMAIL
+        - name: hearing-centre-leeds-mags-email
+          alias: IA_HEARING_CENTRE_LEEDS_MAGS_EMAIL
+        - name: hearing-centre-alloa-sherrif-email
+          alias: IA_HEARING_CENTRE_ALLOA_SHERRIF_EMAIL
         - name: home-office-bradford-email
           alias: IA_HOME_OFFICE_BRADFORD_EMAIL
         - name: home-office-manchester-email
@@ -72,6 +92,26 @@ java:
           alias: IA_HOME_OFFICE_HATTON_CROSS_EMAIL
         - name: home-office-glasgow-email
           alias: IA_HOME_OFFICE_GLASGOW_EMAIL
+        - name: home-office-harmondsworth-email
+          alias: IA_HOME_OFFICE_HARMONDSWORTH_EMAIL
+        - name: home-office-hendon-email
+          alias: IA_HOME_OFFICE_HENDON_EMAIL
+        - name: home-office-yarls-wood-email
+          alias: IA_HOME_OFFICE_YARLS_WOOD_EMAIL
+        - name: home-office-bradford-keighley-email
+          alias: IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL
+        - name: home-office-mcc-minshull-email
+          alias: IA_HOME_OFFICE_MCC_MINSHULL_EMAIL
+        - name: home-office-mcc-crown-square-email
+          alias: IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL
+        - name: home-office-manchester-mags-email
+          alias: IA_HOME_OFFICE_MANCHESTER_MAGS_EMAIL
+        - name: home-office-nth-tyne-mags-email
+          alias: IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL
+        - name: home-office-leeds-mags-email
+          alias: IA_HOME_OFFICE_LEEDS_MAGS_EMAIL
+        - name: home-office-alloa-sherrif-email
+          alias: IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL
         - name: home-office-apc-email
           alias: IA_HOME_OFFICE_APC_EMAIL
         - name: ftpa-home-office-bradford-email
