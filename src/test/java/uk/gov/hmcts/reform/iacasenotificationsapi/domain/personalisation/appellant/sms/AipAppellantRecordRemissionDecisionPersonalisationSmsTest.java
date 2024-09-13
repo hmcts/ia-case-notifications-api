@@ -23,6 +23,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -50,6 +51,8 @@ class AipAppellantRecordRemissionDecisionPersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     SystemDateProvider systemDateProvider;
+    @Mock
+    FeatureToggler featureToggler;
 
     private AipAppellantRecordRemissionDecisionPersonalisationSms aipAppellantRecordRemissionDecisionPersonalisationSms;
 
@@ -67,7 +70,8 @@ class AipAppellantRecordRemissionDecisionPersonalisationSmsTest {
             iaAipFrontendUrl,
             daysAfterRemissionDecision,
             recipientsFinder,
-            systemDateProvider
+            systemDateProvider,
+            featureToggler
         );
     }
 
@@ -82,7 +86,25 @@ class AipAppellantRecordRemissionDecisionPersonalisationSmsTest {
             case APPROVED ->
                 assertEquals(aipAppellantRemissionApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
             case PARTIALLY_APPROVED ->
-                assertEquals(aipAppellantRemissionPartiallyApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
+                assertEquals("", aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
+            case REJECTED ->
+                assertEquals(aipAppellantRemissionRejectedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
+            default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(
+        value = RemissionDecision.class,
+        names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
+    void should_not_return_partially_approved_template_id_when_feature_flag_is_disabled(RemissionDecision remissionDecision) {
+        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
+
+        switch (remissionDecision) {
+            case APPROVED ->
+                assertEquals(aipAppellantRemissionApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
+            case PARTIALLY_APPROVED ->
+                assertEquals("", aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
             case REJECTED ->
                 assertEquals(aipAppellantRemissionRejectedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
             default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
