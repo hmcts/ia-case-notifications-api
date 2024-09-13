@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
           "legalRepHasAddress": "Yes",
@@ -63,6 +64,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
+        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "appellantInDetention": "No",
         "appellantInUk": "Yes",
         "legalRepHasAddress": "Yes",

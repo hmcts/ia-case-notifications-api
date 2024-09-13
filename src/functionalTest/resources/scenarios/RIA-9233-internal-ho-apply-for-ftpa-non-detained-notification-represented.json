@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "appellantInDetention": "No",
@@ -48,6 +49,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
+        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "appellantInDetention": "No",
         "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {

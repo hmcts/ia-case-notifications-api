@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "decideAnApplicationId": "1",
           "makeAnApplications": [
             {
@@ -54,6 +55,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
+        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "decideAnApplicationId": "1",
         "makeAnApplications": [
           {
