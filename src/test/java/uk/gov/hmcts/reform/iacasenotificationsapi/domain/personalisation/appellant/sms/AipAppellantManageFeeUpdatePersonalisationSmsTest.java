@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -48,6 +50,8 @@ class AipAppellantManageFeeUpdatePersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     SystemDateProvider systemDateProvider;
+    @Mock
+    FeatureToggler featureToggler;
 
     private AipAppellantManageFeeUpdatePersonalisationSms aipAppellantManageFeeUpdatePersonalisationSms;
 
@@ -65,7 +69,8 @@ class AipAppellantManageFeeUpdatePersonalisationSmsTest {
             iaAipFrontendUrl,
             daysAfterRemissionDecision,
             recipientsFinder,
-            systemDateProvider
+            systemDateProvider,
+            featureToggler
         );
     }
 
@@ -84,8 +89,18 @@ class AipAppellantManageFeeUpdatePersonalisationSmsTest {
     void should_return_appellant_email_address_from_asylum_case() {
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
 
         assertTrue(aipAppellantManageFeeUpdatePersonalisationSms.getRecipientsList(asylumCase)
+            .contains(mockedAppellantMobilePhone));
+    }
+
+    @Test
+    void should_not_return_appellant_email_address_from_asylum_case_when_flag_is_disabled() {
+        when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+
+        assertFalse(aipAppellantManageFeeUpdatePersonalisationSms.getRecipientsList(asylumCase)
             .contains(mockedAppellantMobilePhone));
     }
 
