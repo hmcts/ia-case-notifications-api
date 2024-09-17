@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.NationalityGovUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
@@ -270,8 +270,8 @@ public class AsylumCaseUtils {
             .read(ADDRESS_LINE_4_ADMIN_J, String.class)
             .orElse(null);
 
-        Nationality oocAddressCountry = Nationality.valueOf(asylumCase
-            .read(COUNTRY_OOC_ADMIN_J, NationalityFieldValue.class)
+        NationalityGovUk oocAddressCountry = NationalityGovUk.valueOf(asylumCase
+            .read(COUNTRY_GOV_UK_OOC_ADMIN_J, NationalityFieldValue.class)
             .orElseThrow(() -> new IllegalStateException("OOC Address country is not present")).getCode());
 
         if (oocAddressLine3 != null) {
@@ -331,9 +331,9 @@ public class AsylumCaseUtils {
             .read(OOC_ADDRESS_LINE_4, String.class)
             .orElse(null);
 
-        Nationality oocLrCountryAdminJ = Nationality.valueOf(asylumCase
-            .read(OOC_LR_COUNTRY_ADMIN_J, NationalityFieldValue.class)
-            .orElseThrow(() -> new IllegalStateException("oocLrCountryAdminJ is not present")).getCode());
+        NationalityGovUk oocLrCountryGovUkAdminJ = NationalityGovUk.valueOf(asylumCase
+            .read(OOC_LR_COUNTRY_GOV_UK_ADMIN_J, NationalityFieldValue.class)
+            .orElseThrow(() -> new IllegalStateException("oocLrCountryGovUkAdminJ is not present")).getCode());
 
         if (addressLine3 != null) {
             legalRepAddressAsList.add(addressLine3);
@@ -341,7 +341,7 @@ public class AsylumCaseUtils {
         if (addressLine4 != null) {
             legalRepAddressAsList.add(addressLine4);
         }
-        legalRepAddressAsList.add(oocLrCountryAdminJ.toString());
+        legalRepAddressAsList.add(oocLrCountryGovUkAdminJ.toString());
 
         return legalRepAddressAsList;
     }

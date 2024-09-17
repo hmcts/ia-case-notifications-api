@@ -20,7 +20,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryOocAdminJ": "ES"
+          "countryGovUkOocAdminJ": "ES"
         }
       }
     }
@@ -41,7 +41,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryOocAdminJ": "ES",
+        "countryGovUkOocAdminJ": "ES",
         "notificationsSent": [
           {
             "id": "9168_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
