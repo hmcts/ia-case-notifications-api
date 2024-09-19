@@ -57,8 +57,7 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         return featureToggler.getValue("dlrm-telephony-feature-flag", false)
-            ? Collections.singleton(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
-            .orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present")))
+            ? LegalRepresentativeEmailNotificationPersonalisation.super.getRecipientsList(asylumCase)
             : Collections.emptySet();
     }
 
