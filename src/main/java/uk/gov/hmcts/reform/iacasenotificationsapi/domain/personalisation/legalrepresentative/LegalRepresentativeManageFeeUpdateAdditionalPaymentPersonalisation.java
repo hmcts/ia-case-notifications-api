@@ -1,16 +1,27 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_AMOUNT_GBP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_REASON;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MANAGE_FEE_REQUESTED_AMOUNT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_FEE_AMOUNT_GBP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -22,20 +33,31 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation 
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysToWaitAfterManageFeeUpdate;
+    private final FeatureToggler featureToggler;
 
 
     public LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation(
-        @NotNull(message = "manageFeeUpdateAdditionalPaymentTemplateId cannot be null") @Value("${govnotify.template.manageFeeUpdate.legalRep.additionalPayment.email}") String manageFeeUpdateAdditionalPaymentTemplateId,
+        @NotNull(message = "manageFeeUpdateAdditionalPaymentTemplateId cannot be null")
+        @Value("${govnotify.template.manageFeeUpdate.legalRep.additionalPayment.email}") String manageFeeUpdateAdditionalPaymentTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider,
-        @Value("${legalRepDaysToWait.afterManageFeeUpdate}") int daysToWaitAfterManageFeeUpdate
+        @Value("${legalRepDaysToWait.afterManageFeeUpdate}") int daysToWaitAfterManageFeeUpdate,
+        FeatureToggler featureToggler
     ) {
         this.manageFeeUpdateAdditionalPaymentTemplateId = manageFeeUpdateAdditionalPaymentTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysToWaitAfterManageFeeUpdate = daysToWaitAfterManageFeeUpdate;
+        this.featureToggler = featureToggler;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return featureToggler.getValue("dlrm-telephony-feature-flag", false)
+            ? LegalRepresentativeEmailNotificationPersonalisation.super.getRecipientsList(asylumCase)
+            : Collections.emptySet();
     }
 
     @Override
