@@ -13,12 +13,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -50,6 +53,8 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
     CustomerServicesProvider customerServicesProvider;
     @Mock
     SystemDateProvider systemDateProvider;
+    @Mock
+    private FeatureToggler featureToggler;
 
     private LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation;
 
@@ -75,8 +80,21 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
             iaExUiFrontendUrl,
             customerServicesProvider,
             systemDateProvider,
-            daysAfterManageFeeUpdate
+            daysAfterManageFeeUpdate,
+            featureToggler
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On_or_off(boolean value) {
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(value);
+        if (value) {
+            assertTrue(
+                legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getRecipientsList(asylumCase).contains("example@example.com"));
+        } else {
+            assertTrue(legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getRecipientsList(asylumCase).isEmpty());
+        }
     }
 
     @Test
@@ -92,6 +110,7 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
         assertTrue(
             legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmail));
     }
@@ -99,7 +118,7 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
     @Test
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         Mockito.when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
-
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
         assertThatThrownBy(() -> legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("legalRepresentativeEmailAddress is not present");
