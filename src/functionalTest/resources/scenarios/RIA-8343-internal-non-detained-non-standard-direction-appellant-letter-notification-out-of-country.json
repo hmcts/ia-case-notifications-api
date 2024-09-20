@@ -24,7 +24,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryOocAdminJ": "ES",
+          "countryGovUkOocAdminJ": "ES",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "directions": [
             {
@@ -76,7 +76,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryOocAdminJ": "ES",
+        "countryGovUkOocAdminJ": "ES",
         "notificationsSent": [
           {
             "id": "8343_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",

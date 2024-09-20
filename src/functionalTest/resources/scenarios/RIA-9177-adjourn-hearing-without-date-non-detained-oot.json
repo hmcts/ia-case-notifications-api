@@ -23,7 +23,7 @@
           "addressLine1AdminJ": "Calle Toledo 32",
           "addressLine2AdminJ": "Madrid",
           "addressLine3AdminJ": "28003",
-          "countryOocAdminJ": "ES"
+          "countryGovUkOocAdminJ": "ES"
         }
       }
     }
@@ -43,7 +43,7 @@
         "addressLine1AdminJ": "Calle Toledo 32",
         "addressLine2AdminJ": "Madrid",
         "addressLine3AdminJ": "28003",
-        "countryOocAdminJ": "ES",
+        "countryGovUkOocAdminJ": "ES",
         "notificationsSent": [
           {
             "id": "91771_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
