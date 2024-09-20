@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -30,6 +31,7 @@ public class AipAppellantRecordRemissionDecisionPersonalisationSms implements Sm
     private final int daysAfterRemissionDecision;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
+    private final FeatureToggler featureToggler;
 
     public AipAppellantRecordRemissionDecisionPersonalisationSms(
         @Value("${govnotify.template.remissionDecision.appellant.approved.sms}") String aipAppellantRemissionApprovedTemplateId,
@@ -38,7 +40,8 @@ public class AipAppellantRecordRemissionDecisionPersonalisationSms implements Sm
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
         RecipientsFinder recipientsFinder,
-        SystemDateProvider systemDateProvider
+        SystemDateProvider systemDateProvider,
+        FeatureToggler featureToggler
     ) {
         this.aipAppellantRemissionApprovedTemplateId = aipAppellantRemissionApprovedTemplateId;
         this.aipAppellantRemissionPartiallyApprovedTemplateId = aipAppellantRemissionPartiallyApprovedTemplateId;
@@ -47,6 +50,7 @@ public class AipAppellantRecordRemissionDecisionPersonalisationSms implements Sm
         this.daysAfterRemissionDecision = daysAfterRemissionDecision;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -61,7 +65,9 @@ public class AipAppellantRecordRemissionDecisionPersonalisationSms implements Sm
 
         return switch (remissionDecision) {
             case APPROVED -> aipAppellantRemissionApprovedTemplateId;
-            case PARTIALLY_APPROVED -> aipAppellantRemissionPartiallyApprovedTemplateId;
+            case PARTIALLY_APPROVED -> featureToggler.getValue("dlrm-telephony-feature-flag", false)
+                ? aipAppellantRemissionPartiallyApprovedTemplateId
+                : "";
             case REJECTED -> aipAppellantRemissionRejectedTemplateId;
         };
     }

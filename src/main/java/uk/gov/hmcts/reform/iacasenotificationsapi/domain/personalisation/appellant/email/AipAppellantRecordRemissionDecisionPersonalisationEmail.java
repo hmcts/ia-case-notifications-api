@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
@@ -31,6 +32,7 @@ public class AipAppellantRecordRemissionDecisionPersonalisationEmail implements 
     private final CustomerServicesProvider customerServicesProvider;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
+    private final FeatureToggler featureToggler;
 
     public AipAppellantRecordRemissionDecisionPersonalisationEmail(
         @Value("${govnotify.template.remissionDecision.appellant.approved.email}") String aipAppellantRemissionApprovedTemplateId,
@@ -40,7 +42,8 @@ public class AipAppellantRecordRemissionDecisionPersonalisationEmail implements 
         @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
         CustomerServicesProvider customerServicesProvider,
         RecipientsFinder recipientsFinder,
-        SystemDateProvider systemDateProvider
+        SystemDateProvider systemDateProvider,
+        FeatureToggler featureToggler
     ) {
         this.aipAppellantRemissionApprovedTemplateId = aipAppellantRemissionApprovedTemplateId;
         this.aipAppellantRemissionPartiallyApprovedTemplateId = aipAppellantRemissionPartiallyApprovedTemplateId;
@@ -50,6 +53,7 @@ public class AipAppellantRecordRemissionDecisionPersonalisationEmail implements 
         this.customerServicesProvider = customerServicesProvider;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -64,7 +68,9 @@ public class AipAppellantRecordRemissionDecisionPersonalisationEmail implements 
 
         return switch (remissionDecision) {
             case APPROVED -> aipAppellantRemissionApprovedTemplateId;
-            case PARTIALLY_APPROVED -> aipAppellantRemissionPartiallyApprovedTemplateId;
+            case PARTIALLY_APPROVED -> featureToggler.getValue("dlrm-telephony-feature-flag", false)
+                ? aipAppellantRemissionPartiallyApprovedTemplateId
+                : "";
             case REJECTED -> aipAppellantRemissionRejectedTemplateId;
         };
     }

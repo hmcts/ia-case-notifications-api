@@ -1,6 +1,6 @@
 {
-  "description": "RIA-8059 AIP Appellant notifications: remission decision partially approved",
-  "launchDarklyKey": "dlrm-telephony-feature-flag:true",
+  "description": "RIA-8059 AIP Appellant notifications: remission decision partially approved should not be sent",
+  "launchDarklyKey": "dlrm-telephony-feature-flag:false",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -56,46 +56,10 @@
           }
         ],
         "notificationsSent": [
-          {
-            "id": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_SMS",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }
         ]
       }
     },
     "notifications": [
-      {
-        "reference": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
-        "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Your request for support to pay the fee has been decided",
-        "body": [
-          "PA/12345/2019",
-          "A1234567",
-          "Pablo Jimenez",
-          "40.00",
-          "{$iaAipFrontendUrl}",
-          "1111222233334444",
-          "{$TODAY+14|d MMM yyyy}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      },
-      {
-        "reference": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_SMS",
-        "recipient": "{$TEST_CITIZEN_MOBILE}",
-        "subject": "",
-        "body": [
-          "PA/12345/2019",
-          "40.00",
-          "{$iaAipFrontendUrl}",
-          "{$TODAY+14|d MMM yyyy}",
-          "1111222233334444"
-        ]
-      }
     ]
   }
 }
