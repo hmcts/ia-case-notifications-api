@@ -6,10 +6,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Component
@@ -19,17 +23,19 @@ public class LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisatio
     private final String partiallyApprovedTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+    private final FeatureToggler featureToggler;
 
     public LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation(
         @Value("${govnotify.template.remissionDecision.legalRep.partiallyApproved.email}")
             String partiallyApprovedTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        CustomerServicesProvider customerServicesProvider
-
+        CustomerServicesProvider customerServicesProvider,
+        FeatureToggler featureToggler
     ) {
         this.partiallyApprovedTemplateId = partiallyApprovedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -40,6 +46,13 @@ public class LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisatio
     @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE";
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return featureToggler.getValue("dlrm-telephony-feature-flag", false)
+                ? LegalRepresentativeEmailNotificationPersonalisation.super.getRecipientsList(asylumCase)
+                : Collections.emptySet();
     }
 
     @Override
