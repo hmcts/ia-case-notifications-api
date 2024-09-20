@@ -12,6 +12,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_FEE_AMOUNT_GBP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
@@ -21,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
@@ -34,6 +36,7 @@ public class AipAppellantManageFeeUpdatePersonalisationEmail implements EmailNot
     private final CustomerServicesProvider customerServicesProvider;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
+    private final FeatureToggler featureToggler;
 
     public AipAppellantManageFeeUpdatePersonalisationEmail(
         @Value("${govnotify.template.manageFeeUpdate.appellant.email}") String aipAppellantManageFeeUpdateTemplateId,
@@ -41,7 +44,8 @@ public class AipAppellantManageFeeUpdatePersonalisationEmail implements EmailNot
         @Value("${appellantDaysToWait.afterNotificationSent}") int daysAfterNotificationSent,
         CustomerServicesProvider customerServicesProvider,
         RecipientsFinder recipientsFinder,
-        SystemDateProvider systemDateProvider
+        SystemDateProvider systemDateProvider,
+        FeatureToggler featureToggler
     ) {
         this.aipAppellantManageFeeUpdateTemplateId = aipAppellantManageFeeUpdateTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
@@ -49,6 +53,7 @@ public class AipAppellantManageFeeUpdatePersonalisationEmail implements EmailNot
         this.customerServicesProvider = customerServicesProvider;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -63,7 +68,9 @@ public class AipAppellantManageFeeUpdatePersonalisationEmail implements EmailNot
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        return featureToggler.getValue("dlrm-telephony-feature-flag", false)
+            ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)
+            : Collections.emptySet();
     }
 
     @Override

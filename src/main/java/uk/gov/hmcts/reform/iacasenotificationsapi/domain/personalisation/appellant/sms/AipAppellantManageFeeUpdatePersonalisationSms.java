@@ -8,6 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_FEE_AMOUNT_GBP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -27,19 +29,22 @@ public class AipAppellantManageFeeUpdatePersonalisationSms implements SmsNotific
     private final int daysAfterRemissionDecision;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
+    private final FeatureToggler featureToggler;
 
     public AipAppellantManageFeeUpdatePersonalisationSms(
         @Value("${govnotify.template.manageFeeUpdate.appellant.sms}") String aipAppellantManageFeeUpdateSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
         RecipientsFinder recipientsFinder,
-        SystemDateProvider systemDateProvider
+        SystemDateProvider systemDateProvider,
+        FeatureToggler featureToggler
     ) {
         this.aipAppellantManageFeeUpdateSmsTemplateId = aipAppellantManageFeeUpdateSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysAfterRemissionDecision = daysAfterRemissionDecision;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
+        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -54,7 +59,9 @@ public class AipAppellantManageFeeUpdatePersonalisationSms implements SmsNotific
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        return featureToggler.getValue("dlrm-telephony-feature-flag", false)
+            ? recipientsFinder.findAll(asylumCase, NotificationType.SMS)
+            : Collections.emptySet();
     }
 
     @Override
