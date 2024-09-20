@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -9,18 +10,26 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisationTest {
 
     @Mock
     private AsylumCase asylumCase;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private FeatureToggler featureToggler;
 
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepRefNumber = "someLegalRepRefNumber";
@@ -44,13 +53,29 @@ class LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisationTest {
 
         legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation =
             new LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation(
-                templateId, iaExUiFrontendUrl, customerServicesProvider);
+                templateId, iaExUiFrontendUrl, customerServicesProvider, featureToggler);
     }
 
     @Test
     void should_return_given_template_id() {
         assertEquals(templateId,
             legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_on_or_off(boolean value) {
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(value);
+        if (value) {
+            when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
+                    .thenReturn(Optional.of(legalRepEmailAddress));
+            assertTrue(
+                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                            .getRecipientsList(asylumCase).contains("legalRepEmailAddress@example.com"));
+        } else {
+            assertTrue(legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                    .getRecipientsList(asylumCase).isEmpty());
+        }
     }
 
     @Test
