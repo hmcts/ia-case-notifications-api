@@ -93,7 +93,7 @@
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Pablo Jimenez",
+          "Talha Awan",
           "{$iaExUiFrontendUrl}",
           "Do the non standard thing",
           "{$TODAY+14|d MMM yyyy}",
@@ -108,7 +108,7 @@
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Pablo Jimenez,",
+          "Talha Awan,",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
