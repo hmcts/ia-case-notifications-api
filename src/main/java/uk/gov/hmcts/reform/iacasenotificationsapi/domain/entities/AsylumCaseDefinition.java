@@ -515,6 +515,9 @@ public enum AsylumCaseDefinition {
     IS_REMOTE_HEARING(
         "isRemoteHearing", new TypeReference<YesOrNo>(){}),
 
+    LISTING_LOCATION(
+        "listingLocation", new TypeReference<DynamicList>(){}),
+
     IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){}),
 
     LETTER_BUNDLE_DOCUMENTS(
@@ -582,7 +585,7 @@ public enum AsylumCaseDefinition {
 
     LEGAL_REP_HAS_ADDRESS(
         "legalRepHasAddress", new TypeReference<YesOrNo>(){}),
-    
+
     //Paper journey legal representative email
     LEGAL_REP_EMAIL(
         "legalRepEmail", new TypeReference<String>(){}),

@@ -19,7 +19,7 @@
             {
               "id": "1",
               "value": {
-                "type":"Judges review application submitted",
+                "type":"An application has been submitted",
                 "details":"",
                 "evidence":[],
                 "applicant":"",
@@ -51,7 +51,7 @@
           {
             "id": "1",
             "value": {
-              "type":"Judges review application submitted",
+              "type":"An application has been submitted",
               "details":"",
               "evidence":[],
               "applicant":"",
