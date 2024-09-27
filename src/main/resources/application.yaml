@@ -1827,8 +1827,6 @@ respondentEmailAddresses:
   respondentEvidenceDirection: ${IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL:respondent@example.com}
   respondentReviewDirection: ${IA_RESPONDENT_REVIEW_DIRECTION_EMAIL:respondent-lart@example.com}
 
-feeRemission:
-  ctscAdminEmailAddress: ${FEE_REMISSION_ADMIN_OFFICER_EMAIL:ctscFeeRemission@example.gov.uk}
 
 ftpaSubmitted:
   ctscAdminEmailAddress: ${IA_CTSC_ADMIN_FTPA_SUBMITTED:ctscFtpaSubmitted@example.gov.uk}
