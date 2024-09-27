@@ -31,7 +31,7 @@ class AdminOfficerRequestFeeRemissionPersonalisationTest {
     private Long caseId = 12345L;
     private String templateId = "applyForLateRemissionTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
+    private String adminOfficerEmailAddress = "feeRemissionAdminOfficer@example.com";
 
     private AdminOfficerRequestFeeRemissionPersonalisation adminOfficerRequestFeeRemissionPersonalisation;
 

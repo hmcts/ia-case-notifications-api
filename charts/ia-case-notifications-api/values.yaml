@@ -152,6 +152,8 @@ java:
           alias: azure.application-insights.instrumentation-key
         - name: fees-admin-officer-email
           alias: FEES_ADMIN_OFFICER_EMAIL
+        - name: fee-remission-admin-officer-email
+          alias: FEE_REMISSION_ADMIN_OFFICER_EMAIL
         - name: payment-exceptions-admin-officer-email
           alias: PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL
         - name: home-office-email-apc
