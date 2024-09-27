@@ -30,7 +30,7 @@ public class AdminOfficerRequestFeeRemissionPersonalisation implements EmailNoti
     public AdminOfficerRequestFeeRemissionPersonalisation(
         @Value("${govnotify.template.requestFeeRemission.adminOfficer.email}") String requestFeeRemissionTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        @Value("${feeRemission.ctscAdminEmailAddress}") String adminOfficerEmailAddress,
+        @Value("${paymentExceptionsAdminOfficerEmailAddress}") String adminOfficerEmailAddress,
         CustomerServicesProvider customerServicesProvider
     ) {
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
