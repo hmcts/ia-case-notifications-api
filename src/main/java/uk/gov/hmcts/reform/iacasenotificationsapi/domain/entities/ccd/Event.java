@@ -127,7 +127,7 @@ public enum Event {
     FORCE_CASE_TO_HEARING("forceCaseToHearing"),
     CHANGE_TRIBUNAL_CENTRE("changeTribunalCentre"),
     SEND_PAYMENT_REMINDER_NOTIFICATION("sendPaymentReminderNotification"),
-
+    PROGRESS_MIGRATED_CASE("progressMigratedCase"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

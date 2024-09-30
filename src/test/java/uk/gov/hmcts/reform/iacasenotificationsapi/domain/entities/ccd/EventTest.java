@@ -136,6 +136,7 @@ public class EventTest {
         assertEquals("recordTheDecision", RECORD_THE_DECISION.toString());
         assertEquals("changeTribunalCentre", CHANGE_TRIBUNAL_CENTRE.toString());
         assertEquals("sendPaymentReminderNotification", SEND_PAYMENT_REMINDER_NOTIFICATION.toString());
+        assertEquals("progressMigratedCase", PROGRESS_MIGRATED_CASE.toString());
     }
 
     @Test

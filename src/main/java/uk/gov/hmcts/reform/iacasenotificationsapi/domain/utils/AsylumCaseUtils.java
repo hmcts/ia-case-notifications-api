@@ -70,6 +70,10 @@ public class AsylumCaseUtils {
         return asylumCase.read(LEGAL_REP_HAS_ADDRESS, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(false);
     }
 
+    public static boolean isAriaMigrated(AsylumCase asylumCase) {
+        return asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
+    }
+
     public static Optional<FtpaDecisionOutcomeType> getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
         Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
             .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);

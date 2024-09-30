@@ -443,6 +443,8 @@ public enum AsylumCaseDefinition {
             "transferOutOfAdaReason", new TypeReference<String>(){}),
     IS_ADMIN(
         "isAdmin", new TypeReference<YesOrNo>() {}),
+    IS_ARIA_MIGRATED(
+        "isAriaMigrated", new TypeReference<YesOrNo>() {}),
     UT_APPEAL_REFERENCE_NUMBER(
         "utAppealReferenceNumber", new TypeReference<String>() {}),
     NOTIFICATION_ATTACHMENT_DOCUMENTS(
@@ -501,24 +503,16 @@ public enum AsylumCaseDefinition {
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
 
     DECIDE_COSTS_APPLICATION_LIST(
-        "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
+        "decideCostsApplicationList", new TypeReference<DynamicList>(){}
+    ),
 
     SEND_DIRECTION_DATE_DUE(
         "sendDirectionDateDue", new TypeReference<String>() {}),
 
     FEE_AMOUNT_GBP(
         "feeAmountGbp", new TypeReference<String>(){}),
-
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
-
-    IS_REMOTE_HEARING(
-        "isRemoteHearing", new TypeReference<YesOrNo>(){}),
-
-    LISTING_LOCATION(
-        "listingLocation", new TypeReference<DynamicList>(){}),
-
-    IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){}),
 
     LETTER_BUNDLE_DOCUMENTS(
         "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
@@ -528,6 +522,14 @@ public enum AsylumCaseDefinition {
 
     PAID_AMOUNT(
         "paidAmount", new TypeReference<String>(){}),
+
+    IS_REMOTE_HEARING(
+        "isRemoteHearing", new TypeReference<YesOrNo>(){}),
+
+    LISTING_LOCATION(
+        "listingLocation", new TypeReference<DynamicList>(){}),
+
+    IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){}),
 
     FEE_UPDATE_REASON(
         "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
@@ -590,8 +592,12 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_EMAIL(
         "legalRepEmail", new TypeReference<String>(){}),
 
+    COUNTRY_ADMIN_J(
+            "countryAdminJ", new TypeReference<String>(){}),
+
     APPELLANTS_REPRESENTATION(
         "appellantsRepresentation", new TypeReference<YesOrNo>(){});
+
 
     private final String value;
     private final TypeReference typeReference;

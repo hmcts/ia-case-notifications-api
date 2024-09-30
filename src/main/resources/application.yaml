@@ -1617,6 +1617,7 @@ security:
       - "buildCase"
       - "listCase"
       - "turnOnNotifications"
+      - "updateTribunalDecision"
     caseworker-ia-admofficer:
       - "listCase"
       - "submitAppeal"
@@ -1672,6 +1673,7 @@ security:
       - "forceCaseToHearing"
       - "markAppealAsRemitted"
       - "changeTribunalCentre"
+      - "progressMigratedCase"
     caseworker-ia-homeofficeapc:
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
