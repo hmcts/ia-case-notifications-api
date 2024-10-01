@@ -121,7 +121,7 @@ class AipAppellantRecordRemissionDecisionPersonalisationSmsTest {
     void should_return_appellant_email_address_from_asylum_case() {
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(appellantMobile));
-
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
         assertTrue(aipAppellantRecordRemissionDecisionPersonalisationSms.getRecipientsList(asylumCase)
             .contains(appellantMobile));
     }
