@@ -7,6 +7,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,16 +69,16 @@ public class AipAppellantRecordRemissionDecisionPersonalisationEmail implements 
 
         return switch (remissionDecision) {
             case APPROVED -> aipAppellantRemissionApprovedTemplateId;
-            case PARTIALLY_APPROVED -> featureToggler.getValue("dlrm-telephony-feature-flag", false)
-                ? aipAppellantRemissionPartiallyApprovedTemplateId
-                : "";
+            case PARTIALLY_APPROVED -> aipAppellantRemissionPartiallyApprovedTemplateId;
             case REJECTED -> aipAppellantRemissionRejectedTemplateId;
         };
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        return featureToggler.getValue("dlrm-telephony-feature-flag", false)
+                ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)
+                : Collections.emptySet();
     }
 
     @Override

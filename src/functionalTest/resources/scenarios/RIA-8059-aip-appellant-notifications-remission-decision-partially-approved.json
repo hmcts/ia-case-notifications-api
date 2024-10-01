@@ -1,6 +1,6 @@
 {
   "description": "RIA-8059 AIP Appellant notifications: remission decision partially approved",
-  "launchDarklyKey": "dlrm-telephony-feature-flag:true",
+  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

@@ -1,16 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +15,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecis
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -86,25 +87,7 @@ class AipAppellantRecordRemissionDecisionPersonalisationSmsTest {
             case APPROVED ->
                 assertEquals(aipAppellantRemissionApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
             case PARTIALLY_APPROVED ->
-                assertEquals("", aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
-            case REJECTED ->
-                assertEquals(aipAppellantRemissionRejectedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
-            default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(
-        value = RemissionDecision.class,
-        names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
-    void should_not_return_partially_approved_template_id_when_feature_flag_is_disabled(RemissionDecision remissionDecision) {
-        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
-
-        switch (remissionDecision) {
-            case APPROVED ->
-                assertEquals(aipAppellantRemissionApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
-            case PARTIALLY_APPROVED ->
-                assertEquals("", aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
+                assertEquals(aipAppellantRemissionPartiallyApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
             case REJECTED ->
                 assertEquals(aipAppellantRemissionRejectedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationSms.getTemplateId(asylumCase));
             default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
@@ -121,7 +104,7 @@ class AipAppellantRecordRemissionDecisionPersonalisationSmsTest {
     void should_return_appellant_email_address_from_asylum_case() {
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(appellantMobile));
-
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
         assertTrue(aipAppellantRecordRemissionDecisionPersonalisationSms.getRecipientsList(asylumCase)
             .contains(appellantMobile));
     }

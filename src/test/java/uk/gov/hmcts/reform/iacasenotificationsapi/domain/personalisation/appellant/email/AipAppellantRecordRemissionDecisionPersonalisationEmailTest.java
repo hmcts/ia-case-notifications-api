@@ -106,24 +106,6 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
         }
     }
 
-    @ParameterizedTest
-    @EnumSource(
-        value = RemissionDecision.class,
-        names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
-    void should_not_return_partially_approved_template_id_when_feature_flag_is_disabled(RemissionDecision remissionDecision) {
-        when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
-
-        switch (remissionDecision) {
-            case APPROVED ->
-                assertEquals(aipAppellantRemissionApprovedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationEmail.getTemplateId(asylumCase));
-            case PARTIALLY_APPROVED ->
-                assertEquals("", aipAppellantRecordRemissionDecisionPersonalisationEmail.getTemplateId(asylumCase));
-            case REJECTED ->
-                assertEquals(aipAppellantRemissionRejectedTemplateId, aipAppellantRecordRemissionDecisionPersonalisationEmail.getTemplateId(asylumCase));
-            default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
-        }
-    }
-
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
@@ -132,6 +114,7 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
+        when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmail));
 
