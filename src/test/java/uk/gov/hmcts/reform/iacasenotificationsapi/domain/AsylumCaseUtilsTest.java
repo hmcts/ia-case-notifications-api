@@ -26,7 +26,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
 
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
@@ -59,17 +58,18 @@ public class AsylumCaseUtilsTest {
         lenient().when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
         if (appellantsRepresentation.equals(NO) && isAdmin.equals(YES)) {
             when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
+            assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+        } else if (appellantsRepresentation.equals(YES) && isAdmin.equals(YES)) {
+            assertTrue(getLegalRepEmailInternalOrLegalRepJourney(asylumCase).isEmpty());
         } else {
             when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
+            assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
         }
-        assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
-        assertEquals(legalRepEmail, getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
     }
 
     @ParameterizedTest
     @CsvSource({
         "YES, NO",
-        "YES, YES",
         "NO, NO",
         "NO, YES"
     })
@@ -82,7 +82,6 @@ public class AsylumCaseUtilsTest {
         );
         if (appellantsRepresentation.equals(NO) && isAdmin.equals(YES)) {
             assertEquals("legalRepEmail is not present", thrown.getMessage());
-
         } else {
             assertEquals("legalRepresentativeEmailAddress is not present", thrown.getMessage());
         }

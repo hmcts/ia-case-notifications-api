@@ -398,8 +398,13 @@ public class AsylumCaseUtils {
     }
 
     public static String getLegalRepEmailInternalOrLegalRepJourney(final AsylumCase asylumCase) {
-        return isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase) ? asylumCase.read(LEGAL_REP_EMAIL, String.class).orElseThrow(() -> new IllegalStateException("legalRepEmail is not present"))
-            : asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
+        if (isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)) {
+            return asylumCase.read(LEGAL_REP_EMAIL, String.class).orElseThrow(() -> new IllegalStateException("legalRepEmail is not present"));
+        } else if (isInternalCase(asylumCase) && !hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)) {
+            return StringUtils.EMPTY;
+        } else {
+            return asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
+        }
     }
 
     public static String getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(final AsylumCase asylumCase) {
