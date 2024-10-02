@@ -17,6 +17,11 @@
           "submissionOutOfTime": "No",
           "paymentStatus": "Payment pending",
           "legalRepHasAddress": "Yes",
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryGovUkOocAdminJ": "ES",
           "legalRepAddressUK": {
             "County": "",
             "Country": "United Kingdom",

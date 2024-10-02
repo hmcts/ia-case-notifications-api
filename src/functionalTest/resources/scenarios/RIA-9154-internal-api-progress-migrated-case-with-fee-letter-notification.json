@@ -17,6 +17,7 @@
           "submissionOutOfTime": "No",
           "paymentStatus": "Payment pending",
           "appellantHasFixedAddress": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
