@@ -444,6 +444,7 @@ public class AsylumCaseUtils {
         }
         return address;
     }
+
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {
         if ("decisionWithHearing".equals(decisionHearingFeeOption)) {
             return "Decision with hearing";
