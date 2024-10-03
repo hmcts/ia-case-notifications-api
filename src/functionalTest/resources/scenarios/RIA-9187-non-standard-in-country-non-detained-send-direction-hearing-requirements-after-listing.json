@@ -12,7 +12,9 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInUk": "Yes",
+          "legalRepEmail": "RIA-9187-test-case-1@example.com",
           "listCaseHearingCentre": "taylorHouse",
+          "appellantsRepresentation": "No",
           "ariaListingReference": "LP/12345/2019",
           "currentCaseStateVisibleToHomeOfficeAll": "preHearing",
           "directions": [
@@ -27,8 +29,7 @@
               }
             }
           ],
-          "notificationsSent": [],
-          "legalRepresentativeEmailAddress": "RIA-9187-test-case-1@example.com"
+          "notificationsSent": []
         }
       }
     }
@@ -63,8 +64,7 @@
             "id": "9187_LEGAL_REP_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
-        ],
-        "legalRepresentativeEmailAddress": "RIA-9187-test-case-1@example.com"
+        ]
       }
     },
     "notifications": [

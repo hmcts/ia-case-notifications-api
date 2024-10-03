@@ -17,7 +17,8 @@
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "isAppellantRespondent": "The appellant",
-          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "No",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

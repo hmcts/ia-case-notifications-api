@@ -18,7 +18,8 @@
           "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "No",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
