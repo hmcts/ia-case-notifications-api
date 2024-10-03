@@ -12,6 +12,8 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInUk": "No",
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "No",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "currentCaseStateVisibleToHomeOfficeAll": "preHearing",

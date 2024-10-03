@@ -13,6 +13,8 @@
           "isAdmin": "Yes",
           "appellantInUk": "Yes",
           "listCaseHearingCentre": "taylorHouse",
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "No",
           "ariaListingReference": "LP/12345/2019",
           "currentCaseStateVisibleToHomeOfficeAll": "preHearing",
           "directions": [

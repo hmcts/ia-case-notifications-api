@@ -12,7 +12,8 @@
         "replacements": {
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "isAdmin": "Yes",
-          "appellantsRepresentation": "Yes",
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "No",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
           "appellantHasFixedAddress": "Yes",

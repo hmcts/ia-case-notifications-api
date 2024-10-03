@@ -16,7 +16,8 @@
           "reinstateAppealDate": "{$TODAY}",
           "reinstateAppealReason": "Withdraw",
           "reinstatedDecisionMaker": "Admin Officer",
-          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net"
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "No"
         }
       }
     }
