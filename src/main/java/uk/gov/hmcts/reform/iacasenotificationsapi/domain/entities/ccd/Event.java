@@ -123,11 +123,13 @@ public enum Event {
     CASE_LISTING("caseListing"),
     DECIDE_FTPA_APPLICATION("decideFtpaApplication"),
     UPDATE_TRIBUNAL_DECISION("updateTribunalDecision"),
+    RECORD_REMISSION_REMINDER("recordRemissionReminder"),
     MARK_APPEAL_AS_REMITTED("markAppealAsRemitted"),
     FORCE_CASE_TO_HEARING("forceCaseToHearing"),
     CHANGE_TRIBUNAL_CENTRE("changeTribunalCentre"),
     SEND_PAYMENT_REMINDER_NOTIFICATION("sendPaymentReminderNotification"),
     PROGRESS_MIGRATED_CASE("progressMigratedCase"),
+    REFUND_CONFIRMATION("refundConfirmation"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
