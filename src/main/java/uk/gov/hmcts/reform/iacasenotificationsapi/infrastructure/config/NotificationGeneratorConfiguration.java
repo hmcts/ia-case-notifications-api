@@ -6475,4 +6475,27 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("internalRefundConfirmationLetterNotificationGenerator")
+    public List<NotificationGenerator> internalRefundConfirmationLetterNotificationGenerator(
+            AppellantInternalRefundConfirmationLetterPersonalisation appellantInternalRefundConfirmationLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Collections.singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalRefundConfirmationLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
 }
