@@ -64,7 +64,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     private String withHearing = "decisionWithHearing";
     private String withoutHearing = "decisionWithoutHearing";
     private String newFeeTotal = "8000";
-    private AppellantInternalRefundConfirmationLetterPersonalisation LetterNotificationPersonalisation;
+    private AppellantInternalRefundConfirmationLetterPersonalisation letterNotificationPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -84,7 +84,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
         when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
 
-        LetterNotificationPersonalisation = new AppellantInternalRefundConfirmationLetterPersonalisation(
+        letterNotificationPersonalisation = new AppellantInternalRefundConfirmationLetterPersonalisation(
                 letterTemplateId,
                 afterManageFeeEvent,
                 customerServicesProvider,
@@ -93,37 +93,37 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, LetterNotificationPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, letterNotificationPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(ccdCaseId + "_INTERNAL_REFUND_CONFIRMATION_APPELLANT_LETTER",
-                LetterNotificationPersonalisation.getReferenceId(ccdCaseId));
+                letterNotificationPersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_address_in_correct_format_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(LetterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(LetterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
     void should_return_address_in_correct_format_legalRep_in_country() {
         legalRepInCountryDataSetup();
-        assertTrue(LetterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
-        assertTrue(LetterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
@@ -133,7 +133,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
 
-        assertThatThrownBy(() -> LetterNotificationPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> letterNotificationPersonalisation.getRecipientsList(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("appellantAddress is not present");
     }
@@ -145,7 +145,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
 
-        assertThatThrownBy(() -> LetterNotificationPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> letterNotificationPersonalisation.getRecipientsList(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
                 .hasMessage("legalRepAddressUK is not present");
     }
@@ -154,7 +154,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-                () -> LetterNotificationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+                () -> letterNotificationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("callback must not be null");
     }
@@ -163,7 +163,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     void should_return_personalisation_when_all_information_given_appellant_in_country() {
         appellantInCountryDataSetup();
         Map<String, String> personalisation =
-                LetterNotificationPersonalisation.getPersonalisation(callback);
+                letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
@@ -188,7 +188,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     void should_return_personalisation_when_all_information_given_appellant_out_of_country() {
         appellantOutOfCountryDataSetup();
         Map<String, String> personalisation =
-                LetterNotificationPersonalisation.getPersonalisation(callback);
+                letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
@@ -212,7 +212,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     void should_return_personalisation_when_all_information_given_legalRep_in_country() {
         legalRepInCountryDataSetup();
         Map<String, String> personalisation =
-                LetterNotificationPersonalisation.getPersonalisation(callback);
+                letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
@@ -236,7 +236,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     void should_return_personalisation_when_all_information_given_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
         Map<String, String> personalisation =
-                LetterNotificationPersonalisation.getPersonalisation(callback);
+                letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
