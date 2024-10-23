@@ -79,13 +79,13 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
     private int daysAfterApplicationDecisionInCountry = 14;
     private int daysAfterApplicationDecisionOoc = 28;
 
-    private static final String homeOfficetimeExtentionContent = "The tribunal will give the Home Office more time to complete its next task. You will get a notification with the new date soon.";
-    private static final String homeOfficeAdjournExpediteTransferContent = "The details of the hearing will be updated and you will be sent a new Notice of Hearing with the agreed changes.";
-    private static final String homeOfficeJudgesReviewContent = "The decision on the Home Office’s original request will be overturned. You will be notified if there is something you need to do next.";
-    private static final String homeOfficeLinkOrUnlinkContent = "This appeal will be linked to or unlinked from the appeal in the Home Office application. You will be notified when this happens.";
-    private static final String homeOfficeReinstateAppealContent = "This appeal will be reinstated and will continue from the point where it was ended. You will be notified when this happens.";
-    private static final String applicationTypeOtherContent = "You will be notified when the tribunal makes the changes the Home Office asked for.";
-    private static final String homeOfficeRefusedContent = "The appeal will continue without any changes.";
+    private static final String HOME_OFFICE_TIME_EXTENTION_CONTENT = "The tribunal will give the Home Office more time to complete its next task. You will get a notification with the new date soon.";
+    private static final String HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT = "The details of the hearing will be updated and you will be sent a new Notice of Hearing with the agreed changes.";
+    private static final String HOME_OFFICE_JUDGES_REVIEW_CONTENT = "The decision on the Home Office’s original request will be overturned. You will be notified if there is something you need to do next.";
+    private static final String HOME_OFFICE_LINK_OR_UNLINK_CONTENT = "This appeal will be linked to or unlinked from the appeal in the Home Office application. You will be notified when this happens.";
+    private static final String HOME_OFFICE_REINSTATE_APPEAL_CONTENT = "This appeal will be reinstated and will continue from the point where it was ended. You will be notified when this happens.";
+    private static final String APPLICATION_TYPE_OTHER_CONTENT = "You will be notified when the tribunal makes the changes the Home Office asked for.";
+    private static final String HOME_OFFICE_REFUSED_CONTENT = "The appeal will continue without any changes.";
 
     private AppellantInternalRespondentApplicationDecidedLetterPersonalisation appellantInternalRespondentApplicationDecidedLetterPersonalisation;
 
@@ -213,20 +213,20 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         if (applicationType == ADJOURN || applicationType == EXPEDITE || applicationType == TRANSFER) {
-            assertEquals(homeOfficeAdjournExpediteTransferContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == TIME_EXTENSION) {
-            assertEquals(homeOfficetimeExtentionContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_TIME_EXTENTION_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == JUDGE_REVIEW_LO) {
-            assertEquals(homeOfficeJudgesReviewContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_JUDGES_REVIEW_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == LINK_OR_UNLINK) {
-            assertEquals(homeOfficeLinkOrUnlinkContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_LINK_OR_UNLINK_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == REINSTATE) {
-            assertEquals(homeOfficeReinstateAppealContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_REINSTATE_APPEAL_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == WITHDRAW) {
             assertEquals("Your appeal may end. If you do not want the appeal to end, you should contact the tribunal by " +
                     systemDateProvider.dueDate(daysAfterApplicationDecisionInCountry) + " to explain why.", personalisation.get("nextStep"));
         } else if (applicationType == OTHER) {
-            assertEquals(applicationTypeOtherContent, personalisation.get("nextStep"));
+            assertEquals(APPLICATION_TYPE_OTHER_CONTENT, personalisation.get("nextStep"));
         }
     }
 
@@ -257,20 +257,20 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         if (applicationType == ADJOURN || applicationType == EXPEDITE || applicationType == TRANSFER) {
-            assertEquals(homeOfficeAdjournExpediteTransferContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == TIME_EXTENSION) {
-            assertEquals(homeOfficetimeExtentionContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_TIME_EXTENTION_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == JUDGE_REVIEW_LO) {
-            assertEquals(homeOfficeJudgesReviewContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_JUDGES_REVIEW_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == LINK_OR_UNLINK) {
-            assertEquals(homeOfficeLinkOrUnlinkContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_LINK_OR_UNLINK_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == REINSTATE) {
-            assertEquals(homeOfficeReinstateAppealContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_REINSTATE_APPEAL_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == WITHDRAW) {
             assertEquals("Your appeal may end. If you do not want the appeal to end, you should contact the tribunal by " +
                     systemDateProvider.dueDate(daysAfterApplicationDecisionOoc) + " to explain why.", personalisation.get("nextStep"));
         } else if (applicationType == OTHER) {
-            assertEquals(applicationTypeOtherContent, personalisation.get("nextStep"));
+            assertEquals(APPLICATION_TYPE_OTHER_CONTENT, personalisation.get("nextStep"));
         }
     }
 
@@ -287,7 +287,7 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
         Map<String, String> personalisation =
                 appellantInternalRespondentApplicationDecidedLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(homeOfficeRefusedContent, personalisation.get("nextStep"));
+        assertEquals(HOME_OFFICE_REFUSED_CONTENT, personalisation.get("nextStep"));
 
     }
 
@@ -316,20 +316,20 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         if (applicationType == ADJOURN || applicationType == EXPEDITE || applicationType == TRANSFER) {
-            assertEquals(homeOfficeAdjournExpediteTransferContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == TIME_EXTENSION) {
-            assertEquals(homeOfficetimeExtentionContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_TIME_EXTENTION_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == JUDGE_REVIEW_LO) {
-            assertEquals(homeOfficeJudgesReviewContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_JUDGES_REVIEW_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == LINK_OR_UNLINK) {
-            assertEquals(homeOfficeLinkOrUnlinkContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_LINK_OR_UNLINK_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == REINSTATE) {
-            assertEquals(homeOfficeReinstateAppealContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_REINSTATE_APPEAL_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == WITHDRAW) {
             assertEquals("Your appeal may end. If you do not want the appeal to end, you should contact the tribunal by " +
                          systemDateProvider.dueDate(daysAfterApplicationDecisionInCountry) + " to explain why.", personalisation.get("nextStep"));
         } else if (applicationType == OTHER) {
-            assertEquals(applicationTypeOtherContent, personalisation.get("nextStep"));
+            assertEquals(APPLICATION_TYPE_OTHER_CONTENT, personalisation.get("nextStep"));
         }
     }
 
@@ -361,20 +361,20 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         if (applicationType == ADJOURN || applicationType == EXPEDITE || applicationType == TRANSFER) {
-            assertEquals(homeOfficeAdjournExpediteTransferContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == TIME_EXTENSION) {
-            assertEquals(homeOfficetimeExtentionContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_TIME_EXTENTION_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == JUDGE_REVIEW_LO) {
-            assertEquals(homeOfficeJudgesReviewContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_JUDGES_REVIEW_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == LINK_OR_UNLINK) {
-            assertEquals(homeOfficeLinkOrUnlinkContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_LINK_OR_UNLINK_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == REINSTATE) {
-            assertEquals(homeOfficeReinstateAppealContent, personalisation.get("nextStep"));
+            assertEquals(HOME_OFFICE_REINSTATE_APPEAL_CONTENT, personalisation.get("nextStep"));
         } else if (applicationType == WITHDRAW) {
             assertEquals("Your appeal may end. If you do not want the appeal to end, you should contact the tribunal by " +
                          systemDateProvider.dueDate(daysAfterApplicationDecisionOoc) + " to explain why.", personalisation.get("nextStep"));
         } else if (applicationType == OTHER) {
-            assertEquals(applicationTypeOtherContent, personalisation.get("nextStep"));
+            assertEquals(APPLICATION_TYPE_OTHER_CONTENT, personalisation.get("nextStep"));
         }
     }
 
@@ -391,7 +391,7 @@ class AppellantInternalRespondentApplicationDecidedLetterPersonalisationTest {
         Map<String, String> personalisation =
             appellantInternalRespondentApplicationDecidedLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(homeOfficeRefusedContent, personalisation.get("nextStep"));
+        assertEquals(HOME_OFFICE_REFUSED_CONTENT, personalisation.get("nextStep"));
 
     }
 

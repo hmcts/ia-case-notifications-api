@@ -8,52 +8,52 @@ public final class WhatHappensNextContentUtils {
         // prevent public constructor for Sonar
     }
 
-    private static final String timeExtentionContent = "The Tribunal will give you more time to complete your next task. You will get a notification with the new date soon.";
-    private static final String adjournExpediteTransferOrUpdateHearingReqsContent = "The details of your hearing will be updated. The Tribunal will contact you when this happens.";
-    private static final String judgesReviewContent = "The decision on your original request will be overturned. The Tribunal will contact you if there is something you need to do next.";
-    private static final String linkOrUnlinkContent = "This appeal will be linked or unlinked. The Tribunal will contact you when this happens.";
-    private static final String withdrawnContent = "The Tribunal will end the appeal. The Tribunal will contact you when this happens.";
-    private static final String updateUpdateDetailsOrOtherContent = "The Tribunal will contact you when it makes the changes you requested.";
-    private static final String reinstateAppealContent = "This appeal will be reinstated and will continue from the point where it was ended. You will be notified when this happens.";
-    private static final String refusedAppellantContent = "If a Legal Officer made this decision, you can contact the tribunal to ask for the decision to be reviewed by a judge.";
+    private static final String TIME_EXTENTION_CONTENT = "The Tribunal will give you more time to complete your next task. You will get a notification with the new date soon.";
+    private static final String ADJOURN_EXPEDITE_TRANSFER_OR_UPDATE_HEARING_REQS_CONTENT = "The details of your hearing will be updated. The Tribunal will contact you when this happens.";
+    private static final String JUDGES_REVIEW_CONTENT = "The decision on your original request will be overturned. The Tribunal will contact you if there is something you need to do next.";
+    private static final String LINK_OR_UNLINK_CONTENT = "This appeal will be linked or unlinked. The Tribunal will contact you when this happens.";
+    private static final String WITHDRAWN_CONTENT = "The Tribunal will end the appeal. The Tribunal will contact you when this happens.";
+    private static final String UPDATE_UPDATE_DETAILS_OR_OTHER_CONTENT = "The Tribunal will contact you when it makes the changes you requested.";
+    private static final String REINSTATE_APPEAL_CONTENT = "This appeal will be reinstated and will continue from the point where it was ended. You will be notified when this happens.";
+    private static final String REFUSED_APPELLANT_CONTENT = "If a Legal Officer made this decision, you can contact the tribunal to ask for the decision to be reviewed by a judge.";
 
 
     //Home office constants
-    private static final String homeOfficetimeExtentionContent = "The tribunal will give the Home Office more time to complete its next task. You will get a notification with the new date soon.";
-    private static final String homeOfficeAdjournExpediteTransferContent = "The details of the hearing will be updated and you will be sent a new Notice of Hearing with the agreed changes.";
-    private static final String homeOfficeJudgesReviewContent = "The decision on the Home Office’s original request will be overturned. You will be notified if there is something you need to do next.";
-    private static final String homeOfficeLinkOrUnlinkContent = "This appeal will be linked to or unlinked from the appeal in the Home Office application. You will be notified when this happens.";
-    private static final String homeOfficeWithdrawnContent = "Your appeal may end. If you do not want the appeal to end, you should contact the tribunal by %s to explain why.";
-    private static final String homeOfficeReinstateAppealContent = "This appeal will be reinstated and will continue from the point where it was ended. You will be notified when this happens.";
-    private static final String applicationTypeOtherContent = "You will be notified when the tribunal makes the changes the Home Office asked for.";
-    private static final String homeOfficeRefusedContent = "The appeal will continue without any changes.";
+    private static final String HOME_OFFICE_TIME_EXTENTION_CONTENT = "The tribunal will give the Home Office more time to complete its next task. You will get a notification with the new date soon.";
+    private static final String HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT = "The details of the hearing will be updated and you will be sent a new Notice of Hearing with the agreed changes.";
+    private static final String HOME_OFFICE_JUDGES_REVIEW_CONTENT = "The decision on the Home Office’s original request will be overturned. You will be notified if there is something you need to do next.";
+    private static final String HOME_OFFICE_LINK_OR_UNLINK_CONTENT = "This appeal will be linked to or unlinked from the appeal in the Home Office application. You will be notified when this happens.";
+    private static final String HOME_OFFICE_WITHDRAWN_CONTENT = "Your appeal may end. If you do not want the appeal to end, you should contact the tribunal by %s to explain why.";
+    private static final String HOME_OFFICE_REINSTATE_APPEAL_CONTENT = "This appeal will be reinstated and will continue from the point where it was ended. You will be notified when this happens.";
+    private static final String APPLICATION_TYPE_OTHER_CONTENT = "You will be notified when the tribunal makes the changes the Home Office asked for.";
+    private static final String HOME_OFFICE_REFUSED_CONTENT = "The appeal will continue without any changes.";
 
     public static String getWhatHappensNextContent(MakeAnApplicationTypes makeAnApplicationTypes, boolean isAppellantApplication, String decisionStr, String dueDate) {
         boolean isGranted = decisionStr.equals("Granted");
         if (isAppellantApplication) {
             return isGranted ? switch (makeAnApplicationTypes) {
-                case TIME_EXTENSION -> timeExtentionContent;
+                case TIME_EXTENSION -> TIME_EXTENTION_CONTENT;
                 case ADJOURN, EXPEDITE, TRANSFER, UPDATE_HEARING_REQUIREMENTS ->
-                        adjournExpediteTransferOrUpdateHearingReqsContent;
-                case JUDGE_REVIEW, JUDGE_REVIEW_LO -> judgesReviewContent;
-                case LINK_OR_UNLINK -> linkOrUnlinkContent;
-                case WITHDRAW -> withdrawnContent;
-                case REINSTATE -> reinstateAppealContent;
-                case UPDATE_APPEAL_DETAILS, OTHER -> updateUpdateDetailsOrOtherContent;
+                        ADJOURN_EXPEDITE_TRANSFER_OR_UPDATE_HEARING_REQS_CONTENT;
+                case JUDGE_REVIEW, JUDGE_REVIEW_LO -> JUDGES_REVIEW_CONTENT;
+                case LINK_OR_UNLINK -> LINK_OR_UNLINK_CONTENT;
+                case WITHDRAW -> WITHDRAWN_CONTENT;
+                case REINSTATE -> REINSTATE_APPEAL_CONTENT;
+                case UPDATE_APPEAL_DETAILS, OTHER -> UPDATE_UPDATE_DETAILS_OR_OTHER_CONTENT;
                 default -> "Unknown";
-            } : refusedAppellantContent;
+            } : REFUSED_APPELLANT_CONTENT;
         } else {
             return isGranted ? switch (makeAnApplicationTypes) {
-                case TIME_EXTENSION -> homeOfficetimeExtentionContent;
+                case TIME_EXTENSION -> HOME_OFFICE_TIME_EXTENTION_CONTENT;
                 case ADJOURN, EXPEDITE, TRANSFER ->
-                        homeOfficeAdjournExpediteTransferContent;
-                case JUDGE_REVIEW_LO -> homeOfficeJudgesReviewContent;
-                case LINK_OR_UNLINK -> homeOfficeLinkOrUnlinkContent;
-                case WITHDRAW -> String.format(homeOfficeWithdrawnContent, dueDate);
-                case REINSTATE -> homeOfficeReinstateAppealContent;
-                case OTHER -> applicationTypeOtherContent;
+                        HOME_OFFICE_ADJOURN_EXPEDITE_TRANSFER_CONTENT;
+                case JUDGE_REVIEW_LO -> HOME_OFFICE_JUDGES_REVIEW_CONTENT;
+                case LINK_OR_UNLINK -> HOME_OFFICE_LINK_OR_UNLINK_CONTENT;
+                case WITHDRAW -> String.format(HOME_OFFICE_WITHDRAWN_CONTENT, dueDate);
+                case REINSTATE -> HOME_OFFICE_REINSTATE_APPEAL_CONTENT;
+                case OTHER -> APPLICATION_TYPE_OTHER_CONTENT;
                 default -> "Unknown";
-            } : homeOfficeRefusedContent;
+            } : HOME_OFFICE_REFUSED_CONTENT;
         }
     }
 
