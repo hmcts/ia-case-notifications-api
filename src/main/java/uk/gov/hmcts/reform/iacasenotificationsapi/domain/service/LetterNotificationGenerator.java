@@ -69,7 +69,8 @@ public class LetterNotificationGenerator implements NotificationGenerator {
             letterTemplateId,
             address,
             personalisation.getPersonalisation(callback),
-            referenceId
+            referenceId,
+            callback
         );
     }
 

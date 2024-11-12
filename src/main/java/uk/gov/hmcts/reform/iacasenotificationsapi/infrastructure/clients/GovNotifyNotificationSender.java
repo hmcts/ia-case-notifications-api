@@ -92,7 +92,8 @@ public class GovNotifyNotificationSender implements NotificationSender<AsylumCas
         final String templateId,
         final String address,
         final Map<String, String> personalisation,
-        final String reference) {
+        final String reference,
+        final Callback<AsylumCase> callback) {
 
         return senderHelper.sendLetter(
             templateId,

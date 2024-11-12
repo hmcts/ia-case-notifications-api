@@ -166,9 +166,9 @@ public class NotificationGeneratorTest {
         when(letterNotificationPersonalisation1.getPersonalisation(callback)).thenReturn(personalizationMap1);
         when(letterNotificationPersonalisation2.getPersonalisation(callback)).thenReturn(personalizationMap2);
 
-        when(notificationSender.sendLetter(templateId1, address1, personalizationMap1, refId1))
+        when(notificationSender.sendLetter(templateId1, address1, personalizationMap1, refId1, callback))
             .thenReturn(notificationId1);
-        when(notificationSender.sendLetter(templateId2, address2, personalizationMap2, refId2))
+        when(notificationSender.sendLetter(templateId2, address2, personalizationMap2, refId2, callback))
             .thenReturn(notificationId2);
 
         when(notificationIdAppender.append(notificationsSent, refId1, notificationId1)).thenReturn(notificationsSent);
@@ -277,8 +277,8 @@ public class NotificationGeneratorTest {
 
         notificationGenerator.generate(callback);
 
-        verify(notificationSender).sendLetter(templateId1, address1, personalizationMap1, refId1);
-        verify(notificationSender).sendLetter(templateId2, address2, personalizationMap2, refId2);
+        verify(notificationSender).sendLetter(templateId1, address1, personalizationMap1, refId1, callback);
+        verify(notificationSender).sendLetter(templateId2, address2, personalizationMap2, refId2, callback);
 
         verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);

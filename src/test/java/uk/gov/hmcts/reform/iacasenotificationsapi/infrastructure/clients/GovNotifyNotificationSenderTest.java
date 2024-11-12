@@ -189,7 +189,8 @@ public class GovNotifyNotificationSenderTest {
                 templateId,
                 address,
                 personalisation,
-                reference
+                reference,
+                callback
             );
 
         verify(senderHelper, times(1)).sendLetter(

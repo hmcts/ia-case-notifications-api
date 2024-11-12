@@ -30,6 +30,7 @@ public interface NotificationSender<T extends CaseData> {
         String address,
         Map<String, String> personalisation,
         String reference,
+        Callback<T> callback
     );
 
     String sendPrecompiledLetter(

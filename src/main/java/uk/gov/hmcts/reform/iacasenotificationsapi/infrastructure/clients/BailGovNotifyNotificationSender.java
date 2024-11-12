@@ -90,7 +90,8 @@ public class BailGovNotifyNotificationSender implements NotificationSender<BailC
             reference,
             notificationBailClient,
             deduplicateSendsWithinSeconds,
-            LOG
+            LOG,
+            callback
         );
     }
 
