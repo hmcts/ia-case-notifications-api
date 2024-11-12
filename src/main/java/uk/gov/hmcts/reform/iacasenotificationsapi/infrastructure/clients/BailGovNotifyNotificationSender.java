@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.InputStream;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,6 +72,39 @@ public class BailGovNotifyNotificationSender implements NotificationSender<BailC
                 deduplicateSendsWithinSeconds,
                 LOG,
                 callback
+        );
+    }
+
+    @Override
+    public synchronized String sendLetter(
+        final String templateId,
+        final String address,
+        final Map<String, String> personalisation,
+        final String reference,
+        final Callback<BailCase> callback) {
+
+        return senderHelper.sendSms(
+            templateId,
+            address,
+            personalisation,
+            reference,
+            notificationBailClient,
+            deduplicateSendsWithinSeconds,
+            LOG
+        );
+    }
+
+    @Override
+    public synchronized String sendPrecompiledLetter(
+        final String reference,
+        final InputStream stream
+    ) {
+        return senderHelper.sendPrecompiledLetter(
+            reference,
+            stream,
+            notificationBailClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         );
     }
 }

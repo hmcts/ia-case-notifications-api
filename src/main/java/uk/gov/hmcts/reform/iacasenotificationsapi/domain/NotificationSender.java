@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 
+import java.io.InputStream;
 import java.util.Map;
 
 
@@ -24,4 +25,15 @@ public interface NotificationSender<T extends CaseData> {
         Callback<T> callback
     );
 
+    String sendLetter(
+        String templateId,
+        String address,
+        Map<String, String> personalisation,
+        String reference,
+    );
+
+    String sendPrecompiledLetter(
+        String reference,
+        InputStream stream
+    );
 }
