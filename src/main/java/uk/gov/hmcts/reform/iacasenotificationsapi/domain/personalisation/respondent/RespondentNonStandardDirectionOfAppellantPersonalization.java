@@ -97,7 +97,7 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
                     State.PRE_HEARING,
                     State.DECISION,
                     State.ADJOURNED
-                ).contains(currentState) && appealService.isAppealListed(asylumCase)) {
+                ).contains(currentState)) {
                     final Optional<HearingCentre> maybeCaseIsListed = asylumCase
                         .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
