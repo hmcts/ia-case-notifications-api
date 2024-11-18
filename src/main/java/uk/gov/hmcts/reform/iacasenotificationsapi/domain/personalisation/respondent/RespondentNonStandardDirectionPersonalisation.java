@@ -124,8 +124,9 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                     } else {
                         return Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
+                } else {
+                    return new HashSet<String>();
                 }
-                throw new IllegalStateException("1 - " + CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
             })
             .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
     }
