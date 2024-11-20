@@ -27,7 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class RespondentNonStandardDirectionPersonalisationTest {
+class RespondentNonStandardDirectionPersonalisationTest {
 
     @Mock
     AsylumCase asylumCase;
@@ -64,7 +64,7 @@ public class RespondentNonStandardDirectionPersonalisationTest {
     private RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         when((emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)))
                 .thenReturn(homeOfficeHearingCentreEmail);
@@ -249,7 +249,7 @@ public class RespondentNonStandardDirectionPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
+    void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> respondentNonStandardDirectionPersonalisation.getPersonalisation((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
@@ -258,7 +258,7 @@ public class RespondentNonStandardDirectionPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+    void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentNonStandardDirectionPersonalisation);
@@ -282,7 +282,7 @@ public class RespondentNonStandardDirectionPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
+    void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentNonStandardDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -312,7 +312,7 @@ public class RespondentNonStandardDirectionPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_direction_is_empty() {
+    void should_throw_exception_on_personalisation_when_direction_is_empty() {
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> respondentNonStandardDirectionPersonalisation.getPersonalisation(asylumCase))
@@ -321,7 +321,7 @@ public class RespondentNonStandardDirectionPersonalisationTest {
     }
 
     @Test
-    public void should_return_false_if_appeal_not_yet_listed() {
+    void should_return_false_if_appeal_not_yet_listed() {
         assertFalse(appealService.isAppealListed(asylumCase));
     }
 }
