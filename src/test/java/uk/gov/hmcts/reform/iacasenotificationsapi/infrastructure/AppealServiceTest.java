@@ -28,7 +28,7 @@ class AppealServiceTest {
 
         HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(hearingCentre));
+            .thenReturn(Optional.of(hearingCentre));
         assertTrue(appealService.isAppealListed(asylumCase));
     }
 
@@ -39,7 +39,7 @@ class AppealServiceTest {
 
         JourneyType journeyType = JourneyType.AIP;
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class))
-                .thenReturn(Optional.of(journeyType));
+            .thenReturn(Optional.of(journeyType));
         assertTrue(appealService.isAppellantInPersonJourney(asylumCase));
     }
 

@@ -14,14 +14,14 @@ public class AppealService {
     public boolean isAppealListed(AsylumCase asylumCase) {
 
         final Optional<HearingCentre> appealListed = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
         return appealListed.isPresent();
     }
 
     public boolean isAppellantInPersonJourney(AsylumCase asylumCase) {
         return  asylumCase
-                .read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)
-                .map(type -> type == JourneyType.AIP).orElse(false);
+            .read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)
+            .map(type -> type == JourneyType.AIP).orElse(false);
     }
 }
