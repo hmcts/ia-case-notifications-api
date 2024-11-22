@@ -204,7 +204,8 @@ class RespondentNonStandardDirectionPersonalisationTest {
                         // test the same state when the case is not listed
                         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
 
-                        assertTrue(respondentNonStandardDirectionPersonalisation.getRecipientsList(asylumCase).isEmpty());
+                        assertTrue(respondentNonStandardDirectionPersonalisation.getRecipientsList(asylumCase)
+                                .contains(homeOfficeHearingCentreEmail));
                     }
                 } else if (homeOfficeEmail.equals(emailAddress)) {
                     when(asylumCase.read(HEARING_CENTRE)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
