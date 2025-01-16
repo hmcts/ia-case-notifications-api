@@ -134,7 +134,9 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                     return new HashSet<String>();
                 }
             })
-            .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
+            .orElseThrow(
+                () -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT)
+            );
     }
 
     @Override
