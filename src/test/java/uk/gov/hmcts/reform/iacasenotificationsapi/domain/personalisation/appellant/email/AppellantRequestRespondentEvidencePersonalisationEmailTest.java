@@ -30,6 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +43,8 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     DirectionFinder directionFinder;
     @Mock
     RecipientsFinder recipientsFinder;
+    @Mock
+    StringProvider stringProvider;
     @Mock
     Direction direction;
 
@@ -80,7 +83,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
                 emailTemplateId,
                 iaAipFrontendUrl,
                 directionFinder,
-                recipientsFinder);
+                recipientsFinder, stringProvider);
     }
 
     @Test

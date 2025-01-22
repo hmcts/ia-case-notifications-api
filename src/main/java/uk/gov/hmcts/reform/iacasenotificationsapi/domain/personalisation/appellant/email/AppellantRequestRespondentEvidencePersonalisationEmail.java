@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @Service
 public class AppellantRequestRespondentEvidencePersonalisationEmail implements EmailNotificationPersonalisation {
@@ -26,18 +27,20 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
     private final String iaAipFrontendUrl;
     private final DirectionFinder directionFinder;
     private final RecipientsFinder recipientsFinder;
+    private final StringProvider stringProvider;
 
     public AppellantRequestRespondentEvidencePersonalisationEmail(
         @Value("${govnotify.template.requestRespondentEvidenceDirection.appellant.email}") String requestRespondentEvidenceDirectionAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DirectionFinder directionFinder,
-        RecipientsFinder recipientsFinder
-    ) {
+        RecipientsFinder recipientsFinder,
+        StringProvider stringProvider) {
         this.requestRespondentEvidenceDirectionAppellantEmailTemplateId = requestRespondentEvidenceDirectionAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.directionFinder = directionFinder;
         this.recipientsFinder = recipientsFinder;
 
+        this.stringProvider = stringProvider;
     }
 
     @Override
@@ -69,18 +72,24 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
                 .parse(direction.getDateDue())
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
-        ImmutableMap.Builder<String, String> builder =
+        return
             ImmutableMap
                 .<String, String>builder()
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("direction due date", directionDueDate);
+                .put("direction due date", directionDueDate)
+                .put("HearingCentre", getHearingCentreName(asylumCase)).build();
+    }
 
-        asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
-                .ifPresent(hearingCentre -> builder.put("hearingCentre", String.valueOf(hearingCentre).toUpperCase()));
+    private String getHearingCentreName(AsylumCase caseData) {
 
-        return builder.build();
+        String oldHearingCentre;
+        HearingCentre mayBeOldHearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+        oldHearingCentre = stringProvider.get("hearingCentreName", mayBeOldHearingCentre.toString())
+                .orElseThrow(() -> new IllegalStateException("hearingCentreName is not present: " + mayBeOldHearingCentre));
+        return oldHearingCentre;
     }
 }

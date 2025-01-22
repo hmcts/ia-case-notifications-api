@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -30,6 +31,8 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     DirectionFinder directionFinder;
+    @Mock
+    StringProvider stringProvider;
     @Mock
     Direction direction;
 
@@ -67,8 +70,8 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
             new LegalRepresentativeRequestHomeOfficeBundlePersonalisation(
                 nonAdaTemplateId,
                 adaTemplateId,
-                directionFinder
-            );
+                directionFinder,
+                    stringProvider);
     }
 
     @Test
