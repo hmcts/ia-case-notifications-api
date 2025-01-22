@@ -62,7 +62,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String mockedHearingCentre = "Hearing Centre";
+    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
 
     private AppellantRequestRespondentEvidencePersonalisationEmail
         appellantRequestRespondentEvidencePersonalisationEmail;
@@ -80,7 +80,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         appellantRequestRespondentEvidencePersonalisationEmail =
             new AppellantRequestRespondentEvidencePersonalisationEmail(
                 emailTemplateId,
@@ -151,7 +151,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(mockedHearingCentre, personalisation.get("HearingCentre"));
+        assertEquals(hearingCentre.getValue().toUpperCase(), personalisation.get("HearingCentre"));
 
     }
 
@@ -172,6 +172,6 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
         assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(mockedHearingCentre, personalisation.get("HearingCentre"));
+        assertEquals(hearingCentre.getValue().toUpperCase(), personalisation.get("HearingCentre"));
     }
 }
