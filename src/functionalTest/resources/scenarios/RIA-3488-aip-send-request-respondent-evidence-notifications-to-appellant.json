@@ -94,15 +94,12 @@
       {
         "reference": "34884_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
-        "subject": "Immigration and Asylum appeal: submit bundle direction",
+        "subject": "Asylum appeal direction: appeal lodged – Manchester",
         "body": [
           "PA/12345/2019",
           "A1234567",
           "Pablo Jimenez",
-          "{$iaExUiFrontendUrl}",
-          "{$TODAY+14|d MMM yyyy}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "{$TODAY+14|d MMM yyyy}"
         ]
       },
       {

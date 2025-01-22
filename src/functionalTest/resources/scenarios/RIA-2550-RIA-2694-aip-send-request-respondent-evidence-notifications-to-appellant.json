@@ -98,7 +98,6 @@
           "PA/12345/2019",
           "A1234567",
           "Pablo Jimenez",
-          "{$iaExUiFrontendUrl}",
           "{$TODAY+14|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
