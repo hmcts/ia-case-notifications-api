@@ -75,11 +75,8 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisation implement
 
     private String getHearingCentreName(AsylumCase caseData) {
 
-        String oldHearingCentre;
-        HearingCentre mayBeOldHearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+        HearingCentre hearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
                 .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
-        oldHearingCentre = stringProvider.get("hearingCentreName", mayBeOldHearingCentre.toString())
-                .orElseThrow(() -> new IllegalStateException("hearingCentreName is not present: " + mayBeOldHearingCentre));
-        return oldHearingCentre;
+        return String.valueOf(hearingCentre).toUpperCase();
     }
 }

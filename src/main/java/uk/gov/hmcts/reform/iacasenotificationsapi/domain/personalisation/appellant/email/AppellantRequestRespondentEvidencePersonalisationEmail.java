@@ -27,7 +27,6 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
     private final String iaAipFrontendUrl;
     private final DirectionFinder directionFinder;
     private final RecipientsFinder recipientsFinder;
-    private final StringProvider stringProvider;
 
     public AppellantRequestRespondentEvidencePersonalisationEmail(
         @Value("${govnotify.template.requestRespondentEvidenceDirection.appellant.email}") String requestRespondentEvidenceDirectionAppellantEmailTemplateId,
@@ -39,8 +38,6 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.directionFinder = directionFinder;
         this.recipientsFinder = recipientsFinder;
-
-        this.stringProvider = stringProvider;
     }
 
     @Override
@@ -80,16 +77,14 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
                 .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("direction due date", directionDueDate)
-                .put("HearingCentre", getHearingCentreName(asylumCase)).build();
+                .put("HearingCentre", getHearingCentreName(asylumCase))
+                    .build();
     }
 
     private String getHearingCentreName(AsylumCase caseData) {
 
-        String oldHearingCentre;
-        HearingCentre mayBeOldHearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+        HearingCentre hearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
                 .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
-        oldHearingCentre = stringProvider.get("hearingCentreName", mayBeOldHearingCentre.toString())
-                .orElseThrow(() -> new IllegalStateException("hearingCentreName is not present: " + mayBeOldHearingCentre));
-        return oldHearingCentre;
+        return String.valueOf(hearingCentre).toUpperCase();
     }
 }
