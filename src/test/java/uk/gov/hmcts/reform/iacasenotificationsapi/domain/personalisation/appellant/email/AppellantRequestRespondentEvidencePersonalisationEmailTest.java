@@ -60,6 +60,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
+    private String mockedHearingCentre = "Hearing Centre";
 
     private AppellantRequestRespondentEvidencePersonalisationEmail
         appellantRequestRespondentEvidencePersonalisationEmail;
@@ -148,7 +149,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals(mockedHearingCentre, personalisation.get("HearingCentre"));
 
     }
 
@@ -168,6 +169,6 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
         assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals(mockedHearingCentre, personalisation.get("HearingCentre"));
     }
 }

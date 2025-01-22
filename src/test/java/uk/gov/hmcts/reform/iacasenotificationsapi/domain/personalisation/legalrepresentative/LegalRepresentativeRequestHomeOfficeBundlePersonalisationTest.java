@@ -48,6 +48,7 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     private String legalRepRefNumber = "somelegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
+    private String hearingCentre = "someHearingCentre";
 
     private LegalRepresentativeRequestHomeOfficeBundlePersonalisation
         legalRepresentativeRequestHomeOfficeBundlePersonalisation;
@@ -125,6 +126,7 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantGivenNames)
                 .put("insertDate", expectedDirectionDueDate)
+                .put("HearingCentre", hearingCentre)
                 .build();
 
         Map<String, String> actualPersonalisation =
