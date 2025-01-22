@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,19 +33,19 @@ public class NotificationIdAppender {
 
     public List<IdValue<String>> append(
         List<IdValue<String>> existingNotificationsSent,
-        String notificationReference,
+        String referenceId,
         String notificationId
     ) {
         long numberOfExistingNotificationsOfSameKind =
             existingNotificationsSent
                 .stream()
                 .map(IdValue::getId)
-                .filter(existingNotificationReference -> existingNotificationReference.startsWith(notificationReference))
+                .filter(existingNotificationReference -> existingNotificationReference.startsWith(referenceId))
                 .count();
-
+        long timestamp = Instant.now().toEpochMilli();
         String qualifiedNotificationReference = numberOfExistingNotificationsOfSameKind > 0
             ?
-            (notificationReference + "_" + UUID.randomUUID().toString()) : notificationReference;
+            (referenceId + "_" + UUID.randomUUID().toString() + "_" + timestamp) : referenceId + "_" + timestamp;
 
         final List<IdValue<String>> newNotificationsSent = new ArrayList<>(existingNotificationsSent);
 
