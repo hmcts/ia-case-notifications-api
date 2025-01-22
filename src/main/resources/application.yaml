@@ -277,16 +277,16 @@ govnotify:
           sms: 62e2bca9-c245-49cb-a7cd-e1afec345d9b
     buildCaseDirection:
       legalRep:
-        email: 2e660e88-62b8-4d4c-bd3d-7860bc4b26d6
+        email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
     reviewDirection:
       legalRep:
-        email: 2e660e88-62b8-4d4c-bd3d-7860bc4b26d6
+        email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
       detentionTeam:
         email: 816d35c8-e4b8-45d3-a4fe-789c1badc408
       respondent:
         email: 8841913e-02c7-4565-8166-963e8a3a973d
       appellant:
-        email: 2e660e88-62b8-4d4c-bd3d-7860bc4b26d6
+        email: 85a38d4a-166a-49c8-9b03-8ebbf64690e2
         sms: b9a45d5e-b070-4876-9c2f-ed4ff9f18116
     nonStandardDirectionBeforeListing:
       respondent:
