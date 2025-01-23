@@ -144,15 +144,37 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-            appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+                appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
         assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
         assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
         assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(hearingCentre.getValue().toUpperCase(), personalisation.get("HearingCentre"));
 
+        // Dynamically format the expected value for Hearing Centre (title case)
+        String hearingCentreValue = hearingCentre.getValue();
+        String expectedHearingCentre = hearingCentreValue.replaceAll("([a-z])([A-Z])", "$1 $2")
+                .toLowerCase(); // Add spaces and convert to lowercase
+
+        // Capitalize the first letter of each word
+        expectedHearingCentre = capitalizeWords(expectedHearingCentre);
+
+        assertEquals(expectedHearingCentre, personalisation.get("HearingCentre"));
+    }
+
+    // Helper method to capitalize each word
+    private String capitalizeWords(String input) {
+        StringBuilder capitalized = new StringBuilder();
+        String[] words = input.split(" ");
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                capitalized.append(Character.toUpperCase(word.charAt(0))) // Capitalize first letter
+                        .append(word.substring(1)) // Append the rest of the word
+                        .append(" "); // Add space after each word
+            }
+        }
+        return capitalized.toString().trim(); // Remove trailing space
     }
 
     @Test
@@ -165,13 +187,20 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         when(asylumCase.read(HEARING_CENTRE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+                appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals("", personalisation.get("HO Ref Number"));
         assertEquals("", personalisation.get("Given names"));
         assertEquals("", personalisation.get("Family name"));
         assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(hearingCentre.getValue().toUpperCase(), personalisation.get("HearingCentre"));
+
+        // Dynamically format the expected hearing centre value to match title case
+        String hearingCentreValue = hearingCentre.getValue();
+        String expectedHearingCentre = hearingCentreValue.replaceAll("([a-z])([A-Z])", "$1 $2")
+                .toLowerCase(); // Add spaces for camel case and convert to lowercase
+        expectedHearingCentre = capitalizeWords(expectedHearingCentre);
+
+        assertEquals(expectedHearingCentre, personalisation.get("HearingCentre"));
     }
 }
