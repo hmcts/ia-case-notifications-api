@@ -86,7 +86,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
                 emailTemplateId,
                 iaAipFrontendUrl,
                 directionFinder,
-                recipientsFinder, stringProvider);
+                recipientsFinder);
     }
 
     @Test
