@@ -6,7 +6,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.google.common.base.Strings;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,8 +43,10 @@ public class NotificationVerifier implements Verifier {
             return;
         }
 
-        List<Map<String, Object>> notificationsSent =
+        List<Map<String, Object>> notificationsSentWithTimestamp =
             MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
+        List<Map<String, Object>> notificationsSent = new ArrayList<>();
+        sanitizeNotifications(notificationsSentWithTimestamp, notificationsSent);
 
         if (notificationsSent.isEmpty()) {
             assertFalse(
@@ -147,5 +152,19 @@ public class NotificationVerifier implements Verifier {
                     );
                 }
             });
+    }
+
+    private static void sanitizeNotifications(List<Map<String, Object>> notificationsSentWithTimestamp, List<Map<String, Object>> notificationsSent) {
+        for (Map<String, Object> notificationSent : notificationsSentWithTimestamp) {
+            for (Map.Entry<String, Object> entrySet : notificationSent.entrySet()) {
+                String key = entrySet.getKey();
+                int lastIndexOf = key.lastIndexOf("_");
+                Map<String, Object> newEntry = new HashMap<>();
+                newEntry.put(
+                        lastIndexOf != -1 ? entrySet.getKey().substring(0, lastIndexOf - 1) : entrySet.getKey(),
+                        entrySet.getValue());
+                notificationsSent.add(newEntry);
+            }
+        }
     }
 }
