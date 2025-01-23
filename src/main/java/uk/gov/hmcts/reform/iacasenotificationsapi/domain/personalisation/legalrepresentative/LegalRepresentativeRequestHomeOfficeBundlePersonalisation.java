@@ -79,6 +79,22 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisation implement
 
         HearingCentre hearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
                 .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
-        return String.valueOf(hearingCentre).toUpperCase();
+        String hearingCentreName = String.valueOf(hearingCentre);
+
+        // Split camel case and capitalize the first letter of each word
+        String[] words = hearingCentreName.replaceAll("([a-z])([A-Z])", "$1 $2").split(" ");
+        StringBuilder formattedName = new StringBuilder();
+
+        for (String word : words) {
+            formattedName.append(word.substring(0, 1).toUpperCase())
+                    .append(word.substring(1).toLowerCase())
+                    .append(" ");
+        }
+
+        // Trim the trailing space and return the result
+        return formattedName.toString().trim();
     }
+
+
+
 }
