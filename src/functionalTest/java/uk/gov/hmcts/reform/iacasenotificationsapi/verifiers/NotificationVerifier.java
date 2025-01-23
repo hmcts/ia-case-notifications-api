@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
@@ -22,6 +24,7 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Component
 @SuppressWarnings("unchecked")
+@Slf4j
 public class NotificationVerifier implements Verifier {
 
     @Autowired
@@ -47,6 +50,12 @@ public class NotificationVerifier implements Verifier {
             MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
         List<Map<String, Object>> notificationsSent = new ArrayList<>();
         sanitizeNotifications(notificationsSentWithTimestamp, notificationsSent);
+
+        // Print the processed list
+        for (Map<String, Object> map : notificationsSent) {
+            map.forEach((key, value) ->
+                    log.info("Notifications sent for testCaseId: {}, key->value : {}->{}", testCaseId, key, value));
+        }
 
         if (notificationsSent.isEmpty()) {
             assertFalse(
@@ -154,17 +163,21 @@ public class NotificationVerifier implements Verifier {
             });
     }
 
-    private static void sanitizeNotifications(List<Map<String, Object>> notificationsSentWithTimestamp, List<Map<String, Object>> notificationsSent) {
-        for (Map<String, Object> notificationSent : notificationsSentWithTimestamp) {
-            for (Map.Entry<String, Object> entrySet : notificationSent.entrySet()) {
-                String key = entrySet.getKey();
-                int lastIndexOf = key.lastIndexOf("_");
-                Map<String, Object> newEntry = new HashMap<>();
-                newEntry.put(
-                        lastIndexOf != -1 ? entrySet.getKey().substring(0, lastIndexOf - 1) : entrySet.getKey(),
-                        entrySet.getValue());
-                notificationsSent.add(newEntry);
+    private static void sanitizeNotifications(List<Map<String, Object>> notificationsSentWithTimestamp,
+                                              List<Map<String, Object>> notificationsSent) {
+
+        for (Map<String, Object> map : notificationsSentWithTimestamp) {
+            Map<String, Object> newMap = new HashMap<>();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+
+                // Trim the key up to the last underscore to exclude timestamp
+                int lastIndexOfUnderscore = key.lastIndexOf('_');
+                String trimmedKey = (lastIndexOfUnderscore != -1) ? key.substring(0, lastIndexOfUnderscore) : key;
+
+                newMap.put(trimmedKey, entry.getValue());
             }
+            notificationsSent.add(newMap);
         }
     }
 }
