@@ -47,15 +47,8 @@ public class NotificationVerifier implements Verifier {
             return;
         }
 
-        List<Map<String, Object>> notificationsSentWithTimestamp =
+        List<Map<String, Object>> notificationsSent =
             MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
-        List<Map<String, Object>> notificationsSent = sanitizeNotifications(notificationsSentWithTimestamp);
-
-        // Print the processed list
-        for (Map<String, Object> map : notificationsSent) {
-            map.forEach((key, value) ->
-                    log.info("Notifications sent for testCaseId: {}, key->value : {}->{}", testCaseId, key, value));
-        }
 
         if (notificationsSent.isEmpty()) {
             assertFalse(
@@ -68,7 +61,7 @@ public class NotificationVerifier implements Verifier {
             notificationsSent
                 .stream()
                 .collect(Collectors.toMap(
-                    notificationSent -> (String) notificationSent.get("id"),
+                    notificationSent -> sanitizeNotificationId((String) notificationSent.get("id")),
                     notificationSent -> (String) notificationSent.get("value")
                 ));
 
@@ -163,7 +156,7 @@ public class NotificationVerifier implements Verifier {
             });
     }
 
-    private static List<Map<String, Object>> sanitizeNotifications(
+    private List<Map<String, Object>> sanitizeNotifications(
             List<Map<String, Object>> notificationsSentWithTimestamp) {
 
         List<Map<String, Object>> notificationsSent = new ArrayList<>();
@@ -183,5 +176,12 @@ public class NotificationVerifier implements Verifier {
         }
 
         return notificationsSent;
+    }
+
+    private String sanitizeNotificationId(String notificationIdWithTimestamp) {
+        // Regular expression to remove the last underscore and following timestamp in epochmillis
+        Pattern pattern = Pattern.compile("^(.*)_\\d{13}$");
+        Matcher matcher = pattern.matcher(notificationIdWithTimestamp);
+        return matcher.find() ? matcher.group(1) : notificationIdWithTimestamp;
     }
 }
