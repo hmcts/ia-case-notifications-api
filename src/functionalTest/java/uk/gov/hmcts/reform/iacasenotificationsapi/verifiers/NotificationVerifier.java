@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,15 +43,13 @@ public class NotificationVerifier implements Verifier {
         List<Map<String, Object>> expectedNotifications =
             MapValueExtractor.extractOrDefault(scenario, "expectation.notifications", Collections.emptyList());
 
-        if (expectedNotifications == null
-            || expectedNotifications.size() == 0) {
+        if (expectedNotifications == null || expectedNotifications.isEmpty()) {
             return;
         }
 
         List<Map<String, Object>> notificationsSentWithTimestamp =
             MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
-        List<Map<String, Object>> notificationsSent = new ArrayList<>();
-        sanitizeNotifications(notificationsSentWithTimestamp, notificationsSent);
+        List<Map<String, Object>> notificationsSent = sanitizeNotifications(notificationsSentWithTimestamp);
 
         // Print the processed list
         for (Map<String, Object> map : notificationsSent) {
@@ -163,21 +163,25 @@ public class NotificationVerifier implements Verifier {
             });
     }
 
-    private static void sanitizeNotifications(List<Map<String, Object>> notificationsSentWithTimestamp,
-                                              List<Map<String, Object>> notificationsSent) {
+    private static List<Map<String, Object>> sanitizeNotifications(
+            List<Map<String, Object>> notificationsSentWithTimestamp) {
 
-        for (Map<String, Object> map : notificationsSentWithTimestamp) {
+        List<Map<String, Object>> notificationsSent = new ArrayList<>();
+        // Regular expression to remove the last underscore and following timestamp in epochmillis
+        Pattern pattern = Pattern.compile("^(.*)_\\d{13}$");
+
+        for (Map<String, Object> notificationWithTimestamp : notificationsSentWithTimestamp) {
             Map<String, Object> newMap = new HashMap<>();
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+            for (Map.Entry<String, Object> entry : notificationWithTimestamp.entrySet()) {
                 String key = entry.getKey();
-
-                // Trim the key up to the last underscore to exclude timestamp
-                int lastIndexOfUnderscore = key.lastIndexOf('_');
-                String trimmedKey = (lastIndexOfUnderscore != -1) ? key.substring(0, lastIndexOfUnderscore) : key;
+                Matcher matcher = pattern.matcher(key);
+                String trimmedKey = matcher.find() ? matcher.group(1) : key;
 
                 newMap.put(trimmedKey, entry.getValue());
             }
             notificationsSent.add(newMap);
         }
+
+        return notificationsSent;
     }
 }
