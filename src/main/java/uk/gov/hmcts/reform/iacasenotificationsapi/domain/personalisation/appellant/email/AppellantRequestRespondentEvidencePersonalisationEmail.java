@@ -31,11 +31,13 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
         @Value("${govnotify.template.requestRespondentEvidenceDirection.appellant.email}") String requestRespondentEvidenceDirectionAppellantEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DirectionFinder directionFinder,
-        RecipientsFinder recipientsFinder) {
+        RecipientsFinder recipientsFinder
+    ) {
         this.requestRespondentEvidenceDirectionAppellantEmailTemplateId = requestRespondentEvidenceDirectionAppellantEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.directionFinder = directionFinder;
         this.recipientsFinder = recipientsFinder;
+
     }
 
     @Override
