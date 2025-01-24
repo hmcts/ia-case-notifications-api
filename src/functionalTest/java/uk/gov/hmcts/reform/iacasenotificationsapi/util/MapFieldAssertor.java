@@ -77,6 +77,15 @@ public final class MapFieldAssertor {
 
             if ((expectedValue instanceof String) && (actualValue instanceof String)) {
 
+                if (isPathContainsNotificationsSentReference(path)) {
+                    assertThat(
+                            "Expected field matches (" + path + ")",
+                            removeTimestampFromNotificationReference((String) actualValue),
+                            equalTo(expectedValue)
+                    );
+                    return;
+                }
+
                 String expectedValueString = (String) expectedValue;
 
                 if (expectedValueString.length() > 3
@@ -119,4 +128,17 @@ public final class MapFieldAssertor {
             );
         }
     }
+
+    private static boolean isPathContainsNotificationsSentReference(String path) {
+        // Regular expression to match the notificationsSent id format
+        String regex = ".*data\\.notificationsSent\\.\\d+\\.id.*";
+
+        // Check if the input matches the pattern
+        return path.matches(regex);
+    }
+
+    public static String removeTimestampFromNotificationReference(String input) {
+        return input.replaceAll("_(\\d{13})$", "");
+    }
+
 }
