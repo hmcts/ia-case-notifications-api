@@ -46,8 +46,6 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
-    StringProvider stringProvider;
-    @Mock
     Direction direction;
 
     private Long caseId = 12345L;
@@ -146,11 +144,11 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
+        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("insertDate"));
 
         // Dynamically format the expected value for Hearing Centre (title case)
         String hearingCentreValue = hearingCentre.getValue();
@@ -189,11 +187,11 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
         assertEquals("", personalisation.get("HO Ref Number"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("insertDate"));
 
         // Dynamically format the expected hearing centre value to match title case
         String hearingCentreValue = hearingCentre.getValue();
