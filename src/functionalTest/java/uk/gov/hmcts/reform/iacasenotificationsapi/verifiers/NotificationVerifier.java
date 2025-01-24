@@ -47,21 +47,27 @@ public class NotificationVerifier implements Verifier {
             return;
         }
 
-        List<Map<String, Object>> notificationsSent =
+        List<Map<String, Object>> actualNotificationsSent =
             MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
 
-        if (notificationsSent.isEmpty()) {
+        if (actualNotificationsSent.isEmpty()) {
             assertFalse(
-                notificationsSent.isEmpty(),
+                actualNotificationsSent.isEmpty(),
                 description + ": Notifications were not delivered"
             );
         }
 
-        Map<String, String> notificationsSentMap =
-            notificationsSent
+        Map<String, String> actualNotificationsSentMap =
+            actualNotificationsSent
                 .stream()
                 .collect(Collectors.toMap(
-                    notificationSent -> sanitizeNotificationId((String) notificationSent.get("id")),
+                    notificationSent -> {
+                        String idWithTimestamp = (String) notificationSent.get("id");
+                        String sanitisedNotificationId = sanitizeNotificationId(idWithTimestamp);
+                        log.info("Actual Notifications: data.actualNotificationsSent id {} and sanitised id {}",
+                                idWithTimestamp, sanitisedNotificationId);
+                        return sanitisedNotificationId;
+                    },
                     notificationSent -> (String) notificationSent.get("value")
                 ));
 
@@ -73,7 +79,10 @@ public class NotificationVerifier implements Verifier {
                 final String expectedSubject = MapValueExtractor.extractOrThrow(expectedNotification, "subject");
                 final Object expectedBodyUnknownType = MapValueExtractor.extractOrThrow(expectedNotification, "body");
 
-                final String deliveredNotificationId = notificationsSentMap.get(expectedReference);
+                log.info("ExpectedNotification: expectedReference: {}, expectedRecipient: {}, expectedSubject: {} ",
+                        expectedReference, expectedRecipient, expectedSubject);
+
+                final String deliveredNotificationId = actualNotificationsSentMap.get(expectedReference);
                 if (Strings.isNullOrEmpty(deliveredNotificationId)) {
                     assertFalse(
                         true,
@@ -85,8 +94,9 @@ public class NotificationVerifier implements Verifier {
                 try {
 
                     Notification notification = notificationClient.getNotificationById(deliveredNotificationId);
-
                     final String actualReference = sanitizeNotificationId(notification.getReference().orElse(""));
+                    log.info("Actual notification reference delivered by Gov Notify: {}, "
+                            + "sanitised notification ID: {}", notification.getReference(), actualReference);
                     final String actualRecipient =
                         notification.getEmailAddress().orElse(notification.getPhoneNumber().orElse(""));
                     final String actualSubject = notification.getSubject().orElse("");
