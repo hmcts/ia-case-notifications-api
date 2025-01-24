@@ -110,7 +110,7 @@
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Pablo Jimenez,",
+          "Pablo Jimenez",
           "{$TODAY+14|d MMM yyyy}"
         ]
       },
