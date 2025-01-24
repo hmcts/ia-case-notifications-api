@@ -7,16 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.google.common.base.Strings;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
@@ -26,7 +23,6 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Component
 @SuppressWarnings("unchecked")
-@Slf4j
 public class NotificationVerifier implements Verifier {
 
     @Autowired
@@ -47,27 +43,21 @@ public class NotificationVerifier implements Verifier {
             return;
         }
 
-        List<Map<String, Object>> actualNotificationsSent =
+        List<Map<String, Object>> notificationsSent =
             MapValueExtractor.extractOrDefault(actualResponse, "data.notificationsSent", Collections.emptyList());
 
-        if (actualNotificationsSent.isEmpty()) {
+        if (notificationsSent.isEmpty()) {
             assertFalse(
-                actualNotificationsSent.isEmpty(),
+                notificationsSent.isEmpty(),
                 description + ": Notifications were not delivered"
             );
         }
 
-        Map<String, String> actualNotificationsSentMap =
-            actualNotificationsSent
+        Map<String, String> notificationsSentMap =
+            notificationsSent
                 .stream()
                 .collect(Collectors.toMap(
-                    notificationSent -> {
-                        String idWithTimestamp = (String) notificationSent.get("id");
-                        String sanitisedNotificationId = sanitizeNotificationId(idWithTimestamp);
-                        log.info("Actual Notifications: data.actualNotificationsSent id {} and sanitised id {}",
-                                idWithTimestamp, sanitisedNotificationId);
-                        return sanitisedNotificationId;
-                    },
+                    notificationSent -> sanitizeNotificationId((String) notificationSent.get("id")),
                     notificationSent -> (String) notificationSent.get("value")
                 ));
 
@@ -79,10 +69,7 @@ public class NotificationVerifier implements Verifier {
                 final String expectedSubject = MapValueExtractor.extractOrThrow(expectedNotification, "subject");
                 final Object expectedBodyUnknownType = MapValueExtractor.extractOrThrow(expectedNotification, "body");
 
-                log.info("ExpectedNotification: expectedReference: {}, expectedRecipient: {}, expectedSubject: {} ",
-                        expectedReference, expectedRecipient, expectedSubject);
-
-                final String deliveredNotificationId = actualNotificationsSentMap.get(expectedReference);
+                final String deliveredNotificationId = notificationsSentMap.get(expectedReference);
                 if (Strings.isNullOrEmpty(deliveredNotificationId)) {
                     assertFalse(
                         true,
@@ -94,9 +81,8 @@ public class NotificationVerifier implements Verifier {
                 try {
 
                     Notification notification = notificationClient.getNotificationById(deliveredNotificationId);
+
                     final String actualReference = sanitizeNotificationId(notification.getReference().orElse(""));
-                    log.info("Actual notification reference delivered by Gov Notify: {}, "
-                            + "sanitised notification ID: {}", notification.getReference(), actualReference);
                     final String actualRecipient =
                         notification.getEmailAddress().orElse(notification.getPhoneNumber().orElse(""));
                     final String actualSubject = notification.getSubject().orElse("");
@@ -164,28 +150,6 @@ public class NotificationVerifier implements Verifier {
                     );
                 }
             });
-    }
-
-    private List<Map<String, Object>> sanitizeNotifications(
-            List<Map<String, Object>> notificationsSentWithTimestamp) {
-
-        List<Map<String, Object>> notificationsSent = new ArrayList<>();
-        // Regular expression to remove the last underscore and following timestamp in epochmillis
-        Pattern pattern = Pattern.compile("^(.*)_\\d{13}$");
-
-        for (Map<String, Object> notificationWithTimestamp : notificationsSentWithTimestamp) {
-            Map<String, Object> newMap = new HashMap<>();
-            for (Map.Entry<String, Object> entry : notificationWithTimestamp.entrySet()) {
-                String key = entry.getKey();
-                Matcher matcher = pattern.matcher(key);
-                String trimmedKey = matcher.find() ? matcher.group(1) : key;
-
-                newMap.put(trimmedKey, entry.getValue());
-            }
-            notificationsSent.add(newMap);
-        }
-
-        return notificationsSent;
     }
 
     private String sanitizeNotificationId(String notificationIdWithTimestamp) {
