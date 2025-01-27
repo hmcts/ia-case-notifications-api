@@ -33,19 +33,19 @@ public class NotificationIdAppender {
 
     public List<IdValue<String>> append(
         List<IdValue<String>> existingNotificationsSent,
-        String referenceId,
+        String notificationReference,
         String notificationId
     ) {
         long numberOfExistingNotificationsOfSameKind =
             existingNotificationsSent
                 .stream()
                 .map(IdValue::getId)
-                .filter(existingNotificationReference -> existingNotificationReference.startsWith(referenceId))
+                .filter(existingNotificationReference -> existingNotificationReference.startsWith(notificationReference))
                 .count();
         long timestamp = Instant.now().toEpochMilli();
         String qualifiedNotificationReference = numberOfExistingNotificationsOfSameKind > 0
             ?
-            (referenceId + "_" + UUID.randomUUID().toString() + "_" + timestamp) : referenceId + "_" + timestamp;
+            (notificationReference + "_" + UUID.randomUUID().toString() + "_" + timestamp) : notificationReference + "_" + timestamp;
 
         final List<IdValue<String>> newNotificationsSent = new ArrayList<>(existingNotificationsSent);
 
