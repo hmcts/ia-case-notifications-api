@@ -77,6 +77,8 @@ public final class MapFieldAssertor {
 
             if ((expectedValue instanceof String) && (actualValue instanceof String)) {
 
+                String expectedValueString = (String) expectedValue;
+
                 if (isPathContainsNotificationsSentReference(path)) {
                     assertThat(
                             "Expected field matches (" + path + ")",
@@ -85,8 +87,6 @@ public final class MapFieldAssertor {
                     );
                     return;
                 }
-
-                String expectedValueString = (String) expectedValue;
 
                 if (expectedValueString.length() > 3
                     && expectedValueString.startsWith("$/")
