@@ -137,10 +137,6 @@ public class AppellantRespondentReviewPersonalisationEmailTest {
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
@@ -161,9 +157,5 @@ public class AppellantRespondentReviewPersonalisationEmailTest {
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

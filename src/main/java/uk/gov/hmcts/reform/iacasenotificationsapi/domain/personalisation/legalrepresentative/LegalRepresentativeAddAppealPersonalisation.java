@@ -4,8 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -14,8 +13,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -73,14 +74,30 @@ public class LegalRepresentativeAddAppealPersonalisation implements LegalReprese
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("hoReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("linkToOnlineService", iaExUiFrontendUrl)
-                .put("explanation", direction.getExplanation())
                 .put("dueDate", directionDueDate)
+                .put("HearingCentre", getHearingCentreName(asylumCase))
                 .build();
+    }
+
+    private String getHearingCentreName(AsylumCase caseData) {
+
+        HearingCentre hearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+        String hearingCentreName = String.valueOf(hearingCentre);
+
+        String[] words = hearingCentreName.replaceAll("([a-z])([A-Z])", "$1 $2").split(" ");
+        StringBuilder formattedName = new StringBuilder();
+
+        for (String word : words) {
+            formattedName.append(word.substring(0, 1).toUpperCase())
+                    .append(word.substring(1).toLowerCase())
+                    .append(" ");
+        }
+
+        return formattedName.toString().trim();
     }
 }

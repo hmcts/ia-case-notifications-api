@@ -88,16 +88,12 @@
       {
         "reference": "46262_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum appeal: The Home Office will review your appeal",
+        "subject": "Asylum appeal direction: review case – Taylor House",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Pablo Jimenez,",
-          "A Tribunal Caseworker has sent your appeal to the Home Office.",
-          "The Home Office will now review their decision to refuse your application to stay in or enter the UK.",
-          "{$iaAipFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "Pablo Jimenez",
+          "{$TODAY+5|d MMM yyyy}"
         ]
       },
       {
