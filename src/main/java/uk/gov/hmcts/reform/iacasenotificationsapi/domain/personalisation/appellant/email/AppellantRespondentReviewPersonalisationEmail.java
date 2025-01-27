@@ -65,7 +65,7 @@ public class AppellantRespondentReviewPersonalisationEmail implements EmailNotif
 
         final Direction direction =
                 directionFinder
-                        .findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS)
+                        .findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)
                         .orElseThrow(() -> new IllegalStateException("Appellant respondent review is not present"));
 
 

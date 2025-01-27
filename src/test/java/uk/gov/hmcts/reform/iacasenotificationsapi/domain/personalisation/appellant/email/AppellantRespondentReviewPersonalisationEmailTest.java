@@ -81,7 +81,7 @@ public class AppellantRespondentReviewPersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         when((direction.getDateDue())).thenReturn(dueDate);
-        when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS))
+        when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW))
                 .thenReturn(Optional.of(direction));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
