@@ -63,7 +63,7 @@
       {
         "reference": "923424_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Asylum appeal direction: review case – ((HearingCentre))",
+        "subject": "Asylum appeal direction: review case – Taylor House",
         "body": [
           "PA/12345/2019",
           "CASE001",
