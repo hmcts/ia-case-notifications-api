@@ -63,13 +63,17 @@
       {
         "reference": "923422_BUILD_CASE_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Asylum appeal direction: build your case",
+        "subject": "Immigration and Asylum appeal: review Build your case direction",
         "body": [
           "PA/12345/2019",
           "CASE001",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
-          "{$TODAY+28|d MMM yyyy}"
+          "You must now build your case by uploading your appeal argument and evidence",
+          "Your argument must explain why you believe the respondent's decision is wrong",
+          "{$TODAY+28|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]
