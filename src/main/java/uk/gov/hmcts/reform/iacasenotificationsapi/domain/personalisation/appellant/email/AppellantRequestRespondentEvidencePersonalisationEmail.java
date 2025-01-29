@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
@@ -72,33 +71,12 @@ public class AppellantRequestRespondentEvidencePersonalisationEmail implements E
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("insertDate", directionDueDate)
-                .put("HearingCentre", getHearingCentreName(asylumCase))
-                    .build();
+                .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("direction due date", directionDueDate)
+                .put("Hyperlink to service", iaAipFrontendUrl)
+                .build();
     }
-
-    private String getHearingCentreName(AsylumCase caseData) {
-
-        HearingCentre hearingCentre = caseData.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
-                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
-        String hearingCentreName = String.valueOf(hearingCentre);
-
-        // Split camel case and capitalize the first letter of each word
-        String[] words = hearingCentreName.replaceAll("([a-z])([A-Z])", "$1 $2").split(" ");
-        StringBuilder formattedName = new StringBuilder();
-
-        for (String word : words) {
-            formattedName.append(word.substring(0, 1).toUpperCase())
-                    .append(word.substring(1).toLowerCase())
-                    .append(" ");
-        }
-
-        // Trim the trailing space and return the result
-        return formattedName.toString().trim();
-    }
-
 }

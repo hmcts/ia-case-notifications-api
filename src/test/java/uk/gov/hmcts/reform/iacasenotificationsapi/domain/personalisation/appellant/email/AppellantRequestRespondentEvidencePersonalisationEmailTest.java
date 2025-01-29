@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 
@@ -24,7 +23,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
@@ -32,6 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -58,7 +57,6 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     private String mockedAppellantGivenNames = "someAppellantGivenNames";
     private String mockedAppellantFamilyName = "someAppellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
 
     private AppellantRequestRespondentEvidencePersonalisationEmail
         appellantRequestRespondentEvidencePersonalisationEmail;
@@ -76,7 +74,7 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+
         appellantRequestRespondentEvidencePersonalisationEmail =
             new AppellantRequestRespondentEvidencePersonalisationEmail(
                 emailTemplateId,
@@ -140,37 +138,15 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("insertDate"));
+        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
+        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
 
-        // Dynamically format the expected value for Hearing Centre (title case)
-        String hearingCentreValue = hearingCentre.getValue();
-        String expectedHearingCentre = hearingCentreValue.replaceAll("([a-z])([A-Z])", "$1 $2")
-                .toLowerCase(); // Add spaces and convert to lowercase
-
-        // Capitalize the first letter of each word
-        expectedHearingCentre = capitalizeWords(expectedHearingCentre);
-
-        assertEquals(expectedHearingCentre, personalisation.get("HearingCentre"));
-    }
-
-    // Helper method to capitalize each word
-    private String capitalizeWords(String input) {
-        StringBuilder capitalized = new StringBuilder();
-        String[] words = input.split(" ");
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                capitalized.append(Character.toUpperCase(word.charAt(0))) // Capitalize first letter
-                        .append(word.substring(1)) // Append the rest of the word
-                        .append(" "); // Add space after each word
-            }
-        }
-        return capitalized.toString().trim(); // Remove trailing space
     }
 
     @Test
@@ -180,23 +156,15 @@ public class AppellantRequestRespondentEvidencePersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(HEARING_CENTRE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantRequestRespondentEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals("", personalisation.get("HO Ref Number"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("insertDate"));
-
-        // Dynamically format the expected hearing centre value to match title case
-        String hearingCentreValue = hearingCentre.getValue();
-        String expectedHearingCentre = hearingCentreValue.replaceAll("([a-z])([A-Z])", "$1 $2")
-                .toLowerCase(); // Add spaces for camel case and convert to lowercase
-        expectedHearingCentre = capitalizeWords(expectedHearingCentre);
-
-        assertEquals(expectedHearingCentre, personalisation.get("HearingCentre"));
+        assertEquals("", personalisation.get("Given names"));
+        assertEquals("", personalisation.get("Family name"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 }

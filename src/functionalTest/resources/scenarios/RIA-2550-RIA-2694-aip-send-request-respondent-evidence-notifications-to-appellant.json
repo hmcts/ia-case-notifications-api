@@ -98,6 +98,7 @@
           "PA/12345/2019",
           "A1234567",
           "Pablo Jimenez",
+          "{$iaExUiFrontendUrl}",
           "{$TODAY+14|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
@@ -106,12 +107,13 @@
       {
         "reference": "1010_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Asylum appeal direction: appeal lodged – Manchester",
+        "subject": "The Tribunal has contacted the Home Office about your case",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Pablo Jimenez",
-          "{$TODAY+14|d MMM yyyy}"
+          "Pablo Jimenez,",
+          "{$TODAY+14|d MMM yyyy}",
+          "{$iaAipFrontendUrl}"
         ]
       },
       {

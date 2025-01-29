@@ -19,10 +19,8 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -32,8 +30,6 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     DirectionFinder directionFinder;
-    @Mock
-    StringProvider stringProvider;
     @Mock
     Direction direction;
 
@@ -49,7 +45,6 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     private String legalRepRefNumber = "somelegalRepRefNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
 
     private LegalRepresentativeRequestHomeOfficeBundlePersonalisation
         legalRepresentativeRequestHomeOfficeBundlePersonalisation;
@@ -65,7 +60,6 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
-        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
@@ -73,8 +67,8 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
             new LegalRepresentativeRequestHomeOfficeBundlePersonalisation(
                 nonAdaTemplateId,
                 adaTemplateId,
-                directionFinder,
-                    stringProvider);
+                directionFinder
+            );
     }
 
     @Test
@@ -128,7 +122,6 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
                 .put("appellantGivenNames", appellantGivenNames)
                 .put("appellantFamilyName", appellantGivenNames)
                 .put("insertDate", expectedDirectionDueDate)
-                .put("HearingCentre", hearingCentre.getValue().toUpperCase())
                 .build();
 
         Map<String, String> actualPersonalisation =

@@ -79,11 +79,13 @@
       {
         "reference": "6555_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Asylum appeal direction: appeal lodged – Taylor House",
+        "subject": "Accelerated detained appeal: direction sent to the Home Office",
         "body": [
           "PA/12345/2019",
-          "A1234567",
+          "CASE001",
           "Talha Awan",
+          "{$customerServices.emailAddress}",
+          "The respondent has been directed to upload the Home Office evidence bundle by: ",
           "{$TODAY+3|d MMM yyyy}"
         ]
       }
