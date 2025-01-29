@@ -63,12 +63,17 @@
       {
         "reference": "923424_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Asylum appeal direction: review case – Taylor House",
+        "subject": "Immigration and Asylum appeal: review Home Office response direction",
         "body": [
           "PA/12345/2019",
-          "A1234567",
+          "CASE001",
           "Talha Awan",
-          "{$TODAY+5|d MMM yyyy}"
+          "{$iaExUiFrontendUrl}",
+          "The respondent has replied to your appeal argument and evidence.",
+          "You must now review their response.",
+          "{$TODAY+5|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]
