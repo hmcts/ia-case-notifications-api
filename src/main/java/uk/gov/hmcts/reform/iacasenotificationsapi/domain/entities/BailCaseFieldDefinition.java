@@ -293,7 +293,7 @@ public enum BailCaseFieldDefinition {
     LISTING_HEARING_DATE(
         "listingHearingDate", new TypeReference<String>(){}),
     LISTING_LOCATION(
-        "listingLocation", new TypeReference<BailHearingLocation>(){}),    
+        "listingLocation", new TypeReference<BailHearingLocation>(){}),
     DECISION_GRANTED_OR_REFUSED(
         "decisionGrantedOrRefused", new TypeReference<String>(){}),
     ADMIN_SELECT_IMA_STATUS(
@@ -305,7 +305,9 @@ public enum BailCaseFieldDefinition {
     REF_DATA_LISTING_LOCATION_DETAIL(
             "refDataListingLocationDetail", new TypeReference<CourtVenue>() {}),
     IS_REMOTE_HEARING(
-            "isRemoteHearing", new TypeReference<YesOrNo>() {});
+            "isRemoteHearing", new TypeReference<YesOrNo>() {}),
+    CURRENT_CASE_STATE_VISIBLE_TO_ALL_USERS(
+    "currentCaseStateVisibleToAllUsers", new TypeReference<String>() {});
 
     private final String value;
     private final TypeReference typeReference;

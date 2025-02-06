@@ -2,16 +2,19 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.InputStream;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
 
 @Service
-public class BailGovNotifyNotificationSender implements NotificationSender {
+public class BailGovNotifyNotificationSender implements NotificationSender<BailCase> {
 
     private static final org.slf4j.Logger LOG = getLogger(BailGovNotifyNotificationSender.class);
 
@@ -21,12 +24,12 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
     @Qualifier("BailClient")
     private final RetryableNotificationClient notificationBailClient;
 
-    private final NotificationSenderHelper senderHelper;
+    private final NotificationSenderHelper<BailCase> senderHelper;
 
     public BailGovNotifyNotificationSender(
         @Value("${notificationSender.deduplicateSendsWithinSeconds}") int deduplicateSendsWithinSeconds,
         RetryableNotificationClient notificationBailClient,
-        NotificationSenderHelper senderHelper
+        NotificationSenderHelper<BailCase> senderHelper
     ) {
         this.deduplicateSendsWithinSeconds = deduplicateSendsWithinSeconds;
         this.notificationBailClient = notificationBailClient;
@@ -37,7 +40,8 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
         String templateId,
         String emailAddress,
         Map<String, String> personalisation,
-        String reference
+        String reference,
+        Callback<BailCase> callback
     ) {
         return senderHelper.sendEmail(
                 templateId,
@@ -46,7 +50,8 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
                 reference,
                 notificationBailClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                callback
         );
     }
 
@@ -55,7 +60,8 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
         final String templateId,
         final String phoneNumber,
         final Map<String, String> personalisation,
-        final String reference) {
+        final String reference,
+        final Callback<BailCase> callback) {
 
         return senderHelper.sendSms(
                 templateId,
@@ -64,7 +70,42 @@ public class BailGovNotifyNotificationSender implements NotificationSender {
                 reference,
                 notificationBailClient,
                 deduplicateSendsWithinSeconds,
-                LOG
+                LOG,
+                callback
+        );
+    }
+
+    @Override
+    public synchronized String sendLetter(
+        final String templateId,
+        final String address,
+        final Map<String, String> personalisation,
+        final String reference,
+        final Callback<BailCase> callback) {
+
+        return senderHelper.sendSms(
+            templateId,
+            address,
+            personalisation,
+            reference,
+            notificationBailClient,
+            deduplicateSendsWithinSeconds,
+            LOG,
+            callback
+        );
+    }
+
+    @Override
+    public synchronized String sendPrecompiledLetter(
+        final String reference,
+        final InputStream stream
+    ) {
+        return senderHelper.sendPrecompiledLetter(
+            reference,
+            stream,
+            notificationBailClient,
+            deduplicateSendsWithinSeconds,
+            LOG
         );
     }
 }

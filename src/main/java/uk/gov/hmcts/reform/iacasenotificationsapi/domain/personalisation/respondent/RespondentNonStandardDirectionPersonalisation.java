@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -20,13 +21,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 @Service
+@Slf4j
 public class RespondentNonStandardDirectionPersonalisation implements EmailNotificationPersonalisation {
 
     public static final String CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT = "currentCaseStateVisibleToHomeOfficeAll flag is not present";
     private final String respondentNonStandardDirectionBeforeListingTemplateId;
-    private final String respondentNonStandardDirectionAfterListingTemplateId;
     private final String respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
-    private final String respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId;
     private final String iaExUiFrontendUrl;
     private final String apcHomeOfficeEmailAddress;
     private final String lartHomeOfficeEmailAddress;
@@ -42,9 +42,7 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
 
     public RespondentNonStandardDirectionPersonalisation(
         @Value("${govnotify.template.nonStandardDirectionBeforeListing.respondent.email}") String respondentNonStandardDirectionBeforeListingTemplateId,
-        @Value("${govnotify.template.nonStandardDirectionAfterListing.respondent.email}") String respondentNonStandardDirectionAfterListingTemplateId,
         @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentBeforeListing.respondent.email}") String respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId,
-        @Value("${govnotify.template.nonStandardDirectionToAppellantAndRespondentAfterListing.respondent.email}") String respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${apcHomeOfficeEmailAddress}") String apcHomeOfficeEmailAddress,
         @Value("${lartHomeOfficeEmailAddress}") String lartHomeOfficeEmailAddress,
@@ -54,9 +52,7 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
         EmailAddressFinder emailAddressFinder
     ) {
         this.respondentNonStandardDirectionBeforeListingTemplateId = respondentNonStandardDirectionBeforeListingTemplateId;
-        this.respondentNonStandardDirectionAfterListingTemplateId = respondentNonStandardDirectionAfterListingTemplateId;
         this.respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId = respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
-        this.respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId = respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.apcHomeOfficeEmailAddress = apcHomeOfficeEmailAddress;
         this.lartHomeOfficeEmailAddress = lartHomeOfficeEmailAddress;
@@ -72,11 +68,9 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                 .findFirst(asylumCase, DirectionTag.NONE)
                 .map(direction -> direction.getParties().equals(Parties.APPELLANT_AND_RESPONDENT))
                 .orElse(false)) {
-            return appealService.isAppealListed(asylumCase)
-                    ? respondentNonStandardDirectionToAppellantAndRespondentAfterListingTemplateId : respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
+            return respondentNonStandardDirectionToAppellantAndRespondentBeforeListingTemplateId;
         } else {
-            return appealService.isAppealListed(asylumCase)
-                    ? respondentNonStandardDirectionAfterListingTemplateId : respondentNonStandardDirectionBeforeListingTemplateId;
+            return respondentNonStandardDirectionBeforeListingTemplateId;
         }
     }
 
@@ -123,7 +117,7 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                         State.APPEAL_TAKEN_OFFLINE,
                         State.REMITTED,
                         State.LISTING
-                ).contains(currentState) && appealService.isAppealListed(asylumCase)) {
+                ).contains(currentState)) {
                     final Optional<HearingCentre> maybeCaseIsListed = asylumCase
                             .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
@@ -132,10 +126,17 @@ public class RespondentNonStandardDirectionPersonalisation implements EmailNotif
                     } else {
                         return Collections.singleton(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase));
                     }
+                } else {
+                    log.warn(
+                        "No recipients for respondent non-standard direction, case ref {}",
+                        asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse("")
+                    );
+                    return new HashSet<String>();
                 }
-                throw new IllegalStateException("1 - " + CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
             })
-            .orElseThrow(() -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT));
+            .orElseThrow(
+                () -> new IllegalStateException(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT)
+            );
     }
 
     @Override

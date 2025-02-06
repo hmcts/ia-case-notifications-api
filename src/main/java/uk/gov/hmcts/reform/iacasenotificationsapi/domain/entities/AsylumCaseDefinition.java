@@ -1,12 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.List;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.caselinking.CaseLink;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.em.Bundle;
+
+import java.util.List;
 
 public enum AsylumCaseDefinition {
 
@@ -359,8 +360,14 @@ public enum AsylumCaseDefinition {
     EMAIL(
         "email", new TypeReference<String>(){}),
 
+    INTERNAL_APPELLANT_EMAIL(
+        "internalAppellantEmail", new TypeReference<String>(){}),
+
     MOBILE_NUMBER(
         "mobileNumber", new TypeReference<String>(){}),
+
+    INTERNAL_APPELLANT_MOBILE_NUMBER(
+        "internalAppellantMobileNumber", new TypeReference<String>(){}),
 
     CONTACT_PREFERENCE(
         "contactPreference", new TypeReference<ContactPreference>(){}),
@@ -398,7 +405,8 @@ public enum AsylumCaseDefinition {
 
     IS_DLRM_FEE_REMISSION_ENABLED(
             "isDlrmFeeRemissionEnabled", new TypeReference<YesOrNo>(){}),
-
+    IS_DLRM_FEE_REFUND_ENABLED(
+        "isDlrmFeeRefundEnabled", new TypeReference<YesOrNo>(){}),
     UPDATE_TRIBUNAL_DECISION_AND_REASONS(
             "updateTribunalDecisionAndReasons", new TypeReference<YesOrNo>(){}),
     UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK(
@@ -428,15 +436,32 @@ public enum AsylumCaseDefinition {
     OTHER_DECISION_FOR_DISPLAY(
         "otherDecisionForDisplay", new TypeReference<String>() {}),
 
+    REQUEST_FEE_REMISSION_DATE(
+        "requestFeeRemissionDate", new TypeReference<String>(){}),
+    REMISSION_REJECTED_DATE_PLUS_14DAYS(
+        "remissionRejectedDatePlus14days", new TypeReference<String>(){}),
+    FEE_AMOUNT_GBP(
+        "feeAmountGbp", new TypeReference<String>(){}),
+    NEW_FEE_AMOUNT(
+        "newFeeAmount", new TypeReference<String>(){}),
+    PREVIOUS_FEE_AMOUNT_GBP(
+        "previousFeeAmountGbp", new TypeReference<String>(){}),
+    FEE_UPDATE_REASON(
+        "feeUpdateReason", new TypeReference<FeeUpdateReason>(){}),
+    MANAGE_FEE_REQUESTED_AMOUNT(
+        "manageFeeRequestedAmount", new TypeReference<String>(){}),
+    FEE_UPDATE_TRIBUNAL_ACTION(
+        "feeUpdateTribunalAction", new TypeReference<FeeTribunalAction>(){}),
     IS_ACCELERATED_DETAINED_APPEAL(
         "isAcceleratedDetainedAppeal", new TypeReference<YesOrNo>(){}),
-
     SUITABILITY_REVIEW_DECISION(
         "suitabilityReviewDecision", new TypeReference<AdaSuitabilityReviewDecision>(){}),
     TRANSFER_OUT_OF_ADA_REASON(
             "transferOutOfAdaReason", new TypeReference<String>(){}),
     IS_ADMIN(
         "isAdmin", new TypeReference<YesOrNo>() {}),
+    IS_ARIA_MIGRATED(
+        "isAriaMigrated", new TypeReference<YesOrNo>() {}),
     UT_APPEAL_REFERENCE_NUMBER(
         "utAppealReferenceNumber", new TypeReference<String>() {}),
     NOTIFICATION_ATTACHMENT_DOCUMENTS(
@@ -445,74 +470,140 @@ public enum AsylumCaseDefinition {
         "ircName", new TypeReference<String>(){}),
     DETENTION_FACILITY(
         "detentionFacility", new TypeReference<String>(){}),
-
     PREVIOUS_DETENTION_LOCATION(
-
             "previousDetentionLocation", new TypeReference<String>() {}),
-
-
     PRISON_NAME(
             "prisonName", new TypeReference<String>(){}),
-
     OTHER_DETENTION_FACILITY_NAME(
             "otherDetentionFacilityName", new TypeReference<OtherDetentionFacilityName>(){}),
-
     APPELLANT_IN_DETENTION(
             "appellantInDetention", new TypeReference<YesOrNo>(){}),
-
     IS_APPELLANT_RESPONDENT(
             "isAppellantRespondent", new TypeReference<String>(){}),
-    IS_EJP(
-            "isEjp", new TypeReference<YesOrNo>() {}),
-
+    IS_EJP("isEjp", new TypeReference<YesOrNo>() {}),
     LEGAL_REP_COMPANY_EJP(
             "legalRepCompanyEjp", new TypeReference<String>() {}),
-
     LEGAL_REP_NAME_EJP(
             "legalRepNameEjp", new TypeReference<String>() {}),
     LEGAL_REP_GIVEN_NAME_EJP(
             "legalRepGivenNameEjp", new TypeReference<String>() {}),
-
     LEGAL_REP_FAMILY_NAME_EJP(
             "legalRepFamilyNameEjp", new TypeReference<String>() {}),
-
     LEGAL_REP_EMAIL_EJP(
             "legalRepEmailEjp", new TypeReference<String>() {}),
-
     LEGAL_REP_REFERENCE_EJP(
             "legalRepReferenceEjp", new TypeReference<String>() {}),
-
     IS_LEGALLY_REPRESENTED_EJP(
             "isLegallyRepresentedEjp", new TypeReference<YesOrNo>() {}),
-
     APPLIES_FOR_COSTS(
             "appliesForCosts", new TypeReference<List<IdValue<ApplyForCosts>>>(){}),
-
     UPPER_TRIBUNAL_REFERENCE_NUMBER(
             "upperTribunalReferenceNumber", new TypeReference<String>() {}),
-
     CCD_REFERENCE_NUMBER_FOR_DISPLAY(
         "ccdReferenceNumberForDisplay", new TypeReference<String>() {}),
-
     RESPOND_TO_COSTS_LIST(
         "respondToCostsList", new TypeReference<DynamicList>(){}),
-
     ADD_EVIDENCE_FOR_COSTS_LIST(
         "addEvidenceForCostsList", new TypeReference<DynamicList>() {}),
-
     DECIDE_COSTS_APPLICATION_LIST(
-        "decideCostsApplicationList", new TypeReference<DynamicList>(){}),
+        "decideCostsApplicationList", new TypeReference<DynamicList>(){}
+    ),
+
+    SEND_DIRECTION_DATE_DUE(
+        "sendDirectionDateDue", new TypeReference<String>() {}),
 
     SOURCE_OF_REMITTAL(
         "sourceOfRemittal", new TypeReference<SourceOfRemittal>(){}),
 
+    LETTER_BUNDLE_DOCUMENTS(
+        "letterBundleDocuments", new TypeReference<List<IdValue<DocumentWithMetadata>>>(){}),
+
+    PAID_AMOUNT(
+        "paidAmount", new TypeReference<String>(){}),
+
     IS_REMOTE_HEARING(
         "isRemoteHearing", new TypeReference<YesOrNo>(){}),
 
+    NOTIFICATIONS("notifications", new TypeReference<List<IdValue<StoredNotification>>>(){}),
+  
     LISTING_LOCATION(
         "listingLocation", new TypeReference<DynamicList>(){}),
 
-    IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){});
+    IS_DECISION_WITHOUT_HEARING("isDecisionWithoutHearing", new TypeReference<YesOrNo>(){}),
+
+    APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J(
+        "appellantHasFixedAddressAdminJ", new TypeReference<YesOrNo>(){}),
+
+    ADDRESS_LINE_1_ADMIN_J(
+        "addressLine1AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_2_ADMIN_J(
+        "addressLine2AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_3_ADMIN_J(
+        "addressLine3AdminJ", new TypeReference<String>(){}),
+
+    ADDRESS_LINE_4_ADMIN_J(
+        "addressLine4AdminJ", new TypeReference<String>(){}),
+
+    COUNTRY_GOV_UK_OOC_ADMIN_J(
+        "countryGovUkOocAdminJ", new TypeReference<NationalityFieldValue>(){}),
+
+    REMISSION_DECISION_REASON(
+        "remissionDecisionReason", new TypeReference<String>(){}),
+
+    LATE_REMISSION_TYPE(
+        "lateRemissionType", new TypeReference<RemissionType>(){}),
+
+    FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT(
+        "ftpaAppellantDecisionRemadeRule32Text", new TypeReference<String>(){}),
+
+    FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT(
+        "ftpaRespondentDecisionRemadeRule32Text", new TypeReference<String>(){}),
+
+    LEGAL_REP_ADDRESS_U_K(
+        "legalRepAddressUK", new TypeReference<AddressUk>(){}),
+
+    OOC_ADDRESS_LINE_1(
+        "oocAddressLine1", new TypeReference<String>(){}),
+
+    OOC_ADDRESS_LINE_2(
+        "oocAddressLine2", new TypeReference<String>(){}),
+
+    OOC_ADDRESS_LINE_3(
+        "oocAddressLine3", new TypeReference<String>(){}),
+
+    OOC_ADDRESS_LINE_4(
+        "oocAddressLine4", new TypeReference<String>(){}),
+
+    OOC_COUNTRY_LINE(
+        "oocCountryLine", new TypeReference<String>(){}),
+
+    OOC_LR_COUNTRY_GOV_UK_ADMIN_J(
+        "oocLrCountryGovUkAdminJ", new TypeReference<NationalityFieldValue>(){}),
+
+    LEGAL_REP_HAS_ADDRESS(
+        "legalRepHasAddress", new TypeReference<YesOrNo>(){}),
+
+    //Paper journey legal representative email
+    LEGAL_REP_EMAIL(
+        "legalRepEmail", new TypeReference<String>(){}),
+
+    COUNTRY_ADMIN_J(
+            "countryAdminJ", new TypeReference<String>(){}),
+
+    APPELLANTS_REPRESENTATION(
+        "appellantsRepresentation", new TypeReference<YesOrNo>(){}),
+
+    IS_LATE_REMISSION_REQUEST(
+            "isLateRemissionRequest", new TypeReference<YesOrNo>(){}),
+
+    PREVIOUS_DECISION_HEARING_FEE_OPTION(
+            "previousDecisionHearingFeeOption", new TypeReference<String>(){}),
+
+    DECISION_HEARING_FEE_OPTION(
+            "decisionHearingFeeOption", new TypeReference<String>(){}),
+    ;
 
 
     private final String value;
