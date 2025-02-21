@@ -3221,12 +3221,12 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> submitAppealPayOfflineNotificationHandler(
         LegalRepresentativeAppealSubmittedPayOfflinePersonalisation legalRepresentativeAppealSubmittedPayOfflinePersonalisation,
         AdminOfficerAppealSubmittedPayOfflinePersonalisation adminOfficerAppealSubmittedPayOfflinePersonalisation,
-        HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
+        HomeOfficeAppealSubmittedPayOfflinePersonalisation homeOfficeAppealSubmittedPayOfflinePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
         //RIA-6682
-        List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPendingPaymentPersonalisation, legalRepresentativeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
+        List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation, legalRepresentativeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
 
         return Collections.singletonList(
             new EmailNotificationGenerator(
