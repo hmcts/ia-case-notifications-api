@@ -41,7 +41,6 @@
       "replacements": {
         "hearingCentre": "taylorHouse",
         "isRemissionsEnabled": "Yes",
-        "remissionType":"hoWaiverRemission",
         "remissionOption": "feeWaiverFromHo",
         "appealType":"revocationOfProtection",
         "eaHuAppealTypePaymentOption": "payLater",
