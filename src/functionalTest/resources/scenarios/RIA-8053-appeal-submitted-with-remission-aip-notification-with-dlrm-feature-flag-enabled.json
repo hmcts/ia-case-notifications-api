@@ -13,7 +13,6 @@
           "isDlrmFeeRemissionEnabled": "Yes",
           "isRemissionsEnabled": "Yes",
           "journeyType": "aip",
-          "remissionType":"hoWaiverRemission",
           "remissionOption": "feeWaiverFromHo",
           "appealType":"refusalOfEu",
           "eaHuAppealTypePaymentOption": "payLater",
