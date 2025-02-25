@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NationalityGovUk {
+    AF("Afghanistan"),
     AR("Argentina"),
     AM("Armenia"),
     AU("Australia"),
