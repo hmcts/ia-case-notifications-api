@@ -4844,6 +4844,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> startAppealLegalRepDisposalNotificationHandler(
+        @Qualifier("startAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.START_APPEAL;
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> adaSuitabilityNotificationHandler(
             @Qualifier("adaSuitabilityNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 

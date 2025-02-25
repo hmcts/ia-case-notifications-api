@@ -84,6 +84,10 @@ govnotify:
       awaitingRespondentEvidence.to.caseBuilding:
         respondent:
           email: fe79c1c1-2f1c-4e46-a58d-e28845ac9761
+    appealStarted:
+      legalRep:
+        disposal:
+          email: eabaebca-a4b9-4cfe-8619-2843349700d3
     appealSubmitted:
       legalRep:
         paid:
