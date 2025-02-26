@@ -4858,7 +4858,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.START_APPEAL;
+                    && (callback.getEvent() == Event.START_APPEAL || callback.getEvent() == EDIT_APPEAL);
             },
             notificationGenerators,
             getErrorHandler()

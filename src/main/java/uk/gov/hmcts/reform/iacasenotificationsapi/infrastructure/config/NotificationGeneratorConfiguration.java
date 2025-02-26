@@ -4428,7 +4428,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("startAppealLegalRepDisposalNotificationGenerator")
-    public List<NotificationGenerator> startAppealLegalRepDisposalNotificationHandler(
+    public List<NotificationGenerator> startAppealLegalRepDisposalNotificationGenerator(
         LegalRepresentativeAppealStartedDisposalPersonalisation legalRepresentativeAppealStartedDisposalPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
