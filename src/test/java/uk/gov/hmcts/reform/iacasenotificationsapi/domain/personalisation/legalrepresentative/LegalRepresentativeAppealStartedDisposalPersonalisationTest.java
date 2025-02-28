@@ -78,7 +78,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_APPEAL_SUBMITTED_LEGAL_REP",
+        assertEquals(caseId + "_APPEAL_STARTED_LEGAL_REP",
             legalRepresentativeAppealStartedDisposalPersonalisation.getReferenceId(caseId));
     }
 

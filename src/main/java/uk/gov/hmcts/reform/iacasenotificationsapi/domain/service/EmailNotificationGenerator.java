@@ -42,7 +42,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
             .setCorrectEmail(asylumCase);
 
         log.info(
-            "--------------EmailNotificationGenerator.generate {}",
+            "--------------3EmailNotificationGenerator.generate {}",
             callback.getCaseDetails().getId()
         );
 
@@ -50,7 +50,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
 
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             log.info(
-                "--------------EmailNotificationGenerator.generate referenceId {}",
+                "--------------3EmailNotificationGenerator.generate referenceId {}",
                 referenceId
             );
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
@@ -88,7 +88,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
         log.info(
-            "--------------EmailNotificationGenerator.sendEmail emailTemplateId {}",
+            "--------------3EmailNotificationGenerator.sendEmail emailTemplateId {}",
             emailTemplateId
         );
 

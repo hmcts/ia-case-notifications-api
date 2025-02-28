@@ -4433,7 +4433,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        log.info("--------------------2NotificationGeneratorConfiguration startAppealLegalRepDisposalNotificationGenerator");
+        log.info("--------------------3NotificationGeneratorConfiguration startAppealLegalRepDisposalNotificationGenerator");
 
         return Collections.singletonList(
             new EmailNotificationGenerator(

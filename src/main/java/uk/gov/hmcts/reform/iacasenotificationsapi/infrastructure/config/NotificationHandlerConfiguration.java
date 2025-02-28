@@ -4848,14 +4848,14 @@ public class NotificationHandlerConfiguration {
         @Qualifier("startAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
-        log.info("--------------------2NotificationHandlerConfiguration startAppealLegalRepDisposalNotification");
+        log.info("--------------------3NotificationHandlerConfiguration startAppealLegalRepDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && (callback.getEvent() == START_APPEAL || callback.getEvent() == EDIT_APPEAL);
-                log.info("--------------------2canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                log.info("--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
                     res
