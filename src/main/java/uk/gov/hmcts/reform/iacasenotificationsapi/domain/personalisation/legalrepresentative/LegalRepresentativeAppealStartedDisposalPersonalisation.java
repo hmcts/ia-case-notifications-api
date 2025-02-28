@@ -59,7 +59,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
 
-        log.info("---------LegalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation {}", res);
+        log.info("--------------------2LegalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation {}", res);
         return res;
     }
 }
