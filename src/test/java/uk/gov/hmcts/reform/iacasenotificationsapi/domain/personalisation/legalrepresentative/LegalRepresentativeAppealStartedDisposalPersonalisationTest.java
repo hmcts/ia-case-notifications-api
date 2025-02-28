@@ -112,7 +112,6 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(legalRepresentativeAppealStartedDisposalPersonalisation);
 
         Map<String, String> personalisation =
             legalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation(asylumCase);
@@ -128,7 +127,6 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(legalRepresentativeAppealStartedDisposalPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
