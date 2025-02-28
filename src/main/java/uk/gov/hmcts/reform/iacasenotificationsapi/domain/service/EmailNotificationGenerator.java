@@ -41,9 +41,18 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
             .setCorrectEmail(asylumCase);
 
+        log.info(
+            "--------------EmailNotificationGenerator.generate {}",
+            callback.getCaseDetails().getId()
+        );
+
         personalisationList.forEach(personalisation -> {
 
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
+            log.info(
+                "--------------EmailNotificationGenerator.generate referenceId {}",
+                referenceId
+            );
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
             notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
         });
@@ -53,8 +62,8 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final BaseNotificationPersonalisation personalisation,
         final AsylumCase asylumCase,
         final String referenceId,
-        final Callback<AsylumCase> callback) {
-
+        final Callback<AsylumCase> callback
+    ) {
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
@@ -64,19 +73,24 @@ public class EmailNotificationGenerator implements NotificationGenerator {
                 email,
                 emailNotificationPersonalisation,
                 referenceId,
-                callback)
-            ).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+                callback
+            ))
+            .filter(StringUtils::isNotBlank).collect(Collectors.toList());
     }
 
     protected String sendEmail(
         final String email,
         final EmailNotificationPersonalisation personalisation,
         final String referenceId,
-        final Callback<AsylumCase> callback) {
-
+        final Callback<AsylumCase> callback
+    ) {
         String emailTemplateId = personalisation.getTemplateId() == null
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
+        log.info(
+            "--------------EmailNotificationGenerator.sendEmail emailTemplateId {}",
+            emailTemplateId
+        );
 
         return notificationSender.sendEmail(
             emailTemplateId,

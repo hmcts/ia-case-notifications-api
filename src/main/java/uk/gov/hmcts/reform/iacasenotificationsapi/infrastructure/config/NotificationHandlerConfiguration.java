@@ -4851,14 +4851,16 @@ public class NotificationHandlerConfiguration {
         log.info("--------------------NotificationHandlerConfiguration startAppealLegalRepDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                log.info("--------------------canHandle startAppealLegalRepDisposalNotification {} {}",
-                    callbackStage,
-                    callback.getEvent()
-                );
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (callback.getEvent() == Event.START_APPEAL || callback.getEvent() == EDIT_APPEAL);
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && (callback.getEvent() == START_APPEAL || callback.getEvent() == EDIT_APPEAL);
+                log.info("--------------------canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
             },
             notificationGenerators,
             getErrorHandler()
