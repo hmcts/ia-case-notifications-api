@@ -16,8 +16,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,7 +50,7 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
 
     private final Long caseId = 12345L;
-
+    private final String emailTemplateId = "someEmailTemplateId";
     private final String mockedAppellantEmailAddress = "appelant@example.net";
 
     private AipAppellantStartAppealDisposalPersonalisationEmail aipAppellantStartAppealDisposalPersonalisationEmail;
@@ -83,7 +85,6 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
-        String emailTemplateId = "someEmailTemplateId";
         String iaAipFrontendUrl = "http://localhost";
         aipAppellantStartAppealDisposalPersonalisationEmail = new AipAppellantStartAppealDisposalPersonalisationEmail(
             emailTemplateId,
@@ -92,6 +93,11 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
             appealService,
             customerServicesProvider
         );
+    }
+
+    @Test
+    public void should_return_given_template_id() {
+        assertEquals(emailTemplateId, aipAppellantStartAppealDisposalPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
@@ -165,5 +171,22 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         assertThatThrownBy(() -> aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("Appellant's birth of date is not present");
+    }
+
+    @Test
+    public void should_return_personalisation_when_all_mandatory_information_given() {
+        // given
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        // when
+        Map<String, String> personalisation =
+                aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
+
+        // then
+        assertThat(personalisation).isNotEmpty();
+        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
     }
 }

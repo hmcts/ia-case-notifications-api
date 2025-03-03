@@ -3,14 +3,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Map;
@@ -24,7 +21,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
@@ -67,7 +63,6 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
         );
     }
 
-
     @Test
     public void should_return_given_template_id() {
         assertEquals(templateId, legalRepresentativeAppealEditedDisposalPersonalisation.getTemplateId(asylumCase));
@@ -106,28 +101,9 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
             .hasMessage("asylumCase must not be null");
     }
 
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+    @Test
+    public void should_return_personalisation_when_all_mandatory_information_given() {
         // given
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-
-        // when
-        Map<String, String> personalisation =
-            legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation(asylumCase);
-
-        // then
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
-        // given
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
