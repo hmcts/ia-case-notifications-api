@@ -3555,8 +3555,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionApprovedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionApprovedPersonalisation legalRepresentativeRemissionDecisionApprovedPersonalisation,
-        AipAppellantRecordRemissionDecisionPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail,
-        AipAppellantRecordRemissionDecisionPersonalisationSms aipAppellantRecordRemissionDecisionPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3564,8 +3562,7 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionApprovedPersonalisation,
-                        aipAppellantRecordRemissionDecisionPersonalisationEmail
+                    legalRepresentativeRemissionDecisionApprovedPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -3576,8 +3573,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionPartiallyApprovedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionPartiallyApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
-        AipAppellantRecordRemissionDecisionPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail,
-        AipAppellantRecordRemissionDecisionPersonalisationSms aipAppellantRecordRemissionDecisionPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3585,8 +3580,7 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
-                        aipAppellantRecordRemissionDecisionPersonalisationEmail
+                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
