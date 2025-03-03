@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -202,7 +203,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
             newArrayList(homeOfficePersonalisation, legalRepresentativeRequestCaseBuildingPersonalisation),
             notificationSender,
             notificationIdAppender)
@@ -215,7 +216,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(newArrayList(personalisation), notificationSender, notificationIdAppender)
         );
     }
@@ -227,7 +228,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeCaseLinkAppealPersonalisation, homeOfficeCaseLinkPersonalisation),
                 notificationSender,
@@ -243,7 +244,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeCaseUnlinkAppealPersonalisation, homeOfficeCaseUnlinkPersonalisation),
                 notificationSender,
@@ -259,7 +260,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeUnlinkAppealPersonalisation, homeOfficeUnlinkAppealPersonalisation),
                 notificationSender,
@@ -297,7 +298,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeLinkAppealPersonalisation, homeOfficeLinkAppealPersonalisation),
                 notificationSender,
@@ -334,7 +335,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(adminOfficerReListCasePersonalisation),
                 notificationSender,
@@ -349,9 +350,9 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
-                Collections.singletonList(legalRepresentativeRequestCaseEditPersonalisation),
+                singletonList(legalRepresentativeRequestCaseEditPersonalisation),
                 notificationSender,
                 notificationIdAppender)
         );
@@ -611,7 +612,7 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                Collections.singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationSms),
+                singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
@@ -636,7 +637,7 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             ),
             new SmsNotificationGenerator(
-                Collections.singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationSms),
+                singletonList(appellantChangeDirectionDueDateOfAppellantPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
@@ -875,7 +876,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeSubmitAppealPersonalisation),
                 notificationSender,
@@ -912,7 +913,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(caseOfficerSubmitCasePersonalisation),
                 notificationSender,
@@ -1001,7 +1002,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeRequestHearingRequirementsPersonalisation, caseOfficerRequestHearingRequirementsPersonalisation),
                 notificationSender,
@@ -1016,7 +1017,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeRequestNewHearingRequirementsPersonalisation),
                 notificationSender,
@@ -1053,7 +1054,7 @@ public class NotificationGeneratorConfiguration {
             : newArrayList(legalRepresentativeRespondentReviewPersonalisation);
 
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -1145,7 +1146,7 @@ public class NotificationGeneratorConfiguration {
             ? newArrayList(respondentEvidenceDirectionPersonalisation, legalRepresentativeRequestHomeOfficeBundlePersonalisation)
             : newArrayList(legalRepresentativeRequestHomeOfficeBundlePersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -1160,7 +1161,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(respondentEvidenceDirectionPersonalisation),
                 notificationSender,
@@ -1175,7 +1176,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(detentionEngagementTeamRequestRespondentEvidencePersonalisation),
                 notificationSender,
@@ -1625,7 +1626,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeSubmittedHearingRequirementsPersonalisation, caseOfficerSubmittedHearingRequirementsPersonalisation),
                 notificationSender,
@@ -2398,7 +2399,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     forceCaseProgressionToCaseUnderReviewPersonalisation,
@@ -2447,7 +2448,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     respondentForceCaseToSubmitHearingRequirementsPersonalisation
@@ -2473,7 +2474,7 @@ public class NotificationGeneratorConfiguration {
             ? newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, respondentAdjournHearingWithoutDatePersonalisation, adminOfficerAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation)
             : newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, adminOfficerAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -2490,7 +2491,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     adminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation,
@@ -2530,7 +2531,7 @@ public class NotificationGeneratorConfiguration {
             ? newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, respondentAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation)
             : newArrayList(legalRepresentativeAdjournHearingWithoutDatePersonalisation, caseOfficerAdjournHearingWithoutDatePersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -2553,7 +2554,7 @@ public class NotificationGeneratorConfiguration {
                 ?  newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, respondentRecordAdjournmentDetailsPersonalisation, adminOfficerRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation)
                 : newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, adminOfficerRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
                 new EmailNotificationGenerator(
                         personalisations,
                         notificationSender,
@@ -2575,7 +2576,7 @@ public class NotificationGeneratorConfiguration {
             ?  newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, respondentRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation)
             : newArrayList(legalRepresentativeRecordAdjournmentDetailsPersonalisation, caseOfficerRecordAdjournmentDetailsPersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -2822,7 +2823,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeEditAppealAfterSubmitPersonalisation,
@@ -3172,7 +3173,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPaidPersonalisation
@@ -3190,7 +3191,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPayLaterPersonalisation
@@ -3208,7 +3209,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPersonalisation
@@ -3230,7 +3231,7 @@ public class NotificationGeneratorConfiguration {
         //RIA-6682
         List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation, legalRepresentativeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -3249,7 +3250,7 @@ public class NotificationGeneratorConfiguration {
         //RIA-6682
         List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -3272,7 +3273,7 @@ public class NotificationGeneratorConfiguration {
             ? newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, homeOfficeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation)
             : newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -3294,7 +3295,7 @@ public class NotificationGeneratorConfiguration {
             ? newArrayList(homeOfficeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation)
             : newArrayList(adminOfficerAppealSubmittedPendingPaymentPersonalisation);
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
                 notificationSender,
@@ -3310,7 +3311,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativePendingPaymentPaidPersonalisation
@@ -3328,7 +3329,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     caseOfficerPendingPaymentPaidPersonalisation
@@ -3347,7 +3348,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeReinstateAppealPersonalisation,
@@ -3423,7 +3424,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeMakeApplicationPersonalisation,
@@ -3444,7 +3445,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeMakeAnApplicationPersonalisation,
@@ -3465,7 +3466,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeDecideAnApplicationPersonalisation,
@@ -3564,7 +3565,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     adminOfficerAppealRemissionApprovedPersonalisation,
@@ -3584,7 +3585,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     adminOfficerRemissionDecisionPartiallyApprovedPersonalisation,
@@ -3603,7 +3604,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRemissionDecisionRejectedPersonalisation
@@ -3621,7 +3622,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeNocRequestDecisionPersonalisation
@@ -3643,7 +3644,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeNocRequestDecisionPersonalisation
@@ -3668,7 +3669,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRemoveRepresentationPersonalisation,
@@ -3693,7 +3694,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     appellantRemoveRepresentationPersonalisationEmail
@@ -3716,7 +3717,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new SmsNotificationGenerator(
                 newArrayList(appellantRemoveRepresentationPersonalisationSms),
                 notificationSender,
@@ -3737,7 +3738,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     appellantRemoveRepresentationPersonalisationEmail
@@ -3760,7 +3761,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new SmsNotificationGenerator(
                 newArrayList(appellantRemoveRepresentationPersonalisationSms),
                 notificationSender,
@@ -3782,7 +3783,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRequestFeeRemissionPersonalisation,
@@ -3798,7 +3799,7 @@ public class NotificationGeneratorConfiguration {
         CaseOfficerManageFeeUpdatePersonalisation caseOfficerManageFeeUpdatePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     caseOfficerManageFeeUpdatePersonalisation
@@ -3817,7 +3818,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     appellantNocRequestDecisionPersonalisationEmail
@@ -3835,7 +3836,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new SmsNotificationGenerator(
                 newArrayList(
                     appellantNocRequestDecisionPersonalisationSms
@@ -3870,6 +3871,36 @@ public class NotificationGeneratorConfiguration {
             ),
             new SmsNotificationGenerator(
                 newArrayList(aipAppellantNocRequestDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("startAppealAipAppellantDisposalNotificationGenerator")
+    public List<NotificationGenerator> startAppealAipAppellantDisposalNotificationGenerator(
+        AipAppellantStartAppealDisposalPersonalisationEmail aipAppellantStartAppealDisposalPersonalisationEmail,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(aipAppellantStartAppealDisposalPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("editAppealAipAppellantDisposalNotificationGenerator")
+    public List<NotificationGenerator> editAppealAipAppellantDisposalNotificationGenerator(
+        AipAppellantStartAppealDisposalPersonalisationEmail appellantEditAppealDisposalPersonalisationEmail,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(appellantEditAppealDisposalPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             )
@@ -3913,7 +3944,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeManageFeeUpdatePersonalisation
@@ -3931,7 +3962,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation
@@ -3948,7 +3979,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRecordOutOfTimeDecisionCanProceed
@@ -3980,7 +4011,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRecordOutOfTimeDecisionCannotProceed
@@ -3997,7 +4028,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail
@@ -4029,7 +4060,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail
@@ -4062,7 +4093,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
@@ -4080,7 +4111,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     adminOfficerEditPaymentMethodPersonalisation
@@ -4100,7 +4131,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPaidPersonalisation,
@@ -4126,7 +4157,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeSubmitAppealPersonalisation,
@@ -4152,7 +4183,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPaidPersonalisation,
@@ -4178,7 +4209,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeSubmitAppealPersonalisation,
@@ -4234,7 +4265,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPaidPersonalisation,
@@ -4259,7 +4290,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativePaymentPaidPersonalisation
@@ -4359,7 +4390,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPersonalisation,
@@ -4379,7 +4410,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPersonalisation,
@@ -4398,7 +4429,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeSubmitAppealPersonalisation
@@ -4416,7 +4447,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealSubmittedPersonalisation
@@ -4435,7 +4466,7 @@ public class NotificationGeneratorConfiguration {
     ) {
         log.info("--------------------3NotificationGeneratorConfiguration startAppealLegalRepDisposalNotificationGenerator");
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealStartedDisposalPersonalisation
@@ -4454,7 +4485,7 @@ public class NotificationGeneratorConfiguration {
     ) {
         log.info("--------------------3NotificationGeneratorConfiguration editAppealLegalRepDisposalNotificationGenerator");
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAppealEditedDisposalPersonalisation
@@ -4473,7 +4504,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeAdaSuitabilityPersonalisation,
@@ -4518,7 +4549,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeTransferOutOfAdaPersonalisation,
@@ -4538,7 +4569,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeMarkAppealAsAdaPersonalisation,
@@ -4558,7 +4589,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRemoveDetentionStatusPersonalisation,
@@ -4604,7 +4635,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeMarkAppealAsDetainedPersonalisation,
@@ -4625,7 +4656,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     upperTribunalMarkAsReadyForUtTransferPersonalisation,
@@ -4646,7 +4677,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     upperTribunalMarkAsReadyForUtTransferPersonalisation,
@@ -4707,7 +4738,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeUpdateDetentionLocationPersonalisation
@@ -4811,7 +4842,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(detentionEngagementTeamAppealFeeDuePersonalisation),
                 notificationSender,
@@ -5187,7 +5218,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
             newArrayList(applyForCostsRespondentPersonalisation, applyForCostsApplicantPersonalisation),
             notificationSender,
             notificationIdAppender)
@@ -5201,7 +5232,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
             newArrayList(decideCostsHomeOfficePersonalisation, decideCostsLegalRepPersonalisation),
             notificationSender,
             notificationIdAppender)
@@ -5269,7 +5300,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
                 newArrayList(respondToCostsApplicantPersonalisation, respondToCostsRespondentPersonalisation),
                 notificationSender,
                 notificationIdAppender
@@ -5283,7 +5314,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
             newArrayList(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation),
             notificationSender,
             notificationIdAppender)
@@ -5296,7 +5327,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
             newArrayList(addEvidenceForCostsSubmittedSubmitterPersonalisation),
             notificationSender,
             notificationIdAppender)
@@ -5310,7 +5341,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Collections.singletonList(new EmailNotificationGenerator(
+        return singletonList(new EmailNotificationGenerator(
             newArrayList(considerMakingCostOrderLegalRepPersonalisation, considerMakingCostOrderHoPersonalisation),
             notificationSender,
             notificationIdAppender)
@@ -5351,7 +5382,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation,
@@ -5641,7 +5672,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation
@@ -5664,7 +5695,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmittedOnTimeWithFeePersonalisation
@@ -5687,7 +5718,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation
@@ -5710,7 +5741,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation
@@ -5733,7 +5764,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmittedOnTimeWithFeePersonalisation
@@ -5756,7 +5787,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation
@@ -5779,7 +5810,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation
@@ -5802,7 +5833,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation
@@ -5825,7 +5856,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation
@@ -5848,7 +5879,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalManageFeeUpdateLetterPersonalisation
@@ -5873,7 +5904,7 @@ public class NotificationGeneratorConfiguration {
 
         DocumentTag documentTag = DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE;
 
-        return Collections.singletonList(
+        return singletonList(
             new PrecompiledLetterNotificationGenerator(
                 newArrayList(
                     documentTag
@@ -5895,7 +5926,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     internalCaseAdjournedWithoutDatePersonalisation
@@ -5918,7 +5949,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalCaseDecisionWithoutHearingPersonalisation
@@ -5941,7 +5972,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalCaseNonStandardDirectionPersonalisation
@@ -5964,7 +5995,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseEndAppealAutomaticallyLetterPersonalisation
@@ -5989,7 +6020,7 @@ public class NotificationGeneratorConfiguration {
 
         DocumentTag documentTag = DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE;
 
-        return Collections.singletonList(
+        return singletonList(
             new PrecompiledLetterNotificationGenerator(
                 newArrayList(
                     documentTag
@@ -6012,7 +6043,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalReinstateAppealLetterPersonalisation
@@ -6035,7 +6066,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalLateRemissionRejectedLetterPersonalisation
@@ -6058,7 +6089,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation
@@ -6080,7 +6111,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation
@@ -6103,7 +6134,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalCaseDisposeUnderRule31Or32Personalisation
@@ -6126,7 +6157,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalMarkAsRemittedLetterPersonalisation
@@ -6148,7 +6179,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalDecideApplicationLetterPersonalisation
@@ -6170,7 +6201,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalUpdateTribunalDecisionLetterPersonalisation
@@ -6193,7 +6224,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalRespondentApplicationDecidedLetterPersonalisation
@@ -6216,7 +6247,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalEditAppealPostSubmitLetterPersonalisation
@@ -6241,7 +6272,7 @@ public class NotificationGeneratorConfiguration {
 
         DocumentTag documentTag = DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE;
 
-        return Collections.singletonList(
+        return singletonList(
             new PrecompiledLetterNotificationGenerator(
                 newArrayList(
                     documentTag
@@ -6266,7 +6297,7 @@ public class NotificationGeneratorConfiguration {
 
         DocumentTag documentTag = DocumentTag.INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE;
 
-        return Collections.singletonList(
+        return singletonList(
             new PrecompiledLetterNotificationGenerator(
                 newArrayList(
                     documentTag
@@ -6289,7 +6320,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation
@@ -6312,7 +6343,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                             appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation
@@ -6335,7 +6366,7 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalRemissionGrantedInTImeLetterPersonalisation
@@ -6523,7 +6554,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return Collections.singletonList(
+        return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalRefundConfirmationLetterPersonalisation

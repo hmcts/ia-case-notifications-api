@@ -88,10 +88,18 @@ govnotify:
       legalRep:
         disposal:
           email: 318e65c4-c432-4e63-a730-021d12d6a490
+      appellant:
+        aip:
+          disposal:
+            email: 318e65c4-c432-4e63-a730-021d12d6a490
     appealEdited:
       legalRep:
         disposal:
           email: bb79cc9b-f5f3-46e1-b5aa-d90f94d3952a
+      appellant:
+        aip:
+          disposal:
+            email: bb79cc9b-f5f3-46e1-b5aa-d90f94d3952a
     appealSubmitted:
       legalRep:
         paid:

@@ -52,7 +52,7 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisation implements L
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_APPEAL_EDITED_LEGAL_REP";
+        return caseId + "_APPEAL_EDITED_LEGAL_REP_DISPOSAL";
     }
 
     @Override

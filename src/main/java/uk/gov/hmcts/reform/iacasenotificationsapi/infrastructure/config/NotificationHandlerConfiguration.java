@@ -4852,9 +4852,11 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
                 boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == START_APPEAL;
+                        && callback.getEvent() == START_APPEAL
+                        && (journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP));
                 log.info("--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
@@ -4876,10 +4878,63 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
                 boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == EDIT_APPEAL;
+                        && callback.getEvent() == EDIT_APPEAL
+                        && (journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP));
                 log.info("--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> startAppealAipAppellantDisposalNotificationHandler(
+        @Qualifier("startAppealAipAppellantDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        log.info("--------------------3NotificationHandlerConfiguration startAppealAipAppellantDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == START_APPEAL
+                        && journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(AIP);
+                log.info("--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editAppealAipAppellantDisposalNotificationHandler(
+        @Qualifier("editAppealAipAppellantDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        log.info("--------------------3NotificationHandlerConfiguration editAppealAipAppellantDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == EDIT_APPEAL
+                        && journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(REP);
+                log.info("--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
                     res
