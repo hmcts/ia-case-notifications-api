@@ -26,7 +26,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRecordAdjournmentDetailsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReListCasePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRemissionDecisionPartiallyApprovedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRequestFeeRemissionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReviewHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerUpperTribunalBundleFailedPersonalisation;
@@ -3556,6 +3555,8 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionApprovedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionApprovedPersonalisation legalRepresentativeRemissionDecisionApprovedPersonalisation,
+        AipAppellantRecordRemissionDecisionPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail,
+        AipAppellantRecordRemissionDecisionPersonalisationSms aipAppellantRecordRemissionDecisionPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3563,7 +3564,8 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionApprovedPersonalisation
+                    legalRepresentativeRemissionDecisionApprovedPersonalisation,
+                        aipAppellantRecordRemissionDecisionPersonalisationEmail
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -3573,8 +3575,9 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("remissionDecisionPartiallyApprovedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionPartiallyApprovedNotificationHandler(
-        AdminOfficerRemissionDecisionPartiallyApprovedPersonalisation adminOfficerRemissionDecisionPartiallyApprovedPersonalisation,
         LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
+        AipAppellantRecordRemissionDecisionPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail,
+        AipAppellantRecordRemissionDecisionPersonalisationSms aipAppellantRecordRemissionDecisionPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3582,8 +3585,8 @@ public class NotificationGeneratorConfiguration {
         return Collections.singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    adminOfficerRemissionDecisionPartiallyApprovedPersonalisation,
-                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
+                        aipAppellantRecordRemissionDecisionPersonalisationEmail
                 ),
                 notificationSender,
                 notificationIdAppender
