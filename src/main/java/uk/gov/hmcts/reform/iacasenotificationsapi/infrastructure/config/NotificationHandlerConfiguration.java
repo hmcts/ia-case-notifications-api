@@ -4854,8 +4854,32 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && (callback.getEvent() == START_APPEAL || callback.getEvent() == EDIT_APPEAL);
+                        && callback.getEvent() == START_APPEAL;
                 log.info("--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editAppealLegalRepDisposalNotificationHandler(
+        @Qualifier("editAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        log.info("--------------------3NotificationHandlerConfiguration editAppealLegalRepDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == EDIT_APPEAL;
+                log.info("--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
                     res

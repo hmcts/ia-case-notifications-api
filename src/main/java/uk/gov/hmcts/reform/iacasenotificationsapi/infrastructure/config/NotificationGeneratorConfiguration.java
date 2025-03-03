@@ -4446,6 +4446,25 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editAppealLegalRepDisposalNotificationGenerator")
+    public List<NotificationGenerator> editAppealLegalRepDisposalNotificationGenerator(
+        LegalRepresentativeAppealEditedDisposalPersonalisation legalRepresentativeAppealEditedDisposalPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        log.info("--------------------3NotificationGeneratorConfiguration editAppealLegalRepDisposalNotificationGenerator");
+
+        return Collections.singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeAppealEditedDisposalPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("adaSuitabilityNotificationGenerator")
     public List<NotificationGenerator> adaSuitabilityNotificationGenerator(
         LegalRepresentativeAdaSuitabilityPersonalisation legalRepresentativeAdaSuitabilityPersonalisation,

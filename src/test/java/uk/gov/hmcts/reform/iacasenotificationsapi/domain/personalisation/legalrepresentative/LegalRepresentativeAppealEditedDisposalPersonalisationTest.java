@@ -30,7 +30,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
+public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,7 +42,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
 
-    private LegalRepresentativeAppealStartedDisposalPersonalisation legalRepresentativeAppealStartedDisposalPersonalisation;
+    private LegalRepresentativeAppealEditedDisposalPersonalisation legalRepresentativeAppealEditedDisposalPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -60,7 +60,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String iaExUiFrontendUrl = "http://localhost";
-        legalRepresentativeAppealStartedDisposalPersonalisation = new LegalRepresentativeAppealStartedDisposalPersonalisation(
+        legalRepresentativeAppealEditedDisposalPersonalisation = new LegalRepresentativeAppealEditedDisposalPersonalisation(
             templateId,
             iaExUiFrontendUrl,
             customerServicesProvider
@@ -70,19 +70,19 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeAppealStartedDisposalPersonalisation.getTemplateId(asylumCase));
+        assertEquals(templateId, legalRepresentativeAppealEditedDisposalPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_STARTED_LEGAL_REP",
-            legalRepresentativeAppealStartedDisposalPersonalisation.getReferenceId(caseId));
+            legalRepresentativeAppealEditedDisposalPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
-        assertTrue(legalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList(asylumCase)
+        assertTrue(legalRepresentativeAppealEditedDisposalPersonalisation.getRecipientsList(asylumCase)
             .contains(legalRepEmailAddress));
     }
 
@@ -93,7 +93,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
 
         // when
         // then
-        assertThatThrownBy(() -> legalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> legalRepresentativeAppealEditedDisposalPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("legalRepresentativeEmailAddress is not present");
     }
@@ -101,7 +101,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(
-            () -> legalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation((AsylumCase) null))
+            () -> legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation((AsylumCase) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("asylumCase must not be null");
     }
@@ -114,7 +114,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
 
         // when
         Map<String, String> personalisation =
-            legalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation(asylumCase);
 
         // then
         assertThat(personalisation).isNotEmpty();
@@ -135,7 +135,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
 
         // when
         Map<String, String> personalisation =
-            legalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation(asylumCase);
 
         // then
         assertThat(personalisation).isNotEmpty();
