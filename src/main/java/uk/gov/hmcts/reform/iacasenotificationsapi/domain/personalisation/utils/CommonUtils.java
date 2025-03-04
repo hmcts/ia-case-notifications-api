@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.TtlCcdObject;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TTL;
@@ -25,6 +27,15 @@ public final class CommonUtils {
 
     public static boolean notificationAlreadySentToday(AsylumCase asylumCase) {
         Optional<TtlCcdObject> ttlOpt = asylumCase.read(TTL);
+        return isTtlNinetyDaysAhead(ttlOpt);
+    }
+
+    public static boolean bailNotificationAlreadySentToday(BailCase bailCase) {
+        Optional<TtlCcdObject> ttlOpt = bailCase.read(BailCaseFieldDefinition.TTL);
+        return isTtlNinetyDaysAhead(ttlOpt);
+    }
+
+    private static boolean isTtlNinetyDaysAhead(Optional<TtlCcdObject> ttlOpt) {
         if (ttlOpt.isPresent()) {
             String systemTtl = ttlOpt.get().getSystemTtl();
             LocalDate systemTtlDate = LocalDate.parse(systemTtl);

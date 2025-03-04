@@ -1,8 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_APPLICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.START_APPLICATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.bailNotificationAlreadySentToday;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,71 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificatio
 @Slf4j
 @Configuration
 public class BailNotificationHandlerConfiguration {
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> startApplicationDisposalNotificationHandler(
+        @Qualifier("startApplicationDisposalNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        log.info("--------------------3NotificationHandlerConfiguration startApplicationDisposalNotification");
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                log.info("--------------------3handling startApplicationDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == START_APPLICATION;
+                log.info(
+                    "--------------------3canHandle startApplicationDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<BailCase> editBailApplicationDisposalNotificationHandler(
+            @Qualifier("editBailApplicationDisposalNotificationGenerator") List<BailNotificationGenerator> notificationGenerators
+    ) {
+
+        log.info("--------------------3NotificationHandlerConfiguration editBailApplicationDisposalNotification");
+        return new BailNotificationHandler(
+            (callbackStage, callback) -> {
+                BailCase bailCase = callback.getCaseDetails().getCaseData();
+
+                log.info("--------------------3handling editBailApplicationDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
+                if (bailNotificationAlreadySentToday(bailCase)) {
+                    log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
+                    return false;
+                }
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == EDIT_BAIL_APPLICATION;
+                log.info(
+                    "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     @Bean
     public PreSubmitCallbackHandler<BailCase> submitApplicationWithLegalRepNotificationHandler(
         @Qualifier("submitApplicationNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
