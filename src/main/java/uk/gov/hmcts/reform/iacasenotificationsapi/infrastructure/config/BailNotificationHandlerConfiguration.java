@@ -59,38 +59,43 @@ public class BailNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> editBailApplicationDisposalNotificationHandler(
-            @Qualifier("editBailApplicationDisposalNotificationGenerator") List<BailNotificationGenerator> notificationGenerators
+        @Qualifier("editBailApplicationDisposalNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
     ) {
 
         log.info("--------------------3NotificationHandlerConfiguration editBailApplicationDisposalNotification");
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
-                BailCase bailCase = callback.getCaseDetails().getCaseData();
-
                 log.info("--------------------3handling editBailApplicationDisposalNotification {} {}",
                     callbackStage,
                     callback.getEvent()
                 );
-                if (bailNotificationAlreadySentToday(bailCase)) {
-                    log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
-                    return false;
-                }
 
-                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_BAIL_APPLICATION;
                 log.info(
                     "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
-                    res
+                    canBeHandled
                 );
-                return res;
+
+                if (canBeHandled) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    if (bailNotificationAlreadySentToday(bailCase)) {
+                        log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                                callbackStage,
+                                callback.getEvent(),
+                                false
+                        );
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
             },
-            notificationGenerators,
+            bailNotificationGenerators,
             getErrorHandler()
         );
     }

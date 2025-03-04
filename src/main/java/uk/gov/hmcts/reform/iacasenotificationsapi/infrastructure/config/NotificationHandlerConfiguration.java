@@ -4857,18 +4857,23 @@ public class NotificationHandlerConfiguration {
                     callbackStage,
                     callback.getEvent()
                 );
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
-
-                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == START_APPEAL
-                    && (journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP));
-                log.info("--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == START_APPEAL;
+                log.info(
+                    "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
-                    res
+                    canBeHandled
                 );
-                return res;
+
+                if (canBeHandled) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                    return journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP);
+                } else {
+                    return false;
+                }
             },
             notificationGenerators,
             getErrorHandler()
@@ -4883,34 +4888,37 @@ public class NotificationHandlerConfiguration {
         log.info("--------------------3NotificationHandlerConfiguration editAppealLegalRepDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
                 log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {}",
                     callbackStage,
                     callback.getEvent()
                 );
-                if (notificationAlreadySentToday(asylumCase)) {
-                    log.info(
-                        "--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
-                    return false;
-                }
 
-                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
-
-                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == EDIT_APPEAL
-                    && (journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP));
+                boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == EDIT_APPEAL;
                 log.info(
                     "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
-                    res
+                    canBeHandled
                 );
-                return res;
+                if (canBeHandled) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                    if (notificationAlreadySentToday(asylumCase)) {
+                        log.info(
+                                "--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                                callbackStage,
+                                callback.getEvent(),
+                                false
+                        );
+                        return false;
+                    }
+
+                    return journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP);
+                } else {
+                    return false;
+                }
             },
             notificationGenerators,
             getErrorHandler()
@@ -4924,24 +4932,28 @@ public class NotificationHandlerConfiguration {
         log.info("--------------------3NotificationHandlerConfiguration startAppealAipAppellantDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                log.info(
-                    "--------------------3handling startAppealAipAppellantDisposalNotification {} {}",
-                    callbackStage,
-                    callback.getEvent()
-                );
-                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
-                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == START_APPEAL
-                    && journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(AIP);
+                boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == START_APPEAL;
                 log.info(
                     "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
-                    res
+                    canBeHandled
                 );
-                return res;
+
+                if (canBeHandled) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    log.info(
+                        "--------------------3handling startAppealAipAppellantDisposalNotification {} {}",
+                        callbackStage,
+                        callback.getEvent()
+                    );
+                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+                    return journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(AIP);
+                } else {
+                    return false;
+                }
             },
             notificationGenerators,
             getErrorHandler()
@@ -4956,34 +4968,39 @@ public class NotificationHandlerConfiguration {
         log.info("--------------------3NotificationHandlerConfiguration editAppealAipAppellantDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 log.info(
                     "--------------------3handling editAppealAipAppellantDisposalNotification {} {}",
                     callbackStage,
                     callback.getEvent()
                 );
-                if (notificationAlreadySentToday(asylumCase)) {
-                    log.info(
-                        "--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
-                    return false;
-                }
 
-                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
-                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == EDIT_APPEAL
-                        && journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(REP);
+                boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == EDIT_APPEAL;
                 log.info(
                     "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
-                    res
+                    canBeHandled
                 );
-                return res;
+
+                if (canBeHandled) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    if (notificationAlreadySentToday(asylumCase)) {
+                        log.info(
+                                "--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
+                                callbackStage,
+                                callback.getEvent(),
+                                false
+                        );
+                        return false;
+                    } else {
+                        Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+                        return journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(REP);
+                    }
+                } else {
+                    return false;
+                }
             },
             notificationGenerators,
             getErrorHandler()
