@@ -4852,6 +4852,10 @@ public class NotificationHandlerConfiguration {
         log.info("--------------------3NotificationHandlerConfiguration startAppealLegalRepDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
+                log.info("--------------------3handling startAppealLegalRepDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
@@ -4880,7 +4884,16 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
                 if (notificationAlreadySentToday(asylumCase)) {
+                    log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
 
@@ -4909,6 +4922,10 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                log.info("--------------------3handling startAppealAipAppellantDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
                 Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
                 boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -4935,7 +4952,16 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                log.info("--------------------3handling editAppealAipAppellantDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
                 if (notificationAlreadySentToday(asylumCase)) {
+                    log.info("--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
 
