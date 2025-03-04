@@ -32,6 +32,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.notificationAlreadySentToday;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import java.util.ArrayList;
@@ -4835,11 +4836,157 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && (isAgeAssessmentAppeal(asylumCase) || isAcceleratedDetainedAppeal(asylumCase));
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && (isAgeAssessmentAppeal(asylumCase) || isAcceleratedDetainedAppeal(asylumCase));
                 },
                 notificationGenerators,
                 getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> startAppealLegalRepDisposalNotificationHandler(
+        @Qualifier("startAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        log.info("--------------------3NotificationHandlerConfiguration startAppealLegalRepDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                log.info(
+                    "--------------------3handling startAppealLegalRepDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == START_APPEAL
+                    && (journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP));
+                log.info("--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editAppealLegalRepDisposalNotificationHandler(
+        @Qualifier("editAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        log.info("--------------------3NotificationHandlerConfiguration editAppealLegalRepDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
+                if (notificationAlreadySentToday(asylumCase)) {
+                    log.info(
+                        "--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
+                    return false;
+                }
+
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == EDIT_APPEAL
+                    && (journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP));
+                log.info(
+                    "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> startAppealAipAppellantDisposalNotificationHandler(
+        @Qualifier("startAppealAipAppellantDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        log.info("--------------------3NotificationHandlerConfiguration startAppealAipAppellantDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                log.info(
+                    "--------------------3handling startAppealAipAppellantDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == START_APPEAL
+                    && journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(AIP);
+                log.info(
+                    "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editAppealAipAppellantDisposalNotificationHandler(
+        @Qualifier("editAppealAipAppellantDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        log.info("--------------------3NotificationHandlerConfiguration editAppealAipAppellantDisposalNotification");
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                log.info(
+                    "--------------------3handling editAppealAipAppellantDisposalNotification {} {}",
+                    callbackStage,
+                    callback.getEvent()
+                );
+                if (notificationAlreadySentToday(asylumCase)) {
+                    log.info(
+                        "--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
+                    return false;
+                }
+
+                Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == EDIT_APPEAL
+                        && journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(REP);
+                log.info(
+                    "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
+                    callbackStage,
+                    callback.getEvent(),
+                    res
+                );
+                return res;
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 

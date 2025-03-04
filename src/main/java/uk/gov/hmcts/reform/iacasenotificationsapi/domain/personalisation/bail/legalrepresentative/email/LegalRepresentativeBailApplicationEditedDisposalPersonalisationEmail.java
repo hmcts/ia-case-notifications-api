@@ -1,36 +1,37 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email;
 
-import static java.util.Objects.requireNonNull;
-
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
+import java.util.Map;
+import javax.validation.constraints.NotNull;
+
+import static java.util.Objects.requireNonNull;
+
 @Service
-public class LegalRepresentativeBailApplicationSubmittedPersonalisation implements LegalRepresentativeBailEmailNotificationPersonalisation {
+public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail implements LegalRepresentativeBailEmailNotificationPersonalisation {
 
-    private final String bailApplicationSubmittedLegalRepresentativeTemplateId;
+    private final String bailApplicationEditedDisposalLegalRepresentativeTemplateId;
 
-    public LegalRepresentativeBailApplicationSubmittedPersonalisation(
-        @NotNull(message = "bailApplicationSubmittedLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.bail.template.submitApplication.email}") String bailApplicationSubmittedLegalRepresentativeTemplateId
+    public LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail(
+        @NotNull(message = "bailApplicationEditedDisposalLegalRepresentativeTemplateId cannot be null")
+        @Value("${govnotify.bail.template.editApplication.disposal.email}") String bailApplicationEditedDisposalLegalRepresentativeTemplateId
     ) {
-        this.bailApplicationSubmittedLegalRepresentativeTemplateId = bailApplicationSubmittedLegalRepresentativeTemplateId;
+        this.bailApplicationEditedDisposalLegalRepresentativeTemplateId = bailApplicationEditedDisposalLegalRepresentativeTemplateId;
     }
 
     @Override
     public String getTemplateId() {
-        return bailApplicationSubmittedLegalRepresentativeTemplateId;
+        return bailApplicationEditedDisposalLegalRepresentativeTemplateId;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_BAIL_APPLICATION_SUBMITTED_LEGAL_REP";
+        return caseId + "_BAIL_APPLICATION_EDITED_DISPOSAL_LEGAL_REPRESENTATIVE";
     }
 
     @Override
@@ -46,5 +47,4 @@ public class LegalRepresentativeBailApplicationSubmittedPersonalisation implemen
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
     }
-
 }
