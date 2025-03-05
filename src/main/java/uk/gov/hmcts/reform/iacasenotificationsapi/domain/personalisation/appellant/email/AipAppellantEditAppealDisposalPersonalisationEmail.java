@@ -77,23 +77,15 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
                 .getCaseDetails()
                 .getCaseData();
 
-        final String dateOfBirth = asylumCase
-            .read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)
-            .orElseThrow(() -> new IllegalStateException("Appellant's birth of date is not present"));
-
-        final String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
         return
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("Ref Number", String.valueOf(callback.getCaseDetails().getId()))
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Date Of Birth", formattedDateOfBirth)
-                .put("Hyperlink to service", iaAipFrontendUrl)
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaAipFrontendUrl)
+                .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
                 .build();
     }
 }

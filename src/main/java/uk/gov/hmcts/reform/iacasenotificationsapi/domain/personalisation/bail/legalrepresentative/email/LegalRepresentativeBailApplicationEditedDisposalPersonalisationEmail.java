@@ -7,6 +7,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 
@@ -16,12 +18,15 @@ import static java.util.Objects.requireNonNull;
 public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail implements LegalRepresentativeBailEmailNotificationPersonalisation {
 
     private final String bailApplicationEditedDisposalLegalRepresentativeTemplateId;
+    private final String iaExUiFrontendUrl;
 
     public LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail(
         @NotNull(message = "bailApplicationEditedDisposalLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.bail.template.editApplication.disposal.email}") String bailApplicationEditedDisposalLegalRepresentativeTemplateId
+        @Value("${govnotify.bail.template.editApplication.disposal.email}") String bailApplicationEditedDisposalLegalRepresentativeTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
     ) {
         this.bailApplicationEditedDisposalLegalRepresentativeTemplateId = bailApplicationEditedDisposalLegalRepresentativeTemplateId;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
     }
 
     @Override
@@ -40,11 +45,12 @@ public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmai
 
         return ImmutableMap
             .<String, String>builder()
-            .put("bailReferenceNumber", bailCase.read(BailCaseFieldDefinition.BAIL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("legalRepReference", bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class).orElse(""))
             .put("applicantGivenNames", bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class).orElse(""))
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .build();
     }
 }

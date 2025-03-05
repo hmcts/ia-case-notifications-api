@@ -22,15 +22,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -62,23 +61,15 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
 
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
 
-        String mockedAppealReferenceNumber = "someReferenceNumber";
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
-        String mockedLegalRepAppealReferenceNumber = "someReferenceNumber";
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class))
-            .thenReturn(Optional.of(mockedLegalRepAppealReferenceNumber));
 
         String mockedAppellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         String mockedAppellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
 
-        String dateOfBirth = "2020-03-01";
-        when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(mockedAppellantEmailAddress));
         String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -161,15 +152,18 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
     }
 
     @Test
-    void should_throw_exception_on_personalisation_when_date_of_birth_is_null() {
+    public void should_return_personalisation_when_all_information_given() {
         // given
-        when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
-
         // when
+        Map<String, String> personalisation =
+                aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
+
         // then
-        assertThatThrownBy(() -> aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant's birth of date is not present");
+        assertEquals("someAppellantGivenNames", personalisation.get("appellantGivenNames"));
+        assertEquals("someAppellantFamilyName", personalisation.get("appellantFamilyName"));
+        assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("http://localhost", personalisation.get("linkToOnlineService"));
+        assertNotNull(personalisation.get("editingDate"));
     }
 
     @Test
@@ -178,7 +172,7 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         // when
         Map<String, String> personalisation =
@@ -186,6 +180,8 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
 
         // then
         assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
     }
 }

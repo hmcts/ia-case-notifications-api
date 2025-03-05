@@ -63,7 +63,6 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
         );
     }
 
-
     @Test
     public void should_return_given_template_id() {
         assertEquals(templateId, legalRepresentativeAppealStartedDisposalPersonalisation.getTemplateId(asylumCase));

@@ -21,7 +21,6 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 @Service
 public class AipAppellantStartAppealDisposalPersonalisationEmail implements EmailNotificationPersonalisation {
@@ -72,29 +71,17 @@ public class AipAppellantStartAppealDisposalPersonalisationEmail implements Emai
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        AsylumCase asylumCase =
-            callback
-                .getCaseDetails()
-                .getCaseData();
-
-        final String dateOfBirth = asylumCase
-            .read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)
-            .orElseThrow(() -> new IllegalStateException("Appellant's birth of date is not present"));
-
-        final String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         return
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("Ref Number", String.valueOf(callback.getCaseDetails().getId()))
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("Legal Rep Ref", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("Given names", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("Date Of Birth", formattedDateOfBirth)
-                .put("Hyperlink to service", iaAipFrontendUrl)
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("creationDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put("linkToOnlineService", iaAipFrontendUrl)
                 .build();
     }
 }
