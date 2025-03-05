@@ -1438,10 +1438,10 @@ govnotify:
     template:
       startApplication:
         disposal:
-            email: 2d69d6eb-0d88-460d-b3a6-8b97e4c16154
+            email: 185fe400-26d9-46ee-ac2d-aa4b9bb32f2e
       editApplication:
         disposal:
-            email: 2ab6049b-83cb-4d09-bad5-7f18017223fa
+            email: a8569409-08dc-4e68-b5db-19a582bc4e94
       submitApplication:
         email: 5f30774f-00fb-4c03-b010-e5a8afaa5f05
         sms: 64ac7c79-682f-4bd7-9847-bfd21240e8c6
