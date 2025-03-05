@@ -1604,6 +1604,8 @@ security:
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
+      - "startApplication"
+      - "editBailApplication"
       - "submitAppeal"
       - "buildCase"
       - "submitCase"
