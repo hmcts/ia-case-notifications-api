@@ -100,8 +100,8 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationTest {
 
         // then
         assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
+        assertEquals(applicantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(applicantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertNotNull(personalisation.get("editingDate"));
@@ -122,8 +122,8 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationTest {
 
         // then
         assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("applicantGivenNames"));
-        assertEquals("", personalisation.get("applicantFamilyName"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
     }
 }

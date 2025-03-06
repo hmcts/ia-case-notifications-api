@@ -101,8 +101,8 @@ class LegalRepresentativeBailApplicationStartedDisposalPersonalisationTest {
 
         // then
         assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
+        assertEquals(applicantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(applicantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertNotNull(personalisation.get("creationDate"));
