@@ -3,13 +3,16 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.l
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.LegalRepresentativeBailEmailNotificationPersonalisation;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
@@ -19,14 +22,22 @@ public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmai
 
     private final String bailApplicationEditedDisposalLegalRepresentativeTemplateId;
     private final String iaExUiFrontendUrl;
+    private final UserDetailsProvider userDetailsProvider;
 
     public LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail(
         @NotNull(message = "bailApplicationEditedDisposalLegalRepresentativeTemplateId cannot be null")
         @Value("${govnotify.bail.template.editApplication.disposal.email}") String bailApplicationEditedDisposalLegalRepresentativeTemplateId,
-        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        UserDetailsProvider userDetailsProvider
     ) {
         this.bailApplicationEditedDisposalLegalRepresentativeTemplateId = bailApplicationEditedDisposalLegalRepresentativeTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.userDetailsProvider = userDetailsProvider;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(BailCase bailCase) {
+        return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
     }
 
     @Override
