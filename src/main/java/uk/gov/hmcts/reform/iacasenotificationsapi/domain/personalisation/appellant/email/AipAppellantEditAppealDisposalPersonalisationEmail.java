@@ -53,14 +53,10 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
     }
 
     @Override
-    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        if (appealService.isAppellantInPersonJourney(asylumCase)) {
-            return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-        } else {
-            return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
-        }
+        return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
     }
 
     @Override

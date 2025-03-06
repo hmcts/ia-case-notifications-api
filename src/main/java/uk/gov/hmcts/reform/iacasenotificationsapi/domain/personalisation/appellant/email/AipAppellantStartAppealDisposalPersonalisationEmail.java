@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
@@ -22,6 +23,7 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 @Service
+@Slf4j
 public class AipAppellantStartAppealDisposalPersonalisationEmail implements EmailNotificationPersonalisation {
     private final String appealStartedAppellantAipDisposalEmailTemplateId;
     private final String iaAipFrontendUrl;
@@ -52,14 +54,10 @@ public class AipAppellantStartAppealDisposalPersonalisationEmail implements Emai
     }
 
     @Override
-    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        if (appealService.isAppellantInPersonJourney(asylumCase)) {
-            return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-        } else {
-            return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
-        }
+        return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
     }
 
     @Override
