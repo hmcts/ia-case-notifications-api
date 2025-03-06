@@ -7,8 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -47,6 +49,10 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
     AppealService appealService;
     @Mock
     CustomerServicesProvider customerServicesProvider;
+    @Mock
+    UserDetailsProvider userDetailsProvider;
+    @Mock
+    UserDetails userDetails;
 
     private final Long caseId = 12345L;
     private final String emailTemplateId = "someEmailTemplateId";
@@ -76,13 +82,17 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
         String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
+        when(userDetails.getEmailAddress()).thenReturn(mockedAppellantEmailAddress);
+
         String iaAipFrontendUrl = "http://localhost";
         aipAppellantEditAppealDisposalPersonalisationEmail = new AipAppellantEditAppealDisposalPersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
             recipientsFinder,
             appealService,
-            customerServicesProvider
+            customerServicesProvider,
+            userDetailsProvider
         );
     }
 
@@ -122,20 +132,6 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
         // then
         assertTrue(aipAppellantEditAppealDisposalPersonalisationEmail.getRecipientsList(asylumCase)
             .contains(mockedAppellantEmailAddress));
-    }
-
-    @Test
-    void should_throw_an_exception_email_address_empty() {
-        // given
-        when(asylumCase.read(EMAIL,String.class))
-            .thenReturn(Optional.empty());
-        when(appealService.isAppellantInPersonJourney(asylumCase)).thenReturn(false);
-
-        // when
-        // then
-        assertThatThrownBy(() -> aipAppellantEditAppealDisposalPersonalisationEmail.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantEmailAddress is not present");
     }
 
     @Test

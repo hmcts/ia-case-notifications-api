@@ -73,7 +73,7 @@ public class BailNotificationHandlerConfiguration {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_BAIL_APPLICATION;
                 log.info(
-                    "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
+                    "--------------------3canHandle Bail editAppealLegalRepDisposalNotification {} {} {}",
                     callbackStage,
                     callback.getEvent(),
                     canBeHandled

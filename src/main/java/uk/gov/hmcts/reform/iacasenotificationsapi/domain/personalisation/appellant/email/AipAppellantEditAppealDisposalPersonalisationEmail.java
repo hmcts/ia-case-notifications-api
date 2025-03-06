@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
@@ -20,8 +21,6 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
-
 @Service
 public class AipAppellantEditAppealDisposalPersonalisationEmail implements EmailNotificationPersonalisation {
 
@@ -30,19 +29,22 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
     private final RecipientsFinder recipientsFinder;
     private final AppealService appealService;
     private final CustomerServicesProvider customerServicesProvider;
+    private final UserDetailsProvider userDetailsProvider;
 
     public AipAppellantEditAppealDisposalPersonalisationEmail(
         @Value("${govnotify.template.appealEdited.appellant.aip.disposal.email}") String appealEditedAppellantAipDisposalEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         AppealService appealService,
-        CustomerServicesProvider customerServicesProvider
+        CustomerServicesProvider customerServicesProvider,
+        UserDetailsProvider userDetailsProvider
     ) {
         this.appealEditedAppellantAipDisposalEmailTemplateId = appealEditedAppellantAipDisposalEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.appealService = appealService;
         this.customerServicesProvider = customerServicesProvider;
+        this.userDetailsProvider = userDetailsProvider;
     }
 
     @Override
@@ -57,9 +59,7 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
         if (appealService.isAppellantInPersonJourney(asylumCase)) {
             return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
         } else {
-            return Collections.singleton(asylumCase
-                .read(EMAIL, String.class)
-                .orElseThrow(() -> new IllegalStateException("appellantEmailAddress is not present")));
+            return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
         }
     }
 
