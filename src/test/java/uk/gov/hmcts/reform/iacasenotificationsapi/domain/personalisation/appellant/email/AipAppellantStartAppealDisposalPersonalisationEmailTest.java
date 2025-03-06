@@ -9,20 +9,15 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,10 +37,6 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
     AsylumCase asylumCase;
     @Mock
     private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    AppealService appealService;
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
@@ -88,8 +79,6 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         aipAppellantStartAppealDisposalPersonalisationEmail = new AipAppellantStartAppealDisposalPersonalisationEmail(
             emailTemplateId,
             iaAipFrontendUrl,
-            recipientsFinder,
-            appealService,
             customerServicesProvider,
             userDetailsProvider
         );
@@ -107,21 +96,6 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
-        // given
-        when(appealService.isAppellantInPersonJourney(asylumCase)).thenReturn(true);
-        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
-
-        when(appealService.isAppellantInPersonJourney(asylumCase)).thenReturn(false);
-
-        // when
-        // then
-        assertTrue(aipAppellantStartAppealDisposalPersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
-    }
-
-    @Test
     void should_return_given_email_address_in_asylum_case_in_non_aip_case() {
         // given
         when(asylumCase.read(EMAIL))
@@ -131,19 +105,6 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         // then
         assertTrue(aipAppellantStartAppealDisposalPersonalisationEmail.getRecipientsList(asylumCase)
                 .contains(mockedAppellantEmailAddress));
-    }
-
-    @Test
-    void should_throw_exception_on_personalisation_when_case_is_null() {
-        // given
-        when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
-
-        // when
-        // then
-        assertThatThrownBy(() -> aipAppellantStartAppealDisposalPersonalisationEmail.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
     }
 
     @Test

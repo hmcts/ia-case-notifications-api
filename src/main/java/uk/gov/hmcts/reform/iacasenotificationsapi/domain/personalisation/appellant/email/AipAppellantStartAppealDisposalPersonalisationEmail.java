@@ -7,11 +7,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.time.LocalDate;
@@ -27,23 +24,17 @@ import static java.util.Objects.requireNonNull;
 public class AipAppellantStartAppealDisposalPersonalisationEmail implements EmailNotificationPersonalisation {
     private final String appealStartedAppellantAipDisposalEmailTemplateId;
     private final String iaAipFrontendUrl;
-    private final RecipientsFinder recipientsFinder;
-    private final AppealService appealService;
     private final CustomerServicesProvider customerServicesProvider;
     private final UserDetailsProvider userDetailsProvider;
 
     public AipAppellantStartAppealDisposalPersonalisationEmail(
         @Value("${govnotify.template.appealStarted.appellant.aip.disposal.email}") String appealStartedAppellantAipDisposalEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        RecipientsFinder recipientsFinder,
-        AppealService appealService,
         CustomerServicesProvider customerServicesProvider,
         UserDetailsProvider userDetailsProvider
     ) {
         this.appealStartedAppellantAipDisposalEmailTemplateId = appealStartedAppellantAipDisposalEmailTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
-        this.recipientsFinder = recipientsFinder;
-        this.appealService = appealService;
         this.customerServicesProvider = customerServicesProvider;
         this.userDetailsProvider = userDetailsProvider;
     }
