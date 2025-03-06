@@ -54,7 +54,15 @@ public class EmailNotificationGenerator implements NotificationGenerator {
                 referenceId
             );
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
+            log.info(
+                "--------------311EmailNotificationGenerator.generate referenceId {}",
+                referenceId
+            );
             notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+            log.info(
+                "--------------322EmailNotificationGenerator.generate referenceId {}",
+                referenceId
+            );
         });
     }
 
@@ -64,6 +72,10 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final String referenceId,
         final Callback<AsylumCase> callback
     ) {
+        log.info(
+                "--------------3EmailNotificationGenerator.createEmail referenceId {}",
+                referenceId
+        );
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
@@ -88,7 +100,8 @@ public class EmailNotificationGenerator implements NotificationGenerator {
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
         log.info(
-            "--------------3EmailNotificationGenerator.sendEmail emailTemplateId {}",
+            "--------------3EmailNotificationGenerator.sendEmail referenceId {} emailTemplateId {}",
+            referenceId,
             emailTemplateId
         );
 
