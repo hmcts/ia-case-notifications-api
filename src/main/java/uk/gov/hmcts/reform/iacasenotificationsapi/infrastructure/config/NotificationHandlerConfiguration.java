@@ -4870,7 +4870,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
-                    return journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP);
+                    return isRepJourney(asylumCase);
                 } else {
                     return false;
                 }
@@ -4915,7 +4915,7 @@ public class NotificationHandlerConfiguration {
                         return false;
                     }
 
-                    return journeyTypeOpt.isEmpty() || journeyTypeOpt.get().equals(REP);
+                    return isRepJourney(asylumCase);
                 } else {
                     return false;
                 }
@@ -4949,8 +4949,7 @@ public class NotificationHandlerConfiguration {
                         callbackStage,
                         callback.getEvent()
                     );
-                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
-                    return journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(AIP);
+                    return isAipJourney(asylumCase);
                 } else {
                     return false;
                 }
@@ -4995,8 +4994,7 @@ public class NotificationHandlerConfiguration {
                         );
                         return false;
                     } else {
-                        Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
-                        return journeyTypeOpt.isPresent() && journeyTypeOpt.get().equals(REP);
+                        return isAipJourney(asylumCase);
                     }
                 } else {
                     return false;
