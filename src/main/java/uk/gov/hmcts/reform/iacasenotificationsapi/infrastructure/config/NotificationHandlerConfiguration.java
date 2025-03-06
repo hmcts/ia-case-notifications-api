@@ -4859,19 +4859,23 @@ public class NotificationHandlerConfiguration {
                 );
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == START_APPEAL;
-                log.info(
-                    "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
-                    callbackStage,
-                    callback.getEvent(),
-                    canBeHandled
-                );
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
-
+                    log.info(
+                        "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        isRepJourney(asylumCase)
+                    );
                     return isRepJourney(asylumCase);
                 } else {
+                    log.info(
+                        "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
             },
@@ -4895,28 +4899,34 @@ public class NotificationHandlerConfiguration {
 
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_APPEAL;
-                log.info(
-                    "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
-                    callbackStage,
-                    callback.getEvent(),
-                    canBeHandled
-                );
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
                     if (notificationAlreadySentToday(asylumCase)) {
                         log.info(
-                                "--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
-                                callbackStage,
-                                callback.getEvent(),
-                                false
+                            "--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                            callbackStage,
+                            callback.getEvent(),
+                            false
                         );
                         return false;
                     }
 
+                    log.info(
+                        "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        isRepJourney(asylumCase)
+                    );
                     return isRepJourney(asylumCase);
                 } else {
+                    log.info(
+                        "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
             },
@@ -4935,22 +4945,23 @@ public class NotificationHandlerConfiguration {
 
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == START_APPEAL;
-                log.info(
-                    "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
-                    callbackStage,
-                    callback.getEvent(),
-                    canBeHandled
-                );
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     log.info(
-                        "--------------------3handling startAppealAipAppellantDisposalNotification {} {}",
+                        "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
                         callbackStage,
-                        callback.getEvent()
+                        callback.getEvent(),
+                        isAipJourney(asylumCase)
                     );
                     return isAipJourney(asylumCase);
                 } else {
+                    log.info(
+                        "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
             },
@@ -4976,27 +4987,33 @@ public class NotificationHandlerConfiguration {
 
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == EDIT_APPEAL;
-                log.info(
-                    "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
-                    callbackStage,
-                    callback.getEvent(),
-                    canBeHandled
-                );
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     if (notificationAlreadySentToday(asylumCase)) {
                         log.info(
-                                "--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
-                                callbackStage,
-                                callback.getEvent(),
-                                false
+                            "--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
+                            callbackStage,
+                            callback.getEvent(),
+                            false
                         );
                         return false;
                     } else {
+                        log.info(
+                            "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
+                            callbackStage,
+                            callback.getEvent(),
+                            isAipJourney(asylumCase)
+                        );
                         return isAipJourney(asylumCase);
                     }
                 } else {
+                    log.info(
+                        "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
             },
