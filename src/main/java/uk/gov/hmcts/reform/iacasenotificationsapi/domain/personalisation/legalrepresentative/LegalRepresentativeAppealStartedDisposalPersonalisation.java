@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
@@ -34,16 +35,19 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
     private final String appealStartedLegalRepresentativeDisposalTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+    private final UserDetailsProvider userDetailsProvider;
 
     public LegalRepresentativeAppealStartedDisposalPersonalisation(
         @NotNull(message = "appealStartedLegalRepresentativeDisposalTemplateId cannot be null")
         @Value("${govnotify.template.appealStarted.legalRep.disposal.email}") String appealStartedLegalRepresentativeDisposalTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        CustomerServicesProvider customerServicesProvider
+        CustomerServicesProvider customerServicesProvider,
+        UserDetailsProvider userDetailsProvider
     ) {
         this.appealStartedLegalRepresentativeDisposalTemplateId = appealStartedLegalRepresentativeDisposalTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
+        this.userDetailsProvider = userDetailsProvider;
 
         log.info(
             "-------------3LegalRepresentativeAppealStartedDisposalPersonalisation appealStartedLegalRepresentativeDisposalTemplateId {}",
@@ -54,35 +58,11 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
 
-        log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList ");
-        if (asylumCase.read(JOURNEY_TYPE, JourneyType.class)
-                .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
-                .orElse(false)) {
-            log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 111");
-
-            return Collections.emptySet();
-        }
-
-        if (asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
-                .map(it -> it.getCaseRoleId() == null)
-                .orElse(false)) {
-
-            log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 222");
-            return Collections.emptySet();
-        }
-
-        if (isEjpCase(asylumCase)) {
-            log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 333");
-            return Collections.singleton(asylumCase
-                    .read(LEGAL_REP_EMAIL_EJP, String.class)
-                    .orElseThrow(() -> new IllegalStateException("legalRepEmailEjp is not present")));
-        }
-
         log.info(
-            "-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 444 {}",
-            getLegalRepEmailInternalOrLegalRepJourney(asylumCase)
+            "-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList {}",
+            userDetailsProvider.getUserDetails().getEmailAddress()
         );
-        return Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+        return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
     }
 
     @Override

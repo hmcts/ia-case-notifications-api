@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -31,6 +32,8 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
+    @Mock
+    UserDetailsProvider userDetailsProvider;
 
     private final String templateId = "someTemplateId";
 
@@ -59,7 +62,8 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
         legalRepresentativeAppealStartedDisposalPersonalisation = new LegalRepresentativeAppealStartedDisposalPersonalisation(
             templateId,
             iaExUiFrontendUrl,
-            customerServicesProvider
+            customerServicesProvider,
+            userDetailsProvider
         );
     }
 
