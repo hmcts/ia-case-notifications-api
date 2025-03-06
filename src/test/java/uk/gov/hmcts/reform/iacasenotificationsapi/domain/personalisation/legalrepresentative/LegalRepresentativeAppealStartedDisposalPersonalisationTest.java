@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Map;
@@ -34,6 +35,8 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     UserDetailsProvider userDetailsProvider;
+    @Mock
+    UserDetails userDetails;
 
     private final String templateId = "someTemplateId";
 
@@ -57,6 +60,9 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
             .thenReturn(Optional.of(legalRepEmailAddress));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+
+        when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
+        when(userDetails.getEmailAddress()).thenReturn(legalRepEmailAddress);
 
         String iaExUiFrontendUrl = "http://localhost";
         legalRepresentativeAppealStartedDisposalPersonalisation = new LegalRepresentativeAppealStartedDisposalPersonalisation(
@@ -83,18 +89,6 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     public void should_return_given_email_address_from_asylum_case() {
         assertTrue(legalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList(asylumCase)
             .contains(legalRepEmailAddress));
-    }
-
-    @Test
-    public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
-        // given
-        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
-
-        // when
-        // then
-        assertThatThrownBy(() -> legalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
     }
 
     @Test

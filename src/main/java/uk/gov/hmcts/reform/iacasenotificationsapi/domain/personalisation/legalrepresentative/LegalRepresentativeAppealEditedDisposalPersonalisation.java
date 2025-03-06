@@ -4,13 +4,16 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.UserDetailsProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
@@ -24,21 +27,34 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisation implements L
     private final String appealEditedLegalRepresentativeDisposalTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+    private final UserDetailsProvider userDetailsProvider;
 
     public LegalRepresentativeAppealEditedDisposalPersonalisation(
         @NotNull(message = "appealEditedLegalRepresentativeDisposalTemplateId cannot be null")
         @Value("${govnotify.template.appealEdited.legalRep.disposal.email}") String appealEditedLegalRepresentativeDisposalTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        CustomerServicesProvider customerServicesProvider
+        CustomerServicesProvider customerServicesProvider,
+        UserDetailsProvider userDetailsProvider
     ) {
         this.appealEditedLegalRepresentativeDisposalTemplateId = appealEditedLegalRepresentativeDisposalTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
+        this.userDetailsProvider = userDetailsProvider;
 
         log.info(
             "-------------LegalRepresentativeAppealEditedDisposalPersonalisation appealEditedLegalRepresentativeDisposalTemplateId {}",
             appealEditedLegalRepresentativeDisposalTemplateId
         );
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+
+        log.info(
+            "-------------LegalRepresentativeAppealEditedDisposalPersonalisation.getRecipientsList {}",
+            userDetailsProvider.getUserDetails().getEmailAddress()
+        );
+        return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
     }
 
     @Override
