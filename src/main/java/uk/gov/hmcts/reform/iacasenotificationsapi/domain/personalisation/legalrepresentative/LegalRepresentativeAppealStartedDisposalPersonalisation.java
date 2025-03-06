@@ -6,16 +6,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.ChangeOrganisationRequest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CHANGE_ORGANISATION_REQUEST_FIELD;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_EMAIL_EJP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isEjpCase;
 
 @Service
 @Slf4j
@@ -39,6 +49,40 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
             "-------------3LegalRepresentativeAppealStartedDisposalPersonalisation appealStartedLegalRepresentativeDisposalTemplateId {}",
             appealStartedLegalRepresentativeDisposalTemplateId
         );
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+
+        log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList ");
+        if (asylumCase.read(JOURNEY_TYPE, JourneyType.class)
+                .map(type -> Objects.equals(type.getValue(), JourneyType.AIP.getValue()))
+                .orElse(false)) {
+            log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 111");
+
+            return Collections.emptySet();
+        }
+
+        if (asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
+                .map(it -> it.getCaseRoleId() == null)
+                .orElse(false)) {
+
+            log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 222");
+            return Collections.emptySet();
+        }
+
+        if (isEjpCase(asylumCase)) {
+            log.info("-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 333");
+            return Collections.singleton(asylumCase
+                    .read(LEGAL_REP_EMAIL_EJP, String.class)
+                    .orElseThrow(() -> new IllegalStateException("legalRepEmailEjp is not present")));
+        }
+
+        log.info(
+            "-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList 444 {}",
+            getLegalRepEmailInternalOrLegalRepJourney(asylumCase)
+        );
+        return Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
     }
 
     @Override

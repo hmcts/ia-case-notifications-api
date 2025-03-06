@@ -399,11 +399,15 @@ public class AsylumCaseUtils {
     }
 
     public static String getLegalRepEmailInternalOrLegalRepJourney(final AsylumCase asylumCase) {
+        log.info("-------------getLegalRepEmailInternalOrLegalRepJourney");
         if (isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)) {
+            log.info("-------------getLegalRepEmailInternalOrLegalRepJourney 222");
             return asylumCase.read(LEGAL_REP_EMAIL, String.class).orElseThrow(() -> new IllegalStateException("legalRepEmail is not present"));
         } else if (isInternalCase(asylumCase) && !hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)) {
+            log.info("-------------getLegalRepEmailInternalOrLegalRepJourney 333");
             return StringUtils.EMPTY;
         } else {
+            log.info("-------------getLegalRepEmailInternalOrLegalRepJourney 444");
             return asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));
         }
     }

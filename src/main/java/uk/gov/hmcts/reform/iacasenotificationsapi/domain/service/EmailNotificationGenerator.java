@@ -73,11 +73,16 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final Callback<AsylumCase> callback
     ) {
         log.info(
-                "--------------3EmailNotificationGenerator.createEmail referenceId {}",
-                referenceId
+            "--------------3EmailNotificationGenerator.createEmail referenceId {}",
+            referenceId
         );
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
+        log.info(
+            "--------------3EmailNotificationGenerator.createEmail referenceId {} subscriberEmails {}",
+            referenceId,
+            subscriberEmails
+        );
 
         return subscriberEmails.stream()
             .filter(this::isValidEmailAddress)
