@@ -34,6 +34,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.notificationAlreadySentToday;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -4868,7 +4869,7 @@ public class NotificationHandlerConfiguration {
                         callback.getEvent(),
                         isRepJourney(asylumCase)
                     );
-                    return isRepJourney(asylumCase);
+                    return isRepJourney(asylumCase) && !isInternalCase(asylumCase);
                 } else {
                     log.info(
                         "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
@@ -4919,7 +4920,7 @@ public class NotificationHandlerConfiguration {
                         callback.getEvent(),
                         isRepJourney(asylumCase)
                     );
-                    return isRepJourney(asylumCase);
+                    return isRepJourney(asylumCase) && !isInternalCase(asylumCase);
                 } else {
                     log.info(
                         "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",

@@ -72,26 +72,30 @@ public class BailNotificationHandlerConfiguration {
 
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_BAIL_APPLICATION;
-                log.info(
-                    "--------------------3canHandle Bail editAppealLegalRepDisposalNotification {} {} {}",
-                    callbackStage,
-                    callback.getEvent(),
-                    canBeHandled
-                );
 
                 if (canBeHandled) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
                     if (bailNotificationAlreadySentToday(bailCase)) {
                         log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
-                                callbackStage,
-                                callback.getEvent(),
-                                false
+                            callbackStage,
+                            callback.getEvent(),
+                            false
                         );
                         return false;
                     } else {
+                        log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                            callbackStage,
+                            callback.getEvent(),
+                            true
+                        );
                         return true;
                     }
                 } else {
+                    log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
                     return false;
                 }
             },
