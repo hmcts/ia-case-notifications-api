@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.BailCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_APPLICATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.START_APPLICATION;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.BailCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ListingEvent;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
@@ -42,15 +44,28 @@ public class BailNotificationHandlerConfiguration {
                     callback.getEvent()
                 );
 
-                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == START_APPLICATION;
-                log.info(
-                    "--------------------3canHandle startApplicationDisposalNotification {} {} {}",
-                    callbackStage,
-                    callback.getEvent(),
-                    res
-                );
-                return res;
+
+                if (canBeHandled) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+
+                    log.info(
+                        "--------------------3canHandle startApplicationDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        isInternalCase(bailCase)
+                    );
+                    return isInternalCase(bailCase);
+                } else {
+                    log.info(
+                        "--------------------3canHandle startApplicationDisposalNotification {} {} {}",
+                        callbackStage,
+                        callback.getEvent(),
+                        false
+                    );
+                    return false;
+                }
             },
             bailNotificationGenerators,
             getErrorHandler()
