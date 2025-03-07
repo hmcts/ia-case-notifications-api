@@ -1695,6 +1695,10 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
     caseworker-ia-admofficer:
+      - "startAppeal"
+      - "editAppeal"
+      - "startApplication"
+      - "editBailApplication"
       - "listCase"
       - "submitAppeal"
       - "editAppeal"
