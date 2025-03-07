@@ -53,9 +53,9 @@ public class BailNotificationHandlerConfiguration {
                         "--------------------3canHandle startApplicationDisposalNotification {} {} {}",
                         callbackStage,
                         callback.getEvent(),
-                        isInternalCase(bailCase)
+                        !isInternalCase(bailCase)
                     );
-                    return isInternalCase(bailCase);
+                    return !isInternalCase(bailCase);
                 } else {
                     log.info(
                         "--------------------3canHandle startApplicationDisposalNotification {} {} {}",
@@ -100,9 +100,9 @@ public class BailNotificationHandlerConfiguration {
                         log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
                             callbackStage,
                             callback.getEvent(),
-                            true
+                            !isInternalCase(bailCase)
                         );
-                        return true;
+                        return !isInternalCase(bailCase);
                     }
                 } else {
                     log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
