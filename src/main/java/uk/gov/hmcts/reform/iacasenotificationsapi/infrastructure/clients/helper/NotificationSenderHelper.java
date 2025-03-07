@@ -46,11 +46,19 @@ public class NotificationSenderHelper<T extends CaseData> {
         Logger logger,
         Callback<T> callback
     ) {
+        log.info(
+            "--------------NotificationSenderHelper.sendEmail reference {}",
+            reference
+        );
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
         return recentDeliveryReceiptCache.get(
             emailAddress + reference,
             k -> {
                 try {
+                    log.info(
+                        "--------------NotificationSenderHelper Attempting to send emai reference {}",
+                        reference
+                    );
                     logger.info("Attempting to send email notification to GovNotify: {}", reference);
 
                     SendEmailResponse response = notificationClient.sendEmail(
