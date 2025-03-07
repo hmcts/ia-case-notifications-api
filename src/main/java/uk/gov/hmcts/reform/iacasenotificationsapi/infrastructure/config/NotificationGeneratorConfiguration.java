@@ -3894,7 +3894,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("editAppealAipAppellantDisposalNotificationGenerator")
     public List<NotificationGenerator> editAppealAipAppellantDisposalNotificationGenerator(
-        AipAppellantStartAppealDisposalPersonalisationEmail appellantEditAppealDisposalPersonalisationEmail,
+        AipAppellantEditAppealDisposalPersonalisationEmail appellantEditAppealDisposalPersonalisationEmail,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
