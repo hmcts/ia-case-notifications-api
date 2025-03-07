@@ -37,15 +37,15 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
     private final String iaExUiFrontendUrl = "url";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String legalRepReference = "someLegalRepReference";
-    private final String applicantGivenNames = "someApplicantGivenNames";
-    private final String applicantFamilyName = "someApplicantFamilyName";
+    private final String legalRepName = "someLegalRepName";
+    private final String legalRepFamilyName = "someLegalRepFamilyName";
 
     private LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
-        when(bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(applicantGivenNames));
-        when(bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
+        when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+        when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.of(legalRepFamilyName));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.of(legalRepReference));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
@@ -96,8 +96,8 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
         // then
         assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(legalRepName, personalisation.get("legalRepName"));
+        assertEquals(legalRepFamilyName, personalisation.get("legalRepFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertNotNull(personalisation.get("editingDate"));
     }
@@ -105,8 +105,8 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
         // given
-        when(bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-        when(bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         // when
@@ -115,7 +115,7 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
         // then
         assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("legalRepName"));
+        assertEquals("", personalisation.get("legalRepFamilyName"));
     }
 }
