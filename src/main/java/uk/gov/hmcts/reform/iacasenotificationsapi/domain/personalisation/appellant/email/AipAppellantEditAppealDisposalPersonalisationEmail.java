@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -61,13 +62,20 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+        Optional<String> appellantGivenamesOpt = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class);
+        Optional<String> appellantFamilyNameOpt = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class);
+        String appellantFullName;
+        if (appellantGivenamesOpt.isEmpty() && appellantFamilyNameOpt.isEmpty()) {
+            appellantFullName = "Appellant";
+        } else {
+            appellantFullName = appellantGivenamesOpt.orElse("") + " " + appellantFamilyNameOpt.orElse("");
+        }
         return
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("appellantFullName", appellantFullName)
                 .put("linkToOnlineService", iaAipFrontendUrl)
                 .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
                 .build();
