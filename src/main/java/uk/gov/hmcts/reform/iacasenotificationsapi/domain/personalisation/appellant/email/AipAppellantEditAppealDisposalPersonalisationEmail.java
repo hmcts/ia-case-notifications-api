@@ -59,10 +59,7 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
-        AsylumCase asylumCase =
-            callback
-                .getCaseDetails()
-                .getCaseData();
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         return
             ImmutableMap
