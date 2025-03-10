@@ -31,7 +31,7 @@ public enum NationalityGovUk {
     BM("Bermuda"),
     BT("Bhutan"),
     BO("Bolivia"),
-    BQ("Bonaire, Sint Eustatius and Saba"),
+    BQ("Bonaire"),
     BA("Bosnia and Herzegovina"),
     BW("Botswana"),
     BV("Bouvet Island"),
