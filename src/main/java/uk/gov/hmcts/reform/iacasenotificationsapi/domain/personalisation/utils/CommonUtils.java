@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
