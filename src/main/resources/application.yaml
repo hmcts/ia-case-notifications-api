@@ -1756,6 +1756,8 @@ security:
       - "progressMigratedCase"
       - "refundConfirmation"
     caseworker-ia-homeofficeapc:
+      - "startApplication"
+      - "editBailApplication"
       - "uploadHomeOfficeBundle"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
@@ -1764,6 +1766,8 @@ security:
       - "respondToCosts"
       - "addEvidenceForCosts"
     caseworker-ia-homeofficelart:
+      - "startApplication"
+      - "editBailApplication"
       - "uploadHomeOfficeAppealResponse"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
@@ -1772,6 +1776,8 @@ security:
       - "respondToCosts"
       - "addEvidenceForCosts"
     caseworker-ia-homeofficepou:
+      - "startApplication"
+      - "editBailApplication"
       - "uploadAdditionalEvidenceHomeOffice"
       - "uploadAddendumEvidenceHomeOffice"
       - "applyForFTPARespondent"
@@ -1840,6 +1846,8 @@ security:
       - "sendPaymentReminderNotification"
       - "recordRemissionReminder"
     caseworker-ia-homeofficebail:
+      - "startApplication"
+      - "editBailApplication"
       - "submitApplication"
       - "uploadBailSummary"
       - "uploadDocuments"
