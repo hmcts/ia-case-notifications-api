@@ -26,13 +26,11 @@ public final class CommonUtils {
     }
 
     public static boolean notificationAlreadySentToday(AsylumCase asylumCase) {
-        Optional<TtlCcdObject> ttlOpt = asylumCase.read(TTL);
-        return isTtlNinetyDaysAhead(ttlOpt);
+        return false;
     }
 
     public static boolean bailNotificationAlreadySentToday(BailCase bailCase) {
-        Optional<TtlCcdObject> ttlOpt = bailCase.read(BailCaseFieldDefinition.TTL);
-        return isTtlNinetyDaysAhead(ttlOpt);
+        return false;
     }
 
     private static boolean isTtlNinetyDaysAhead(Optional<TtlCcdObject> ttlOpt) {

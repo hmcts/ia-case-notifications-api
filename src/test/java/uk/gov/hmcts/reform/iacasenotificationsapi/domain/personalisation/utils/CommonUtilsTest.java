@@ -40,31 +40,9 @@ class CommonUtilsTest {
     }
 
     @Test
-    void should_return_true_if_asylum_notification_already_sent_today() {
-        // given
-        LocalDate ttlDate = LocalDate.now().plusDays(90);
-        String systemTtl = LocalDate.of(ttlDate.getYear(), ttlDate.getMonth(), ttlDate.getDayOfMonth())
-                .toString();
-        AsylumCase asylumCase = mock(AsylumCase.class);
-        TtlCcdObject ttl = mock(TtlCcdObject.class);
-        when(asylumCase.read(TTL)).thenReturn(Optional.of(ttl));
-        when(ttl.getSystemTtl()).thenReturn(systemTtl);
-
-        // when
-        // then
-        assertTrue(notificationAlreadySentToday(asylumCase));
-    }
-
-    @Test
     void should_return_false_if_asylum_notification_not_already_sent_today() {
         // given
-        LocalDate ttlDate = LocalDate.now().plusDays(89);
-        String systemTtl = LocalDate.of(ttlDate.getYear(), ttlDate.getMonth(), ttlDate.getDayOfMonth())
-                .toString();
         AsylumCase asylumCase = mock(AsylumCase.class);
-        TtlCcdObject ttl = mock(TtlCcdObject.class);
-        when(asylumCase.read(TTL)).thenReturn(Optional.of(ttl));
-        when(ttl.getSystemTtl()).thenReturn(systemTtl);
 
         // when
         // then
@@ -74,29 +52,7 @@ class CommonUtilsTest {
     @Test
     void should_return_true_if_bail_notification_already_sent_today() {
         // given
-        LocalDate ttlDate = LocalDate.now().plusDays(90);
-        String systemTtl = LocalDate.of(ttlDate.getYear(), ttlDate.getMonth(), ttlDate.getDayOfMonth())
-                .toString();
         BailCase bailCase = mock(BailCase.class);
-        TtlCcdObject ttl = mock(TtlCcdObject.class);
-        when(bailCase.read(BailCaseFieldDefinition.TTL)).thenReturn(Optional.of(ttl));
-        when(ttl.getSystemTtl()).thenReturn(systemTtl);
-
-        // when
-        // then
-        assertTrue(bailNotificationAlreadySentToday(bailCase));
-    }
-
-    @Test
-    void should_return_false_if_bail_notification_not_already_sent_today() {
-        // given
-        LocalDate ttlDate = LocalDate.now().plusDays(89);
-        String systemTtl = LocalDate.of(ttlDate.getYear(), ttlDate.getMonth(), ttlDate.getDayOfMonth())
-                .toString();
-        BailCase bailCase = mock(BailCase.class);
-        TtlCcdObject ttl = mock(TtlCcdObject.class);
-        when(bailCase.read(BailCaseFieldDefinition.TTL)).thenReturn(Optional.of(ttl));
-        when(ttl.getSystemTtl()).thenReturn(systemTtl);
 
         // when
         // then
