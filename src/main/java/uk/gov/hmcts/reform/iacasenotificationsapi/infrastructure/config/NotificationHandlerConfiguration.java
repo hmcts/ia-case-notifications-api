@@ -32,7 +32,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.notificationAlreadySentToday;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
@@ -4850,33 +4849,15 @@ public class NotificationHandlerConfiguration {
         @Qualifier("startAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
-        log.info("--------------------3NotificationHandlerConfiguration startAppealLegalRepDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                log.info(
-                    "--------------------3handling startAppealLegalRepDisposalNotification {} {}",
-                    callbackStage,
-                    callback.getEvent()
-                );
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == START_APPEAL;
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    log.info(
-                        "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        isRepJourney(asylumCase)
-                    );
                     return isRepJourney(asylumCase) && !isInternalCase(asylumCase);
                 } else {
-                    log.info(
-                        "--------------------3canHandle startAppealLegalRepDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
                     return false;
                 }
             },
@@ -4890,44 +4871,16 @@ public class NotificationHandlerConfiguration {
         @Qualifier("editAppealLegalRepDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
-        log.info("--------------------3NotificationHandlerConfiguration editAppealLegalRepDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                log.info("--------------------3handling editAppealLegalRepDisposalNotification {} {}",
-                    callbackStage,
-                    callback.getEvent()
-                );
-
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_APPEAL;
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
 
-                    if (notificationAlreadySentToday(asylumCase)) {
-                        log.info(
-                            "--------------------3handling editAppealLegalRepDisposalNotification {} {} {}",
-                            callbackStage,
-                            callback.getEvent(),
-                            false
-                        );
-                        return false;
-                    }
-
-                    log.info(
-                        "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        isRepJourney(asylumCase)
-                    );
                     return isRepJourney(asylumCase) && !isInternalCase(asylumCase);
                 } else {
-                    log.info(
-                        "--------------------3canHandle editAppealLegalRepDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
                     return false;
                 }
             },
@@ -4940,7 +4893,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> startAppealAipAppellantDisposalNotificationHandler(
         @Qualifier("startAppealAipAppellantDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-        log.info("--------------------3NotificationHandlerConfiguration startAppealAipAppellantDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
 
@@ -4949,20 +4901,8 @@ public class NotificationHandlerConfiguration {
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    log.info(
-                        "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        isAipJourney(asylumCase)
-                    );
                     return isAipJourney(asylumCase);
                 } else {
-                    log.info(
-                        "--------------------3canHandle startAppealAipAppellantDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
                     return false;
                 }
             },
@@ -4976,45 +4916,15 @@ public class NotificationHandlerConfiguration {
         @Qualifier("editAppealAipAppellantDisposalNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
-        log.info("--------------------3NotificationHandlerConfiguration editAppealAipAppellantDisposalNotification");
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                log.info(
-                    "--------------------3handling editAppealAipAppellantDisposalNotification {} {}",
-                    callbackStage,
-                    callback.getEvent()
-                );
-
-
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == EDIT_APPEAL;
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    if (notificationAlreadySentToday(asylumCase)) {
-                        log.info(
-                            "--------------------3handling editAppealAipAppellantDisposalNotification {} {} {}",
-                            callbackStage,
-                            callback.getEvent(),
-                            false
-                        );
-                        return false;
-                    } else {
-                        log.info(
-                            "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
-                            callbackStage,
-                            callback.getEvent(),
-                            isAipJourney(asylumCase)
-                        );
-                        return isAipJourney(asylumCase);
-                    }
+                    return isAipJourney(asylumCase);
                 } else {
-                    log.info(
-                        "--------------------3canHandle editAppealAipAppellantDisposalNotification {} {} {}",
-                        callbackStage,
-                        callback.getEvent(),
-                        false
-                    );
                     return false;
                 }
             },
