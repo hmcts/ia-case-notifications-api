@@ -51,10 +51,6 @@ public class NotificationSenderHelper<T extends CaseData> {
             emailAddress + reference,
             k -> {
                 try {
-                    log.info(
-                        "--------------NotificationSenderHelper Attempting to send emai reference {}",
-                        reference
-                    );
                     logger.info("Attempting to send email notification to GovNotify: {}", reference);
 
                     SendEmailResponse response = notificationClient.sendEmail(
