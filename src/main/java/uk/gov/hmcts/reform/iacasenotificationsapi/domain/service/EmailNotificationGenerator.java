@@ -41,28 +41,11 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
             .setCorrectEmail(asylumCase);
 
-        log.info(
-            "--------------3EmailNotificationGenerator.generate {}",
-            callback.getCaseDetails().getId()
-        );
-
         personalisationList.forEach(personalisation -> {
 
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
-            log.info(
-                "--------------3EmailNotificationGenerator.generate referenceId {}",
-                referenceId
-            );
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
-            log.info(
-                "--------------311EmailNotificationGenerator.generate referenceId {}",
-                referenceId
-            );
             notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
-            log.info(
-                "--------------322EmailNotificationGenerator.generate referenceId {}",
-                referenceId
-            );
         });
     }
 
@@ -72,17 +55,8 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final String referenceId,
         final Callback<AsylumCase> callback
     ) {
-        log.info(
-            "--------------3EmailNotificationGenerator.createEmail referenceId {}",
-            referenceId
-        );
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
-        log.info(
-            "--------------3EmailNotificationGenerator.createEmail referenceId {} subscriberEmails {}",
-            referenceId,
-            subscriberEmails
-        );
 
         return subscriberEmails.stream()
             .filter(this::isValidEmailAddress)
@@ -104,11 +78,6 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         String emailTemplateId = personalisation.getTemplateId() == null
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
-        log.info(
-            "--------------3EmailNotificationGenerator.sendEmail referenceId {} emailTemplateId {}",
-            referenceId,
-            emailTemplateId
-        );
 
         return notificationSender.sendEmail(
             emailTemplateId,

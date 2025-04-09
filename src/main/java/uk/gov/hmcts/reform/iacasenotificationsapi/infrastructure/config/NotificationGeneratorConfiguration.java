@@ -4458,8 +4458,6 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        log.info("--------------------3NotificationGeneratorConfiguration startAppealLegalRepDisposalNotificationGenerator");
-
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
@@ -4477,8 +4475,6 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        log.info("--------------------3NotificationGeneratorConfiguration editAppealLegalRepDisposalNotificationGenerator");
-
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(

@@ -18,10 +18,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 public class NotificationIdAppender {
 
     public void appendAll(final AsylumCase asylumCase, final String referenceId, final List<String> notificationIds) {
-        log.info(
-            "--------------NotificationIdAppender.appendAll referenceId {}",
-            referenceId
-        );
         Optional<List<IdValue<String>>> maybeNotificationSent =
             asylumCase.read(NOTIFICATIONS_SENT);
 

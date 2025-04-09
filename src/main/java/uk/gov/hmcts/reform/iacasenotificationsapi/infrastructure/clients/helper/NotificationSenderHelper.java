@@ -46,10 +46,6 @@ public class NotificationSenderHelper<T extends CaseData> {
         Logger logger,
         Callback<T> callback
     ) {
-        log.info(
-            "--------------NotificationSenderHelper.sendEmail reference {}",
-            reference
-        );
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
         return recentDeliveryReceiptCache.get(
             emailAddress + reference,

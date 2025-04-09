@@ -40,29 +40,15 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.userDetailsProvider = userDetailsProvider;
-
-        log.info(
-            "-------------3LegalRepresentativeAppealStartedDisposalPersonalisation appealStartedLegalRepresentativeDisposalTemplateId {}",
-            appealStartedLegalRepresentativeDisposalTemplateId
-        );
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-
-        log.info(
-            "-------------LegalRepresentativeAppealStartedDisposalPersonalisation.getRecipientsList {}",
-            userDetailsProvider.getUserDetails().getEmailAddress()
-        );
         return Collections.singleton(userDetailsProvider.getUserDetails().getEmailAddress());
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        log.info(
-            "-------------3LegalRepresentativeAppealStartedDisposalPersonalisation getTemplateId {}",
-            appealStartedLegalRepresentativeDisposalTemplateId
-        );
         return appealStartedLegalRepresentativeDisposalTemplateId;
     }
 
@@ -85,11 +71,6 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("creationDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .build();
-
-        log.info(
-            "--------------------3LegalRepresentativeAppealStartedDisposalPersonalisation.getPersonalisation {}",
-            res
-        );
 
         return res;
     }
