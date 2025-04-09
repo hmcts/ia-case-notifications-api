@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
 @Service
@@ -51,13 +52,17 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisation implements Ema
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "callback must not be null");
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return
             ImmutableMap
                 .<String, String>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("ccdCaseId", String.valueOf(callback.getCaseDetails().getId()))
                 .putAll(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
                 .build();
     }

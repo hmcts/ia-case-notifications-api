@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
@@ -65,7 +66,10 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "callback must not be null");
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return
@@ -73,6 +77,7 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
                 .<String, String>builder()
                 .putAll(adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase))
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("ccdCaseId", String.valueOf(callback.getCaseDetails().getId()))
                 .build();
     }
 }
