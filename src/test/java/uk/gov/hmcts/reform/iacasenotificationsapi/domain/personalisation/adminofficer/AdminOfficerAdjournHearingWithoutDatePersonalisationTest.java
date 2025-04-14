@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
@@ -32,18 +33,18 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
-    private String templateId = "someTemplateId";
-
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
+    private final String templateId = "someTemplateId";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
+    private final String ccdReferenceNumber = "1234 2345 3456 4567";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String listRef = "LP/12345/2019";
 
     private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerdjournHearingWithoutDatePersonalisation;
 
     @BeforeEach
     public void setup() {
-        String appealReferenceNumber = "someReferenceNumber";
-        String appellantGivenNames = "someAppellantGivenNames";
-        String appellantFamilyName = "someAppellantFamilyName";
-        String listRef = "LP/12345/2019";
         when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()
@@ -52,6 +53,7 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
                 .put("appellantFamilyName", appellantFamilyName)
                 .put("ariaListingReference", listRef)
                 .build());
+        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
 
         adminOfficerdjournHearingWithoutDatePersonalisation =
             new AdminOfficerAdjournHearingWithoutDatePersonalisation(templateId, adminOfficerEmailAddress,
@@ -89,14 +91,17 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
-        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
-            .thenReturn(ImmutableMap.<String, String>builder().build());
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(adminOfficerdjournHearingWithoutDatePersonalisation);
+
         Map<String, String> personalisation =
             adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(ccdReferenceNumber, personalisation.get("ccdReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(listRef, personalisation.get("ariaListingReference"));
     }
 }

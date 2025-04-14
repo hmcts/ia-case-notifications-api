@@ -49,14 +49,14 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
     private PersonalisationProvider personalisationProvider;
     @Mock
     JSONObject jsonDocument;
-    private String templateId = "templateId";
+    private final String templateId = "templateId";
+    private final String ccdReferenceNumber = "1234 2345 3456 4567";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final Long caseId = 12345L;
     private DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation;
 
     DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
@@ -73,6 +73,7 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
 
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(doc)));
+        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonDocument);
 
         detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation = new DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation(
@@ -95,6 +96,7 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_ADJOURN_HEARING_WITHOUT_DATE_DET",
             detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation.getReferenceId(caseId));
     }
@@ -127,6 +129,7 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(yesOrNo));
 
         final Map<String, Object> expectedPersonalisation = new HashMap<>();
+        expectedPersonalisation.put("ccdReferenceNumber", ccdReferenceNumber);
         expectedPersonalisation.put("appealReferenceNumber", appealReferenceNumber);
         expectedPersonalisation.put("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
         expectedPersonalisation.put("appellantGivenNames", appellantGivenNames);
