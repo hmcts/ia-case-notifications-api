@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
-
 @Service
 public class AdminOfficerReviewHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
 
@@ -73,6 +72,7 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
                 .<String, String>builder()
                 .putAll(adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase))
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("ccdReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .build();
     }
 }
