@@ -16,7 +16,7 @@
           "remissionDecision": "partiallyApproved",
           "remittedAmount": "10000",
           "amountLeftToPay": "4000",
-          "ccdReferenceNumberForDisplay": "1111222233334444",
+          "ccdReferenceNumberForDisplay": "1234 2345 3456 4567",
           "isDlrmFeeRemissionEnabled": "Yes"
         }
       }
