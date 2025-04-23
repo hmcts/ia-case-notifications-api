@@ -71,6 +71,8 @@ java:
         - name: home-office-hatton-cross-email
           alias: IA_HOME_OFFICE_HATTON_CROSS_EMAIL
         - name: home-office-glasgow-email
+          alias: IA_HOME_OFFICE_HARMONDSWORTH_EMAIL
+        - name: hearing-centre-harmondsworth-email
           alias: IA_HOME_OFFICE_GLASGOW_EMAIL
         - name: home-office-apc-email
           alias: IA_HOME_OFFICE_APC_EMAIL
