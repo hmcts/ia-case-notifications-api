@@ -28,7 +28,6 @@ def secrets = [
         secret('hearing-centre-north-shields-email', 'IA_HEARING_CENTRE_NORTH_SHIELDS_EMAIL'),
         secret('hearing-centre-birmingham-email', 'IA_HEARING_CENTRE_BIRMINGHAM_EMAIL'),
         secret('hearing-centre-hatton-cross-email', 'IA_HEARING_CENTRE_HATTON_CROSS_EMAIL'),
-        secret('hearing-centre-harmondsworth-email', 'IA_HOME_OFFICE_HARMONDSWORTH_EMAIL'),
         secret('hearing-centre-glasgow-email', 'IA_HEARING_CENTRE_GLASGOW_EMAIL'),
 
         secret('home-office-bradford-email', 'IA_HOME_OFFICE_BRADFORD_EMAIL'),
