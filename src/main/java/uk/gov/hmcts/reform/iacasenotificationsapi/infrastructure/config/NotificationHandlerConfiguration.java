@@ -35,6 +35,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -4877,8 +4879,6 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == EDIT_APPEAL;
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
-
                     return isRepJourney(asylumCase) && !isInternalCase(asylumCase);
                 } else {
                     return false;
@@ -4923,7 +4923,20 @@ public class NotificationHandlerConfiguration {
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return isAipJourney(asylumCase);
+
+                    boolean res = isAipJourney(asylumCase);
+
+                    if (res) {
+                        String latestEditAppealNotificationDateStr =
+                                asylumCase.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
+                        Optional<LocalDate> latestEditAppealNotificationDate =
+                                parseDate(latestEditAppealNotificationDateStr);
+                        if (latestEditAppealNotificationDate.isEmpty()) {
+                            asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
+                        }
+                    }
+
+                    return res;
                 } else {
                     return false;
                 }
@@ -6900,5 +6913,14 @@ public class NotificationHandlerConfiguration {
     private boolean isDlrmFeeRefundEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_FEE_REFUND_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private Optional<LocalDate> parseDate(String dateStr) {
+        try {
+            return Optional.of(LocalDate.parse(dateStr));
+        } catch (DateTimeParseException ex) {
+            log.error("Date Str [{}] can't be parsed", dateStr);
+        }
+        return Optional.empty();
     }
 }
