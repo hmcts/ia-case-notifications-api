@@ -4921,17 +4921,21 @@ public class NotificationHandlerConfiguration {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == EDIT_APPEAL;
 
+                log.info("----------111");
                 if (canBeHandled) {
+                    log.info("----------222");
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     boolean res = isAipJourney(asylumCase);
 
                     if (res) {
+                        log.info("----------333");
                         String latestEditAppealNotificationDateStr =
                                 asylumCase.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
                         Optional<LocalDate> latestEditAppealNotificationDate =
                                 parseDate(latestEditAppealNotificationDateStr);
                         if (latestEditAppealNotificationDate.isEmpty()) {
+                            log.info("----------444");
                             asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
                         }
                     }
