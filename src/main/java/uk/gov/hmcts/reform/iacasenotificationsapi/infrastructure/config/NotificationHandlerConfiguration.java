@@ -4928,9 +4928,10 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     Optional<CaseDetails<AsylumCase>> caseDetailsBeforeOpt = callback.getCaseDetailsBefore();
 
+                    AsylumCase asylumCaseBefore;
                     if (caseDetailsBeforeOpt.isPresent()) {
                         log.info("----------222 caseDetailsBeforeOpt.isPresent() true");
-                        AsylumCase asylumCaseBefore = caseDetailsBeforeOpt.get().getCaseData();
+                        asylumCaseBefore = caseDetailsBeforeOpt.get().getCaseData();
                         String latestEditAppealNotificationDateBeforeStr =
                                 asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
                         log.info("----------222: " + latestEditAppealNotificationDateBeforeStr + "|");
@@ -4938,14 +4939,16 @@ public class NotificationHandlerConfiguration {
                                 parseDate(latestEditAppealNotificationDateBeforeStr);
                         log.info("----------222: " + latestEditAppealNotificationDateBeforeOpt + "|");
                     } else {
+                        // should be never reached
                         log.info("----------222 caseDetailsBeforeOpt.isPresent() false");
+                        asylumCaseBefore = callback.getCaseDetails().getCaseData();
                     }
 
                     boolean res = isAipJourney(asylumCase);
 
                     if (res) {
                         String latestEditAppealNotificationDateStr =
-                                asylumCase.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
+                                asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
                         log.info("----------333: " + latestEditAppealNotificationDateStr + "|");
                         Optional<LocalDate> latestEditAppealNotificationDateOpt =
                                 parseDate(latestEditAppealNotificationDateStr);
@@ -4956,7 +4959,7 @@ public class NotificationHandlerConfiguration {
                             log.info("----------555");
                             asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, today.toString());
                         } else {
-                            String caseRef = asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse("");
+                            String caseRef = asylumCaseBefore.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse("");
 
                             log.info(
                                 "Notification upon editAppeal event for case {} already sent on {}",
