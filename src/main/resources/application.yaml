@@ -1871,86 +1871,86 @@ idam:
 ### Email addresses
 
 adminEmailAddresses:
-  newport: ${IA_ADMIN_NEWPORT_EMAIL:newportedets@example.com}
-  taylorHouse: ${IA_ADMIN_TAYLOR_HOUSE_EMAIL:taylorhouseedets@example.com}
-  hattonCross: ${IA_ADMIN_HATTON_CROSS_EMAIL:hattonxedets@example.com}
-  manchester: ${IA_ADMIN_MANCHESTER_EMAIL:manchesteredets@example.com}
-  glasgow: ${IA_ADMIN_GLASGOW_EMAIL:glasgowedets@example.com}
-  bradford: ${IA_ADMIN_BRADFORD_EMAIL:bradfordedets@example.com}
-  birmingham: ${IA_ADMIN_BIRMINGHAM_EMAIL:birminghamedets@example.com}
-  harmondsworth: ${IA_ADMIN_HARMONDSWORTH_EMAIL:harmondsworthedets@example.com}
-  yarlsWood: ${IA_ADMIN_YARLSWOOD_EMAIL:yarlswoodedets@example.com}
+  newport: Elize.Reyes@HMCTS.NET
+  taylorHouse: Elize.Reyes@HMCTS.NET
+  hattonCross: Elize.Reyes@HMCTS.NET
+  manchester: Elize.Reyes@HMCTS.NET
+  glasgow: Elize.Reyes@HMCTS.NET
+  bradford: Elize.Reyes@HMCTS.NET
+  birmingham: Elize.Reyes@HMCTS.NET
+  harmondsworth: Elize.Reyes@HMCTS.NET
+  yarlsWood: Elize.Reyes@HMCTS.NET
 
 hearingCentreEmailAddresses:
-  bradford: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
-  manchester: ${IA_HEARING_CENTRE_MANCHESTER_EMAIL:hc-manchester@example.com}
-  newport: ${IA_HEARING_CENTRE_NEWPORT_EMAIL:hc-newport@example.com}
-  taylorHouse: ${IA_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:hc-taylorhouse@example.com}
-  northShields: ${IA_HEARING_CENTRE_NORTH_SHIELDS_EMAIL:hc-north-shields@example.com}
-  newcastle: ${IA_HEARING_CENTRE_NORTH_SHIELDS_EMAIL:hc-north-shields@example.com}
-  birmingham: ${IA_HEARING_CENTRE_BIRMINGHAM_EMAIL:hc-birmingham@example.com}
-  hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
-  glasgow: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
-  belfast: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
-  harmondsworth: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
-  hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:hc-hendon@example.com}
-  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:hc-yarls-wood@example.com}
-  bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:hc-bradford-keighley@example.com}
-  mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:hc-mcc-minshull@example.com}
-  mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:hc-mcc-crown-square@example.com}
-  manchesterMags: ${IA_HOME_OFFICE_MANCHESTER_MAGS_EMAIL:hc-manchester-mags@example.com}
-  nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:hc-nth-tyne-mags@example.com}
-  leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:hc-leeds-mags@example.com}
-  alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif@example.com}
+  bradford: Elize.Reyes@HMCTS.NET
+  manchester: Elize.Reyes@HMCTS.NET
+  newport: Elize.Reyes@HMCTS.NET
+  taylorHouse: Elize.Reyes@HMCTS.NET
+  northShields: Elize.Reyes@HMCTS.NET
+  newcastle: Elize.Reyes@HMCTS.NET
+  birmingham: Elize.Reyes@HMCTS.NET
+  hattonCross: Elize.Reyes@HMCTS.NET
+  glasgow: Elize.Reyes@HMCTS.NET
+  belfast: Elize.Reyes@HMCTS.NET
+  harmondsworth: Elize.Reyes@HMCTS.NET
+  hendon: Elize.Reyes@HMCTS.NET
+  yarlsWood: Elize.Reyes@HMCTS.NET
+  bradfordKeighley: Elize.Reyes@HMCTS.NET
+  mccMinshull: Elize.Reyes@HMCTS.NET
+  mccCrownSquare: Elize.Reyes@HMCTS.NET
+  manchesterMags: Elize.Reyes@HMCTS.NET
+  nthTyneMags: Elize.Reyes@HMCTS.NET
+  leedsMags: Elize.Reyes@HMCTS.NET
+  alloaSherrif: Elize.Reyes@HMCTS.NET
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
-  yarlswood: ${IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL:hc-bradford@example.com}
-  glasgow: ${IA_BAIL_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow@example.com}
-  manchester: ${IA_BAIL_HEARING_CENTRE_MANCHESTER_EMAIL:hc-manchester@example.com}
-  hattonCross: ${IA_BAIL_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross@example.com}
-  taylorHouse: ${IA_BAIL_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:hc-taylorhouse@example.com}
-  newport: ${IA_BAIL_HEARING_CENTRE_NEWPORT_EMAIL:hc-newport@example.com}
-  birmingham: ${IA_BAIL_HEARING_CENTRE_BIRMINGHAM_EMAIL:hc-birmingham@example.com}
-  bradford: ${IA_BAIL_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
+  yarlswood: Elize.Reyes@HMCTS.NET
+  glasgow: Elize.Reyes@HMCTS.NET
+  manchester: Elize.Reyes@HMCTS.NET
+  hattonCross: Elize.Reyes@HMCTS.NET
+  taylorHouse: Elize.Reyes@HMCTS.NET
+  newport: Elize.Reyes@HMCTS.NET
+  birmingham: Elize.Reyes@HMCTS.NET
+  bradford: Elize.Reyes@HMCTS.NET
 
 ### POU Email addresses (Case listed)
 homeOfficeEmailAddresses:
-  bradford: ${IA_HOME_OFFICE_BRADFORD_EMAIL:ho-bradford@example.com}
-  manchester: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ho-manchester@example.com}
-  newport: ${IA_HOME_OFFICE_NEWPORT_EMAIL:ho-newport@example.com}
-  taylorHouse: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-taylorhouse@example.com}
-  northShields: ${IA_HOME_OFFICE_NORTH_SHIELDS_EMAIL:ho-north-shields@example.com}
-  newcastle: ${IA_HOME_OFFICE_NORTH_SHIELDS_EMAIL:ho-north-shields@example.com}
-  birmingham: ${IA_HOME_OFFICE_BIRMINGHAM_EMAIL:ho-birmingham@example.com}
-  hattonCross: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-hatton-cross@example.com}
-  glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-harmondsworth@example.com}
-  hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
-  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:ho-yarls-wood@example.com}
-  bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
-  mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
-  mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:ho-mcc-crown-square@example.com}
-  manchesterMags: ${IA_HOME_OFFICE_MANCHESTER_MAGS_EMAIL:ho-manchester-mags@example.com}
-  nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:ho-nth-tyne-mags@example.com}
-  leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:ho-leeds-mags@example.com}
-  alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:ho-alloa-sherrif@example.com}
+  bradford: Elize.Reyes@HMCTS.NET
+  manchester: Elize.Reyes@HMCTS.NET
+  newport: Elize.Reyes@HMCTS.NET
+  taylorHouse: Elize.Reyes@HMCTS.NET
+  northShields: Elize.Reyes@HMCTS.NET
+  newcastle: Elize.Reyes@HMCTS.NET
+  birmingham: Elize.Reyes@HMCTS.NET
+  hattonCross: Elize.Reyes@HMCTS.NET
+  glasgow: Elize.Reyes@HMCTS.NET
+  belfast: Elize.Reyes@HMCTS.NET
+  harmondsworth: Elize.Reyes@HMCTS.NET
+  hendon: Elize.Reyes@HMCTS.NET
+  yarlsWood: Elize.Reyes@HMCTS.NET
+  bradfordKeighley: Elize.Reyes@HMCTS.NET
+  mccMinshull: Elize.Reyes@HMCTS.NET
+  mccCrownSquare: Elize.Reyes@HMCTS.NET
+  manchesterMags: Elize.Reyes@HMCTS.NET
+  nthTyneMags: Elize.Reyes@HMCTS.NET
+  leedsMags: Elize.Reyes@HMCTS.NET
+  alloaSherrif: Elize.Reyes@HMCTS.NET
 
 
 homeOfficeFtpaEmailAddresses:
-  bradford: ${IA_FTPA_HOME_OFFICE_BRADFORD_EMAIL:ho-ftpa-bradford@example.com}
-  manchester: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ho-manchester@example.com}
-  newport: ${IA_HOME_OFFICE_NEWPORT_EMAIL:ho-newport@example.com}
-  taylorHouse: ${IA_FTPA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-ftpa-taylorhouse@example.com}
-  northShields: ${IA_HOME_OFFICE_NORTH_SHIELDS_EMAIL:ho-north-shields@example.com}
-  newcastle: ${IA_FTPA_HOME_OFFICE_NEWCASTLE_EMAIL:ho-ftpa-north-shields@example.com}
-  birmingham: ${IA_HOME_OFFICE_BIRMINGHAM_EMAIL:ho-birmingham@example.com}
-  hattonCross: ${IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-ftpa-hatton-cross@example.com}
-  glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  harmondsworth: ${IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-ftpa-harmondsworth@example.com}
-  yarlswood: ${IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-ftpa-yarlswood@example.com}
+  bradford: Elize.Reyes@HMCTS.NET
+  manchester: Elize.Reyes@HMCTS.NET
+  newport: Elize.Reyes@HMCTS.NET
+  taylorHouse: Elize.Reyes@HMCTS.NET
+  northShields: Elize.Reyes@HMCTS.NET
+  newcastle: Elize.Reyes@HMCTS.NET
+  birmingham: Elize.Reyes@HMCTS.NET
+  hattonCross: Elize.Reyes@HMCTS.NET
+  glasgow: Elize.Reyes@HMCTS.NET
+  belfast: Elize.Reyes@HMCTS.NET
+  harmondsworth: Elize.Reyes@HMCTS.NET
+  yarlswood: Elize.Reyes@HMCTS.NET
 
 
 hearingCentreTelephoneNumber:
@@ -1965,219 +1965,219 @@ hearingCentreTelephoneNumber:
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
 
-endAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_END_APPEAL_EMAIL:ho-end-appeal@example.com}
-allowedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL:ho-allowed-appeal@example.com}
-dismissedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL:ho-dismissed-appeal@example.com}
-apcPrivateHomeOfficeEmailAddress: ${IA_HOME_OFFICE_APC_EMAIL}
-reviewHearingRequirementsAdminOfficerEmailAddress: ${IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL:ao-review@example.com}
-listCaseCaseOfficerEmailAddress: ${IA_CASE_OFFICER_LIST_CASE_EMAIL:co-list-case@example.com}
-ctscAdminFtpaDecisionEmailAddress: ${IA_CTSC_ADMIN_FTPA_DECISION:ctscFtpaDecision@example.gov.uk}
-feesAdminOfficerEmailAddress: ${FEES_ADMIN_OFFICER_EMAIL}
-paymentExceptionsAdminOfficerEmailAddress: ${PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL:payment-exceptions-ao@example.com}
-apcHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_APC}
-lartHomeOfficeEmailAddress: ${HOME_OFFICE_EMAIL_LART}
-upperTribunalNoticesEmailAddress: ${IA_UPPER_TRIBUNAL_NOTICES_EMAIL}
-bailUpperTribunalEmailAddress: ${IA_BAIL_UPPER_TRIBUNAL_EMAIL:upper-tribunal-bail-alar@example.com}
-upperTribunalUrgentAppealsEmailAddress: ${IA_UPPER_TRIBUNAL_URGENT_APPEALS_EMAIL:upper-tribunal-urgent-appeals@example.com}
-applyForCostsHomeOfficeEmailAddress: ${HO_APPLY_FOR_COSTS_EMAIL:ho-apply-for-costs@example.com}
+endAppealHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
+allowedAppealHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
+dismissedAppealHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
+apcPrivateHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
+reviewHearingRequirementsAdminOfficerEmailAddress: Elize.Reyes@HMCTS.NET
+listCaseCaseOfficerEmailAddress: Elize.Reyes@HMCTS.NET
+ctscAdminFtpaDecisionEmailAddress: Elize.Reyes@HMCTS.NET
+feesAdminOfficerEmailAddress: Elize.Reyes@HMCTS.NET
+paymentExceptionsAdminOfficerEmailAddress: Elize.Reyes@HMCTS.NET
+apcHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
+lartHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
+upperTribunalNoticesEmailAddress: Elize.Reyes@HMCTS.NET
+bailUpperTribunalEmailAddress: Elize.Reyes@HMCTS.NET
+upperTribunalUrgentAppealsEmailAddress: Elize.Reyes@HMCTS.NET
+applyForCostsHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
 
-nbcEmailAddress: ${IA_NBC_EMAIL}
-ctscEmailAddress: ${IA_CTSC_EMAIL}
-ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
-upperTribunalPermissionApplicationsEmailAddress: ${IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL:UTIACpermissionapplications@grantedpartgranted.fake.com}
-bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
+nbcEmailAddress: Elize.Reyes@HMCTS.NET
+ctscEmailAddress: Elize.Reyes@HMCTS.NET
+ctscAdminPendingPaymentEmailAddress: Elize.Reyes@HMCTS.NET
+upperTribunalPermissionApplicationsEmailAddress: Elize.Reyes@HMCTS.NET
+bailHomeOfficeEmailAddress: Elize.Reyes@HMCTS.NET
 
 respondentEmailAddresses:
-  nonStandardDirectionUntilListing: ${IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL:respondent@example.com}
-  respondentEvidenceDirection: ${IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL:respondent@example.com}
-  respondentReviewDirection: ${IA_RESPONDENT_REVIEW_DIRECTION_EMAIL:respondent-lart@example.com}
+  nonStandardDirectionUntilListing: Elize.Reyes@HMCTS.NET
+  respondentEvidenceDirection: Elize.Reyes@HMCTS.NET
+  respondentReviewDirection: Elize.Reyes@HMCTS.NET
 
 
 ftpaSubmitted:
-  ctscAdminEmailAddress: ${IA_CTSC_ADMIN_FTPA_SUBMITTED:ctscFtpaSubmitted@example.gov.uk}
-  respondentEmailAddress: ${IA_RESPONDENT_FTPA_SUBMITTED:homeOfficeFtpaSubmitted@example.gov.uk}
+  ctscAdminEmailAddress: Elize.Reyes@HMCTS.NET
+  respondentEmailAddress: Elize.Reyes@HMCTS.NET
 
 ### DET Email addresses for IRC
 detentionEngagementTeamIrcEmailAddresses:
-  Brookhouse: ${IA_DET_IRC_BROOKHOUSE_EMAIL:det-irc-brookhouse@example.com}
-  Colnbrook: ${IA_DET_IRC_COLNBROOK_EMAIL:det-irc-colnbrook@example.com}
-  Derwentside: ${IA_DET_IRC_DERWENTSIDE_EMAIL:det-irc-derwentside@example.com}
-  Dungavel: ${IA_DET_IRC_DUNGAVEL_EMAIL:det-irc-dungavel@example.com}
-  Harmondsworth: ${IA_DET_IRC_HARMONDSWORTH_EMAIL:det-irc-harmondsworth@example.com}
-  TinsleyHouse: ${IA_DET_IRC_TINSLEYHOUSE_EMAIL:det-irc-tinsleyhouse@example.com}
-  Yarlswood: ${IA_DET_IRC_YARLSWOOD_EMAIL:det-irc-yarlswood@example.com}
+  Brookhouse: Elize.Reyes@HMCTS.NET
+  Colnbrook: Elize.Reyes@HMCTS.NET
+  Derwentside: Elize.Reyes@HMCTS.NET
+  Dungavel: Elize.Reyes@HMCTS.NET
+  Harmondsworth: Elize.Reyes@HMCTS.NET
+  TinsleyHouse: Elize.Reyes@HMCTS.NET
+  Yarlswood: Elize.Reyes@HMCTS.NET
 
 ### DET Email addresses for Prison
 detentionEngagementTeamPrisonEmailAddresses:
-  Acklington: ${IA_DET_PRISON_ACKLINGTON_EMAIL:det-prison-acklington@example.com}
-  Addiewell: ${IA_DET_PRISON_ADDIEWELL_EMAIL:det-prison-addiewell@example.com}
-  Albany: ${IA_DET_PRISON_ALBANY_EMAIL:det-prison-albany@example.com}
-  Altcourse: ${IA_DET_PRISON_ALTCOURSE_EMAIL:det-prison-altcourse@example.com}
-  Ashfield: ${IA_DET_PRISON_ASHFIELD_EMAIL:det-prison-ashfield@example.com}
-  Ashwell: ${IA_DET_PRISON_ASHWELL_EMAIL:det-prison-ashwell@example.com}
-  AskhamGrange: ${IA_DET_PRISON_ASKHAM_GRANGE_EMAIL:det-prison-askham-grange@example.com}
-  Aylesbury: ${IA_DET_PRISON_AYLESBURY_EMAIL:det-prison-aylesbury@example.com}
-  Barlinnie: ${IA_DET_PRISON_BARLINNIE_EMAIL:det-prison-barlinnie@example.com}
-  Bedford: ${IA_DET_PRISON_BEDFORD_EMAIL:det-prison-bedford@example.com}
-  Belmarsh: ${IA_DET_PRISON_BELMARSH_EMAIL:det-prison-belmarsh@example.com}
-  Birmingham: ${IA_DET_PRISON_BIRMINGHAM_EMAIL:det-prison-birmingham@example.com}
-  Blakenhurst: ${IA_DET_PRISON_BLAKENHURST_EMAIL:det-prison-blakenhurst@example.com}
-  BlantyreHouse: ${IA_DET_PRISON_BLANTYRE_HOUSE_EMAIL:det-prison-blantyre-house@example.com}
-  Blundeston: ${IA_DET_PRISON_BLUNDESTON_EMAIL:det-prison-blundeston@example.com}
-  Brinsford: ${IA_DET_PRISON_BRINSFORD_EMAIL:det-prison-brinsford@example.com}
-  Bristol: ${IA_DET_PRISON_BRISTOL_EMAIL:det-prison-bristol@example.com}
-  Brixton: ${IA_DET_PRISON_BRIXTON_EMAIL:det-prison-brixton@example.com}
-  Brockhill: ${IA_DET_PRISON_BROCKHILL_EMAIL:det-prison-brockhill@example.com}
-  Bronzefield: ${IA_DET_PRISON_BRONZEFIELD_EMAIL:det-prison-bronzefield@example.com}
-  BuckleyHall: ${IA_DET_PRISON_BUCKLEY_HALL_EMAIL:det-prison-buckley-hall@example.com}
-  Bullingdon: ${IA_DET_PRISON_BULLINGDON_EMAIL:det-prison-bullingdon@example.com}
-  BullwoodHall: ${IA_DET_PRISON_BULLWOOD_HALL_EMAIL:det-prison-bullwood-hall@example.com}
-  CampHill: ${IA_DET_PRISON_CAMP_HILL_EMAIL:det-prison-camp-hill@example.com}
-  Canterbury: ${IA_DET_PRISON_CANTERBURY_EMAIL:det-prison-canterbury@example.com}
-  Cardiff: ${IA_DET_PRISON_CARDIFF_EMAIL:det-prison-cardiff@example.com}
-  Castington: ${IA_DET_PRISON_CASTINGTON_EMAIL:det-prison-castington@example.com}
-  CastleHuntly: ${IA_DET_PRISON_CASTLE_HUNTLY_EMAIL:det-prison-castle-huntly@example.com}
-  ChanningsWood: ${IA_DET_PRISON_CHANNINGS_WOOD_EMAIL:det-prison-channings-wood@example.com}
-  Chelmsford: ${IA_DET_PRISON_CHELMSFORD_EMAIL:det-prison-chelmsford@example.com}
-  Coldingley: ${IA_DET_PRISON_COLDINGLEY_EMAIL:det-prison-coldingley@example.com}
-  CookhamWood: ${IA_DET_PRISON_COOKHAM_WOOD_EMAIL:det-prison-cookham-wood@example.com}
-  CorntonVale: ${IA_DET_PRISON_CORNTON_VALE_EMAIL:det-prison-cornton-vale@example.com}
-  Dartmoor: ${IA_DET_PRISON_DARTMOOR_EMAIL:det-prison-dartmoor@example.com}
-  Deerbolt: ${IA_DET_PRISON_DEERBOLT_EMAIL:det-prison-deerbolt@example.com}
-  Doncaster: ${IA_DET_PRISON_DONCASTER_EMAIL:det-prison-doncaster@example.com}
-  Dorchester: ${IA_DET_PRISON_DORCHESTER_EMAIL:det-prison-dorchester@example.com}
-  Dovegate: ${IA_DET_PRISON_DOVEGATE_EMAIL:det-prison-dovegate@example.com}
-  Downview: ${IA_DET_PRISON_DOWNVIEW_EMAIL:det-prison-downview@example.com}
-  DrakeHall: ${IA_DET_PRISON_DRAKE_HALL_EMAIL:det-prison-drake-hall@example.com}
-  Dumfries: ${IA_DET_PRISON_DUMFRIES_EMAIL:det-prison-dumfries@example.com}
-  Durham: ${IA_DET_PRISON_DURHAM_EMAIL:det-prison-durham@example.com}
-  EastSuttonPark: ${IA_DET_PRISON_EAST_SUTTON_PARK_EMAIL:det-prison-east-sutton-park@example.com}
-  EastwoodPark: ${IA_DET_PRISON_EASTWOOD_PARK_EMAIL:det-prison-eastwood-park@example.com}
-  EdinburghSaughton: ${IA_DET_PRISON_EDINBURGH_SAUGHTON_EMAIL:det-prison-edinburgh-saughton@example.com}
-  EdmundsHill: ${IA_DET_PRISON_EDMUNDS_HILL_EMAIL:det-prison-edmunds-hill@example.com}
-  Elmley: ${IA_DET_PRISON_ELMLEY_EMAIL:det-prison-elmley@example.com}
-  Erlestoke: ${IA_DET_PRISON_ERLESTOKE_EMAIL:det-prison-erlestoke@example.com}
-  Everthorpe: ${IA_DET_PRISON_EVERTHORPE_EMAIL:det-prison-everthorpe@example.com}
-  Exeter: ${IA_DET_PRISON_EXETER_EMAIL:det-prison-exeter@example.com}
-  Featherstone: ${IA_DET_PRISON_FEATHERSTONE_EMAIL:det-prison-featherstone@example.com}
-  Feltham: ${IA_DET_PRISON_FELTHAM_EMAIL:det-prison-feltham@example.com}
-  Ford: ${IA_DET_PRISON_FORD_EMAIL:det-prison-ford@example.com}
-  ForestBank: ${IA_DET_PRISON_FOREST_BANK_EMAIL:det-prison-forest-bank@example.com}
-  FostonHall: ${IA_DET_PRISON_FOSTON_HALL_EMAIL:det-prison-foston-hall@example.com}
-  Frankland: ${IA_DET_PRISON_FRANKLAND_EMAIL:det-prison-frankland@example.com}
-  FullSutton: ${IA_DET_PRISON_FULL_SUTTON_EMAIL:det-prison-full-sutton@example.com}
-  Garth: ${IA_DET_PRISON_GARTH_EMAIL:det-prison-garth@example.com}
-  Gartree: ${IA_DET_PRISON_GARTREE_EMAIL:det-prison-gartree@example.com}
-  GlenParva: ${IA_DET_PRISON_GLEN_PARVA_EMAIL:det-prison-glen-parva@example.com}
-  Glenochil: ${IA_DET_PRISON_GLENOCHIL_EMAIL:det-prison-glenochil@example.com}
-  Gloucester: ${IA_DET_PRISON_GLOUCESTER_EMAIL:det-prison-gloucester@example.com}
-  Grampian: ${IA_DET_PRISON_GRAMPIAN_EMAIL:det-prison-grampian@example.com}
-  Greenock: ${IA_DET_PRISON_GREENOCK_EMAIL:det-prison-greenock@example.com}
-  GrendonSpringHill: ${IA_DET_PRISON_GRENDON_SPRING_HILL_EMAIL:det-prison-grendon-spring-hill@example.com}
-  GuysMarsh: ${IA_DET_PRISON_GUYS_MARSH_EMAIL:det-prison-guys-marsh@example.com}
-  Haverigg: ${IA_DET_PRISON_HAVERIGG_EMAIL:det-prison-haverigg@example.com}
-  HewellGrange: ${IA_DET_PRISON_HEWELL_GRANGE_EMAIL:det-prison-hewell-grange@example.com}
-  HighDown: ${IA_DET_PRISON_HIGH_DOWN_EMAIL:det-prison-high-down@example.com}
-  Highpoint: ${IA_DET_PRISON_HIGHPOINT_EMAIL:det-prison-highpoint@example.com}
-  Hindley: ${IA_DET_PRISON_HINDLEY_EMAIL:det-prison-hindley@example.com}
-  HollesleyBayHmyoiWarrenHill: ${IA_DET_PRISON_HOLLESLEY_BAY_HMYOI_WARREN_HILL_EMAIL:det-prison-hollesley-bay-hmyoi-warren-hill@example.com}
-  Holloway: ${IA_DET_PRISON_HOLLOWAY_EMAIL:det-prison-holloway@example.com}
-  HolmeHouse: ${IA_DET_PRISON_HOLME_HOUSE_EMAIL:det-prison-holme-house@example.com}
-  Hull: ${IA_DET_PRISON_HULL_EMAIL:det-prison-hull@example.com}
-  Huntercombe: ${IA_DET_PRISON_HUNTERCOMBE_EMAIL:det-prison-huntercombe@example.com}
-  HydebankWood: ${IA_DET_PRISON_HYDEBANK_WOOD_EMAIL:det-prison-hydebank-wood@example.com}
-  Inverness: ${IA_DET_PRISON_INVERNESS_EMAIL:det-prison-inverness@example.com}
-  Isis: ${IA_DET_PRISON_ISIS_EMAIL:det-prison-isis@example.com}
-  Kennet: ${IA_DET_PRISON_KENNET_EMAIL:det-prison-kennet@example.com}
-  Kilmarnock: ${IA_DET_PRISON_KILMARNOCK_EMAIL:det-prison-kilmarnock@example.com}
-  Kingston: ${IA_DET_PRISON_KINGSTON_EMAIL:det-prison-kingston@example.com}
-  Kirkham: ${IA_DET_PRISON_KIRKHAM_EMAIL:det-prison-kirkham@example.com}
-  KirklevingtonGrange: ${IA_DET_PRISON_KIRKLEVINGTON_GRANGE_EMAIL:det-prison-kirklevington-grange@example.com}
-  Lancaster: ${IA_DET_PRISON_LANCASTER_EMAIL:det-prison-lancaster@example.com}
-  LancasterFarms: ${IA_DET_PRISON_LANCASTER_FARMS_EMAIL:det-prison-lancaster-farms@example.com}
-  LatchmereHouse: ${IA_DET_PRISON_LATCHMERE_HOUSE_EMAIL:det-prison-latchmere-house@example.com}
-  Leeds: ${IA_DET_PRISON_LEEDS_EMAIL:det-prison-leeds@example.com}
-  Leicester: ${IA_DET_PRISON_LEICESTER_EMAIL:det-prison-leicester@example.com}
-  Lewes: ${IA_DET_PRISON_LEWES_EMAIL:det-prison-lewes@example.com}
-  Leyhill: ${IA_DET_PRISON_LEYHILL_EMAIL:det-prison-leyhill@example.com}
-  Lincoln: ${IA_DET_PRISON_LINCOLN_EMAIL:det-prison-lincoln@example.com}
-  Lindholme: ${IA_DET_PRISON_LINDHOLME_EMAIL:det-prison-lindholme@example.com}
-  Littlehey: ${IA_DET_PRISON_LITTLEHEY_EMAIL:det-prison-littlehey@example.com}
-  Liverpool: ${IA_DET_PRISON_LIVERPOOL_EMAIL:det-prison-liverpool@example.com}
-  LongLartin: ${IA_DET_PRISON_LONG_LARTIN_EMAIL:det-prison-long-lartin@example.com}
-  LowMoss: ${IA_DET_PRISON_LOW_MOSS_EMAIL:det-prison-low-moss@example.com}
-  LowNewton: ${IA_DET_PRISON_LOW_NEWTON_EMAIL:det-prison-low-newton@example.com}
-  LowdhamGrange: ${IA_DET_PRISON_LOWDHAM_GRANGE_EMAIL:det-prison-lowdham-grange@example.com}
-  Magilligan: ${IA_DET_PRISON_MAGILLIGAN_EMAIL:det-prison-magilligan@example.com}
-  Maghaberry: ${IA_DET_PRISON_MAGHABERRY_EMAIL:det-prison-maghaberry@example.com}
-  Maidstone: ${IA_DET_PRISON_MAIDSTONE_EMAIL:det-prison-maidstone@example.com}
-  Manchester: ${IA_DET_PRISON_MANCHESTER_EMAIL:det-prison-manchester@example.com}
-  MoorlandClosed: ${IA_DET_PRISON_MOORLAND_CLOSED_EMAIL:det-prison-moorland-closed@example.com}
-  MoorlandOpen: ${IA_DET_PRISON_MOORLAND_OPEN_EMAIL:det-prison-moorland-open@example.com}
-  MortonHall: ${IA_DET_PRISON_MORTON_HALL_EMAIL:det-prison-morton-hall@example.com}
-  NewHall: ${IA_DET_PRISON_NEW_HALL_EMAIL:det-prison-new-hall@example.com}
-  NorthSeaCamp: ${IA_DET_PRISON_NORTH_SEA_CAMP_EMAIL:det-prison-north-sea-camp@example.com}
-  Northallerton: ${IA_DET_PRISON_NORTHALLERTON_EMAIL:det-prison-northallerton@example.com}
-  Norwich: ${IA_DET_PRISON_NORWICH_EMAIL:det-prison-norwich@example.com}
-  Nottingham: ${IA_DET_PRISON_NOTTINGHAM_EMAIL:det-prison-nottingham@example.com}
-  Onley: ${IA_DET_PRISON_ONLEY_EMAIL:det-prison-onley@example.com}
-  Parc: ${IA_DET_PRISON_PARC_EMAIL:det-prison-parc@example.com}
-  Parkhurst: ${IA_DET_PRISON_PARKHURST_EMAIL:det-prison-parkhurst@example.com}
-  Pentonville: ${IA_DET_PRISON_PENTONVILLE_EMAIL:det-prison-pentonville@example.com}
-  Perth: ${IA_DET_PRISON_PERTH_EMAIL:det-prison-perth@example.com}
-  Peterborough: ${IA_DET_PRISON_PETERBOROUGH_EMAIL:det-prison-peterborough@example.com}
-  Polmont: ${IA_DET_PRISON_POLMONT_EMAIL:det-prison-polmont@example.com}
-  Portland: ${IA_DET_PRISON_PORTLAND_EMAIL:det-prison-portland@example.com}
-  Prescoed: ${IA_DET_PRISON_PRESCOED_EMAIL:det-prison-prescoed@example.com}
-  Preston: ${IA_DET_PRISON_PRESTON_EMAIL:det-prison-preston@example.com}
-  Ranby: ${IA_DET_PRISON_RANBY_EMAIL:det-prison-ranby@example.com}
-  Reading: ${IA_DET_PRISON_READING_EMAIL:det-prison-reading@example.com}
-  Risley: ${IA_DET_PRISON_RISLEY_EMAIL:det-prison-risley@example.com}
-  Rochester: ${IA_DET_PRISON_ROCHESTER_EMAIL:det-prison-rochester@example.com}
-  RyeHill: ${IA_DET_PRISON_RYE_HILL_EMAIL:det-prison-rye-hill@example.com}
-  Send: ${IA_DET_PRISON_SEND_EMAIL:det-prison-send@example.com}
-  SheptonMallet: ${IA_DET_PRISON_SHEPTON_MALLET_EMAIL:det-prison-shepton-mallet@example.com}
-  Shotts: ${IA_DET_PRISON_SHOTTS_EMAIL:det-prison-shotts@example.com}
-  Shrewsbury: ${IA_DET_PRISON_SHREWSBURY_EMAIL:det-prison-shrewsbury@example.com}
-  SpringHill: ${IA_DET_PRISON_SPRING_HILL_EMAIL:det-prison-spring-hill@example.com}
-  Stafford: ${IA_DET_PRISON_STAFFORD_EMAIL:det-prison-stafford@example.com}
-  StandfordHill: ${IA_DET_PRISON_STANDFORD_HILL_EMAIL:det-prison-standford-hill@example.com}
-  Stocken: ${IA_DET_PRISON_STOCKEN_EMAIL:det-prison-stocken@example.com}
-  StokeHeath: ${IA_DET_PRISON_STOKE_HEATH_EMAIL:det-prison-stoke-heath@example.com}
-  Styal: ${IA_DET_PRISON_STYAL_EMAIL:det-prison-styal@example.com}
-  Sudbury: ${IA_DET_PRISON_SUDBURY_EMAIL:det-prison-sudbury@example.com}
-  Swaleside: ${IA_DET_PRISON_SWALESIDE_EMAIL:det-prison-swaleside@example.com}
-  Swansea: ${IA_DET_PRISON_SWANSEA_EMAIL:det-prison-swansea@example.com}
-  SwinfenHall: ${IA_DET_PRISON_SWINFEN_HALL_EMAIL:det-prison-swinfen-hall@example.com}
-  TheMount: ${IA_DET_PRISON_THE_MOUNT_EMAIL:det-prison-the-mount@example.com}
-  TheWeare: ${IA_DET_PRISON_THE_WEARE_EMAIL:det-prison-the-weare@example.com}
-  ThornCross: ${IA_DET_PRISON_THORN_CROSS_EMAIL:det-prison-thorn-cross@example.com}
-  Usk: ${IA_DET_PRISON_USK_EMAIL:det-prison-usk@example.com}
-  Wakefield: ${IA_DET_PRISON_WAKEFIELD_EMAIL:det-prison-wakefield@example.com}
-  Wandsworth: ${IA_DET_PRISON_WANDSWORTH_EMAIL:det-prison-wandsworth@example.com}
-  WarrenHill: ${IA_DET_PRISON_WARREN_HILL_EMAIL:det-prison-warren-hill@example.com}
-  Wayland: ${IA_DET_PRISON_WAYLAND_EMAIL:det-prison-wayland@example.com}
-  Wealstun: ${IA_DET_PRISON_WEALSTUN_EMAIL:det-prison-wealstun@example.com}
-  Wellingborough: ${IA_DET_PRISON_WELLINGBOROUGH_EMAIL:det-prison-wellingborough@example.com}
-  Werrington: ${IA_DET_PRISON_WERRINGTON_EMAIL:det-prison-werrington@example.com}
-  Wetherby: ${IA_DET_PRISON_WETHERBY_EMAIL:det-prison-wetherby@example.com}
-  Whatton: ${IA_DET_PRISON_WHATTON_EMAIL:det-prison-whatton@example.com}
-  Whitemoor: ${IA_DET_PRISON_WHITEMOOR_EMAIL:det-prison-whitemoor@example.com}
-  Winchester: ${IA_DET_PRISON_WINCHESTER_EMAIL:det-prison-winchester@example.com}
-  Wolds: ${IA_DET_PRISON_WOLDS_EMAIL:det-prison-wolds@example.com}
-  Woodhill: ${IA_DET_PRISON_WOODHILL_EMAIL:det-prison-woodhill@example.com}
-  WormwoodScrubs: ${IA_DET_PRISON_WORMWOOD_SCRUBS_EMAIL:det-prison-wormwood-scrubs@example.com}
-  Wymott: ${IA_DET_PRISON_WYMOTT_EMAIL:det-prison-wymott@example.com}
+  Acklington: Elize.Reyes@HMCTS.NET
+  Addiewell: Elize.Reyes@HMCTS.NET
+  Albany: Elize.Reyes@HMCTS.NET
+  Altcourse: Elize.Reyes@HMCTS.NET
+  Ashfield: Elize.Reyes@HMCTS.NET
+  Ashwell: Elize.Reyes@HMCTS.NET
+  AskhamGrange: Elize.Reyes@HMCTS.NET
+  Aylesbury: Elize.Reyes@HMCTS.NET
+  Barlinnie: Elize.Reyes@HMCTS.NET
+  Bedford: Elize.Reyes@HMCTS.NET
+  Belmarsh: Elize.Reyes@HMCTS.NET
+  Birmingham: Elize.Reyes@HMCTS.NET
+  Blakenhurst: Elize.Reyes@HMCTS.NET
+  BlantyreHouse: Elize.Reyes@HMCTS.NET
+  Blundeston: Elize.Reyes@HMCTS.NET
+  Brinsford: Elize.Reyes@HMCTS.NET
+  Bristol: Elize.Reyes@HMCTS.NET
+  Brixton: Elize.Reyes@HMCTS.NET
+  Brockhill: Elize.Reyes@HMCTS.NET
+  Bronzefield: Elize.Reyes@HMCTS.NET
+  BuckleyHall: Elize.Reyes@HMCTS.NET
+  Bullingdon: Elize.Reyes@HMCTS.NET
+  BullwoodHall: Elize.Reyes@HMCTS.NET
+  CampHill: Elize.Reyes@HMCTS.NET
+  Canterbury: Elize.Reyes@HMCTS.NET
+  Cardiff: Elize.Reyes@HMCTS.NET
+  Castington: Elize.Reyes@HMCTS.NET
+  CastleHuntly: Elize.Reyes@HMCTS.NET
+  ChanningsWood: Elize.Reyes@HMCTS.NET
+  Chelmsford: Elize.Reyes@HMCTS.NET
+  Coldingley: Elize.Reyes@HMCTS.NET
+  CookhamWood: Elize.Reyes@HMCTS.NET
+  CorntonVale: Elize.Reyes@HMCTS.NET
+  Dartmoor: Elize.Reyes@HMCTS.NET
+  Deerbolt: Elize.Reyes@HMCTS.NET
+  Doncaster: Elize.Reyes@HMCTS.NET
+  Dorchester: Elize.Reyes@HMCTS.NET
+  Dovegate: Elize.Reyes@HMCTS.NET
+  Downview: Elize.Reyes@HMCTS.NET
+  DrakeHall: Elize.Reyes@HMCTS.NET
+  Dumfries: Elize.Reyes@HMCTS.NET
+  Durham: Elize.Reyes@HMCTS.NET
+  EastSuttonPark: Elize.Reyes@HMCTS.NET
+  EastwoodPark: Elize.Reyes@HMCTS.NET
+  EdinburghSaughton: Elize.Reyes@HMCTS.NET
+  EdmundsHill: Elize.Reyes@HMCTS.NET
+  Elmley: Elize.Reyes@HMCTS.NET
+  Erlestoke: Elize.Reyes@HMCTS.NET
+  Everthorpe: Elize.Reyes@HMCTS.NET
+  Exeter: Elize.Reyes@HMCTS.NET
+  Featherstone: Elize.Reyes@HMCTS.NET
+  Feltham: Elize.Reyes@HMCTS.NET
+  Ford: Elize.Reyes@HMCTS.NET
+  ForestBank: Elize.Reyes@HMCTS.NET
+  FostonHall: Elize.Reyes@HMCTS.NET
+  Frankland: Elize.Reyes@HMCTS.NET
+  FullSutton: Elize.Reyes@HMCTS.NET
+  Garth: Elize.Reyes@HMCTS.NET
+  Gartree: Elize.Reyes@HMCTS.NET
+  GlenParva: Elize.Reyes@HMCTS.NET
+  Glenochil: Elize.Reyes@HMCTS.NET
+  Gloucester: Elize.Reyes@HMCTS.NET
+  Grampian: Elize.Reyes@HMCTS.NET
+  Greenock: Elize.Reyes@HMCTS.NET
+  GrendonSpringHill: Elize.Reyes@HMCTS.NET
+  GuysMarsh: Elize.Reyes@HMCTS.NET
+  Haverigg: Elize.Reyes@HMCTS.NET
+  HewellGrange: Elize.Reyes@HMCTS.NET
+  HighDown: Elize.Reyes@HMCTS.NET
+  Highpoint: Elize.Reyes@HMCTS.NET
+  Hindley: Elize.Reyes@HMCTS.NET
+  HollesleyBayHmyoiWarrenHill: Elize.Reyes@HMCTS.NET
+  Holloway: Elize.Reyes@HMCTS.NET
+  HolmeHouse: Elize.Reyes@HMCTS.NET
+  Hull: Elize.Reyes@HMCTS.NET
+  Huntercombe: Elize.Reyes@HMCTS.NET
+  HydebankWood: Elize.Reyes@HMCTS.NET
+  Inverness: Elize.Reyes@HMCTS.NET
+  Isis: Elize.Reyes@HMCTS.NET
+  Kennet: Elize.Reyes@HMCTS.NET
+  Kilmarnock: Elize.Reyes@HMCTS.NET
+  Kingston: Elize.Reyes@HMCTS.NET
+  Kirkham: Elize.Reyes@HMCTS.NET
+  KirklevingtonGrange: Elize.Reyes@HMCTS.NET
+  Lancaster: Elize.Reyes@HMCTS.NET
+  LancasterFarms: Elize.Reyes@HMCTS.NET
+  LatchmereHouse: Elize.Reyes@HMCTS.NET
+  Leeds: Elize.Reyes@HMCTS.NET
+  Leicester: Elize.Reyes@HMCTS.NET
+  Lewes: Elize.Reyes@HMCTS.NET
+  Leyhill: Elize.Reyes@HMCTS.NET
+  Lincoln: Elize.Reyes@HMCTS.NET
+  Lindholme: Elize.Reyes@HMCTS.NET
+  Littlehey: Elize.Reyes@HMCTS.NET
+  Liverpool: Elize.Reyes@HMCTS.NET
+  LongLartin: Elize.Reyes@HMCTS.NET
+  LowMoss: Elize.Reyes@HMCTS.NET
+  LowNewton: Elize.Reyes@HMCTS.NET
+  LowdhamGrange: Elize.Reyes@HMCTS.NET
+  Magilligan: Elize.Reyes@HMCTS.NET
+  Maghaberry: Elize.Reyes@HMCTS.NET
+  Maidstone: Elize.Reyes@HMCTS.NET
+  Manchester: Elize.Reyes@HMCTS.NET
+  MoorlandClosed: Elize.Reyes@HMCTS.NET
+  MoorlandOpen: Elize.Reyes@HMCTS.NET
+  MortonHall: Elize.Reyes@HMCTS.NET
+  NewHall: Elize.Reyes@HMCTS.NET
+  NorthSeaCamp: Elize.Reyes@HMCTS.NET
+  Northallerton: Elize.Reyes@HMCTS.NET
+  Norwich: Elize.Reyes@HMCTS.NET
+  Nottingham: Elize.Reyes@HMCTS.NET
+  Onley: Elize.Reyes@HMCTS.NET
+  Parc: Elize.Reyes@HMCTS.NET
+  Parkhurst: Elize.Reyes@HMCTS.NET
+  Pentonville: Elize.Reyes@HMCTS.NET
+  Perth: Elize.Reyes@HMCTS.NET
+  Peterborough: Elize.Reyes@HMCTS.NET
+  Polmont: Elize.Reyes@HMCTS.NET
+  Portland: Elize.Reyes@HMCTS.NET
+  Prescoed: Elize.Reyes@HMCTS.NET
+  Preston: Elize.Reyes@HMCTS.NET
+  Ranby: Elize.Reyes@HMCTS.NET
+  Reading: Elize.Reyes@HMCTS.NET
+  Risley: Elize.Reyes@HMCTS.NET
+  Rochester: Elize.Reyes@HMCTS.NET
+  RyeHill: Elize.Reyes@HMCTS.NET
+  Send: Elize.Reyes@HMCTS.NET
+  SheptonMallet: Elize.Reyes@HMCTS.NET
+  Shotts: Elize.Reyes@HMCTS.NET
+  Shrewsbury: Elize.Reyes@HMCTS.NET
+  SpringHill: Elize.Reyes@HMCTS.NET
+  Stafford: Elize.Reyes@HMCTS.NET
+  StandfordHill: Elize.Reyes@HMCTS.NET
+  Stocken: Elize.Reyes@HMCTS.NET
+  StokeHeath: Elize.Reyes@HMCTS.NET
+  Styal: Elize.Reyes@HMCTS.NET
+  Sudbury: Elize.Reyes@HMCTS.NET
+  Swaleside: Elize.Reyes@HMCTS.NET
+  Swansea: Elize.Reyes@HMCTS.NET
+  SwinfenHall: Elize.Reyes@HMCTS.NET
+  TheMount: Elize.Reyes@HMCTS.NET
+  TheWeare: Elize.Reyes@HMCTS.NET
+  ThornCross: Elize.Reyes@HMCTS.NET
+  Usk: Elize.Reyes@HMCTS.NET
+  Wakefield: Elize.Reyes@HMCTS.NET
+  Wandsworth: Elize.Reyes@HMCTS.NET
+  WarrenHill: Elize.Reyes@HMCTS.NET
+  Wayland: Elize.Reyes@HMCTS.NET
+  Wealstun: Elize.Reyes@HMCTS.NET
+  Wellingborough: Elize.Reyes@HMCTS.NET
+  Werrington: Elize.Reyes@HMCTS.NET
+  Wetherby: Elize.Reyes@HMCTS.NET
+  Whatton: Elize.Reyes@HMCTS.NET
+  Whitemoor: Elize.Reyes@HMCTS.NET
+  Winchester: Elize.Reyes@HMCTS.NET
+  Wolds: Elize.Reyes@HMCTS.NET
+  Woodhill: Elize.Reyes@HMCTS.NET
+  WormwoodScrubs: Elize.Reyes@HMCTS.NET
+  Wymott: Elize.Reyes@HMCTS.NET
 
-detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
+detentionEngagementTeamEmailAddress: Elize.Reyes@HMCTS.NET
 
 judgesReviewDeadlineDateDelay: ${JUDGES_REVIEW_DEADLINE_DATE_DELAY:14}
 
 makeAnApplicationFormLink: ${MAKE_AN_APPLICATION_FORM_LINK:https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaftada4}
 
 customerServices:
-  emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
-  internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
+  emailAddress: Elize.Reyes@HMCTS.NET
+  internalCaseEmailAddress: Elize.Reyes@HMCTS.NET
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
 
 appellantDaysToWait:
