@@ -4929,13 +4929,14 @@ public class NotificationHandlerConfiguration {
                     boolean res = isAipJourney(asylumCase);
 
                     if (res) {
-                        log.info("----------333");
                         String latestEditAppealNotificationDateStr =
                                 asylumCase.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
+                        log.info("----------333: " + latestEditAppealNotificationDateStr + "|");
                         Optional<LocalDate> latestEditAppealNotificationDate =
                                 parseDate(latestEditAppealNotificationDateStr);
+                        log.info("----------444: " + latestEditAppealNotificationDate + "|");
                         if (latestEditAppealNotificationDate.isEmpty()) {
-                            log.info("----------444");
+                            log.info("----------555");
                             asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
                         }
                     }
