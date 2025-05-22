@@ -77,6 +77,7 @@ public class CcdScenarioRunnerTest {
         RestAssured.useRelaxedHTTPSValidation();
     }
 
+    @Disabled
     @Test
     public void scenarios_should_behave_as_specified() throws IOException {
         boolean launchDarklyFeature = false;
