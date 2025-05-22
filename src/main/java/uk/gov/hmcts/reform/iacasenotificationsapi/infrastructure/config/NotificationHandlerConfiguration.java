@@ -4932,15 +4932,28 @@ public class NotificationHandlerConfiguration {
                         String latestEditAppealNotificationDateStr =
                                 asylumCase.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
                         log.info("----------333: " + latestEditAppealNotificationDateStr + "|");
-                        Optional<LocalDate> latestEditAppealNotificationDate =
+                        Optional<LocalDate> latestEditAppealNotificationDateOpt =
                                 parseDate(latestEditAppealNotificationDateStr);
-                        log.info("----------444: " + latestEditAppealNotificationDate + "|");
-                        if (latestEditAppealNotificationDate.isEmpty()) {
+                        log.info("----------444: " + latestEditAppealNotificationDateOpt + "|");
+                        LocalDate today = LocalDate.now();
+                        if (latestEditAppealNotificationDateOpt.isEmpty() ||
+                                latestEditAppealNotificationDateOpt.get().isBefore(today)) {
                             log.info("----------555");
-                            asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
+                            asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, today.toString());
+                        } else {
+                            String caseRef = asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse("");
+
+                            log.info(
+                                "Notification upon editAppeal event for case {} already sent on {}",
+                                caseRef,
+                                today
+                            );
+
+                            res = false;
                         }
                     }
 
+                    log.info("----------res " + res);
                     return res;
                 } else {
                     return false;
