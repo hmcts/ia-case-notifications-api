@@ -4879,14 +4879,12 @@ public class NotificationHandlerConfiguration {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_APPEAL;
 
-                log.info("----------111");
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     boolean res = isRepJourney(asylumCase) && !isInternalCase(asylumCase);
 
                     res = revertIfNotificationAlreadySentToday(res, callback, asylumCase);
 
-                    log.info("----------res " + res);
                     return res;
                 } else {
                     return false;
@@ -4929,16 +4927,13 @@ public class NotificationHandlerConfiguration {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == EDIT_APPEAL;
 
-                log.info("----------111");
                 if (canBeHandled) {
-                    log.info("----------222");
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     boolean res = isAipJourney(asylumCase);
 
                     res = revertIfNotificationAlreadySentToday(res, callback, asylumCase);
 
-                    log.info("----------res " + res);
                     return res;
                 } else {
                     return false;
@@ -6933,14 +6928,11 @@ public class NotificationHandlerConfiguration {
 
             String latestEditAppealNotificationDateStr =
                     asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
-            log.info("----------333: " + latestEditAppealNotificationDateStr + "|");
             Optional<LocalDate> latestEditAppealNotificationDateOpt =
                     parseDate(latestEditAppealNotificationDateStr);
-            log.info("----------444: " + latestEditAppealNotificationDateOpt + "|");
             LocalDate today = LocalDate.now();
             if (latestEditAppealNotificationDateOpt.isEmpty() ||
                     latestEditAppealNotificationDateOpt.get().isBefore(today)) {
-                log.info("----------555");
                 asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, today.toString());
             } else {
                 String caseRef = asylumCaseBefore.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse("");
@@ -6961,17 +6953,13 @@ public class NotificationHandlerConfiguration {
         Optional<CaseDetails<AsylumCase>> caseDetailsBeforeOpt = callback.getCaseDetailsBefore();
         AsylumCase asylumCaseBefore;
         if (caseDetailsBeforeOpt.isPresent()) {
-            log.info("----------222 caseDetailsBeforeOpt.isPresent() true");
             asylumCaseBefore = caseDetailsBeforeOpt.get().getCaseData();
             String latestEditAppealNotificationDateBeforeStr =
                     asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
-            log.info("----------222: " + latestEditAppealNotificationDateBeforeStr + "|");
             Optional<LocalDate> latestEditAppealNotificationDateBeforeOpt =
                     parseDate(latestEditAppealNotificationDateBeforeStr);
-            log.info("----------222: " + latestEditAppealNotificationDateBeforeOpt + "|");
         } else {
             // should be never reached
-            log.info("----------222 caseDetailsBeforeOpt.isPresent() false");
             asylumCaseBefore = callback.getCaseDetails().getCaseData();
         }
         return asylumCaseBefore;
