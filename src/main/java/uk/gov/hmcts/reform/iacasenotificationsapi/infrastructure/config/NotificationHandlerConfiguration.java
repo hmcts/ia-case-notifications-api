@@ -6926,6 +6926,7 @@ public class NotificationHandlerConfiguration {
         }
         return Optional.empty();
     }
+
     private boolean revertIfNotificationAlreadySentToday(boolean res, Callback<AsylumCase> callback, AsylumCase asylumCase) {
         if (res) {
             AsylumCase asylumCaseBefore = getAsylumCaseBefore(callback);
