@@ -2176,8 +2176,8 @@ judgesReviewDeadlineDateDelay: ${JUDGES_REVIEW_DEADLINE_DATE_DELAY:14}
 makeAnApplicationFormLink: ${MAKE_AN_APPLICATION_FORM_LINK:https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaftada4}
 
 customerServices:
-  emailAddress: Elize.Reyes@HMCTS.NET
-  internalCaseEmailAddress: Elize.Reyes@HMCTS.NET
+  emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
+  internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
 
 appellantDaysToWait:
