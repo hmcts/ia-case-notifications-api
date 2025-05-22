@@ -71,6 +71,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -4925,6 +4926,20 @@ public class NotificationHandlerConfiguration {
                 if (canBeHandled) {
                     log.info("----------222");
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    Optional<CaseDetails<AsylumCase>> caseDetailsBeforeOpt = callback.getCaseDetailsBefore();
+
+                    if (caseDetailsBeforeOpt.isPresent()) {
+                        log.info("----------222 caseDetailsBeforeOpt.isPresent() true");
+                        AsylumCase asylumCaseBefore = caseDetailsBeforeOpt.get().getCaseData();
+                        String latestEditAppealNotificationDateBeforeStr =
+                                asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
+                        log.info("----------222: " + latestEditAppealNotificationDateBeforeStr + "|");
+                        Optional<LocalDate> latestEditAppealNotificationDateBeforeOpt =
+                                parseDate(latestEditAppealNotificationDateBeforeStr);
+                        log.info("----------222: " + latestEditAppealNotificationDateBeforeOpt + "|");
+                    } else {
+                        log.info("----------222 caseDetailsBeforeOpt.isPresent() false");
+                    }
 
                     boolean res = isAipJourney(asylumCase);
 
@@ -4941,7 +4956,7 @@ public class NotificationHandlerConfiguration {
                             log.info("----------555");
                             asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, today.toString());
                         } else {
-                            String caseRef = asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse("");
+                            String caseRef = asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse("");
 
                             log.info(
                                 "Notification upon editAppeal event for case {} already sent on {}",
