@@ -35,6 +35,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,6 +71,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -4875,11 +4878,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_APPEAL;
+
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    Optional<JourneyType> journeyTypeOpt = asylumCase.read(JOURNEY_TYPE);
+                    boolean res = isRepJourney(asylumCase) && !isInternalCase(asylumCase);
 
-                    return isRepJourney(asylumCase) && !isInternalCase(asylumCase);
+                    res = revertIfNotificationAlreadySentToday(res, callback, asylumCase);
+
+                    return res;
                 } else {
                     return false;
                 }
@@ -4923,7 +4929,12 @@ public class NotificationHandlerConfiguration {
 
                 if (canBeHandled) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return isAipJourney(asylumCase);
+
+                    boolean res = isAipJourney(asylumCase);
+
+                    res = revertIfNotificationAlreadySentToday(res, callback, asylumCase);
+
+                    return res;
                 } else {
                     return false;
                 }
@@ -6900,5 +6911,57 @@ public class NotificationHandlerConfiguration {
     private boolean isDlrmFeeRefundEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_FEE_REFUND_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private Optional<LocalDate> parseDate(String dateStr) {
+        try {
+            return Optional.of(LocalDate.parse(dateStr));
+        } catch (DateTimeParseException ex) {
+            log.error("Date Str [{}] can't be parsed", dateStr);
+        }
+        return Optional.empty();
+    }
+
+    private boolean revertIfNotificationAlreadySentToday(boolean res, Callback<AsylumCase> callback, AsylumCase asylumCase) {
+        if (res) {
+            AsylumCase asylumCaseBefore = getAsylumCaseBefore(callback);
+
+            String latestEditAppealNotificationDateStr =
+                    asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
+            Optional<LocalDate> latestEditAppealNotificationDateOpt =
+                    parseDate(latestEditAppealNotificationDateStr);
+            LocalDate today = LocalDate.now();
+            if (latestEditAppealNotificationDateOpt.isEmpty() ||
+                    latestEditAppealNotificationDateOpt.get().isBefore(today)) {
+                asylumCase.write(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, today.toString());
+            } else {
+                String caseRef = asylumCaseBefore.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse("");
+
+                log.info(
+                        "Notification upon editAppeal event for case {} already sent on {}",
+                        caseRef,
+                        today
+                );
+
+                res = false;
+            }
+        }
+        return res;
+    }
+
+    private AsylumCase getAsylumCaseBefore(Callback<AsylumCase> callback) {
+        Optional<CaseDetails<AsylumCase>> caseDetailsBeforeOpt = callback.getCaseDetailsBefore();
+        AsylumCase asylumCaseBefore;
+        if (caseDetailsBeforeOpt.isPresent()) {
+            asylumCaseBefore = caseDetailsBeforeOpt.get().getCaseData();
+            String latestEditAppealNotificationDateBeforeStr =
+                    asylumCaseBefore.read(LATEST_EDIT_APPEAL_NOTIFICATION_DATE, String.class).orElse("");
+            Optional<LocalDate> latestEditAppealNotificationDateBeforeOpt =
+                    parseDate(latestEditAppealNotificationDateBeforeStr);
+        } else {
+            // should be never reached
+            asylumCaseBefore = callback.getCaseDetails().getCaseData();
+        }
+        return asylumCaseBefore;
     }
 }
