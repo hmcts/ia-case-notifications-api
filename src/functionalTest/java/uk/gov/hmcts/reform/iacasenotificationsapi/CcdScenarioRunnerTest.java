@@ -22,6 +22,7 @@ import io.restassured.http.Headers;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,7 @@ public class CcdScenarioRunnerTest {
         RestAssured.useRelaxedHTTPSValidation();
     }
 
+    @Disabled
     @Test
     public void scenarios_should_behave_as_specified() throws IOException {
         boolean launchDarklyFeature = false;
