@@ -289,9 +289,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url 'https://www.jitpack.io'
-    }
-    maven {
         url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
     }
 }
