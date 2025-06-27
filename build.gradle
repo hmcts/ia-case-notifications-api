@@ -14,7 +14,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'pmd'
-    id 'com.github.ben-manes.versions' version '0.52.0'
+    id 'com.github.ben-manes.versions' version '0.51.0'
     id 'info.solidsoft.pitest' version '1.9.11'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.owasp.dependencycheck' version '10.0.4'
@@ -37,7 +37,7 @@ def versions = [
         junitPlatform      : '1.13.2',
         gradlePitest       : '1.15.0',
         pact_version       : '4.6.17',
-        pitest             : '1.20.0',
+        pitest             : '1.15.3',
         reformLogging      : '6.1.9',
         reformHealthStarter: '0.0.5',
         restAssured        : '5.4.0',
@@ -54,7 +54,8 @@ ext.libraries = [
                 "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
                 "org.junit.jupiter:junit-jupiter-params:${versions.junit}",
                 "org.junit.platform:junit-platform-commons:${versions.junitPlatform}",
-                "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
+                "org.junit.platform:junit-platform-engine:${versions.junitPlatform}",
+                "org.junit.platform:junit-platform-launcher:${versions.junitPlatform}"
         ]
 ]
 
@@ -252,8 +253,6 @@ task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test 
     classpath = sourceSets.contractTest.runtimeClasspath
 }
 
-runAndPublishConsumerPactTests.finalizedBy pactPublish
-
 pact {
     broker {
         pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
@@ -264,6 +263,12 @@ pact {
         version = project.pacticipantVersion
     }
 }
+
+pactPublish {
+    pactPublish = project.pact.publish
+}
+
+runAndPublishConsumerPactTests.finalizedBy pactPublish
 
 sonarqube {
     properties {
@@ -371,7 +376,7 @@ dependencies {
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.106'
 
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.9'
-    implementation (group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'){
+    implementation (group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.0'){
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
     }
 
@@ -406,7 +411,7 @@ dependencies {
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.3.0'
 
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude group: "com.vaadin.external.google", module: "android-json"
@@ -426,7 +431,8 @@ dependencies {
     testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.8', classifier: 'all', {
+    testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
+    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.9', classifier: 'all', {
         exclude group: 'commons-io', module: 'commons-io'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
     }
