@@ -36,7 +36,7 @@ def versions = [
         jupiter            : '5.8.2',
         junitPlatform      : '1.13.2',
         gradlePitest       : '1.15.0',
-        pact_version       : '4.6.17',
+        pact_version       : '4.4.9',
         pitest             : '1.15.3',
         reformLogging      : '6.1.9',
         reformHealthStarter: '0.0.5',
