@@ -431,18 +431,20 @@ public class AsylumCaseUtils {
     public static List<String> getAppellantOrLegalRepAddressLetterPersonalisation(AsylumCase asylumCase) {
         boolean appellantRepresentation = hasBeenSubmittedByAppellantInternalCase(asylumCase);
         List<String> address;
-        // Internal appellant no representation - use appellant address
-        if (appellantRepresentation) {
-            address = inCountryAppeal(asylumCase) ?
-                    getAppellantAddressAsList(asylumCase) :
-                    getAppellantAddressAsListOoc(asylumCase);
-            // Internal appellant has representation - use legal rep address
-        } else {
+        if (appellantRepresentation) { // Internal appellant no representation - use appellant address
+            address = getAppellantLetterPersonalisation(asylumCase);
+        } else { // Internal appellant has representation - use legal rep address
             address = legalRepInCountryAppeal(asylumCase) ?
                     getLegalRepresentativeAddressAsList(asylumCase) :
                     getLegalRepresentativeAddressOocAsList(asylumCase);
         }
         return address;
+    }
+
+    public static List<String> getAppellantLetterPersonalisation(AsylumCase asylumCase) {
+      return inCountryAppeal(asylumCase) ?
+                getAppellantAddressAsList(asylumCase) :
+                getAppellantAddressAsListOoc(asylumCase);
     }
 
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {

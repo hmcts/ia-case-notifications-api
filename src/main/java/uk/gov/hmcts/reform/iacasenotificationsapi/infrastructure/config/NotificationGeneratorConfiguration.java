@@ -709,6 +709,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    // TODO: HERE?
     @Bean("listCaseNotificationGenerator")
     public List<NotificationGenerator> listCaseNotificationGenerator(
         LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation,
@@ -716,6 +717,7 @@ public class NotificationGeneratorConfiguration {
         CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
         AppellantListCasePersonalisationEmail legallyReppedAppellantListCasePersonalisationEmail,
         AppellantListCasePersonalisationSms legallyReppedAppellantListCasePersonalisationSms,
+        AppellantLegallyRepresentedCaseListedLetterPersonalisation appellantLegallyRepresentedCaseListedLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
@@ -739,7 +741,12 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(legallyReppedAppellantListCasePersonalisationSms),
                 notificationSender,
                 notificationIdAppender
-            )
+            ),
+            new LetterNotificationGenerator(
+                newArrayList(appellantLegallyRepresentedCaseListedLetterPersonalisation),
+                notificationSender,
+                notificationIdAppender
+              )
         );
     }
 

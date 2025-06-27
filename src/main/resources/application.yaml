@@ -379,6 +379,7 @@ govnotify:
       appellant:
         email: c87b9b3d-9054-4f75-a7df-aa53b317422d
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
+        letter: b9b381e1-cf22-401c-8233-cde4513b2173
       legallyReppedAppellant:
         email: 3593d788-2d44-452f-a0c8-218e33be57da
         sms: 367f98a9-57f2-4905-a696-529b27341b47
