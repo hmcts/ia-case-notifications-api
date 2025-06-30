@@ -256,9 +256,14 @@ task runContractTests(type: Test, description: 'Runs contract tests.', group: 'V
 }
 
 task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test to broker.', group: 'Verification') {
-    logger.lifecycle("Runs pact consumer Tests")
+    onlyIf {
+        return System.env.SKIP_CONTRACT_TESTS == null || System.env.SKIP_CONTRACT_TESTS == 'false'
+    }
+    useJUnitPlatform()
     testClassesDirs = sourceSets.contractTest.output.classesDirs
     classpath = sourceSets.contractTest.runtimeClasspath
+    systemProperty 'pact.rootDir', "pacts"
+    testLogging.showStandardStreams = true
 }
 
 pact {
@@ -268,7 +273,7 @@ pact {
     publish {
         pactDirectory = 'pacts'
         tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
-        version = project.pacticipantVersion
+        version = project.pacticipantVersion + '_' + System.nanoTime().toString()
     }
 }
 
@@ -461,9 +466,9 @@ dependencies {
     smokeTestImplementation sourceSets.test.runtimeClasspath
 
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
-    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
-    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pact_version
+//    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
+//    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
+//    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pact_version
     contractTestImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     contractTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
     contractTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version : versions.junit
