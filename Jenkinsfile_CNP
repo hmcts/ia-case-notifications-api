@@ -178,7 +178,7 @@ withPipeline(type, product, component) {
     afterAlways('akschartsinstall') {
         stage('Can I deploy without init script logs') {
             try {
-                sh('./gradlew --no-daemon canideploy --stacktrace --info --debug')
+                sh('./gradlew --no-daemon canideploy --stacktrace --info')
             } catch (Error) {
                 // Ignore the failure here, as this is a best effort attempt to deploy the charts
                 // and we don't want to fail the pipeline if it fails.
@@ -187,7 +187,7 @@ withPipeline(type, product, component) {
         }
         stage('Can I deploy with init script logs') {
             try {
-                sh('./gradlew --no-daemon --init-script init.gradle canideploy --stacktrace --info --debug')
+                sh('./gradlew --no-daemon --init-script init.gradle canideploy --stacktrace')
             } catch (Error) {
                 // Ignore the failure here, as this is a best effort attempt to deploy the charts
                 // and we don't want to fail the pipeline if it fails.
