@@ -176,19 +176,23 @@ withPipeline(type, product, component) {
     loadVaultSecrets(secrets)
 
     afterAlways('akschartsinstall') {
-        try {
-            sh('./gradlew --no-daemon canideploy')
-        } catch (Error) {
-            // Ignore the failure here, as this is a best effort attempt to deploy the charts
-            // and we don't want to fail the pipeline if it fails.
-            println Error.toString()
+        stage('Can I deploy without init script logs') {
+            try {
+                sh('./gradlew --no-daemon canideploy --stacktrace --info --debug')
+            } catch (Error) {
+                // Ignore the failure here, as this is a best effort attempt to deploy the charts
+                // and we don't want to fail the pipeline if it fails.
+                println Error.toString()
+            }
         }
-        try {
-            sh('./gradlew --no-daemon --init-script init.gradle canideploy')
-        } catch (Error) {
-            // Ignore the failure here, as this is a best effort attempt to deploy the charts
-            // and we don't want to fail the pipeline if it fails.
-            println Error.toString()
+        stage('Can I deploy with init script logs') {
+            try {
+                sh('./gradlew --no-daemon --init-script init.gradle canideploy --stacktrace --info --debug')
+            } catch (Error) {
+                // Ignore the failure here, as this is a best effort attempt to deploy the charts
+                // and we don't want to fail the pipeline if it fails.
+                println Error.toString()
+            }
         }
     }
 
