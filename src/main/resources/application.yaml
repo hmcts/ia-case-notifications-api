@@ -1902,6 +1902,7 @@ hearingCentreEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:hc-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:hc-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif@example.com}
+  iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:hc-virtualregion@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
