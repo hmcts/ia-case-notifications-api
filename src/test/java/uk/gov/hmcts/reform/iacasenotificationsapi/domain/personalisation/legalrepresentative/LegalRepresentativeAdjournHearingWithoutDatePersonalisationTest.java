@@ -5,13 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADJOURN_HEARING_WITHOUT_DATE_REASONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Map;
@@ -35,22 +29,21 @@ public class LegalRepresentativeAdjournHearingWithoutDatePersonalisationTest {
     @Mock
     AsylumCase asylumCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String someReason = "someExplanation";
-
-    private String legalRepEmailAddress = "legalrep@example.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String templateId = "someTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ccdReferenceNumber = "1234 2345 3456 4567";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String someReason = "someExplanation";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
 
     private LegalRepresentativeAdjournHearingWithoutDatePersonalisation
         legalRepresentativeAdjournHearingWithoutDatePersonalisation;
 
     @BeforeEach
     public void setup() {
+        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
@@ -70,6 +63,7 @@ public class LegalRepresentativeAdjournHearingWithoutDatePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
             legalRepresentativeAdjournHearingWithoutDatePersonalisation.getReferenceId(caseId));
     }
@@ -108,6 +102,11 @@ public class LegalRepresentativeAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
         assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(ccdReferenceNumber, personalisation.get("ccdReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(someReason, personalisation.get("insertAdjournmentReason"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
     }
 }
