@@ -56,6 +56,8 @@ java:
           alias: IA_HEARING_CENTRE_HATTON_CROSS_EMAIL
         - name: hearing-centre-glasgow-email
           alias: IA_HEARING_CENTRE_GLASGOW_EMAIL
+        - name: hearing-centre-virtual-region-email
+          alias: IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL
         - name: home-office-bradford-email
           alias: IA_HOME_OFFICE_BRADFORD_EMAIL
         - name: home-office-manchester-email
