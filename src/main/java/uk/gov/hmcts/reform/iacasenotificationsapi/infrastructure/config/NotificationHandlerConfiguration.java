@@ -1064,8 +1064,7 @@ public class NotificationHandlerConfiguration {
                     && isAppealOnTime
                     && !isEaHuEuAppeal(asylumCase)
                     && isDlrmFeeRemissionEnabled(asylumCase)
-                    && remissionOption == RemissionOption.NO_REMISSION
-                );
+                    && remissionOption == RemissionOption.NO_REMISSION);
             }, notificationGenerators
         );
     }
@@ -4365,8 +4364,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
                     && state != State.APPEAL_STARTED
                     && isEaHuEuAppeal(asylumCase)
-                    && !isRemissionRejectedAndPaymentChangedToCard(asylumCase)
-                );
+                    && !isRemissionRejectedAndPaymentChangedToCard(asylumCase));
             }, notificationGenerators
         );
     }
@@ -4452,7 +4450,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isCorrectAppealTypeAndState =
                     isCorrectAppealType
-                    && (currentState != State.APPEAL_STARTED
+                        && (currentState != State.APPEAL_STARTED
                         || currentState != State.APPEAL_SUBMITTED
                     );
 
