@@ -16,7 +16,7 @@ public enum SubscriberType {
         this.value = value;
     }
 
-    public static Optional<uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType> from(
+    public static Optional<SubscriberType> from(
         String value
     ) {
         return stream(values())
