@@ -61,6 +61,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAct
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
@@ -86,6 +87,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit.Pos
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.NotificationHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicationRespondentFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
@@ -750,7 +752,8 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> listCaseNotificationHandler(
-        @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("listCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators,
+        RecipientsFinder recipientsFinder) {
 
         // RIA-3631 - listCase
         return new NotificationHandler(
@@ -763,13 +766,60 @@ public class NotificationHandlerConfiguration {
                     return (callback.getEvent() == LIST_CASE
                             && isRepJourney(callback.getCaseDetails().getCaseData())
                             && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
-                            && !isAcceleratedDetainedAppeal(asylumCase));
+                            && !isAcceleratedDetainedAppeal(asylumCase)
+                            && digitalAppellantContactIsAvailable(asylumCase, recipientsFinder));
                 } else {
                     return false;
                 }
             },
             notificationGenerators
         );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> listCaseLetterBackupNotificationHandler(
+        @Qualifier("listCaseLetterBackupNotificationGenerator") List<NotificationGenerator> notificationGenerators,
+        RecipientsFinder recipientsFinder) {
+
+      // RIA-3631 - listCase
+      return new NotificationHandler(
+          (callbackStage, callback) -> {
+            boolean isAllowedAsylumCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == LIST_CASE);
+
+            if (isAllowedAsylumCase) {
+              AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+              return (callback.getEvent() == LIST_CASE
+                  && isRepJourney(callback.getCaseDetails().getCaseData())
+                  && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                  && !isAcceleratedDetainedAppeal(asylumCase)
+                  && digitalAppellantContactNotAvailable(asylumCase, recipientsFinder));
+            } else {
+              return false;
+            }
+          },
+          notificationGenerators
+      );
+    }
+
+    private boolean digitalAppellantContactNotAvailable(AsylumCase asylumCase, RecipientsFinder recipientsFinder) {
+      Set<String> emailAddresses = recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+      emailAddresses.addAll(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL));
+
+      Set<String> mobileNos = recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+      mobileNos.addAll(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS));
+
+      return emailAddresses.isEmpty() && mobileNos.isEmpty();
+    }
+
+    private boolean digitalAppellantContactIsAvailable(AsylumCase asylumCase, RecipientsFinder recipientsFinder) {
+        Set<String> emailAddresses = recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        emailAddresses.addAll(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL));
+
+        Set<String> mobileNos = recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        mobileNos.addAll(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS));
+
+        return !emailAddresses.isEmpty() || !mobileNos.isEmpty();
     }
 
     @Bean

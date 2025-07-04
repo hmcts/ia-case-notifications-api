@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAdjournHearingWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAppealOutcomePersonalisation;
@@ -717,7 +718,6 @@ public class NotificationGeneratorConfiguration {
         CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
         AppellantListCasePersonalisationEmail legallyReppedAppellantListCasePersonalisationEmail,
         AppellantListCasePersonalisationSms legallyReppedAppellantListCasePersonalisationSms,
-        AppellantLegallyRepresentedCaseListedLetterPersonalisation appellantLegallyRepresentedCaseListedLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
@@ -741,12 +741,46 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(legallyReppedAppellantListCasePersonalisationSms),
                 notificationSender,
                 notificationIdAppender
-            ),
-            new LetterNotificationGenerator(
-                newArrayList(appellantLegallyRepresentedCaseListedLetterPersonalisation),
+            )
+        );
+    }
+
+    @Bean("listCaseLetterBackupNotificationGenerator")
+    public List<NotificationGenerator> listCaseLetterBackupNotificationGenerator(
+        LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation,
+        HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
+        CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient) {
+
+        List<EmailNotificationPersonalisation> emailPersonalisations = isHomeOfficeGovNotifyEnabled ?
+            newArrayList(legalRepresentativeListCasePersonalisation,
+                homeOfficeListCasePersonalisation,
+                caseOfficerListCasePersonalisation) :
+            newArrayList(legalRepresentativeListCasePersonalisation,
+                caseOfficerListCasePersonalisation);
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE;
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
                 notificationSender,
                 notificationIdAppender
-              )
+            ),
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 
