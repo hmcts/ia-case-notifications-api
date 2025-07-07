@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -51,6 +52,7 @@ public class AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation imp
         return
             ImmutableMap
                 .<String, String>builder()
+                .put("ccdReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .putAll(adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase))
                 .build();
     }
