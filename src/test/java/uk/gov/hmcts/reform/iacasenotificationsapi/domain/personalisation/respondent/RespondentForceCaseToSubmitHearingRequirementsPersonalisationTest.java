@@ -3,11 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Collections;
@@ -32,17 +28,18 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
+    private final Long caseId = 12345L;
+    private final String templateId = "someTemplateId";
+    private final String detentionTemplateId = "detentionTemplateId";
+    private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
 
-    private String hmctsReference = "hmctsReference";
-    private String homeOfficeReference = "homeOfficeReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String hmctsReference = "hmctsReference";
+    private final String homeOfficeReference = "homeOfficeReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private RespondentForceCaseToSubmitHearingRequirementsPersonalisation
-        respondentForceCaseToSubmitHearingRequirementsPersonalisation;
+            respondentForceCaseToSubmitHearingRequirementsPersonalisation;
 
     @BeforeEach
     public void setUp() {
@@ -52,28 +49,43 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         respondentForceCaseToSubmitHearingRequirementsPersonalisation =
-            new RespondentForceCaseToSubmitHearingRequirementsPersonalisation(
-                templateId,
-                homeOfficeLartEmailAddress
-            );
+                new RespondentForceCaseToSubmitHearingRequirementsPersonalisation(
+                        templateId,
+                        detentionTemplateId,
+                        homeOfficeLartEmailAddress
+                );
     }
 
     @Test
-    public void should_return_the_given_template_id() {
+    public void should_return_the_given_template_id_for_non_detention() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
-        assertEquals(templateId, respondentForceCaseToSubmitHearingRequirementsPersonalisation.getTemplateId());
+        assertEquals(templateId, respondentForceCaseToSubmitHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+    }
+
+    public void should_return_the_given_template_id_for_missing_detention() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertEquals(templateId, respondentForceCaseToSubmitHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(detentionTemplateId, respondentForceCaseToSubmitHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_the_ho_lart_email_address_at_respondent_review() {
         assertEquals(Collections.singleton(homeOfficeLartEmailAddress),
-            respondentForceCaseToSubmitHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
+                respondentForceCaseToSubmitHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
-            respondentForceCaseToSubmitHearingRequirementsPersonalisation.getReferenceId(caseId));
+                respondentForceCaseToSubmitHearingRequirementsPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
@@ -83,22 +95,22 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentForceCaseToSubmitHearingRequirementsPersonalisation);
         Map<String, String> personalisation =
-            respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
+                respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(hmctsReference, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+                ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(
-            () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+                () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
+                .isExactlyInstanceOf(NullPointerException.class)
+                .hasMessage("asylumCase must not be null");
     }
 }
