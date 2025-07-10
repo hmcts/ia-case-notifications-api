@@ -30,11 +30,11 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisation imple
     private String nonAdaPrefix;
 
     public RespondentForceCaseToSubmitHearingRequirementsPersonalisation(
-            @NotNull(message = "respondentForceCaseToSubmitHearingRequirementsTemplateId cannot be null")
-            @Value("${govnotify.template.forceCaseProgression.respondentReview.to.submitHearingRequirements.respondent.email}") String respondentForceCaseToSubmitHearingRequirementsTemplateId,
-            @Value("${govnotify.template.forceCaseProgression.respondentReview.to.submitHearingRequirements.respondent.detention.email}") String respondentForceCaseToSubmitHearingRequirementsDetentionTemplateId,
-            @NotNull(message = "respondentEmailAddressAtRespondentReview cannot be null")
-            @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddressAtRespondentReview
+        @NotNull(message = "respondentForceCaseToSubmitHearingRequirementsTemplateId cannot be null")
+        @Value("${govnotify.template.forceCaseProgression.respondentReview.to.submitHearingRequirements.respondent.email}") String respondentForceCaseToSubmitHearingRequirementsTemplateId,
+        @Value("${govnotify.template.forceCaseProgression.respondentReview.to.submitHearingRequirements.respondent.detention.email}") String respondentForceCaseToSubmitHearingRequirementsDetentionTemplateId,
+        @NotNull(message = "respondentEmailAddressAtRespondentReview cannot be null")
+        @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddressAtRespondentReview
     ) {
 
         this.respondentForceCaseToSubmitHearingRequirementsTemplateId = respondentForceCaseToSubmitHearingRequirementsTemplateId;
@@ -71,12 +71,12 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisation imple
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap
-                .<String, String>builder()
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .build();
+            .<String, String>builder()
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .build();
     }
 }
