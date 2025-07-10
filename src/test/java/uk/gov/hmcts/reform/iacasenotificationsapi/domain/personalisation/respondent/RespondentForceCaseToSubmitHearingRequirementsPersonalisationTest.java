@@ -39,7 +39,7 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
 
     private RespondentForceCaseToSubmitHearingRequirementsPersonalisation
-            respondentForceCaseToSubmitHearingRequirementsPersonalisation;
+         espondentForceCaseToSubmitHearingRequirementsPersonalisation;
 
     @BeforeEach
     public void setUp() {
@@ -49,11 +49,11 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         respondentForceCaseToSubmitHearingRequirementsPersonalisation =
-                new RespondentForceCaseToSubmitHearingRequirementsPersonalisation(
-                        templateId,
-                        detentionTemplateId,
-                        homeOfficeLartEmailAddress
-                );
+            new RespondentForceCaseToSubmitHearingRequirementsPersonalisation(
+                templateId,
+                detentionTemplateId,
+                homeOfficeLartEmailAddress
+            );
     }
 
     @Test
@@ -79,13 +79,13 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
     @Test
     public void should_return_the_ho_lart_email_address_at_respondent_review() {
         assertEquals(Collections.singleton(homeOfficeLartEmailAddress),
-                respondentForceCaseToSubmitHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
+            respondentForceCaseToSubmitHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
-                respondentForceCaseToSubmitHearingRequirementsPersonalisation.getReferenceId(caseId));
+            respondentForceCaseToSubmitHearingRequirementsPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
@@ -95,22 +95,22 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentForceCaseToSubmitHearingRequirementsPersonalisation);
         Map<String, String> personalisation =
-                respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
+            respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(hmctsReference, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(
-                () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+            () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
+            .isExactlyInstanceOf(NullPointerException.class)
+            .hasMessage("asylumCase must not be null");
     }
 }
