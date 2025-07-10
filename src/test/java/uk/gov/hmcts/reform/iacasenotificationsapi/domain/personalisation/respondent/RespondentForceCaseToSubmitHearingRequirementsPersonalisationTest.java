@@ -39,7 +39,7 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
 
     private RespondentForceCaseToSubmitHearingRequirementsPersonalisation
-         espondentForceCaseToSubmitHearingRequirementsPersonalisation;
+         respondentForceCaseToSubmitHearingRequirementsPersonalisation;
 
     @BeforeEach
     public void setUp() {
