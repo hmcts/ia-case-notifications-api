@@ -172,7 +172,7 @@ govnotify:
           email: b37bfeae-cc9a-4389-92d6-b3a65060b192
           sms: 352c22ca-8dbf-44f0-96d8-8ad5d5550345
         partiallyApproved:
-          email: 6ed39862-b574-4df6-b82e-e544957cf529
+          email: 3de5881f-7b79-4e98-b27d-f23b5da98548
           sms: 8fd27331-abc0-4cc3-b61a-bb906b8f960d
           letter: cd5cad85-e337-4b06-9501-ff4cc1e6c892
         rejected:
