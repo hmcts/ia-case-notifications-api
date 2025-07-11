@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @Component
 public class LegalRepresentativeRemissionDecisionPaRejectedPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
-
+ 
     private final String rejectedTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;

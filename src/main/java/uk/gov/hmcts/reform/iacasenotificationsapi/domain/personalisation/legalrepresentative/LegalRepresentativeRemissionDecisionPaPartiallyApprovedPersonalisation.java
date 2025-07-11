@@ -21,14 +21,13 @@ public class LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisat
     implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String partiallyApprovedTemplateId;
-    private final String partiallyApprovedTemplatePaId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
     private final FeatureToggler featureToggler;
 
     public LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation(
         @Value("${govnotify.template.remissionDecision.legalRep.pa.partiallyApproved.email}")
-            String partiallyApprovedTemplatePaId,    
+            String partiallyApprovedTemplateId,    
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider,
         FeatureToggler featureToggler
@@ -37,7 +36,6 @@ public class LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisat
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.featureToggler = featureToggler;
-        this.partiallyApprovedTemplatePaId = partiallyApprovedTemplatePaId;
     }
 
     @Override
