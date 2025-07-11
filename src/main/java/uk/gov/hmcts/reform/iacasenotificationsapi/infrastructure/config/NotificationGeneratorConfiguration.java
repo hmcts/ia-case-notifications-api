@@ -3576,6 +3576,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionPartiallyApprovedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionPartiallyApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
+        LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3583,7 +3584,8 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
+                    legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -3594,6 +3596,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionRejectedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionRejectedNotificationHandler(
         LegalRepresentativeRemissionDecisionRejectedPersonalisation legalRepresentativeRemissionDecisionRejectedPersonalisation,
+        LegalRepresentativeRemissionDecisionPaRejectedPersonalisation legalRepresentativeRemissionDecisionPaRejectedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3601,7 +3604,8 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionRejectedPersonalisation
+                    legalRepresentativeRemissionDecisionRejectedPersonalisation,
+                    legalRepresentativeRemissionDecisionPaRejectedPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
