@@ -40,6 +40,8 @@ java:
           alias: IA_ADMIN_HARMONDSWORTH_EMAIL
         - name: admin-office-yarlswood-email
           alias: IA_ADMIN_YARLSWOOD_EMAIL
+        - name: admin-office-virtual-region-email
+          alias: IA_ADMIN_VIRTUAL_REGION_EMAIL
         - name: hearing-centre-bradford-email
           alias: IA_HEARING_CENTRE_BRADFORD_EMAIL
         - name: hearing-centre-manchester-email
@@ -74,6 +76,8 @@ java:
           alias: IA_HOME_OFFICE_HATTON_CROSS_EMAIL
         - name: home-office-glasgow-email
           alias: IA_HOME_OFFICE_GLASGOW_EMAIL
+        - name: home-office-virtual-region-email
+          alias: IA_HOME_OFFICE_VIRTUAL_REGION_EMAIL
         - name: home-office-apc-email
           alias: IA_HOME_OFFICE_APC_EMAIL
         - name: ftpa-home-office-bradford-email
@@ -86,6 +90,8 @@ java:
           alias: IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL
         - name: ftpa-home-office-yarlswood-email
           alias: IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL
+        - name: ftpa-home-office-virtual-region-email
+          alias: IA_FTPA_HOME_OFFICE_VIRTUAL_REGION_EMAIL
         - name: hearing-centre-bradford-telephone
           alias: IA_HEARING_CENTRE_BRADFORD_TELEPHONE
         - name: hearing-centre-manchester-telephone
@@ -101,6 +107,8 @@ java:
         - name: hearing-centre-hatton-cross-telephone
           alias: IA_HEARING_CENTRE_HATTON_CROSS_TELEPHONE
         - name: hearing-centre-glasgow-telephone
+          alias: IA_HEARING_CENTRE_GLASGOW_TELEPHONE
+        - name: hearing-centre-virtual-region-telephone
           alias: IA_HEARING_CENTRE_GLASGOW_TELEPHONE
         - name: respondent-evidence-direction-email
           alias: IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL
