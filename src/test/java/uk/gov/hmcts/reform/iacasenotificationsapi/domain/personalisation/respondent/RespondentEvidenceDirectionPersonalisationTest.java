@@ -40,48 +40,47 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @Mock Direction direction;
     @Mock CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String ejpTemplateId = "someEjpTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String respondentReviewEmailAddress = "respondentReview@example.com";
+    private final Long caseId = 12345L;
+    private final String templateId = "someTemplateId";
+    private final String ejpTemplateId = "someEjpTemplateId";
+    private final String detentionTemplateId = "someDetentionTemplateId";
+    private final String respondentReviewEmailAddress = "respondentReview@example.com";
 
-    private String directionDueDate = "2019-08-27";
-    private String expectedDirectionDueDate = "27 Aug 2019";
-    private String companyName = "Legal Rep Company Name";
-    private String companyAddress = "45 Lunar House Spa Road London SE1 3HP";
-    private String legalRepName = "Legal Rep Name";
-    private String legalRepFamilyName = "Legal Rep Family Name";
-    private String legalRepReference = "Legal Rep Reference";
-    private String legalRepEmail = "Legal Rep Email";
-    private String legalRepEjpGivenName = "Given Name";
-    private String legalRepEjpFamilyName = "Family Name";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
+    private final String companyName = "Legal Rep Company Name";
+    private final String companyAddress = "45 Lunar House Spa Road London SE1 3HP";
+    private final String legalRepName = "Legal Rep Name";
+    private final String legalRepFamilyName = "Legal Rep Family Name";
+    private final String legalRepReference = "Legal Rep Reference";
+    private final String legalRepEmail = "Legal Rep Email";
+    private final String legalRepEjpGivenName = "Given Name";
+    private final String legalRepEjpFamilyName = "Family Name";
 
-    private String legalRepEjpReference = "Legal Rep Reference Ejp";
-    private String legalRepEjpEmail = "Legal Rep Email Ejp";
-    private String legalRepEjpCompanyName = "Legal Rep Company Name Ejp";
-    private AddressUk legalRepCompanyAddress;
+    private final String legalRepEjpReference = "Legal Rep Reference Ejp";
+    private final String legalRepEjpEmail = "Legal Rep Email Ejp";
+    private final String legalRepEjpCompanyName = "Legal Rep Company Name Ejp";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer.services@example.com";
 
     private RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation;
 
     @BeforeEach
     public void setup() {
 
-        legalRepCompanyAddress = new AddressUk("45 Lunar House",
+        AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
                 "Spa Road",
                 "Woolworth",
                 "London",
                 "London",
-                "SE1 3HP","UK");
+                "SE1 3HP", "UK");
 
+        String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(direction));
 
@@ -100,11 +99,13 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        String iaExUiFrontendUrl = "http://somefrontendurl";
         respondentEvidenceDirectionPersonalisation = new RespondentEvidenceDirectionPersonalisation(
             templateId,
             ejpTemplateId,
+            detentionTemplateId,
             respondentReviewEmailAddress,
-            iaExUiFrontendUrl,
+                iaExUiFrontendUrl,
             directionFinder,
             customerServicesProvider);
         when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
@@ -125,6 +126,26 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
         assertEquals(ejpTemplateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_non_detention() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+
+        assertEquals(templateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    public void should_return_the_given_template_id_for_missing_detention() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertEquals(templateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(detentionTemplateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -158,7 +179,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
+        assertEquals(companyAddress, personalisation.get("companyAddress"));
         assertEquals(companyName, personalisation.get("companyName"));
         assertEquals(companyName, personalisation.get("companyName"));
         assertEquals(companyName, personalisation.get("companyName"));
@@ -174,7 +195,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
-
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -199,6 +219,33 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+    }
+
+    @Test
+    public void should_return_personalisation_when_all_mandatory_information_given_detained_appeal() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(companyName, personalisation.get("companyName"));
+        assertEquals(companyAddress, personalisation.get("companyAddress"));
+        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
+        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
+        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest

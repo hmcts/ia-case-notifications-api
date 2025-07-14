@@ -263,6 +263,8 @@ govnotify:
         email:
           nonEjp: dfc0ee96-c71a-4db3-98ca-f70d7eec1525
           ejp: 492e19f3-6e91-4eb2-961c-7abe1931a0b2
+        detention:
+          email: c3829e8a-e9e5-4661-8e8e-222e0f0b46e8
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
