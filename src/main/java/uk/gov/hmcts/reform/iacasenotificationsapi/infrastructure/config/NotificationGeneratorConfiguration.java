@@ -3587,7 +3587,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("remissionDecisionPaPartiallyApprovedNotificationGenerator")
-    public List<NotificationGenerator> remissionDecisionPAPartiallyApprovedNotificationHandler(
+    public List<NotificationGenerator> remissionDecisionPaPartiallyApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
