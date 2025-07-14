@@ -3642,7 +3642,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionPartiallyPaApprovedNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionPAPartiallyApprovedNotificationHandler(
         @Qualifier("remissionDecisionPaPartiallyApprovedNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
