@@ -180,9 +180,9 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(companyName, personalisation.get("companyName"));
         assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
+        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
+        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
+        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
