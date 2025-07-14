@@ -3576,6 +3576,23 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionPartiallyApprovedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionPartiallyApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("remissionDecisionPaPartiallyApprovedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionPAPartiallyApprovedNotificationHandler(
         LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -3584,7 +3601,6 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation,
                     legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation
                 ),
                 notificationSender,
@@ -3596,6 +3612,23 @@ public class NotificationGeneratorConfiguration {
     @Bean("remissionDecisionRejectedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionRejectedNotificationHandler(
         LegalRepresentativeRemissionDecisionRejectedPersonalisation legalRepresentativeRemissionDecisionRejectedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeRemissionDecisionRejectedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("remissionDecisionPaRejectedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionPaRejectedNotificationHandler(
         LegalRepresentativeRemissionDecisionPaRejectedPersonalisation legalRepresentativeRemissionDecisionPaRejectedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -3604,7 +3637,6 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeRemissionDecisionRejectedPersonalisation,
                     legalRepresentativeRemissionDecisionPaRejectedPersonalisation
                 ),
                 notificationSender,

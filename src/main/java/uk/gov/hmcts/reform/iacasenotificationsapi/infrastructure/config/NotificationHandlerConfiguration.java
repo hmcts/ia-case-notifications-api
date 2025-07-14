@@ -3634,7 +3634,34 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
-                       && isPartiallyApproved;
+                       && isPartiallyApproved
+                       && isEaHuAppeal(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionPartiallyPaApprovedNotificationHandler(
+        @Qualifier("remissionDecisionPaPartiallyApprovedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                boolean isPartiallyApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> PARTIALLY_APPROVED == decision)
+                    .orElse(false);   
+                    
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                       && isPartiallyApproved
+                       && isPaAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -3662,7 +3689,36 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
-                       && isRejected;
+                       && isRejected
+                       && isEaHuAppeal(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remissionDecisionPaRejectedNotificationHandler(
+        @Qualifier("remissionDecisionPaRejectedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase =
+                    callback
+                        .getCaseDetails()
+                        .getCaseData();
+
+                boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> REJECTED == decision)
+
+
+                    .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                       && isRejected
+                       && isPaAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -3880,6 +3936,12 @@ public class NotificationHandlerConfiguration {
         return asylumCase
             .read(APPEAL_TYPE, AppealType.class)
             .map(type -> type == PA).orElse(false);
+    }
+
+    protected boolean isEaHuAppeal(AsylumCase asylumCase) {
+        return asylumCase
+            .read(APPEAL_TYPE, AppealType.class)
+            .map(type -> type == EA || type == HU).orElse(false);
     }
 
     protected boolean isEaHuEuAppeal(AsylumCase asylumCase) {
