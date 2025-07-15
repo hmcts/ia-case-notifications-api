@@ -3635,7 +3635,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
                        && isPartiallyApproved
-                       && isEuHuAppeal(asylumCase);
+                       && isEaHuAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -3690,7 +3690,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
                        && isRejected
-                       && isEuHuAppeal(asylumCase);
+                       && isEaHuAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -3938,10 +3938,10 @@ public class NotificationHandlerConfiguration {
             .map(type -> type == PA).orElse(false);
     }
 
-    protected boolean isEuHuAppeal(AsylumCase asylumCase) {
+    protected boolean isEaHuAppeal(AsylumCase asylumCase) {
         return asylumCase
             .read(APPEAL_TYPE, AppealType.class)
-            .map(type -> type == EU || type == HU).orElse(false);
+            .map(type -> type == EA || type == HU).orElse(false);
     }
 
     protected boolean isEaHuEuAppeal(AsylumCase asylumCase) {
