@@ -41,7 +41,7 @@ def versions = [
         reformLogging      : '6.1.9',
         reformHealthStarter: '0.0.5',
         restAssured        : '5.4.0',
-        serenity           : '4.2.34',
+        serenity           : '4.2.31',
         sonarPitest        : '0.5',
         springHystrix      : '2.2.10.RELEASE',
         springDoc          : '1.8.0',
