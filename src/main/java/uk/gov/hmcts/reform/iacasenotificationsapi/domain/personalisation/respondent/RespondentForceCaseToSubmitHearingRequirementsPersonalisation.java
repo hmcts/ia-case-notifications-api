@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
 @Service
@@ -44,12 +42,7 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisation imple
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        boolean appellantInDetention = asylumCase
-                .read(APPELLANT_IN_DETENTION, YesOrNo.class)
-                .map(inDetention -> YES == inDetention)
-                .orElse(false);
-
-        if (appellantInDetention) {
+        if (isAppellantInDetention(asylumCase)) {
             return respondentForceCaseToSubmitHearingRequirementsDetentionTemplateId;
         } else {
             return respondentForceCaseToSubmitHearingRequirementsTemplateId;
