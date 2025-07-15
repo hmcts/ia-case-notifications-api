@@ -175,27 +175,6 @@ withPipeline(type, product, component) {
 
     loadVaultSecrets(secrets)
 
-    afterAlways('akschartsinstall') {
-        stage('Can I deploy without init script logs') {
-            try {
-                sh('./gradlew --no-daemon canideploy --stacktrace --info')
-            } catch (Error) {
-                // Ignore the failure here, as this is a best effort attempt to deploy the charts
-                // and we don't want to fail the pipeline if it fails.
-                println Error.toString()
-            }
-        }
-        stage('Can I deploy with init script logs') {
-            try {
-                sh('./gradlew --no-daemon --init-script init.gradle canideploy --stacktrace')
-            } catch (Error) {
-                // Ignore the failure here, as this is a best effort attempt to deploy the charts
-                // and we don't want to fail the pipeline if it fails.
-                println Error.toString()
-            }
-        }
-    }
-
     afterAlways('test') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
         publishHTML target: [
@@ -219,9 +198,9 @@ withPipeline(type, product, component) {
     enableSlackNotifications('#ia-tech')
 
     onMaster() {
-        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER, AppPipelineDsl.PactRoles.CONSUMER_DEPLOY_CHECK])
+        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
     }
     onPR() {
-        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER, AppPipelineDsl.PactRoles.CONSUMER_DEPLOY_CHECK])
+        enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
     }
 }
