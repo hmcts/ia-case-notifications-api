@@ -66,7 +66,12 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
             return Collections.emptySet();
         }
 
-        return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        Optional<String> detEmailAddress = detEmailService.getDetEmailAddress(asylumCase);
+        if (detEmailAddress.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        return Collections.singleton(detEmailAddress.get());
     }
 
     @Override

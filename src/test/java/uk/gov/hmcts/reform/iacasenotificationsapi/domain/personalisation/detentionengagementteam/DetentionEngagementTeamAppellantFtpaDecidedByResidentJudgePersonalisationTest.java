@@ -113,7 +113,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(Optional.of(detEmailAddress));
 
         assertTrue(
                 detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
