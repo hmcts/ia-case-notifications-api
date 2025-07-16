@@ -177,17 +177,27 @@ govnotify:
           email: b37bfeae-cc9a-4389-92d6-b3a65060b192
           sms: 352c22ca-8dbf-44f0-96d8-8ad5d5550345
         partiallyApproved:
-          email: 3de5881f-7b79-4e98-b27d-f23b5da98548
-          sms: 8fd27331-abc0-4cc3-b61a-bb906b8f960d
+          email: 6ed39862-b574-4df6-b82e-e544957cf529
+          sms: 87e44e78-ee3a-41af-98b1-d8e78bd54681
           letter: cd5cad85-e337-4b06-9501-ff4cc1e6c892
         rejected:
-          email: 8492f47a-7e71-4f76-9b03-4839a93803e5
-          sms: 6afea8a5-3d4c-4a16-8f0b-53194949a4f0
+          email: 5e23cb62-9c63-4fc2-8c04-cdb3adf69013
+          sms: 4bebbf93-8aef-47c0-b1a9-a89da915f9e5
           letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
           outOfTime:
             letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
           onTime:
             letter: 14fd949c-d879-4878-ae6d-844abce5baf3
+        pa:
+          approved:
+            email: b37bfeae-cc9a-4389-92d6-b3a65060b192
+            sms: 352c22ca-8dbf-44f0-96d8-8ad5d5550345
+          partiallyApproved:
+            email: 3de5881f-7b79-4e98-b27d-f23b5da98548
+            sms: 8fd27331-abc0-4cc3-b61a-bb906b8f960d
+          rejected:
+            email: 8492f47a-7e71-4f76-9b03-4839a93803e5
+            sms: 6afea8a5-3d4c-4a16-8f0b-53194949a4f0 
         approvedOrPartiallyApproved:
           approved:
             letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
