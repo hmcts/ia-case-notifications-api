@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 
 @Service
@@ -58,6 +59,7 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisation implements Ema
             ImmutableMap
                 .<String, String>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("ccdReferenceNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .putAll(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
                 .build();
     }

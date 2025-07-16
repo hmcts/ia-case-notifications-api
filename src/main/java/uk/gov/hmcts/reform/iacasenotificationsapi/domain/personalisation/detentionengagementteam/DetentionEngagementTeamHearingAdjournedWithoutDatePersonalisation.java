@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_ADJOURN_HEARING_WITHOUT_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
@@ -28,8 +29,8 @@ public class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation i
     private final DocumentDownloadClient documentDownloadClient;
     private final DetEmailService detEmailService;
     private final PersonalisationProvider personalisationProvider;
-    private String adaPrefix;
-    private String nonAdaPrefix;
+    private final String adaPrefix;
+    private final String nonAdaPrefix;
 
 
     public DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation(
@@ -71,6 +72,7 @@ public class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation i
                 .<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
+                .put("ccdReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("documentLink", getInternalDetainedAdjournWithoutDateLetterInJsonObject(asylumCase))
                 .build();
     }
