@@ -47,7 +47,6 @@ def secrets = [
         secret('ftpa-home-office-north-shields-email', 'IA_FTPA_HOME_OFFICE_NEWCASTLE_EMAIL'),
         secret('ftpa-home-office-hatton-cross-email', 'IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL'),
         secret('ftpa-home-office-yarlswood-email', 'IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL'),
-        secret('ftpa-home-office-virtual-region-email', 'IA_FTPA_HOME_OFFICE_VIRTUAL_REGION_EMAIL'),
 
         secret('hearing-centre-bradford-telephone', 'IA_HEARING_CENTRE_BRADFORD_TELEPHONE'),
         secret('hearing-centre-manchester-telephone', 'IA_HEARING_CENTRE_MANCHESTER_TELEPHONE'),

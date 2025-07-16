@@ -90,8 +90,6 @@ java:
           alias: IA_FTPA_HOME_OFFICE_HATTON_CROSS_EMAIL
         - name: ftpa-home-office-yarlswood-email
           alias: IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL
-        - name: ftpa-home-office-virtual-region-email
-          alias: IA_FTPA_HOME_OFFICE_VIRTUAL_REGION_EMAIL
         - name: hearing-centre-bradford-telephone
           alias: IA_HEARING_CENTRE_BRADFORD_TELEPHONE
         - name: hearing-centre-manchester-telephone
