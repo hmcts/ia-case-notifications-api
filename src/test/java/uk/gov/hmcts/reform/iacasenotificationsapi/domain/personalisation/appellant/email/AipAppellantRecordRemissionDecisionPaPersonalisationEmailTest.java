@@ -60,7 +60,7 @@ class AipAppellantRecordRemissionDecisionPaPersonalisationEmailTest {
     @Mock
     FeatureToggler featureToggler;
 
-    private AipAppellantRecordRemissionDecisionPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail;
+    private AipAppellantRecordRemissionDecisionPaPersonalisationEmail aipAppellantRecordRemissionDecisionPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
@@ -74,7 +74,7 @@ class AipAppellantRecordRemissionDecisionPaPersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
-        aipAppellantRecordRemissionDecisionPersonalisationEmail = new AipAppellantRecordRemissionDecisionPersonalisationEmail(
+        aipAppellantRecordRemissionDecisionPersonalisationEmail = new AipAppellantRecordRemissionDecisionPaPersonalisationEmail(
             aipAppellantRemissionApprovedTemplateId,
             aipAppellantRemissionPartiallyApprovedTemplateId,
             aipAppellantRemissionRejectedTemplateId,
