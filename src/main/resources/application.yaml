@@ -298,6 +298,8 @@ govnotify:
     buildCaseDirection:
       legalRep:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
+        detention:
+          email: 68fdfc26-6bef-45c8-84cf-ae1ece8572cf
     reviewDirection:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
