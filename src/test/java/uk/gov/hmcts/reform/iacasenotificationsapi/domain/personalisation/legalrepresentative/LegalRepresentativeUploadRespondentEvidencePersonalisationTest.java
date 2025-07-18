@@ -92,6 +92,7 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
         assertEquals(templateId, legalRepresentativeUploadRespondentEvidencePersonalisation.getTemplateId(asylumCase));
     }
 
+    @Test
     public void should_return_the_given_template_id_for_missing_detention() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.empty());
 
