@@ -99,6 +99,7 @@ public class RespondentDirectionPersonalisationTest {
 
         assertEquals(detentionTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
     }
+
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_RESPONDENT_REVIEW_DIRECTION", respondentDirectionPersonalisation.getReferenceId(caseId));
