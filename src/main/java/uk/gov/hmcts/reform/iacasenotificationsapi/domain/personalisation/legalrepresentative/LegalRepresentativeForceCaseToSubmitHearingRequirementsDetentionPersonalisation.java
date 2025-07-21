@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -14,6 +15,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 @Service
+@Slf4j
 public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String legalRepForceCaseToSubmitHearingRequirementsDetentionTemplateId;
@@ -55,6 +57,7 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+        log.info("-------------------------: {}", legalRepForceCaseToSubmitHearingRequirementsDetentionTemplateId);
         final String dueDate = systemDateProvider.dueDate(daysAfterRequestingHearingRequirements);
 
         return ImmutableMap
