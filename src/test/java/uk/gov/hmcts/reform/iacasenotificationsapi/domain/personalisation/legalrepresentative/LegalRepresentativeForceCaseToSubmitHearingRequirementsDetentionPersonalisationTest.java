@@ -39,10 +39,11 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
     private final String templateId = "someTemplateId";
     private final int daysAfterRequestingHearingRequirements = 5;
     private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String legalRepReferenceNumber = "someLegalRepReferenceNumber";
+    private final String homeOfficeReferencrNumber = "someHomeOfficeReferenceNumber";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String linkToOnlineService = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
 
     private LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation
@@ -50,11 +51,12 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
 
     @BeforeEach
     public void setup() {
-
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferencrNumber));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
@@ -119,6 +121,8 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
         assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReferencrNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
@@ -138,6 +142,8 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation);
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
@@ -148,6 +154,8 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
 
         assertThat(personalisation).isNotEmpty();
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
         assertEquals("", personalisation.get("appealReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
