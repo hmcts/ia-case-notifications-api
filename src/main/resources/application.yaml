@@ -82,10 +82,10 @@ govnotify:
         respondent:
           email: 7b597ead-8218-4227-8168-31d24a2824c5
           detention:
-            email: 8f191673-6f52-425f-910e-5222769c513a
+            email: a60e2dfe-df22-4633-a172-e54c37aeabd9
         legalRep:
           detention:
-            email: a60e2dfe-df22-4633-a172-e54c37aeabd9
+            email: 8f191673-6f52-425f-910e-5222769c513a
       awaitingRespondentEvidence.to.caseBuilding:
         respondent:
           email: fe79c1c1-2f1c-4e46-a58d-e28845ac9761
