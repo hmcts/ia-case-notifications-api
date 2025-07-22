@@ -6,6 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -15,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.CcdEventAuthorizor;
 
+@Slf4j
 @Component
 public class PreSubmitCallbackDispatcher<T extends CaseData> {
 
@@ -48,14 +52,31 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
                 .getCaseDetails()
                 .getCaseData();
 
-        PreSubmitCallbackResponse<T> callbackResponse =
-            new PreSubmitCallbackResponse<>(caseData);
+        log.info("CaseDetails for callback stage `{}` and event `{}`: {}",
+            callbackStage,
+            callback.getEvent(),
+            callback.getCaseDetails());
+        log.info("CaseData for callback stage `{}` and event `{}`: {}",
+            callbackStage,
+            callback.getEvent(),
+            caseData);
+ 
+        ExtendedAsylumCase<T> caseData3 = ExtendedAsylumCase.copyToExtended((AsylumCase) caseData);
+
+        @SuppressWarnings("unchecked")
+        PreSubmitCallbackResponse2<T> callbackResponse =
+            new PreSubmitCallbackResponse2<>((T) caseData3);
 
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.EARLIEST);
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.EARLY);
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.LATE);
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.LATEST);
 
+        log.info("Callback response after dispatching handlers for stage `{}` and event `{}`: {}",
+            callbackStage,
+            callback.getEvent(),
+            callbackResponse);
+    
         return callbackResponse;
     }
 
@@ -94,6 +115,26 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
                     }
                 }
             }
+        }
+    }
+
+    private static class PreSubmitCallbackResponse2<T extends CaseData> extends PreSubmitCallbackResponse<T> {
+        
+        public PreSubmitCallbackResponse2(T caseData) {
+            super(caseData);
+        }
+    }
+
+    private static class ExtendedAsylumCase<T extends CaseData> extends AsylumCase {
+        
+        public static <T extends CaseData> ExtendedAsylumCase<T> copyToExtended(AsylumCase original) {
+            ExtendedAsylumCase<T> extended = new ExtendedAsylumCase<>();
+            // Copy all fields from original AsylumCase except isNabaEnabledOoc
+            original.entrySet().stream()
+                .filter(entry -> !"isNabaEnabledOoc".equals(entry.getKey()))
+                .forEach(entry -> extended.put(entry.getKey(), entry.getValue()));
+            //extended.put("stowaway", "defaultPassengerValue");
+            return extended;
         }
     }
 }
