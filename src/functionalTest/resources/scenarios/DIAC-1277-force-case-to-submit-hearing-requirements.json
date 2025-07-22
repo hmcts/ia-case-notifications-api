@@ -1,5 +1,5 @@
 {
-  "description": "RIA-2776 Case Officer forced case progression to submit hearing requirements",
+  "description": "DIAC-1277 Case Officer forced case progression to submit hearing requirements for detained appeal",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
