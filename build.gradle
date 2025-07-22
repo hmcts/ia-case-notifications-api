@@ -300,7 +300,7 @@ dependencyManagement {
             entry 'snakeyaml'
         }
 
-        dependencySet(group: 'commons-fileupload', version: '1.5') {
+        dependencySet(group: 'commons-fileupload', version: '1.6.0') {
             entry 'commons-fileupload'
         }
 
@@ -351,7 +351,7 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.37.2'
 
     // CVE-2021-27568
-    implementation group: 'net.minidev', name: 'json-smart', version: '2.5.0'
+    implementation group: 'net.minidev', name: 'json-smart', version: '2.5.2'
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.9.3'
 
@@ -390,7 +390,7 @@ dependencies {
     implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap' , version: '3.1.7') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
     }
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.75'
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
 
     implementation 'ch.qos.logback:logback-classic:1.2.13'
     implementation 'ch.qos.logback:logback-core:1.2.13'
