@@ -129,9 +129,11 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
         
         public static <T extends CaseData> ExtendedAsylumCase<T> copyToExtended(AsylumCase original) {
             ExtendedAsylumCase<T> extended = new ExtendedAsylumCase<>();
-            // Copy all fields from original AsylumCase
-            extended.putAll(original);
-            extended.put("stowaway", "defaultPassengerValue");
+            // Copy all fields from original AsylumCase except isNabaEnabledOoc
+            original.entrySet().stream()
+                .filter(entry -> !"isNabaEnabledOoc".equals(entry.getKey()))
+                .forEach(entry -> extended.put(entry.getKey(), entry.getValue()));
+            //extended.put("stowaway", "defaultPassengerValue");
             return extended;
         }
     }
