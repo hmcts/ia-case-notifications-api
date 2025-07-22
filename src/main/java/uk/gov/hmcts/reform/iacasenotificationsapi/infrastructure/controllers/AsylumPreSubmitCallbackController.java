@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.validation.constraints.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PreSubmitCallbackDispatcher;
 
 @Tag(name = "Asylum service")
-
+@Slf4j
 @RequestMapping(
     path = "/asylum",
     consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -73,6 +75,10 @@ public class AsylumPreSubmitCallbackController extends PreSubmitCallbackControll
     public ResponseEntity<PreSubmitCallbackResponse<AsylumCase>> ccdAboutToStart(
         @Parameter(name = "Asylum case data", required = true) @NotNull @RequestBody Callback<AsylumCase> callback
     ) {
+        log.info(null != callback.getCaseDetails()
+            ? "Received CCD AboutToStart callback for case ID: {}"
+            : "Received CCD AboutToStart callback with no case details", 
+            callback.getCaseDetails() != null ? callback.getCaseDetails().getId() : "N/A");
         return super.ccdAboutToStart(callback);
     }
 
@@ -111,6 +117,10 @@ public class AsylumPreSubmitCallbackController extends PreSubmitCallbackControll
     public ResponseEntity<PreSubmitCallbackResponse<AsylumCase>> ccdAboutToSubmit(
         @Parameter(name = "Asylum case data", required = true) @NotNull @RequestBody Callback<AsylumCase> callback
     ) {
+        log.info(null != callback.getCaseDetails()
+            ? "Received CCD AboutToSubmit callback for case ID: {}"
+            : "Received CCD AboutToSubmit callback with no case details", 
+            callback.getCaseDetails() != null ? callback.getCaseDetails().getId() : "N/A");
         return super.ccdAboutToSubmit(callback);
     }
 

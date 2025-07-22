@@ -70,6 +70,7 @@ public class AsylumPostSubmitCallbackController extends PostSubmitCallbackContro
     public ResponseEntity<PostSubmitCallbackResponse> ccdSubmitted(
         @Parameter(name = "Asylum case data", required = true) @RequestBody Callback<AsylumCase> callback
     ) {
+        log.info("Received CCD Submitted callback for case ID: {}", callback.getCaseDetails().getId());
         return super.ccdSubmitted(callback);
     }
 }

@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PostSubmitCallbackDispatcher;
 
 @Slf4j
-
 public class PostSubmitCallbackController<T extends CaseData> {
 
     private static final org.slf4j.Logger LOG = getLogger(PostSubmitCallbackController.class);
@@ -34,6 +33,10 @@ public class PostSubmitCallbackController<T extends CaseData> {
     public ResponseEntity<PostSubmitCallbackResponse> ccdSubmitted(
         @Parameter(name = "Asylum case data", required = true) @RequestBody Callback<T> callback
     ) {
+        log.info("Received Asylum Case Notifications API `ccdSubmitted` event `{}` for Case ID `{}`",
+            callback.getEvent(),
+            callback.getCaseDetails().getId()
+        );
         LOG.info(
             "Asylum Case Notifications API `ccdSubmitted` event `{}` received for Case ID `{}`",
             callback.getEvent(),
