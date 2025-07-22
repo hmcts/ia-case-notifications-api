@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers;
 
 import static java.util.Objects.requireNonNull;
-import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.ResponseEntity.ok;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,8 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PreSubmitCallba
 
 @Slf4j
 public class PreSubmitCallbackController<T extends CaseData> {
-
-    private static final org.slf4j.Logger LOG = getLogger(PreSubmitCallbackController.class);
 
     private final PreSubmitCallbackDispatcher<T> callbackDispatcher;
 
@@ -57,8 +54,8 @@ public class PreSubmitCallbackController<T extends CaseData> {
         Callback<T> callback
     ) {
 
-        LOG.info(
-            "Asylum Case CCD `{}` event `{}` received for Case ID `{}`",
+        log.info(
+            "Asylum Case CCD before `{}` event `{}` received for Case ID `{}`",
             callbackStage,
             callback.getEvent(),
             callback.getCaseDetails().getId()
@@ -67,11 +64,16 @@ public class PreSubmitCallbackController<T extends CaseData> {
         PreSubmitCallbackResponse<T> callbackResponse =
             callbackDispatcher.handle(callbackStage, callback);
 
-        LOG.info(
-            "Asylum Case CCD `{}` event `{}` handled for Case ID `{}`",
+        log.info(
+            "Asylum Case CCD After `{}` event `{}` handled for Case ID `{}`",
             callbackStage,
             callback.getEvent(),
             callback.getCaseDetails().getId()
+        );
+
+        //log callbackResponse.getData().toString();
+        log.info(
+            "Asylum Case CCD Data `{}`", callbackResponse.getData()
         );
 
         return ok(callbackResponse);

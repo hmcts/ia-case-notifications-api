@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -15,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.CcdEventAuthorizor;
 
+@Slf4j
 @Component
 public class PreSubmitCallbackDispatcher<T extends CaseData> {
 
@@ -47,6 +50,15 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
             callback
                 .getCaseDetails()
                 .getCaseData();
+
+        log.info("CaseDetails for callback stage `{}` and event `{}`: {}",
+            callbackStage,
+            callback.getEvent(),
+            callback.getCaseDetails());
+        log.info("CaseData for callback stage `{}` and event `{}`: {}",
+            callbackStage,
+            callback.getEvent(),
+            caseData);
 
         PreSubmitCallbackResponse<T> callbackResponse =
             new PreSubmitCallbackResponse<>(caseData);
