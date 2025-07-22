@@ -127,21 +127,11 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
 
     private static class ExtendedAsylumCase<T extends CaseData> extends AsylumCase {
         
-        private String thePassenger;
-
-        public String getThePassenger() {
-            return thePassenger;
-        }
-
-        public void setThePassenger(String thePassenger) {
-            this.thePassenger = thePassenger;
-        }
-
         public static <T extends CaseData> ExtendedAsylumCase<T> copyToExtended(AsylumCase original) {
             ExtendedAsylumCase<T> extended = new ExtendedAsylumCase<>();
             // Copy all fields from original AsylumCase
             extended.putAll(original);
-            extended.setThePassenger("Tourist");
+            extended.put("stowaway", "defaultPassengerValue");
             return extended;
         }
     }
