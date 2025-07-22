@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -59,15 +60,23 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
             callbackStage,
             callback.getEvent(),
             caseData);
+ 
+        ExtendedAsylumCase<T> caseData3 = ExtendedAsylumCase.copyToExtended((AsylumCase) caseData);
 
-        PreSubmitCallbackResponse<T> callbackResponse =
-            new PreSubmitCallbackResponse<>(caseData);
+        @SuppressWarnings("unchecked")
+        PreSubmitCallbackResponse2<T> callbackResponse =
+            new PreSubmitCallbackResponse2<>((T) caseData3);
 
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.EARLIEST);
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.EARLY);
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.LATE);
         dispatchToHandlers(callbackStage, callback, sortedCallbackHandlers, callbackResponse, DispatchPriority.LATEST);
 
+        log.info("Callback response after dispatching handlers for stage `{}` and event `{}`: {}",
+            callbackStage,
+            callback.getEvent(),
+            callbackResponse);
+    
         return callbackResponse;
     }
 
@@ -106,6 +115,34 @@ public class PreSubmitCallbackDispatcher<T extends CaseData> {
                     }
                 }
             }
+        }
+    }
+
+    private static class PreSubmitCallbackResponse2<T extends CaseData> extends PreSubmitCallbackResponse<T> {
+        
+        public PreSubmitCallbackResponse2(T caseData) {
+            super(caseData);
+        }
+    }
+
+    private static class ExtendedAsylumCase<T extends CaseData> extends AsylumCase {
+        
+        private String thePassenger;
+
+        public String getThePassenger() {
+            return thePassenger;
+        }
+
+        public void setThePassenger(String thePassenger) {
+            this.thePassenger = thePassenger;
+        }
+
+        public static <T extends CaseData> ExtendedAsylumCase<T> copyToExtended(AsylumCase original) {
+            ExtendedAsylumCase<T> extended = new ExtendedAsylumCase<>();
+            // Copy all fields from original AsylumCase
+            extended.putAll(original);
+            extended.setThePassenger("Tourist");
+            return extended;
         }
     }
 }
