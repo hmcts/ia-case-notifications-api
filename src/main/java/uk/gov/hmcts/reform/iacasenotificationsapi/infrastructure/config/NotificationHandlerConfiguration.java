@@ -3764,8 +3764,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PostSubmitCallbackHandler<AsylumCase> removeRepresentationNotificationHandler(
-        @Qualifier("removeRepresentationNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("removeRepresentationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new PostSubmitNotificationHandler(
             (callbackStage, callback) -> {
@@ -3801,7 +3800,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                        && callback.getEvent() == Event.REMOVE_REPRESENTATION
-                       && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent();
+                       && callback.getCaseDetails().getCaseData().read(MOBILE_NUMBER, String.class).isPresent()
+                       && !AsylumCaseUtils.isAppellantInDetention(callback.getCaseDetails().getCaseData()); // TEMPORARY until we play ticket for this scenario
             },
             notificationGenerators
         );
@@ -3816,7 +3816,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                        && callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE
-                       && callback.getCaseDetails().getCaseData().read(EMAIL, String.class).isPresent();
+                       && callback.getCaseDetails().getCaseData().read(EMAIL, String.class).isPresent()
+                       && !AsylumCaseUtils.isAppellantInDetention(callback.getCaseDetails().getCaseData()); // TEMPORARY until we play ticket for this scenario
             },
             notificationGenerators
         );
