@@ -323,18 +323,18 @@ dependencyManagement {
             entry 'commons-fileupload'
         }
 
-        dependencySet(group: 'com.fasterxml.jackson.core', version: '2.19.1') {
+        dependencySet(group: 'com.fasterxml.jackson.core', version: '2.19.2') {
             entry 'jackson-databind'
             entry 'jackson-core'
             entry 'jackson-annotations'
         }
 
-        dependencySet(group: 'com.fasterxml.jackson.dataformat', version: '2.19.1') {
+        dependencySet(group: 'com.fasterxml.jackson.dataformat', version: '2.19.2') {
             entry 'jackson-dataformat-yaml'
             entry 'jackson-dataformat-csv'
         }
 
-        dependencySet(group: 'com.fasterxml.jackson.datatype', version: '2.19.1') {
+        dependencySet(group: 'com.fasterxml.jackson.datatype', version: '2.19.2') {
             entry 'jackson-datatype-jsr310'
             entry 'jackson-datatype-jdk8'
         }
@@ -401,7 +401,7 @@ dependencies {
     }
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.20.0'
 
     implementation(group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.9') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
