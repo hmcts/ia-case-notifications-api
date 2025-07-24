@@ -65,21 +65,21 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
 
+    private final AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
+            "Spa Road",
+            "Woolworth",
+            "London",
+            "London",
+            "SE1 3HP", "UK");
+
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
 
     private RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation;
 
+
     @BeforeEach
     public void setup() {
-
-        AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
-                "Spa Road",
-                "Woolworth",
-                "London",
-                "London",
-                "SE1 3HP", "UK");
-
         String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(direction));
@@ -135,6 +135,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(templateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
+    @Test
     public void should_return_the_given_template_id_for_missing_detention() {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
 
@@ -201,6 +202,52 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(companyName, personalisation.get("companyName"));
+        assertEquals(companyAddress, personalisation.get("companyAddress"));
+        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
+        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
+        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(isAda.equals(YesOrNo.YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_mandatory_information_given_icc(YesOrNo isAda) {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_JUDGEMENT, String.class)).thenReturn(Optional.of(legalRepFamilyName));
+
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
+
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER_PAPER_JUDGEMENT, String.class)).thenReturn(Optional.of(legalRepReference));
+
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_COMPANY_PAPER_JUDGEMENT, String.class)).thenReturn(Optional.of(companyName));
+
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(legalRepCompanyAddress));
 
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 

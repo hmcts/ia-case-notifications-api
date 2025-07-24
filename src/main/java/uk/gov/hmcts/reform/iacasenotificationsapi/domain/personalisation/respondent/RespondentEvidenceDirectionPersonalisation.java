@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -133,12 +134,14 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
     }
 
     Map<String, String> getLegalRepFields(AsylumCase asylumCase) {
-        AddressUk address = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(new AddressUk("",
+        AddressUk address = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)
+                .orElse(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)
+                        .orElse(new AddressUk("",
                 "",
                 "",
                 "",
                 "",
-                "",""));
+                "","")));
         String companyAddress = "";
 
         companyAddress += address.getAddressLine1().orElse("") + " ";
@@ -151,16 +154,24 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
                 .orElse(false);
 
         String lrName = asylumCase.read(LEGAL_REP_NAME, String.class).orElse("");
-        String lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
+        String lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_JUDGEMENT, String.class)
+                .orElse(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)
+                        .orElse(""));
         String legalRepName = (lrName + " " + lrLastName).trim();
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("companyName", hasNoc ? "" : asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse(""))
+                .put("companyName", hasNoc ? "" : asylumCase.read(LEGAL_REP_COMPANY_PAPER_JUDGEMENT, String.class)
+                        .orElse(asylumCase.read(LEGAL_REP_COMPANY, String.class)
+                                .orElse("")))
                 .put("companyAddress", hasNoc ? "" : companyAddress)
                 .put("legalRepName", hasNoc ? "" : legalRepName)
-                .put("legalRepEmail", hasNoc ? "" : asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse(""))
-                .put("legalRepReference", hasNoc ? "" : asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("legalRepEmail", hasNoc ? "" : asylumCase.read(LEGAL_REP_EMAIL, String.class)
+                        .orElse(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
+                                .orElse("")))
+                .put("legalRepReference", hasNoc ? "" : asylumCase.read(LEGAL_REP_REFERENCE_NUMBER_PAPER_JUDGEMENT, String.class)
+                        .orElse(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)
+                                .orElse("")))
                 .build();
     }
 
