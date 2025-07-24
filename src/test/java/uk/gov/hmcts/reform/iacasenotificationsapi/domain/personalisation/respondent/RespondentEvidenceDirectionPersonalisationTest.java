@@ -235,16 +235,16 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
 
         when(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_JUDGEMENT, String.class)).thenReturn(Optional.of(legalRepFamilyName));
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class)).thenReturn(Optional.of(legalRepFamilyName));
 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
 
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER_PAPER_JUDGEMENT, String.class)).thenReturn(Optional.of(legalRepReference));
+        when(asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class)).thenReturn(Optional.of(legalRepReference));
 
         when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(LEGAL_REP_COMPANY_PAPER_JUDGEMENT, String.class)).thenReturn(Optional.of(companyName));
+        when(asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class)).thenReturn(Optional.of(companyName));
 
         when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(legalRepCompanyAddress));

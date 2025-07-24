@@ -53,7 +53,7 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_REFERENCE_NUMBER(
             "legalRepReferenceNumber", new TypeReference<String>(){}),
 
-    LEGAL_REP_REFERENCE_NUMBER_PAPER_JUDGEMENT(
+    LEGAL_REP_REF_NUMBER_PAPER_J(
             "legalRepRefNumberPaperJ", new TypeReference<String>(){}),
 
     APPEAL_REFERENCE_NUMBER(
@@ -95,7 +95,7 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_FAMILY_NAME(
         "legalRepFamilyName", new TypeReference<String>(){}),
 
-    LEGAL_REP_FAMILY_NAME_PAPER_JUDGEMENT(
+    LEGAL_REP_FAMILY_NAME_PAPER_J(
         "legalRepFamilyNamePaperJ", new TypeReference<String>(){}),
 
     LEGAL_REP_COMPANY_NAME(
@@ -104,7 +104,7 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_COMPANY(
         "legalRepCompany", new TypeReference<String>(){}),
 
-    LEGAL_REP_COMPANY_PAPER_JUDGEMENT(
+    LEGAL_REP_COMPANY_PAPER_J(
         "legalRepCompanyPaperJ", new TypeReference<String>(){}),
 
     LEGAL_REP_COMPANY_ADDRESS(
