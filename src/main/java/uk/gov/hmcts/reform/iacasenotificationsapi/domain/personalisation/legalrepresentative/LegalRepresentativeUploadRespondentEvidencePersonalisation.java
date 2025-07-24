@@ -6,7 +6,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -24,7 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 public class LegalRepresentativeUploadRespondentEvidencePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String buildCaseDirectionTemplateId;
-    private final String buildCaseDirectionDetentionTemplateId;
     private final String iaExUiFrontendUrl;
     private final DirectionFinder directionFinder;
     private final CustomerServicesProvider customerServicesProvider;
@@ -36,7 +34,6 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisation implemen
 
     public LegalRepresentativeUploadRespondentEvidencePersonalisation(
         @Value("${govnotify.template.buildCaseDirection.legalRep.email}") String buildCaseDirectionTemplateId,
-        @Value("${govnotify.template.buildCaseDirection.legalRep.detention.email}") String buildCaseDirectionDetentionTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DirectionFinder directionFinder,
         CustomerServicesProvider customerServicesProvider
@@ -44,19 +41,14 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisation implemen
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
 
         this.buildCaseDirectionTemplateId = buildCaseDirectionTemplateId;
-        this.buildCaseDirectionDetentionTemplateId = buildCaseDirectionDetentionTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.directionFinder = directionFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
-        if (isAppellantInDetention(asylumCase)) {
-            return buildCaseDirectionDetentionTemplateId;
-        } else {
-            return buildCaseDirectionTemplateId;
-        }
+    public String getTemplateId() {
+        return buildCaseDirectionTemplateId;
     }
 
     @Override
