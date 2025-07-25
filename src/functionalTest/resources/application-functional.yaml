@@ -9,3 +9,8 @@ spring:
     cache-names: userInfoCache, legalRepATokenCache, caseOfficerTokenCache, adminOfficerTokenCache, homeOfficeApcTokenCache, homeOfficeLartTokenCache, homeOfficePouTokenCache, homeOfficeGenericTokenCache, legalRepShareCaseATokenCache, judgeTokenCache, citizenTokenCache, systemTokenCache
     caffeine:
       spec: expireAfterAccess=3600s
+
+# Prison email mappings for functional tests
+prison:
+  email:
+    mappings: ${IA_DET_PRISON_EMAIL_MAPPINGS:{"prisonEmailMappings":{"Test Prison":"test-prison@example.com"}}}
