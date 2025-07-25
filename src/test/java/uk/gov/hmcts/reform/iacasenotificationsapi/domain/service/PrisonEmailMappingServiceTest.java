@@ -1,182 +1,172 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 class PrisonEmailMappingServiceTest {
 
-    private ObjectMapper objectMapper;
     private PrisonEmailMappingService prisonEmailMappingService;
 
     @BeforeEach
     void setUp() {
-        objectMapper = new ObjectMapper();
-        prisonEmailMappingService = new PrisonEmailMappingService(objectMapper);
+        prisonEmailMappingService = new PrisonEmailMappingService("dev");
     }
 
     @Test
-    void shouldLoadDevConfigurationByDefault() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "dev");
+    void should_return_email_for_prison_when_environment_variable_exists() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
+                    .thenReturn("test-det-prison-addiewell@example.com");
 
-        // When
-        prisonEmailMappingService.loadConfiguration();
+            prisonEmailMappingService = new PrisonEmailMappingService("dev");
+            prisonEmailMappingService.init();
 
-        // Then
-        Optional<String> email = prisonEmailMappingService.getPrisonEmail("Addiewell");
-        assertThat(email).isPresent();
-        assertThat(email.get()).isEqualTo("test-det-prison-addiewell@example.com");
+            Optional<String> result = prisonEmailMappingService.getPrisonEmail("Addiewell");
+
+            assertThat(result).isPresent();
+            assertThat(result.get()).isEqualTo("test-det-prison-addiewell@example.com");
+        }
     }
 
     @Test
-    void shouldLoadProdConfigurationWhenEnvironmentIsProduction() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "prod");
+    void should_return_empty_when_prison_not_found() {
+        prisonEmailMappingService.init();
 
-        // When
-        prisonEmailMappingService.loadConfiguration();
+        Optional<String> result = prisonEmailMappingService.getPrisonEmail("NonexistentPrison");
 
-        // Then
-        Optional<String> email = prisonEmailMappingService.getPrisonEmail("Addiewell");
-        assertThat(email).isPresent();
-        assertThat(email.get()).isEqualTo("adcourts@sodexogov.co.uk");
+        assertThat(result).isEmpty();
     }
 
     @Test
-    void shouldReturnEmptyOptionalWhenPrisonNotFound() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "dev");
-        prisonEmailMappingService.loadConfiguration();
+    void should_return_empty_when_prison_name_is_null() {
+        prisonEmailMappingService.init();
 
-        // When
-        Optional<String> email = prisonEmailMappingService.getPrisonEmail("NonExistentPrison");
+        Optional<String> result = prisonEmailMappingService.getPrisonEmail(null);
 
-        // Then
-        assertThat(email).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
-    void shouldReturnEmptyOptionalWhenMappingsNotLoaded() {
-        // Given - don't load configuration
+    void should_return_empty_when_prison_name_is_empty() {
+        prisonEmailMappingService.init();
 
-        // When
-        Optional<String> email = prisonEmailMappingService.getPrisonEmail("Addiewell");
+        Optional<String> result = prisonEmailMappingService.getPrisonEmail("");
 
-        // Then
-        assertThat(email).isEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
-    void shouldReturnTrueWhenPrisonIsSupported() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "dev");
-        prisonEmailMappingService.loadConfiguration();
+    void should_return_production_emails_for_prod_environment() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_PROD_ADDIEWELL_EMAIL"))
+                    .thenReturn("adcourts@sodexogov.co.uk");
 
-        // When
-        boolean isSupported = prisonEmailMappingService.isPrisonSupported("Addiewell");
+            PrisonEmailMappingService prodService = new PrisonEmailMappingService("prod");
+            prodService.init();
 
-        // Then
-        assertThat(isSupported).isTrue();
+            Optional<String> result = prodService.getPrisonEmail("Addiewell");
+
+            assertThat(result).isPresent();
+            assertThat(result.get()).isEqualTo("adcourts@sodexogov.co.uk");
+        }
     }
 
     @Test
-    void shouldReturnFalseWhenPrisonIsNotSupported() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "dev");
-        prisonEmailMappingService.loadConfiguration();
+    void should_check_if_prison_is_supported() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
+                    .thenReturn("test-det-prison-addiewell@example.com");
 
-        // When
-        boolean isSupported = prisonEmailMappingService.isPrisonSupported("NonExistentPrison");
+            prisonEmailMappingService = new PrisonEmailMappingService("dev");
+            prisonEmailMappingService.init();
 
-        // Then
-        assertThat(isSupported).isFalse();
+            assertThat(prisonEmailMappingService.isPrisonSupported("Addiewell")).isTrue();
+            assertThat(prisonEmailMappingService.isPrisonSupported("NonexistentPrison")).isFalse();
+        }
     }
 
     @Test
-    void shouldReturnFalseWhenMappingsNotLoadedForIsPrisonSupported() {
-        // Given - don't load configuration
+    void should_return_all_prison_emails() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
+                    .thenReturn("test-det-prison-addiewell@example.com");
+            systemMock.when(() -> System.getenv("PRISON_DEV_ALTCOURSE_EMAIL"))
+                    .thenReturn("test-det-prison-altcourse@example.com");
 
-        // When
-        boolean isSupported = prisonEmailMappingService.isPrisonSupported("Addiewell");
+            prisonEmailMappingService = new PrisonEmailMappingService("dev");
+            prisonEmailMappingService.init();
 
-        // Then
-        assertThat(isSupported).isFalse();
+            Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
+
+            assertThat(allEmails).containsEntry("Addiewell", "test-det-prison-addiewell@example.com");
+            assertThat(allEmails).containsEntry("Altcourse", "test-det-prison-altcourse@example.com");
+            assertThat(allEmails).hasSize(2);
+        }
     }
 
     @Test
-    void shouldReturnAllPrisonEmails() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "dev");
-        prisonEmailMappingService.loadConfiguration();
+    void should_return_supported_prisons() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
+                    .thenReturn("test-det-prison-addiewell@example.com");
 
-        // When
-        Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
+            prisonEmailMappingService = new PrisonEmailMappingService("dev");
+            prisonEmailMappingService.init();
 
-        // Then
-        assertThat(allEmails).isNotEmpty();
-        assertThat(allEmails).containsKey("Addiewell");
-        assertThat(allEmails).containsKey("Birmingham");
-        assertThat(allEmails.get("Addiewell")).isEqualTo("test-det-prison-addiewell@example.com");
+            Set<String> supportedPrisons = prisonEmailMappingService.getSupportedPrisons();
+
+            assertThat(supportedPrisons).contains("Addiewell");
+            assertThat(supportedPrisons).hasSize(1);
+        }
     }
 
     @Test
-    void shouldReturnEmptyMapWhenMappingsNotLoaded() {
-        // Given - don't load configuration
+    void should_return_correct_environment() {
+        assertThat(prisonEmailMappingService.getEnvironment()).isEqualTo("dev");
 
-        // When
-        Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
-
-        // Then
-        assertThat(allEmails).isEmpty();
+        PrisonEmailMappingService prodService = new PrisonEmailMappingService("prod");
+        assertThat(prodService.getEnvironment()).isEqualTo("prod");
     }
 
     @Test
-    void shouldReturnCurrentEnvironment() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "prod");
+    void should_handle_prison_names_with_spaces() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_DEV_ASKHAM_GRANGE_EMAIL"))
+                    .thenReturn("test-det-prison-askham-grange@example.com");
 
-        // When
-        String environment = prisonEmailMappingService.getEnvironment();
+            prisonEmailMappingService = new PrisonEmailMappingService("dev");
+            prisonEmailMappingService.init();
 
-        // Then
-        assertThat(environment).isEqualTo("prod");
+            Optional<String> result = prisonEmailMappingService.getPrisonEmail("Askham Grange");
+
+            assertThat(result).isPresent();
+            assertThat(result.get()).isEqualTo("test-det-prison-askham-grange@example.com");
+        }
     }
 
     @Test
-    void shouldFallBackToDevConfigurationWhenConfigFileNotFound() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "nonexistent");
+    void should_trim_whitespace_from_prison_name() {
+        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
+            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
+                    .thenReturn("test-det-prison-addiewell@example.com");
 
-        // When
-        prisonEmailMappingService.loadConfiguration();
+            prisonEmailMappingService = new PrisonEmailMappingService("dev");
+            prisonEmailMappingService.init();
 
-        // Then
-        Optional<String> email = prisonEmailMappingService.getPrisonEmail("Addiewell");
-        assertThat(email).isPresent();
-        assertThat(email.get()).isEqualTo("test-det-prison-addiewell@example.com"); // Should fall back to dev
-    }
+            Optional<String> result = prisonEmailMappingService.getPrisonEmail("  Addiewell  ");
 
-    @Test
-    void shouldHandleExactPrisonNameMatching() {
-        // Given
-        ReflectionTestUtils.setField(prisonEmailMappingService, "environment", "dev");
-        prisonEmailMappingService.loadConfiguration();
-
-        // When & Then
-        assertThat(prisonEmailMappingService.getPrisonEmail("Askham Grange")).isPresent();
-        assertThat(prisonEmailMappingService.getPrisonEmail("Hatfield (Main site)")).isPresent();
-        assertThat(prisonEmailMappingService.getPrisonEmail("Hatfield (Lakes site)")).isPresent();
+            assertThat(result).isPresent();
+            assertThat(result.get()).isEqualTo("test-det-prison-addiewell@example.com");
+        }
     }
 } 
