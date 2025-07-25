@@ -76,6 +76,9 @@ public class PrisonEmailMappingService {
                 
                 log.info("Successfully loaded {} prison email mappings", prisonEmailCache.size());
                 
+                // Log all prison email addresses for verification
+                log.info("Prison email mappings loaded: {}", prisonEmailCache);
+                
                 if (log.isDebugEnabled()) {
                     log.debug("Loaded prison mappings: {}", prisonEmailCache.keySet());
                 }
