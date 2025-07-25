@@ -2011,24 +2011,14 @@ detentionEngagementTeamIrcEmailAddresses:
   TinsleyHouse: ${IA_DET_IRC_TINSLEYHOUSE_EMAIL:det-irc-tinsleyhouse@example.com}
   Yarlswood: ${IA_DET_IRC_YARLSWOOD_EMAIL:det-irc-yarlswood@example.com}
 
-### DET Email addresses for Prison - DEPRECATED: Now loaded from JSON files
-# The prison email addresses are now loaded from JSON configuration files:
-# - src/main/resources/prison-emails/prison-emails-dev.json (for dev/test environments)
-# - src/main/resources/prison-emails/prison-emails-prod.json (for production)
-# This approach eliminates the need for 160+ environment variables
-#
-# detentionEngagementTeamPrisonEmailAddresses:
-#   Acklington: ${IA_DET_PRISON_ACKLINGTON_EMAIL:det-prison-acklington@example.com}
-#   Addiewell: ${IA_DET_PRISON_ADDIEWELL_EMAIL:det-prison-addiewell@example.com}
-#   ... (all other prison entries commented out)
 
 detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
 
-# Prison Email Environment Configuration
-# Prison email addresses injected via Azure Key Vault
+  # Prison email addresses injected via Azure Key Vault (ia-det-prison-email-mappings)
+  # See README.md for local development setup instructions
 prison:
   email:
-    addresses: ${PRISON_EMAIL_ADDRESSES:}
+    mappings: ${IA_DET_PRISON_EMAIL_MAPPINGS:}
 
 judgesReviewDeadlineDateDelay: ${JUDGES_REVIEW_DEADLINE_DATE_DELAY:14}
 

@@ -17,10 +17,10 @@ import javax.annotation.PostConstruct;
  * Service for mapping prison names to email addresses.
  * Reads prison email addresses from JSON data stored in Azure Key Vault.
  * 
- * The JSON data is injected via the PRISON_EMAIL_ADDRESSES environment variable
+ * <p>The JSON data is injected via the IA_DET_PRISON_EMAIL_MAPPINGS environment variable
  * and should have the following format:
  * 
- * {
+ * <p>{
  *   "prisonEmailMappings": {
  *     "Addiewell": "adcourts@example.com",
  *     "Belmarsh": "belmarsh@example.com",
@@ -38,7 +38,7 @@ public class PrisonEmailMappingService {
     private final Map<String, String> prisonEmailCache = new HashMap<>();
 
     public PrisonEmailMappingService(
-        @Value("${prison.email.addresses:}") String prisonEmailAddresses
+        @Value("${prison.email.mappings:}") String prisonEmailAddresses
     ) {
         this.prisonEmailAddresses = prisonEmailAddresses;
         this.objectMapper = new ObjectMapper();
@@ -55,7 +55,7 @@ public class PrisonEmailMappingService {
      */
     private void loadPrisonEmails() {
         if (!StringUtils.hasText(prisonEmailAddresses)) {
-            log.warn("No prison email addresses configured. PRISON_EMAIL_ADDRESSES environment variable is empty.");
+            log.warn("No prison email addresses configured. IA_DET_PRISON_EMAIL_MAPPINGS environment variable is empty.");
             return;
         }
 
