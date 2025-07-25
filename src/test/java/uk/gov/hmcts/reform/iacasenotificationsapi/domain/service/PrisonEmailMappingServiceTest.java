@@ -3,45 +3,49 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mockStatic;
 
 @ExtendWith(MockitoExtension.class)
 class PrisonEmailMappingServiceTest {
 
     private PrisonEmailMappingService prisonEmailMappingService;
+    private final String validJsonData = """
+        {
+          "prisonEmailMappings": {
+            "Addiewell": "addiewell@example.com",
+            "Belmarsh": "belmarsh@example.com",
+            "Askham Grange": "askham-grange@example.com"
+          }
+        }
+        """;
+
+    private final String emptyJsonData = """
+        {
+          "prisonEmailMappings": {}
+        }
+        """;
 
     @BeforeEach
     void setUp() {
-        prisonEmailMappingService = new PrisonEmailMappingService("dev");
+        prisonEmailMappingService = new PrisonEmailMappingService(validJsonData);
+        prisonEmailMappingService.init();
     }
 
     @Test
-    void should_return_email_for_prison_when_environment_variable_exists() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
-                    .thenReturn("test-det-prison-addiewell@example.com");
+    void should_return_email_for_prison_when_mapping_exists() {
+        Optional<String> result = prisonEmailMappingService.getPrisonEmail("Addiewell");
 
-            prisonEmailMappingService = new PrisonEmailMappingService("dev");
-            prisonEmailMappingService.init();
-
-            Optional<String> result = prisonEmailMappingService.getPrisonEmail("Addiewell");
-
-            assertThat(result).isPresent();
-            assertThat(result.get()).isEqualTo("test-det-prison-addiewell@example.com");
-        }
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo("addiewell@example.com");
     }
 
     @Test
     void should_return_empty_when_prison_not_found() {
-        prisonEmailMappingService.init();
-
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("NonexistentPrison");
 
         assertThat(result).isEmpty();
@@ -49,8 +53,6 @@ class PrisonEmailMappingServiceTest {
 
     @Test
     void should_return_empty_when_prison_name_is_null() {
-        prisonEmailMappingService.init();
-
         Optional<String> result = prisonEmailMappingService.getPrisonEmail(null);
 
         assertThat(result).isEmpty();
@@ -58,115 +60,96 @@ class PrisonEmailMappingServiceTest {
 
     @Test
     void should_return_empty_when_prison_name_is_empty() {
-        prisonEmailMappingService.init();
-
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("");
 
         assertThat(result).isEmpty();
     }
 
     @Test
-    void should_return_production_emails_for_prod_environment() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_PROD_ADDIEWELL_EMAIL"))
-                    .thenReturn("adcourts@sodexogov.co.uk");
+    void should_handle_empty_configuration() {
+        PrisonEmailMappingService emptyService = new PrisonEmailMappingService(emptyJsonData);
+        emptyService.init();
 
-            PrisonEmailMappingService prodService = new PrisonEmailMappingService("prod");
-            prodService.init();
+        Optional<String> result = emptyService.getPrisonEmail("Addiewell");
 
-            Optional<String> result = prodService.getPrisonEmail("Addiewell");
+        assertThat(result).isEmpty();
+    }
 
-            assertThat(result).isPresent();
-            assertThat(result.get()).isEqualTo("adcourts@sodexogov.co.uk");
-        }
+    @Test
+    void should_handle_no_configuration() {
+        PrisonEmailMappingService noConfigService = new PrisonEmailMappingService("");
+        noConfigService.init();
+
+        Optional<String> result = noConfigService.getPrisonEmail("Addiewell");
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_handle_invalid_json() {
+        PrisonEmailMappingService invalidJsonService = new PrisonEmailMappingService("invalid json");
+        invalidJsonService.init();
+
+        Optional<String> result = invalidJsonService.getPrisonEmail("Addiewell");
+
+        assertThat(result).isEmpty();
     }
 
     @Test
     void should_check_if_prison_is_supported() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
-                    .thenReturn("test-det-prison-addiewell@example.com");
-
-            prisonEmailMappingService = new PrisonEmailMappingService("dev");
-            prisonEmailMappingService.init();
-
-            assertThat(prisonEmailMappingService.isPrisonSupported("Addiewell")).isTrue();
-            assertThat(prisonEmailMappingService.isPrisonSupported("NonexistentPrison")).isFalse();
-        }
+        assertThat(prisonEmailMappingService.isPrisonSupported("Addiewell")).isTrue();
+        assertThat(prisonEmailMappingService.isPrisonSupported("NonexistentPrison")).isFalse();
     }
 
     @Test
     void should_return_all_prison_emails() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
-                    .thenReturn("test-det-prison-addiewell@example.com");
-            systemMock.when(() -> System.getenv("PRISON_DEV_ALTCOURSE_EMAIL"))
-                    .thenReturn("test-det-prison-altcourse@example.com");
+        Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
 
-            prisonEmailMappingService = new PrisonEmailMappingService("dev");
-            prisonEmailMappingService.init();
-
-            Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
-
-            assertThat(allEmails).containsEntry("Addiewell", "test-det-prison-addiewell@example.com");
-            assertThat(allEmails).containsEntry("Altcourse", "test-det-prison-altcourse@example.com");
-            assertThat(allEmails).hasSize(2);
-        }
+        assertThat(allEmails).containsEntry("Addiewell", "addiewell@example.com");
+        assertThat(allEmails).containsEntry("Belmarsh", "belmarsh@example.com");
+        assertThat(allEmails).containsEntry("Askham Grange", "askham-grange@example.com");
+        assertThat(allEmails).hasSize(3);
     }
 
     @Test
     void should_return_supported_prisons() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
-                    .thenReturn("test-det-prison-addiewell@example.com");
+        Set<String> supportedPrisons = prisonEmailMappingService.getSupportedPrisons();
 
-            prisonEmailMappingService = new PrisonEmailMappingService("dev");
-            prisonEmailMappingService.init();
-
-            Set<String> supportedPrisons = prisonEmailMappingService.getSupportedPrisons();
-
-            assertThat(supportedPrisons).contains("Addiewell");
-            assertThat(supportedPrisons).hasSize(1);
-        }
-    }
-
-    @Test
-    void should_return_correct_environment() {
-        assertThat(prisonEmailMappingService.getEnvironment()).isEqualTo("dev");
-
-        PrisonEmailMappingService prodService = new PrisonEmailMappingService("prod");
-        assertThat(prodService.getEnvironment()).isEqualTo("prod");
+        assertThat(supportedPrisons).contains("Addiewell", "Belmarsh", "Askham Grange");
+        assertThat(supportedPrisons).hasSize(3);
     }
 
     @Test
     void should_handle_prison_names_with_spaces() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_DEV_ASKHAM_GRANGE_EMAIL"))
-                    .thenReturn("test-det-prison-askham-grange@example.com");
+        Optional<String> result = prisonEmailMappingService.getPrisonEmail("Askham Grange");
 
-            prisonEmailMappingService = new PrisonEmailMappingService("dev");
-            prisonEmailMappingService.init();
-
-            Optional<String> result = prisonEmailMappingService.getPrisonEmail("Askham Grange");
-
-            assertThat(result).isPresent();
-            assertThat(result.get()).isEqualTo("test-det-prison-askham-grange@example.com");
-        }
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo("askham-grange@example.com");
     }
 
     @Test
     void should_trim_whitespace_from_prison_name() {
-        try (MockedStatic<System> systemMock = mockStatic(System.class)) {
-            systemMock.when(() -> System.getenv("PRISON_DEV_ADDIEWELL_EMAIL"))
-                    .thenReturn("test-det-prison-addiewell@example.com");
+        Optional<String> result = prisonEmailMappingService.getPrisonEmail("  Addiewell  ");
 
-            prisonEmailMappingService = new PrisonEmailMappingService("dev");
-            prisonEmailMappingService.init();
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo("addiewell@example.com");
+    }
 
-            Optional<String> result = prisonEmailMappingService.getPrisonEmail("  Addiewell  ");
+    @Test
+    void should_handle_malformed_json_structure() {
+        String malformedJson = """
+            {
+              "wrongKey": {
+                "Addiewell": "addiewell@example.com"
+              }
+            }
+            """;
+        
+        PrisonEmailMappingService malformedService = new PrisonEmailMappingService(malformedJson);
+        malformedService.init();
 
-            assertThat(result).isPresent();
-            assertThat(result.get()).isEqualTo("test-det-prison-addiewell@example.com");
-        }
+        Optional<String> result = malformedService.getPrisonEmail("Addiewell");
+
+        assertThat(result).isEmpty();
     }
 } 

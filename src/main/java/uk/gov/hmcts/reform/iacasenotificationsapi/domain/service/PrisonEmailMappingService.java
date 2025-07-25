@@ -1,7 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
@@ -10,51 +15,33 @@ import javax.annotation.PostConstruct;
 
 /**
  * Service for mapping prison names to email addresses.
- * Reads prison email addresses from environment variables stored in Azure Key Vault.
+ * Reads prison email addresses from JSON data stored in Azure Key Vault.
  * 
- * Environment Variables Pattern:
- * - Development: PRISON_DEV_{PRISON_NAME}_EMAIL
- * - Production: PRISON_PROD_{PRISON_NAME}_EMAIL
+ * The JSON data is injected via the PRISON_EMAIL_ADDRESSES environment variable
+ * and should have the following format:
  * 
- * Example:
- * - PRISON_DEV_ADDIEWELL_EMAIL=test-det-prison-addiewell@example.com
- * - PRISON_PROD_ADDIEWELL_EMAIL=adcourts@sodexogov.co.uk
+ * {
+ *   "prisonEmailMappings": {
+ *     "Addiewell": "adcourts@example.com",
+ *     "Belmarsh": "belmarsh@example.com",
+ *     "Birmingham": "birmingham@example.com"
+ *   }
+ * }
  */
 @Service
 public class PrisonEmailMappingService {
 
-    private final String environment;
+    private static final Logger log = LoggerFactory.getLogger(PrisonEmailMappingService.class);
+    
+    private final String prisonEmailAddresses;
+    private final ObjectMapper objectMapper;
     private final Map<String, String> prisonEmailCache = new HashMap<>();
 
-    // All supported prison names (normalized to uppercase with underscores)
-    private static final String[] SUPPORTED_PRISONS = {
-        "ADDIEWELL", "ALTCOURSE", "ASKHAM_GRANGE", "AYLESBURY", "BEDFORD", "BELMARSH",
-        "BERWYN", "BIRMINGHAM", "BLANTYRE_HOUSE", "BRIXTON", "BROCKHILL", "BRONZEFIELD",
-        "BUCKLEY_HALL", "BULLINGDON", "BURE", "CARDIFF", "CHANNINGS_WOOD", "CHELMSFORD",
-        "COLDINGLEY", "COOKHAM_WOOD", "DARTMOOR", "DEERBOLT", "DOWNVIEW", "DRAKE_HALL",
-        "DURHAM", "EAST_SUTTON_PARK", "EASTWOOD_PARK", "ERLESTOKE", "EVERTHORPE",
-        "EXETER", "FEATHERSTONE", "FELTHAM", "FORD", "FOREST_BANK", "FOSTON_HALL",
-        "FRANKLAND", "FULL_SUTTON", "GARTH", "GARTREE", "GLEN_PARVA", "GLOUCESTER",
-        "GRENDON", "GUYS_MARSH", "HATFIELD", "HAVERIGG", "HEWELL", "HIGH_DOWN",
-        "HINDLEY", "HOLLESLEY_BAY", "HOLME_HOUSE", "HULL", "HUNTERCOMBE", "HUMBER",
-        "ISIS", "ISLE_OF_WIGHT", "KENNET", "KIRKHAM", "KIRKLEVINGTON_GRANGE", "LANCASTER_FARMS",
-        "LEEDS", "LEICESTER", "LEWES", "LEYHILL", "LINCOLN", "LINDHOLME", "LITTLEHEY",
-        "LIVERPOOL", "LONG_LARTIN", "LOWDHAM_GRANGE", "MAIDSTONE", "MANCHESTER",
-        "MOORLAND", "MORTON_HALL", "MOUNT", "NEW_HALL", "NORTH_SEA_CAMP", "NORTHUMBERLAND",
-        "NORWICH", "NOTTINGHAM", "OAKWOOD", "ONLEY", "PARC", "PARKHURST", "PENTONVILLE",
-        "PETERBOROUGH", "PORTLAND", "PRESTON", "RANBY", "READING", "RISLEY", "ROCHESTER",
-        "RYE_HILL", "SEND", "SHEPTON_MALLET", "SPRING_HILL", "STAFFORD", "STANDFORD_HILL",
-        "STOCKEN", "STOKE_HEATH", "STYAL", "SUDBURY", "SWALESIDE", "SWANSEA", "SWINFEN_HALL",
-        "THAMESIDE", "THE_MOUNT", "THE_VERNE", "THORN_CROSS", "THURROCK", "USK", "WAKEFIELD",
-        "WANDSWORTH", "WARREN_HILL", "WAYLAND", "WEALSTUN", "WELLINGBOROUGH", "WERRINGTON",
-        "WETHERBY", "WHATTON", "WHITEMOOR", "WINCHESTER", "WOODHILL", "WORMWOOD_SCRUBS",
-        "WYMOTT"
-    };
-
     public PrisonEmailMappingService(
-        @Value("${prison.email.environment:${PRISON_EMAIL_ENV:${ENVIRONMENT:${APP_ENV:dev}}}}") String environment
+        @Value("${prison.email.addresses:}") String prisonEmailAddresses
     ) {
-        this.environment = environment;
+        this.prisonEmailAddresses = prisonEmailAddresses;
+        this.objectMapper = new ObjectMapper();
     }
 
     @PostConstruct
@@ -63,46 +50,43 @@ public class PrisonEmailMappingService {
     }
 
     /**
-     * Loads prison email addresses from environment variables into cache.
-     * Environment variable pattern: PRISON_{ENV}_{PRISON_NAME}_EMAIL
+     * Loads prison email addresses from JSON data into cache.
+     * Expects JSON format: {"prisonEmailMappings": {"Prison Name": "email@example.com"}}
      */
     private void loadPrisonEmails() {
-        String envPrefix = "dev".equals(environment) ? "DEV" : "PROD";
-        
-        for (String prisonName : SUPPORTED_PRISONS) {
-            String envVarName = String.format("PRISON_%s_%s_EMAIL", envPrefix, prisonName);
-            String emailAddress = System.getenv(envVarName);
-            
-            if (emailAddress != null && !emailAddress.trim().isEmpty()) {
-                // Convert back to readable format for the key (e.g., "ADDIEWELL" -> "Addiewell")
-                String readablePrisonName = convertToReadableFormat(prisonName);
-                prisonEmailCache.put(readablePrisonName, emailAddress.trim());
-            }
+        if (!StringUtils.hasText(prisonEmailAddresses)) {
+            log.warn("No prison email addresses configured. PRISON_EMAIL_ADDRESSES environment variable is empty.");
+            return;
         }
-    }
 
-    /**
-     * Converts environment variable format to readable prison name.
-     * Example: "ADDIEWELL" -> "Addiewell", "ASKHAM_GRANGE" -> "Askham Grange"
-     */
-    private String convertToReadableFormat(String envFormat) {
-        String[] words = envFormat.toLowerCase().split("_");
-        StringBuilder result = new StringBuilder();
-        
-        for (int i = 0; i < words.length; i++) {
-            if (i > 0) {
-                result.append(" ");
-            }
-            String word = words[i];
-            if (!word.isEmpty()) {
-                result.append(Character.toUpperCase(word.charAt(0)));
-                if (word.length() > 1) {
-                    result.append(word.substring(1));
+        try {
+            log.info("Loading prison email mappings from vault");
+            
+            // Parse JSON structure: {"prisonEmailMappings": {...}}
+            TypeReference<Map<String, Object>> typeRef = new TypeReference<Map<String, Object>>() {};
+            Map<String, Object> jsonData = objectMapper.readValue(prisonEmailAddresses, typeRef);
+            
+            Object mappingsObj = jsonData.get("prisonEmailMappings");
+            if (mappingsObj instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, String> mappings = (Map<String, String>) mappingsObj;
+                
+                prisonEmailCache.clear();
+                prisonEmailCache.putAll(mappings);
+                
+                log.info("Successfully loaded {} prison email mappings", prisonEmailCache.size());
+                
+                if (log.isDebugEnabled()) {
+                    log.debug("Loaded prison mappings: {}", prisonEmailCache.keySet());
                 }
+            } else {
+                log.error("Invalid JSON structure: 'prisonEmailMappings' should be an object");
             }
+            
+        } catch (Exception e) {
+            log.error("Failed to load prison email mappings from JSON: {}", e.getMessage(), e);
+            prisonEmailCache.clear();
         }
-        
-        return result.toString();
     }
 
     /**
@@ -147,12 +131,5 @@ public class PrisonEmailMappingService {
         return prisonEmailCache.keySet();
     }
 
-    /**
-     * Gets the current environment configuration.
-     * 
-     * @return The environment (dev/prod) being used for email mapping
-     */
-    public String getEnvironment() {
-        return environment;
-    }
+
 } 

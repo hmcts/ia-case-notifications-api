@@ -2025,11 +2025,10 @@ detentionEngagementTeamIrcEmailAddresses:
 detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
 
 # Prison Email Environment Configuration
-# Uses PRISON_EMAIL_ENV environment variable to determine which configuration to load
-# Falls back to ENVIRONMENT, APP_ENV, or defaults to 'dev' if none are set
+# Prison email addresses injected via Azure Key Vault
 prison:
   email:
-    environment: ${PRISON_EMAIL_ENV:${ENVIRONMENT:${APP_ENV:dev}}}
+    addresses: ${PRISON_EMAIL_ADDRESSES:}
 
 judgesReviewDeadlineDateDelay: ${JUDGES_REVIEW_DEADLINE_DATE_DELAY:14}
 
