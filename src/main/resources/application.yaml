@@ -32,8 +32,6 @@ spring:
     allow-bean-definition-overriding: true
   config:
     import: "optional:configtree:/mnt/secrets/ia/"
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
   security:
     oauth2:
       client:
