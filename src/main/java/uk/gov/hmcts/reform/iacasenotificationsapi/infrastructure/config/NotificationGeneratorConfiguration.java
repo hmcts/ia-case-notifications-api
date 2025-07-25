@@ -2457,6 +2457,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("legalRepForceCaseToSubmitHearingRequirementsNotificationDetentionGenerator")
+    public List<NotificationGenerator> forceCaseToSubmitHearingRequirementsNotificationDetentionGenerator(
+        LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("adjournHearingWithoutDateNonIntegratedNotificationGenerator")
     public List<NotificationGenerator> adjournHearingWithoutDateNotificationNonIntegratedGenerator(
         LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
