@@ -6182,7 +6182,6 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
                        && isRpAndDcAppealType
-                       && !isAppellantInDetention(asylumCase)
                        && isSubmissionOutOfTime(asylumCase);
 
             },
