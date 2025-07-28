@@ -39,6 +39,7 @@ class DetEmailServiceTest {
             .put("Brookhouse", "irc-brookhouse@example.com")
             .put("Colnbrook", "irc-colnbrook@example.com")
             .put("Harmondsworth", "irc-harmondsworth@example.com")
+            .put("TinsleyHouse", "det-irc-tinsleyhouse@example.com")
             .build();
 
         detEmailService = new DetEmailService(ircEmailMappings, prisonEmailMappingService);
@@ -193,5 +194,20 @@ class DetEmailServiceTest {
 
         // Then
         assertThat(recipients).isEmpty();
+    }
+
+    @Test
+    void shouldReturnIrcEmailAddressForTinsleyHouseWithDisplayName() {
+        // Given
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("Tinsley House"));
+
+        // When
+        Optional<String> emailAddress = detEmailService.getDetEmailAddress(asylumCase);
+
+        // Then
+        assertThat(emailAddress).isPresent();
+        assertThat(emailAddress.get()).isEqualTo("det-irc-tinsleyhouse@example.com");
     }
 }
