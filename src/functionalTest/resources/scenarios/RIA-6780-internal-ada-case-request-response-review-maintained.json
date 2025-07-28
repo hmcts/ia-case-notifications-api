@@ -10,6 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "appellantInDetention": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "ariaListingReference": "LR/1234/2345",
@@ -46,6 +47,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appellantInDetention": "Yes",
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
         "ariaListingReference": "LR/1234/2345",
