@@ -18,8 +18,7 @@
           "isRemissionsEnabled": "Yes",
           "remissionType":"hoWaiverRemission",
           "remissionOption": "feeWaiverFromHo",
-          "appealType":"refusalOfEu",
-          "eaHuAppealTypePaymentOption": "payLater",
+          "appealType":"revocationOfProtection",
           "legalRepHasAddress": "Yes",
           "legalRepAddressUK": {
             "County": "",
@@ -47,8 +46,7 @@
         "isRemissionsEnabled": "Yes",
         "remissionType":"hoWaiverRemission",
         "remissionOption": "feeWaiverFromHo",
-        "appealType":"refusalOfEu",
-        "eaHuAppealTypePaymentOption": "payLater",
+        "appealType":"revocationOfProtection",
         "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {
           "County": "",
