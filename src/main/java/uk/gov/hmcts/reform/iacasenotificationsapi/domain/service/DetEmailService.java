@@ -37,8 +37,8 @@ public class DetEmailService {
 
     public Optional<String> getDetEmailAddress(AsylumCase asylumCase) {
         
-        if (!AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)) {
-            log.debug("Case is not an accelerated detained appeal, no DET email required");
+        if (!AsylumCaseUtils.isAppellantInDetention(asylumCase)) {
+            log.debug("Appellant is not in detention, no DET email required");
             return Optional.empty();
         }
 
