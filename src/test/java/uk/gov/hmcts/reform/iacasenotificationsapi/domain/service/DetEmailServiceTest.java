@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IRC_NAME;
@@ -44,10 +45,10 @@ class DetEmailServiceTest {
     }
 
     @Test
-    void shouldReturnIrcEmailAddressForDetainedAppealInIrc() {
+    void shouldReturnIrcEmailAddressForIrcDetentionFacility() {
         // Given
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("Brookhouse"));
 
         // When
@@ -59,10 +60,10 @@ class DetEmailServiceTest {
     }
 
     @Test
-    void shouldReturnPrisonEmailAddressForDetainedAppealInPrison() {
+    void shouldReturnPrisonEmailAddressForPrisonDetentionFacility() {
         // Given
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
         when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.of("Belmarsh"));
         when(prisonEmailMappingService.getPrisonEmail("Belmarsh")).thenReturn(Optional.of("prison-belmarsh@example.com"));
 
@@ -72,6 +73,19 @@ class DetEmailServiceTest {
         // Then
         assertThat(emailAddress).isPresent();
         assertThat(emailAddress.get()).isEqualTo("prison-belmarsh@example.com");
+    }
+
+    @Test
+    void shouldReturnEmptyForOtherDetentionFacility() {
+        // Given
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+
+        // When
+        Optional<String> emailAddress = detEmailService.getDetEmailAddress(asylumCase);
+
+        // Then
+        assertThat(emailAddress).isEmpty();
     }
 
     @Test
@@ -87,39 +101,50 @@ class DetEmailServiceTest {
     }
 
     @Test
-    void shouldReturnEmptyWhenIrcNameNotPresent() {
+    void shouldReturnEmptyWhenDetentionFacilityNotPresent() {
         // Given
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
 
         // When
         Optional<String> emailAddress = detEmailService.getDetEmailAddress(asylumCase);
 
         // Then
         assertThat(emailAddress).isEmpty();
+    }
+
+    @Test
+    void shouldThrowExceptionWhenIrcNameNotPresent() {
+        // Given
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> detEmailService.getDetEmailAddress(asylumCase))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("IRC name is not present");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenIrcNotFound() {
+        // Given
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("NonexistentIrc"));
+
+        // When & Then
+        assertThatThrownBy(() -> detEmailService.getDetEmailAddress(asylumCase))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("DET email address not found for: NonexistentIrc");
     }
 
     @Test
     void shouldReturnEmptyWhenPrisonNameNotPresent() {
         // Given
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
         when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.empty());
-
-        // When
-        Optional<String> emailAddress = detEmailService.getDetEmailAddress(asylumCase);
-
-        // Then
-        assertThat(emailAddress).isEmpty();
-    }
-
-    @Test
-    void shouldReturnEmptyWhenIrcNotFound() {
-        // Given
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("UnknownIrc"));
 
         // When
         Optional<String> emailAddress = detEmailService.getDetEmailAddress(asylumCase);
@@ -132,9 +157,9 @@ class DetEmailServiceTest {
     void shouldReturnEmptyWhenPrisonNotFound() {
         // Given
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.of("UnknownPrison"));
-        when(prisonEmailMappingService.getPrisonEmail("UnknownPrison")).thenReturn(Optional.empty());
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
+        when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.of("NonexistentPrison"));
+        when(prisonEmailMappingService.getPrisonEmail("NonexistentPrison")).thenReturn(Optional.empty());
 
         // When
         Optional<String> emailAddress = detEmailService.getDetEmailAddress(asylumCase);
@@ -147,21 +172,21 @@ class DetEmailServiceTest {
     void shouldReturnRecipientsListWithEmailAddress() {
         // Given
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(DETENTION_FACILITY, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("Brookhouse"));
 
         // When
         Set<String> recipients = detEmailService.getRecipientsList(asylumCase);
 
         // Then
-        assertThat(recipients).hasSize(1);
-        assertThat(recipients).contains("irc-brookhouse@example.com");
+        assertThat(recipients).containsExactly("irc-brookhouse@example.com");
     }
 
     @Test
     void shouldReturnEmptyRecipientsListWhenNoEmailFound() {
         // Given
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
 
         // When
         Set<String> recipients = detEmailService.getRecipientsList(asylumCase);

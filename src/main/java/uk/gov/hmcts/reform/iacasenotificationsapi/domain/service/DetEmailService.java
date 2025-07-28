@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 @Service
@@ -44,31 +42,52 @@ public class DetEmailService {
             return Optional.empty();
         }
 
-        YesOrNo detentionFacility = asylumCase.read(DETENTION_FACILITY, YesOrNo.class).orElse(YesOrNo.NO);
-        
-        if (detentionFacility == YesOrNo.YES) {
-            return getIrcEmailAddress(asylumCase);
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+
+        if (detentionFacility.isPresent()) {
+            String facility = detentionFacility.get();
+            switch (facility) {
+                case "immigrationRemovalCentre":
+                    return getIrcEmailAddress(asylumCase);
+                case "prison":
+                    return getPrisonEmailAddress(asylumCase);
+                case "other":
+                    log.debug("Detention facility is 'other', no email address available");
+                    return Optional.empty();
+                default:
+                    log.warn("Unknown detention facility type: '{}', no email address available", facility);
+                    return Optional.empty();
+            }
         } else {
-            return getPrisonEmailAddress(asylumCase);
+            log.warn("DETENTION_FACILITY field is not present in case data");
+            return Optional.empty();
         }
     }
 
     private Optional<String> getIrcEmailAddress(AsylumCase asylumCase) {
-        Optional<String> ircName = asylumCase.read(IRC_NAME, String.class);
+        String emailAddress = asylumCase
+            .read(IRC_NAME, String.class)
+            .map(ircName -> {
+                String email = getDetEmailAddressMapping(ircEmailMappings, ircName);
+                if (email == null) {
+                    throw new IllegalStateException("DET email address not found for: " + ircName);
+                }
+                return email;
+            })
+            .orElseThrow(() -> new IllegalStateException("IRC name is not present"));
         
-        if (ircName.isEmpty()) {
-            log.warn("IRC name is not present in case data for IRC email lookup");
-            return Optional.empty();
-        }
-
-        String emailAddress = ircEmailMappings.get(ircName.get());
-        if (StringUtils.isBlank(emailAddress)) {
-            log.warn("No email address found for IRC: {}", ircName.get());
-            return Optional.empty();
-        }
-
-        log.debug("Found IRC email address for '{}': {}", ircName.get(), emailAddress);
         return Optional.of(emailAddress);
+    }
+
+    /**
+     * Gets the email address mapping for a given key from the provided mappings.
+     * 
+     * @param mappings the email mappings
+     * @param key the key to look up
+     * @return the email address, or null if not found
+     */
+    private String getDetEmailAddressMapping(Map<String, String> mappings, String key) {
+        return mappings.get(key);
     }
 
     private Optional<String> getPrisonEmailAddress(AsylumCase asylumCase) {
