@@ -399,6 +399,8 @@ govnotify:
       detentionEngagementTeam:
         nonAda:
           email: b7e398f0-4a1a-4e13-ae98-9569967e1a7d
+        production:
+          email: 0efe4c2f-d2f4-47f6-baf6-cd723f5bba3d
     adaCaseListedSendDirection:
       legalRep:
         email: a61da7e2-d70f-4d62-89c5-fc54155321c9
@@ -1293,6 +1295,8 @@ govnotify:
     editCaseListing:
       detentionEngagementTeam:
         email: 698cccf8-99b5-4360-b2b5-8aedb9667e21
+        production:
+          email: 1b456113-9c31-41be-9fe8-dc2f2f9a10b1
     hoFtpaDecided:
       detentionEngagementTeam:
         granted:
