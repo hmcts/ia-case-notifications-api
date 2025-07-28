@@ -107,9 +107,6 @@ public class CcdScenarioRunnerTest {
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
         int maxRetries = 3;
         for (String scenarioSource : scenarioSources) {
-            if (!scenarioSource.startsWith("DIAC-1253")) {
-                continue;
-            }
             String description = "";
             for (int i = 0; i < maxRetries; i++) {
                 try {
