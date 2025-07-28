@@ -254,6 +254,8 @@ task runAndPublishConsumerPactTests(type: Test, description: 'Publish pact test 
 
 runAndPublishConsumerPactTests.finalizedBy pactPublish
 
+checkOutcomes.dependsOn clearReports
+
 pact {
     broker {
         pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
@@ -377,7 +379,7 @@ dependencies {
 
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.reformLogging
-    implementation(group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.2') {
+    implementation(group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
     }
 

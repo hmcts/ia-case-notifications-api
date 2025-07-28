@@ -2449,6 +2449,20 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepForceCaseToSubmitHearingRequirementsNotificationHandler(
+        @Qualifier("legalRepForceCaseToSubmitHearingRequirementsNotificationDetentionGenerator")
+            List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS
+                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> adjournHearingWithoutDateNonIntegratedHandler(
         @Qualifier("adjournHearingWithoutDateNonIntegratedNotificationGenerator")
             List<NotificationGenerator> notificationGenerator) {
