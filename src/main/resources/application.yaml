@@ -81,6 +81,11 @@ govnotify:
       respondentReview.to.submitHearingRequirements:
         respondent:
           email: 7b597ead-8218-4227-8168-31d24a2824c5
+          detention:
+            email: a60e2dfe-df22-4633-a172-e54c37aeabd9
+        legalRep:
+          detention:
+            email: 8f191673-6f52-425f-910e-5222769c513a
       awaitingRespondentEvidence.to.caseBuilding:
         respondent:
           email: fe79c1c1-2f1c-4e46-a58d-e28845ac9761
@@ -276,6 +281,8 @@ govnotify:
         email:
           nonEjp: dfc0ee96-c71a-4db3-98ca-f70d7eec1525
           ejp: 492e19f3-6e91-4eb2-961c-7abe1931a0b2
+        detention:
+          email: c3829e8a-e9e5-4661-8e8e-222e0f0b46e8
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
@@ -309,6 +316,8 @@ govnotify:
     buildCaseDirection:
       legalRep:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
+        detention:
+          email: 68fdfc26-6bef-45c8-84cf-ae1ece8572cf
     reviewDirection:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
@@ -316,6 +325,8 @@ govnotify:
         email: 816d35c8-e4b8-45d3-a4fe-789c1badc408
       respondent:
         email: 6c9d4e44-7eba-4058-a928-20da6f447d74
+        detention:
+          email: 9ea5bf72-34b1-433d-b6d8-99a3df12657e
       appellant:
         email: 85a38d4a-166a-49c8-9b03-8ebbf64690e2
         sms: b9a45d5e-b070-4876-9c2f-ed4ff9f18116
@@ -2063,6 +2074,7 @@ appellantDaysToAskReinstate: 14
 
 legalRepDaysToWait:
   afterManageFeeUpdate: 14
+  afterRequestingHearingRequirements: 5
 
 ftpaOutOfCountryDays: 28
 ftpaInCountryDays: 14
