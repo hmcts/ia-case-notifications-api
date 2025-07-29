@@ -11,7 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appellantInDetention": "Yes",
-          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepEmailEjp": "{$TEST_LAW_FIRM_A_USERNAME}",
           "notificationsSent": []
         }
       }
