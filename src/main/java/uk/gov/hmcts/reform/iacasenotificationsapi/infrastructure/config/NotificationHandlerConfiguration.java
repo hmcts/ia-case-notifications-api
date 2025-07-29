@@ -1338,10 +1338,20 @@ public class NotificationHandlerConfiguration {
         @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> {
+                boolean res = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                        && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData());
+                log.info("-----------------------------------callback.getEvent(): {}", callback.getEvent());
+                log.info(
+                        "-----------------------------------2: {}",
+                        isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
+                );
+                log.info("-----------------------------------res: {}", res);
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                        && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData());
+            },
             notificationGenerators
         );
     }

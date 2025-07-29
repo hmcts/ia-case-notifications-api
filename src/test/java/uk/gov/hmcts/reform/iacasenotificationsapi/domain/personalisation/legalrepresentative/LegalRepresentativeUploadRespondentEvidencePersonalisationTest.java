@@ -40,7 +40,6 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
 
     private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
-    private final String detentionTemplateId = "detentionTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String directionDueDate = "2019-08-27";
     private final String expectedDirectionDueDate = "27 Aug 2019";
@@ -78,7 +77,6 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
         legalRepresentativeUploadRespondentEvidencePersonalisation =
             new LegalRepresentativeUploadRespondentEvidencePersonalisation(
                 templateId,
-                detentionTemplateId,
                 iaExUiFrontendUrl,
                 directionFinder,
                 customerServicesProvider
@@ -86,24 +84,8 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
     }
 
     @Test
-    public void should_return_the_given_template_id_for_non_detention() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-
-        assertEquals(templateId, legalRepresentativeUploadRespondentEvidencePersonalisation.getTemplateId(asylumCase));
-    }
-
-    @Test
-    public void should_return_the_given_template_id_for_missing_detention() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.empty());
-
-        assertEquals(templateId, legalRepresentativeUploadRespondentEvidencePersonalisation.getTemplateId(asylumCase));
-    }
-
-    @Test
-    public void should_return_the_given_template_id_for_detention() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-
-        assertEquals(detentionTemplateId, legalRepresentativeUploadRespondentEvidencePersonalisation.getTemplateId(asylumCase));
+    public void should_return_the_given_template_id() {
+        assertEquals(templateId, legalRepresentativeUploadRespondentEvidencePersonalisation.getTemplateId());
     }
 
     @Test
