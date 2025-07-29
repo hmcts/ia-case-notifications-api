@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
@@ -25,20 +25,20 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 public class DetentionEngagementTeamListCaseProductionPersonalisation implements EmailNotificationPersonalisation {
 
     private final String caseListedProductionDetainedTemplateId;
-    private final DetEmailService detEmailService;
+    private final DetentionEmailService detentionEmailService;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final String subjectPrefix;
 
     public DetentionEngagementTeamListCaseProductionPersonalisation(
         @Value("${govnotify.template.caseListed.detentionEngagementTeam.production.email}") String caseListedProductionDetainedTemplateId,
-        DetEmailService detEmailService,
+        DetentionEmailService detentionEmailService,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix
     ) {
         this.caseListedProductionDetainedTemplateId = caseListedProductionDetainedTemplateId;
-        this.detEmailService = detEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
         this.subjectPrefix = subjectPrefix;
@@ -60,7 +60,7 @@ public class DetentionEngagementTeamListCaseProductionPersonalisation implements
             return Collections.emptySet();
         }
 
-        return detEmailService.getDetentionRecipientsList(asylumCase);
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
