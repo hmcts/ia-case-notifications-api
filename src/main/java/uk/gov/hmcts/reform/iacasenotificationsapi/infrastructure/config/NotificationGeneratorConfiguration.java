@@ -25,7 +25,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerEditPaymentMethodPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaDecisionAppellantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaDecisionRespondentPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerFtpaSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRecordAdjournmentDetailsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerReListCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerRequestFeeRemissionPersonalisation;
@@ -2097,7 +2096,6 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> ftpaSubmittedAip(
         AppellantFtpaSubmittedPersonalisationEmail appellantFtpaSubmittedPersonalisationEmail,
         AppellantFtpaSubmittedPersonalisationSms appellantFtpaSubmittedPersonalisationSms,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -2106,7 +2104,6 @@ public class NotificationGeneratorConfiguration {
         return List.of(
             new EmailNotificationGenerator(
                 List.of(appellantFtpaSubmittedPersonalisationEmail,
-                    adminOfficerFtpaSubmittedPersonalisation,
                     respondentAppellantFtpaSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
@@ -2140,7 +2137,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("ftpaSubmittedRespondentNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedRespondent(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         LegalRepresentativeRespondentFtpaSubmittedPersonalisation legalRepresentativeRespondentFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -2148,8 +2144,8 @@ public class NotificationGeneratorConfiguration {
 
         // RIA-3316 - applyForFTPARespondent
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ? newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation)
-            : newArrayList(adminOfficerFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation);
+            ? newArrayList(respondentFtpaSubmittedPersonalisation, legalRepresentativeRespondentFtpaSubmittedPersonalisation)
+            : newArrayList(legalRepresentativeRespondentFtpaSubmittedPersonalisation);
 
         return Arrays.asList(
             new EmailNotificationGenerator(
@@ -2210,7 +2206,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("ftpaSubmittedRespondentAipJourneyNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedRespondentAipJourney(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
-        AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation,
         // notification sent to appellant for FTPA submitted by HO
         AppellantRespondentFtpaSubmittedPersonalisationEmail appellantRespondentFtpaSubmittedPersonalisationEmail,
         AppellantRespondentFtpaSubmittedPersonalisationSms appellantRespondentFtpaSubmittedPersonalisationSms,
@@ -2220,8 +2215,8 @@ public class NotificationGeneratorConfiguration {
 
         // RIA-3316 - applyForFTPARespondent
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ? newArrayList(respondentFtpaSubmittedPersonalisation, adminOfficerFtpaSubmittedPersonalisation, appellantRespondentFtpaSubmittedPersonalisationEmail)
-            : newArrayList(adminOfficerFtpaSubmittedPersonalisation, appellantRespondentFtpaSubmittedPersonalisationEmail);
+            ? newArrayList(respondentFtpaSubmittedPersonalisation, appellantRespondentFtpaSubmittedPersonalisationEmail)
+            : newArrayList(appellantRespondentFtpaSubmittedPersonalisationEmail);
 
         return Arrays.asList(
             new EmailNotificationGenerator(
@@ -3568,6 +3563,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("remissionDecisionPaPartiallyApprovedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionPaPartiallyApprovedNotificationHandler(
+        LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("remissionDecisionRejectedNotificationGenerator")
     public List<NotificationGenerator> remissionDecisionRejectedNotificationHandler(
         LegalRepresentativeRemissionDecisionRejectedPersonalisation legalRepresentativeRemissionDecisionRejectedPersonalisation,
@@ -3579,6 +3592,24 @@ public class NotificationGeneratorConfiguration {
             new EmailNotificationGenerator(
                 newArrayList(
                     legalRepresentativeRemissionDecisionRejectedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("remissionDecisionPaRejectedNotificationGenerator")
+    public List<NotificationGenerator> remissionDecisionPaRejectedNotificationHandler(
+        LegalRepresentativeRemissionDecisionPaRejectedPersonalisation legalRepresentativeRemissionDecisionPaRejectedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeRemissionDecisionPaRejectedPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -5520,6 +5551,27 @@ public class NotificationGeneratorConfiguration {
             ),
             new SmsNotificationGenerator(
                 newArrayList(aipAppellantRecordRemissionDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("aipAppellantRecordRemissionDecisionPaNotificationGenerator")
+    public List<NotificationGenerator> aipAppellantRecordRemissionDecisionPaNotificationGenerator(
+        AipAppellantRecordRemissionDecisionPaPersonalisationEmail aipAppellantRecordRemissionDecisionPaPersonalisationEmail,
+        AipAppellantRecordRemissionDecisionPaPersonalisationSms aipAppellantRecordRemissionDecisionPaPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(aipAppellantRecordRemissionDecisionPaPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(aipAppellantRecordRemissionDecisionPaPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
