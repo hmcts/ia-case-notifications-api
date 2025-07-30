@@ -61,6 +61,7 @@ public class DetentionEngagementTeamRequestRespondentEvidencePersonalisation imp
     @Override
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+
         return ImmutableMap
                 .<String, Object>builder()
                 .put("subjectPrefix", detainedPrefix)

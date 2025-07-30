@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -19,12 +20,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.ChangeOrganisationRequest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
 public class RespondentEvidenceDirectionPersonalisation implements EmailNotificationPersonalisation {
+
+    private static final AddressUk BLANK_ADDRESS = new AddressUk("", "", "", "", "", "", "");
 
     private final String respondentEvidenceDirectionTemplateId;
     private final String respondentEvidenceDirectionEjpTemplateId;
@@ -134,45 +138,43 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
     }
 
     Map<String, String> getLegalRepFields(AsylumCase asylumCase) {
-        AddressUk address = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)
-                .orElse(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)
-                        .orElse(new AddressUk("",
-                "",
-                "",
-                "",
-                "",
-                "","")));
-        String companyAddress = "";
+        AddressUk address;
+        String lrLastName, legalRepCompanyName, legalRepEmail, legalRepReference;
 
+        String lrName = asylumCase.read(LEGAL_REP_NAME, String.class).orElse("");
+        if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(NO).equals(NO)) {
+            address = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
+            lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
+            legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse("");
+            legalRepEmail = asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse("");
+            legalRepReference = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("");
+        } else {
+            address = asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class).orElse(BLANK_ADDRESS);
+            lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class).orElse("");
+            legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class).orElse("");
+            legalRepEmail = asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("");
+            legalRepReference = asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse("");
+        }
+
+        String companyAddress = "";
         companyAddress += address.getAddressLine1().orElse("") + " ";
         companyAddress += address.getAddressLine2().orElse("") + " ";
         companyAddress += address.getCounty().orElse("") + " ";
         companyAddress += address.getPostCode().orElse("");
-
-        final boolean hasNoc = asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
-                .map(it -> it.getCaseRoleId() == null)
-                .orElse(false);
-
-        String lrName = asylumCase.read(LEGAL_REP_NAME, String.class).orElse("");
-        String lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class)
-                .orElse(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)
-                        .orElse(""));
         String legalRepName = (lrName + " " + lrLastName).trim();
 
+        final boolean hasNoc = asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
+            .map(it -> it.getCaseRoleId() == null)
+            .orElse(false);
+
         return ImmutableMap
-                .<String, String>builder()
-                .put("companyName", hasNoc ? "" : asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class)
-                        .orElse(asylumCase.read(LEGAL_REP_COMPANY, String.class)
-                                .orElse("")))
-                .put("companyAddress", hasNoc ? "" : companyAddress)
-                .put("legalRepName", hasNoc ? "" : legalRepName)
-                .put("legalRepEmail", hasNoc ? "" : asylumCase.read(LEGAL_REP_EMAIL, String.class)
-                        .orElse(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)
-                                .orElse("")))
-                .put("legalRepReference", hasNoc ? "" : asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class)
-                        .orElse(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)
-                                .orElse("")))
-                .build();
+            .<String, String>builder()
+            .put("companyName", hasNoc ? "" : legalRepCompanyName)
+            .put("companyAddress", hasNoc ? "" : companyAddress)
+            .put("legalRepName", hasNoc ? "" : legalRepName)
+            .put("legalRepEmail", hasNoc ? "" : legalRepEmail)
+            .put("legalRepReference", hasNoc ? "" : legalRepReference)
+            .build();
     }
 
     private boolean isEjp(AsylumCase asylumCase) {
