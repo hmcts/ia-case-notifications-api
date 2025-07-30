@@ -57,7 +57,7 @@
       {
         "reference": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: check the details of your hearing",
+        "subject": "Immigration and Asylum appeal: case listedg",
         "body": [
           "PA/12345/2023",
           "LP/12345/2023",
@@ -69,7 +69,7 @@
       {
         "reference": "1017_CASE_LISTED_HOME_OFFICE",
         "recipient": "ho-harmondsworth@example.com",
-        "subject": "Immigration and Asylum appeal: check the details of your hearing",
+        "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
           "LP/12345/2023",
@@ -81,7 +81,7 @@
       {
         "reference": "1017_DETAINED_CASE_LISTED_PRODUCTION_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: check the details of your hearing",
+        "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
           "LP/12345/2023",
