@@ -20,6 +20,15 @@
           "detentionFacility": "prison",
           "prisonName": "Albany"
         }
+      },
+      "caseDataBefore": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "ariaListingReference": "LP/12345/2019",
+          "listCaseHearingCentre": "taylorHouse",
+          "listCaseHearingDate": "2019-05-01T13:30:15.000",
+          "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net"
+        }
       }
     }
   },
@@ -35,6 +44,18 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
+            "id": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1017_CASE_LISTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1017_CASE_LISTED_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
             "id": "1017_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
@@ -42,6 +63,30 @@
       }
     },
     "notifications": [
+      {
+        "reference": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: check the details of your hearing",
+        "body": [
+          "PA/12345/2023",
+          "LP/12345/2023",
+          "3 Sep 2023",
+          "14:25",
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
+        ]
+      },
+      {
+        "reference": "1017_CASE_LISTED_HOME_OFFICE",
+        "recipient": "ho-harmondsworth@example.com",
+        "subject": "Immigration and Asylum appeal: case listed",
+        "body": [
+          "PA/12345/2023",
+          "LP/12345/2023",
+          "3 Sep 2023",
+          "14:25",
+          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
+        ]
+      },
       {
         "reference": "1017_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
         "recipient": "det-prison-albany@example.com",
