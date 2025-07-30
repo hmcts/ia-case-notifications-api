@@ -80,7 +80,7 @@
       },
       {
         "reference": "1017_DETAINED_CASE_LISTED_PRODUCTION_DET",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "recipient": "det-prison-albany@example.com",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
