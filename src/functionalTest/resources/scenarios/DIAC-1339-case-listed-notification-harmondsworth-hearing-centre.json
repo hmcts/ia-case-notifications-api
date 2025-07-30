@@ -68,7 +68,7 @@
       },
       {
         "reference": "1017_CASE_LISTED_HOME_OFFICE",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "recipient": "{$IA_HOME_OFFICE_HARMONDSWORTH_EMAIL}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2023",
