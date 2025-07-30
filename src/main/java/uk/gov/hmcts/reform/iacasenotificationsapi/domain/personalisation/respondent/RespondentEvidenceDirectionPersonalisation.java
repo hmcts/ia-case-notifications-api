@@ -139,9 +139,11 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
 
     Map<String, String> getLegalRepFields(AsylumCase asylumCase) {
         AddressUk address;
-        String lrLastName, legalRepCompanyName, legalRepEmail, legalRepReference;
+        String lrLastName;
+        String legalRepCompanyName;
+        String legalRepEmail;
+        String legalRepReference;
 
-        String lrName = asylumCase.read(LEGAL_REP_NAME, String.class).orElse("");
         if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(NO).equals(NO)) {
             address = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
             lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
@@ -161,6 +163,8 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
         companyAddress += address.getAddressLine2().orElse("") + " ";
         companyAddress += address.getCounty().orElse("") + " ";
         companyAddress += address.getPostCode().orElse("");
+
+        String lrName = asylumCase.read(LEGAL_REP_NAME, String.class).orElse("");
         String legalRepName = (lrName + " " + lrLastName).trim();
 
         final boolean hasNoc = asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
