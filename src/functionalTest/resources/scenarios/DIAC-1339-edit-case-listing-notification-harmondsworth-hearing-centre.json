@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1339 Send case listed production notification",
+  "description": "DIAC-1339 Edit case listing production notification",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
