@@ -8,7 +8,52 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.APPELLANT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.RESPONDENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_HAS_FIXED_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECIDE_AN_APPLICATION_ID;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTION_EDIT_PARTIES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_COMPLETED_STAGES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_RECORDED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FEE_UPDATE_TRIBUNAL_ACTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HAS_SERVICE_REQUEST_ALREADY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_APPEAL_DECIDED_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_DECIDED_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_APPELLANT_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_DECIDED_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_FTPA_RESPONDENT_INSTRUCT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_APPELLANT_RESPONDENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REFUND_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_FEE_REMISSION_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DLRM_SET_ASIDE_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_LATE_REMISSION_REQUEST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REMISSIONS_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LATE_REMISSION_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MAKE_AN_APPLICATIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.OUT_OF_TIME_DECISION_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PAYMENT_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.RELIST_CASE_IMMEDIATELY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_OPTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBMIT_NOTIFICATION_STATUS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.UPDATE_TRIBUNAL_DECISION_LIST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.OTHER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAction.ADDITIONAL_PAYMENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
@@ -25,15 +70,58 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HELP_WITH_FEES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HO_WAIVER_REMISSION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.NO_REMISSION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.ADD_EVIDENCE_FOR_COSTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.ADJOURN_HEARING_WITHOUT_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.APPLY_FOR_COSTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.APPLY_FOR_FTPA_RESPONDENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.BUILD_CASE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CONSIDER_MAKING_COSTS_ORDER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECIDE_AN_APPLICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECIDE_COSTS_APPLICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECISION_WITHOUT_HEARING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL_AUTOMATICALLY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.GENERATE_HEARING_BUNDLE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.LIST_CASE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MANAGE_FEE_UPDATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MARK_APPEAL_AS_REMITTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REINSTATE_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_RESPONDENT_EVIDENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_RESPONDENT_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_RESPONSE_AMEND;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESIDENT_JUDGE_FTPA_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESPOND_TO_COSTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_PAYMENT_REMINDER_NOTIFICATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.START_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.TURN_ON_NOTIFICATIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPDATE_HEARING_ADJUSTMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDITIONAL_EVIDENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.PAID;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.PAYMENT_PENDING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAriaMigrated;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInFacilityType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +175,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.Noti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicationRespondentFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 @Slf4j
 @Configuration
@@ -1681,8 +1768,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE
-                    && AsylumCaseUtils.isInternalCase(asylumCase)
-                    && AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase);
+                    && isInternalCase(asylumCase)
+                    && isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -1760,7 +1847,7 @@ public class NotificationHandlerConfiguration {
                                     && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
                                     && callback.getCaseDetails().getState() != State.FTPA_DECIDED
                                     && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                                    && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData());
+                                    && isInternalCase(callback.getCaseDetails().getCaseData());
                 },
                 notificationGenerators
         );
@@ -2186,7 +2273,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                    && AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+                    && isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2693,7 +2780,7 @@ public class NotificationHandlerConfiguration {
                            || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
                        && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
                     FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase)
+                       && !isInternalCase(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT")
                        && !isAipJourney(asylumCase);
@@ -2744,7 +2831,7 @@ public class NotificationHandlerConfiguration {
                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
                            || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase)
+                       && !isInternalCase(asylumCase)
                        && isGrantedOrPartiallyGrantedOutcome(asylumCase,
                     FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
@@ -2834,7 +2921,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
                        || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase)
+                       && !isInternalCase(asylumCase)
                        && isReheardDecisionOutcome
                        && !isDlrmSetAsideEnabled(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
@@ -2910,7 +2997,7 @@ public class NotificationHandlerConfiguration {
                            || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
                        && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase)
+                       && !isInternalCase(asylumCase)
                        && !isAipJourney(asylumCase)
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
@@ -2993,7 +3080,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isRespondentApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
                     .map(applicantType -> RESPONDENT == applicantType).orElse(false);
-                FtpaDecisionOutcomeType decisionOutcomeType = AsylumCaseUtils.getFtpaDecisionOutcomeType(asylumCase)
+                FtpaDecisionOutcomeType decisionOutcomeType = getFtpaDecisionOutcomeType(asylumCase)
                     .orElse(null);
                 Set<FtpaDecisionOutcomeType> validDecisionOutcomeTypes = Set.of(
                     FTPA_REFUSED,
@@ -3007,7 +3094,7 @@ public class NotificationHandlerConfiguration {
                     || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
                     && isRespondentApplication
                     && validDecisionOutcomeTypes.contains(decisionOutcomeType)
-                    && AsylumCaseUtils.isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -3024,7 +3111,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isRespondentApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
                     .map(applicantType -> RESPONDENT == applicantType).orElse(false);
-                FtpaDecisionOutcomeType decisionOutcomeType = AsylumCaseUtils.getFtpaDecisionOutcomeType(asylumCase)
+                FtpaDecisionOutcomeType decisionOutcomeType = getFtpaDecisionOutcomeType(asylumCase)
                     .orElse(null);
                 Set<FtpaDecisionOutcomeType> validDecisionOutcomeTypes = Set.of(
                     FTPA_REFUSED,
@@ -3036,8 +3123,8 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
                        && isRespondentApplication
                        && validDecisionOutcomeTypes.contains(decisionOutcomeType)
-                       && AsylumCaseUtils.isAppellantInDetention(asylumCase)
-                       && AsylumCaseUtils.isInternalCase(asylumCase);
+                       && isAppellantInDetention(asylumCase)
+                       && isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -3094,7 +3181,7 @@ public class NotificationHandlerConfiguration {
                     || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
                     && isGrantedOrPartiallyGrantedOutcome(asylumCase,
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
-                    && !AsylumCaseUtils.isInternalCase(asylumCase)
+                    && !isInternalCase(asylumCase)
                     && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
                     && !isAipJourney(asylumCase);
@@ -3117,7 +3204,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
                     && isGrantedOrPartiallyGrantedOutcome(asylumCase,
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
-                    && AsylumCaseUtils.isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -3212,7 +3299,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && (callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
                        || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
-                       && !AsylumCaseUtils.isInternalCase(asylumCase)
+                       && !isInternalCase(asylumCase)
                        && isReheardDecisionOutcome
                        && !hasThisNotificationSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
@@ -4956,7 +5043,7 @@ public class NotificationHandlerConfiguration {
                     callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.ADA_SUITABILITY_REVIEW
                             && isRepJourney(callback.getCaseDetails().getCaseData())
-                            && !AsylumCaseUtils.isInternalCase(callback.getCaseDetails().getCaseData()),
+                            && !isInternalCase(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
     }
@@ -4971,8 +5058,8 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.ADA_SUITABILITY_REVIEW
-                            && AsylumCaseUtils.isInternalCase(asylumCase)
-                            && AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase);
+                            && isInternalCase(asylumCase)
+                            && isAcceleratedDetainedAppeal(asylumCase);
                 },
                 notificationGenerators
         );
@@ -6182,6 +6269,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
                        && isRpAndDcAppealType
+                       && (!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER))
                        && isSubmissionOutOfTime(asylumCase);
 
             },
