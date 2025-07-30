@@ -34,11 +34,11 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1017_DETAINED_CASE_LISTED_PRODUCTION_DET",
+            "id": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "1017_DETAINED_CASE_LISTED_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,7 +46,7 @@
     },
     "notifications": [
       {
-        "reference": "1017_DETAINED_CASE_LISTED_PRODUCTION_DET",
+        "reference": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
@@ -58,7 +58,7 @@
         ]
       },
       {
-        "reference": "1017_CASE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "1017_DETAINED_CASE_LISTED_PRODUCTION_DET",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
