@@ -48,7 +48,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1017_CASE_LISTED_HOME_OFFICE",
+            "id": "1017_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
@@ -65,7 +65,7 @@
     "notifications": [
       {
         "reference": "1017_CASE_RE_LISTED_HOME_OFFICE",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2023",
@@ -76,8 +76,8 @@
         ]
       },
       {
-        "reference": "1017_CASE_LISTED_HOME_OFFICE",
-        "recipient": "ho-harmondsworth@example.com",
+        "reference": "1017_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2023",
