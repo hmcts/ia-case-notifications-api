@@ -68,7 +68,7 @@
       },
       {
         "reference": "1017_CASE_LISTED_HOME_OFFICE",
-        "recipient": "{$IA_HOME_OFFICE_HARMONDSWORTH_EMAIL}",
+        "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
           "PA/12345/2023",
