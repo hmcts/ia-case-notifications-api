@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 public class RespondentDirectionPersonalisation implements EmailNotificationPersonalisation {
 
     private final String respondentReviewDirectionTemplateId;
+    private final String respondentReviewDirectionDetentionTemplateId;
     private final String iaExUiFrontendUrl;
     private final String respondentReviewDirectionEmailAddress;
     private final DirectionFinder directionFinder;
@@ -36,6 +38,7 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
 
     public RespondentDirectionPersonalisation(
         @Value("${govnotify.template.reviewDirection.respondent.email}") String respondentReviewDirectionTemplateId,
+        @Value("${govnotify.template.reviewDirection.respondent.detention.email}") String respondentReviewDirectionDetentionTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentReviewDirectionEmailAddress,
         DirectionFinder directionFinder,
@@ -43,6 +46,7 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     ) {
 
         this.respondentReviewDirectionTemplateId = respondentReviewDirectionTemplateId;
+        this.respondentReviewDirectionDetentionTemplateId = respondentReviewDirectionDetentionTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.respondentReviewDirectionEmailAddress = respondentReviewDirectionEmailAddress;
         this.directionFinder = directionFinder;
@@ -50,8 +54,12 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     }
 
     @Override
-    public String getTemplateId() {
-        return respondentReviewDirectionTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        if (isAppellantInDetention(asylumCase)) {
+            return respondentReviewDirectionDetentionTemplateId;
+        } else {
+            return respondentReviewDirectionTemplateId;
+        }
     }
 
     @Override

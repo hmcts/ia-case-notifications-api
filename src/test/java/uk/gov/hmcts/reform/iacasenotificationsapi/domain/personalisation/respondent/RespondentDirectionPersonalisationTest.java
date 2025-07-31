@@ -4,11 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Map;
@@ -38,22 +34,23 @@ public class RespondentDirectionPersonalisationTest {
     @Mock Direction direction;
     @Mock CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String respondentReviewEmailAddress = "respondentReview@example.com";
+    private final Long caseId = 12345L;
+    private final String templateId = "someTemplateId";
+    private final String detentionTemplateId = "someDetentionTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String respondentReviewEmailAddress = "respondentReview@example.com";
 
-    private String directionDueDate = "2019-08-27";
-    private String expectedDirectionDueDate = "27 Aug 2019";
-    private String directionExplanation = "someExplanation";
+    private final String directionDueDate = "2019-08-27";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
+    private final String directionExplanation = "someExplanation";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer.services@example.com";
 
     private RespondentDirectionPersonalisation respondentDirectionPersonalisation;
 
@@ -74,6 +71,7 @@ public class RespondentDirectionPersonalisationTest {
 
         respondentDirectionPersonalisation = new RespondentDirectionPersonalisation(
             templateId,
+            detentionTemplateId,
             iaExUiFrontendUrl,
             respondentReviewEmailAddress,
             directionFinder,
@@ -82,8 +80,24 @@ public class RespondentDirectionPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_template_id() {
-        assertEquals(templateId, respondentDirectionPersonalisation.getTemplateId());
+    public void should_return_the_given_template_id_for_non_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+
+        assertEquals(templateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_missing_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertEquals(templateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_detention() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(detentionTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

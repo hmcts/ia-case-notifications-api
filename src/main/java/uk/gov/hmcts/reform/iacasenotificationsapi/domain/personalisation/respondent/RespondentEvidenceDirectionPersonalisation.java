@@ -2,8 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isEjpCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -28,6 +27,7 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
 
     private final String respondentEvidenceDirectionTemplateId;
     private final String respondentEvidenceDirectionEjpTemplateId;
+    private final String respondentEvidenceDirectionDetentionTemplateId;
 
     private final String respondentEvidenceDirectionEmailAddress;
     private final String iaExUiFrontendUrl;
@@ -42,6 +42,7 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
     public RespondentEvidenceDirectionPersonalisation(
             @Value("${govnotify.template.requestRespondentEvidenceDirection.respondent.email.nonEjp}") String respondentEvidenceDirectionTemplateId,
             @Value("${govnotify.template.requestRespondentEvidenceDirection.respondent.email.ejp}") String respondentEvidenceEjpDirectionTemplateId,
+            @Value("${govnotify.template.requestRespondentEvidenceDirection.respondent.detention.email}") String respondentEvidenceDirectionDetentionTemplateId,
             @Value("${respondentEmailAddresses.respondentEvidenceDirection}") String respondentEvidenceDirectionEmailAddress,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             DirectionFinder directionFinder,
@@ -49,6 +50,7 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
 
         this.respondentEvidenceDirectionTemplateId = respondentEvidenceDirectionTemplateId;
         this.respondentEvidenceDirectionEjpTemplateId = respondentEvidenceEjpDirectionTemplateId;
+        this.respondentEvidenceDirectionDetentionTemplateId = respondentEvidenceDirectionDetentionTemplateId;
         this.respondentEvidenceDirectionEmailAddress = respondentEvidenceDirectionEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.directionFinder = directionFinder;
@@ -57,8 +59,10 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isEjp(asylumCase)
-                ? respondentEvidenceDirectionEjpTemplateId : respondentEvidenceDirectionTemplateId;
+        return isAppellantInDetention(asylumCase)
+                   ? respondentEvidenceDirectionDetentionTemplateId
+                      : isEjp(asylumCase)
+                          ? respondentEvidenceDirectionEjpTemplateId : respondentEvidenceDirectionTemplateId;
     }
 
     @Override
@@ -79,11 +83,16 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
         personalisation
                 .putAll(getCommonPersonalisationFields(asylumCase));
 
-        if (isEjp(asylumCase)) {
-            personalisation.putAll(getPersonalisationForEjp(asylumCase));
-        } else {
+        if (isAppellantInDetention(asylumCase)) {
             personalisation.putAll(getLegalRepFields(asylumCase));
+        } else {
+            if (isEjp(asylumCase)) {
+                personalisation.putAll(getPersonalisationForEjp(asylumCase));
+            } else {
+                personalisation.putAll(getLegalRepFields(asylumCase));
+            }
         }
+
         return personalisation;
     }
 
