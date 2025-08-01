@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -51,7 +52,8 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
             @Value("${respondentEmailAddresses.respondentEvidenceDirection}") String respondentEvidenceDirectionEmailAddress,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             DirectionFinder directionFinder,
-            CustomerServicesProvider customerServicesProvider) {
+            CustomerServicesProvider customerServicesProvider
+    ) {
 
         this.respondentEvidenceDirectionTemplateId = respondentEvidenceDirectionTemplateId;
         this.respondentEvidenceDirectionEjpTemplateId = respondentEvidenceEjpDirectionTemplateId;
@@ -105,67 +107,75 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
         String legalRepFullName = asylumCase.read(LEGAL_REP_GIVEN_NAME_EJP, String.class).orElse("") + " " + asylumCase.read(LEGAL_REP_FAMILY_NAME_EJP, String.class).orElse("");
 
         return ImmutableMap
-                .<String, String>builder()
-                .put("companyName", asylumCase.read(LEGAL_REP_COMPANY_EJP, String.class).orElse(""))
-                .put("legalRepName", legalRepFullName)
-                .put("legalRepEmail", asylumCase.read(LEGAL_REP_EMAIL_EJP, String.class).orElse(""))
-                .put("legalRepReference", asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class).orElse(""))
-                .build();
+            .<String, String>builder()
+            .put("companyName", asylumCase.read(LEGAL_REP_COMPANY_EJP, String.class).orElse(""))
+            .put("legalRepName", legalRepFullName)
+            .put("legalRepEmail", asylumCase.read(LEGAL_REP_EMAIL_EJP, String.class).orElse(""))
+            .put("legalRepReference", asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class).orElse(""))
+            .build();
     }
 
     Map<String, String> getCommonPersonalisationFields(AsylumCase asylumCase) {
         final Direction direction =
-                directionFinder
-                        .findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)
-                        .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_EVIDENCE + "' is not present"));
+            directionFinder
+                .findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)
+                .orElseThrow(() -> new IllegalStateException("direction '" + DirectionTag.RESPONDENT_EVIDENCE + "' is not present"));
 
         final String directionDueDate =
-                LocalDate
-                        .parse(direction.getDateDue())
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            LocalDate
+                .parse(direction.getDateDue())
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return ImmutableMap
-                .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("dueDate", directionDueDate)
-                .put("linkToOnlineService", iaExUiFrontendUrl)
-                .build();
+            .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+            .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("dueDate", directionDueDate)
+            .put("linkToOnlineService", iaExUiFrontendUrl)
+            .build();
     }
 
     Map<String, String> getLegalRepFields(AsylumCase asylumCase) {
-        AddressUk address;
-        String lrLastName;
+        AddressUk legalRepAddress;
+        String legalRepLastName;
         String legalRepCompanyName;
         String legalRepEmail;
         String legalRepReference;
 
-        if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(NO).equals(NO)) {
-            address = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
-            lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
+        if (asylumCase.read(IS_ADMIN, YesOrNo.class).orElse(NO).equals(YES)) {
+            if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(NO).equals(NO)) {
+                legalRepAddress = asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class).orElse(BLANK_ADDRESS);
+                legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class).orElse("");
+                legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class).orElse("");
+                legalRepEmail = asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("");
+                legalRepReference = asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse("");
+            } else {
+                legalRepAddress = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
+                legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
+                legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse("");
+                legalRepEmail = asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse("");
+                legalRepReference = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("");
+            }
+        } else {
+            legalRepAddress = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
+            legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
             legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse("");
             legalRepEmail = asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse("");
             legalRepReference = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("");
-        } else {
-            address = asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class).orElse(BLANK_ADDRESS);
-            lrLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class).orElse("");
-            legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class).orElse("");
-            legalRepEmail = asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("");
-            legalRepReference = asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse("");
         }
 
         String companyAddress = "";
-        companyAddress += address.getAddressLine1().orElse("") + " ";
-        companyAddress += address.getAddressLine2().orElse("") + " ";
-        companyAddress += address.getCounty().orElse("") + " ";
-        companyAddress += address.getPostCode().orElse("");
+        companyAddress += legalRepAddress.getAddressLine1().orElse("") + " ";
+        companyAddress += legalRepAddress.getAddressLine2().orElse("") + " ";
+        companyAddress += legalRepAddress.getCounty().orElse("") + " ";
+        companyAddress += legalRepAddress.getPostCode().orElse("");
 
         String lrName = asylumCase.read(LEGAL_REP_NAME, String.class).orElse("");
-        String legalRepName = (lrName + " " + lrLastName).trim();
+        String legalRepName = (lrName + " " + legalRepLastName).trim();
 
         final boolean hasNoc = asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
             .map(it -> it.getCaseRoleId() == null)
@@ -185,4 +195,3 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
         return isEjpCase(asylumCase) && asylumCase.read(LEGAL_REP_NAME, String.class).isEmpty();
     }
 }
-
