@@ -146,7 +146,8 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
         String legalRepEmail;
         String legalRepReference;
 
-       if (asylumCase.read(IS_ADMIN, YesOrNo.class).orElse(NO).equals(YES)
+        Optional<YesOrNo> appellantsPresentation = asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class);        
+        if (asylumCase.read(IS_ADMIN, YesOrNo.class).orElse(NO).equals(YES)
                 && appellantsPresentation.isPresent()
                     && appellantsPresentation.get().equals(NO)) {
             legalRepAddress = asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class).orElse(BLANK_ADDRESS);
