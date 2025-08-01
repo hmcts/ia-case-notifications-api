@@ -146,20 +146,14 @@ public class RespondentEvidenceDirectionPersonalisation implements EmailNotifica
         String legalRepEmail;
         String legalRepReference;
 
-        if (asylumCase.read(IS_ADMIN, YesOrNo.class).orElse(NO).equals(YES)) {
-            if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(NO).equals(NO)) {
-                legalRepAddress = asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class).orElse(BLANK_ADDRESS);
-                legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class).orElse("");
-                legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class).orElse("");
-                legalRepEmail = asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("");
-                legalRepReference = asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse("");
-            } else {
-                legalRepAddress = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
-                legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
-                legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY, String.class).orElse("");
-                legalRepEmail = asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElse("");
-                legalRepReference = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("");
-            }
+       if (asylumCase.read(IS_ADMIN, YesOrNo.class).orElse(NO).equals(YES)
+                && appellantsPresentation.isPresent()
+                    && appellantsPresentation.get().equals(NO)) {
+            legalRepAddress = asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class).orElse(BLANK_ADDRESS);
+            legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class).orElse("");
+            legalRepCompanyName = asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class).orElse("");
+            legalRepEmail = asylumCase.read(LEGAL_REP_EMAIL, String.class).orElse("");
+            legalRepReference = asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse("");
         } else {
             legalRepAddress = asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class).orElse(BLANK_ADDRESS);
             legalRepLastName = asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class).orElse("");
