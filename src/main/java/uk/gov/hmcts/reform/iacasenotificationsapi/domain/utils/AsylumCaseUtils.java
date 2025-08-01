@@ -445,6 +445,32 @@ public class AsylumCaseUtils {
         return address;
     }
 
+    public static List<String> getDetainedAddressLetterPersonalisation(AsylumCase asylumCase) {
+        String detentionFacility = getDetentionFacility(asylumCase);
+        List<String> address;
+
+        if (detentionFacility.equals("other")) {
+            address = getAppellantAddressAsList(asylumCase);
+        } else {
+            // prison and irc to be implemented here
+            address = Arrays.asList("");
+        }
+        return address;
+    }
+
+    public static String getDetentionFacility(AsylumCase asylumCase) {
+        return asylumCase.read(DETENTION_FACILITY, String.class).orElseThrow(() -> new IllegalStateException("detentionFacility is not present"));
+    }
+
+    public static boolean isAipManualJourney(AsylumCase asylumCase) {
+        boolean isJourneyTypeEmpty = asylumCase
+                .read(JOURNEY_TYPE, JourneyType.class).isEmpty();
+        boolean isAppellantsRepresentation = asylumCase
+                .read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES;
+
+        return isJourneyTypeEmpty && isAppellantsRepresentation;
+    }
+
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {
         if ("decisionWithHearing".equals(decisionHearingFeeOption)) {
             return "Decision with hearing";
