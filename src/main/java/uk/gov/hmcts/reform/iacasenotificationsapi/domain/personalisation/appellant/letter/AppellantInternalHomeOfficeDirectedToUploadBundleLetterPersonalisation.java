@@ -64,7 +64,13 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+        List<String> address;
+
+        if (isAppellantInDetention(asylumCase) && isAipManualJourney(asylumCase) && getDetentionFacility(asylumCase).equals("other")) {
+            address = getDetainedAddressLetterPersonalisation(asylumCase);
+        } else {
+            address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+        }
 
         final Direction direction =
             directionFinder

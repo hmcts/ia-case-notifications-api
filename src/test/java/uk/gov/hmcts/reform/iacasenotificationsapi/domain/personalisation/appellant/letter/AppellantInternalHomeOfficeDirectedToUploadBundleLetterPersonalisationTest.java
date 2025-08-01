@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
@@ -171,6 +172,33 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+    }
+
+    @Test
+    void should_return_personalisation_when_aip_manual_detention_facility_other() {
+        appellantInCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(AsylumCaseDefinition.DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        Map<String, String> personalisation =
+                appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getPersonalisation(callback);
+
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(addressLine1, personalisation.get("address_line_1"));
+        assertEquals(addressLine2, personalisation.get("address_line_2"));
+        assertEquals(addressLine3, personalisation.get("address_line_3"));
+        assertEquals(postTown, personalisation.get("address_line_4"));
+        assertEquals(postCode.toString(), personalisation.get("address_line_5"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+
     }
 
     private void appellantOutOfCountryDataSetup() {
