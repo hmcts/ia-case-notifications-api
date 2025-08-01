@@ -422,4 +422,47 @@ public class AsylumCaseUtilsTest {
         String feeDifference = AsylumCaseUtils.calculateFeeDifference(originalFeeTotal, newFeeTotal);
         assertEquals(expectedDifference, feeDifference);
     }
+
+    @Test
+    void getDetentionFacility_should_return_detention_facility() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+        assertEquals("other", AsylumCaseUtils.getDetentionFacility(asylumCase));
+    }
+
+    @Test
+    void getDetentionFacility_should_throw_exception_detention_facility_empty() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> AsylumCaseUtils.getDetentionFacility(asylumCase))
+                .hasMessage("detentionFacility is not present")
+                .isExactlyInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void isAipManualJourney_should_return_true() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertTrue(AsylumCaseUtils.isAipManualJourney(asylumCase));
+    }
+
+    @Test
+    void isAipManualJourney_should_return_false_journey_rep() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertFalse(AsylumCaseUtils.isAipManualJourney(asylumCase));
+    }
+
+    @Test
+    void isAipManualJourney_should_return_false_appellants_representation_false() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertFalse(AsylumCaseUtils.isAipManualJourney(asylumCase));
+    }
+
+    @Test
+    void isAipManualJourney_should_return_false_journey_rep_appellants_representation_false() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertFalse(AsylumCaseUtils.isAipManualJourney(asylumCase));
+    }
+
 }
