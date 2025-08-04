@@ -1,23 +1,22 @@
 {
-  "description": "RIA-1323 Internal AIP migrated case with fee letter when detained in other",
+  "description": "RIA-1323 Send letter notification to appellant for Submit Appeal within time with fee and detained in other",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "LegalRepresentative",
     "input": {
       "id": 1323,
-      "eventId": "progressMigratedCase",
+      "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "isAriaMigrated": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "other",
           "submissionOutOfTime": "No",
           "paymentStatus": "Payment pending",
-          "appellantsRepresentation": "Yes",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -37,13 +36,12 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "isAriaMigrated": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInUk": "Yes",
         "appellantInDetention": "Yes",
         "detentionFacility": "other",
         "submissionOutOfTime": "No",
         "paymentStatus": "Payment pending",
-        "appellantsRepresentation": "Yes",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
