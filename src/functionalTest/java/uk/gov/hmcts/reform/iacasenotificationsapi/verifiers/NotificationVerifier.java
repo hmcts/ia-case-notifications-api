@@ -100,7 +100,7 @@ public class NotificationVerifier implements Verifier {
                     assertThat(
                         description
                             + ": Notification "
-                            + expectedReference
+                            + expectedReference + "|" + actualRecipient + "|" + expectedRecipient
                             + " was delivered to wrong recipient",
                         actualRecipient,
                         equalTo(expectedRecipient)
