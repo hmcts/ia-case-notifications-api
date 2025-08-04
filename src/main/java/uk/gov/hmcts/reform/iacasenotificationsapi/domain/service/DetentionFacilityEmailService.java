@@ -9,11 +9,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PRISON_NAME;
 
 @Service
-public class DetentionEmailService {
+public class DetentionFacilityEmailService {
     private final DetEmailService detEmailService;
     private final PrisonEmailMappingService prisonEmailMappingService;
 
-    public DetentionEmailService(DetEmailService detEmailService, PrisonEmailMappingService prisonEmailMappingService) {
+    public DetentionFacilityEmailService(DetEmailService detEmailService, PrisonEmailMappingService prisonEmailMappingService) {
         this.detEmailService = detEmailService;
         this.prisonEmailMappingService = prisonEmailMappingService;
     }

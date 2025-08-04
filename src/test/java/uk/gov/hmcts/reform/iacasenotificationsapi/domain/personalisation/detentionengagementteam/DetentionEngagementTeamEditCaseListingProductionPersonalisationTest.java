@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMe
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.service.notify.NotificationClientException;
@@ -43,7 +43,7 @@ class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
     @Mock
     private DateTimeExtractor dateTimeExtractor;
     @Mock
-    private DetentionEmailService detentionEmailService;
+    private DetentionFacilityEmailService detentionFacilityEmailService;
     @Mock
     private HearingDetailsFinder hearingDetailsFinder;
     @Mock
@@ -71,7 +71,7 @@ class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
 
         personalisation = new DetentionEngagementTeamEditCaseListingProductionPersonalisation(
             templateId,
-            detentionEmailService,
+                detentionFacilityEmailService,
             dateTimeExtractor,
             hearingDetailsFinder,
             nonAdaPrefix
@@ -97,7 +97,7 @@ class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+        when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(personalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
@@ -25,20 +25,20 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 public class DetentionEngagementTeamEditCaseListingProductionPersonalisation implements EmailNotificationPersonalisation {
 
     private final String editCaseListingProductionDetainedTemplateId;
-    private final DetentionEmailService detentionEmailService;
+    private final DetentionFacilityEmailService detentionFacilityEmailService;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final String subjectPrefix;
 
     public DetentionEngagementTeamEditCaseListingProductionPersonalisation(
         @Value("${govnotify.template.editCaseListing.detentionEngagementTeam.production.email}") String editCaseListingProductionDetainedTemplateId,
-        DetentionEmailService detentionEmailService,
+        DetentionFacilityEmailService detentionFacilityEmailService,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix
     ) {
         this.editCaseListingProductionDetainedTemplateId = editCaseListingProductionDetainedTemplateId;
-        this.detentionEmailService = detentionEmailService;
+        this.detentionFacilityEmailService = detentionFacilityEmailService;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
         this.subjectPrefix = subjectPrefix;
@@ -60,7 +60,7 @@ public class DetentionEngagementTeamEditCaseListingProductionPersonalisation imp
             return Collections.emptySet();
         }
 
-        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
+        return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
