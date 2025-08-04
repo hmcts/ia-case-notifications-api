@@ -58,7 +58,7 @@
       },
       {
         "reference": "2959123_END_APPEAL_LEGAL_REPRESENTATIVE",
-        "recipient": "det-prison-albany@example.com",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: appeal ended",
         "body": [
           "PA/12345/2019",
