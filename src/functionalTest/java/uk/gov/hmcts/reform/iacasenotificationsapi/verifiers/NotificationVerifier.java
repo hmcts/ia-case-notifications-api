@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.google.common.base.Strings;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,14 @@ public class NotificationVerifier implements Verifier {
                         equalTo(expectedReference)
                     );
 
-                    assertEquals(expectedRecipient, actualRecipient, "Notification was delivered to wrong recipient");
+                    assertEquals(
+                            expectedRecipient,
+                            actualRecipient,
+                            "Notification was delivered to wrong recipient|"
+                                    + Arrays.toString(expectedRecipient.getBytes())
+                                    + "|"
+                                    + Arrays.toString(actualRecipient.getBytes())
+                    );
 
                     assertThat(
                         description
