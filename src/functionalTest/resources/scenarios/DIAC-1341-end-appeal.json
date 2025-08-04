@@ -48,7 +48,7 @@
     "notifications": [
       {
         "reference": "2959123_END_APPEAL_HOME_OFFICE",
-        "recipient": "det-prison-albany@example.com",
+        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "IAFT – SERVE IN PERSON: Hearing adjourned",
         "body": [
           "PA/12345/2019",

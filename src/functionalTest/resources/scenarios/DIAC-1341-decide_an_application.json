@@ -54,7 +54,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2959123_RESPONDENT_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "2959123_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
@@ -86,7 +86,7 @@
         ]
       },
       {
-        "reference": "2959123_RESPONDENT_ADJOURN_HEARING_WITHOUT_DATE",
+        "reference": "2959123_DECIDE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
