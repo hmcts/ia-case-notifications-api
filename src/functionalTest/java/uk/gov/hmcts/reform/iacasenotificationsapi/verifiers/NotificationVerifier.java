@@ -98,14 +98,6 @@ public class NotificationVerifier implements Verifier {
                         equalTo(expectedReference)
                     );
 
-//                    assertThat(
-//                        description
-//                            + ": Notification "
-//                            + expectedReference + "|" + actualRecipient + "|" + expectedRecipient
-//                            + " was delivered to wrong recipient",
-//                        actualRecipient,
-//                        equalTo(expectedRecipient)
-//                    );
                     assertEquals(expectedRecipient, actualRecipient, "Notification was delivered to wrong recipient");
 
                     assertThat(
