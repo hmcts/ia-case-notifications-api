@@ -6102,7 +6102,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(asylumCase)
                     && !isAriaMigrated(asylumCase)
-                    && ((!isAppellantInDetention(asylumCase)) || isDetainedInFacilityType(asylumCase, OTHER))
+                    && ((!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER)))
                     && !isSubmissionOutOfTime(asylumCase)
                     && isPaymentPending
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
