@@ -49,7 +49,7 @@
       {
         "reference": "2959123_END_APPEAL_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: appeal ended",
+        "subject": "Immigration and Asylum appeal: appeal ended –",
         "body": [
           "PA/12345/2019",
           "A1234567",

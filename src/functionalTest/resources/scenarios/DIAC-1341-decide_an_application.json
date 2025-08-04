@@ -68,7 +68,7 @@
       {
         "reference": "2959123_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Hearing adjourned",
+        "subject": "Immigration and Asylum appeal: A respondent application has been granted",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
