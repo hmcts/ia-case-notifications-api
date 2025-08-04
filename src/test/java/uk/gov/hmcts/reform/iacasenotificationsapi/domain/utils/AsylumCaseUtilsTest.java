@@ -482,30 +482,30 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
-    void isAipManualJourney_should_return_true() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.empty());
+    void isAipManual_should_return_true() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(AsylumCaseUtils.isAipManualJourney(asylumCase));
+        assertTrue(AsylumCaseUtils.isAipManual(asylumCase));
     }
 
     @Test
-    void isAipManualJourney_should_return_false_journey_rep() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+    void isAipManual_should_return_false_not_admin() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertFalse(AsylumCaseUtils.isAipManualJourney(asylumCase));
+        assertFalse(AsylumCaseUtils.isAipManual(asylumCase));
     }
 
     @Test
-    void isAipManualJourney_should_return_false_appellants_representation_false() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.empty());
+    void isAipManual_should_return_false_appellants_representation_false() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertFalse(AsylumCaseUtils.isAipManualJourney(asylumCase));
+        assertFalse(AsylumCaseUtils.isAipManual(asylumCase));
     }
 
     @Test
-    void isAipManualJourney_should_return_false_journey_rep_appellants_representation_false() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+    void isAipManual_should_return_false_not_admin_appellants_representation_false() {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertFalse(AsylumCaseUtils.isAipManualJourney(asylumCase));
+        assertFalse(AsylumCaseUtils.isAipManual(asylumCase));
     }
 }

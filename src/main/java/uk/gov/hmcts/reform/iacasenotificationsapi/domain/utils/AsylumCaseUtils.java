@@ -462,13 +462,13 @@ public class AsylumCaseUtils {
         return asylumCase.read(DETENTION_FACILITY, String.class).orElseThrow(() -> new IllegalStateException("detentionFacility is not present"));
     }
 
-    public static boolean isAipManualJourney(AsylumCase asylumCase) {
-        boolean isJourneyTypeEmpty = asylumCase
-                .read(JOURNEY_TYPE, JourneyType.class).isEmpty();
+    public static boolean isAipManual(AsylumCase asylumCase) {
+        boolean isAdmin = asylumCase
+                .read(IS_ADMIN, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES;
         boolean isAppellantsRepresentation = asylumCase
                 .read(APPELLANTS_REPRESENTATION, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES;
 
-        return isJourneyTypeEmpty && isAppellantsRepresentation;
+        return isAdmin && isAppellantsRepresentation;
     }
 
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {

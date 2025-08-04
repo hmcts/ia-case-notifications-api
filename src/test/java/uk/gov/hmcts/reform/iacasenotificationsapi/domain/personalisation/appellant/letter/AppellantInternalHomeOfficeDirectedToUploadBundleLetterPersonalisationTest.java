@@ -178,7 +178,6 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
     void should_return_personalisation_when_aip_manual_detention_facility_other() {
         appellantInCountryDataSetup();
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(AsylumCaseDefinition.JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
@@ -198,7 +197,6 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
-
     }
 
     private void appellantOutOfCountryDataSetup() {
