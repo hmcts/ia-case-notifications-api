@@ -77,7 +77,7 @@ class DetentionEngagementTeamEndTheAppealProductionPersonalisationTest {
     @Test
     void should_return_reference_id() {
         assertThat(personalisation.getReferenceId(123L))
-                .isEqualTo("123_DETAINED_CASE_LISTED_PRODUCTION_DET");
+                .isEqualTo("123_DETAINED_END_APPEAL_PRODUCTION_DET");
     }
 
     @Test

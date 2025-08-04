@@ -17,16 +17,26 @@
           "ariaListingReference": "LP/12345/2019",
           "appellantInDetention": "Yes",
           "detentionFacility": "prison",
-          "prisonName": "Albany"
-        },
-        "caseDataBefore": {
-          "template": "minimal-appeal-submitted.json",
-          "replacements": {
-            "ariaListingReference": "LP/12345/2019",
-            "listCaseHearingCentre": "taylorHouse",
-            "listCaseHearingDate": "2019-05-01T13:30:15.000",
-            "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net"
-          }
+          "prisonName": "Albany",
+          "decideAnApplicationId": "1",
+          "makeAnApplications": [
+            {
+              "id": "1",
+              "value": {
+                "type":"Other",
+                "details":"",
+                "evidence":[],
+                "applicant":"",
+                "date":"{$TODAY}",
+                "decision":"Granted",
+                "state":"prepareForHearing",
+                "applicantRole":"caseworker-ia-homeofficeapc",
+                "decisionReason":"No Reason given",
+                "decisionDate":"{$TODAY}",
+                "decisionMaker": "Judge"
+              }
+            }
+          ]
         }
       }
     }

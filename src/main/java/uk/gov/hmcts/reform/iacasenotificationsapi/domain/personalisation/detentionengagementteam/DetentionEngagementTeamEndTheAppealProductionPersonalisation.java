@@ -67,7 +67,7 @@ public class DetentionEngagementTeamEndTheAppealProductionPersonalisation implem
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETAINED_CASE_LISTED_PRODUCTION_DET";
+        return caseId + "_DETAINED_END_APPEAL_PRODUCTION_DET";
     }
 
     @Override
