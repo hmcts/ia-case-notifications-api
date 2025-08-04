@@ -6102,7 +6102,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(asylumCase)
                     && !isAriaMigrated(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && ((!isAppellantInDetention(asylumCase)) || isDetainedInFacilityType(asylumCase, OTHER))
                     && !isSubmissionOutOfTime(asylumCase)
                     && isPaymentPending
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
@@ -6129,7 +6129,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.PROGRESS_MIGRATED_CASE
                     && isInternalCase(asylumCase)
                     && isAriaMigrated(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && ((!isAppellantInDetention(asylumCase)) || isDetainedInFacilityType(asylumCase, OTHER))
                     && !isSubmissionOutOfTime(asylumCase)
                     && isPaymentPending
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
