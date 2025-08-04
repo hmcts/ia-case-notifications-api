@@ -35,6 +35,10 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
+            "id": "2959123_END_APPEAL_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
             "id": "2959123_DETAINED_END_APPEAL_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
@@ -44,6 +48,16 @@
     "notifications": [
       {
         "reference": "2959123_END_APPEAL_HOME_OFFICE",
+        "recipient": "det-prison-albany@example.com",
+        "subject": "IAFT – SERVE IN PERSON: Hearing adjourned",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Talha Awan"
+        ]
+      },
+      {
+        "reference": "2959123_END_APPEAL_LEGAL_REPRESENTATIVE",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – SERVE IN PERSON: Hearing adjourned",
         "body": [

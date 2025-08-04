@@ -50,7 +50,7 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "2959123_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "2959123_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
@@ -74,7 +74,7 @@
     },
     "notifications": [
       {
-        "reference": "2959123_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
+        "reference": "2959123_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
