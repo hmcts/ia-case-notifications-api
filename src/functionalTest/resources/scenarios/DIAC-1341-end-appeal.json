@@ -52,7 +52,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2959123_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "2959123_END_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
@@ -107,7 +107,7 @@
         ]
       },
       {
-        "reference": "2959123_DETAINED_CASE_ADJOURNED_HEARING_WITHOUT_DATE_PRODUCTION_DET",
+        "reference": "2959123_END_APPEAL_HOME_OFFICE",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – SERVE IN PERSON: Hearing adjourned",
         "body": [
