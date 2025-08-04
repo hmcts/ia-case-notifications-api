@@ -78,7 +78,7 @@
       },
       {
         "reference": "2959123_DECIDE_AN_APPLICATION_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
+        "recipient": "ho-email-apc-aat@example.com",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
           "PA/12345/2019",
