@@ -66,7 +66,7 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
 
         List<String> address;
 
-        if (isAppellantInDetention(asylumCase) && isAipManualJourney(asylumCase) && getDetentionFacility(asylumCase).equals("other")) {
+        if (isAppellantInDetention(asylumCase) && isAipManual(asylumCase) && getDetentionFacility(asylumCase).equals("other")) {
             address = getDetainedAddressLetterPersonalisation(asylumCase);
         } else {
             address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
