@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.verifiers;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.google.common.base.Strings;
@@ -97,14 +98,15 @@ public class NotificationVerifier implements Verifier {
                         equalTo(expectedReference)
                     );
 
-                    assertThat(
-                        description
-                            + ": Notification "
-                            + expectedReference + "|" + actualRecipient + "|" + expectedRecipient
-                            + " was delivered to wrong recipient",
-                        actualRecipient,
-                        equalTo(expectedRecipient)
-                    );
+//                    assertThat(
+//                        description
+//                            + ": Notification "
+//                            + expectedReference + "|" + actualRecipient + "|" + expectedRecipient
+//                            + " was delivered to wrong recipient",
+//                        actualRecipient,
+//                        equalTo(expectedRecipient)
+//                    );
+                    assertEquals(expectedRecipient, actualRecipient, "Notification was delivered to wrong recipient");
 
                     assertThat(
                         description
