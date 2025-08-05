@@ -408,6 +408,27 @@ public class AsylumCaseUtilsTest {
     void should_return_false_if_neither_in_country_nor_ooc_is_present() {
         when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_true_if_appellant_is_detained_in_other_facility() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+
+        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+    }
+
+    @Test
+    void should_return_false_if_appellant_is_detained_in_non_other_facility() {
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
 
         assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
