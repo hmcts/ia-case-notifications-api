@@ -1,12 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
+import static org.slf4j.LoggerFactory.getLogger;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -59,6 +59,10 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisation implements Le
 
     @Override
     public String getReferenceId(Long caseId) {
+        getLogger(LegalRepresentativeEmailNotificationPersonalisation.class).info(
+                "-------getReferenceId: {}",
+                caseId + "_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING"
+        );
         return caseId + "_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING";
     }
 
