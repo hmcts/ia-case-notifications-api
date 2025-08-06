@@ -51,7 +51,7 @@
         "isAdmin": "Yes",
         "appellantsRepresentation": "Yes",
         "appellantInUk": "Yes",
-        "appellantInDetention": "No",
+        "appellantInDetention": "Yes",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
           "County": "",
