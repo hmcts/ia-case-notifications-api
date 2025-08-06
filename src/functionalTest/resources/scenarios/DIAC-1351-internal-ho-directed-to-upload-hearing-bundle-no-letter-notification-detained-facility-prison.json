@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1351 - HO directed to Send Respondent Evidence Facility Other - Detained letter notification",
+  "description": "DIAC-1351 - HO directed to Send Respondent Evidence Facility Prison - NO Detained letter notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -13,7 +13,7 @@
           "isAdmin": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "other",
+          "detentionFacility": "prison",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -69,12 +69,7 @@
           }
         ]
       },
-      "notificationsSent": [
-        {
-          "id": "1351_INTERNAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER",
-          "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-        }
-      ]
+      "notificationsSent": []
     }
   }
 }
