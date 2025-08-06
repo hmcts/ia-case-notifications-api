@@ -52,6 +52,7 @@
         "appellantsRepresentation": "Yes",
         "appellantInUk": "Yes",
         "appellantInDetention": "Yes",
+        "detentionFacility": "other",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
           "County": "",
