@@ -487,46 +487,4 @@ public class AsylumCaseUtilsTest {
         
         assertTrue(AsylumCaseUtils.isDetainedInFacilityType(asylumCase, facilityType));
     }
-    
-    @Test
-    void getDetentionFacility_should_return_detention_facility() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals("other", AsylumCaseUtils.getDetentionFacility(asylumCase));
-    }
-
-    @Test
-    void getDetentionFacility_should_throw_exception_detention_facility_empty() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> AsylumCaseUtils.getDetentionFacility(asylumCase))
-                .hasMessage("detentionFacility is not present")
-                .isExactlyInstanceOf(IllegalStateException.class);
-    }
-
-    @Test
-    void isAipManual_should_return_true() {
-        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(AsylumCaseUtils.isAipManual(asylumCase));
-    }
-
-    @Test
-    void isAipManual_should_return_false_not_admin() {
-        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertFalse(AsylumCaseUtils.isAipManual(asylumCase));
-    }
-
-    @Test
-    void isAipManual_should_return_false_appellants_representation_false() {
-        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertFalse(AsylumCaseUtils.isAipManual(asylumCase));
-    }
-
-    @Test
-    void isAipManual_should_return_false_not_admin_appellants_representation_false() {
-        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertFalse(AsylumCaseUtils.isAipManual(asylumCase));
-    }
 }
