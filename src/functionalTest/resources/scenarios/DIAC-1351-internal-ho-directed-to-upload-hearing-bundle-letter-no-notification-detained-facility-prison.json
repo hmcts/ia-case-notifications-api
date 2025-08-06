@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1351 - HO directed to Send Respondent Evidence  - Detained letter notification",
+  "description": "DIAC-1351 - HO directed to Send Respondent Evidence appellant in Prison  - NO Detained letter notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
