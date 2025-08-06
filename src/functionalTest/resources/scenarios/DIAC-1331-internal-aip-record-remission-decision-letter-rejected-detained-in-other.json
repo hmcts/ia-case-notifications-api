@@ -49,7 +49,7 @@
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
         },
-        "remissionDecision": "partiallyApproved",
+        "remissionDecision": "rejected",
         "remissionDecisionReason": "Remission decision reason example",
         "ccdReferenceNumberForDisplay": "1111222233334444",
         "notificationsSent": [
