@@ -5,8 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -25,7 +24,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 public class RespondentDirectionPersonalisation implements EmailNotificationPersonalisation {
 
     private final String respondentReviewDirectionTemplateId;
-    private final String respondentReviewDirectionDetentionTemplateId;
+    private final String respondentReviewDirectionAipDetentionTemplateId;
+    private final String respondentReviewDirectionLegalRepDetentionTemplateId;
     private final String iaExUiFrontendUrl;
     private final String respondentReviewDirectionEmailAddress;
     private final DirectionFinder directionFinder;
@@ -38,7 +38,8 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
 
     public RespondentDirectionPersonalisation(
         @Value("${govnotify.template.reviewDirection.respondent.email}") String respondentReviewDirectionTemplateId,
-        @Value("${govnotify.template.reviewDirection.respondent.detention.email}") String respondentReviewDirectionDetentionTemplateId,
+        @Value("${govnotify.template.reviewDirection.respondent.detention.aip.email}") String respondentReviewDirectionAipDetentionTemplateId,
+        @Value("${govnotify.template.reviewDirection.respondent.detention.legalRep.email}") String respondentReviewDirectionLegalRepDetentionTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentReviewDirectionEmailAddress,
         DirectionFinder directionFinder,
@@ -46,7 +47,8 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     ) {
 
         this.respondentReviewDirectionTemplateId = respondentReviewDirectionTemplateId;
-        this.respondentReviewDirectionDetentionTemplateId = respondentReviewDirectionDetentionTemplateId;
+        this.respondentReviewDirectionAipDetentionTemplateId = respondentReviewDirectionAipDetentionTemplateId;
+        this.respondentReviewDirectionLegalRepDetentionTemplateId = respondentReviewDirectionLegalRepDetentionTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.respondentReviewDirectionEmailAddress = respondentReviewDirectionEmailAddress;
         this.directionFinder = directionFinder;
@@ -56,7 +58,11 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         if (isAppellantInDetention(asylumCase)) {
-            return respondentReviewDirectionDetentionTemplateId;
+            if (isAipJourney(asylumCase)) {
+                return respondentReviewDirectionAipDetentionTemplateId;
+            } else {
+                return respondentReviewDirectionLegalRepDetentionTemplateId;
+            }
         } else {
             return respondentReviewDirectionTemplateId;
         }

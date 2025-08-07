@@ -326,7 +326,10 @@ govnotify:
       respondent:
         email: 6c9d4e44-7eba-4058-a928-20da6f447d74
         detention:
-          email: 9ea5bf72-34b1-433d-b6d8-99a3df12657e
+          aip:
+            email: 56c2546a-2567-4b3d-80dc-b0e3206122b7
+          legalRep:
+            email: 9ea5bf72-34b1-433d-b6d8-99a3df12657e
       appellant:
         email: 85a38d4a-166a-49c8-9b03-8ebbf64690e2
         sms: b9a45d5e-b070-4876-9c2f-ed4ff9f18116
