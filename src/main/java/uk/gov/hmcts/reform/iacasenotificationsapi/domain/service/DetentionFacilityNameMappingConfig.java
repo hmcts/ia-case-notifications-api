@@ -2,28 +2,22 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "mappings")
 @Data
 public class DetentionFacilityNameMappingConfig {
-    private List<KeyValueEntry> prisonNames;
-    private List<KeyValueEntry> ircNames;
-
-    @Data
-    public static class KeyValueEntry {
-        private String key;
-        private String value;
-    }
+    private List<NameMapping> prisonNames;
+    private List<NameMapping> ircNames;
 
     public Map<String, String> getPrisonNamesMapping() {
         Map<String, String> result = new HashMap<>();
-        for (KeyValueEntry entry : prisonNames) {
+        for (NameMapping entry : prisonNames) {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
@@ -31,9 +25,15 @@ public class DetentionFacilityNameMappingConfig {
 
     public Map<String, String> getIrcNamesMapping() {
         Map<String, String> result = new HashMap<>();
-        for (KeyValueEntry entry : ircNames) {
+        for (NameMapping entry : ircNames) {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+
+    @Data
+    public static class NameMapping {
+        private String key;
+        private String value;
     }
 }
