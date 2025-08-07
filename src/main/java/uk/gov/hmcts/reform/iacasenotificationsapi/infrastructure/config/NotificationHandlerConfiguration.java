@@ -6532,7 +6532,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseDecideApplicationByAppelantLetterHandler(
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseDecideApplicationByAppellantLetterHandler(
         @Qualifier("internalDecideApplicationAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
@@ -6543,7 +6543,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == DECIDE_AN_APPLICATION
                     && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && isApplicationCreatedByAdmin(asylumCase);
             },
             notificationGenerators,
