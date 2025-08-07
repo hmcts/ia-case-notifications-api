@@ -5130,7 +5130,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
-                       && ((!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER)))
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                        && isSubmissionOutOfTime(asylumCase)
                        && isPaymentPending;
 
@@ -6102,7 +6102,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(asylumCase)
                     && !isAriaMigrated(asylumCase)
-                    && ((!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER)))
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && !isSubmissionOutOfTime(asylumCase)
                     && isPaymentPending
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
@@ -6129,7 +6129,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.PROGRESS_MIGRATED_CASE
                     && isInternalCase(asylumCase)
                     && isAriaMigrated(asylumCase)
-                    && ((!isAppellantInDetention(asylumCase)) || isDetainedInFacilityType(asylumCase, OTHER))
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && !isSubmissionOutOfTime(asylumCase)
                     && isPaymentPending
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
@@ -6159,7 +6159,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
-                       && ((!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER)))
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                        && isRemissionPresent
                        && !isSubmissionOutOfTime(asylumCase);
 
@@ -6188,7 +6188,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
-                       && ((!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER)))
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                        && isRemissionPresent
                        && isSubmissionOutOfTime(asylumCase);
 
@@ -6257,7 +6257,7 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == Event.SUBMIT_APPEAL
                        && isInternalCase(asylumCase)
                        && isRpAndDcAppealType
-                       && (!isAppellantInDetention(asylumCase)) || (isDetainedInFacilityType(asylumCase, OTHER))
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                        && isSubmissionOutOfTime(asylumCase);
 
             },
