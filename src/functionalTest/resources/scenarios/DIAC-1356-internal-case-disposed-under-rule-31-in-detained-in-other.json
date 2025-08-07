@@ -13,7 +13,7 @@
           "isAdmin": "Yes",
           "appellantsRepresentation": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "Other",
+          "detentionFacility": "other",
           "appellantInUk": "Yes",
           "appellantAddress": {
             "County": "",
@@ -41,7 +41,7 @@
         "isAdmin": "Yes",
         "appellantsRepresentation": "Yes",
         "appellantInDetention": "Yes",
-        "detentionFacility": "Other",
+        "detentionFacility": "other",
         "appellantInUk": "Yes",
         "appellantAddress": {
           "County": "",
