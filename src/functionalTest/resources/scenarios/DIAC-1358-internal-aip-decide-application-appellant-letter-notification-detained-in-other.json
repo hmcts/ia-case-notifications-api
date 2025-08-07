@@ -32,7 +32,7 @@
             }
           ],
           "appellantInDetention": "Yes",
-          "detentionFacility": "Other",
+          "detentionFacility": "other",
           "appellantInUk": "Yes",
           "appellantAddress": {
             "County": "",
@@ -74,7 +74,7 @@
           }
         ],
         "appellantInDetention": "Yes",
-        "detentionFacility": "Other",
+        "detentionFacility": "other",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
