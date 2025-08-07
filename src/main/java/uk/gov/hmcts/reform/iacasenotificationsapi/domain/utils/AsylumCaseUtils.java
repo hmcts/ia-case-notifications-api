@@ -19,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
@@ -378,10 +379,15 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasAppellantAddressInCountryOrOutOfCountry(AsylumCase asylumCase) {
-        return asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
-                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
-                || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
-                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+        boolean appellantHasFixedUkAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
+            .map(flag -> flag.equals(YES))
+            .orElse(false);
+
+        boolean appellantHasFixedOutOfCountryAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+            .map(flag -> flag.equals(YES))
+            .orElse(false);
+
+        return appellantHasFixedUkAddress || appellantHasFixedOutOfCountryAddress || isDetainedInFacilityType(asylumCase, OTHER);
     }
 
     public static Set<String> getAppellantAddressInCountryOrOoc(final AsylumCase asylumCase) {
@@ -454,5 +460,15 @@ public class AsylumCaseUtils {
             return "";
         }
     }
+
+    public static boolean isDetainedInFacilityType(AsylumCase asylumCase, DetentionFacility facilityType) {
+        if (!isAppellantInDetention(asylumCase)) {
+            return false;
+        }
+        String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class).orElse("none");
+
+        return detentionFacility.equals(facilityType.getValue());
+    }
+
 
 }
