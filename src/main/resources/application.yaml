@@ -1731,6 +1731,7 @@ security:
       - "listCma"
       - "linkAppeal"
       - "unlinkAppeal"
+      - "editDocuments"
       - "uploadAddendumEvidenceAdminOfficer"
       - "endAppeal"
       - "markAppealPaid"
