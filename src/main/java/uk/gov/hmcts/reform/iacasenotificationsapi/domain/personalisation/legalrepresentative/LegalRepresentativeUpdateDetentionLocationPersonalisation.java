@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityNameMappingService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -22,6 +23,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
     private final PersonalisationProvider personalisationProvider;
+    private final DetentionFacilityNameMappingService detentionFacilityNameMappingService;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -35,13 +37,15 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
             @Value("${govnotify.template.updateDetentionLocation.legalRep.afterListing.email}") String updateDetentionLocationAfterListingAppellantTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
-            PersonalisationProvider personalisationProvider
+            PersonalisationProvider personalisationProvider,
+            DetentionFacilityNameMappingService detentionFacilityNameMappingService
     ) {
         this.updateDetentionLocationBeforeListingAppellantTemplateId = updateDetentionLocationBeforeListingAppellantTemplateId;
         this.updateDetentionLocationAfterListingAppellantTemplateId = updateDetentionLocationAfterListingAppellantTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.personalisationProvider = personalisationProvider;
+        this.detentionFacilityNameMappingService = detentionFacilityNameMappingService;
     }
 
     @Override
@@ -59,14 +63,20 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+        String previousDetentionLocationName = asylumCase.read(AsylumCaseDefinition.PREVIOUS_DETENTION_LOCATION, String.class)
+                .orElseThrow(() -> new RequiredFieldMissingException("Previous Detention location is missing"));
+        String newDetentionFacilityName = getDetentionFacilityName(asylumCase);
+
+        String oldDetentionLocation = detentionFacilityNameMappingService.getDetentionFacility(previousDetentionLocationName);
+        String newDetentionLocation = detentionFacilityNameMappingService.getDetentionFacility(newDetentionFacilityName);
+
         return ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .putAll(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase))
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
-                .put("oldDetentionLocation", asylumCase.read(AsylumCaseDefinition.PREVIOUS_DETENTION_LOCATION, String.class)
-                        .orElseThrow(() -> new RequiredFieldMissingException("Previous Detention location is missing")))
-                .put("newDetentionLocation", getDetentionFacilityName(asylumCase))
+                .put("oldDetentionLocation", oldDetentionLocation)
+                .put("newDetentionLocation", newDetentionLocation)
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }
