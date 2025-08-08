@@ -6188,8 +6188,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
-    public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppelantLetterGenerator(
+    @Bean("internalCaseDisposeUnderRule31Or32AppellantLetterGenerator")
+    public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppellantLetterGenerator(
         AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
