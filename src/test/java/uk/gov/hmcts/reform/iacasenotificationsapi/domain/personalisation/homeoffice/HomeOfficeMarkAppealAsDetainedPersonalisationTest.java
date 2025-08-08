@@ -117,6 +117,14 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     }
 
     @Test
+    public void should_return_the_ho_apc_email_address_until_case_under_review() {
+        when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
+                .thenReturn(Optional.of(State.CASE_UNDER_REVIEW));
+
+        assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
+    }
+
+    @Test
     public void should_return_the_ho_lart_email_address_until_listing() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
                 .thenReturn(Optional.of(State.LISTING));
