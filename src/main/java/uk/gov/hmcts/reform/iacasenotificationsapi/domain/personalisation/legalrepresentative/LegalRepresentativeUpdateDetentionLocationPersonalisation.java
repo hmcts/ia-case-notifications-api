@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityNameMappingService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DetentionFacilityNameFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -24,7 +24,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
     private final PersonalisationProvider personalisationProvider;
-    private final DetentionFacilityNameMappingService detentionFacilityNameMappingService;
+    private final DetentionFacilityNameFinder detentionFacilityNameFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -39,14 +39,14 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             PersonalisationProvider personalisationProvider,
-            DetentionFacilityNameMappingService detentionFacilityNameMappingService
+            DetentionFacilityNameFinder detentionFacilityNameFinder
     ) {
         this.updateDetentionLocationBeforeListingAppellantTemplateId = updateDetentionLocationBeforeListingAppellantTemplateId;
         this.updateDetentionLocationAfterListingAppellantTemplateId = updateDetentionLocationAfterListingAppellantTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.personalisationProvider = personalisationProvider;
-        this.detentionFacilityNameMappingService = detentionFacilityNameMappingService;
+        this.detentionFacilityNameFinder = detentionFacilityNameFinder;
     }
 
     @Override
@@ -68,8 +68,8 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
                 .orElseThrow(() -> new RequiredFieldMissingException("Previous Detention location is missing"));
         String newDetentionFacilityName = getDetentionFacilityName(asylumCase);
 
-        String oldDetentionLocation = detentionFacilityNameMappingService.getDetentionFacility(previousDetentionLocationName);
-        String newDetentionLocation = detentionFacilityNameMappingService.getDetentionFacility(newDetentionFacilityName);
+        String oldDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocationName);
+        String newDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(newDetentionFacilityName);
 
         return ImmutableMap
                 .<String, String>builder()

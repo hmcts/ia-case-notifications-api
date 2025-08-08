@@ -21,7 +21,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityNameMappingService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DetentionFacilityNameFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -50,7 +50,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
-    DetentionFacilityNameMappingService detentionFacilityNameMappingService;
+    DetentionFacilityNameFinder detentionFacilityNameFinder;
     private LegalRepresentativeUpdateDetentionLocationPersonalisation legalRepresentativeUpdateDetentionLocationPersonalisation;
 
     @BeforeEach
@@ -64,9 +64,9 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(emailAddress));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("Colnbrook"));
-        when(detentionFacilityNameMappingService.getDetentionFacility("Colnbrook")).thenReturn("Colnbrook");
+        when(detentionFacilityNameFinder.getDetentionFacility("Colnbrook")).thenReturn("Colnbrook");
         when(asylumCase.read(PREVIOUS_DETENTION_LOCATION, String.class)).thenReturn(Optional.of("Harmondsworth"));
-        when(detentionFacilityNameMappingService.getDetentionFacility("Harmondsworth")).thenReturn("Harmondsworth");
+        when(detentionFacilityNameFinder.getDetentionFacility("Harmondsworth")).thenReturn("Harmondsworth");
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
@@ -76,7 +76,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
                 iaExUiFrontendUrl,
                 customerServicesProvider,
                 personalisationProvider,
-                detentionFacilityNameMappingService
+                detentionFacilityNameFinder
         );
         when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationForLegalRep());
     }
