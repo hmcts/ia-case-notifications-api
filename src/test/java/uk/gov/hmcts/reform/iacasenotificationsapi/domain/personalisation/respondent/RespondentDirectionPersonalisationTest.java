@@ -36,7 +36,8 @@ public class RespondentDirectionPersonalisationTest {
 
     private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
-    private final String detentionTemplateId = "someDetentionTemplateId";
+    private final String detentionAipTemplateId = "someDetentionAipTemplateId";
+    private final String detentionLegalRepTemplateId = "someDetentionLegalRepTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String respondentReviewEmailAddress = "respondentReview@example.com";
 
@@ -71,7 +72,8 @@ public class RespondentDirectionPersonalisationTest {
 
         respondentDirectionPersonalisation = new RespondentDirectionPersonalisation(
             templateId,
-            detentionTemplateId,
+            detentionAipTemplateId,
+            detentionLegalRepTemplateId,
             iaExUiFrontendUrl,
             respondentReviewEmailAddress,
             directionFinder,
@@ -94,10 +96,27 @@ public class RespondentDirectionPersonalisationTest {
     }
 
     @Test
-    public void should_return_the_given_template_id_for_detention() {
+    public void should_return_the_given_template_id_for_detention_aip() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertEquals(detentionTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
+        assertEquals(detentionAipTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_detention_lr() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+
+        assertEquals(detentionLegalRepTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_the_given_template_id_for_detention_empty_journey_type() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.empty());
+
+        assertEquals(detentionLegalRepTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
