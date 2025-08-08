@@ -15,8 +15,8 @@ public class DetentionFacilityNameFinder {
     }
 
     public String getDetentionFacility(String detentionFacilityName) {
-            return stringProvider.get(PRISON_NAME, detentionFacilityName)
-                    .orElse(stringProvider.get(IRC_NAME, detentionFacilityName)
-                            .orElse(detentionFacilityName));
+        return stringProvider.get(PRISON_NAME, detentionFacilityName)
+            .orElse(stringProvider.get(IRC_NAME, detentionFacilityName)
+                .orElse(detentionFacilityName));
     }
 }
