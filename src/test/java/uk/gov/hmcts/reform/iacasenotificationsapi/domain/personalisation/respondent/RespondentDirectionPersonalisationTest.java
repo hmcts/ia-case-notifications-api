@@ -21,7 +21,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -99,7 +98,7 @@ public class RespondentDirectionPersonalisationTest {
     @Test
     public void should_return_the_given_template_id_for_detention_aip() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals(detentionAipTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
     }
@@ -107,7 +106,7 @@ public class RespondentDirectionPersonalisationTest {
     @Test
     public void should_return_the_given_template_id_for_detention_lr() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         assertEquals(detentionLegalRepTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
     }
@@ -115,7 +114,7 @@ public class RespondentDirectionPersonalisationTest {
     @Test
     public void should_return_the_given_template_id_for_detention_empty_journey_type() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.empty());
 
         assertEquals(detentionLegalRepTemplateId, respondentDirectionPersonalisation.getTemplateId(asylumCase));
     }

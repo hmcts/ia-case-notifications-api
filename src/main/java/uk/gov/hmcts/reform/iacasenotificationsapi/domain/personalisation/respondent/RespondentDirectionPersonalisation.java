@@ -1,10 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -16,6 +13,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -58,7 +56,8 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         if (isAppellantInDetention(asylumCase)) {
-            if (isAipJourney(asylumCase)) {
+            if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
+                    .map(type -> type == YesOrNo.YES).orElse(false)) {
                 return respondentReviewDirectionAipDetentionTemplateId;
             } else {
                 return respondentReviewDirectionLegalRepDetentionTemplateId;
