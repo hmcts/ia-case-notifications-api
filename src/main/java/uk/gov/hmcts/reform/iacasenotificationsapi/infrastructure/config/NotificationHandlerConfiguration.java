@@ -838,9 +838,11 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return (callback.getEvent() == LIST_CASE
+                    Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    return callback.getEvent() == LIST_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isAppellantInDetention(asylumCase));
+                            && isAppellantInDetention(asylumCase)
+                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
                 },
                 notificationGenerators
         );
@@ -6800,9 +6802,11 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isAppellantInDetention(asylumCase);
+                    && isAppellantInDetention(asylumCase)
+                    && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
             }, notificationGenerators
         );
     }
