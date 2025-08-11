@@ -832,6 +832,26 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> listCaseDetainedOtherNotificationHandler(
+            @Qualifier("listCaseDetainedOtherNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    boolean isAllowedAsylumCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == LIST_CASE);
+
+                    if (isAllowedAsylumCase) {
+                        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                        return isDetainedInFacilityType(asylumCase, OTHER);
+                    } else {
+                        return false;
+                    }
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> addAppealNotificationHandler(
         @Qualifier("addAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 

@@ -48,16 +48,14 @@ class HearingDetailsFinderTest {
     StringProvider stringProvider;
     private HearingDetailsFinder hearingDetailsFinder;
     private CourtVenue hattonCross;
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String hearingCentreName = "some hearing centre name";
+    private final String hearingCentreName = "some hearing centre name";
     private String bailHearingLocationName = "Glasgow";
-    private String hearingCentreAddress = "some hearing centre address";
+    private final String hearingCentreAddress = "some hearing centre address";
     private String hearingCentreRefDataAddress = "hearing centre address retrieved from ref data";
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
+    private final String hearingDateTime = "2019-08-27T14:25:15.000";
     private String bailHearingDateTime = "2024-01-01T10:29:00.000";
-    private String hearingDate = "2019-08-27";
-    private String hearingTime = "14:25";
 
     @BeforeEach
     void setUp() {
@@ -166,6 +164,36 @@ class HearingDetailsFinderTest {
             .thenReturn(Optional.of("testAddress"));
 
         assertEquals("testAddress", hearingDetailsFinder.getHearingCentreName(asylumCase));
+    }
+
+    @Test
+    void should_return_remote_hearing_when_yes() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class))
+                .thenReturn(Optional.of(YesOrNo.YES));
+
+        String result = hearingDetailsFinder.getHearingChannel(asylumCase);
+
+        assertEquals("Remote hearing", result);
+    }
+
+    @Test
+    void should_return_in_person_when_no() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class))
+                .thenReturn(Optional.of(YesOrNo.NO));
+
+        String result = hearingDetailsFinder.getHearingChannel(asylumCase);
+
+        assertEquals("In person", result);
+    }
+
+    @Test
+    void should_return_in_person_when_value_missing() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class))
+                .thenReturn(Optional.empty());
+
+        String result = hearingDetailsFinder.getHearingChannel(asylumCase);
+
+        assertEquals("In person", result);
     }
 
     @Test
