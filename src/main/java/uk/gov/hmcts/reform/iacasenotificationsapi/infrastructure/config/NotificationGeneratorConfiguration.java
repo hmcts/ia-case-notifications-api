@@ -6188,8 +6188,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
-    public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppelantLetterGenerator(
+    @Bean("internalCaseDisposeUnderRule31Or32AppellantLetterGenerator")
+    public List<NotificationGenerator> internalCaseDisposeUnderRule31Or32AppellantLetterGenerator(
         AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6376,7 +6376,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalRemissionGrantedOotLetterNotificationGenerator")
     public List<NotificationGenerator> internalRemissionGrantedOotLetterNotificationGenerator(
-        AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation,
+        AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -6422,7 +6422,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalRemissionGrantedInTimeLetterNotificationGenerator")
     public List<NotificationGenerator> internalRemissionGrantedInTimeLetterNotificationGenerator(
-        AppellantInternalRemissionGrantedInTImeLetterPersonalisation appellantInternalRemissionGrantedInTImeLetterPersonalisation,
+        AppellantInternalRemissionGrantedInTimeLetterPersonalisation appellantInternalRemissionGrantedInTImeLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
