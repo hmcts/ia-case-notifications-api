@@ -49,26 +49,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicationDecision;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAction;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -823,6 +804,26 @@ public class NotificationHandlerConfiguration {
                         return (callback.getEvent() == LIST_CASE
                                 && isInternalCase(asylumCase)
                                 && !isAcceleratedDetainedAppeal(asylumCase));
+                    } else {
+                        return false;
+                    }
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> listCaseDetainedOtherNotificationHandler(
+            @Qualifier("listCaseDetainedOtherNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    boolean isAllowedAsylumCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == LIST_CASE);
+
+                    if (isAllowedAsylumCase) {
+                        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                        return isDetainedInFacilityType(asylumCase, OTHER);
                     } else {
                         return false;
                     }

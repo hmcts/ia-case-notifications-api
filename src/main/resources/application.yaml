@@ -407,6 +407,9 @@ govnotify:
           ada: 2a651831-f119-4aa4-8e2a-a55154ce978d
       appellant:
         email: c87b9b3d-9054-4f75-a7df-aa53b317422d
+        letter:
+          detained:
+            other: 37fbd47e-0570-4a78-8f71-a8bf1da6dd65
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
       legallyReppedAppellant:
         email: 3593d788-2d44-452f-a0c8-218e33be57da

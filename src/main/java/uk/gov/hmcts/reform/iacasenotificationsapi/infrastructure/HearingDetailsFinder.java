@@ -61,6 +61,17 @@ public class HearingDetailsFinder {
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreName is not present"));
     }
 
+    public String getHearingChannel(AsylumCase asylumCase) {
+        boolean isRemoteHearing = asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)
+                .orElse(NO) == YES;
+
+        if (isRemoteHearing) {
+            return "Remote hearing";
+        } else {
+            return "In person";
+        }
+    }
+
     public String getOldHearingCentreName(AsylumCase asylumCaseBefore) {
         if (isCaseUsingLocationRefData(asylumCaseBefore)) {
             return getRefDataLocationName(asylumCaseBefore);
