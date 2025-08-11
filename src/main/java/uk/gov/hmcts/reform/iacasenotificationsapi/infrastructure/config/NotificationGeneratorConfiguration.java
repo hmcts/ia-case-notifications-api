@@ -4911,21 +4911,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("listCaseDetainedOtherNotificationGenerator")
-    public List<NotificationGenerator> listCaseDetainedOtherNotificationGenerator(
-        AppellantListCaseDetainedOtherPersonalisation listCaseDetainedOtherPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-        return singletonList(
-            new LetterNotificationGenerator(
-                newArrayList(Collections.singleton(listCaseDetainedOtherPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("requestHearingRequirementsInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> requestHearingRequirementsInternalDetainedNotificationGenerator(
         DetentionEngagementTeamRequestHearingRequirementPersonalisation detentionEngagementTeamRequestHearingRequirementPersonalisation,
