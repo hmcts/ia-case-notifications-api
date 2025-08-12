@@ -6072,13 +6072,12 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalOrDetainedCaseListedAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalOrDetainedCaseListedAppellantLetterNotificationGenerator(
+    @Bean("internalCaseListedAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalCaseListedAppellantLetterNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
     ) {
-        log.info("----------------internalOrDetainedCaseListedAppellantLetterNotificationGenerator");
 
         DocumentTag documentTag = DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE;
 
