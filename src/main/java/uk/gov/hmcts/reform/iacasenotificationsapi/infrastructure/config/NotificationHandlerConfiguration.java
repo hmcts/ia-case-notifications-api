@@ -6392,8 +6392,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedAppellantLetterNotificationHandler(
-        @Qualifier("internalCaseListedAppellantLetterNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> nonInternalCaseListedAppellantLetterNotificationHandler(
+        @Qualifier("internalOrDetainedCaseListedAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6402,10 +6402,33 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == LIST_CASE
-                       && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                    && callback.getEvent() == LIST_CASE
+                    && isInternalCase(asylumCase) &&
+                    (!isAppellantInDetention(asylumCase)
+                        || isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
+                    )
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> nonInternalDetainedCaseListedAppellantLetterNotificationHandler(
+        @Qualifier("internalOrDetainedCaseListedAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == LIST_CASE
+                    && !isInternalCase(asylumCase)
+                    && isAppellantInDetention(asylumCase)
+                    && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators,
             getErrorHandler()
