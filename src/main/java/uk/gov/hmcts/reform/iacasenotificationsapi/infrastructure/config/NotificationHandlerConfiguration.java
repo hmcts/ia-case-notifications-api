@@ -6463,9 +6463,10 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTimeLetterNotificationHandler(
-        @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutDateLetterNotificationHandler(
+        @Qualifier("internalOrDetainedCaseAdjournedWithoutDateLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators
+    ) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -6474,9 +6475,32 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                    && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase);
+                    && isInternalCase(asylumCase) &&
+                        (!isAppellantInDetention(asylumCase)
+                            || isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
+                        );
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> nonInternalDetainedOtherCaseAdjournedWithoutDateLetterNotificationHandler(
+        @Qualifier("internalOrDetainedCaseAdjournedWithoutDateLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                    && !isInternalCase(asylumCase)
+                    && isAppellantInDetention(asylumCase)
+                    && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators,
             getErrorHandler()

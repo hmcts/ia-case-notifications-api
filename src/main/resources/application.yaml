@@ -748,13 +748,13 @@ govnotify:
         email: 8a87904f-5a67-4a79-a56a-8450b7829f9b
       detentionEngagementTeam:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
+      appellant:
+        letter: 9843c2a6-c416-4c19-9a73-563487bab982
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
         admin:
           email: fce53459-8463-43a5-86ce-b160b4a26bb4
-        appellant:
-          letter: 9843c2a6-c416-4c19-9a73-563487bab982
     recordAdjournmentDetails:
       respondent:
         email: 85442b94-d5ed-4542-b483-94556cc4e3bb

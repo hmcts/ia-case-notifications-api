@@ -20,14 +20,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtract
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 @Service
-public class AppellantInternalCaseAdjournedWithoutDatePersonalisation implements LetterNotificationPersonalisation {
+public class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalCaseAdjournedWithoutDateTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
-    public AppellantInternalCaseAdjournedWithoutDatePersonalisation(
-        @Value("${govnotify.template.adjournHearingWithoutDate.nonDetained.appellant.letter}") String appellantInternalCaseAdjournedWithoutDateTemplateId,
+    public AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisation(
+        @Value("${govnotify.template.adjournHearingWithoutDate.appellant.letter}") String appellantInternalCaseAdjournedWithoutDateTemplateId,
         CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder
     ) {
         this.appellantInternalCaseAdjournedWithoutDateTemplateId = appellantInternalCaseAdjournedWithoutDateTemplateId;
@@ -49,7 +49,7 @@ public class AppellantInternalCaseAdjournedWithoutDatePersonalisation implements
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_CASE_AJOURN_WITHOUT_DATE_APPELLANT_LETTER";
+        return caseId + "_AJOURN_CASE_WITHOUT_DATE_APPELLANT_LETTER";
     }
 
     @Override
@@ -72,7 +72,12 @@ public class AppellantInternalCaseAdjournedWithoutDatePersonalisation implements
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("adjournedHearingReason", asylumCase.read(ADJOURN_HEARING_WITHOUT_DATE_REASONS, String.class).orElse(""));
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+        List<String> address;
+        if (isInternalCase(asylumCase) && !isAppellantInDetention(asylumCase)) {
+            address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+        } else { //isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
+            address =  getAppellantAddressAsList(asylumCase);
+        }
 
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
