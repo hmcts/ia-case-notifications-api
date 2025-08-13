@@ -6363,7 +6363,13 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.SEND_DIRECTION
                             && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase);
+                            && (
+                                !isAppellantInDetention(asylumCase)
+                                ||
+                                isAppellantInDetention(asylumCase)
+                                    && isDetainedInFacilityType(asylumCase, OTHER)
+                                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            );
                 },
                 notificationGenerators,
                 getErrorHandler()
