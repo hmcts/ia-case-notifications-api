@@ -6231,7 +6231,13 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == APPLY_FOR_FTPA_RESPONDENT
                     && isInternalCase(asylumCase)
-                    && (!isAppellantInDetention(asylumCase) || !inCountryAppeal(asylumCase));
+                    && (
+                        !isAppellantInDetention(asylumCase)
+                        ||
+                        !inCountryAppeal(asylumCase)
+                        ||
+                        isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
+                    );
 
             },
             notificationGenerators,
