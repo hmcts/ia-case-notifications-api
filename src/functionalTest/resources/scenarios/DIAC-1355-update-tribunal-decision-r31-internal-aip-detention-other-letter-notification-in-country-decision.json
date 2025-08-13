@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8334 Update Tribunal Decision Rule 31 Internal Non Detained Letter Notification (in country)",
+  "description": "DIAC-1355 Update Tribunal Decision Rule 31 Internal AiP Detained in Other Letter Notification (in country)",
   "launchDarklyKey": "dlrm-setaside-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -56,7 +56,7 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "appellantsRepresentation": "Yes",
-        "appellantInDetention": "No",
+        "appellantInDetention": "Yes",
         "appellantInUk": "Yes",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
