@@ -1,5 +1,5 @@
 {
-  "description": "RIA-9233 Internal non-detained case adjourned without date letter sent to Legal Rep (represented)",
+  "description": "DIAC-1354 Internal lr detained other case adjourned without date letter sent to Legal Rep (represented)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -52,7 +52,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
-        "appellantInDetention": "No",
+        "appellantInDetention": "Yes",
         "appellantInUk": "Yes",
         "listCaseHearingCentre": "bradford",
         "listCaseHearingLength": "60",

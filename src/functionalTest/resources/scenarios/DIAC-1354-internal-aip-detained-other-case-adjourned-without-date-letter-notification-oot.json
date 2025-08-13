@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8331 Internal non-detained case listed letter - out of time",
+  "description": "DIAC-1354 Internal aip detained other case listed letter - out of time",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -31,12 +31,6 @@
           "listCaseRequirementsSingleSexCourt": "something around SingleSexCourt",
           "listCaseRequirementsInCameraCourt": "something around InCameraCourt",
           "listCaseRequirementsOther": "something around Other",
-          "appellantHasFixedAddress": "Yes",
-          "appellantHasFixedAddressAdminJ": "Yes",
-          "addressLine1AdminJ": "Calle Toledo 32",
-          "addressLine2AdminJ": "Madrid",
-          "addressLine3AdminJ": "28003",
-          "countryGovUkOocAdminJ": "ES"
         }
       }
     }
@@ -49,8 +43,8 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "Yes",
-        "appellantInUk": "No",
-        "appellantInDetention": "No",
+        "appellantInUk": "Yes",
+        "appellantInDetention": "Yes",
         "listCaseHearingCentre": "bradford",
         "listCaseHearingLength": "60",
         "listCaseHearingDate": "2018-12-31T12:34:56",
@@ -60,11 +54,6 @@
         "listCaseRequirementsInCameraCourt": "something around InCameraCourt",
         "listCaseRequirementsOther": "something around Other",
         "appellantHasFixedAddress": "Yes",
-        "appellantHasFixedAddressAdminJ": "Yes",
-        "addressLine1AdminJ": "Calle Toledo 32",
-        "addressLine2AdminJ": "Madrid",
-        "addressLine3AdminJ": "28003",
-        "countryGovUkOocAdminJ": "ES",
 
         "notificationsSent": [
           {
