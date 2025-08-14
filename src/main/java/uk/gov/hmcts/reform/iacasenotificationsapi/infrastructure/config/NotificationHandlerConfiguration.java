@@ -6721,7 +6721,9 @@ public class NotificationHandlerConfiguration {
                             && (
                                 !isAppellantInDetention(asylumCase)
                                 ||
-                                isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
+                                hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                        && isAppellantInDetention(asylumCase)
+                                        && isDetainedInFacilityType(asylumCase, OTHER)
                             )
                             && isRemissionPartiallyApprovedOrApproved
                             && lateRemissionType.isPresent();
