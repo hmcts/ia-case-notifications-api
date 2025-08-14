@@ -1,12 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -17,6 +13,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -25,7 +22,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 public class RespondentDirectionPersonalisation implements EmailNotificationPersonalisation {
 
     private final String respondentReviewDirectionTemplateId;
-    private final String respondentReviewDirectionDetentionTemplateId;
+    private final String respondentReviewDirectionAipDetentionTemplateId;
+    private final String respondentReviewDirectionLegalRepDetentionTemplateId;
     private final String iaExUiFrontendUrl;
     private final String respondentReviewDirectionEmailAddress;
     private final DirectionFinder directionFinder;
@@ -38,7 +36,8 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
 
     public RespondentDirectionPersonalisation(
         @Value("${govnotify.template.reviewDirection.respondent.email}") String respondentReviewDirectionTemplateId,
-        @Value("${govnotify.template.reviewDirection.respondent.detention.email}") String respondentReviewDirectionDetentionTemplateId,
+        @Value("${govnotify.template.reviewDirection.respondent.detention.aip.email}") String respondentReviewDirectionAipDetentionTemplateId,
+        @Value("${govnotify.template.reviewDirection.respondent.detention.legalRep.email}") String respondentReviewDirectionLegalRepDetentionTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentReviewDirectionEmailAddress,
         DirectionFinder directionFinder,
@@ -46,7 +45,8 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     ) {
 
         this.respondentReviewDirectionTemplateId = respondentReviewDirectionTemplateId;
-        this.respondentReviewDirectionDetentionTemplateId = respondentReviewDirectionDetentionTemplateId;
+        this.respondentReviewDirectionAipDetentionTemplateId = respondentReviewDirectionAipDetentionTemplateId;
+        this.respondentReviewDirectionLegalRepDetentionTemplateId = respondentReviewDirectionLegalRepDetentionTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.respondentReviewDirectionEmailAddress = respondentReviewDirectionEmailAddress;
         this.directionFinder = directionFinder;
@@ -56,7 +56,12 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         if (isAppellantInDetention(asylumCase)) {
-            return respondentReviewDirectionDetentionTemplateId;
+            if (asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
+                    .map(type -> type == YesOrNo.YES).orElse(false)) {
+                return respondentReviewDirectionAipDetentionTemplateId;
+            } else {
+                return respondentReviewDirectionLegalRepDetentionTemplateId;
+            }
         } else {
             return respondentReviewDirectionTemplateId;
         }

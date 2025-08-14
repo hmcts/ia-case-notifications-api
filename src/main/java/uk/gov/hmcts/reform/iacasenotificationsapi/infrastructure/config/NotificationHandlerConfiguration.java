@@ -6529,8 +6529,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseDisposeUnderRule31Or32AppelantLetterHandler(
-        @Qualifier("internalCaseDisposeUnderRule31Or32AppelantLetterGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseDisposeUnderRule31Or32AppellantLetterHandler(
+        @Qualifier("internalCaseDisposeUnderRule31Or32AppellantLetterGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6540,7 +6540,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
                     && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase);
             },
             notificationGenerators,
@@ -6707,7 +6707,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                        && isApproved
                        && isOutOfTimeAppeal;
             },
