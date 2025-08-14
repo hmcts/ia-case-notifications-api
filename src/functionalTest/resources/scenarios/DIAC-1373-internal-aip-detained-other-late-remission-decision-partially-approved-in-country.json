@@ -46,7 +46,7 @@
         "isAdmin": "Yes",
         "appellantsRepresentation": "Yes",
         "appellantInDetention": "Yes",
-        "remissionDecision": "approved",
+        "remissionDecision": "partiallyApproved",
         "lateRemissionType": "hoWaiverRemission",
         "remissionClaim": "legalAid",
         "legalAidAccountNumber": "1A234B",
