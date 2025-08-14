@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.time.LocalDateTime;
@@ -65,21 +67,21 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
 
+    private final AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
+            "Spa Road",
+            "Woolworth",
+            "London",
+            "London",
+            "SE1 3HP", "UK");
+
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
 
     private RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation;
 
+
     @BeforeEach
     public void setup() {
-
-        AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
-                "Spa Road",
-                "Woolworth",
-                "London",
-                "London",
-                "SE1 3HP", "UK");
-
         String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.of(direction));
@@ -108,7 +110,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
                 iaExUiFrontendUrl,
             directionFinder,
             customerServicesProvider);
-        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(LEGAL_REP_GIVEN_NAME_EJP, String.class)).thenReturn(Optional.of(legalRepEjpGivenName));
         when(asylumCase.read(LEGAL_REP_FAMILY_NAME_EJP, String.class)).thenReturn(Optional.of(legalRepEjpFamilyName));
         when(asylumCase.read(LEGAL_REP_EMAIL_EJP, String.class)).thenReturn(Optional.of(legalRepEjpEmail));
@@ -123,18 +125,19 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
     @Test
     public void should_return_given_ejp_template_id() {
-        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
         assertEquals(ejpTemplateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_the_given_template_id_for_non_detention() {
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(NO));
 
         assertEquals(templateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
     }
 
+    @Test
     public void should_return_the_given_template_id_for_missing_detention() {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
 
@@ -143,7 +146,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
     @Test
     public void should_return_the_given_template_id_for_detention() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
 
         assertEquals(detentionTemplateId, respondentEvidenceDirectionPersonalisation.getTemplateId(asylumCase));
     }
@@ -170,6 +173,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentEvidenceDirectionPersonalisation);
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
@@ -186,7 +190,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(isAda.equals(YesOrNo.YES)
+        assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
@@ -194,13 +198,32 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
+    public void should_return_personalisation_when_all_mandatory_information_given_icc_lr(YesOrNo isAda) {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class)).thenReturn(Optional.of(legalRepFamilyName));
+
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.of(legalRepEmail));
+
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class)).thenReturn(Optional.of(legalRepReference));
+
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class)).thenReturn(Optional.of(companyName));
+
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(legalRepCompanyAddress));
 
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
@@ -216,14 +239,62 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(isAda.equals(YesOrNo.YES)
+        assertEquals(isAda.equals(YES)
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    public void should_return_personalisation_when_all_mandatory_information_given_icc_aip(YesOrNo isAda) {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.of(legalRepName));
+
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.of(legalRepFamilyName));
+        when(asylumCase.read(LEGAL_REP_FAMILY_NAME_PAPER_J, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
+        when(asylumCase.read(LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReference));
+        when(asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(companyName));
+        when(asylumCase.read(LEGAL_REP_COMPANY_PAPER_J, String.class)).thenReturn(Optional.empty());
+
+        when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.of(legalRepCompanyAddress));
+        when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
+
+        Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
+
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertEquals(companyName, personalisation.get("companyName"));
+        assertEquals(companyAddress, personalisation.get("companyAddress"));
+        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
+        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
+        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given_detained_appeal() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
 
         initializePrefixes(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -276,7 +347,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(isAda.equals(YesOrNo.YES)
+        assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
@@ -313,7 +384,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(isAda.equals(YesOrNo.YES)
+        assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
@@ -332,7 +403,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     public void should_return_ejp_personalisation_when_all_information_given() {
 
         initializePrefixes(respondentEvidenceDirectionPersonalisation);
-        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 

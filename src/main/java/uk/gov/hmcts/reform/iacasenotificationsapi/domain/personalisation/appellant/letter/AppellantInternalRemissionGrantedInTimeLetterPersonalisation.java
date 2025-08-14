@@ -16,14 +16,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class AppellantInternalRemissionGrantedInTImeLetterPersonalisation implements LetterNotificationPersonalisation {
+public class AppellantInternalRemissionGrantedInTimeLetterPersonalisation implements LetterNotificationPersonalisation {
 
     private final String appellantInternalRemissionDecisionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
 
 
-    public AppellantInternalRemissionGrantedInTImeLetterPersonalisation(
-        @Value("${govnotify.template.remissionDecision.appellant.rejected.onTime.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
+    public AppellantInternalRemissionGrantedInTimeLetterPersonalisation(
+        @Value("${govnotify.template.remissionDecision.appellant.approved.onTime.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantInternalRemissionDecisionLetterTemplateId = appellantInternalRemissionDecisionLetterTemplateId;
