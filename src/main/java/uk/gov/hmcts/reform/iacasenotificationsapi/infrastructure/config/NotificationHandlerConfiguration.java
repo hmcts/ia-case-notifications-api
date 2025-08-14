@@ -6425,8 +6425,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == REINSTATE_APPEAL
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase);
-
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
             },
             notificationGenerators,
             getErrorHandler()
