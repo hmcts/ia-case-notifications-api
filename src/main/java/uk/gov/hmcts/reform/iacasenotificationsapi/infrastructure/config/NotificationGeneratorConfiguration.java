@@ -4870,6 +4870,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("listCaseProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> listCaseProductionDetainedNotificationGenerator(
+        DetentionEngagementTeamListCaseProductionPersonalisation detentionEngagementTeamListCaseProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamListCaseProductionPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("requestHearingRequirementsInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> requestHearingRequirementsInternalDetainedNotificationGenerator(
         DetentionEngagementTeamRequestHearingRequirementPersonalisation detentionEngagementTeamRequestHearingRequirementPersonalisation,
@@ -6308,12 +6323,13 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+
     @Bean("endTheAppealProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> endTheAppealProductionDetainedNotificationGenerator(
         DetentionEngagementTeamEndTheAppealProductionPersonalisation detentionEngagementTeamEndTheAppealProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
-    ) {
+   ) {
 
         return singletonList(
             new EmailNotificationGenerator(
@@ -6385,6 +6401,29 @@ public class NotificationGeneratorConfiguration {
             new EmailNotificationGenerator(
                 newArrayList(
                     detentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }                  
+                  
+    @Bean("editCaseListingProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingProductionDetainedNotificationGenerator(
+            DetentionEngagementTeamEditCaseListingProductionPersonalisation detentionEngagementTeamEditCaseListingProductionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamEditCaseListingProductionPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

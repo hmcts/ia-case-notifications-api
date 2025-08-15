@@ -480,7 +480,7 @@ public enum AsylumCaseDefinition {
     DETENTION_FACILITY(
         "detentionFacility", new TypeReference<String>(){}),
     DETENTION_BUILDING(
-            "detentionBuilding", new TypeReference<String>(){}),
+        "detentionBuilding", new TypeReference<String>(){}),
     PREVIOUS_DETENTION_LOCATION(
             "previousDetentionLocation", new TypeReference<String>() {}),
     PRISON_NAME(
