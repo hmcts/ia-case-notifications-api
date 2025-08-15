@@ -832,6 +832,23 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> listCaseProductionDetainedNotificationHandler(
+            @Qualifier("listCaseProductionDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    return callback.getEvent() == LIST_CASE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isAppellantInDetention(asylumCase)
+                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> addAppealNotificationHandler(
         @Qualifier("addAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
@@ -6788,6 +6805,23 @@ public class NotificationHandlerConfiguration {
                     && isInternalCase(asylumCase)
                     && !isAppellantInDetention(asylumCase)
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editCaseListingProductionDetainedNotificationHandler(
+        @Qualifier("editCaseListingProductionDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                return callback.getEvent() == Event.EDIT_CASE_LISTING
+                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAppellantInDetention(asylumCase)
+                    && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
             }, notificationGenerators
         );
     }
