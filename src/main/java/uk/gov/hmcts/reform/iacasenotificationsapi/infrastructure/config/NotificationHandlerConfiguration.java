@@ -6314,14 +6314,15 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == END_APPEAL
-                       && isInternalCase(asylumCase)
-                       && (
-                           !isAppellantInDetention(asylumCase)
-                           ||
-                           isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
-                       )
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                    && callback.getEvent() == END_APPEAL
+                    && isInternalCase(asylumCase)
+                    && (
+                        !isAppellantInDetention(asylumCase)
+                        || hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER)
+                        || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                    )
+                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
