@@ -6586,8 +6586,8 @@ public class NotificationHandlerConfiguration {
                     && isRule31ReasonUpdatingDecision(asylumCase)
                     && (
                         !isAppellantInDetention(asylumCase)
-                        || hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER)
+                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER))
                         || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
                     );
             },
