@@ -6400,6 +6400,23 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                log.info("--------------isInternalCase(asylumCase): {}", isInternalCase(asylumCase));
+                log.info("--------------isAppellantInDetention(asylumCase): {}", isAppellantInDetention(asylumCase));
+                log.info(
+                        "--------------isDetainedInFacilityType(asylumCase, OTHER): {}",
+                        isDetainedInFacilityType(asylumCase, OTHER)
+                );
+                log.info(
+                        "--------------hasAppellantAddressInCountryOrOutOfCountry(asylumCase): {}",
+                        hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
+                );
+                log.info("--------------res: {}", callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == LIST_CASE
+                        && isInternalCase(asylumCase) &&
+                        (!isAppellantInDetention(asylumCase)
+                                || isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
+                        )
+                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == LIST_CASE
