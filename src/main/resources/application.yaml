@@ -181,6 +181,10 @@ govnotify:
         approved:
           email: b37bfeae-cc9a-4389-92d6-b3a65060b192
           sms: 352c22ca-8dbf-44f0-96d8-8ad5d5550345
+          onTime:
+            letter: 14fd949c-d879-4878-ae6d-844abce5baf3
+          outOfTime:
+            letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
         partiallyApproved:
           email: 6ed39862-b574-4df6-b82e-e544957cf529
           sms: 87e44e78-ee3a-41af-98b1-d8e78bd54681
@@ -189,10 +193,6 @@ govnotify:
           email: 5e23cb62-9c63-4fc2-8c04-cdb3adf69013
           sms: 4bebbf93-8aef-47c0-b1a9-a89da915f9e5
           letter: 473a6c61-69a0-41bf-bd7c-8919445695d6
-          outOfTime:
-            letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
-          onTime:
-            letter: 14fd949c-d879-4878-ae6d-844abce5baf3
         pa:
           approved:
             email: b37bfeae-cc9a-4389-92d6-b3a65060b192
@@ -324,7 +324,10 @@ govnotify:
       respondent:
         email: 6c9d4e44-7eba-4058-a928-20da6f447d74
         detention:
-          email: 9ea5bf72-34b1-433d-b6d8-99a3df12657e
+          aip:
+            email: 56c2546a-2567-4b3d-80dc-b0e3206122b7
+          legalRep:
+            email: 9ea5bf72-34b1-433d-b6d8-99a3df12657e
       appellant:
         email: 85a38d4a-166a-49c8-9b03-8ebbf64690e2
         sms: b9a45d5e-b070-4876-9c2f-ed4ff9f18116

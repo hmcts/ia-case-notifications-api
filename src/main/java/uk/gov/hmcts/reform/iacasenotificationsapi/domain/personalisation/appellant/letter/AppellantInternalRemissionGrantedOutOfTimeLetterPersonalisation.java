@@ -17,15 +17,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation implements LetterNotificationPersonalisation {
+public class AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisation implements LetterNotificationPersonalisation {
 
     private final String appellantInternalRemissionDecisionLetterTemplateId;
     private final int daysAfterRemissionDecision;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
 
-    public AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation(
-        @Value("${govnotify.template.remissionDecision.appellant.rejected.outOfTime.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
+    public AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisation(
+        @Value("${govnotify.template.remissionDecision.appellant.approved.outOfTime.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
         @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterRemissionDecision,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
