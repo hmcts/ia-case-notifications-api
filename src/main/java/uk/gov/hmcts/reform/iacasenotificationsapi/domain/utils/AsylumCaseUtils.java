@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -128,6 +129,13 @@ public class AsylumCaseUtils {
         return asylumCase
                 .read(JOURNEY_TYPE, JourneyType.class)
                 .map(type -> type == AIP).orElse(false);
+    }
+
+    public static boolean isRepJourney(AsylumCase asylumCase) {
+
+        return asylumCase
+                .read(JOURNEY_TYPE, JourneyType.class)
+                .map(type -> type == REP).orElse(false);
     }
 
     public static List<IdValue<DocumentWithMetadata>> getAddendumEvidenceDocuments(AsylumCase asylumCase) {
@@ -408,6 +416,8 @@ public class AsylumCaseUtils {
         if (isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)) {
             return asylumCase.read(LEGAL_REP_EMAIL, String.class).orElseThrow(() -> new IllegalStateException("legalRepEmail is not present"));
         } else if (isInternalCase(asylumCase) && !hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)) {
+            return StringUtils.EMPTY;
+        } else if (isAppellantInDetention(asylumCase) && !isAipJourney(asylumCase) && !isRepJourney(asylumCase)) {
             return StringUtils.EMPTY;
         } else {
             return asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class).orElseThrow(() -> new IllegalStateException("legalRepresentativeEmailAddress is not present"));

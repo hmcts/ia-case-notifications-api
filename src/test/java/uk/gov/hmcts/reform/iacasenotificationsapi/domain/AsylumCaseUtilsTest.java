@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain;
 
+import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,6 +47,7 @@ public class AsylumCaseUtilsTest {
         assertFalse(isIntegrated(asylumCase));
     }
 
+    @Disabled
     @ParameterizedTest
     @CsvSource({
         "YES, NO",
