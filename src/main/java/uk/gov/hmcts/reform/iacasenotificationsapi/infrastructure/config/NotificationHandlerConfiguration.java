@@ -6589,7 +6589,12 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                     && isInternalCase(asylumCase)
                     && isRule31ReasonUpdatingDecision(asylumCase)
-                    && !isAppellantInDetention(asylumCase);
+                    && (
+                        !isAppellantInDetention(asylumCase)
+                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER))
+                        || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                    );
             },
             notificationGenerators,
             getErrorHandler()
