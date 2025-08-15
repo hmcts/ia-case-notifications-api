@@ -6234,9 +6234,9 @@ public class NotificationHandlerConfiguration {
                     && (
                         !isAppellantInDetention(asylumCase)
                         || !inCountryAppeal(asylumCase)
-                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER))
-                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                        || hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER)
+                        || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
                     );
             },
             notificationGenerators,
