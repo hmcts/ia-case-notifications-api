@@ -154,7 +154,10 @@ def secrets = [
                 secret('bail-test-applicant-mobile', 'IA_TEST_APPLICANT_MOBILE'),
 
                 secret('system-username', 'IA_SYSTEM_USERNAME'),
-                secret('system-password', 'IA_SYSTEM_PASSWORD')
+                secret('system-password', 'IA_SYSTEM_PASSWORD'),
+
+                secret('det-prison-email-mappings', 'IA_DET_PRISON_EMAIL_MAPPINGS')
+
         ]
 ]
 
