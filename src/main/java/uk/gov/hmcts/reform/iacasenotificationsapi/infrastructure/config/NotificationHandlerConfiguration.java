@@ -6401,12 +6401,16 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                YesOrNo appellantHasFixedAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class).orElse(NO);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == END_APPEAL_AUTOMATICALLY
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase);
+                       && (
+                            !isAppellantInDetention(asylumCase)
+                                || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                    && isDetainedInFacilityType(asylumCase, OTHER))
+                                || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                        );
             },
             notificationGenerators,
             getErrorHandler()
@@ -6447,8 +6451,12 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == REINSTATE_APPEAL
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase);
-
+                       && (
+                            !isAppellantInDetention(asylumCase)
+                                || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                    && isDetainedInFacilityType(asylumCase, OTHER))
+                                || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                        );
             },
             notificationGenerators,
             getErrorHandler()
@@ -6474,7 +6482,12 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
+                       && (
+                            !isAppellantInDetention(asylumCase)
+                                || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                    && isDetainedInFacilityType(asylumCase, OTHER))
+                                || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                        )
                        && isRejected
                        && lateRemissionType.isPresent();
 
@@ -6649,7 +6662,8 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase)
+                            && (!isAppellantInDetention(asylumCase)
+                                || (isDetainedInFacilityType(asylumCase, OTHER) && hasBeenSubmittedByAppellantInternalCase(asylumCase)))
                             && isApplicationCreatedByRespondent(asylumCase);
                 },
                 notificationGenerators,
@@ -6689,7 +6703,12 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase);
+                            && (
+                                !isAppellantInDetention(asylumCase)
+                                    || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                        && isDetainedInFacilityType(asylumCase, OTHER))
+                                    || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                            );
                 },
                 notificationGenerators,
                 getErrorHandler()
