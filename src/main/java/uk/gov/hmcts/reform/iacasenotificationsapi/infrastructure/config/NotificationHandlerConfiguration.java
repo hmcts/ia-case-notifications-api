@@ -6702,7 +6702,12 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase);
+                            && (
+                                !isAppellantInDetention(asylumCase)
+                                    || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                        && isDetainedInFacilityType(asylumCase, OTHER))
+                                    || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                            );
                 },
                 notificationGenerators,
                 getErrorHandler()
