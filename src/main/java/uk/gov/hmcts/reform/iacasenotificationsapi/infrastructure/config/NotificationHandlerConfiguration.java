@@ -6662,7 +6662,8 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                             && isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase)
+                            && (!isAppellantInDetention(asylumCase)
+                                || (isDetainedInFacilityType(asylumCase, OTHER) && hasBeenSubmittedByAppellantInternalCase(asylumCase)))
                             && isApplicationCreatedByRespondent(asylumCase);
                 },
                 notificationGenerators,
