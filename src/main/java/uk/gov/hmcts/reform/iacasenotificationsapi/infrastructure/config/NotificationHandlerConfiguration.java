@@ -6296,7 +6296,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == MANAGE_FEE_UPDATE
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase);
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
             },
             notificationGenerators,
             getErrorHandler()
