@@ -37,30 +37,9 @@
   "expectation": {
     "status": 200,
     "errors": [],
-    "caseData": {
-      "template": "minimal-appeal-submitted.json",
-      "replacements": {
-        "hearingCentre": "manchester",
-        "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
-        "appellantHasFixedAddress": "Yes",
-        "appellantInUk": "Yes",
-        "appellantInDetention": "Yes",
-        "detentionFacility": "other",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NW7 1BJ",
-          "PostTown": "LONDON",
-          "AddressLine1": "60 MAIN STREET",
-          "AddressLine2": ""
-        },
-        "notificationsSent": [
-          {
-            "id": "1425_REMOVE_REPRESENTATION_DETAINED_OTHER_APPELLANT_LETTER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }
-        ]
-      }
+    "confirmation": {
+      "header": "success",
+      "body": "contains([_REMOVE_REPRESENTATION_DETAINED_OTHER_APPELLANT_LETTER])"
     }
   }
 }
