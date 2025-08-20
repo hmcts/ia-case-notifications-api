@@ -13,6 +13,7 @@
           "hearingCentre": "manchester",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "appellantHasFixedAddress": "Yes",
+          "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "other",
           "appellantAddress": {
