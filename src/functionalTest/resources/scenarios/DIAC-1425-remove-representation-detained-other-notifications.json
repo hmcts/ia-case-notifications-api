@@ -30,6 +30,12 @@
             "pinUsed": "No"
           }
         }
+      },
+      "caseDataBefore": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "legalRepReferenceNumber": "123-456"
+        }
       }
     }
   },
