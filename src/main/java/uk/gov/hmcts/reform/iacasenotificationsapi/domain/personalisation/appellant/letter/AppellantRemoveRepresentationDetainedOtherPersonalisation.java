@@ -43,7 +43,7 @@ public class AppellantRemoveRepresentationDetainedOtherPersonalisation implement
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REMOVE_REPRESENTATION_APPELLANT_DETAINED_OTHER_LETTER";
+        return caseId + "_REMOVE_REPRESENTATION_DETAINED_OTHER_APPELLANT_LETTER";
     }
 
     @Override

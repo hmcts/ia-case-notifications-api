@@ -74,7 +74,7 @@ class AppellantRemoveRepresentationDetainedOtherPersonalisationTest {
     @Test
     void should_return_reference_id() {
         String reference = personalisation.getReferenceId(CASE_ID);
-        assertThat(reference).isEqualTo(CASE_ID + "_REMOVE_REPRESENTATION_APPELLANT_DETAINED_OTHER_LETTER");
+        assertThat(reference).isEqualTo(CASE_ID + "_REMOVE_REPRESENTATION_DETAINED_OTHER_APPELLANT_LETTER");
     }
 
     @Test
