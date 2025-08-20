@@ -19,9 +19,9 @@
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
-            "PostCode": "X1X 0XX",
+            "PostCode": "NW7 1BJ",
             "PostTown": "LONDON",
-            "AddressLine1": "60 XXY STREET",
+            "AddressLine1": "60 MAIN STREET",
             "AddressLine2": ""
           }
         }
@@ -49,9 +49,9 @@
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
-          "PostCode": "X1X 0XX",
+          "PostCode": "NW7 1BJ",
           "PostTown": "LONDON",
-          "AddressLine1": "60 XXY STREET",
+          "AddressLine1": "60 MAIN STREET",
           "AddressLine2": ""
         },
         "notificationsSent": [
