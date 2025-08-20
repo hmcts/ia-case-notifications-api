@@ -1,0 +1,43 @@
+{
+  "description": "DIAC-1425 Remove legal representative for detained in other notification to appellant",
+  "request": {
+    "uri": "/asylum/ccdSubmitted",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 1425,
+      "eventId": "removeLegalRepresentative",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "hearingCentre": "manchester",
+          "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
+          "appellantHasFixedAddress": "Yes",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "other",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "X1X 0XX",
+            "PostTown": "LONDON",
+            "AddressLine1": "60 XXY STREET",
+            "AddressLine2": ""
+          },
+          "appellantPinInPost": {
+            "accessCode": "AI123BX",
+            "expiryDate": "01/01/2022",
+            "pinUsed": "No"
+          }
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "confirmation": {
+      "header": "success",
+      "body": "contains([_REMOVE_REPRESENTATION_APPELLANT_DETAINED_OTHER_LETTER])"
+    }
+  }
+}
