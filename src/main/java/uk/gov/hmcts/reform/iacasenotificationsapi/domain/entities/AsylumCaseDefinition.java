@@ -479,6 +479,8 @@ public enum AsylumCaseDefinition {
         "ircName", new TypeReference<String>(){}),
     DETENTION_FACILITY(
         "detentionFacility", new TypeReference<String>(){}),
+    DETENTION_BUILDING(
+        "detentionBuilding", new TypeReference<String>(){}),
     PREVIOUS_DETENTION_LOCATION(
             "previousDetentionLocation", new TypeReference<String>() {}),
     PRISON_NAME(
@@ -615,6 +617,9 @@ public enum AsylumCaseDefinition {
 
     TTL(
             "TTL", new TypeReference<TtlCcdObject>(){}),
+
+    PRISON_NOMS(
+            "prisonNOMSNumber", new TypeReference<PrisonNomsNumber>(){}),
     ;
 
 
