@@ -5122,6 +5122,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> removeDetentionStatusLegalRepManualNotificationHandler(
+            @Qualifier("removeDetentionStatusNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.REMOVE_DETAINED_STATUS
+                                && isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeDetentionStatusInternalNotificationHandler(
             @Qualifier("removeDetentionStatusInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
@@ -5143,6 +5156,19 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.MARK_APPEAL_AS_DETAINED
                                 && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> markAsDetainedLegalRepManualNotificationHandler(
+            @Qualifier("markAsDetainedLegalRepManualNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.MARK_APPEAL_AS_DETAINED
+                                && isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
     }
@@ -7066,6 +7092,10 @@ public class NotificationHandlerConfiguration {
 
     private boolean isInternalWithoutLegalRepresentation(AsylumCase asylumCase) {
         return isInternalCase(asylumCase) && !hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+    }
+
+    private boolean isInternalWithLegalRepresentation(AsylumCase asylumCase) {
+        return isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
     }
 
     private boolean isRemissionRejectedOrPartiallyApproved(AsylumCase asylumCase) {
