@@ -36,7 +36,6 @@
         "appellantGivenNames": "Test",
         "appellantFamilyName": "User",
         "listCaseHearingDate": "2023-05-01T13:30:15.000",
-        "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {
           "County": "",
           "Country": "United Kingdom",
