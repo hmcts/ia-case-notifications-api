@@ -479,6 +479,8 @@ public enum AsylumCaseDefinition {
         "ircName", new TypeReference<String>(){}),
     DETENTION_FACILITY(
         "detentionFacility", new TypeReference<String>(){}),
+    DETENTION_BUILDING(
+        "detentionBuilding", new TypeReference<String>(){}),
     PREVIOUS_DETENTION_LOCATION(
             "previousDetentionLocation", new TypeReference<String>() {}),
     PRISON_NAME(
@@ -532,6 +534,8 @@ public enum AsylumCaseDefinition {
 
     IS_REMOTE_HEARING(
         "isRemoteHearing", new TypeReference<YesOrNo>(){}),
+
+    IS_VIRTUAL_HEARING("isVirtualHearing", new TypeReference<YesOrNo>(){}),
 
     NOTIFICATIONS("notifications", new TypeReference<List<IdValue<StoredNotification>>>(){}),
   
@@ -615,6 +619,9 @@ public enum AsylumCaseDefinition {
 
     TTL(
             "TTL", new TypeReference<TtlCcdObject>(){}),
+
+    PRISON_NOMS(
+            "prisonNOMSNumber", new TypeReference<PrisonNomsNumber>(){}),
     ;
 
 
