@@ -3808,8 +3808,7 @@ public class NotificationGeneratorConfiguration {
 
         return singletonList(
             new EmailNotificationGenerator(
-                newArrayList(
-                    legalRepresentativeRequestFeeRemissionPersonalisation),
+                legalRepresentativeRequestFeeRemissionPersonalisation,
                 notificationSender,
                 notificationIdAppender
             )
