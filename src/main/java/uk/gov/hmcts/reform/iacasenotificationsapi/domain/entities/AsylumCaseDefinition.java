@@ -608,6 +608,9 @@ public enum AsylumCaseDefinition {
 
     TTL(
             "TTL", new TypeReference<TtlCcdObject>(){}),
+
+    LATEST_EDIT_APPEAL_NOTIFICATION_DATE(
+            "latestEditAppealNotificationDate", new TypeReference<String>(){}),
     ;
 
 
