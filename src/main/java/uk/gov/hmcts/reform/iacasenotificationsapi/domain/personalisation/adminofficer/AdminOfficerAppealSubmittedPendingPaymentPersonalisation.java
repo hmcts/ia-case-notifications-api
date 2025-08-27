@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements EmailNotificationPersonalisation {
 
     private final String adminOfficerAppealSubmittedPendingPaymentTemplateId;
-    private final String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
     private final String feesAdminOfficerEmailAddress;
     private final String paymentExceptionsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
@@ -33,8 +32,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
         @Value("${govnotify.template.appealSubmitted.adminOfficer.pendingPaymentEaHu.email}")
             String adminOfficerAppealSubmittedPendingPaymentTemplateId,
         @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null")
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.remission.email}")
-            String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId,
         @Value("${feesAdminOfficerEmailAddress}")
             String feesAdminOfficerEmailAddress,
         @Value("${paymentExceptionsAdminOfficerEmailAddress}")

@@ -40,7 +40,6 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
 
         adminOfficerAppealSubmittedPayOfflinePersonalisation = new AdminOfficerAppealSubmittedPayOfflinePersonalisation(
             templateId,
-            remissionTemplateId,
             changeToHearingRequirementsAdminOfficerEmailAddress,
             paymentExceptionsAdminOfficerEmailAddress,
             adminOfficerPersonalisationProvider
@@ -50,16 +49,6 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(templateId, adminOfficerAppealSubmittedPayOfflinePersonalisation.getTemplateId(asylumCase));
-    }
-
-    @ParameterizedTest
-    @EnumSource(
-        value = RemissionType.class,
-        names = {"HO_WAIVER_REMISSION", "HELP_WITH_FEES", "EXCEPTIONAL_CIRCUMSTANCES_REMISSION"})
-    void should_return_given_template_id_with_remission(RemissionType remissionType) {
-        when(asylumCase.read(REMISSION_TYPE, RemissionType.class)).thenReturn(Optional.of(remissionType));
-        assertEquals(
-            remissionTemplateId, adminOfficerAppealSubmittedPayOfflinePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -73,16 +62,6 @@ class AdminOfficerAppealSubmittedPayOfflinePersonalisationTest {
     void should_return_given_email_address_from_asylum_case() {
         assertTrue(adminOfficerAppealSubmittedPayOfflinePersonalisation.getRecipientsList(asylumCase)
             .contains(changeToHearingRequirementsAdminOfficerEmailAddress));
-    }
-
-    @ParameterizedTest
-    @EnumSource(
-        value = RemissionType.class,
-        names = {"HO_WAIVER_REMISSION", "HELP_WITH_FEES", "EXCEPTIONAL_CIRCUMSTANCES_REMISSION"})
-    void should_return_payment_email_address_with_remission(RemissionType remissionType) {
-        when(asylumCase.read(REMISSION_TYPE, RemissionType.class)).thenReturn(Optional.of(remissionType));
-        assertTrue(adminOfficerAppealSubmittedPayOfflinePersonalisation.getRecipientsList(asylumCase)
-            .contains(paymentExceptionsAdminOfficerEmailAddress));
     }
 
     @Test
