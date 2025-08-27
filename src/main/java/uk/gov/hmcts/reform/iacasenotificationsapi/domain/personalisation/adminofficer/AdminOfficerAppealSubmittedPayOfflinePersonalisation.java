@@ -38,8 +38,6 @@ public class AdminOfficerAppealSubmittedPayOfflinePersonalisation implements Ema
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
         this.caseAdminOfficerAppealSubmittedPayOfflineTemplateId = caseAdminOfficerAppealSubmittedPayOfflineTemplateId;
-        this.caseAdminOfficerAppealSubmittedWithRemissionTemplateId =
-            caseAdminOfficerAppealSubmittedWithRemissionTemplateId;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = feesAdminOfficerEmailAddress;
         this.paymentExceptionsAdminOfficerEmailAddress = paymentExceptionsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
@@ -52,13 +50,6 @@ public class AdminOfficerAppealSubmittedPayOfflinePersonalisation implements Ema
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        RemissionType remissionType = asylumCase
-            .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-
-        if (Arrays.asList(HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION)
-            .contains(remissionType)) {
-            return caseAdminOfficerAppealSubmittedWithRemissionTemplateId;
-        }
         return caseAdminOfficerAppealSubmittedPayOfflineTemplateId;
     }
 

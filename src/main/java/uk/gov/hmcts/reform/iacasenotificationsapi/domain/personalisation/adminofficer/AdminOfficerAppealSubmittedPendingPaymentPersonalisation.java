@@ -39,8 +39,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
         this.adminOfficerAppealSubmittedPendingPaymentTemplateId = adminOfficerAppealSubmittedPendingPaymentTemplateId;
-        this.adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId =
-            adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
         this.feesAdminOfficerEmailAddress = feesAdminOfficerEmailAddress;
         this.paymentExceptionsAdminOfficerEmailAddress = paymentExceptionsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
@@ -53,13 +51,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        RemissionType remissionType = asylumCase
-            .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-
-        if (Arrays.asList(HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION)
-            .contains(remissionType)) {
-            return adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
-        }
         return adminOfficerAppealSubmittedPendingPaymentTemplateId;
     }
 
