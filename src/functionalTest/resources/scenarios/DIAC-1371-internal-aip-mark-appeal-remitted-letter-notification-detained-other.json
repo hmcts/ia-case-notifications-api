@@ -37,7 +37,7 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
-        "appellantInDetention": "yes",
+        "appellantInDetention": "Yes",
         "sourceOfRemittal": "Upper Tribunal",
         "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {
