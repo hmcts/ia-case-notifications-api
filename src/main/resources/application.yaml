@@ -525,12 +525,12 @@ govnotify:
       detentionEngagementTeam:
         email: e4c5547d-7cff-49f5-b47c-7861343db513
       legalRep:
-        email: 33f23316-8283-4968-90a0-aac4a1faebce
+        email: 283d8b0e-daff-49f5-9b71-2f33eca08b99
       homeOffice:
-        email: c2f68250-3930-4284-aa08-54c94a37da70
+        email: 0ac82b78-a356-4ac4-8e8a-d7b83b94c841
       appellant:
-        email: fae42617-155a-4a46-b7be-9829e91bb17c
-        sms: 24e64431-0888-427e-b2e9-9a4cbb0d79d4
+        email: e5e9a82f-aba6-4d3c-a7e6-2005dad1b30f
+        sms: 77fa2da9-7bd5-4c8f-ba6b-7229ec7563ba
     hearingBundleFailed:
       caseOfficer:
         email: 640fa369-bdba-4dc7-93e4-bfb56e7e25bc
@@ -1896,6 +1896,7 @@ adminEmailAddresses:
   birmingham: ${IA_ADMIN_BIRMINGHAM_EMAIL:birminghamedets@example.com}
   harmondsworth: ${IA_ADMIN_HARMONDSWORTH_EMAIL:harmondsworthedets@example.com}
   yarlsWood: ${IA_ADMIN_YARLSWOOD_EMAIL:yarlswoodedets@example.com}
+  iacNationalVirtual: ${IA_ADMIN_VIRTUAL_REGION_EMAIL:virtual-region-admin-default@example.com}
 
 hearingCentreEmailAddresses:
   bradford: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
@@ -1918,6 +1919,7 @@ hearingCentreEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:hc-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:hc-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif@example.com}
+  iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:hc-virtualregion-default@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
@@ -1952,6 +1954,7 @@ homeOfficeEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:ho-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:ho-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:ho-alloa-sherrif@example.com}
+  iacNationalVirtual: ${IA_HOME_OFFICE_VIRTUAL_REGION_EMAIL:ho-virtual-region-default@example.com}
 
 
 homeOfficeFtpaEmailAddresses:
@@ -1980,6 +1983,7 @@ hearingCentreTelephoneNumber:
   hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_TELEPHONE:0300 123 1711}
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
+  iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_TELEPHONE:0300 123 1711}
 
 endAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_END_APPEAL_EMAIL:ho-end-appeal@example.com}
 allowedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL:ho-allowed-appeal@example.com}
