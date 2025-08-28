@@ -3865,6 +3865,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantDetainedOtherNotificationHandler(
+        @Qualifier("removeRepresentativeAppellantDetainedOtherLetterNotificationHandler")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && (callback.getEvent() == Event.REMOVE_REPRESENTATION
+                        || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
+                    && isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                    && isDetainedInFacilityType(callback.getCaseDetails().getCaseData(), OTHER),
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantEmailNotificationHandler(
         @Qualifier("removeRepresentationAppellantEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
@@ -6875,8 +6891,8 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && (isInternalCase(asylumCase) || isLegalRepCaseForDetainedAppellant(asylumCase))
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             }, notificationGenerators
         );

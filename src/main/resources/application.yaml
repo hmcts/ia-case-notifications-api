@@ -1118,6 +1118,9 @@ govnotify:
       appellant:
         email: 7d2b7690-12d4-43b4-8793-cd505d8033a9
         sms: 318452c5-230f-4471-aafa-847accf5f20b
+        detention:
+          other:
+            letter: cd39c5ce-ef8b-4de6-ad00-65116da2820b
     requestFeeRemission:
       legalRep:
         email: 7c336cc1-ff6e-431a-afc1-812c9bf1b883

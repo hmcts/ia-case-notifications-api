@@ -2,11 +2,13 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.generateAppellantPinIfNotPresent;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicantAndRespondent;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
@@ -83,31 +85,31 @@ public class AsylumCaseUtilsTest {
     @Test
     void should_return_correct_value_for_det() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
-        assertTrue(AsylumCaseUtils.isAppellantInDetention(asylumCase));
+        assertTrue(isAppellantInDetention(asylumCase));
     }
 
     @Test
     void should_return_correct_value_for_ada() {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
-        assertTrue(AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase));
+        assertTrue(isAcceleratedDetainedAppeal(asylumCase));
     }
 
     @Test
     void should_return_correct_value_for_aaa() {
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.AG));
-        assertTrue(AsylumCaseUtils.isAgeAssessmentAppeal(asylumCase));
+        assertTrue(isAgeAssessmentAppeal(asylumCase));
     }
 
     @Test
     void isAdmin_should_return_true() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
-        assertTrue(AsylumCaseUtils.isInternalCase(asylumCase));
+        assertTrue(isInternalCase(asylumCase));
     }
 
     @Test
     void isAdmin_should_return_false() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
-        assertFalse(AsylumCaseUtils.isInternalCase(asylumCase));
+        assertFalse(isInternalCase(asylumCase));
     }
 
     @Test
@@ -115,45 +117,45 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
 
-        assertTrue(AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation(asylumCase));
+        assertTrue(isNotInternalOrIsInternalWithLegalRepresentation(asylumCase));
     }
 
     @Test
     void isNotInternalOrIsInternalWithLegalRepresentation_should_return_false() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
 
-        assertFalse(AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation(asylumCase));
+        assertFalse(isNotInternalOrIsInternalWithLegalRepresentation(asylumCase));
     }
 
     @Test
     void isAriaMigrated_should_return_true() {
         when(asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class)).thenReturn(Optional.of(YES));
-        assertTrue(AsylumCaseUtils.isAriaMigrated(asylumCase));
+        assertTrue(isAriaMigrated(asylumCase));
     }
 
     @Test
     void isAriaMigrated_should_return_false() {
         when(asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class)).thenReturn(Optional.of(NO));
-        assertFalse(AsylumCaseUtils.isAriaMigrated(asylumCase));
+        assertFalse(isAriaMigrated(asylumCase));
     }
 
     @Test
     void isAipJourney_should_return_true() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
-        assertTrue(AsylumCaseUtils.isAipJourney(asylumCase));
+        assertTrue(isAipJourney(asylumCase));
     }
 
     @Test
     void isAipJourney_should_return_false() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
-        assertFalse(AsylumCaseUtils.isAipJourney(asylumCase));
+        assertFalse(isAipJourney(asylumCase));
     }
 
     @Test
     void getFtpaDecisionOutcomeType_should_return_granted() {
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(FtpaDecisionOutcomeType.FTPA_GRANTED));
-        assertEquals(FtpaDecisionOutcomeType.FTPA_GRANTED, AsylumCaseUtils.getFtpaDecisionOutcomeType(asylumCase).orElse(null));
+        assertEquals(FtpaDecisionOutcomeType.FTPA_GRANTED, getFtpaDecisionOutcomeType(asylumCase).orElse(null));
     }
 
     @Test
@@ -162,7 +164,7 @@ public class AsylumCaseUtilsTest {
             .thenReturn(Optional.of(FtpaDecisionOutcomeType.FTPA_REFUSED));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.empty());
-        assertEquals(FtpaDecisionOutcomeType.FTPA_REFUSED, AsylumCaseUtils.getFtpaDecisionOutcomeType(asylumCase).orElse(null));
+        assertEquals(FtpaDecisionOutcomeType.FTPA_REFUSED, getFtpaDecisionOutcomeType(asylumCase).orElse(null));
     }
 
     @ParameterizedTest
@@ -170,7 +172,7 @@ public class AsylumCaseUtilsTest {
     void isListed_should_return_correct_value(String hearingCentre) {
         Optional<HearingCentre> mayBeListCaseHearingCenter = HearingCentre.from(hearingCentre);
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(mayBeListCaseHearingCenter);
-        assertEquals(mayBeListCaseHearingCenter.isPresent(), AsylumCaseUtils.isAppealListed(asylumCase));
+        assertEquals(mayBeListCaseHearingCenter.isPresent(), isAppealListed(asylumCase));
     }
 
     @Test
@@ -179,8 +181,8 @@ public class AsylumCaseUtilsTest {
         addendumDocuments.add(addendumOne);
         when(asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS)).thenReturn(Optional.of(addendumDocuments));
 
-        assertEquals(addendumDocuments, AsylumCaseUtils.getAddendumEvidenceDocuments(asylumCase));
-        assertEquals(Optional.of(addendumOne), AsylumCaseUtils.getLatestAddendumEvidenceDocument(asylumCase));
+        assertEquals(addendumDocuments, getAddendumEvidenceDocuments(asylumCase));
+        assertEquals(Optional.of(addendumOne), getLatestAddendumEvidenceDocument(asylumCase));
     }
 
     @Test
@@ -190,16 +192,16 @@ public class AsylumCaseUtilsTest {
         addendumDocuments.add(addendumTwo);
         when(asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS)).thenReturn(Optional.of(addendumDocuments));
 
-        assertEquals(addendumDocuments, AsylumCaseUtils.getAddendumEvidenceDocuments(asylumCase));
-        assertEquals(2, AsylumCaseUtils.getAddendumEvidenceDocuments(asylumCase).size());
+        assertEquals(addendumDocuments, getAddendumEvidenceDocuments(asylumCase));
+        assertEquals(2, getAddendumEvidenceDocuments(asylumCase).size());
     }
 
     @Test
     void should_return_empty_list_when_no_addendum_evidence_documents_present() {
         when(asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertEquals(Collections.emptyList(), AsylumCaseUtils.getAddendumEvidenceDocuments(asylumCase));
-        assertEquals(Optional.empty(), AsylumCaseUtils.getLatestAddendumEvidenceDocument(asylumCase));
+        assertEquals(Collections.emptyList(), getAddendumEvidenceDocuments(asylumCase));
+        assertEquals(Optional.empty(), getLatestAddendumEvidenceDocument(asylumCase));
     }
 
     @Test
@@ -218,7 +220,7 @@ public class AsylumCaseUtilsTest {
     @Test
     void should_throw_when_applies_for_costs_are_not_present() {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> AsylumCaseUtils.retrieveLatestApplyForCosts(asylumCase))
+        assertThatThrownBy(() -> retrieveLatestApplyForCosts(asylumCase))
             .hasMessage("Applies for costs are not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
@@ -231,7 +233,7 @@ public class AsylumCaseUtilsTest {
         );
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertEquals(applyForCostsList.get(0).getValue(), AsylumCaseUtils.retrieveLatestApplyForCosts(asylumCase));
+        assertEquals(applyForCostsList.get(0).getValue(), retrieveLatestApplyForCosts(asylumCase));
     }
 
     @Test
@@ -245,7 +247,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertEquals(applyForCostsList.get(0).getValue(), AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+        assertEquals(applyForCostsList.get(0).getValue(), getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
     }
 
     @Test
@@ -255,7 +257,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))
+        assertThatThrownBy(() -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))
             .hasMessage("appliesForCost are not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
@@ -271,7 +273,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))
+        assertThatThrownBy(() -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))
             .hasMessage("Apply for costs with id 3 not found")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
@@ -286,7 +288,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertTrue(AsylumCaseUtils.isLoggedUserIsHomeOffice(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
+        assertTrue(isLoggedUserIsHomeOffice(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
     }
 
     @Test
@@ -299,7 +301,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> AsylumCaseUtils.isLoggedUserIsHomeOffice(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
+        assertThatThrownBy(() -> isLoggedUserIsHomeOffice(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
             .hasMessage("Correct applicant type is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
@@ -315,7 +317,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        ImmutablePair<String, String> getApplicantAndRespondent = getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+        ImmutablePair<String, String> getApplicantAndRespondent = getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
 
         assertEquals("Legal representative", getApplicantAndRespondent.getRight());
         assertEquals("Home office", getApplicantAndRespondent.getLeft());
@@ -332,7 +334,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
+        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
             .hasMessage("Correct applicant type is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
@@ -348,7 +350,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> AsylumCaseUtils.getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
+        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
             .hasMessage("Correct respondent type is not present")
             .isExactlyInstanceOf(IllegalStateException.class);
     }
@@ -382,26 +384,26 @@ public class AsylumCaseUtilsTest {
     @Test
     void submissionOutOfTime_should_return_true() {
         when(asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)).thenReturn(Optional.of(YES));
-        assertTrue(AsylumCaseUtils.isSubmissionOutOfTime(asylumCase));
+        assertTrue(isSubmissionOutOfTime(asylumCase));
     }
 
     @Test
     void submissionOutOfTime_should_return_false() {
         when(asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)).thenReturn(Optional.of(NO));
-        assertFalse(AsylumCaseUtils.isSubmissionOutOfTime(asylumCase));
+        assertFalse(isSubmissionOutOfTime(asylumCase));
     }
 
     @Test
     void should_return_true_if_in_country_is_present() {
         when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+        assertTrue(hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 
     @Test
     void should_return_true_if_ooc_is_present() {
         when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+        assertTrue(hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 
     @Test
@@ -410,7 +412,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
 
-        assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+        assertFalse(hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 
     @Test
@@ -420,7 +422,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
 
-        assertTrue(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+        assertTrue(hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 
     @Test
@@ -430,7 +432,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
 
-        assertFalse(AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
+        assertFalse(hasAppellantAddressInCountryOrOutOfCountry(asylumCase));
     }
 
     @ParameterizedTest
@@ -440,7 +442,7 @@ public class AsylumCaseUtilsTest {
         "10000, 10000, 0.00"
     })
     void should_return_absolute_fee_amount_even_when_negative_difference(String originalFeeTotal, String newFeeTotal, String expectedDifference) {
-        String feeDifference = AsylumCaseUtils.calculateFeeDifference(originalFeeTotal, newFeeTotal);
+        String feeDifference = calculateFeeDifference(originalFeeTotal, newFeeTotal);
         assertEquals(expectedDifference, feeDifference);
     }
 
@@ -475,14 +477,14 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         
-        assertTrue(AsylumCaseUtils.isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
+        assertTrue(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
     @Test
     void should_return_false_when_appellant_is_not_in_detention() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
         
-        assertFalse(AsylumCaseUtils.isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
+        assertFalse(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
     @Test
@@ -490,7 +492,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
         
-        assertFalse(AsylumCaseUtils.isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
+        assertFalse(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
     @Test
@@ -498,7 +500,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         
-        assertFalse(AsylumCaseUtils.isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
+        assertFalse(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
     @ParameterizedTest
@@ -511,6 +513,21 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(detentionFacilityValue));
         
-        assertTrue(AsylumCaseUtils.isDetainedInFacilityType(asylumCase, facilityType));
+        assertTrue(isDetainedInFacilityType(asylumCase, facilityType));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+        "YES, YES, false",
+        "YES, NO, false",
+        "NO, YES, true",
+        "NO, NO, false"
+    })
+    void should_return_correct_value_for_legal_rep_case_for_detained_appellant_combinations(YesOrNo isAdmin, YesOrNo isDetained, boolean expected) {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
+        lenient().when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
+
+        assertEquals(expected, isLegalRepCaseForDetainedAppellant(asylumCase));
+    }
+
 }
