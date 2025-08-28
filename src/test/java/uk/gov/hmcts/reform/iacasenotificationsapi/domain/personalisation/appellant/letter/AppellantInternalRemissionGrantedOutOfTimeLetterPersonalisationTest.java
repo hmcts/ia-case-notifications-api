@@ -32,7 +32,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
+class AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -67,7 +67,7 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
     private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private int daysAfterRemissionDecision = 10;
 
-    private AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation;
+    private AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -96,7 +96,7 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         final String dueDate = LocalDate.now().plusDays(daysAfterRemissionDecision).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
 
-        appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation = new AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation(
+        appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation = new AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisation(
             letterTemplateId,
             daysAfterRemissionDecision,
             customerServicesProvider,

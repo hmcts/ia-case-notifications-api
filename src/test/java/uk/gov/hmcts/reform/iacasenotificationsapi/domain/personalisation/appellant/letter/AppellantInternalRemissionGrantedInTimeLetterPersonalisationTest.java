@@ -30,7 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalRemissionGrantedInTImeLetterPersonalisationTest {
+class AppellantInternalRemissionGrantedInTimeLetterPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -62,7 +62,7 @@ class AppellantInternalRemissionGrantedInTImeLetterPersonalisationTest {
     private String oocAddressLine3 = "28003";
     private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
 
-    private AppellantInternalRemissionGrantedInTImeLetterPersonalisation appellantInternalRemissionGrantedInTImeLetterPersonalisation;
+    private AppellantInternalRemissionGrantedInTimeLetterPersonalisation appellantInternalRemissionGrantedInTImeLetterPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -89,7 +89,7 @@ class AppellantInternalRemissionGrantedInTImeLetterPersonalisationTest {
         when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
         when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
 
-        appellantInternalRemissionGrantedInTImeLetterPersonalisation = new AppellantInternalRemissionGrantedInTImeLetterPersonalisation(
+        appellantInternalRemissionGrantedInTImeLetterPersonalisation = new AppellantInternalRemissionGrantedInTimeLetterPersonalisation(
             letterTemplateId,
             customerServicesProvider
         );
