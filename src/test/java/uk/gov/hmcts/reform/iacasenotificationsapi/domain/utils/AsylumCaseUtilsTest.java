@@ -445,6 +445,32 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
+    void should_return_true_when_appellant_is_in_detention_and_one_of_facility_types_matches() {
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+
+        assertTrue(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertTrue(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
+    void should_return_false_when_appellant_is_in_detention_and_none_of_facility_types_matches() {
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
+    void should_return_false_when_appellant_is_not_in_detention_for_multipole_facility_types() {
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
     void should_return_true_when_appellant_is_in_detention_and_facility_type_matches() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));

@@ -461,6 +461,15 @@ public class AsylumCaseUtils {
         }
     }
 
+    public static boolean isDetainedInOneOfFacilityTypes(AsylumCase asylumCase, DetentionFacility... facilityTypes) {
+        for (DetentionFacility facilityType : facilityTypes) {
+            if (isDetainedInFacilityType(asylumCase, facilityType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isDetainedInFacilityType(AsylumCase asylumCase, DetentionFacility facilityType) {
         if (!isAppellantInDetention(asylumCase)) {
             return false;
