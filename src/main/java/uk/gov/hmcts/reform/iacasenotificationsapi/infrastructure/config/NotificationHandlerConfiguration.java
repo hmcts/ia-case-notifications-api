@@ -6868,8 +6868,8 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && (isInternalCase(asylumCase) || isLegalRepCaseForDetainedAppellant(asylumCase))
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             }, notificationGenerators
         );
