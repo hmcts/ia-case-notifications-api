@@ -3865,6 +3865,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantDetainedOtherNotificationHandler(
+        @Qualifier("removeRepresentativeAppellantDetainedOtherLetterNotificationHandler")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && (callback.getEvent() == Event.REMOVE_REPRESENTATION
+                        || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
+                    && isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                    && isDetainedInFacilityType(callback.getCaseDetails().getCaseData(), OTHER),
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantEmailNotificationHandler(
         @Qualifier("removeRepresentationAppellantEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
