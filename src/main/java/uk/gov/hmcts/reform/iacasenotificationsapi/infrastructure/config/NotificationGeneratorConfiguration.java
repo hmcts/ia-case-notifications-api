@@ -3794,6 +3794,27 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("removeRepresentativeAppellantDetainedOtherLetterNotificationHandler")
+    public List<NotificationGenerator> removeRepresentativeAppellantDetainedOtherLetterNotificationHandler(
+        AppellantRemoveRepresentationDetainedOtherPersonalisation appellantRemoveRepresentationDetainedOtherPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(appellantRemoveRepresentationDetainedOtherPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("header", "body");
+                }
+            }
+        );
+    }
+
     @Bean("requestFeeRemissionNotificationGenerator")
     public List<NotificationGenerator> requestFeeRemissionNotificationHandler(
         LegalRepresentativeRequestFeeRemissionPersonalisation legalRepresentativeRequestFeeRemissionPersonalisation,

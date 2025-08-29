@@ -3700,8 +3700,8 @@ public class NotificationHandlerConfiguration {
 
                 boolean isPartiallyApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> PARTIALLY_APPROVED == decision)
-                    .orElse(false);   
-                    
+                    .orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
@@ -3860,6 +3860,22 @@ public class NotificationHandlerConfiguration {
                        && (callback.getEvent() == Event.REMOVE_REPRESENTATION
                            || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE);
             },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> removeRepresentationAppellantDetainedOtherNotificationHandler(
+        @Qualifier("removeRepresentativeAppellantDetainedOtherLetterNotificationHandler")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && (callback.getEvent() == Event.REMOVE_REPRESENTATION
+                        || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
+                    && isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                    && isDetainedInFacilityType(callback.getCaseDetails().getCaseData(), OTHER),
             notificationGenerators
         );
     }
@@ -6650,7 +6666,9 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == MARK_APPEAL_AS_REMITTED
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase);
+                       && (!isAppellantInDetention(asylumCase) || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER))
+                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)));
             },
             notificationGenerators,
             getErrorHandler()
@@ -6872,8 +6890,8 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
+                    && (isInternalCase(asylumCase) || isLegalRepCaseForDetainedAppellant(asylumCase))
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             }, notificationGenerators
         );
