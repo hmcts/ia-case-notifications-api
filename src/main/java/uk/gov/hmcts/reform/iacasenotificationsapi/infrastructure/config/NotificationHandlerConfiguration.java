@@ -6122,11 +6122,15 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == RP || type == DC).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isInternalCase(asylumCase)
-                       && isRpOrDcAppealType
-                       && !isAppellantInDetention(asylumCase)
-                       && !isSubmissionOutOfTime(asylumCase);
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && isInternalCase(asylumCase)
+                        && isRpOrDcAppealType
+                        && (
+                            !isAppellantInDetention(asylumCase)
+                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER))
+                            || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                        )
+                        && !isSubmissionOutOfTime(asylumCase);
 
             },
             notificationGenerators,
