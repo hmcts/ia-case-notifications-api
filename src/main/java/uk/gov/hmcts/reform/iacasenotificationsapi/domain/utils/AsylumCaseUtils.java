@@ -18,6 +18,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
@@ -461,6 +463,15 @@ public class AsylumCaseUtils {
         }
     }
 
+    public static boolean isDetainedInOneOfFacilityTypes(AsylumCase asylumCase, DetentionFacility... facilityTypes) {
+        for (DetentionFacility facilityType : facilityTypes) {
+            if (isDetainedInFacilityType(asylumCase, facilityType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isDetainedInFacilityType(AsylumCase asylumCase, DetentionFacility facilityType) {
         if (!isAppellantInDetention(asylumCase)) {
             return false;
@@ -470,8 +481,15 @@ public class AsylumCaseUtils {
         return detentionFacility.equals(facilityType.getValue());
     }
 
+    public static Boolean isFeeExemptAppeal(AsylumCase asylumCase) {
+        return asylumCase
+            .read(APPEAL_TYPE, AppealType.class)
+            .map(type -> type == RP || type == DC).orElse(false);
+    }
+
     public static boolean isLegalRepCaseForDetainedAppellant(AsylumCase asylumCase) {
         return (!isInternalCase(asylumCase)) && isAppellantInDetention(asylumCase);
     }
+
 
 }
