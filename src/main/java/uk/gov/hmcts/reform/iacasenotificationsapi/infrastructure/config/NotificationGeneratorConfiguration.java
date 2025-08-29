@@ -5970,7 +5970,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalOrDetainedCaseAdjournedWithoutDateLetterNotificationGenerator")
+    @Bean("adjournedWithoutDateLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseAdjournedWithoutTimeLetterNotificationGenerator(
         AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisation internalOrDetainedCaseAdjournedWithoutDatePersonalisation,
         GovNotifyNotificationSender notificationSender,

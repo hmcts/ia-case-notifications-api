@@ -6524,7 +6524,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutDateLetterNotificationHandler(
-        @Qualifier("internalOrDetainedCaseAdjournedWithoutDateLetterNotificationGenerator")
+        @Qualifier("adjournedWithoutDateLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators
     ) {
 
@@ -6536,7 +6536,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
                     && isInternalCase(asylumCase)
-                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
+                    && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -6544,8 +6544,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> nonInternalDetainedOtherCaseAdjournedWithoutDateLetterNotificationHandler(
-        @Qualifier("internalOrDetainedCaseAdjournedWithoutDateLetterNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> detainedCaseAdjournedWithoutDateLetterNotificationHandler(
+        @Qualifier("adjournedWithoutDateLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators
     ) {
 
@@ -6555,10 +6555,9 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                    && !isInternalCase(asylumCase)
-                    && isAppellantInDetention(asylumCase)
-                    && isDetainedInFacilityType(asylumCase, OTHER);
+                        && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                        && isAppellantInDetention(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators,
             getErrorHandler()
