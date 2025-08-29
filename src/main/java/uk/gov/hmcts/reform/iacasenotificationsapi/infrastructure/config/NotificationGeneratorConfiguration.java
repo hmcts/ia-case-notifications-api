@@ -6344,7 +6344,7 @@ public class NotificationGeneratorConfiguration {
         DetentionEngagementTeamEndTheAppealProductionPersonalisation detentionEngagementTeamEndTheAppealProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
-   ) {
+    ) {
 
         return singletonList(
             new EmailNotificationGenerator(
