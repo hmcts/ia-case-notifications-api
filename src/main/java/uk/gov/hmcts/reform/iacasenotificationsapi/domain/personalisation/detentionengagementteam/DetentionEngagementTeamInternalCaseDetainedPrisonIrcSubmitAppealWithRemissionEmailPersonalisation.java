@@ -24,19 +24,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Slf4j
 @Service
 public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation implements EmailWithLinkNotificationPersonalisation {
-    private final String appealSubmittedNonAdaInTimeDetainedOnlyTemplateId;
+    private final String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
     private final String nonAdaPrefix;
     private final DetentionFacilityEmailService detentionFacilityEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation(
         @Value("${govnotify.template.appealSubmitted.adminOfficer.nonAdaInTimeDetainedPrisonIrc.email}")
-        String appealSubmittedNonAdaInTimeDetainedOnlyTemplateId,
+        String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId,
         @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
         DetentionFacilityEmailService detentionFacilityEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
-        this.appealSubmittedNonAdaInTimeDetainedOnlyTemplateId = appealSubmittedNonAdaInTimeDetainedOnlyTemplateId;
+        this.appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId = appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
         this.detentionFacilityEmailService = detentionFacilityEmailService;
         this.documentDownloadClient = documentDownloadClient;
@@ -54,7 +54,7 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWit
 
     @Override
     public String getTemplateId() {
-        return appealSubmittedNonAdaInTimeDetainedOnlyTemplateId;
+        return appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
     }
 
     @Override

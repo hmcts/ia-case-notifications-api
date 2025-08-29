@@ -6219,8 +6219,9 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOnTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationHandler(
-        @Qualifier("internalSubmitAppealOnTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationHandler")
-        List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("internalSubmitAppealOnTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators
+    ) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
