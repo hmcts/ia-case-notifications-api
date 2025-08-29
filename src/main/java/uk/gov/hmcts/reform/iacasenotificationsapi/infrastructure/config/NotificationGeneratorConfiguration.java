@@ -5991,16 +5991,16 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
+    @Bean("adjournedWithoutDateLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseAdjournedWithoutTimeLetterNotificationGenerator(
-        AppellantInternalCaseAdjournedWithoutDatePersonalisation internalCaseAdjournedWithoutDatePersonalisation,
+        AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisation internalOrDetainedCaseAdjournedWithoutDatePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
             new LetterNotificationGenerator(
                 newArrayList(
-                    internalCaseAdjournedWithoutDatePersonalisation
+                    internalOrDetainedCaseAdjournedWithoutDatePersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

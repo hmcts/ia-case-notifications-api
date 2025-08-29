@@ -6539,9 +6539,10 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTimeLetterNotificationHandler(
-        @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutDateLetterNotificationHandler(
+        @Qualifier("adjournedWithoutDateLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators
+    ) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -6552,7 +6553,27 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
                     && isInternalCase(asylumCase)
                     && !isAppellantInDetention(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> detainedCaseAdjournedWithoutDateLetterNotificationHandler(
+        @Qualifier("adjournedWithoutDateLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                        && isAppellantInDetention(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators,
             getErrorHandler()
