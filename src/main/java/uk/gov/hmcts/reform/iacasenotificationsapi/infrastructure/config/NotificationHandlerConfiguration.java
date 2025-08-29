@@ -6845,6 +6845,9 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
+                       || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                       && isDetainedInFacilityType(asylumCase, OTHER))
+                       || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
                        && isApproved
                        && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();

@@ -182,7 +182,7 @@ govnotify:
           email: b37bfeae-cc9a-4389-92d6-b3a65060b192
           sms: 352c22ca-8dbf-44f0-96d8-8ad5d5550345
           onTime:
-            letter: 14fd949c-d879-4878-ae6d-844abce5baf3
+            letter: 863a6855-eabb-48d2-86f3-db31c6fb9afc
           outOfTime:
             letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
         partiallyApproved:
