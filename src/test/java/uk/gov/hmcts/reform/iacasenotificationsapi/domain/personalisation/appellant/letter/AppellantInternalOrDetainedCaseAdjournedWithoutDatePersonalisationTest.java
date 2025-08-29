@@ -152,6 +152,8 @@ class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisationTest {
         legalRepInCountryDataSetup();
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class))
+                .thenReturn(Optional.of(new AddressUk("10", "Main St", "", "Birmingham", "", "BM1 2ED", "UK")));
 
         fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
 
@@ -164,11 +166,11 @@ class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
         assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
         assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
-        assertEquals(addressLine1, fieldValuesMap.get("address_line_1"));
-        assertEquals(addressLine2, fieldValuesMap.get("address_line_2"));
-        assertEquals(addressLine3, fieldValuesMap.get("address_line_3"));
-        assertEquals(postTown, fieldValuesMap.get("address_line_4"));
-        assertEquals(postCode, fieldValuesMap.get("address_line_5"));
+        assertEquals("10", fieldValuesMap.get("address_line_1"));
+        assertEquals("Main St", fieldValuesMap.get("address_line_2"));
+        assertEquals("", fieldValuesMap.get("address_line_3"));
+        assertEquals("Birmingham", fieldValuesMap.get("address_line_4"));
+        assertEquals("BM1 2ED", fieldValuesMap.get("address_line_5"));
     }
 
     @Test
@@ -176,6 +178,8 @@ class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisationTest {
         appellantOocDataSetupOoc();
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class))
+                .thenReturn(Optional.of(new AddressUk("10", "Main St", "", "Birmingham", "", "BM1 2ED", "UK")));
 
         fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
 
@@ -188,10 +192,10 @@ class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
         assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
         assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
-        assertEquals(oocAddressLine1, fieldValuesMap.get("address_line_1"));
-        assertEquals(oocAddressLine2, fieldValuesMap.get("address_line_2"));
-        assertEquals(oocAddressLine3, fieldValuesMap.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_4"));
+        assertEquals("10", fieldValuesMap.get("address_line_1"));
+        assertEquals("Main St", fieldValuesMap.get("address_line_2"));
+        assertEquals("", fieldValuesMap.get("address_line_3"));
+        assertEquals("Birmingham", fieldValuesMap.get("address_line_4"));
     }
 
     @Test
@@ -222,6 +226,8 @@ class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisationTest {
         legalRepOocDataSetupOoc();
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class))
+                .thenReturn(Optional.of(new AddressUk("10", "Main St", "", "Birmingham", "", "BM1 2ED", "UK")));
 
         fieldValuesMap = internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation(callback);
 
@@ -234,10 +240,10 @@ class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
         assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
         assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
-        assertEquals(oocAddressLine1, fieldValuesMap.get("address_line_1"));
-        assertEquals(oocAddressLine2, fieldValuesMap.get("address_line_2"));
-        assertEquals(oocAddressLine3, fieldValuesMap.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_4"));
+        assertEquals("10", fieldValuesMap.get("address_line_1"));
+        assertEquals("Main St", fieldValuesMap.get("address_line_2"));
+        assertEquals("", fieldValuesMap.get("address_line_3"));
+        assertEquals("Birmingham", fieldValuesMap.get("address_line_4"));
     }
 
     void appellantOocDataSetupOoc() {

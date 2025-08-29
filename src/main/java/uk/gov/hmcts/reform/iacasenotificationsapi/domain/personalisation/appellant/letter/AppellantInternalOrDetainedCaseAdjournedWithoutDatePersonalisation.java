@@ -72,12 +72,7 @@ public class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisation 
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("adjournedHearingReason", asylumCase.read(ADJOURN_HEARING_WITHOUT_DATE_REASONS, String.class).orElse(""));
 
-        List<String> address;
-        if (isInternalCase(asylumCase) && !isAppellantInDetention(asylumCase)) {
-            address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-        } else { //isAppellantInDetention(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER)
-            address =  getAppellantAddressAsList(asylumCase);
-        }
+        List<String> address = getAppellantAddressAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
