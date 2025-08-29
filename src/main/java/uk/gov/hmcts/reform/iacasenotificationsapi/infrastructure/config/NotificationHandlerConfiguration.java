@@ -6235,11 +6235,10 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isInternalCase(asylumCase)
+                       && (isInternalCase(asylumCase) && hasBeenSubmittedByAppellantInternalCase(asylumCase))
                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                        && isRemissionPresent
                        && !isSubmissionOutOfTime(asylumCase);
-
             },
             notificationGenerators,
             getErrorHandler()
