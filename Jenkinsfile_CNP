@@ -58,6 +58,8 @@ def secrets = [
         secret('hearing-centre-glasgow-telephone', 'IA_HEARING_CENTRE_GLASGOW_TELEPHONE'),
         secret('hearing-centre-virtual-region-telephone', 'IA_HEARING_CENTRE_VIRTUAL_REGION_TELEPHONE'),
 
+        secret('ia-det-prison-email-mappings', 'IA_DET_PRISON_EMAIL_MAPPINGS'),
+
         secret('respondent-evidence-direction-email', 'IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL'),
         secret('respondent-review-direction-email', 'IA_RESPONDENT_REVIEW_DIRECTION_EMAIL'),
         secret('respondent-non-standard-direction-until-listing-email', 'IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL'),
