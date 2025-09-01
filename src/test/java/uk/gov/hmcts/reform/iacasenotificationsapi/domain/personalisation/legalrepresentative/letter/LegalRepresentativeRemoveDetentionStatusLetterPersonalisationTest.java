@@ -63,7 +63,7 @@ class LegalRepresentativeRemoveDetentionStatusLetterPersonalisationTest {
     @Test
     void should_return_reference_id() {
         String referenceId = personalisation.getReferenceId(CASE_ID);
-        assertThat(referenceId).isEqualTo(CASE_ID + "_REMOVE_DETENTION_STATUS_LETTER");
+        assertThat(referenceId).isEqualTo(CASE_ID + "_REMOVE_DETENTION_STATUS_LEGAL_REP_LETTER");
     }
 
     @Test

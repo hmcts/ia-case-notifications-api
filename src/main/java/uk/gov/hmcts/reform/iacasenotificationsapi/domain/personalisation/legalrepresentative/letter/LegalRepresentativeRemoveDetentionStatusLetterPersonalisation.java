@@ -46,7 +46,7 @@ public class LegalRepresentativeRemoveDetentionStatusLetterPersonalisation imple
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REMOVE_DETENTION_STATUS_LETTER";
+        return caseId + "_REMOVE_DETENTION_STATUS_LEGAL_REP_LETTER";
     }
 
     @Override
