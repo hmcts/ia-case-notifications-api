@@ -120,7 +120,9 @@ govnotify:
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
         letter:
           inTime:
-            withExemption: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+            withExemption:
+              legallyRepresented: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+              aip: f161d437-d17d-421b-8118-48ec0f2c5446
             withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
