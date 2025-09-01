@@ -6848,10 +6848,10 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
-                       || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                       && isDetainedInFacilityType(asylumCase, OTHER))
-                       || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                        && (!isAppellantInDetention(asylumCase)
+                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                && isDetainedInFacilityType(asylumCase, OTHER))
+                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))   
                        && isApproved
                        && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();
