@@ -120,7 +120,9 @@ govnotify:
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
         letter:
           inTime:
-            withExemption: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+            withExemption:
+              legallyRepresented: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+              aip: f161d437-d17d-421b-8118-48ec0f2c5446
             withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
@@ -497,6 +499,8 @@ govnotify:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
       detentionEngagementTeam:
         email: cef6603c-b5dd-4e63-b438-1e93644bad5c
+        production:
+          email: 73985562-43a4-417e-b201-175e8bf36682
     endAppealBeforeListing:
       legalRep:
         email: 7eb6e398-c85d-483f-9ff7-6ec7a3e17651
@@ -752,6 +756,8 @@ govnotify:
         email: 8a87904f-5a67-4a79-a56a-8450b7829f9b
       detentionEngagementTeam:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
@@ -768,6 +774,9 @@ govnotify:
         email: 153cab2a-0533-424f-bcaf-41b916d06321
       adminOfficer:
         email: 6c007d84-488d-498a-9d53-85ba5e008d31
+      detentionEngagementTeam:
+        production:
+          email: f97b30d5-c41c-4b85-a18c-8d4efa1a0f3e
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1021,6 +1030,8 @@ govnotify:
         otherParty:
           detentionEngagementTeam:
             email: 47289033-479f-45e2-aa17-2c785378733a
+            production:
+              email: c0d82e4c-6f72-4fb9-b002-1d47e1fc5115
           appellant:
             beforeListing:
               email: 22cee197-d6a9-4a9f-bdc9-a8aec8ab36f8

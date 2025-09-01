@@ -6397,6 +6397,96 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+
+    @Bean("endTheAppealProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> endTheAppealProductionDetainedNotificationGenerator(
+        DetentionEngagementTeamEndTheAppealProductionPersonalisation detentionEngagementTeamEndTheAppealProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamEndTheAppealProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("recordAdjournmentDetailsProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> recordAdjournmentDetailsProductionDetainedNotificationGenerator(
+        DetentionEngagementTeamRecordAdjournmentDetailsProductionPersonalisation detentionEngagementTeamRecordAdjournmentDetailsProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamRecordAdjournmentDetailsProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("decideAnApplicationProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationProductionDetainedNotificationGenerator(
+        DetentionEngagementTeamDecideAnApplicationProductionPersonalisation detentionEngagementTeamDecideAnApplicationProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamDecideAnApplicationProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("adjournHearingWithoutDateProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> adjournHearingWithoutDateProductionDetainedNotificationGenerator(
+        DetentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation detentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }                  
+                  
     @Bean("editCaseListingProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> editCaseListingProductionDetainedNotificationGenerator(
             DetentionEngagementTeamEditCaseListingProductionPersonalisation detentionEngagementTeamEditCaseListingProductionPersonalisation,
