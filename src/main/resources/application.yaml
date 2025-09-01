@@ -120,7 +120,9 @@ govnotify:
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
         letter:
           inTime:
-            withExemption: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+            withExemption:
+              legallyRepresented: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+              aip: f161d437-d17d-421b-8118-48ec0f2c5446
             withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
@@ -497,6 +499,8 @@ govnotify:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
       detentionEngagementTeam:
         email: cef6603c-b5dd-4e63-b438-1e93644bad5c
+        production:
+          email: 73985562-43a4-417e-b201-175e8bf36682
     endAppealBeforeListing:
       legalRep:
         email: 7eb6e398-c85d-483f-9ff7-6ec7a3e17651
@@ -543,12 +547,12 @@ govnotify:
       detentionEngagementTeam:
         email: e4c5547d-7cff-49f5-b47c-7861343db513
       legalRep:
-        email: 33f23316-8283-4968-90a0-aac4a1faebce
+        email: 283d8b0e-daff-49f5-9b71-2f33eca08b99
       homeOffice:
-        email: c2f68250-3930-4284-aa08-54c94a37da70
+        email: 0ac82b78-a356-4ac4-8e8a-d7b83b94c841
       appellant:
-        email: fae42617-155a-4a46-b7be-9829e91bb17c
-        sms: 24e64431-0888-427e-b2e9-9a4cbb0d79d4
+        email: e5e9a82f-aba6-4d3c-a7e6-2005dad1b30f
+        sms: 77fa2da9-7bd5-4c8f-ba6b-7229ec7563ba
     hearingBundleFailed:
       caseOfficer:
         email: 640fa369-bdba-4dc7-93e4-bfb56e7e25bc
@@ -752,6 +756,8 @@ govnotify:
         email: 8a87904f-5a67-4a79-a56a-8450b7829f9b
       detentionEngagementTeam:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
@@ -768,6 +774,9 @@ govnotify:
         email: 153cab2a-0533-424f-bcaf-41b916d06321
       adminOfficer:
         email: 6c007d84-488d-498a-9d53-85ba5e008d31
+      detentionEngagementTeam:
+        production:
+          email: f97b30d5-c41c-4b85-a18c-8d4efa1a0f3e
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1021,6 +1030,8 @@ govnotify:
         otherParty:
           detentionEngagementTeam:
             email: 47289033-479f-45e2-aa17-2c785378733a
+            production:
+              email: c0d82e4c-6f72-4fb9-b002-1d47e1fc5115
           appellant:
             beforeListing:
               email: 22cee197-d6a9-4a9f-bdc9-a8aec8ab36f8
@@ -1116,6 +1127,9 @@ govnotify:
       appellant:
         email: 7d2b7690-12d4-43b4-8793-cd505d8033a9
         sms: 318452c5-230f-4471-aafa-847accf5f20b
+        detention:
+          other:
+            letter: cd39c5ce-ef8b-4de6-ad00-65116da2820b
     requestFeeRemission:
       legalRep:
         email: 7c336cc1-ff6e-431a-afc1-812c9bf1b883
@@ -1433,7 +1447,7 @@ govnotify:
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
-        letter: fb14e920-9834-4d11-91b7-bb38e7dfbb1e
+        letter: 24c26241-2fad-494b-91a8-f4dcb26e4e28
     recordRefundDecision:
       appellant:
         approved:
@@ -1915,6 +1929,7 @@ adminEmailAddresses:
   birmingham: ${IA_ADMIN_BIRMINGHAM_EMAIL:birminghamedets@example.com}
   harmondsworth: ${IA_ADMIN_HARMONDSWORTH_EMAIL:harmondsworthedets@example.com}
   yarlsWood: ${IA_ADMIN_YARLSWOOD_EMAIL:yarlswoodedets@example.com}
+  iacNationalVirtual: ${IA_ADMIN_VIRTUAL_REGION_EMAIL:virtual-region-admin-default@example.com}
 
 hearingCentreEmailAddresses:
   bradford: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford@example.com}
@@ -1937,6 +1952,7 @@ hearingCentreEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:hc-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:hc-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif@example.com}
+  iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:hc-virtualregion-default@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
@@ -1971,6 +1987,7 @@ homeOfficeEmailAddresses:
   nthTyneMags: ${IA_HOME_OFFICE_NTH_TYNE_MAGS_EMAIL:ho-nth-tyne-mags@example.com}
   leedsMags: ${IA_HOME_OFFICE_LEEDS_MAGS_EMAIL:ho-leeds-mags@example.com}
   alloaSherrif: ${IA_HOME_OFFICE_ALLOA_SHERRIF_EMAIL:ho-alloa-sherrif@example.com}
+  iacNationalVirtual: ${IA_HOME_OFFICE_VIRTUAL_REGION_EMAIL:ho-virtual-region-default@example.com}
 
 
 homeOfficeFtpaEmailAddresses:
@@ -1999,6 +2016,7 @@ hearingCentreTelephoneNumber:
   hattonCross: ${IA_HEARING_CENTRE_HATTON_CROSS_TELEPHONE:0300 123 1711}
   glasgow: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
   belfast: ${IA_HEARING_CENTRE_GLASGOW_TELEPHONE:0300 123 1711}
+  iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_TELEPHONE:0300 123 1711}
 
 endAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_END_APPEAL_EMAIL:ho-end-appeal@example.com}
 allowedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_ALLOWED_APPEAL_EMAIL:ho-allowed-appeal@example.com}
