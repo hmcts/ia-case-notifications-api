@@ -4391,6 +4391,30 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealSubmittedInTimeWithFeeToPayEmailInternalNotificationHandler(
+        @Qualifier("appealSubmittedInTimeWithFeeToPayEmailInternalNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                YesOrNo isOutOfTime =
+                    asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isOutOfTime.equals(YesOrNo.NO)
+                    && !isFeeExemptAppeal(asylumCase)
+                    && isInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {

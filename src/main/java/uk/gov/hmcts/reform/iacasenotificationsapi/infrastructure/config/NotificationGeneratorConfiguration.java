@@ -4058,6 +4058,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appealSubmittedInTimeWithFeeToPayEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> appealSubmittedInTimeWithFeeToPayEmailInternalNotificationHandler(
+        DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation appealSubmittedInTimeWithFeeToPayPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(appealSubmittedInTimeWithFeeToPayPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
