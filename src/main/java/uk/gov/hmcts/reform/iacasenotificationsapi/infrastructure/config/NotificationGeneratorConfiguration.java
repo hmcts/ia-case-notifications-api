@@ -4045,6 +4045,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appealSubmittedLateWithExemptionEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> appealSubmittedLateWithExemptionEmailInternalNotificationHandler(
+        DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation appealSubmittedLateWithExemptionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(appealSubmittedLateWithExemptionPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
