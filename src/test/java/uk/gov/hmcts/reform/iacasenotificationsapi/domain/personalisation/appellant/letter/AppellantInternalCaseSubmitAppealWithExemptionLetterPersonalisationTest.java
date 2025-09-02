@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 
 import java.util.Map;
 import java.util.Optional;
@@ -38,20 +39,21 @@ class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
     @Mock
     AddressUk address;
 
-    private Long ccdCaseId = 12345L;
-    private String letterTemplateId = "someLetterTemplateId";
-    private String appealReferenceNumber = "someAppealRefNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String addressLine1 = "50";
-    private String addressLine2 = "Building name";
-    private String addressLine3 = "Street name";
-    private String postCode = "XX1 2YY";
-    private NationalityFieldValue oocCountry = mock(NationalityFieldValue.class);
-    private String postTown = "Town name";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "example@example.com";
+    private final Long ccdCaseId = 12345L;
+    private final String letterLrTemplateId = "someLrLetterTemplateId";
+    private final String letterAipTemplateId = "someAipLetterTemplateId";
+    private final String appealReferenceNumber = "someAppealRefNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String addressLine1 = "50";
+    private final String addressLine2 = "Building name";
+    private final String addressLine3 = "Street name";
+    private final String postCode = "XX1 2YY";
+    private final NationalityFieldValue oocCountry = mock(NationalityFieldValue.class);
+    private final String postTown = "Town name";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "example@example.com";
 
     private AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation;
 
@@ -75,13 +77,27 @@ class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
         when(address.getPostTown()).thenReturn(Optional.of(postTown));
 
         appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation = new AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation(
-            letterTemplateId,
+            letterLrTemplateId,
+            letterAipTemplateId,
             customerServicesProvider);
     }
 
     @Test
+    void should_return_given_aip_template_id() {
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(letterAipTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_given_lr_template_id() {
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertEquals(letterLrTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId());
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.empty());
+        assertEquals(letterLrTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

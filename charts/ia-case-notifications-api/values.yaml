@@ -14,6 +14,7 @@ java:
     OPEN_ID_IDAM_URL: "https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net"
     S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     IA_HOME_OFFICE_GOV_NOTIFY_ENABLED: "true"
+
   keyVaults:
     ia:
       resourceGroup: ia
@@ -40,6 +41,8 @@ java:
           alias: IA_ADMIN_HARMONDSWORTH_EMAIL
         - name: admin-office-yarlswood-email
           alias: IA_ADMIN_YARLSWOOD_EMAIL
+        - name: admin-office-virtual-region-email
+          alias: IA_ADMIN_VIRTUAL_REGION_EMAIL
         - name: hearing-centre-bradford-email
           alias: IA_HEARING_CENTRE_BRADFORD_EMAIL
         - name: hearing-centre-manchester-email
@@ -56,6 +59,8 @@ java:
           alias: IA_HEARING_CENTRE_HATTON_CROSS_EMAIL
         - name: hearing-centre-glasgow-email
           alias: IA_HEARING_CENTRE_GLASGOW_EMAIL
+        - name: hearing-centre-virtual-region-email
+          alias: IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL
         - name: home-office-bradford-email
           alias: IA_HOME_OFFICE_BRADFORD_EMAIL
         - name: home-office-manchester-email
@@ -72,6 +77,8 @@ java:
           alias: IA_HOME_OFFICE_HATTON_CROSS_EMAIL
         - name: home-office-glasgow-email
           alias: IA_HOME_OFFICE_GLASGOW_EMAIL
+        - name: home-office-virtual-region-email
+          alias: IA_HOME_OFFICE_VIRTUAL_REGION_EMAIL
         - name: home-office-apc-email
           alias: IA_HOME_OFFICE_APC_EMAIL
         - name: ftpa-home-office-bradford-email
@@ -99,6 +106,8 @@ java:
         - name: hearing-centre-hatton-cross-telephone
           alias: IA_HEARING_CENTRE_HATTON_CROSS_TELEPHONE
         - name: hearing-centre-glasgow-telephone
+          alias: IA_HEARING_CENTRE_GLASGOW_TELEPHONE
+        - name: hearing-centre-virtual-region-telephone
           alias: IA_HEARING_CENTRE_GLASGOW_TELEPHONE
         - name: respondent-evidence-direction-email
           alias: IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL
