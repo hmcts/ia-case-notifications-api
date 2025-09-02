@@ -5970,6 +5970,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalEndAppealDetainedOtherAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> internalEndAppealDetainedOtherAppellantLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.END_APPEAL;
+
+        return singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseAdjournedWithoutTimeLetterNotificationGenerator(
         AppellantInternalCaseAdjournedWithoutDatePersonalisation internalCaseAdjournedWithoutDatePersonalisation,
