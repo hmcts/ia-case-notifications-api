@@ -6640,7 +6640,28 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == LIST_CASE
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> digitalCaseListedAppellantDetainedInOtherLetterNotificationHandler(
+        @Qualifier("internalCaseListedAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == LIST_CASE
+                       && !isInternalCase(asylumCase)
+                       && isDetainedInFacilityType(asylumCase, OTHER)
                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
