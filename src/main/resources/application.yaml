@@ -154,6 +154,8 @@ govnotify:
           email: c6fb22e2-c3fa-41f6-a4de-b9f6a55aa417
         nonAdaInTimeDetainedOnly:
           email: 0e187f28-ee4e-4ef0-8218-0f922c433bf4
+      detentionEngagementTeam:
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     sendPaymentReminder:
       appellant:
         email: a1628213-dfd3-4f91-a66e-b8d3961947a9
@@ -1254,11 +1256,13 @@ govnotify:
     markAppealAsDetained:
       legalRep:
         email: 1baf79a7-1a7f-4a2c-9a03-eb5ec6ff7a49
+        letter: 40b7c42a-a378-46b5-a636-3add03e3a1c8
       homeOffice:
         email: 7b972a67-7665-4b3b-a64c-ed74d1ca8d55
     removeDetentionStatus:
       legalRep:
         email: 23669485-ffb0-4ae2-9d36-26c437a57e92
+        letter: 753d6f8c-19b1-498e-b80a-868be0c33e3f
       homeOffice:
         email: 3891dcd8-a9d1-47e8-8b87-3da77789a913
       appellant:
