@@ -4391,6 +4391,34 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealSubmittedInTimeWithFeeToPayEmailInternalNotificationHandler(
+        @Qualifier("appealSubmittedInTimeWithFeeToPayEmailInternalNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                YesOrNo isOutOfTime =
+                    asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
+
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .map(status -> status == PAYMENT_PENDING)
+                        .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isOutOfTime.equals(YesOrNo.NO)
+                    && isPaymentPending
+                    && isInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
@@ -6988,7 +7016,7 @@ public class NotificationHandlerConfiguration {
                         && (!isAppellantInDetention(asylumCase)
                             || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                                 && isDetainedInFacilityType(asylumCase, OTHER))
-                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))   
+                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
                        && isApproved
                        && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();
