@@ -7037,7 +7037,7 @@ public class NotificationHandlerConfiguration {
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isInternalCase(asylumCase)
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
+                    && (!isAppellantInDetention(asylumCase) || (isDetainedInFacilityType(asylumCase, OTHER) && hasBeenSubmittedByAppellantInternalCase(asylumCase)))
                     && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             }, notificationGenerators
         );
