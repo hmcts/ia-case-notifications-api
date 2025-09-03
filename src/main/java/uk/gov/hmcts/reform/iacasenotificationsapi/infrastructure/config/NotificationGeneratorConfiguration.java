@@ -6036,7 +6036,7 @@ public class NotificationGeneratorConfiguration {
         DocumentDownloadClient documentDownloadClient
     ) {
 
-        DocumentTag documentTag = DocumentTag.END_APPEAL;
+        DocumentTag documentTag = DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE;
 
         return singletonList(
             new PrecompiledLetterNotificationGenerator(
