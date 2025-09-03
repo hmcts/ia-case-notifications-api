@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -28,18 +29,18 @@ public class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisa
 
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
-    private final DetEmailService detEmailService;
+    private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation(
             @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
-            DetEmailService detEmailService,
+            DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
-        this.detEmailService = detEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
@@ -50,7 +51,7 @@ public class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisa
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return detEmailService.getRecipientsList(asylumCase);
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
