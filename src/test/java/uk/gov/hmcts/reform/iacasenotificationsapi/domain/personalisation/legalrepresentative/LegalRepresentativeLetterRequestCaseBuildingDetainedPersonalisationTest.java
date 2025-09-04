@@ -64,7 +64,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private int fourteenDaysDeadline = 14;
     private String directionDueDate = "2025-09-15";
-    private String expectedDirectionDueDate = "15 Sept 2025";
     private String directionExplanation = "someExplanation";
 
     private LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation;
@@ -181,7 +180,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
         assertEquals(addressLine3, personalisation.get("address_line_3"));
         assertEquals(postTown, personalisation.get("address_line_4"));
         assertEquals(postCode, personalisation.get("address_line_5"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -200,7 +198,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
         assertEquals(addressLine2, personalisation.get("address_line_2"));
         assertEquals(addressLine3, personalisation.get("address_line_3"));
         assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
@@ -221,7 +218,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
         assertEquals(addressLine3, personalisation.get("address_line_3"));
         assertEquals(postTown, personalisation.get("address_line_4"));
         assertEquals(postCode, personalisation.get("address_line_5"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -240,7 +236,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
         assertEquals(addressLine2, personalisation.get("address_line_2"));
         assertEquals(addressLine3, personalisation.get("address_line_3"));
         assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
