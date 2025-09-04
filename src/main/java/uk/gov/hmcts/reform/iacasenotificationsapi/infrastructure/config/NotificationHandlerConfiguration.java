@@ -1452,8 +1452,8 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.REQUEST_CASE_BUILDING
                 && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
-                && !isAppellantInDetention(callback.getCaseDetails().getCaseData())
-                && !isRepJourney(callback.getCaseDetails().getCaseData()),
+                && !isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+//                && !isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
