@@ -80,7 +80,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -109,18 +108,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
     }
 
     @Test
-    void should_return_address_in_correct_format_appellant_in_country() {
-        appellantInCountryDataSetup();
-        assertTrue(legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
-    }
-
-    @Test
-    void should_return_address_in_correct_format_appellant_out_of_country() {
-        appellantOutOfCountryDataSetup();
-        assertTrue(legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
-    }
-
-    @Test
     void should_return_address_in_correct_format_legalRep_in_country() {
         legalRepInCountryDataSetup();
         assertTrue(legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
@@ -130,18 +117,6 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
     void should_return_address_in_correct_format_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
         assertTrue(legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
-    }
-
-    @Test
-    void should_throw_exception_when_cannot_find_address_for_appellant_in_country() {
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-
-
-        assertThatThrownBy(() -> legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("appellantAddress is not present");
     }
 
     @Test
