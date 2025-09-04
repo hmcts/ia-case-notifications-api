@@ -1453,7 +1453,7 @@ public class NotificationHandlerConfiguration {
                 && callback.getEvent() == Event.REQUEST_CASE_BUILDING
                 && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
                 && !isAppellantInDetention(callback.getCaseDetails().getCaseData()),
-//                && !isRepJourney(callback.getCaseDetails().getCaseData()),
+                //&& !isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
