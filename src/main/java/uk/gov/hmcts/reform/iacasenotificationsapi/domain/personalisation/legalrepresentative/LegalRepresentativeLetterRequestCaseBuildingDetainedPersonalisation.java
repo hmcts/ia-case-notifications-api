@@ -48,8 +48,7 @@ public class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
-                getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
+        return getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override

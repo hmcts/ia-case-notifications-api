@@ -16,6 +16,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Tinsley House",
+          "legalRepHasAddress": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
