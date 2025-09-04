@@ -51,7 +51,7 @@ public class AppellantRemoveRepresentationDetainedOtherPersonalisation implement
         requireNonNull(callback, "callback must not be null");
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-        AsylumCase asylumCaseBefore = callback.getCaseDetailsBefore().get().getCaseData();
+        AsylumCase asylumCaseBefore = callback.getCaseDetailsBefore().orElse(callback.getCaseDetails()).getCaseData();
 
         final String dateOfBirth = asylumCase
                 .read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH,String.class)
