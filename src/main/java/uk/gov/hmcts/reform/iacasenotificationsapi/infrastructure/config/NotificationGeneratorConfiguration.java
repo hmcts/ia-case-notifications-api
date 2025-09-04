@@ -112,6 +112,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeMarkAppealAsDetainedLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeRemoveDetentionStatusLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAdjournHearingWithoutDatePersonalisation;
@@ -4058,6 +4060,36 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appealSubmittedLateWithExemptionEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> appealSubmittedLateWithExemptionEmailInternalNotificationHandler(
+        DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation appealSubmittedLateWithExemptionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(appealSubmittedLateWithExemptionPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("appealSubmittedInTimeWithFeeToPayEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> appealSubmittedInTimeWithFeeToPayEmailInternalNotificationHandler(
+        DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation appealSubmittedInTimeWithFeeToPayPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(appealSubmittedInTimeWithFeeToPayPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
@@ -4650,6 +4682,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("removeDetentionStatusLegalRepManualNotificationGenerator")
+    public List<NotificationGenerator> removeDetentionStatusLegalRepManualNotificationGenerator(
+        LegalRepresentativeRemoveDetentionStatusLetterPersonalisation legalRepresentativeRemoveDetentionStatusLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeRemoveDetentionStatusLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("removeDetentionStatusInternalNotificationGenerator")
     public List<NotificationGenerator> removeDetentionStatusInternalNotificationGenerator(
         AppellantRemoveDetainedStatusPersonalisationEmail appellantRemoveDetainedStatusPersonalisationEmail,
@@ -4689,6 +4739,24 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(
                     legalRepresentativeMarkAppealAsDetainedPersonalisation,
                     homeOfficeMarkAppealAsDetainedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("markAsDetainedLegalRepManualNotificationGenerator")
+    public List<NotificationGenerator> markAsDetainedLegalRepManualNotificationGenerator(
+        LegalRepresentativeMarkAppealAsDetainedLetterPersonalisation legalRepresentativeMarkAppealAsDetainedLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeMarkAppealAsDetainedLetterPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
