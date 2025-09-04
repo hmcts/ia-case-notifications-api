@@ -762,6 +762,8 @@ govnotify:
         letter: 9843c2a6-c416-4c19-9a73-563487bab982
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+      appellant:
+        letter: 9843c2a6-c416-4c19-9a73-563487bab982
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
