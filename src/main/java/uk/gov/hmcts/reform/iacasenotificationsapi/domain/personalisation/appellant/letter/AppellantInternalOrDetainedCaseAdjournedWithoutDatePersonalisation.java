@@ -49,7 +49,7 @@ public class AppellantInternalOrDetainedCaseAdjournedWithoutDatePersonalisation 
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_AJOURN_HEARING_WITHOUT_DATE_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_CASE_AJOURN_WITHOUT_DATE_APPELLANT_LETTER";
     }
 
     @Override

@@ -73,7 +73,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1354_AJOURN_HEARING_WITHOUT_DATE_APPELLANT_LETTER",
+            "id": "1354_INTERNAL_CASE_AJOURN_WITHOUT_DATE_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
