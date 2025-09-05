@@ -486,10 +486,4 @@ public class AsylumCaseUtils {
             .read(APPEAL_TYPE, AppealType.class)
             .map(type -> type == RP || type == DC).orElse(false);
     }
-
-    public static boolean isLegalRepCaseForDetainedAppellant(AsylumCase asylumCase) {
-        return (!isInternalCase(asylumCase)) && isAppellantInDetention(asylumCase);
-    }
-
-
 }
