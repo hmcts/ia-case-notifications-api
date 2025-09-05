@@ -5888,6 +5888,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalSubmitAppealOnTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealOnTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationG(
+        DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation detentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("internalSubmitAppealOutOfTimeWithRemissionAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithRemissionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation,
