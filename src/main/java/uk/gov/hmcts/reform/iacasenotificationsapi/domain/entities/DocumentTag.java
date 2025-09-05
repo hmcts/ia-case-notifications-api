@@ -41,6 +41,7 @@ public enum DocumentTag {
     HEARING_BUNDLE_READY_LETTER("hearingBundleReadyLetter"),
     INTERNAL_DET_DECISION_AND_REASONS_LETTER("internalDetDecisionAndReasonsLetter"),
     INTERNAL_APPEAL_SUBMISSION("internalAppealSubmission"),
+    INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION("internalDetainedPrisonIrcAppealSubmission"),
     INTERNAL_REQUEST_RESPONDENT_EVIDENCE_LETTER("internalRequestRespondentEvidenceLetter"),
     INTERNAL_END_APPEAL_AUTOMATICALLY("internalEndAppealAutomatically"),
     INTERNAL_APPEAL_FEE_DUE_LETTER("internalAppealFeeDueLetter"),
