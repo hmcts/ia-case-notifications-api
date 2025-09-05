@@ -4030,21 +4030,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("recordOfTimeDecisionCanProceedEmailInternalNotificationGenerator")
-    public List<NotificationGenerator> recordOfTimeDecisionCanProceedEmailInternalNotificationHandler(
-        DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("appealSubmittedLateWithExemptionEmailInternalNotificationGenerator")
     public List<NotificationGenerator> appealSubmittedLateWithExemptionEmailInternalNotificationHandler(
         DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation appealSubmittedLateWithExemptionPersonalisation,

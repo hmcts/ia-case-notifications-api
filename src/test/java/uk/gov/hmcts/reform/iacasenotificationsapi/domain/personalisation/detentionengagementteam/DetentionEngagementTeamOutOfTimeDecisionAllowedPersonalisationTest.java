@@ -76,7 +76,7 @@ class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_LATE_WITH_EXEMPTION",
+        assertEquals(caseId + "_INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER",
                 detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getReferenceId(caseId));
     }
 

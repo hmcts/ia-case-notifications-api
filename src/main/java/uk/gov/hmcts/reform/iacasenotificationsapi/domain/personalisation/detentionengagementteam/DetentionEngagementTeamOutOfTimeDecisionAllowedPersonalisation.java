@@ -47,7 +47,7 @@ public class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation impl
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_LATE_WITH_EXEMPTION";
+        return caseId + "_INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER";
     }
 
     @Override
