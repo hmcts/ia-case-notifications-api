@@ -14,6 +14,7 @@ java:
     OPEN_ID_IDAM_URL: "https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net"
     S2S_URL: "http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
     IA_HOME_OFFICE_GOV_NOTIFY_ENABLED: "true"
+
   keyVaults:
     ia:
       resourceGroup: ia

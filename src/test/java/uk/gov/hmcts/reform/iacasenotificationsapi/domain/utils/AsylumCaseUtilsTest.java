@@ -1,17 +1,54 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.lenient;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDENDUM_EVIDENCE_DOCUMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_HAS_FIXED_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPLIES_FOR_COSTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ARIA_MIGRATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_EJP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.RESPOND_TO_COSTS_LIST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.calculateFeeDifference;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.generateAppellantPinIfNotPresent;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAddendumEvidenceDocuments;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicantAndRespondent;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicationById;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppealListed;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAriaMigrated;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInFacilityType;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInOneOfFacilityTypes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,7 +67,19 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplyForCosts;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DynamicList;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Value;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -516,18 +565,69 @@ public class AsylumCaseUtilsTest {
         assertTrue(isDetainedInFacilityType(asylumCase, facilityType));
     }
 
-    @ParameterizedTest
-    @CsvSource({
-        "YES, YES, false",
-        "YES, NO, false",
-        "NO, YES, true",
-        "NO, NO, false"
-    })
-    void should_return_correct_value_for_legal_rep_case_for_detained_appellant_combinations(YesOrNo isAdmin, YesOrNo isDetained, boolean expected) {
-        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
-        lenient().when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
+    @Test
+    void should_return_true_when_appellant_is_detained_in_any_of_the_specified_facility_types() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
 
-        assertEquals(expected, isLegalRepCaseForDetainedAppellant(asylumCase));
+        assertTrue(
+            isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON, DetentionFacility.OTHER));
+    }
+
+    @Test
+    void should_return_true_when_appellant_is_detained_in_first_specified_facility_type() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+
+        assertTrue(
+            isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
+    void should_return_false_when_appellant_is_detained_in_none_of_the_specified_facility_types() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+
+        assertFalse(
+            isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
+    void should_return_false_when_appellant_is_not_detained_for_facility_types_check() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertFalse(
+            isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON, DetentionFacility.OTHER));
+    }
+
+    @Test
+    void should_return_false_when_no_facility_types_specified() {
+        assertFalse(isDetainedInOneOfFacilityTypes(asylumCase));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"RP", "DC"})
+    void should_return_true_for_fee_exempt_appeal_types(String appealTypeValue) {
+        AppealType appealType = AppealType.valueOf(appealTypeValue);
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(appealType));
+
+        assertTrue(isFeeExemptAppeal(asylumCase));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"PA", "EA", "HU", "EU", "AG"})
+    void should_return_false_for_non_fee_exempt_appeal_types(String appealTypeValue) {
+        AppealType appealType = AppealType.valueOf(appealTypeValue);
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(appealType));
+
+        assertFalse(isFeeExemptAppeal(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_appeal_type_is_not_present() {
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.empty());
+
+        assertFalse(isFeeExemptAppeal(asylumCase));
     }
 
 }

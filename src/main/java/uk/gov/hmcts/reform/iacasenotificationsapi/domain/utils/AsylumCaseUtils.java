@@ -18,6 +18,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
@@ -479,8 +481,9 @@ public class AsylumCaseUtils {
         return detentionFacility.equals(facilityType.getValue());
     }
 
-    public static boolean isLegalRepCaseForDetainedAppellant(AsylumCase asylumCase) {
-        return (!isInternalCase(asylumCase)) && isAppellantInDetention(asylumCase);
+    public static Boolean isFeeExemptAppeal(AsylumCase asylumCase) {
+        return asylumCase
+            .read(APPEAL_TYPE, AppealType.class)
+            .map(type -> type == RP || type == DC).orElse(false);
     }
-
 }
