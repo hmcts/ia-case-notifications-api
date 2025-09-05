@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -110,6 +111,7 @@ class DetentionEngagementTeamEndTheAppealProductionPersonalisationTest {
     void should_return_personalisation_with_all_data() {
         when(callback.getCaseDetailsBefore()).thenReturn(Optional.of(caseDetailsBefore));
         when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+        when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of("2025-07-31T12:00"));
 
         when(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore)).thenReturn("2025-07-31T12:00");
         when(dateTimeExtractor.extractHearingDate("2025-07-31T12:00")).thenReturn("31-07-2025");
@@ -138,6 +140,42 @@ class DetentionEngagementTeamEndTheAppealProductionPersonalisationTest {
                 .containsEntry("hearingDate", "31-07-2025")
                 .containsEntry("hearingTime", "12:00")
                 .containsEntry("hearingCentreAddress", "Hearing Address")
+                .containsEntry("detentionBuilding", "Building X");
+    }
+
+    @Test
+    void should_return_personalisation_with_missing_hearing_date() {
+        when(callback.getCaseDetailsBefore()).thenReturn(Optional.of(caseDetailsBefore));
+        when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+        when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.empty());
+
+        when(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore)).thenReturn("2025-07-31T12:00");
+        when(dateTimeExtractor.extractHearingDate("2025-07-31T12:00")).thenReturn("31-07-2025");
+        when(dateTimeExtractor.extractHearingTime("2025-07-31T12:00")).thenReturn("12:00");
+        when(hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore)).thenReturn("Hearing Address");
+
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(PRISON));
+        when(asylumCase.read(PRISON_NOMS, PrisonNomsNumber.class)).thenReturn(Optional.of(prisonNomsNumber));
+        when(prisonNomsNumber.getPrison()).thenReturn("PR123");
+
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("REF001"));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("HO001"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("Jane"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
+        when(asylumCase.read(DETENTION_BUILDING, String.class)).thenReturn(Optional.of("Building X"));
+
+        Map<String, String> result = personalisation.getPersonalisation(callback);
+
+        assertThat(result)
+                .containsEntry("subjectPrefix", SUBJECT_PREFIX)
+                .containsEntry("appealReferenceNumber", "REF001")
+                .containsEntry("homeOfficeReferenceNumber", "HO001")
+                .containsEntry("appellantGivenNames", "Jane")
+                .containsEntry("appellantFamilyName", "Doe")
+                .containsEntry("nomsRef", "NOMS Ref: PR123")
+                .containsEntry("hearingDate", "")
+                .containsEntry("hearingTime", "")
+                .containsEntry("hearingCentreAddress", "")
                 .containsEntry("detentionBuilding", "Building X");
     }
 
