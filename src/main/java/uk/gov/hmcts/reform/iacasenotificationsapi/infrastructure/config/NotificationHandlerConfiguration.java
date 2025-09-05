@@ -4418,6 +4418,29 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedOutOfTimeDecisionAllowedEmailNotificationHandler(
+            @Qualifier("internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    OutOfTimeDecisionType outOfTimeDecisionType =
+                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
+                                    .orElse(UNKNOWN);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
+                            && outOfTimeDecisionType == OutOfTimeDecisionType.APPROVED
+                            && isInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
