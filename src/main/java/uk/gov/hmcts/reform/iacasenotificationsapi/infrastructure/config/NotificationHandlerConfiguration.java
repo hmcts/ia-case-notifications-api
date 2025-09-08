@@ -6710,6 +6710,9 @@ public class NotificationHandlerConfiguration {
                        && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
                        && isInternalCase(asylumCase)
                        && !isAppellantInDetention(asylumCase)
+                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER))
+                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
@@ -6826,8 +6829,11 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_REMISSION_DECISION
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER)
-                       && isApproved
+                        && (!isAppellantInDetention(asylumCase)
+                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER))
+                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
+                        && isApproved
                        && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();
             },
