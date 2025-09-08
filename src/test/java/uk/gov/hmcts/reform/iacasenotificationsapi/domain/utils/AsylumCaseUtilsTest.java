@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDENDUM_EVIDENCE_DOCUMENTS;
@@ -45,7 +44,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInOneOfFacilityTypes;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepCaseForDetainedAppellant;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation;
@@ -498,6 +496,32 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
+    void should_return_true_when_appellant_is_in_detention_and_one_of_facility_types_matches() {
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+
+        assertTrue(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertTrue(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
+    void should_return_false_when_appellant_is_in_detention_and_none_of_facility_types_matches() {
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
+    void should_return_false_when_appellant_is_not_in_detention_for_multipole_facility_types() {
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+    }
+
+    @Test
     void should_return_true_when_appellant_is_in_detention_and_facility_type_matches() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
@@ -539,20 +563,6 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(detentionFacilityValue));
         
         assertTrue(isDetainedInFacilityType(asylumCase, facilityType));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-        "YES, YES, false",
-        "YES, NO, false",
-        "NO, YES, true",
-        "NO, NO, false"
-    })
-    void should_return_correct_value_for_legal_rep_case_for_detained_appellant_combinations(YesOrNo isAdmin, YesOrNo isDetained, boolean expected) {
-        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
-        lenient().when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
-
-        assertEquals(expected, isLegalRepCaseForDetainedAppellant(asylumCase));
     }
 
     @Test
