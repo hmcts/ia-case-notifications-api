@@ -233,7 +233,9 @@ govnotify:
           email: e1461a4c-9437-4ec9-8aae-dc3d1134e3b0
           sms: f84000c5-7ba0-4bd9-bb64-437f4b51b878
 
-
+    outOfTimeDecisionAllowed:
+      detentionEngagementTeam:
+        email: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     decisionHomeOfficeNotificationFailed:
       caseOfficer:
         email: 2f33706d-6de1-4617-8393-ac99306b85d5
