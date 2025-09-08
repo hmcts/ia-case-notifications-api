@@ -4372,6 +4372,35 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealSubmittedLateWithFeeEmailInternalNotificationHandler(
+        @Qualifier("appealSubmittedLateWithFeeEmailInternalNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                YesOrNo isOutOfTime =
+                    asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
+
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                    .map(status -> status == PAYMENT_PENDING)
+                    .orElse(false);
+
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isOutOfTime.equals(YesOrNo.YES)
+                    && isPaymentPending
+                    && isInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
@@ -5427,30 +5456,6 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && !isAcceleratedDetainedAppeal(asylumCase)
                             && isAppellantInDetention(asylumCase);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealFeeDueNotificationHandler(
-            @Qualifier("internalDetainedAppealFeeDueNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    boolean isNoRemission = asylumCase.read(REMISSION_TYPE, RemissionType.class)
-                            .map(remission -> remission == RemissionType.NO_REMISSION).orElse(false);
-
-                    return callback.getEvent() == Event.SUBMIT_APPEAL
-                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getCaseDetails().getState().equals(State.PENDING_PAYMENT)
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
-                            && !isAcceleratedDetainedAppeal(asylumCase)
-                            && isNoRemission
-                            && isEaHuEuAppeal(asylumCase);
                 }, notificationGenerators
         );
     }
