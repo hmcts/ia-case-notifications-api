@@ -4281,30 +4281,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCanProceedEmailInternalNotificationHandler(
-            @Qualifier("recordOfTimeDecisionCanProceedEmailInternalNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    OutOfTimeDecisionType outOfTimeDecisionType =
-                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
-                                    .orElse(UNKNOWN);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_OUT_OF_TIME_DECISION
-                            && outOfTimeDecisionType == OutOfTimeDecisionType.APPROVED
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
-                            && !isAcceleratedDetainedAppeal(asylumCase);
-
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealSubmittedLateWithExemptionEmailInternalNotificationHandler(
         @Qualifier("appealSubmittedLateWithExemptionEmailInternalNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -4378,6 +4354,29 @@ public class NotificationHandlerConfiguration {
                         && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                         && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedOutOfTimeDecisionAllowedEmailNotificationHandler(
+            @Qualifier("internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    OutOfTimeDecisionType outOfTimeDecisionType =
+                            asylumCase.read(OUT_OF_TIME_DECISION_TYPE, OutOfTimeDecisionType.class)
+                                    .orElse(UNKNOWN);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
+                            && outOfTimeDecisionType == OutOfTimeDecisionType.APPROVED
+                            && isInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+
+                }, notificationGenerators
         );
     }
 
