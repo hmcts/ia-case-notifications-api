@@ -66,22 +66,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAriaMigrated;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInFacilityType;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInOneOfFacilityTypes;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -4367,6 +4352,31 @@ public class NotificationHandlerConfiguration {
                     && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                     && !isAcceleratedDetainedAppeal(asylumCase);
 
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealRemissionGrantedInTimeEmailNotificationHandler(
+        @Qualifier("internalDetainedAppealRemissionGrantedInTimeLetter")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean submissionInTime = asylumCase
+                        .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                        .map(yesOrNo -> yesOrNo == YesOrNo.NO)
+                        .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                        && isInternalCase(asylumCase) && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && submissionInTime
+                        && isRemissionApproved(asylumCase)
+                        && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                        && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
         );
     }

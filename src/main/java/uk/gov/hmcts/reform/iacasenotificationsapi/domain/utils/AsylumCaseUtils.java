@@ -78,6 +78,12 @@ public class AsylumCaseUtils {
         return asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
     }
 
+    public static boolean isRemissionApproved(AsylumCase asylumCase) {
+        Optional<RemissionDecision> remissionDecision = asylumCase.read(REMISSION_DECISION, RemissionDecision.class);
+
+        return remissionDecision.isPresent() && remissionDecision.get().equals(RemissionDecision.APPROVED);
+    }
+
     public static Optional<FtpaDecisionOutcomeType> getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
         Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
                 .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
