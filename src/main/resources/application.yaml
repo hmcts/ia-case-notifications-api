@@ -1336,7 +1336,8 @@ govnotify:
           email: 03cb8170-abe1-42f1-9cfd-8526e1635294
     editCaseListing:
       detentionEngagementTeam:
-        email: 698cccf8-99b5-4360-b2b5-8aedb9667e21
+#        698cccf8-99b5-4360-b2b5-8aedb9667e21
+        email: 3d3ca452-5de2-4674-bc4f-ea4d98386a36
         production:
           email: 1b456113-9c31-41be-9fe8-dc2f2f9a10b1
     hoFtpaDecided:
