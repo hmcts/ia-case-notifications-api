@@ -1701,7 +1701,8 @@ public class NotificationHandlerConfiguration {
                 && callback.getEvent() == Event.EDIT_CASE_LISTING
                 && isRepJourney(callback.getCaseDetails().getCaseData())
                 && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
-            && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                && (!isAppellantInDetention(callback.getCaseDetails().getCaseData()) || (isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),PRISON, IRC)) && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData()))
+                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -1730,6 +1731,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.EDIT_CASE_LISTING
                 && !isInternalCase(callback.getCaseDetails().getCaseData())
+                && (!isAppellantInDetention(callback.getCaseDetails().getCaseData()) || (isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),PRISON, IRC)) && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData()))
                 && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
