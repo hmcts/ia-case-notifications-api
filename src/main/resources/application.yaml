@@ -2085,7 +2085,7 @@ customerServices:
   emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
   internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
-  appealIaEmailAddress: ${IA_CUSTOMER_SERVICES_APPEAL_EMAIL:test1@test.com}
+  appealIaEmailAddress: ${IA_CUSTOMER_SERVICES_APPEAL_EMAIL:AppealIA@Justice.gov.uk}
 
 appellantDaysToWait:
   afterSubmission: 28
