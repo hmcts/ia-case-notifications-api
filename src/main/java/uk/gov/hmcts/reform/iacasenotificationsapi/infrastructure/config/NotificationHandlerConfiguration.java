@@ -1402,9 +1402,13 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                && !(isInternalCase(asylumCase) && isAppellantInDetention(asylumCase))
+                && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+            },
             notificationGenerators
         );
     }
