@@ -1398,7 +1398,8 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCaseBuildingNotificationHandler(
-        @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -1415,15 +1416,19 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCaseBuildingLegalRepNotInternalDetainedNotificationHandler(
-        @Qualifier("requestCaseBuildingLegalRepDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("requestCaseBuildingLegalRepDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                && !isInternalCase(callback.getCaseDetails().getCaseData())
-                && isRepJourney(callback.getCaseDetails().getCaseData())
-                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                    && !isInternalCase(asylumCase)
+                    && isRepJourney(asylumCase)
+                    && isAppellantInDetention(asylumCase);
+            },
             notificationGenerators
         );
     }
