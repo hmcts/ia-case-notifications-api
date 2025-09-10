@@ -135,6 +135,8 @@ java:
           alias: IA_CUSTOMER_SERVICES_TELEPHONE
         - name: customer-services-email
           alias: IA_CUSTOMER_SERVICES_EMAIL
+        - name: customer-services-appeal-email
+          alias: IA_CUSTOMER_SERVICES_APPEAL_EMAIL
         - name: system-username
           alias: IA_SYSTEM_USERNAME
         - name: system-password
