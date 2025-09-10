@@ -1,5 +1,6 @@
 {
   "description": "RIA-7547 Send appeal submitted notification to DET(Internal, non-Ada, In-time)",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -12,7 +13,7 @@
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
-          "isAcceleratedDetainedAppeal": "Yes",
+          "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "submissionOutOfTime": "No",
           "notificationAttachmentDocuments": [
