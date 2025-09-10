@@ -42,6 +42,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.CcdEve
 @Slf4j
 class MultipleNotificationsTest extends SpringBootIntegrationTest implements WithServiceAuthStub {
 
+    private static final String ABOUT_TO_START_PATH = "/asylum/ccdAboutToStart";
     private static final String ABOUT_TO_SUBMIT_PATH = "/asylum/ccdAboutToSubmit";
 
     @MockBean
@@ -50,7 +51,7 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
     @MockBean
     private GovNotifyNotificationSender notificationSender;
 
-    private final List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
+    private List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
         Lists.newArrayList(
             new HashMap.SimpleImmutableEntry<>(Event.SUBMIT_APPEAL, "_APPEAL_SUBMITTED_CASE_OFFICER"),
             new HashMap.SimpleImmutableEntry<>(Event.UPLOAD_RESPONDENT_EVIDENCE, "_BUILD_CASE_DIRECTION"),
@@ -61,7 +62,7 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
             new HashMap.SimpleImmutableEntry<>(Event.REQUEST_RESPONDENT_REVIEW, "_RESPONDENT_REVIEW_DIRECTION"));
 
     @Test
-    @WithMockUser(authorities = {"caseworker-ia", "tribunal-caseworker"})
+    @WithMockUser(authorities = {"caseworker-ia", "caseworker-ia-caseofficer"})
     void should_send_multiple_notifications_of_same_type_with_unique_reference_numbers() {
 
         addServiceAuthStub(server);
@@ -120,6 +121,8 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
         final String json = objectMapper.writeValueAsString(callback);
 
         final PreSubmitCallbackResponse<AsylumCase> callbackResponse = doPost(
+            ABOUT_TO_SUBMIT_PATH,
+            MediaType.APPLICATION_JSON,
             json,
             HttpStatus.OK.value()
         );
@@ -146,17 +149,19 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
     }
 
     private PreSubmitCallbackResponse<AsylumCase> doPost(
+        final String path,
+        final MediaType mediaType,
         final String content,
         final int expectedHttpStatus
     ) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(post(MultipleNotificationsTest.ABOUT_TO_SUBMIT_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(content))
+        MvcResult mvcResult = mockMvc.perform(post(path)
+            .contentType(mediaType).content(content))
             .andExpect(status().is(expectedHttpStatus)).andReturn();
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 
         return objectMapper.readValue(jsonResponse,
-            new TypeReference<>() {
+            new TypeReference<PreSubmitCallbackResponse<AsylumCase>>() {
             }
         );
 
@@ -184,6 +189,8 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
                 directionTag = DirectionTag.RESPONDENT_EVIDENCE;
                 break;
             case SEND_DIRECTION:
+                party = Parties.RESPONDENT;
+                directionTag = DirectionTag.NONE;
                 break;
             case REQUEST_RESPONDENT_REVIEW:
                 directionTag = DirectionTag.RESPONDENT_REVIEW;

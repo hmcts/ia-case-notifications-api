@@ -42,7 +42,7 @@
                 "date":"{$TODAY}",
                 "decision":"Refused",
                 "state":"prepareForHearing",
-                "applicantRole":"ctsc",
+                "applicantRole":"caseworker-ia-admofficer",
                 "decisionReason":"No Reason given",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Judge"
