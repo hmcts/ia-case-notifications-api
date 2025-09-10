@@ -1329,6 +1329,7 @@ govnotify:
           email: acf67e1c-ec14-48f5-aed9-61a703831a5c
         afterListing:
           email: 59bbd0ed-2b2f-432b-8111-0cb4b9ea9a7d
+        letter: aa1c859d-d5c8-4576-bbb9-7bf46c1f54a2
     appealDecided:
       detentionTeam:
         dismissed:

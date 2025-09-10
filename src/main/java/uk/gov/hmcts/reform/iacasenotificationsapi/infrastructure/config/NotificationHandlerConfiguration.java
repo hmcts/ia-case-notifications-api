@@ -5330,6 +5330,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateDetentionLocationLegalRepManualNotificationHandler(
+            @Qualifier("updateDetentionLocationLegalRepManualNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.UPDATE_DETENTION_LOCATION
+                                && isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationHandler(
         @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
