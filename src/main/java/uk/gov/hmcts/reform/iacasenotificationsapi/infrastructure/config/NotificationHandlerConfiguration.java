@@ -1401,13 +1401,13 @@ public class NotificationHandlerConfiguration {
         @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-            {
+            (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                && !(isInternalCase(asylumCase) && isAppellantInDetention(asylumCase))
-                && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                    && !(isInternalCase(asylumCase) && isAppellantInDetention(asylumCase))
+                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
