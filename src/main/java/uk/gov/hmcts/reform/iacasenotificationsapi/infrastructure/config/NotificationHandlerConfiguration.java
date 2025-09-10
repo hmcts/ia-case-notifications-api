@@ -5475,7 +5475,7 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.SUBMIT_APPEAL
                             && isInternalCase(asylumCase)
                             && isAppealOnTime
-                            && !isAcceleratedDetainedAppeal(asylumCase)
+                            && isAcceleratedDetainedAppeal(asylumCase) // New notification has superseded this one, left here in case of future usage
                             && isAppellantInDetention(asylumCase);
                 }, notificationGenerators
         );
