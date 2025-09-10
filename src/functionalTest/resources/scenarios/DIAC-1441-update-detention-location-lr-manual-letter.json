@@ -11,7 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appellantInDetention": "Yes",
-          "appellantsRepresentation": "Yes",
+          "appellantsRepresentation": "No",
           "isAdmin": "Yes",
           "journeyType": null,
           "legalRepHasAddress": "Yes",
@@ -35,7 +35,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appellantInDetention": "Yes",
-          "appellantsRepresentation": "Yes",
+          "appellantsRepresentation": "No",
           "isAdmin": "Yes",
           "journeyType": null,
           "legalRepHasAddress": "Yes",
@@ -64,7 +64,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "appellantInDetention": "Yes",
-        "appellantsRepresentation": "Yes",
+        "appellantsRepresentation": "No",
         "isAdmin": "Yes",
         "journeyType": null,
         "detentionFacility": "prison",
