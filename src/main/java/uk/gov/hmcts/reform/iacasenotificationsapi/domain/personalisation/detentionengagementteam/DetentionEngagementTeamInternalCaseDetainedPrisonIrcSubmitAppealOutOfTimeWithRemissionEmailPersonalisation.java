@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
 @Slf4j
@@ -75,7 +75,7 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOut
 
     private JSONObject getAppealSubmittedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal Appeal submission Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal Appeal submission Letter in compatible format");

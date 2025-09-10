@@ -1,17 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.getDocumentWithMetadata;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Collections;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +16,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailS
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.getDocumentWithMetadata;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATION_ATTACHMENT_DOCUMENTS;
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisationTest {
@@ -37,7 +42,7 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
     private static final long CASE_ID = 1234L;
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     DocumentWithMetadata internalAppealSubmissionDoc = getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION);
+            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER);
     IdValue<DocumentWithMetadata> appealSubmittedBundle = new IdValue<>("1", internalAppealSubmissionDoc);
 
     @Mock
@@ -72,7 +77,7 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
     void should_return_recipients_list() {
         String detentionEmailAddress = "detention-email@example.com";
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEmailAddress);
-        
+
         assertThat(personalisation.getRecipientsList(asylumCase))
                 .isEqualTo(Collections.singleton(detentionEmailAddress));
     }
@@ -125,10 +130,10 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
     @Test
     void should_throw_exception_when_appeal_submission_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        
+
         assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetainedPrisonIrcAppealSubmission document not available");
+                .hasMessage("internalDetainedOutOfTimeRemissionIrcPrisonLetter document not available");
     }
 
     @Test
