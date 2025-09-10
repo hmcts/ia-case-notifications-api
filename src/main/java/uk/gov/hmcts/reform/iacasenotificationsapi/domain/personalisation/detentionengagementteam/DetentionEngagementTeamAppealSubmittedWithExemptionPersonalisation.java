@@ -32,7 +32,7 @@ public class DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation 
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation(
-            @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String detentionEngagementTeamTemplateId,
+            @Value("${govnotify.template.detained-iaft-email-template}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
