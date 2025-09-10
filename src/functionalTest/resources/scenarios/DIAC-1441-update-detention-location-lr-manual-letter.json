@@ -28,8 +28,7 @@
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Derwentside",
-          "isAcceleratedDetainedAppeal": "No",
-          "appellantInDetention": "Yes"
+          "isAcceleratedDetainedAppeal": "No"
         }
       },
       "caseData": {
@@ -53,8 +52,7 @@
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "detentionFacility": "prison",
           "prisonName": "Aylesbury",
-          "isAcceleratedDetainedAppeal": "No",
-          "appellantInDetention": "Yes"
+          "isAcceleratedDetainedAppeal": "No"
         }
       }
     }
