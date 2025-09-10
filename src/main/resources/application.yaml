@@ -536,6 +536,7 @@ govnotify:
         email: 190f9645-8fe7-4f28-a854-62fb312622ec
         detention:
           email: 7fd3785b-082e-4b91-bed4-aff3d95fce52
+          letter: fa0b0ba8-4cf6-419c-b829-1f5c3a1430df
       detentionEngagementTeam:
         ada:
           email: 9609ebb3-cb45-4322-ba2c-f3d2a162f7b6
@@ -2085,6 +2086,7 @@ customerServices:
   emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
   internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
+  appealIaEmailAddress: ${IA_CUSTOMER_SERVICES_APPEAL_EMAIL:AppealIA@Justice.gov.uk}
 
 appellantDaysToWait:
   afterSubmission: 28

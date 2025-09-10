@@ -1,5 +1,6 @@
 {
   "description": "RIA-7152 Send request case building notification to DET (Colnbrook).",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",

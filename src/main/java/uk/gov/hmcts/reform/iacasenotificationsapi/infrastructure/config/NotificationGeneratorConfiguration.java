@@ -1439,6 +1439,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("requestCaseBuildingLegalRepInternalDetainedNotificationGenerator")
+    public List<NotificationGenerator> requestCaseBuildingLegalRepInternalDetainedNotificationGenerator(
+            LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new LetterNotificationGenerator(
+                        newArrayList(legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("requestResponseReviewNotificationGenerator")
     public List<NotificationGenerator> requestResponseReviewNotificationGenerator(
         LegalRepresentativeRequestResponseReviewPersonalisation legalRepresentativeRequestResponseReviewPersonalisation,
