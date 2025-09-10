@@ -25,7 +25,7 @@
                 "date":"",
                 "decision":"Granted",
                 "state":"appealSubmitted",
-                "applicantRole": "ctsc",
+                "applicantRole": "caseworker-ia-admofficer",
                 "decisionReason":"No Reason given",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Judge"
@@ -68,7 +68,7 @@
               "date":"",
               "decision":"Granted",
               "state":"appealSubmitted",
-              "applicantRole":"ctsc",
+              "applicantRole":"caseworker-ia-admofficer",
               "decisionReason":"No Reason given",
               "decisionDate":"{$TODAY}",
               "decisionMaker": "Judge"

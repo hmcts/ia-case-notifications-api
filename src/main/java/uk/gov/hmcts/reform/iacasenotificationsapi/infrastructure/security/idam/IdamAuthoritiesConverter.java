@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.IdamService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.IdamApi;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.idam.UserInfo;
 
 @Component
@@ -22,9 +23,12 @@ public class IdamAuthoritiesConverter implements Converter<Jwt, Collection<Grant
 
     static final String TOKEN_NAME = "tokenName";
 
+    private final IdamApi idamApi;
     private final IdamService idamService;
 
-    public IdamAuthoritiesConverter(IdamService idamService) {
+    public IdamAuthoritiesConverter(IdamApi idamApi,
+        IdamService idamService) {
+        this.idamApi = idamApi;
         this.idamService = idamService;
     }
 

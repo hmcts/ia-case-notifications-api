@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.IdamService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.IdamApi;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.idam.UserInfo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.AccessTokenProvider;
 
@@ -25,6 +26,8 @@ public class IdamUserDetailsProviderTest {
 
     @Mock
     private AccessTokenProvider accessTokenProvider;
+    @Mock
+    private IdamApi idamApi;
     @Mock
     private IdamService idamService;
     private IdamUserDetailsProvider idamUserDetailsProvider;
@@ -35,6 +38,7 @@ public class IdamUserDetailsProviderTest {
         idamUserDetailsProvider =
             new IdamUserDetailsProvider(
                 accessTokenProvider,
+                idamApi,
                 idamService
             );
     }
@@ -83,7 +87,7 @@ public class IdamUserDetailsProviderTest {
         UserInfo userInfo = new UserInfo(
             "john.doe@example.com",
             null,
-            List.of("role"),
+            Arrays.asList("role"),
             "John Doe",
             "John",
             "Doe"
@@ -129,7 +133,7 @@ public class IdamUserDetailsProviderTest {
         UserInfo userInfo = new UserInfo(
             null,
             "some-id",
-            List.of("role"),
+            Arrays.asList("role"),
             "John Doe",
             "John",
             "Doe"
@@ -152,7 +156,7 @@ public class IdamUserDetailsProviderTest {
         UserInfo userInfo = new UserInfo(
             "john.doe@example.com",
             "some-id",
-            List.of("role"),
+            Arrays.asList("role"),
             "John Doe",
             null,
             "Doe"
@@ -175,7 +179,7 @@ public class IdamUserDetailsProviderTest {
         UserInfo userInfo = new UserInfo(
             "john.doe@example.com",
             "some-id",
-            List.of("role"),
+            Arrays.asList("role"),
             "John Doe",
             "John",
             null
