@@ -1407,7 +1407,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                    && !(isInternalCase(asylumCase) && isAppellantInDetention(asylumCase))
+                    && (isInternalCase(asylumCase) || !isAppellantInDetention(asylumCase))
                     && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators
