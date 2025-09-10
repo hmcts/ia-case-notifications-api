@@ -1398,18 +1398,14 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCaseBuildingNotificationHandler(
-        @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
+        @Qualifier("requestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                    && (isInternalCase(asylumCase) || !isAppellantInDetention(asylumCase))
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
-            },
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
+                && !isAppellantInDetention(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -1430,6 +1426,21 @@ public class NotificationHandlerConfiguration {
                     && isAppellantInDetention(asylumCase);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> requestCaseBuildingLegalRepInternalDetainedNotificationHandler(
+            @Qualifier("requestCaseBuildingLegalRepInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.REQUEST_CASE_BUILDING
+                                && isInternalCase(callback.getCaseDetails().getCaseData())
+                                && isRepJourney(callback.getCaseDetails().getCaseData())
+                                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
         );
     }
 
