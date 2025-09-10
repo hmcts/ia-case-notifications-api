@@ -10,6 +10,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "isAdmin": "No",
+          "journeyType": "rep",
           "appellantInDetention": "Yes",
           "directions": [
             {
