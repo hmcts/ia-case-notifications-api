@@ -6438,7 +6438,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && (isInternalCase(asylumCase) && hasBeenSubmittedByAppellantInternalCase(asylumCase))
+                       && isInternalCase(asylumCase)
                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                        && isRemissionPresent
                        && isSubmissionOutOfTime(asylumCase);
