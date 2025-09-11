@@ -1,5 +1,6 @@
 {
   "description": "RIA-7547 Send appeal submitted notification to DET(Internal, non-Ada, In-time)",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
