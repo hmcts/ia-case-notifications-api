@@ -7,31 +7,6 @@
       "id": 1441,
       "eventId": "updateDetentionLocation",
       "state": "appealSubmitted",
-      "caseDataBefore": {
-        "template": "minimal-appeal-submitted.json",
-        "replacements": {
-          "appellantInDetention": "Yes",
-          "appellantsRepresentation": "No",
-          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "isAdmin": "Yes",
-          "journeyType": null,
-          "legalRepHasAddress": "Yes",
-          "legalRepAddressUK": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NW7 1BJ",
-            "PostTown": "London",
-            "AddressLine1": "Flat 1",
-            "AddressLine2": "Tamarind Court",
-            "AddressLine3": "1 Sanders Lane"
-          },
-          "notificationsSent": [],
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "detentionFacility": "immigrationRemovalCentre",
-          "ircName": "Derwentside",
-          "isAcceleratedDetainedAppeal": "No"
-        }
-      },
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
@@ -54,6 +29,7 @@
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "detentionFacility": "prison",
           "prisonName": "Aylesbury",
+          "previousDetentionLocation": "Colnbrook",
           "isAcceleratedDetainedAppeal": "No"
         }
       }
