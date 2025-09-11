@@ -4075,6 +4075,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedAppealHoUploadBundle")
+    public List<NotificationGenerator> internalDetainedAppealRemissionGrantedInTimeLetter(
+            DetentionEngagementTeamHoUploadBundlePersonalisation detentionEngagementTeamHoUploadBundlePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamHoUploadBundlePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator")
     public List<NotificationGenerator> internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator(
             DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation personalisation,

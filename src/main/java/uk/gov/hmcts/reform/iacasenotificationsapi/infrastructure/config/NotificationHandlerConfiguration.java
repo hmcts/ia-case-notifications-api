@@ -4336,6 +4336,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealRemissionGrantedInTimeEmailNotificationHandler(
+            @Qualifier("internalDetainedAppealHoUploadBundle")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealSubmittedInTimeWithFeeToPayEmailInternalNotificationHandler(
         @Qualifier("appealSubmittedInTimeWithFeeToPayEmailInternalNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

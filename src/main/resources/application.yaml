@@ -294,6 +294,8 @@ govnotify:
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
+        appellant:
+          email: 26ed296f-7b8f-47b1-a8eb-96e4720aa1e5
     markAppealAsPaid:
       detentionEngagementTeam:
         email:
