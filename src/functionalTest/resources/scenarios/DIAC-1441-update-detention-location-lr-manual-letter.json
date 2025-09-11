@@ -60,17 +60,6 @@
           "AddressLine2": "Tamarind Court",
           "AddressLine3": "1 Sanders Lane"
         },
-        "caseNotes": [
-          {
-            "id": "1",
-            "value": {
-              "caseNoteSubject": "Updated detention location",
-              "caseNoteDescription": "The detention location for this appellant has changed from: \n\nDerwentside IRC\n\n to: \n\nAylesbury Prison",
-              "user": "{$IA_USER_PREFIX}Case Officer",
-              "dateAdded": "{$TODAY}"
-            }
-          }
-        ],
         "notificationsSent": [
           {
             "id": "1441_UPDATE_DETENTION_LOCATION_LEGAL_REPRESENTATIVE_LETTER",
