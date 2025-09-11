@@ -1049,7 +1049,6 @@ public class NotificationGeneratorConfiguration {
     }
     @Bean("respondentReviewAipIrcPrisonNotificationGenerator")
     public List<NotificationGenerator> respondentReviewAipIrcPrisonNotificationGenerator(
-            RespondentDirectionPersonalisation respondentDirectionPersonalisation,
             DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation detentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {

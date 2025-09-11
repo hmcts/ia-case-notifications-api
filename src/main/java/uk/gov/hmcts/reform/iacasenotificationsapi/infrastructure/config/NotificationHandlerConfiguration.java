@@ -1062,7 +1062,7 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) ->
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
-                                && (isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),PRISON, IRC, OTHER))
+                                && (isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),PRISON, IRC))
                                 && isAipJourney(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
