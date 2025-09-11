@@ -42,9 +42,9 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return asylumCase.read(APPEAL_TYPE, AppealType.class)
-                .filter(type -> type == PA)
-                .flatMap(paType -> asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+        return asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE, AppealType.class)
+                .filter(type -> type == uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.PA)
+                .flatMap(paType -> asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
                         .filter(payType -> "payLater".equals(payType) || "payOffline".equals(payType))
                         .map(payType -> refundRequestedAipPaPayLaterEmailTemplateId)
                 )
