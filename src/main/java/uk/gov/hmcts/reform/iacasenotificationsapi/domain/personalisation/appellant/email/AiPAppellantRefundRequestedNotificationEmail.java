@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @Service
 public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotificationPersonalisation {
     private final String refundRequestedAipEmailTemplateId;
+    private final String refundRequestedAipPaPayLaterEmailTemplateId
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
@@ -24,6 +25,7 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
 
     public AiPAppellantRefundRequestedNotificationEmail(
         @Value("${govnotify.template.requestFeeRemission.appellant.email}") String refundRequestedAipEmailTemplateId,
+        @Value("${govnotify.template.requestFeeRemission.appellant.paPayLater.email}") String refundRequestedAipPaPayLaterEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
         RecipientsFinder recipientsFinder,
@@ -37,9 +39,21 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
 
     }
 
-
     @Override
     public String getTemplateId() {
+        boolean isPaAppealType = asylumCase
+                .read(APPEAL_TYPE, AppealType.class)
+                .map(type -> type == PA)
+                .orElse(false);
+
+        String payType = asylumCase
+                .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                .orElseThrow(() -> new IllegalStateException("Pay type not found"));
+
+        if (isPaAppealType && ("payLater".equals(payType) || "payOffline".equals(payType))) {
+            return refundRequestedAipPaPayLaterEmailTemplateId;
+        }
+
         return refundRequestedAipEmailTemplateId;
     }
 

@@ -1106,6 +1106,9 @@ govnotify:
       appellant:
         email: 8ff8227a-82c2-4a36-8469-2e948ed50c50
         sms: e2a60fc6-da83-4d39-94fc-2fc7c3a610a2
+        paPayLater:
+          email: 0023652f-6abf-48dd-98e7-562270dc6d46
+          sms: fd26acb0-d425-4e62-adee-617c9d1889e2
     nocRequestDecision:
       legalRep:
         beforeListing:
