@@ -1053,6 +1053,7 @@ public class NotificationHandlerConfiguration {
             notificationGenerators
         );
     }
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> respondentReviewAipDetainedIrcPrisonNotificationHandler(
             @Qualifier("respondentReviewAipIrcPrisonNotificationGenerator") List<NotificationGenerator> notificationGenerators) {

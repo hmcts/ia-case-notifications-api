@@ -1047,6 +1047,7 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
     @Bean("respondentReviewAipIrcPrisonNotificationGenerator")
     public List<NotificationGenerator> respondentReviewAipIrcPrisonNotificationGenerator(
             DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation detentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation,
