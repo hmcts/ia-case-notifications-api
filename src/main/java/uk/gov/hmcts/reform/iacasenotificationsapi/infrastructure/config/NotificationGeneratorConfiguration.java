@@ -1050,17 +1050,13 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewAipIrcPrisonNotificationGenerator")
     public List<NotificationGenerator> respondentReviewAipIrcPrisonNotificationGenerator(
             RespondentDirectionPersonalisation respondentDirectionPersonalisation,
-            AppellantRespondentReviewPersonalisationEmail appellantRespondentReviewPersonalisationEmail,
+            DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation detentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
-        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-                ? newArrayList(respondentDirectionPersonalisation, appellantRespondentReviewPersonalisationEmail)
-                : newArrayList(appellantRespondentReviewPersonalisationEmail);
-
         return singletonList(
-                new EmailNotificationGenerator(
-                        personalisations,
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
