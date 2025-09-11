@@ -91,7 +91,7 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_UPDATE_DETENTION_LOCATION_LEGAL_REPRESENTATIVE_LETTER",
+        assertEquals(ccdCaseId + "_UPDATE_DETENTION_LOCATION_LETTER_LEGAL_REPRESENTATIVE",
                 legalRepresentativeLetterUpdateDetentionLocationPersonalisation.getReferenceId(ccdCaseId));
     }
 

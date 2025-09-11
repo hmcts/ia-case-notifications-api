@@ -47,7 +47,7 @@ public class LegalRepresentativeLetterUpdateDetentionLocationPersonalisation imp
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_UPDATE_DETENTION_LOCATION_LEGAL_REPRESENTATIVE_LETTER";
+        return caseId + "_UPDATE_DETENTION_LOCATION_LETTER_LEGAL_REPRESENTATIVE";
     }
 
     @Override
