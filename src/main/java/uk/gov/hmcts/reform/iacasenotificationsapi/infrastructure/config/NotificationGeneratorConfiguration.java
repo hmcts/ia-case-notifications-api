@@ -1047,6 +1047,25 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+    @Bean("respondentReviewAipIrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> respondentReviewAipIrcPrisonNotificationGenerator(
+            RespondentDirectionPersonalisation respondentDirectionPersonalisation,
+            AppellantRespondentReviewPersonalisationEmail appellantRespondentReviewPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+                ? newArrayList(respondentDirectionPersonalisation, appellantRespondentReviewPersonalisationEmail)
+                : newArrayList(appellantRespondentReviewPersonalisationEmail);
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        personalisations,
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
     @Bean("respondentReviewInternalNotificationGenerator")
     public List<NotificationGenerator> respondentReviewInternalNotificationGenerator(

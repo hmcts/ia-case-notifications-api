@@ -25,31 +25,31 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Service
 @Slf4j
-public class DetentionEngagementTeamRespondentReviewPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String detentionEngagementTeamRespondentReviewTemplateId;
+    private final String detentionEngagementTeamRespondentReviewAipIrcPrisonTemplateId;
     private final DetEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
-    public DetentionEngagementTeamRespondentReviewPersonalisation(
-        @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
-        @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-        DetEmailService detEmailService,
-        DocumentDownloadClient documentDownloadClient
+    public DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation(
+            @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
+            @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
+            DetEmailService detEmailService,
+            DocumentDownloadClient documentDownloadClient
     ) {
-        this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
+        this.detentionEngagementTeamRespondentReviewAipIrcPrisonTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
     @Override
     public String getTemplateId() {
-        return detentionEngagementTeamRespondentReviewTemplateId;
+        return detentionEngagementTeamRespondentReviewAipIrcPrisonTemplateId;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW_AIP_IRC_PRISON";
+        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
     }
 
     @Override
@@ -66,14 +66,14 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap
-            .<String, Object>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? "ADA" : "IAFT")
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("documentLink", getRespondentReviewLetterJsonObject(asylumCase))
-            .build();
+                .<String, Object>builder()
+                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? "ADA" : "IAFT")
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("documentLink", getRespondentReviewLetterJsonObject(asylumCase))
+                .build();
 
     }
 

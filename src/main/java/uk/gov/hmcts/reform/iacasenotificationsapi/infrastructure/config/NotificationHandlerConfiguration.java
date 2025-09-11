@@ -1053,6 +1053,20 @@ public class NotificationHandlerConfiguration {
             notificationGenerators
         );
     }
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> respondentReviewAipDetainedIrcPrisonNotificationHandler(
+            @Qualifier("respondentReviewAipIrcPrisonNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        // RIA-3631 - requestRespondentReview
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
+                                && (isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),PRISON, IRC, OTHER))
+                                && isAipJourney(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> respondentReviewInternalNotificationHandler(
