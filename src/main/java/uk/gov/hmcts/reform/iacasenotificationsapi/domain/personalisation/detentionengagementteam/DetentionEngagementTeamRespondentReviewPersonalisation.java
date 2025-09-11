@@ -54,11 +54,11 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (!isAppellantInDetention(asylumCase)) {
-            return Collections.emptySet();
+        if (isAppellantInDetention(asylumCase)) {
+            return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
         }
-
-        return detEmailService.getRecipientsList(asylumCase);
+        else
+            return Collections.emptySet();
     }
 
     @Override

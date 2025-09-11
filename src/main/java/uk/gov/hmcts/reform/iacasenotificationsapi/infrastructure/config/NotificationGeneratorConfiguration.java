@@ -1048,15 +1048,15 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("respondentReviewAipIrcPrisonNotificationGenerator")
-    public List<NotificationGenerator> respondentReviewAipIrcPrisonNotificationGenerator(
-            DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation detentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation,
+    @Bean("respondentReviewInternalIrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> respondentReviewInternalIrcPrisonNotificationGenerator(
+            DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return singletonList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(detentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation),
+                        newArrayList(detentionEngagementTeamRespondentReviewPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
@@ -1066,16 +1066,11 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewInternalNotificationGenerator")
     public List<NotificationGenerator> respondentReviewInternalNotificationGenerator(
         RespondentDirectionPersonalisation respondentDirectionPersonalisation,
-        DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamRespondentReviewPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
+
             new EmailNotificationGenerator(
                 newArrayList(respondentDirectionPersonalisation),
                 notificationSender,
