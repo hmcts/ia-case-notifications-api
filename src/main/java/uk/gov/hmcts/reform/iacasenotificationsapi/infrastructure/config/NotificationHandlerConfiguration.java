@@ -2759,7 +2759,7 @@ public class NotificationHandlerConfiguration {
                     && isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
                     FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                        && !isInternalCase(asylumCase)
-                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                       && hasThisNotificationNotSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT")
                     && !isAipJourney(asylumCase);
             },
@@ -2902,7 +2902,7 @@ public class NotificationHandlerConfiguration {
                        && !isInternalCase(asylumCase)
                        && isReheardDecisionOutcome
                        && !isDlrmSetAsideEnabled(asylumCase)
-                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                       && hasThisNotificationNotSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT");
             },
             notificationGenerators
@@ -2975,7 +2975,7 @@ public class NotificationHandlerConfiguration {
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                        && !isInternalCase(asylumCase)
                        && !isAipJourney(asylumCase)
-                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                       && hasThisNotificationNotSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
             },
             notificationGenerators
@@ -3158,7 +3158,7 @@ public class NotificationHandlerConfiguration {
                     && isGrantedOrPartiallyGrantedOutcome(asylumCase,
                     FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                     && !isInternalCase(asylumCase)
-                    && !hasThisNotificationSentBefore(asylumCase, callback,
+                    && hasThisNotificationNotSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT")
                     && !isAipJourney(asylumCase);
             },
@@ -3277,7 +3277,7 @@ public class NotificationHandlerConfiguration {
                        || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
                        && !isInternalCase(asylumCase)
                        && isReheardDecisionOutcome
-                       && !hasThisNotificationSentBefore(asylumCase, callback,
+                       && hasThisNotificationNotSentBefore(asylumCase, callback,
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
             },
             notificationGenerators
