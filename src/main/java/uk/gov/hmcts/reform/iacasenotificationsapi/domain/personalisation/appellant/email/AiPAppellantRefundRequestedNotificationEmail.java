@@ -33,6 +33,7 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
         SystemDateProvider systemDateProvider
     ) {
         this.refundRequestedAipEmailTemplateId = refundRequestedAipEmailTemplateId;
+        this.refundRequestedAipPaPayLaterEmailTemplateId = refundRequestedAipPaPayLaterEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
