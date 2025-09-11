@@ -40,21 +40,14 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
     }
 
     @Override
-    public String getTemplateId() {
-        boolean isPaAppealType = asylumCase
-                .read(APPEAL_TYPE, AppealType.class)
-                .map(type -> type == PA)
-                .orElse(false);
-
-        String payType = asylumCase
-                .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                .orElseThrow(() -> new IllegalStateException("Pay type not found"));
-
-        if (isPaAppealType && ("payLater".equals(payType) || "payOffline".equals(payType))) {
-            return refundRequestedAipPaPayLaterEmailTemplateId;
-        }
-
-        return refundRequestedAipEmailTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return asylumCase.read(APPEAL_TYPE, AppealType.class)
+                .filter(type -> type == PA)
+                .flatMap(paType -> asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                        .filter(payType -> "payLater".equals(payType) || "payOffline".equals(payType))
+                        .map(payType -> refundRequestedAipPaPayLaterEmailTemplateId)
+                )
+                .orElse(refundRequestedAipEmailTemplateId);
     }
 
     @Override
