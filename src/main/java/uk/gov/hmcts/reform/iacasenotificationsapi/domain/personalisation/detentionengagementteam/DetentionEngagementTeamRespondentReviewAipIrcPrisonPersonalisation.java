@@ -49,7 +49,7 @@ public class DetentionEngagementTeamRespondentReviewAipIrcPrisonPersonalisation 
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
+        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW_AIP_IRC_PRISON";
     }
 
     @Override
