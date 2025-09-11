@@ -67,7 +67,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
 
         aipAppellantRefundRequestedNotificationEmail = new AiPAppellantRefundRequestedNotificationEmail(
             refundRequestedAipEmailTemplateId,
-            refundRequestedAipPaPayLaterEmailTemplateId
+            refundRequestedAipPaPayLaterEmailTemplateId,
             iaAipFrontendUrl,
             14,
             recipientsFinder,
