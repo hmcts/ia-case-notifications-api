@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -60,12 +59,11 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
             return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
-        }
-        else if (isDetainedInFacilityType(asylumCase, DetentionFacility.PRISON)) {
+        } else if (isDetainedInFacilityType(asylumCase, DetentionFacility.PRISON)) {
             return Collections.singleton(ctscEmailAddress);
-        }
-        else
+        } else {
             return Collections.emptySet();
+        }
     }
 
     @Override
