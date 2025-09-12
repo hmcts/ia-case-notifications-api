@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.reflect.IReflectionWorld;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,6 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
     public DetentionEngagementTeamRespondentReviewPersonalisation(
             @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
             @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-            @Value("${ctscEmailAddress}") String ctscEmailAddress,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
