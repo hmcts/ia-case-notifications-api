@@ -41,6 +41,7 @@ public enum DocumentTag {
     HEARING_BUNDLE_READY_LETTER("hearingBundleReadyLetter"),
     INTERNAL_DET_DECISION_AND_REASONS_LETTER("internalDetDecisionAndReasonsLetter"),
     INTERNAL_APPEAL_SUBMISSION("internalAppealSubmission"),
+    INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION("internalDetainedPrisonIrcAppealSubmission"),
     INTERNAL_REQUEST_RESPONDENT_EVIDENCE_LETTER("internalRequestRespondentEvidenceLetter"),
     INTERNAL_END_APPEAL_AUTOMATICALLY("internalEndAppealAutomatically"),
     INTERNAL_APPEAL_FEE_DUE_LETTER("internalAppealFeeDueLetter"),
@@ -78,6 +79,11 @@ public enum DocumentTag {
     INTERNAL_CASE_LISTED_LETTER_BUNDLE("internalCaseListedLetterBundle"),
     INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE("internalEditCaseListingLetterBundle"),
     INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE("internalOutOfTimeDecisionLetter"),
+    INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_EXEMPTION_LETTER("internalDetainedAppealSubmittedOutOfTimeWithExemptionLetter"),
+    INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter"),
+    INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER("internalDetainedAppealSubmittedOutOfTimeWithFeeLetter"),
+    INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER("internalDetainedOutOfTimeDecisionAllowedLetter"),
+    INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER("internalDetainedOutOfTimeRemissionIrcPrisonLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

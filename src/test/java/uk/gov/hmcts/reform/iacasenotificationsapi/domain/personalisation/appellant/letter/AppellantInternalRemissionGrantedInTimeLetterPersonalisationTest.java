@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_DECISION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Nationality.ES;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,11 +27,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
+class AppellantInternalRemissionGrantedInTimeLetterPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -44,8 +42,6 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     AddressUk address;
-    @Mock
-    SystemDateProvider systemDateProvider;
 
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
@@ -65,9 +61,8 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
     private String oocAddressLine2 = "Madrid";
     private String oocAddressLine3 = "28003";
     private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-    private int daysAfterRemissionDecision = 10;
 
-    private AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation;
+    private AppellantInternalRemissionGrantedInTimeLetterPersonalisation appellantInternalRemissionGrantedInTImeLetterPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -93,45 +88,41 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.COUNTRY_GOV_UK_OOC_ADMIN_J, NationalityFieldValue.class)).thenReturn(Optional.of(oocAddressCountry));
         when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
         when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
-        final String dueDate = LocalDate.now().plusDays(daysAfterRemissionDecision).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-        when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
 
-        appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation = new AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation(
+        appellantInternalRemissionGrantedInTImeLetterPersonalisation = new AppellantInternalRemissionGrantedInTimeLetterPersonalisation(
             letterTemplateId,
-            daysAfterRemissionDecision,
-            customerServicesProvider,
-            systemDateProvider
+            customerServicesProvider
         );
     }
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(letterTemplateId, appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getTemplateId());
+        assertEquals(letterTemplateId, appellantInternalRemissionGrantedInTImeLetterPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(ccdCaseId + "_INTERNAL_REMISSION_GRANTED_OOT_APPELLANT_LETTER",
-            appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getReferenceId(ccdCaseId));
+        assertEquals(ccdCaseId + "_INTERNAL_REMISSION_GRANTED_IN_TIME_APPELLANT_LETTER",
+            appellantInternalRemissionGrantedInTImeLetterPersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
     void should_return_appellant_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalRemissionGrantedInTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalRemissionGrantedInTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
     void should_return_legalRep_address_in_correct_format() {
         legalRepInCountryDataSetup();
-        assertTrue(appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalRemissionGrantedInTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
 
         legalRepOutOfCountryDataSetup();
-        assertTrue(appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Townname_Spain"));
+        assertTrue(appellantInternalRemissionGrantedInTImeLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Townname_Spain"));
     }
 
     @Test
@@ -140,7 +131,7 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalRemissionGrantedInTImeLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("appellantAddress is not present");
     }
@@ -150,7 +141,7 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         legalRepInCountryDataSetup();
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase))
+        assertThatThrownBy(() -> appellantInternalRemissionGrantedInTImeLetterPersonalisation.getRecipientsList(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("legalRepAddressUK is not present");
     }
@@ -159,18 +150,18 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(
-            () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            () -> appellantInternalRemissionGrantedInTImeLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
             .isExactlyInstanceOf(NullPointerException.class)
             .hasMessage("callback must not be null");
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given_appellant_in_country() {
+    void should_return_personalisation_when_all_information_given_in_country() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, String> personalisation =
-            appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalRemissionGrantedInTImeLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -183,17 +174,16 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
 
     }
 
     @Test
-    void should_return_personalisation_when_all_information_given_appellant_out_of_country() {
+    void should_return_personalisation_when_all_information_given_out_of_country() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         Map<String, String> personalisation =
-            appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalRemissionGrantedInTImeLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -202,18 +192,16 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
         assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
         assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+        assertEquals(ES.toString(), personalisation.get("address_line_4"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
-
     }
 
     @Test
     void should_return_personalisation_when_all_information_given_legalRep_in_country() {
         legalRepInCountryDataSetup();
         Map<String, String> personalisation =
-            appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalRemissionGrantedInTImeLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -226,14 +214,13 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
     }
 
     @Test
     void should_return_personalisation_when_all_information_given_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
         Map<String, String> personalisation =
-            appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation(callback);
+            appellantInternalRemissionGrantedInTImeLetterPersonalisation.getPersonalisation(callback);
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
@@ -246,7 +233,6 @@ class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisationTest {
         assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
     }
 
     private void legalRepOutOfCountryDataSetup() {

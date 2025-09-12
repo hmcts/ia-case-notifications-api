@@ -14,26 +14,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
-public class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation implements LetterNotificationPersonalisation {
+public class AppellantInternalRemissionGrantedInTimeLetterPersonalisation implements LetterNotificationPersonalisation {
 
     private final String appellantInternalRemissionDecisionLetterTemplateId;
-    private final int daysAfterRemissionDecision;
     private final CustomerServicesProvider customerServicesProvider;
-    private final SystemDateProvider systemDateProvider;
 
-    public AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation(
-        @Value("${govnotify.template.remissionDecision.appellant.rejected.outOfTime.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterRemissionDecision,
-        CustomerServicesProvider customerServicesProvider,
-        SystemDateProvider systemDateProvider
+
+    public AppellantInternalRemissionGrantedInTimeLetterPersonalisation(
+        @Value("${govnotify.template.remissionDecision.appellant.approved.onTime.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
+        CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantInternalRemissionDecisionLetterTemplateId = appellantInternalRemissionDecisionLetterTemplateId;
-        this.daysAfterRemissionDecision = daysAfterRemissionDecision;
         this.customerServicesProvider = customerServicesProvider;
-        this.systemDateProvider = systemDateProvider;
     }
 
     @Override
@@ -49,7 +43,7 @@ public class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation imp
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_REMISSION_GRANTED_OOT_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_REMISSION_GRANTED_IN_TIME_APPELLANT_LETTER";
     }
 
     @Override
@@ -63,16 +57,13 @@ public class AppellantInternalRemissionGrantedOutOfTImeLetterPersonalisation imp
 
         List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
-        final String dueDate = systemDateProvider.dueDate(daysAfterRemissionDecision);
-
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("tenDaysAfterRemissionDecision", dueDate);
+            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
 
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
