@@ -34,7 +34,8 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
     public DetentionEngagementTeamRespondentReviewPersonalisation(
             @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
             @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-            DetEmailService detEmailService,
+            @Value("${ctscEmailAddress}") String ctscEmailAddress,
+            @Value("${detentionEngagementTeamEmailAddress}")  DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
