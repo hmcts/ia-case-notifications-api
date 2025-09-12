@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -77,18 +78,16 @@ public class DetentionEngagementTeamEndTheAppealProductionPersonalisation implem
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
 
-        String hearingDate;
-        String hearingTime;
-        String hearingCentreAddress;
+        String hearingDate = "";
+        String hearingTime = "";
+        String hearingCentreAddress = "";
         if (caseDetailsBefore.isPresent()) {
             AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
-            hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
-            hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
-            hearingCentreAddress = hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore);
-        } else {
-            hearingDate = "";
-            hearingTime = "";
-            hearingCentreAddress = "";
+            if (asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class).isPresent()) {
+                hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
+                hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
+                hearingCentreAddress = hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore);
+            }
         }
 
         boolean isPrison = asylumCase.read(DETENTION_FACILITY, String.class).orElse("").equals("prison");
