@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1366 Request case building for AiP detained appeal - No sent letter",
+  "description": "DIAC-1366 Request case building for AiP Digital detained appeal - No sent letter",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
