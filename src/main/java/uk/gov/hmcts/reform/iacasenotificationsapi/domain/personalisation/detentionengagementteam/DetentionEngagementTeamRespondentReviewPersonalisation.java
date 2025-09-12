@@ -26,16 +26,16 @@ import uk.gov.service.notify.NotificationClientException;
 @Slf4j
 public class DetentionEngagementTeamRespondentReviewPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
+
     private final String detentionEngagementTeamRespondentReviewTemplateId;
     private final DetEmailService detEmailService;
     private final String ctscEmailAddress;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamRespondentReviewPersonalisation(
-            @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
             @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
             @Value("${ctscEmailAddress}") String ctscEmailAddress,
-            @Value("${detentionEngagementTeamEmailAddress}")  DetEmailService detEmailService,
+            DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
