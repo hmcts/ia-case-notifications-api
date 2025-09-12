@@ -2,9 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -13,11 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.reflect.IReflectionWorld;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -29,18 +29,22 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     private final String detentionEngagementTeamRespondentReviewTemplateId;
     private final DetEmailService detEmailService;
+    private final String ctscEmailAddress;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamRespondentReviewPersonalisation(
-        @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
-        @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-        DetEmailService detEmailService,
-        DocumentDownloadClient documentDownloadClient
+            @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
+            @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
+            @Value("${ctscEmailAddress}") String ctscEmailAddress,
+            DetEmailService detEmailService,
+            DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
+        this.ctscEmailAddress = ctscEmailAddress;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
+
 
     @Override
     public String getTemplateId() {
@@ -52,13 +56,14 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
         return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
     }
 
+
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isAppellantInDetention(asylumCase)) {
+        if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
             return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
         }
         else
-            return Collections.emptySet();
+            return Collections.singleton(ctscEmailAddress);
     }
 
     @Override
