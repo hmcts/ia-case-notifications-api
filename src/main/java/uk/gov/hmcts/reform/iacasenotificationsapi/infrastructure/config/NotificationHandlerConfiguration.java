@@ -1407,6 +1407,7 @@ public class NotificationHandlerConfiguration {
                                 && callback.getEvent() == Event.REQUEST_CASE_BUILDING
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
                                 && !isAipJourney(callback.getCaseDetails().getCaseData())
+                                && !hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
                                 && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
