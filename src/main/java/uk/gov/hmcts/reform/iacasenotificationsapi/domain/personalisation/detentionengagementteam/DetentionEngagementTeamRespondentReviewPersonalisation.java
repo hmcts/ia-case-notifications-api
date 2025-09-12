@@ -61,8 +61,11 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
         if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
             return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
         }
-        else
+        else if (isDetainedInFacilityType(asylumCase, DetentionFacility.PRISON)) {
             return Collections.singleton(ctscEmailAddress);
+        }
+        else
+            return Collections.emptySet();
     }
 
     @Override

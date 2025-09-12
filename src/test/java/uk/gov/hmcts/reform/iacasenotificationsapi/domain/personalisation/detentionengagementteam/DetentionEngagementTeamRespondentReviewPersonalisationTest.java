@@ -24,6 +24,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +37,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     private DetEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
+    private String ctscEmailAddress = "ctscEmailAddress";
 
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -50,6 +52,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     void setup() {
         detentionEngagementTeamRespondentReviewPersonalisation = new DetentionEngagementTeamRespondentReviewPersonalisation(
                 detentionEngagementTeamRespondentReviewTemplateId,
+                ctscEmailAddress,
                 detEmailService,
                 documentDownloadClient
         );
