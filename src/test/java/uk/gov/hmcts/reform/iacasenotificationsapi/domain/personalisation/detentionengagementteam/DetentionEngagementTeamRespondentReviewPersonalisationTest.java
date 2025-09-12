@@ -23,6 +23,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +36,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     private DetEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
+    private String ctscEmailAddress = "ctscEmailAddress";
 
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -49,6 +51,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     void setup() {
         detentionEngagementTeamRespondentReviewPersonalisation = new DetentionEngagementTeamRespondentReviewPersonalisation(
                 detentionEngagementTeamRespondentReviewTemplateId,
+                ctscEmailAddress,
                 detEmailService,
                 documentDownloadClient
         );
@@ -69,8 +72,9 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre")).thenReturn(Optional.of("prison"));
+        when(detEmailService.getDetEmailAddress(asylumCase))
+                .thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
             detentionEngagementTeamRespondentReviewPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
