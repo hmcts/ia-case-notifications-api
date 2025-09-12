@@ -4779,6 +4779,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("updateDetentionLocationLegalRepManualNotificationGenerator")
+    public List<NotificationGenerator> updateDetentionLocationLegalRepManualNotificationGenerator(
+            LegalRepresentativeLetterUpdateDetentionLocationPersonalisation legalRepresentativeUpdateDetentionLocationLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeUpdateDetentionLocationLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("markAsReadyForUtTransferNotificationGenerator")
     public List<NotificationGenerator> markAsReadyForUtTransferNotificationGenerator(
         UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
