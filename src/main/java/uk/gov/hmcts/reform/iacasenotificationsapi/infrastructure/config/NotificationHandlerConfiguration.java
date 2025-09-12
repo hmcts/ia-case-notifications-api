@@ -4310,7 +4310,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                            && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
