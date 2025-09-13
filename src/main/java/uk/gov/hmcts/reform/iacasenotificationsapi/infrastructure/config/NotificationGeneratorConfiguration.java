@@ -4076,7 +4076,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalDetainedAppealHoUploadBundle")
-    public List<NotificationGenerator> internalDetainedAppealRemissionGrantedInTimeLetter(
+    public List<NotificationGenerator> internalDetainedAppealHoUploadBundleLetter(
             DetentionEngagementTeamHoUploadBundlePersonalisation detentionEngagementTeamHoUploadBundlePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {

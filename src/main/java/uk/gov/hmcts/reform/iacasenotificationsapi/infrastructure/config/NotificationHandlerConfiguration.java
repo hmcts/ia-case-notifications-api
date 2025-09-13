@@ -4301,7 +4301,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealRemissionGrantedInTimeEmailNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealHoUploadBundleEmailNotificationHandler(
             @Qualifier("internalDetainedAppealHoUploadBundle")
             List<NotificationGenerator> notificationGenerators) {
 
