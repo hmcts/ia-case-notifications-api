@@ -765,6 +765,8 @@ govnotify:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+        appellant:
+          email: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
