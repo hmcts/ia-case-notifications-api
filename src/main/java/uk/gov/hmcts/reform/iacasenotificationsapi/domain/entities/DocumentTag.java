@@ -83,7 +83,8 @@ public enum DocumentTag {
     INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter"),
     INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER("internalDetainedAppealSubmittedOutOfTimeWithFeeLetter"),
     INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER("internalDetainedOutOfTimeDecisionAllowedLetter"),
-    INTERNAL_DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_A_DATE_LETTER("internalDetainedAppealAdjournHearingWithoutADateLetter"),
+    DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER("detainedAppealAdjournHearingWithoutDateIrcPrisonLetter"),
+    INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER("internalDetainedOutOfTimeRemissionIrcPrisonLetter"),
 
     @JsonEnumDefaultValue
     NONE("");

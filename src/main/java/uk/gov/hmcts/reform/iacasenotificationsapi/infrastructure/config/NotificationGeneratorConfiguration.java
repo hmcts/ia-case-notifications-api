@@ -4105,6 +4105,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("detainedAppealHearingAdjournedNoDateAppellantEmail")
+    public List<NotificationGenerator> detainedAppealHearingAdjournedNoDateAppellantEmail(
+            DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation detentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
@@ -5923,6 +5938,21 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("internalSubmitAppealOutOfTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator(
+        DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation detentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
