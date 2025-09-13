@@ -1406,7 +1406,8 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.REQUEST_CASE_BUILDING
                                 && isInternalCase(callback.getCaseDetails().getCaseData())
-                                && isRepJourney(callback.getCaseDetails().getCaseData())
+                                && !isAipJourney(callback.getCaseDetails().getCaseData())
+                                && !hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
                                 && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
@@ -6391,6 +6392,35 @@ public class NotificationHandlerConfiguration {
                        && isRemissionPresent
                        && isSubmissionOutOfTime(asylumCase);
 
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationHandler(
+        @Qualifier("internalSubmitAppealOutOfTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                RemissionType remissionType = asylumCase
+                    .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
+
+                boolean isRemissionPresent = Arrays.asList(
+                    HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                       && callback.getEvent() == Event.SUBMIT_APPEAL
+                       && isInternalCase(asylumCase)
+                       && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                       && isRemissionPresent
+                       && isSubmissionOutOfTime(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
