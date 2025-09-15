@@ -64,7 +64,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW",
+        assertEquals(caseId + "_INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER",
                 detentionEngagementTeamRespondentReviewPersonalisation.getReferenceId(caseId));
     }
 
