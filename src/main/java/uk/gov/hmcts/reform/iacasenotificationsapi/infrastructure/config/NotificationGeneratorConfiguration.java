@@ -4075,6 +4075,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedAppealHoUploadBundle")
+    public List<NotificationGenerator> internalDetainedAppealHoUploadBundleLetter(
+            DetentionEngagementTeamHoUploadBundlePersonalisation detentionEngagementTeamHoUploadBundlePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamHoUploadBundlePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator")
     public List<NotificationGenerator> internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator(
             DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation personalisation,
@@ -4791,6 +4806,24 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("updateDetentionLocationLegalRepManualNotificationGenerator")
+    public List<NotificationGenerator> updateDetentionLocationLegalRepManualNotificationGenerator(
+            LegalRepresentativeLetterUpdateDetentionLocationPersonalisation legalRepresentativeUpdateDetentionLocationLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeUpdateDetentionLocationLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 

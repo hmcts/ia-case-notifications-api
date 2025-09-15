@@ -4302,6 +4302,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealHoUploadBundleEmailNotificationHandler(
+            @Qualifier("internalDetainedAppealHoUploadBundle")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.REQUEST_RESPONDENT_EVIDENCE
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealSubmittedInTimeWithFeeToPayEmailInternalNotificationHandler(
         @Qualifier("appealSubmittedInTimeWithFeeToPayEmailInternalNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -5303,6 +5322,19 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) ->
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.MARK_APPEAL_AS_DETAINED
+                                && isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> updateDetentionLocationLegalRepManualNotificationHandler(
+            @Qualifier("updateDetentionLocationLegalRepManualNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.UPDATE_DETENTION_LOCATION
                                 && isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
                 notificationGenerators
         );
@@ -6775,6 +6807,50 @@ public class NotificationHandlerConfiguration {
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> digitalDetainedOtherCaseAdjournedWithoutDateLetterNotificationHandler(
+            @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                            && !isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedOtherCaseAdjournedWithoutDateLetterNotificationHandler(
+            @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
+                            && isInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER);
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
