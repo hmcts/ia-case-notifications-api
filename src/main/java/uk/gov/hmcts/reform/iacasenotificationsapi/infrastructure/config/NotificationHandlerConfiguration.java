@@ -87,6 +87,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserRole;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -7158,9 +7159,12 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    AsylumCase asylumCaseBefore = callback.getCaseDetailsBefore().orElse(callback.getCaseDetails()).getCaseData();
+
                     return callback.getEvent() == END_APPEAL
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isAppellantInDetention(asylumCase);
+                            && isAppellantInDetention(asylumCase)
+                            && asylumCaseBefore.read(LIST_CASE_HEARING_CENTRE).isPresent();
                 }, notificationGenerators
         );
     }
