@@ -1,5 +1,6 @@
 {
   "description": "RIA-7152 Send request case building notification to DET (Tinsley house).",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
@@ -16,6 +17,7 @@
           "isAcceleratedDetainedAppeal": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Tinsley House",
+          "legalRepHasAddress": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",

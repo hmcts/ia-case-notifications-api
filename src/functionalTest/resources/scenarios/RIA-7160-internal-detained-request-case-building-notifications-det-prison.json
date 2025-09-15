@@ -1,5 +1,6 @@
 {
   "description": "RIA-7160 Send request case building notification (Non-ADA) to DET prison (The Mount)",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
