@@ -1439,6 +1439,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("requestCaseBuildingLegalRepInternalDetainedNotificationGenerator")
+    public List<NotificationGenerator> requestCaseBuildingLegalRepInternalDetainedNotificationGenerator(
+            LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new LetterNotificationGenerator(
+                        newArrayList(legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("requestResponseReviewNotificationGenerator")
     public List<NotificationGenerator> requestResponseReviewNotificationGenerator(
         LegalRepresentativeRequestResponseReviewPersonalisation legalRepresentativeRequestResponseReviewPersonalisation,
@@ -4779,6 +4794,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("updateDetentionLocationLegalRepManualNotificationGenerator")
+    public List<NotificationGenerator> updateDetentionLocationLegalRepManualNotificationGenerator(
+            LegalRepresentativeLetterUpdateDetentionLocationPersonalisation legalRepresentativeUpdateDetentionLocationLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeUpdateDetentionLocationLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("markAsReadyForUtTransferNotificationGenerator")
     public List<NotificationGenerator> markAsReadyForUtTransferNotificationGenerator(
         UpperTribunalMarkAsReadyForUtTransferPersonalisation upperTribunalMarkAsReadyForUtTransferPersonalisation,
@@ -5923,6 +5956,21 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("internalSubmitAppealOutOfTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithRemissionAppellantDetainedPrisonIrcLetterNotificationGenerator(
+        DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation detentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
