@@ -83,6 +83,8 @@ public enum DocumentTag {
     INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter"),
     INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER("internalDetainedAppealSubmittedOutOfTimeWithFeeLetter"),
     INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER("internalDetainedOutOfTimeDecisionAllowedLetter"),
+    INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER("internalDetainedRespondentReviewIrcPrisonNotificationLetter"),
+
 
     @JsonEnumDefaultValue
     NONE("");
