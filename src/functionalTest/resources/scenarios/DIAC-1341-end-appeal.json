@@ -1,7 +1,7 @@
 {
   "description": "DIAC-1341 End appeal - Cancellation of Production Notice - Detained ",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
