@@ -83,6 +83,7 @@ class DocumentTagTest {
         assertEquals("internalDetainedRespondentReviewIrcPrisonNotificationLetter",DocumentTag.INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER.toString());
         assertEquals("internalDetainedAppealHOUploadBundleAppellantLetter", DocumentTag.INTERNAL_DETAINED_APPEAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER.toString());
         assertEquals("internalDetainedOutOfTimeRemissionIrcPrisonLetter", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER.toString());
+        assertEquals("internalDetainedOutOfTimeRemissionGrantedIrcPrisonLetter", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_GRANTED_IRC_PRISON_LETTER.toString());
 
     }
 

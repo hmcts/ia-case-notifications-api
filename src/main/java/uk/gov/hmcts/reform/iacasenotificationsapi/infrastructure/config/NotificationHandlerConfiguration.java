@@ -6455,6 +6455,33 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalRemissionApprovedOutOfTimeAppellantDetainedPrisonIrcLetterNotificationNotificationHandler(
+            @Qualifier("internalRemissionApprovedOutOfTimeAppellantDetainedPrisonIrcLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isRemissionApproved = asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION, RemissionDecision.class)
+                            .map(decision -> APPROVED == decision)
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                            && isInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                            && isSubmissionOutOfTime(asylumCase)
+                            && isRemissionApproved;
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalHomeOfficeDirectedToReviewAppealAipNotificationHandler(
         @Qualifier("internalHomeOfficeDirectedToReviewAppealAipNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
