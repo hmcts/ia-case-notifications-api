@@ -111,6 +111,7 @@ class DetentionEngagementTeamEditCaseListingPersonalisationTest {
         assertTrue(
                 detentionEngagementTeamEditCaseListingPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
+
     @Test
     void getRecipientsList_should_return_empty_set_if_not_in_detention() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
