@@ -58,14 +58,14 @@ public class DetentionEngagementTeamEditCaseListingPersonalisation implements Em
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-            if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
-                return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
-            } else if (isDetainedInFacilityType(asylumCase, DetentionFacility.PRISON)) {
-                return Collections.singleton(ctscEmailAddress);
-            } else {
-                return Collections.emptySet();
-            }
+        if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
+            return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
+        } else if (isDetainedInFacilityType(asylumCase, DetentionFacility.PRISON)) {
+            return Collections.singleton(ctscEmailAddress);
+        } else {
+            return Collections.emptySet();
         }
+    }
 
 
     @Override
