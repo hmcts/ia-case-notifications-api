@@ -13,10 +13,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,13 +104,13 @@ class DetentionEngagementTeamEditCaseListingPersonalisationTest {
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre")).thenReturn(Optional.of("prison"));
+        when(detEmailService.getDetEmailAddress(asylumCase))
+                .thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
                 detentionEngagementTeamEditCaseListingPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
-
     @Test
     void getRecipientsList_should_return_empty_set_if_not_in_detention() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
