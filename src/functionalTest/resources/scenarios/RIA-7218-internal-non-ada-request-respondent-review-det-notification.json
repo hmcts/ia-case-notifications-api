@@ -86,7 +86,7 @@
         "appellantInDetention": "Yes",
         "notificationsSent":[
           {
-            "id": "7218_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW",
+            "id": "7218_INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
