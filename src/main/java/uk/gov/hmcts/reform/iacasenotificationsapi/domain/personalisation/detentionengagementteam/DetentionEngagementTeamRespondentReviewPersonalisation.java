@@ -1,12 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -18,8 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -27,20 +25,21 @@ import uk.gov.service.notify.NotificationClientException;
 @Slf4j
 public class DetentionEngagementTeamRespondentReviewPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
+
     private final String detentionEngagementTeamRespondentReviewTemplateId;
-    private final DetEmailService detEmailService;
+    private final DetentionEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamRespondentReviewPersonalisation(
-        @NotNull(message = "DetentionEngagementTeamRespondentReviewTemplateId cannot be null")
-        @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-        DetEmailService detEmailService,
-        DocumentDownloadClient documentDownloadClient
+            @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
+            DetentionEmailService detEmailService,
+            DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
+
 
     @Override
     public String getTemplateId() {
@@ -49,16 +48,17 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
+        return caseId + "_INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER";
     }
+
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (!isAppellantInDetention(asylumCase)) {
+        if (isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC,DetentionFacility.PRISON)) {
+            return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
+        } else {
             return Collections.emptySet();
         }
-
-        return detEmailService.getRecipientsList(asylumCase);
     }
 
     @Override
@@ -67,7 +67,6 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
         return ImmutableMap
             .<String, Object>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? "ADA" : "IAFT")
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
@@ -79,7 +78,7 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     private JSONObject getRespondentReviewLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, REQUEST_RESPONDENT_REVIEW));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Request Respondent Review Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Request Respondent Review Letter in compatible format");
