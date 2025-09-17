@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1017,
+      "id": 15812,
       "eventId": "listCase",
       "state": "prepareForHearing",
       "caseData": {
@@ -23,7 +23,13 @@
             "value": {
               "code": "VID",
               "label": "Video"
-            }
+            },
+            "list_items": [
+              {
+                "code": "VID",
+                "label": "Video"
+              }
+            ]
           }
         }
       }
