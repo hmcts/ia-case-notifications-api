@@ -22,8 +22,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,10 +33,9 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
     @Mock
-    private DetEmailService detEmailService;
+    private DetentionEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-    private String ctscEmailAddress = "ctscEmailAddress";
 
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -51,7 +50,6 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     void setup() {
         detentionEngagementTeamRespondentReviewPersonalisation = new DetentionEngagementTeamRespondentReviewPersonalisation(
                 detentionEngagementTeamRespondentReviewTemplateId,
-                ctscEmailAddress,
                 detEmailService,
                 documentDownloadClient
         );
@@ -73,7 +71,7 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre")).thenReturn(Optional.of("prison"));
-        when(detEmailService.getDetEmailAddress(asylumCase))
+        when(detEmailService.getDetentionEmailAddress(asylumCase))
                 .thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(

@@ -17,7 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -27,18 +27,15 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
 
     private final String detentionEngagementTeamRespondentReviewTemplateId;
-    private final DetEmailService detEmailService;
-    private final String ctscEmailAddress;
+    private final DetentionEmailService detEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamRespondentReviewPersonalisation(
             @Value("${govnotify.template.reviewDirection.detentionTeam.email}") String detentionEngagementTeamRespondentReviewTemplateId,
-            @Value("${ctscEmailAddress}") String ctscEmailAddress,
-            DetEmailService detEmailService,
+            DetentionEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamRespondentReviewTemplateId = detentionEngagementTeamRespondentReviewTemplateId;
-        this.ctscEmailAddress = ctscEmailAddress;
         this.detEmailService = detEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
@@ -57,10 +54,8 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
-            return Collections.singleton(detEmailService.getDetEmailAddress(asylumCase));
-        } else if (isDetainedInFacilityType(asylumCase, DetentionFacility.PRISON)) {
-            return Collections.singleton(ctscEmailAddress);
+        if (isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC,DetentionFacility.PRISON)) {
+            return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
         } else {
             return Collections.emptySet();
         }
@@ -72,7 +67,6 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
         return ImmutableMap
             .<String, Object>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? "ADA" : "IAFT")
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
