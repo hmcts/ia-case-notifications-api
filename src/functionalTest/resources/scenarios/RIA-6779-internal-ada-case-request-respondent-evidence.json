@@ -49,7 +49,7 @@
           "appellantGivenNames": "Test",
           "appellantFamilyName": "User",
           "isAdmin": "Yes",
-          "isAcceleratedDetainedAppeal": "Yes",
+          "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes"
         }
       }
@@ -84,7 +84,7 @@
         "appellantGivenNames": "Test",
         "appellantFamilyName": "User",
         "isAdmin": "Yes",
-        "isAcceleratedDetainedAppeal": "Yes",
+        "isAcceleratedDetainedAppeal": "No",
         "appellantInDetention": "Yes",
         "notificationsSent":[
           {

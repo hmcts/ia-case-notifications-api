@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER";
+        return caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW";
     }
 
 
@@ -78,7 +78,7 @@ public class DetentionEngagementTeamRespondentReviewPersonalisation implements E
 
     private JSONObject getRespondentReviewLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_PRISON_IRC_RESPONDER_REVIEW_NOTICE_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, REQUEST_RESPONDENT_REVIEW));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Request Respondent Review Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Request Respondent Review Letter in compatible format");
