@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 @Service
 public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
+    private final String adminOfficerAppealSubmittedPendingPaymentTemplateId;
     private final String feesAdminOfficerEmailAddress;
     private final String paymentExceptionsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
@@ -29,17 +29,16 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
 
     public AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
         @NotNull(message = "pendingPaymentAdminOfficerTemplateId cannot be null")
+        @Value("${govnotify.template.appealSubmitted.adminOfficer.pendingPaymentEaHu.email}")
+            String adminOfficerAppealSubmittedPendingPaymentTemplateId,
         @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null")
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.remission.email}")
-            String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId,
         @Value("${feesAdminOfficerEmailAddress}")
             String feesAdminOfficerEmailAddress,
         @Value("${paymentExceptionsAdminOfficerEmailAddress}")
             String paymentExceptionsAdminOfficerEmailAddress,
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
-        this.adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId =
-            adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
+        this.adminOfficerAppealSubmittedPendingPaymentTemplateId = adminOfficerAppealSubmittedPendingPaymentTemplateId;
         this.feesAdminOfficerEmailAddress = feesAdminOfficerEmailAddress;
         this.paymentExceptionsAdminOfficerEmailAddress = paymentExceptionsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
@@ -52,14 +51,7 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        RemissionType remissionType = asylumCase
-            .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-
-        if (Arrays.asList(HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION)
-            .contains(remissionType)) {
-            return adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
-        }
-        return null;
+        return adminOfficerAppealSubmittedPendingPaymentTemplateId;
     }
 
     @Override
