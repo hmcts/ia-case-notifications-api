@@ -25,7 +25,6 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
-    private String templateId = "someTemplateId";
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
     private String appellantFamilyName = "someAppellantFamilyName";
@@ -51,7 +50,6 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
 
         adminOfficerAppealSubmittedPendingPaymentPersonalisation =
             new AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
-                templateId,
                 adminOfficerEmailAddress,
                 paymentExceptionsAdminOfficerEmailAddress,
                 adminOfficerPersonalisationProvider);

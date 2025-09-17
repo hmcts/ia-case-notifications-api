@@ -21,16 +21,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 @Service
 public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String adminOfficerAppealSubmittedPendingPaymentTemplateId;
     private final String feesAdminOfficerEmailAddress;
     private final String paymentExceptionsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
 
     public AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
-        @NotNull(message = "pendingPaymentAdminOfficerTemplateId cannot be null")
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.pendingPaymentEaHu.email}")
-            String adminOfficerAppealSubmittedPendingPaymentTemplateId,
+        @NotNull(message = "pendingPaymentAdminOfficerTemplateId cannot be null"),
         @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null")
         @Value("${feesAdminOfficerEmailAddress}")
             String feesAdminOfficerEmailAddress,
@@ -38,7 +35,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
             String paymentExceptionsAdminOfficerEmailAddress,
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
-        this.adminOfficerAppealSubmittedPendingPaymentTemplateId = adminOfficerAppealSubmittedPendingPaymentTemplateId;
         this.feesAdminOfficerEmailAddress = feesAdminOfficerEmailAddress;
         this.paymentExceptionsAdminOfficerEmailAddress = paymentExceptionsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
@@ -47,11 +43,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
     @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_APPEAL_SUBMITTED_PENDING_PAYMENT_ADMIN_OFFICER";
-    }
-
-    @Override
-    public String getTemplateId(AsylumCase asylumCase) {
-        return adminOfficerAppealSubmittedPendingPaymentTemplateId;
     }
 
     @Override
