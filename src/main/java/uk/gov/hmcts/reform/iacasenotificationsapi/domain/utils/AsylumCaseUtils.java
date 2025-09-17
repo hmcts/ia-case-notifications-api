@@ -33,6 +33,8 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
+    private static final String HEARING_CHANNEL_CODE_VIDEO = "VID";
+    private static final String HEARING_CHANNEL_CODE_TELEPHONE = "TEL";
 
 
     private AsylumCaseUtils() {
@@ -485,5 +487,19 @@ public class AsylumCaseUtils {
         return asylumCase
             .read(APPEAL_TYPE, AppealType.class)
             .map(type -> type == RP || type == DC).orElse(false);
+    }
+
+    public static boolean isHearingChannelVideo(AsylumCase asylumCase) {
+        return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
+                .map(hearingChannels -> hearingChannels.getListItems().stream()
+                        .anyMatch(c -> c.getCode().equals(HEARING_CHANNEL_CODE_VIDEO)))
+                .orElse(false);
+    }
+
+    public static boolean isHearingChannelTelephone(AsylumCase asylumCase) {
+        return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
+                .map(hearingChannels -> hearingChannels.getListItems().stream()
+                        .anyMatch(c -> c.getCode().equals(HEARING_CHANNEL_CODE_TELEPHONE)))
+                .orElse(false);
     }
 }
