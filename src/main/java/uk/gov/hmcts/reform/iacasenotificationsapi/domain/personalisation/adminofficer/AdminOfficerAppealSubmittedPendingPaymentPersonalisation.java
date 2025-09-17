@@ -27,7 +27,7 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
 
 
     public AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
-        @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null"),
+        @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null")
         @Value("${feesAdminOfficerEmailAddress}")
             String feesAdminOfficerEmailAddress,
         @Value("${paymentExceptionsAdminOfficerEmailAddress}")
