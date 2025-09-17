@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 @Service
 public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String adminOfficerAppealSubmittedPendingPaymentTemplateId;
     private final String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
     private final String feesAdminOfficerEmailAddress;
     private final String paymentExceptionsAdminOfficerEmailAddress;
@@ -30,8 +29,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
 
     public AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
         @NotNull(message = "pendingPaymentAdminOfficerTemplateId cannot be null")
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.pendingPaymentEaHu.email}")
-            String adminOfficerAppealSubmittedPendingPaymentTemplateId,
         @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null")
         @Value("${govnotify.template.appealSubmitted.adminOfficer.remission.email}")
             String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId,
@@ -41,7 +38,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
             String paymentExceptionsAdminOfficerEmailAddress,
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
-        this.adminOfficerAppealSubmittedPendingPaymentTemplateId = adminOfficerAppealSubmittedPendingPaymentTemplateId;
         this.adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId =
             adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
         this.feesAdminOfficerEmailAddress = feesAdminOfficerEmailAddress;
@@ -63,7 +59,7 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
             .contains(remissionType)) {
             return adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
         }
-        return adminOfficerAppealSubmittedPendingPaymentTemplateId;
+        return null;
     }
 
     @Override

@@ -30,7 +30,6 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
-    private String templateId = "someTemplateId";
     private String remissionTemplateId = "someRemissionTemplateId";
     private String appealReferenceNumber = "someReferenceNumber";
     private String appellantGivenNames = "someAppellantGivenNames";
@@ -57,7 +56,6 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
 
         adminOfficerAppealSubmittedPendingPaymentPersonalisation =
             new AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
-                templateId,
                 remissionTemplateId,
                 adminOfficerEmailAddress,
                 paymentExceptionsAdminOfficerEmailAddress,
