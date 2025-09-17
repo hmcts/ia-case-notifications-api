@@ -57,7 +57,7 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, adminOfficerAppealSubmittedPendingPaymentPersonalisation.getTemplateId(asylumCase));
+        assertEquals(adminOfficerAppealSubmittedPendingPaymentPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
