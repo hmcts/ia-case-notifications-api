@@ -6468,6 +6468,26 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepRemovedDetainedPrisonIrcLetterNotificationHandler(
+            @Qualifier("legalRepRemovedDetainedPrisonIrcLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && (callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE || callback.getEvent() == Event.REMOVE_REPRESENTATION)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalHomeOfficeDirectedToReviewAppealAipNotificationHandler(
         @Qualifier("internalHomeOfficeDirectedToReviewAppealAipNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
