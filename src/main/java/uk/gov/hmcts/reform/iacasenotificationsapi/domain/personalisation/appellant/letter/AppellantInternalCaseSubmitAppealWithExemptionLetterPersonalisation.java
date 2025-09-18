@@ -16,27 +16,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @Service
 public class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation implements LetterNotificationPersonalisation {
 
-    private final String appellantInternalCaseSubmitAppealWithExemptionLrLetterTemplateId;
-    private final String appellantInternalCaseSubmitAppealWithExemptionAipLetterTemplateId;
+    private final String appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation(
-        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withExemption.legallyRepresented}") String appellantInternalCaseSubmitAppealWithExemptionLrLetterTemplateId,
-        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withExemption.aip}") String appellantInternalCaseSubmitAppealWithExemptionAipLetterTemplateId,
+        @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withExemption}") String appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.appellantInternalCaseSubmitAppealWithExemptionLrLetterTemplateId = appellantInternalCaseSubmitAppealWithExemptionLrLetterTemplateId;
-        this.appellantInternalCaseSubmitAppealWithExemptionAipLetterTemplateId = appellantInternalCaseSubmitAppealWithExemptionAipLetterTemplateId;
+        this.appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId = appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (hasBeenSubmittedByAppellantInternalCase(asylumCase)) {
-            return appellantInternalCaseSubmitAppealWithExemptionAipLetterTemplateId;
-        } else {
-            return appellantInternalCaseSubmitAppealWithExemptionLrLetterTemplateId;
-        }
+        return appellantInternalCaseSubmitAppealWithExemptionLetterTemplateId;
     }
 
     @Override
