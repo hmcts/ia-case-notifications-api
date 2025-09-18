@@ -7250,7 +7250,9 @@ public class NotificationHandlerConfiguration {
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
-                    && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
+                    && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
+                    && !hasHearingChannelVideo(asylumCase)
+                    && !hasHearingChannelTelephone(asylumCase);
             }, notificationGenerators
         );
     }
