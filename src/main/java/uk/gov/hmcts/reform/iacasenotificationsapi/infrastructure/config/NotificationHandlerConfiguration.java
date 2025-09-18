@@ -4905,6 +4905,24 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> detainedAppealHearingAdjournedNoDateAppellantEmailNotificationHandler(
+            @Qualifier("detainedAppealHearingAdjournedNoDateAppellantEmail")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                            && (isRepJourney(asylumCase) || isInternalCase(asylumCase))
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
     private boolean isRepJourney(AsylumCase asylumCase) {
 
         return asylumCase
