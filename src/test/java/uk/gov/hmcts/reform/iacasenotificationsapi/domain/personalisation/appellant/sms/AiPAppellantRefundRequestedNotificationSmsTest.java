@@ -115,7 +115,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
 
 
     }

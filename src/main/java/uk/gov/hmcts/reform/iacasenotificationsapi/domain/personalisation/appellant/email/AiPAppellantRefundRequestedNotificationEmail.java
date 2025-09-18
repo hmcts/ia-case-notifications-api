@@ -76,7 +76,7 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
-                .put("14 days after refund request sent", refundRequestDueDate)
+                .put("14 days after remission request sent", refundRequestDueDate)
                 .build();
     }
 }

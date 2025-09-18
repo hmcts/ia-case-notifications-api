@@ -149,7 +149,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
 
     }
 }
