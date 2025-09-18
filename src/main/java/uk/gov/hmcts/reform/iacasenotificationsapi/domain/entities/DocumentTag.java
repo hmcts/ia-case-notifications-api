@@ -44,7 +44,6 @@ public enum DocumentTag {
     INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION("internalDetainedPrisonIrcAppealSubmission"),
     INTERNAL_REQUEST_RESPONDENT_EVIDENCE_LETTER("internalRequestRespondentEvidenceLetter"),
     INTERNAL_END_APPEAL_AUTOMATICALLY("internalEndAppealAutomatically"),
-    INTERNAL_APPEAL_FEE_DUE_LETTER("internalAppealFeeDueLetter"),
     INTERNAL_DET_MARK_AS_PAID_LETTER("internalDetMarkAsPaidLetter"),
     INTERNAL_LIST_CASE_LETTER("internalListCaseLetter"),
     INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW("internalDetainedRequestHomeOfficeResponseReview"),
@@ -86,6 +85,8 @@ public enum DocumentTag {
     INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER("internalDetainedOutOfTimeDecisionAllowedLetter"),
     INTERNAL_DETAINED_APPEAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER("internalDetainedAppealHOUploadBundleAppellantLetter"),
     INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER("internalDetainedOutOfTimeRemissionIrcPrisonLetter"),
+    INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_GRANTED_IRC_PRISON_LETTER("internalDetainedOutOfTimeRemissionGrantedIrcPrisonLetter"),
+    INTERNAL_DETAINED_APPEAL_REMISSION_PARTIALLY_GRANTED_OR_REFUSED_TEMPLATE_LETTER("internalDetainedAppealRemissionPartiallyGrantedOrRefusedTemplateLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
