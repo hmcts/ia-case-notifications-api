@@ -489,14 +489,14 @@ public class AsylumCaseUtils {
             .map(type -> type == RP || type == DC).orElse(false);
     }
 
-    public static boolean isHearingChannelVideo(AsylumCase asylumCase) {
+    public static boolean hasHearingChannelVideo(AsylumCase asylumCase) {
         return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
                 .map(hearingChannels -> hearingChannels.getListItems().stream()
                         .anyMatch(c -> c.getCode().equals(HEARING_CHANNEL_CODE_VIDEO)))
                 .orElse(false);
     }
 
-    public static boolean isHearingChannelTelephone(AsylumCase asylumCase) {
+    public static boolean hasHearingChannelTelephone(AsylumCase asylumCase) {
         return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
                 .map(hearingChannels -> hearingChannels.getListItems().stream()
                         .anyMatch(c -> c.getCode().equals(HEARING_CHANNEL_CODE_TELEPHONE)))
