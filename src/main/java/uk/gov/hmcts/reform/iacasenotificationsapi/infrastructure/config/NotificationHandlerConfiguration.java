@@ -4401,6 +4401,30 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealSubmittedWithExemptionEmailInternalNotificationHandler(
+        @Qualifier("appealSubmittedWithExemptionEmailInternalNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                YesOrNo isOutOfTime =
+                    asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isOutOfTime.equals(NO)
+                    && isFeeExemptAppeal(asylumCase)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -5441,11 +5465,11 @@ public class NotificationHandlerConfiguration {
                     .map(outOfTime -> outOfTime == NO).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isInternalCase(asylumCase)
-                    && isAppealOnTime
-                    && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                            && callback.getEvent() == Event.SUBMIT_APPEAL
+                            && isInternalCase(asylumCase)
+                            && isAppealOnTime
+                            && isAcceleratedDetainedAppeal(asylumCase) // New notification has superseded this one, left here in case of future usage
+                            && isAppellantInDetention(asylumCase);
             }, notificationGenerators
         );
     }

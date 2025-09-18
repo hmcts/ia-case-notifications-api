@@ -86,6 +86,7 @@ public enum DocumentTag {
     INTERNAL_DETAINED_APPEAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER("internalDetainedAppealHOUploadBundleAppellantLetter"),
     INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER("internalDetainedOutOfTimeRemissionIrcPrisonLetter"),
     INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_GRANTED_IRC_PRISON_LETTER("internalDetainedOutOfTimeRemissionGrantedIrcPrisonLetter"),
+    INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER("internalDetainedAppealSubmittedWithExemptionLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
