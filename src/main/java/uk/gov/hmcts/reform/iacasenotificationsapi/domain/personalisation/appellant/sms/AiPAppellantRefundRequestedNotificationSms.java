@@ -66,7 +66,7 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
-                .put("14 days after refund request sent", refundRequestDueDate)
+                .put("14 days after remission request sent", refundRequestDueDate)
                 .build();
     }
 }
