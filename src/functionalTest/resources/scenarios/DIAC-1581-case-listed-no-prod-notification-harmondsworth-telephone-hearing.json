@@ -21,8 +21,8 @@
           "prisonName": "Albany",
           "hearingChannel": {
             "value": {
-              "code": "TEL",
-              "label": "Telephone"
+              "code": "some",
+              "label": "val"
             },
             "list_items": [
               {
