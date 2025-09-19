@@ -3662,7 +3662,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
+                    && (isInternalCase(callback.getCaseDetails().getCaseData()) || isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON))
                     && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
