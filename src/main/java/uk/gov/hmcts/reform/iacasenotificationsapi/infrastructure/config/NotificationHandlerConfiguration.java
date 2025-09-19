@@ -7152,8 +7152,8 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase)
-                    && (isInternalNonDetainedCase(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
+                    && (hasAppellantAddressInCountryOrOutOfCountry(asylumCase) && isInternalNonDetainedCase(asylumCase))
+                    || isDetainedInFacilityType(asylumCase, OTHER);
             }, notificationGenerators
         );
     }
