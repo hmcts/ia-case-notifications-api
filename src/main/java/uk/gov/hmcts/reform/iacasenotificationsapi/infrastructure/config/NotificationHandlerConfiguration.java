@@ -3891,10 +3891,32 @@ public class NotificationHandlerConfiguration {
         List<NotificationGenerator> notificationGenerators) {
 
         return new PostSubmitNotificationHandler(
-            (callbackStage, callback) -> callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                && (callback.getEvent() == Event.REMOVE_REPRESENTATION
-                || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE),
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                        && (callback.getEvent() == Event.REMOVE_REPRESENTATION
+                        || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
+                        && !isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
+            },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> legalRepRemovedDetainedPrisonIrcLetterNotificationHandler(
+            @Qualifier("legalRepRemovedDetainedPrisonIrcLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                            && (callback.getEvent() == Event.REMOVE_REPRESENTATION || callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
+                },
+                notificationGenerators
         );
     }
 
@@ -6458,26 +6480,6 @@ public class NotificationHandlerConfiguration {
                             && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                             && isSubmissionOutOfTime(asylumCase)
                             && isRemissionApproved;
-                },
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> legalRepRemovedDetainedPrisonIrcLetterNotificationHandler(
-            @Qualifier("legalRepRemovedDetainedPrisonIrcLetterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && (callback.getEvent() == Event.REMOVE_LEGAL_REPRESENTATIVE || callback.getEvent() == Event.REMOVE_REPRESENTATION)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
                 },
                 notificationGenerators,
                 getErrorHandler()
