@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1017,
+      "id": 13392,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -18,7 +18,19 @@
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "appellantInDetention": "Yes",
           "detentionFacility": "prison",
-          "prisonName": "Albany"
+          "prisonName": "Albany",
+          "hearingChannel": {
+            "value": {
+              "code": "some",
+              "label": "val"
+            },
+            "list_items": [
+              {
+                "code": "INTER",
+                "label": "In Person"
+              }
+            ]
+          }
         }
       },
       "caseDataBefore": {
@@ -44,19 +56,19 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1017_CASE_RE_LISTED_HOME_OFFICE",
+            "id": "13392_CASE_RE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1017_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "13392_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1017_CASE_RE_LISTED_CASE_OFFICER",
+            "id": "13392_CASE_RE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1017_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
+            "id": "13392_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -64,7 +76,7 @@
     },
     "notifications": [
       {
-        "reference": "1017_CASE_RE_LISTED_HOME_OFFICE",
+        "reference": "13392_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -76,7 +88,7 @@
         ]
       },
       {
-        "reference": "1017_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "13392_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -88,7 +100,7 @@
         ]
       },
       {
-        "reference": "1017_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
+        "reference": "13392_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – SERVE IN PERSON: Hearing details",
         "body": [
