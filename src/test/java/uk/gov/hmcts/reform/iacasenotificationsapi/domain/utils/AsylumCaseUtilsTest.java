@@ -35,6 +35,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
@@ -44,8 +45,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInFacilityType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInOneOfFacilityTypes;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasHearingChannelTelephone;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasHearingChannelVideo;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
@@ -634,7 +633,7 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
-    void should_return_true_when_hearing_channel_is_video() {
+    void should_return_true_when_has_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
                 new Value("some", "Value"),
                 List.of(new Value("INTER", "In Person"),
@@ -645,64 +644,28 @@ public class AsylumCaseUtilsTest {
 
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
 
-        assertTrue(hasHearingChannelVideo(asylumCase));
+        assertTrue(hasHearingChannel(asylumCase, "INTER"));
     }
 
     @Test
-    void should_return_false_when_hearing_channel_is_not_video() {
+    void should_return_false_when_missing_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
                 new Value("some", "Value"),
-                List.of(new Value("INTER", "In Person"),
-                        new Value("NA", "Not in Attendance"),
+                List.of(new Value("NA", "Not in Attendance"),
+                        new Value("VID", "Video"),
                         new Value("TEL", "Telephone"))
         );
 
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
 
-        assertFalse(hasHearingChannelVideo(asylumCase));
+        assertFalse(hasHearingChannel(asylumCase, "INTER"));
     }
 
     @Test
     void should_return_false_when_hearing_channel_is_empty_for_video() {
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
 
-        assertFalse(hasHearingChannelVideo(asylumCase));
-    }
-
-    @Test
-    void should_return_true_when_hearing_channel_is_telephone() {
-        DynamicList hearingChannelList = new DynamicList(
-                new Value("some", "Value"),
-                List.of(new Value("INTER", "In Person"),
-                        new Value("NA", "Not in Attendance"),
-                        new Value("VID", "Video"),
-                        new Value("TEL", "Telephone"))
-        );
-
-        when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
-
-        assertTrue(hasHearingChannelTelephone(asylumCase));
-    }
-
-    @Test
-    void should_return_false_when_hearing_channel_is_not_telephone() {
-        DynamicList hearingChannelList = new DynamicList(
-                new Value("some", "Value"),
-                List.of(new Value("INTER", "In Person"),
-                        new Value("NA", "Not in Attendance"),
-                        new Value("VID", "Video"))
-        );
-
-        when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
-
-        assertFalse(hasHearingChannelTelephone(asylumCase));
-    }
-
-    @Test
-    void should_return_false_when_hearing_channel_is_empty_for_telephone() {
-        when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
-
-        assertFalse(hasHearingChannelTelephone(asylumCase));
+        assertFalse(hasHearingChannel(asylumCase, "INTER"));
     }
 
 }
