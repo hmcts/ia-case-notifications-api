@@ -104,7 +104,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail).toString());
+        when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
             detentionEngagementTeamDecideAnApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
