@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
@@ -65,7 +64,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             return Collections.emptySet();
         }
 
-        return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase)) ;
+        return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
