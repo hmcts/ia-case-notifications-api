@@ -7146,16 +7146,18 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> internalEditCaseListingNotificationHandler(
         @Qualifier("editCaseListingInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (hasAppellantAddressInCountryOrOutOfCountry(asylumCase) && isInternalNonDetainedCase(asylumCase))
-                    || isDetainedInFacilityType(asylumCase, OTHER);
+                    && (internalNonDetainedWithAddressAvailable(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
             }, notificationGenerators
         );
+    }
+
+    private static boolean internalNonDetainedWithAddressAvailable(AsylumCase asylumCase) {
+        return hasAppellantAddressInCountryOrOutOfCountry(asylumCase) && isInternalNonDetainedCase(asylumCase);
     }
 
     @Bean
