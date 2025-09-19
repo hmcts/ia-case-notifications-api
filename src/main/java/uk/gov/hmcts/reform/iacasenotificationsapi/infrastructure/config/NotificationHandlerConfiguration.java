@@ -5506,8 +5506,7 @@ public class NotificationHandlerConfiguration {
 
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isInternalCase(asylumCase)
-                    && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON);
+                    && isInternalCase(asylumCase);
             }, notificationGenerators
         );
     }
