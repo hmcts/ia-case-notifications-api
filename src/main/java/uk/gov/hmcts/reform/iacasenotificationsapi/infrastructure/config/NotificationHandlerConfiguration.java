@@ -52,6 +52,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -3448,8 +3449,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> markAsPaidInternalDetandHoNotificationHandler(
-        @Qualifier("markAsPaidInternalDetandHonotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> markAsPaidInternalDetAndHoNotificationHandler(
+        @Qualifier("markAsPaidInternalDetAndHoNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -4401,6 +4402,27 @@ public class NotificationHandlerConfiguration {
             }, notificationGenerators
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
+        @Qualifier("remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && remissionDecisionPartiallyGrantedOrRefused(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
@@ -5466,31 +5488,6 @@ public class NotificationHandlerConfiguration {
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase)
                     && isAppellantInDetention(asylumCase);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealFeeDueRecordRemissionDecisionNotificationHandler(
-        @Qualifier("internalDetainedAppealFeeDueNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                    .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
-                    .orElse(false);
-
-                return callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getCaseDetails().getState().equals(State.PENDING_PAYMENT)
-                    && isInternalCase(asylumCase)
-                    && isAppellantInDetention(asylumCase)
-                    && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isRemissionPartiallyApprovedOrRejected
-                    && isEaHuEuAppeal(asylumCase);
             }, notificationGenerators
         );
     }
