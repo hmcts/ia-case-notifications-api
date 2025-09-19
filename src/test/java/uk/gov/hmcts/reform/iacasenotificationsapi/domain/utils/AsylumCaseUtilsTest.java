@@ -36,7 +36,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasHearingChannel;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
@@ -636,9 +636,9 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
-    void should_return_true_when_has_hearing_channel() {
+    void should_return_true_when_is_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
-                new Value("some", "Value"),
+                new Value("INTER", "In Person"),
                 List.of(new Value("INTER", "In Person"),
                         new Value("NA", "Not in Attendance"),
                         new Value("VID", "Video"),
@@ -647,28 +647,29 @@ public class AsylumCaseUtilsTest {
 
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
 
-        assertTrue(hasHearingChannel(asylumCase, "INTER"));
+        assertTrue(isHearingChannel(asylumCase, "INTER"));
     }
 
     @Test
-    void should_return_false_when_missing_hearing_channel() {
+    void should_return_false_when_not_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
-                new Value("some", "Value"),
-                List.of(new Value("NA", "Not in Attendance"),
+                new Value("VID", "Video"),
+                List.of(new Value("INTER", "In Person"),
+                        new Value("NA", "Not in Attendance"),
                         new Value("VID", "Video"),
                         new Value("TEL", "Telephone"))
         );
 
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
 
-        assertFalse(hasHearingChannel(asylumCase, "INTER"));
+        assertFalse(isHearingChannel(asylumCase, "INTER"));
     }
 
     @Test
-    void should_return_false_when_hearing_channel_is_empty_for_video() {
+    void should_return_false_when_hearing_channel_is_empty() {
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
 
-        assertFalse(hasHearingChannel(asylumCase, "INTER"));
+        assertFalse(isHearingChannel(asylumCase, "INTER"));
     }
     
     @ParameterizedTest

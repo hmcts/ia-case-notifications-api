@@ -491,10 +491,9 @@ public class AsylumCaseUtils {
             .map(type -> type == RP || type == DC).orElse(false);
     }
 
-    public static boolean hasHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
+    public static boolean isHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
         return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
-                .map(hearingChannels -> hearingChannels.getListItems().stream()
-                        .anyMatch(c -> c.getCode().equals(hearingChannelCode)))
+                .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
                 .orElse(false);
     }
     

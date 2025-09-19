@@ -21,10 +21,22 @@
           "prisonName": "Albany",
           "hearingChannel": {
             "value": {
-              "code": "some",
-              "label": "val"
+              "code": "VID",
+              "label": "Video"
             },
             "list_items": [
+              {
+                "code": "INTER",
+                "label": "In Person"
+              },
+              {
+                "code": "NA",
+                "label": "Not in Attendance"
+              },
+              {
+                "code": "TEL",
+                "label": "Telephone"
+              },
               {
                 "code": "VID",
                 "label": "Video"
