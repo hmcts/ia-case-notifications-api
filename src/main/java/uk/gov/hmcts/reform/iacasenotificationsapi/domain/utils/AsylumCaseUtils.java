@@ -494,4 +494,8 @@ public class AsylumCaseUtils {
             .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
             .orElse(false);
     }
+
+    public static boolean isInternalNonDetainedCase(AsylumCase asylumCase) {
+        return isInternalCase(asylumCase) && !isAppellantInDetention(asylumCase);
+    }
 }

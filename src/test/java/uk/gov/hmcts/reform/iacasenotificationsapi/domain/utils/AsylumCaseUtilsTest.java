@@ -658,4 +658,12 @@ public class AsylumCaseUtilsTest {
         assertFalse(remissionDecisionPartiallyGrantedOrRefused(asylumCase));
     }
 
+    @Test
+    void should_return_true_for_internal_non_detained_case() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertTrue(AsylumCaseUtils.isInternalNonDetainedCase(asylumCase));
+    }
+
 }
