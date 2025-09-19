@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Addr
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DetentionFacilityNameFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 import java.util.Map;
@@ -25,6 +26,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IRC_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_DETENTION_LOCATION;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -39,6 +43,8 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     AddressUk address;
+    @Mock
+    DetentionFacilityNameFinder detentionFacilityNameFinder;
 
     private Long ccdCaseId = 12345L;
     private String letterTemplateId = "someLetterTemplateId";
@@ -55,7 +61,9 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
     private String detentionFacility = "immigrationRemovalCentre";
-    private String ircName = "some irc name";
+    private String ircName = "Colnbrook";
+    private String previousDetentionLocation = "Addiewell";
+    private String previousDetentionLocationFull = "HM Prison Addiewell";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
 
     private LegalRepresentativeLetterUpdateDetentionLocationPersonalisation legalRepresentativeLetterUpdateDetentionLocationPersonalisation;
@@ -69,8 +77,11 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(asylumCase.read(AsylumCaseDefinition.DETENTION_FACILITY, String.class)).thenReturn(Optional.of(detentionFacility));
-        when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of(ircName));
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(detentionFacility));
+        when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of(ircName));
+        when(detentionFacilityNameFinder.getDetentionFacility(ircName)).thenReturn(ircName);
+        when(asylumCase.read(PREVIOUS_DETENTION_LOCATION, String.class)).thenReturn(Optional.of(previousDetentionLocation));
+        when(detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocation)).thenReturn(previousDetentionLocationFull);
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
@@ -81,7 +92,8 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
 
         legalRepresentativeLetterUpdateDetentionLocationPersonalisation = new LegalRepresentativeLetterUpdateDetentionLocationPersonalisation(
                 letterTemplateId,
-                customerServicesProvider);
+                customerServicesProvider,
+                detentionFacilityNameFinder);
     }
 
     @Test
@@ -145,6 +157,8 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(previousDetentionLocationFull, personalisation.get("oldDetentionLocation"));
+        assertEquals(ircName, personalisation.get("newDetentionLocation"));
     }
 
     @Test
@@ -183,6 +197,8 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
         assertEquals(postCode, personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(previousDetentionLocationFull, personalisation.get("oldDetentionLocation"));
+        assertEquals(ircName, personalisation.get("newDetentionLocation"));
     }
 
     @Test
@@ -202,6 +218,8 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
         assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals(previousDetentionLocationFull, personalisation.get("oldDetentionLocation"));
+        assertEquals(ircName, personalisation.get("newDetentionLocation"));
     }
 
     private void appellantOutOfCountryDataSetup() {
