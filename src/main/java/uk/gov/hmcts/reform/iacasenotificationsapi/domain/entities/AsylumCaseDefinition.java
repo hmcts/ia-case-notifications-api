@@ -622,6 +622,9 @@ public enum AsylumCaseDefinition {
 
     PRISON_NOMS(
             "prisonNOMSNumber", new TypeReference<PrisonNomsNumber>(){}),
+
+    HEARING_CHANNEL(
+            "hearingChannel", new TypeReference<DynamicList>(){}),
     ;
 
 

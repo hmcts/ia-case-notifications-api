@@ -40,6 +40,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
@@ -860,7 +861,8 @@ public class NotificationHandlerConfiguration {
                     return callback.getEvent() == LIST_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
-                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
+                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
+                            && isHearingChannel(asylumCase, "INTER");
                 },
                 notificationGenerators
         );
@@ -7243,7 +7245,8 @@ public class NotificationHandlerConfiguration {
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
-                    && detentionFacility.isPresent() && !detentionFacility.get().equals("other");
+                    && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
+                    && isHearingChannel(asylumCase, "INTER");
             }, notificationGenerators
         );
     }
