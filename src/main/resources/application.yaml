@@ -1757,6 +1757,7 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "hearingCancelled"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
