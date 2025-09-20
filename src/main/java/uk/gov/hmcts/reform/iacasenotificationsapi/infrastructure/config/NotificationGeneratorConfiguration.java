@@ -6654,14 +6654,14 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("hearingCancelledProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> hearingCancelledProductionDetainedNotificationGenerator(
-            DetentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation detentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation,
+            DetentionEngagementTeamHearingCancelledProductionPersonalisation detentionEngagementTeamHearingCancelledProductionPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                detentionEngagementTeamAdjournHearingWithoutDateProductionPersonalisation
+                                detentionEngagementTeamHearingCancelledProductionPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
