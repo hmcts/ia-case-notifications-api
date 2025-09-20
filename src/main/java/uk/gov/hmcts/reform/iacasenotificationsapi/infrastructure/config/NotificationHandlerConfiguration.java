@@ -7197,9 +7197,12 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    AsylumCase asylumCaseBefore = callback.getCaseDetailsBefore().orElse(callback.getCaseDetails()).getCaseData();
+
                     return callback.getEvent() == END_APPEAL
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isAppellantInDetention(asylumCase);
+                            && isAppellantInDetention(asylumCase)
+                            && asylumCaseBefore.read(LIST_CASE_HEARING_CENTRE).isPresent();
                 }, notificationGenerators
         );
     }
@@ -7244,7 +7247,27 @@ public class NotificationHandlerConfiguration {
                             && isAppellantInDetention(asylumCase);
                 }, notificationGenerators
         );
-    }          
+    }
+
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingCancelledProductionDetainedNotificationHandler(
+            @Qualifier("hearingCancelledProductionDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    return callback.getEvent() == HEARING_CANCELLED
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isAppellantInDetention(asylumCase)
+                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
+                            && isHearingChannel(asylumCase, "INTER");
+                }, notificationGenerators
+        );
+    }
+
+
   
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> editCaseListingProductionDetainedNotificationHandler(
