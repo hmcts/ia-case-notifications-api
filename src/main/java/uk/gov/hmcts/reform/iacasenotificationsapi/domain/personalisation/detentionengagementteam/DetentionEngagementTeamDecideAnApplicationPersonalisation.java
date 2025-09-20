@@ -17,7 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -30,7 +30,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     private final CustomerServicesProvider customerServicesProvider;
     private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId;
     private final MakeAnApplicationService makeAnApplicationService;
-    private final DetEmailService detEmailService;
+    private final DetentionEmailService detEmailService;
 
     @Value("${govnotify.emailPrefix.adaInPerson}")
     private String adaPrefix;
@@ -43,7 +43,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
         @Value("${govnotify.template.decideAnApplication.applicant.detentionEngagementTeam.email}") String detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
         CustomerServicesProvider customerServicesProvider,
         MakeAnApplicationService makeAnApplicationService,
-        DetEmailService detEmailService,
+        DetentionEmailService detEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamDecideAnApplicationApplicantTemplateId = detentionEngagementTeamDecideAnApplicationApplicantTemplateId;
@@ -64,7 +64,7 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
             return Collections.emptySet();
         }
 
-        return detEmailService.getRecipientsList(asylumCase);
+        return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
