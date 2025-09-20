@@ -18,8 +18,13 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -30,6 +35,8 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
+    private static final String HEARING_CHANNEL_CODE_VIDEO = "VID";
+    private static final String HEARING_CHANNEL_CODE_TELEPHONE = "TEL";
 
 
     private AsylumCaseUtils() {
@@ -378,10 +385,15 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasAppellantAddressInCountryOrOutOfCountry(AsylumCase asylumCase) {
-        return asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
-                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false)
-                || asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
-                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+        boolean appellantHasFixedUkAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)
+            .map(flag -> flag.equals(YES))
+            .orElse(false);
+
+        boolean appellantHasFixedOutOfCountryAddress = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+            .map(flag -> flag.equals(YES))
+            .orElse(false);
+
+        return appellantHasFixedUkAddress || appellantHasFixedOutOfCountryAddress || isDetainedInFacilityType(asylumCase, OTHER);
     }
 
     public static Set<String> getAppellantAddressInCountryOrOoc(final AsylumCase asylumCase) {
@@ -455,4 +467,39 @@ public class AsylumCaseUtils {
         }
     }
 
+    public static boolean isDetainedInOneOfFacilityTypes(AsylumCase asylumCase, DetentionFacility... facilityTypes) {
+        for (DetentionFacility facilityType : facilityTypes) {
+            if (isDetainedInFacilityType(asylumCase, facilityType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isDetainedInFacilityType(AsylumCase asylumCase, DetentionFacility facilityType) {
+        if (!isAppellantInDetention(asylumCase)) {
+            return false;
+        }
+        String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class).orElse("none");
+
+        return detentionFacility.equals(facilityType.getValue());
+    }
+
+    public static Boolean isFeeExemptAppeal(AsylumCase asylumCase) {
+        return asylumCase
+            .read(APPEAL_TYPE, AppealType.class)
+            .map(type -> type == RP || type == DC).orElse(false);
+    }
+
+    public static boolean isHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
+        return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
+                .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
+                .orElse(false);
+    }
+    
+    public static Boolean remissionDecisionPartiallyGrantedOrRefused(AsylumCase asylumCase) {
+        return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+            .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+            .orElse(false);
+    }
 }
