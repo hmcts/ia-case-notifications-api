@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumb
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
@@ -45,7 +45,7 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
     private DetentionEngagementTeamHearingCancelledProductionPersonalisation personalisation;
 
     @Mock
-    private DetentionEmailService detentionEmailService;
+    private DetentionFacilityEmailService detentionFacilityEmailService;
     @Mock
     private DateTimeExtractor dateTimeExtractor;
     @Mock
@@ -66,7 +66,7 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
     @BeforeEach
     void setUp() {
         personalisation = new DetentionEngagementTeamHearingCancelledProductionPersonalisation(
-                TEMPLATE_ID, detentionEmailService, dateTimeExtractor, hearingDetailsFinder, SUBJECT_PREFIX);
+                TEMPLATE_ID, detentionFacilityEmailService, dateTimeExtractor, hearingDetailsFinder, SUBJECT_PREFIX);
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -87,7 +87,7 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
     void should_return_recipients_if_detained_in_prison() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(PRISON));
-        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(EMAIL);
+        when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(EMAIL);
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
         assertThat(recipients).containsExactly(EMAIL);
