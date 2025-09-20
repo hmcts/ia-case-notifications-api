@@ -4,7 +4,7 @@
   "disabled": false,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "CaseOfficer",
+    "credentials": "AdminOfficer",
     "input": {
       "id": 13412,
       "eventId": "hearingCancelled",
