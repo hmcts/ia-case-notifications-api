@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 
 import java.util.Map;
 import java.util.Optional;
@@ -40,8 +39,7 @@ class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
     AddressUk address;
 
     private final Long ccdCaseId = 12345L;
-    private final String letterLrTemplateId = "someLrLetterTemplateId";
-    private final String letterAipTemplateId = "someAipLetterTemplateId";
+    private final String letterTemplateId = "someLrLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -77,27 +75,13 @@ class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
         when(address.getPostTown()).thenReturn(Optional.of(postTown));
 
         appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation = new AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation(
-            letterLrTemplateId,
-            letterAipTemplateId,
+            letterTemplateId,
             customerServicesProvider);
     }
 
     @Test
-    void should_return_given_aip_template_id() {
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertEquals(letterAipTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
-    }
-
-    @Test
-    void should_return_given_lr_template_id() {
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertEquals(letterLrTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
-    }
-
-    @Test
     void should_return_given_template_id() {
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.empty());
-        assertEquals(letterLrTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
+        assertEquals(letterTemplateId, appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

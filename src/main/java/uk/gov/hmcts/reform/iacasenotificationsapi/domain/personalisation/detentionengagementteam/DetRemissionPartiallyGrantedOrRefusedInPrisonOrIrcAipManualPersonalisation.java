@@ -6,7 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_APPEAL_REMISSION_PARTIALLY_GRANTED_OR_REFUSED_TEMPLATE_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
@@ -28,14 +28,14 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
     private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
-    public DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisation(
+    public DetRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation(
             @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetentionEmailService detentionEmailService,
@@ -49,7 +49,7 @@ public class DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisation im
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_LATE_WITH_FEE";
+        return caseId + "_INTERNAL_NON_ADA_REMISSION_PARTIALLY_GRANTED_OR_REFUSED_IN_PRISON_OR_IRC";
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisation im
 
     private JSONObject getAppealCanProceedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_APPEAL_REMISSION_PARTIALLY_GRANTED_OR_REFUSED_TEMPLATE_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal 'Appeal can proceed' Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal 'Appeal can proceed' Letter in compatible format");

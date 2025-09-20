@@ -4120,6 +4120,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
+        DetRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+
     @Bean("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
     public List<NotificationGenerator> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         LegalRepresentativeRecordOutOfTimeDecisionCannotProceed legalRepresentativeRecordOutOfTimeDecisionCannotProceed,
@@ -4961,23 +4977,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalDetainedAppealFeeDueNotificationGenerator")
-    public List<NotificationGenerator> internalDetainedAppealFeeDueNotificationGenerator(
-        DetentionEngagementTeamAppealFeeDuePersonalisation detentionEngagementTeamAppealFeeDuePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamAppealFeeDuePersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("markAsPaidInternalDetandHonotificationGenerator")
-    public List<NotificationGenerator> markAsPaidInternalDetandHoNotificationHandler(
+    @Bean("markAsPaidInternalDetAndHoNotificationGenerator")
+    public List<NotificationGenerator> markAsPaidInternalDetAndHoNotificationHandler(
         DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
         HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation, //identical notification already existing for different event, reusing it.
         GovNotifyNotificationSender notificationSender,
@@ -5971,6 +5972,21 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("internalRemissionApprovedOutOfTimeAppellantDetainedPrisonIrcLetterNotificationGenerator")
+    public List<NotificationGenerator> internalRemissionApprovedOutOfTimeAppellantDetainedPrisonIrcLetterNotificationGenerator(
+            DetentionEngagementTeamInternalCaseDetainedPrisonIrcRemissionApprovedOutOfTimeEmailPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(personalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
