@@ -1757,7 +1757,6 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
-      - "hearingCancelled"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1905,6 +1904,7 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
+      - "hearingCancelled"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
