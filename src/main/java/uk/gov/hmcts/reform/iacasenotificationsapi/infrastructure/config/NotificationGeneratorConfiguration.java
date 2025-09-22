@@ -6023,6 +6023,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("legalRepRemovedDetainedPrisonIrcLetterNotificationGenerator")
+    public List<NotificationGenerator> legalRepRemovedDetainedPrisonIrcLetterNotificationGenerator(
+            DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(personalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalSubmitAppealWithFeeAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation appellantInternalCaseSubmittedOnTimeWithFeePersonalisation,
