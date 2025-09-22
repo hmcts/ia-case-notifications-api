@@ -3,7 +3,7 @@
   "launchDarklyKey": "tcw-notifications-feature:true",
   "disabled": false,
   "request": {
-    "uri": "/asylum/ccdAboutToSubmit",
+    "uri": "/asylum/ccdSubmitted",
     "credentials": "AdminOfficer",
     "input": {
       "id": 13411,

@@ -1,13 +1,13 @@
 {
-  "description": "DIAC-1341 Hearing Cancelled - No Cancellation of Production Notice - Detained - Other",
+  "description": "DIAC-1341 End Appeal - No Cancellation of Production Notice - Detained - Other",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "disabled": false,
   "request": {
-    "uri": "/asylum/ccdSubmitted",
+    "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 13413,
-      "eventId": "hearingCancelled",
+      "id": 13416,
+      "eventId": "endAppeal",
       "state": "preHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",

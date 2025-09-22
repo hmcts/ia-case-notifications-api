@@ -1,13 +1,13 @@
 {
-  "description": "DIAC-1341 Hearing Cancelled - No Cancellation of Production Notice - Detained - Other",
+  "description": "DIAC-1341 End Appeal - Cancellation of Production Notice - Detained ",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "disabled": false,
   "request": {
-    "uri": "/asylum/ccdSubmitted",
+    "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 13413,
-      "eventId": "hearingCancelled",
+      "id": 13414,
+      "eventId": "endAppeal",
       "state": "preHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -16,15 +16,8 @@
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "appellantInDetention": "Yes",
-          "detentionFacility": "other",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "detentionFacility": "prison",
+          "prisonName": "Albany",
           "hearingChannel": {
             "value": {
               "code": "INTER",
@@ -60,9 +53,25 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "listCaseHearingCentre": "taylorHouse",
-        "notificationsSent": []
+        "notificationsSent": [
+          {
+            "id": "13414_DETAINED_HEARING_CANCELLED_PRODUCTION_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
       }
     },
-    "notifications": []
+    "notifications": [
+      {
+        "reference": "13414_DETAINED_HEARING_CANCELLED_PRODUCTION_DET",
+        "recipient": "det-prison-albany@example.com",
+        "subject": "IAFT – SERVE IN PERSON: IAFT – Cancellation of Production Notice",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Talha Awan"
+        ]
+      }
+    ]
   }
 }

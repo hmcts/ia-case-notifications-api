@@ -1,13 +1,13 @@
 {
-  "description": "DIAC-1341 Hearing Cancelled - No Cancellation of Production Notice - Detained - Other",
+  "description": "DIAC-1341 End Appeal - No Cancellation of Production Notice - Detained - Video",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "disabled": false,
   "request": {
-    "uri": "/asylum/ccdSubmitted",
+    "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 13413,
-      "eventId": "hearingCancelled",
+      "id": 13415,
+      "eventId": "endAppeal",
       "state": "preHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -16,19 +16,12 @@
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "appellantInDetention": "Yes",
-          "detentionFacility": "other",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "detentionFacility": "prison",
+          "prisonName": "Albany",
           "hearingChannel": {
             "value": {
-              "code": "INTER",
-              "label": "In Person"
+              "code": "VID",
+              "label": "Video"
             },
             "list_items": [
               {
