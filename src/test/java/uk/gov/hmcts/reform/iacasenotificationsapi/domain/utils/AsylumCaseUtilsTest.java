@@ -16,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CHANNEL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ARIA_MIGRATED;
@@ -35,6 +36,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
@@ -633,6 +635,43 @@ public class AsylumCaseUtilsTest {
         assertFalse(isFeeExemptAppeal(asylumCase));
     }
 
+    @Test
+    void should_return_true_when_is_hearing_channel() {
+        DynamicList hearingChannelList = new DynamicList(
+                new Value("INTER", "In Person"),
+                List.of(new Value("INTER", "In Person"),
+                        new Value("NA", "Not in Attendance"),
+                        new Value("VID", "Video"),
+                        new Value("TEL", "Telephone"))
+        );
+
+        when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
+
+        assertTrue(isHearingChannel(asylumCase, "INTER"));
+    }
+
+    @Test
+    void should_return_false_when_not_hearing_channel() {
+        DynamicList hearingChannelList = new DynamicList(
+                new Value("VID", "Video"),
+                List.of(new Value("INTER", "In Person"),
+                        new Value("NA", "Not in Attendance"),
+                        new Value("VID", "Video"),
+                        new Value("TEL", "Telephone"))
+        );
+
+        when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
+
+        assertFalse(isHearingChannel(asylumCase, "INTER"));
+    }
+
+    @Test
+    void should_return_false_when_hearing_channel_is_empty() {
+        when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
+
+        assertFalse(isHearingChannel(asylumCase, "INTER"));
+    }
+    
     @ParameterizedTest
     @ValueSource(strings = {"PARTIALLY_APPROVED", "REJECTED"})
     void should_return_true_for_remission_decision_partially_granted_or_refused(String remissionDecisionValue) {

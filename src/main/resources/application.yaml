@@ -784,6 +784,10 @@ govnotify:
       detentionEngagementTeam:
         production:
           email: f97b30d5-c41c-4b85-a18c-8d4efa1a0f3e
+    hearingCancelled:
+      detentionEngagementTeam:
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1900,6 +1904,7 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
+      - "hearingCancelled"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
