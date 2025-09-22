@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumb
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
@@ -19,28 +19,33 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_BUILDING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PRISON_NOMS;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamEndTheAppealProductionPersonalisation implements EmailNotificationPersonalisation {
+public class DetentionEngagementTeamHearingCancelledProductionPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String caseListedProductionDetainedTemplateId;
-    private final DetentionEmailService detentionEmailService;
+    private final String hearingCancelledProductionDetainedTemplateId;
+    private final DetentionFacilityEmailService detentionFacilityEmailService;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final String subjectPrefix;
 
-    public DetentionEngagementTeamEndTheAppealProductionPersonalisation(
-        @Value("${govnotify.template.endAppeal.detentionEngagementTeam.production.email}") String caseListedProductionDetainedTemplateId,
-        DetentionEmailService detentionEmailService,
+    public DetentionEngagementTeamHearingCancelledProductionPersonalisation(
+        @Value("${govnotify.template.hearingCancelled.detentionEngagementTeam.production.email}") String hearingCancelledProductionDetainedTemplateId,
+        DetentionFacilityEmailService detentionFacilityEmailService,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix
     ) {
-        this.caseListedProductionDetainedTemplateId = caseListedProductionDetainedTemplateId;
-        this.detentionEmailService = detentionEmailService;
+        this.hearingCancelledProductionDetainedTemplateId = hearingCancelledProductionDetainedTemplateId;
+        this.detentionFacilityEmailService = detentionFacilityEmailService;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
         this.subjectPrefix = subjectPrefix;
@@ -48,26 +53,17 @@ public class DetentionEngagementTeamEndTheAppealProductionPersonalisation implem
 
     @Override
     public String getTemplateId() {
-        return caseListedProductionDetainedTemplateId;
+        return hearingCancelledProductionDetainedTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (!isAppellantInDetention(asylumCase)) {
-            return Collections.emptySet();
-        }
-
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-
-        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
+        return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETAINED_END_APPEAL_PRODUCTION_DET";
+        return caseId + "_DETAINED_HEARING_CANCELLED_PRODUCTION_DET";
     }
 
     @Override

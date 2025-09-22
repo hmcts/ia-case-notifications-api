@@ -1,11 +1,11 @@
 {
-  "description": "DIAC-1339 Edit case listing production notification",
+  "description": "DIAC-1581 Edit case listing No production notification Video",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 13392,
+      "id": 15812,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -21,8 +21,8 @@
           "prisonName": "Albany",
           "hearingChannel": {
             "value": {
-              "code": "INTER",
-              "label": "In Person"
+              "code": "VID",
+              "label": "Video"
             },
             "list_items": [
               {
@@ -68,19 +68,15 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "13392_CASE_RE_LISTED_HOME_OFFICE",
+            "id": "15812_CASE_RE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "13392_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "15812_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "13392_CASE_RE_LISTED_CASE_OFFICER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "13392_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
+            "id": "15812_CASE_RE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -88,7 +84,7 @@
     },
     "notifications": [
       {
-        "reference": "13392_CASE_RE_LISTED_HOME_OFFICE",
+        "reference": "15812_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -100,7 +96,7 @@
         ]
       },
       {
-        "reference": "13392_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "15812_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -109,18 +105,6 @@
           "3 Sep 2023",
           "14:25",
           "Talha Awan"
-        ]
-      },
-      {
-        "reference": "13392_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
-        "recipient": "det-prison-albany@example.com",
-        "subject": "IAFT – SERVE IN PERSON: Hearing details",
-        "body": [
-          "PA/12345/2023",
-          "Appellant name: Talha Awan",
-          "3 Sep 2023",
-          "14:25",
-          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
         ]
       }
     ]
