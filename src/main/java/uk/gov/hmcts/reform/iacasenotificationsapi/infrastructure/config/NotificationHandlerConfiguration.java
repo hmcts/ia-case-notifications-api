@@ -3668,22 +3668,22 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationDetainedInternalNotificationHandler(
-            @Qualifier("decideAnApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                                && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
-                                && (isInternalCase(callback.getCaseDetails().getCaseData()) || isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON))
-                                && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData())
-                                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
-
-                notificationGenerators
-        );
-    }
+//    @Bean
+//    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationDetainedInternalNotificationHandler(
+//            @Qualifier("decideAnApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+//
+//        return new NotificationHandler(
+//                (callbackStage, callback) ->
+//                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+//                                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
+//                                && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
+//                                && (isInternalCase(callback.getCaseDetails().getCaseData()) || isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON))
+//                                && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData())
+//                                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+//
+//                notificationGenerators
+//        );
+//    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalNotificationHandler(
