@@ -4962,22 +4962,6 @@ public class NotificationGeneratorConfiguration {
 
     }
 
-    @Bean("internalSubmitAppealInTimeNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealInTimeNotificationGenerator(
-        DetentionEngagementTeamAppealSubmittedInTimePersonalisation detentionEngagementTeamAppealSubmittedInTimePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamAppealSubmittedInTimePersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-
-    }
-
     @Bean("internalEndAppealAutomaticallyNotificationGenerator")
     public List<NotificationGenerator> internalEndAppealAutomaticallyNotificationGenerator(
         DetentionEngagementTeamEndAppealAutomaticallyPersonalisation detentionEngagementTeamEndAppealAutomaticallyPersonalisation,
