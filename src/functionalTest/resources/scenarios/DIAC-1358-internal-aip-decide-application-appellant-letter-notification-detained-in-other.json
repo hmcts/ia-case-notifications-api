@@ -1,5 +1,6 @@
 {
   "description": "DIAC-1358 Send letter notification to appellant, Decide application - detained in other (internal case creation)",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
