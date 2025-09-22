@@ -59,7 +59,25 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appellantHasFixedAddress": "No",
+        "legalRepReferenceNumber": "CASE001",
+        "appealGroundsProtection": "{values=[refugeeConvention]}",
+        "legalRepresentativeName": "A Test Legal Rep",
+        "legalRepresentativeEmailAddress": "ia.legalrep.a.ccd@gmail.com",
+        "appellantDateOfBirth": "2005-09-27",
+        "hasOtherAppeals": "No",
         "listCaseHearingCentre": "taylorHouse",
+        "appealReferenceNumber": "PA/12345/2019",
+        "appellantGivenNames": "Talha",
+        "appealType": "protection",
+        "appellantFamilyName": "Awan",
+        "hearingCentre": "taylorHouse",
+        "appellantTitle": "Mr",
+        "appellantNationalities": "[{id=1, value={Iceland=IS}}]",
+        "homeOfficeDecisionDate": "2025-09-22",
+        "sendDirectionActionAvailable": "Yes",
+        "hasNewMatters": "No",
+        "homeOfficeReferenceNumber": "A1234567",
         "notificationsSent": []
       }
     },
