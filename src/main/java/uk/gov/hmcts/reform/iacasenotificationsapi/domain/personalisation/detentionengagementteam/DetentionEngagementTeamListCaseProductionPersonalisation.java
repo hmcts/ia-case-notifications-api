@@ -13,12 +13,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Slf4j
 @Service
@@ -51,15 +49,6 @@ public class DetentionEngagementTeamListCaseProductionPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (!isAppellantInDetention(asylumCase)) {
-            return Collections.emptySet();
-        }
-
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-
         return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
     }
 
