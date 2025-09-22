@@ -3480,23 +3480,23 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-//    @Bean("decideAnApplicationDetaiendInternalNotificationGenerator")
-//    public List<NotificationGenerator> decideAnApplicationDetaiendInternalNotificationGenerator(
-//            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-//            GovNotifyNotificationSender notificationSender,
-//            NotificationIdAppender notificationIdAppender
-//    ) {
-//        return singletonList(
-//                new EmailWithLinkNotificationGenerator(
-//                        newArrayList(
-//                        detDecideAnApplicationDetainedPersonalisation
-//                        ),
-//                        notificationSender,
-//                        notificationIdAppender
-//                )
-//        );
-//
-//    }
+    //    @Bean("decideAnApplicationDetaiendInternalNotificationGenerator")
+    //    public List<NotificationGenerator> decideAnApplicationDetaiendInternalNotificationGenerator(
+    //            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
+    //            GovNotifyNotificationSender notificationSender,
+    //            NotificationIdAppender notificationIdAppender
+    //    ) {
+    //        return singletonList(
+    //                new EmailWithLinkNotificationGenerator(
+    //                        newArrayList(
+    //                        detDecideAnApplicationDetainedPersonalisation
+    //                        ),
+    //                        notificationSender,
+    //                        notificationIdAppender
+    //                )
+    //        );
+    //
+    //    }
 
     @Bean("decideAnApplicationInternalNotificationGenerator")
     public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
