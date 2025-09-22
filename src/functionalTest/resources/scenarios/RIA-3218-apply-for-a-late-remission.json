@@ -50,16 +50,6 @@
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
-      },
-      {
-        "reference": "3218_ADMIN_OFFICER_LATE_REMISSION_SUBMITTED",
-        "recipient": "{$PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL}",
-        "subject": "Immigration and Asylum appeal: Fee remission requested",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}"
-        ]
       }
     ]
   }
