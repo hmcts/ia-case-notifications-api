@@ -3665,9 +3665,26 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                    && (isInternalCase(callback.getCaseDetails().getCaseData()) || isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON))
+                    && isInternalCase(callback.getCaseDetails().getCaseData())
+                    && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
                     && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantApplicationDecidedDetainedInIrcPrisonNotificationHandler(
+            @Qualifier("decideAnApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
+                                && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
+                                && (isInternalCase(callback.getCaseDetails().getCaseData()) || isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON))
+                                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                                && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
+                notificationGenerators
         );
     }
 
