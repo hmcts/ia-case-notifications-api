@@ -1,21 +1,21 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 
 import java.util.Optional;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PRISON_NAME;
 
 @Service
 public class DetentionEmailService {
     private final DetEmailService detEmailService;
-    private final PrisonEmailMappingService prisonEmailMappingService;
+    private final String ctscEmailAddress;
 
-    public DetentionEmailService(DetEmailService detEmailService, PrisonEmailMappingService prisonEmailMappingService) {
+    public DetentionEmailService(DetEmailService detEmailService, @Value("${ctscEmailAddress}") String ctscEmailAddress) {
         this.detEmailService = detEmailService;
-        this.prisonEmailMappingService = prisonEmailMappingService;
+        this.ctscEmailAddress = ctscEmailAddress;
     }
 
     public String getDetentionEmailAddress(AsylumCase asylumCase) {
@@ -24,16 +24,10 @@ public class DetentionEmailService {
         if (detentionFacility.isPresent()) {
             if (detentionFacility.get().equals("immigrationRemovalCentre")) {
                 return detEmailService.getDetEmailAddress(asylumCase);
+            } else if (detentionFacility.get().equals("prison")) {
+                return  this.ctscEmailAddress;
             } else {
-                Optional<String> prisonNameOpt = asylumCase.read(PRISON_NAME, String.class);
-                if (prisonNameOpt.isPresent()) {
-                    return prisonEmailMappingService.getPrisonEmail(prisonNameOpt.get())
-                            .orElseThrow(() -> new IllegalStateException(
-                                    "Prison email address not found for Prison: " + prisonNameOpt.get())
-                            );
-                } else {
-                    throw new IllegalStateException("Prison name is not present");
-                }
+                throw new IllegalStateException("Detention facility is not valid");
             }
         } else {
             throw new IllegalStateException("Detention facility is not present");
