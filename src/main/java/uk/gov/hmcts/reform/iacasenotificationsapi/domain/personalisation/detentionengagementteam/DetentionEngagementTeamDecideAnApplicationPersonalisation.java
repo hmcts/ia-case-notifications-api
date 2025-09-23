@@ -61,8 +61,9 @@ public class DetentionEngagementTeamDecideAnApplicationPersonalisation implement
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         if (isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON)) {
             return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
-        } else
+        } else {
             return Collections.emptySet();
+        }
     }
 
     @Override

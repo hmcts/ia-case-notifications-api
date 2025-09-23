@@ -3506,14 +3506,14 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-    return singletonList(
-        new EmailWithLinkNotificationGenerator(
-            newArrayList(
-                detentionEngagementTeamDecideAnApplicationPersonalisation
-            ),
-            notificationSender,
-            notificationIdAppender
-            )
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamDecideAnApplicationPersonalisation
+                ),
+                    notificationSender,
+                    notificationIdAppender
+                )
         );
     }
 
