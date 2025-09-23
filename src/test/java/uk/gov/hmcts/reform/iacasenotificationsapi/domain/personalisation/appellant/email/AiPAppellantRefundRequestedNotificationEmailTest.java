@@ -149,7 +149,26 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
 
     }
+
+    @Test
+    void should_return_personalisation_for_payLater_payOffline() {
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
+        when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payNow"));
+
+        Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(callback);
+
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
+    }
+
+    @Test
+    void should_return_personalisation_for_standard_refund() {
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.EA));
+
+        Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(callback);
+
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
+    }
+
 }
