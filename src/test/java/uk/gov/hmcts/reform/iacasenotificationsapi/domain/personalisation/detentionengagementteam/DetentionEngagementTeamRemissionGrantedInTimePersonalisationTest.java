@@ -12,6 +12,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 
@@ -22,6 +23,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_APPEAL_REMISSION_GRANTED_IN_TIME_LETTER;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,20 +36,21 @@ class DetentionEngagementTeamRemissionGrantedInTimePersonalisationTest {
     private static final String DETENTION_EMAIL = "detention@example.com";
 
     @Mock
-    private DetentionEmailService detentionEmailService;
+    private DetEmailService detEmailService;
 
     @Mock
     private DocumentDownloadClient documentDownloadClient;
 
+    private DetentionEmailService detentionEmailService;
     private DetentionEngagementTeamRemissionGrantedInTimePersonalisation personalisation;
 
     @BeforeEach
     void setUp() {
+        detentionEmailService = new DetentionEmailService(detEmailService, CTSC_EMAIL);
         personalisation = new DetentionEngagementTeamRemissionGrantedInTimePersonalisation(
                 TEMPLATE_ID,
                 NON_ADA_PREFIX,
                 detentionEmailService,
-                CTSC_EMAIL,
                 documentDownloadClient
         );
     }
@@ -61,8 +64,8 @@ class DetentionEngagementTeamRemissionGrantedInTimePersonalisationTest {
     @Test
     void shouldReturnDetentionEmailAddress_whenDetainedInIrc() {
         AsylumCase asylumCase = mock(AsylumCase.class);
-        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(DETENTION_EMAIL);
-        // mock AsylumCaseUtils.isDetainedInFacilityType(...) if needed using MockedStatic
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(DETENTION_EMAIL);
 
         try (var mocked = Mockito.mockStatic(
                 uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.class)) {
@@ -79,6 +82,8 @@ class DetentionEngagementTeamRemissionGrantedInTimePersonalisationTest {
     @Test
     void shouldReturnCtscEmailAddress_whenNotInIrc() {
         AsylumCase asylumCase = mock(AsylumCase.class);
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
+
         try (var mocked = Mockito.mockStatic(
                 uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.class)) {
             mocked.when(() -> uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils

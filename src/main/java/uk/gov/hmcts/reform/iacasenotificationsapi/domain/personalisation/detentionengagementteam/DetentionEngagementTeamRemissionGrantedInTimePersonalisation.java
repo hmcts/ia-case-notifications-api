@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -21,7 +20,6 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_APPEAL_REMISSION_GRANTED_IN_TIME_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInFacilityType;
 
 @Slf4j
 @Service
@@ -29,7 +27,6 @@ public class DetentionEngagementTeamRemissionGrantedInTimePersonalisation implem
 
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
-    private final String ctscEmailAddress;
     private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
@@ -37,12 +34,10 @@ public class DetentionEngagementTeamRemissionGrantedInTimePersonalisation implem
             @Value("${govnotify.template.remissionDecision.detentionEngagementTeam.approved.onTime.email}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetentionEmailService detentionEmailService,
-            @Value("${ctscEmailAddress}") String ctscEmailAddress,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
-        this.ctscEmailAddress = ctscEmailAddress;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
@@ -54,11 +49,7 @@ public class DetentionEngagementTeamRemissionGrantedInTimePersonalisation implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
-            return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
-        } else {
-            return Collections.singleton(ctscEmailAddress);
-        }
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
