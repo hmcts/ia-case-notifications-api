@@ -154,13 +154,29 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
 
     @Test
     void should_return_personalisation_for_payLater_payOffline() {
-        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
-        when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payNow"));
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class))
+                .thenReturn(Optional.of(AppealType.PA));
 
-        Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(callback);
+        when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class))
+                .thenReturn(Optional.of("payLater"));
 
+        // Mock other required fields (appeal reference, HO ref, names, etc.)
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of("A1234567"));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of("HO123456"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
+                .thenReturn(Optional.of("Test"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
+                .thenReturn(Optional.of("User"));
+
+        // Execute
+        Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(asylumCase);
+
+        // ✅ This should now pass
         assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
     }
+
 
     @Test
     void should_return_personalisation_for_standard_refund() {
