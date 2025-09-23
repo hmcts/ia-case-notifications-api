@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -26,19 +26,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation implements EmailWithLinkNotificationPersonalisation {
     private final String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
     private final String nonAdaPrefix;
-    private final DetentionFacilityEmailService detentionFacilityEmailService;
+    private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation(
         @Value("${govnotify.template.appealSubmitted.adminOfficer.nonAdaInTimeDetainedPrisonIrc.email}")
         String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId,
         @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
-        DetentionFacilityEmailService detentionFacilityEmailService,
+        DetentionEmailService detentionEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
         this.appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId = appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
-        this.detentionFacilityEmailService = detentionFacilityEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
@@ -49,7 +49,7 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWit
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
