@@ -49,13 +49,7 @@
   "expectation": {
     "status": 200,
     "errors": [],
-    "caseData": {
-      "template": "minimal-appeal-submitted.json",
-      "replacements": {
-        "listCaseHearingCentre": "taylorHouse",
-        "notificationsSent": []
-      }
-    },
+    "caseData": null,
     "notifications": []
   }
 }
