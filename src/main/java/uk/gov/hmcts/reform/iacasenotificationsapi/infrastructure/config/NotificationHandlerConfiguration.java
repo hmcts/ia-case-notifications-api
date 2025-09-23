@@ -2555,7 +2555,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                && isListAssistIntegrated(callback.getCaseDetails().getCaseData()),
+                && isListAssistIntegrated(callback.getCaseDetails().getCaseData())
+                && isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2629,7 +2630,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                    && !isAppellantInDetention(callback.getCaseDetails().getCaseData())
                     && isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
@@ -6799,7 +6799,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internaLateRemissionRefusedLetterNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> internalLateRemissionRefusedLetterNotificationHandler(
         @Qualifier("internalLateRemissionRefusedLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
@@ -6833,31 +6833,9 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseAdjournedWithoutTimeLetterNotificationHandler(
-        @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                    && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase);
-
-            },
-            notificationGenerators,
-            getErrorHandler()
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> digitalDetainedOtherCaseAdjournedWithoutDateLetterNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> adjournedWithoutTimeLetterNotificationHandler(
             @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
-    ) {
+            List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
@@ -6866,31 +6844,11 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                            && !isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER);
-                },
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
+                            && ((isInternalCase(asylumCase) &&
+                            !isAppellantInDetention(asylumCase))
+                            || (isAppellantInDetention(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER)));
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedOtherCaseAdjournedWithoutDateLetterNotificationHandler(
-            @Qualifier("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                            && isInternalCase(asylumCase)
-                            && isAppellantInDetention(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER);
                 },
                 notificationGenerators,
                 getErrorHandler()
