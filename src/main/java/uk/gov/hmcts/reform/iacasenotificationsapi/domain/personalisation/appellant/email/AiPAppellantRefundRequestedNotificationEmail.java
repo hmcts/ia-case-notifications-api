@@ -62,7 +62,6 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
         return refundRequestedAipEmailTemplateId;
     }
 
-
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
@@ -78,16 +77,18 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
+        final String correctDateKey = getTemplateId(asylumCase).equals(refundRequestedAipPaPayLaterEmailTemplateId)
+                ? "14 days after remission request sent"
+                : "14 days after refund request sent";
 
-        return
-            ImmutableMap
+        return ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
-                .put("14 days after remission request sent", refundRequestDueDate)
+                .put(correctDateKey, refundRequestDueDate)
                 .build();
     }
 }
