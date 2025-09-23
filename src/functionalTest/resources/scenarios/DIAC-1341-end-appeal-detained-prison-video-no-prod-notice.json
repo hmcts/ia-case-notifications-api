@@ -49,7 +49,7 @@
   "expectation": {
     "status": 200,
     "errors": [],
-    "caseData": null,
+    "caseData": {},
     "notifications": []
   }
 }
