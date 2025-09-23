@@ -3666,7 +3666,6 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                     && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
                     && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
