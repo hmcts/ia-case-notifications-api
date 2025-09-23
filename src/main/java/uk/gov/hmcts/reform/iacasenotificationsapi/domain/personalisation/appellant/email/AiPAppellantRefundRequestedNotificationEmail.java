@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @Service
 public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotificationPersonalisation {
     private final String refundRequestedAipEmailTemplateId;
+    private final String refundRequestedAipPaPayLaterEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
@@ -24,12 +26,14 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
 
     public AiPAppellantRefundRequestedNotificationEmail(
         @Value("${govnotify.template.requestFeeRemission.appellant.email}") String refundRequestedAipEmailTemplateId,
+        @Value("${govnotify.template.requestFeeRemission.appellant.paPayLater.email}") String refundRequestedAipPaPayLaterEmailTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
         this.refundRequestedAipEmailTemplateId = refundRequestedAipEmailTemplateId;
+        this.refundRequestedAipPaPayLaterEmailTemplateId = refundRequestedAipPaPayLaterEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
@@ -39,8 +43,14 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
 
 
     @Override
-    public String getTemplateId() {
-        return refundRequestedAipEmailTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE, AppealType.class)
+                .filter(type -> type == uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.PA)
+                .flatMap(paType -> asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                        .filter(payType -> "payLater".equals(payType) || "payOffline".equals(payType))
+                        .map(payType -> refundRequestedAipPaPayLaterEmailTemplateId)
+                )
+                .orElse(refundRequestedAipEmailTemplateId);
     }
 
     @Override
@@ -67,7 +77,7 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
-                .put("14 days after refund request sent", refundRequestDueDate)
+                .put("14 days after remission request sent", refundRequestDueDate)
                 .build();
     }
 }
