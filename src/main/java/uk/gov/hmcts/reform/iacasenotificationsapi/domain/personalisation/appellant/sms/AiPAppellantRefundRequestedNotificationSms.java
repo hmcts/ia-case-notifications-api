@@ -73,8 +73,8 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
     }
 
     @Override
-    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
-        requireNonNull(callback, "callback must not be null");
+    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
 
         final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
         final String correctDateKey = getTemplateId(asylumCase).equals(refundRequestedAipPaPayLaterSmsTemplateId)
