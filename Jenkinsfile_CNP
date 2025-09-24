@@ -58,6 +58,8 @@ def secrets = [
         secret('hearing-centre-glasgow-telephone', 'IA_HEARING_CENTRE_GLASGOW_TELEPHONE'),
         secret('hearing-centre-virtual-region-telephone', 'IA_HEARING_CENTRE_VIRTUAL_REGION_TELEPHONE'),
 
+        secret('ia-det-prison-email-mappings', 'IA_DET_PRISON_EMAIL_MAPPINGS'),
+
         secret('respondent-evidence-direction-email', 'IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL'),
         secret('respondent-review-direction-email', 'IA_RESPONDENT_REVIEW_DIRECTION_EMAIL'),
         secret('respondent-non-standard-direction-until-listing-email', 'IA_RESPONDENT_NON_STANDARD_DIRECTION_UNTIL_LISTING_EMAIL'),
@@ -112,6 +114,7 @@ def secrets = [
 
         secret('customer-services-telephone', 'IA_CUSTOMER_SERVICES_TELEPHONE'),
         secret('customer-services-email', 'IA_CUSTOMER_SERVICES_EMAIL'),
+        secret('customer-services-appeal-email', 'IA_CUSTOMER_SERVICES_APPEAL_EMAIL'),
         secret('fees-admin-officer-email', 'FEES_ADMIN_OFFICER_EMAIL'),
         secret('payment-exceptions-admin-officer-email', 'PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL'),
 
@@ -173,6 +176,7 @@ withPipeline(type, product, component) {
     env.OPEN_ID_IDAM_URL = "https://idam-web-public.aat.platform.hmcts.net"
     env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
     env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
+    env.ROLE_ASSIGNMENT_URL = "http://am-role-assignment-service-aat.service.core-compute-aat.internal"
 
     enableAksStagingDeployment()
     disableLegacyDeployment()

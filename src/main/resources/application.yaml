@@ -120,7 +120,7 @@ govnotify:
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
         letter:
           inTime:
-            withExemption: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
+            withExemption: f161d437-d17d-421b-8118-48ec0f2c5446
             withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
@@ -152,6 +152,10 @@ govnotify:
           email: c6fb22e2-c3fa-41f6-a4de-b9f6a55aa417
         nonAdaInTimeDetainedOnly:
           email: 0e187f28-ee4e-4ef0-8218-0f922c433bf4
+        nonAdaInTimeDetainedPrisonIrc:
+          email: ad15aa59-3cec-48a3-a723-3143c2aadc30
+      detentionEngagementTeam:
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     sendPaymentReminder:
       appellant:
         email: a1628213-dfd3-4f91-a66e-b8d3961947a9
@@ -182,7 +186,7 @@ govnotify:
           email: b37bfeae-cc9a-4389-92d6-b3a65060b192
           sms: 352c22ca-8dbf-44f0-96d8-8ad5d5550345
           onTime:
-            letter: 14fd949c-d879-4878-ae6d-844abce5baf3
+            letter: 863a6855-eabb-48d2-86f3-db31c6fb9afc
           outOfTime:
             letter: 5360d4f4-511e-496a-ae35-ffdd04f3705f
         partiallyApproved:
@@ -227,7 +231,9 @@ govnotify:
           email: e1461a4c-9437-4ec9-8aae-dc3d1134e3b0
           sms: f84000c5-7ba0-4bd9-bb64-437f4b51b878
 
-
+    outOfTimeDecisionAllowed:
+      detentionEngagementTeam:
+        email: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     decisionHomeOfficeNotificationFailed:
       caseOfficer:
         email: 2f33706d-6de1-4617-8393-ac99306b85d5
@@ -286,6 +292,8 @@ govnotify:
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
+        appellant:
+          email: 26ed296f-7b8f-47b1-a8eb-96e4720aa1e5
     markAppealAsPaid:
       detentionEngagementTeam:
         email:
@@ -497,6 +505,8 @@ govnotify:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
       detentionEngagementTeam:
         email: cef6603c-b5dd-4e63-b438-1e93644bad5c
+        production:
+          email: 73985562-43a4-417e-b201-175e8bf36682
     endAppealBeforeListing:
       legalRep:
         email: 7eb6e398-c85d-483f-9ff7-6ec7a3e17651
@@ -526,6 +536,7 @@ govnotify:
         email: 190f9645-8fe7-4f28-a854-62fb312622ec
         detention:
           email: 7fd3785b-082e-4b91-bed4-aff3d95fce52
+          letter: fa0b0ba8-4cf6-419c-b829-1f5c3a1430df
       detentionEngagementTeam:
         ada:
           email: 9609ebb3-cb45-4322-ba2c-f3d2a162f7b6
@@ -752,6 +763,8 @@ govnotify:
         email: 8a87904f-5a67-4a79-a56a-8450b7829f9b
       detentionEngagementTeam:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
@@ -768,6 +781,13 @@ govnotify:
         email: 153cab2a-0533-424f-bcaf-41b916d06321
       adminOfficer:
         email: 6c007d84-488d-498a-9d53-85ba5e008d31
+      detentionEngagementTeam:
+        production:
+          email: f97b30d5-c41c-4b85-a18c-8d4efa1a0f3e
+    hearingCancelled:
+      detentionEngagementTeam:
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1021,6 +1041,8 @@ govnotify:
         otherParty:
           detentionEngagementTeam:
             email: 47289033-479f-45e2-aa17-2c785378733a
+            production:
+              email: c0d82e4c-6f72-4fb9-b002-1d47e1fc5115
           appellant:
             beforeListing:
               email: 22cee197-d6a9-4a9f-bdc9-a8aec8ab36f8
@@ -1116,6 +1138,9 @@ govnotify:
       appellant:
         email: 7d2b7690-12d4-43b4-8793-cd505d8033a9
         sms: 318452c5-230f-4471-aafa-847accf5f20b
+        detention:
+          other:
+            letter: cd39c5ce-ef8b-4de6-ad00-65116da2820b
     requestFeeRemission:
       legalRep:
         email: 7c336cc1-ff6e-431a-afc1-812c9bf1b883
@@ -1240,11 +1265,13 @@ govnotify:
     markAppealAsDetained:
       legalRep:
         email: 1baf79a7-1a7f-4a2c-9a03-eb5ec6ff7a49
+        letter: 40b7c42a-a378-46b5-a636-3add03e3a1c8
       homeOffice:
         email: 7b972a67-7665-4b3b-a64c-ed74d1ca8d55
     removeDetentionStatus:
       legalRep:
         email: 23669485-ffb0-4ae2-9d36-26c437a57e92
+        letter: 753d6f8c-19b1-498e-b80a-868be0c33e3f
       homeOffice:
         email: 3891dcd8-a9d1-47e8-8b87-3da77789a913
       appellant:
@@ -1306,6 +1333,7 @@ govnotify:
           email: acf67e1c-ec14-48f5-aed9-61a703831a5c
         afterListing:
           email: 59bbd0ed-2b2f-432b-8111-0cb4b9ea9a7d
+        letter: aa1c859d-d5c8-4576-bbb9-7bf46c1f54a2
     appealDecided:
       detentionTeam:
         dismissed:
@@ -1433,7 +1461,7 @@ govnotify:
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
-        letter: fb14e920-9834-4d11-91b7-bb38e7dfbb1e
+        letter: 24c26241-2fad-494b-91a8-f4dcb26e4e28
     recordRefundDecision:
       appellant:
         approved:
@@ -1665,7 +1693,7 @@ security:
       - "applyForCosts"
       - "respondToCosts"
       - "addEvidenceForCosts"
-    caseworker-ia-caseofficer:
+    tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
       - "requestCaseEdit"
@@ -1729,66 +1757,411 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
-    caseworker-ia-admofficer:
-      - "startAppeal"
-      - "editAppeal"
-      - "startApplication"
-      - "editBailApplication"
-      - "listCase"
-      - "submitAppeal"
-      - "editAppeal"
-      - "makeAnApplication"
+    challenged-access-legal-operations:
+      - "sendDirection"
+      - "changeDirectionDueDate"
+      - "requestCaseEdit"
+      - "requestHearingRequirements"
+      - "reviewHearingRequirements"
+      - "listCaseWithoutHearingRequirements"
+      - "requestHearingRequirementsFeature"
       - "draftHearingRequirements"
-      - "buildCase"
-      - "submitCase"
-      - "uploadAdditionalEvidence"
-      - "applyForFTPAAppellant"
-      - "requestFeeRemission"
+      - "requestRespondentEvidence"
+      - "uploadRespondentEvidence"
+      - "requestRespondentReview"
+      - "addAppealResponse"
+      - "createCaseSummary"
+      - "generateHearingBundle"
+      - "asyncStitchingComplete"
+      - "customiseHearingBundle"
       - "editCaseListing"
+      - "endAppeal"
+      - "recordApplication"
+      - "requestCaseBuilding"
+      - "forceRequestCaseBuilding"
+      - "requestResponseReview"
       - "sendDecisionAndReasons"
+      - "uploadAddendumEvidence"
+      - "requestReasonsForAppeal"
+      - "updateHearingAdjustments"
+      - "removeAppealFromOnline"
+      - "changeHearingCentre"
+      - "reviewTimeExtension"
+      - "sendDirectionWithQuestions"
+      - "forceCaseToCaseUnderReview"
+      - "forceCaseToSubmitHearingRequirements"
       - "adjournHearingWithoutDate"
       - "restoreStateFromAdjourn"
-      - "listCma"
+      - "requestCmaRequirements"
+      - "editAppealAfterSubmit"
       - "linkAppeal"
       - "unlinkAppeal"
-      - "uploadAddendumEvidenceAdminOfficer"
-      - "endAppeal"
-      - "markAppealPaid"
+      - "editDocuments"
+      - "requestResponseAmend"
       - "reinstateAppeal"
-      - "recordRemissionDecision"
+      - "decideAnApplication"
+      - "requestNewHearingRequirements"
       - "removeLegalRepresentative"
       - "manageFeeUpdate"
-      - "asyncStitchingComplete"
-      - "submitApplication"
-      - "uploadSignedDecisionNotice"
-      - "endApplication"
-      - "uploadDocuments"
-      - "sendBailDirection"
-      - "editBailDocuments"
-      - "editBailApplicationAfterSubmit"
-      - "changeBailDirectionDueDate"
-      - "makeNewApplication"
+      - "recordOutOfTimeDecision"
+      - "transferOutOfAda"
+      - "markAppealAsAda"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
       - "createCaseLink"
       - "maintainCaseLinks"
-      - "createBailCaseLink"
-      - "maintainBailCaseLinks"
-      - "decisionWithoutHearing"
       - "recordAdjournmentDetails"
-      - "caseListing"
-      - "recordTheDecision"
-      - "editAppealAfterSubmit"
-      - "markAppealAsAda"
       - "removeDetainedStatus"
       - "markAppealAsDetained"
       - "markAsReadyForUtTransfer"
       - "updateDetentionLocation"
-      - "recordOutOfTimeDecision"
+      - "editAppeal"
+      - "buildCase"
+      - "listCase"
       - "turnOnNotifications"
+      - "updateTribunalDecision"
+      - "recordRemissionReminder"
+    senior-tribunal-caseworker:
+      - "sendDirection"
+      - "changeDirectionDueDate"
+      - "requestCaseEdit"
+      - "requestHearingRequirements"
+      - "reviewHearingRequirements"
+      - "listCaseWithoutHearingRequirements"
+      - "requestHearingRequirementsFeature"
+      - "draftHearingRequirements"
+      - "requestRespondentEvidence"
+      - "uploadRespondentEvidence"
+      - "requestRespondentReview"
+      - "addAppealResponse"
+      - "createCaseSummary"
+      - "generateHearingBundle"
+      - "asyncStitchingComplete"
+      - "customiseHearingBundle"
+      - "editCaseListing"
+      - "endAppeal"
+      - "recordApplication"
+      - "requestCaseBuilding"
+      - "forceRequestCaseBuilding"
+      - "requestResponseReview"
+      - "sendDecisionAndReasons"
+      - "uploadAddendumEvidence"
+      - "requestReasonsForAppeal"
+      - "updateHearingAdjustments"
+      - "removeAppealFromOnline"
+      - "changeHearingCentre"
+      - "reviewTimeExtension"
+      - "sendDirectionWithQuestions"
+      - "forceCaseToCaseUnderReview"
+      - "forceCaseToSubmitHearingRequirements"
+      - "adjournHearingWithoutDate"
+      - "restoreStateFromAdjourn"
+      - "requestCmaRequirements"
+      - "editAppealAfterSubmit"
+      - "linkAppeal"
+      - "unlinkAppeal"
+      - "editDocuments"
+      - "requestResponseAmend"
+      - "reinstateAppeal"
+      - "decideAnApplication"
+      - "requestNewHearingRequirements"
+      - "removeLegalRepresentative"
+      - "manageFeeUpdate"
+      - "recordOutOfTimeDecision"
+      - "transferOutOfAda"
+      - "markAppealAsAda"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "createCaseLink"
+      - "maintainCaseLinks"
+      - "recordAdjournmentDetails"
+      - "removeDetainedStatus"
+      - "markAppealAsDetained"
+      - "markAsReadyForUtTransfer"
+      - "updateDetentionLocation"
+      - "editAppeal"
+      - "buildCase"
+      - "listCase"
+      - "turnOnNotifications"
+      - "updateTribunalDecision"
+      - "recordRemissionReminder"
+    # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
+    caseworker-ia-admofficer:
+      - "editBailApplication"
+      - "uploadSignedDecisionNotice"
       - "caseListing"
-      - "forceCaseToHearing"
-      - "markAppealAsRemitted"
+      - "changeBailDirectionDueDate"
+      - "maintainBailCaseLinks"
+      - "startApplication"
       - "changeTribunalCentre"
+      - "uploadDocuments"
+      - "submitApplication"
+      - "editBailApplicationAfterSubmit"
+      - "forceCaseToHearing"
+      - "editBailDocuments"
+      - "recordTheDecision"
+      - "endApplication"
+      - "makeNewApplication"
+      - "sendBailDirection"
+      - "createBailCaseLink"
+      - "hearingCancelled"
+    hearing-centre-admin:
       - "progressMigratedCase"
+      - "requestFeeRemission"
+      - "buildCase"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "removeLegalRepresentative"
+      - "uploadAddendumEvidenceAdminOfficer"
+      - "sendDecisionAndReasons"
+      - "markAppealAsAda"
+      - "restoreStateFromAdjourn"
+      - "editCaseListing"
+      - "asyncStitchingComplete"
+      - "adjournHearingWithoutDate"
+      - "listCma"
+      - "recordOutOfTimeDecision"
+      - "makeAnApplication"
+      - "manageFeeUpdate"
+      - "maintainCaseLinks"
+      - "applyForFTPAAppellant"
+      - "unlinkAppeal"
+      - "submitCase"
+      - "markAsReadyForUtTransfer"
+      - "removeDetainedStatus"
+      - "linkAppeal"
+      - "reinstateAppeal"
+      - "markAppealAsDetained"
+      - "updateDetentionLocation"
+      - "listCase"
+      - "editDocuments"
+      - "uploadAdditionalEvidence"
+      - "endAppeal"
+      - "recordAdjournmentDetails"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "recordRemissionDecision"
+      - "draftHearingRequirements"
+      - "markAppealAsRemitted"
+      - "submitAppeal"
+      - "turnOnNotifications"
+      - "editAppeal"
+      - "startAppeal"
+      - "refundConfirmation"
+    ctsc:
+      - "progressMigratedCase"
+      - "requestFeeRemission"
+      - "buildCase"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "removeLegalRepresentative"
+      - "uploadAddendumEvidenceAdminOfficer"
+      - "sendDecisionAndReasons"
+      - "markAppealAsAda"
+      - "restoreStateFromAdjourn"
+      - "editCaseListing"
+      - "asyncStitchingComplete"
+      - "adjournHearingWithoutDate"
+      - "listCma"
+      - "recordOutOfTimeDecision"
+      - "makeAnApplication"
+      - "manageFeeUpdate"
+      - "maintainCaseLinks"
+      - "applyForFTPAAppellant"
+      - "unlinkAppeal"
+      - "editDocuments"
+      - "submitCase"
+      - "markAsReadyForUtTransfer"
+      - "removeDetainedStatus"
+      - "linkAppeal"
+      - "reinstateAppeal"
+      - "markAppealAsDetained"
+      - "updateDetentionLocation"
+      - "listCase"
+      - "uploadAdditionalEvidence"
+      - "endAppeal"
+      - "recordAdjournmentDetails"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "recordRemissionDecision"
+      - "draftHearingRequirements"
+      - "markAppealAsRemitted"
+      - "submitAppeal"
+      - "turnOnNotifications"
+      - "editAppeal"
+      - "startAppeal"
+      - "refundConfirmation"
+    ctsc-team-leader:
+      - "progressMigratedCase"
+      - "requestFeeRemission"
+      - "buildCase"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "removeLegalRepresentative"
+      - "uploadAddendumEvidenceAdminOfficer"
+      - "sendDecisionAndReasons"
+      - "markAppealAsAda"
+      - "restoreStateFromAdjourn"
+      - "editCaseListing"
+      - "asyncStitchingComplete"
+      - "adjournHearingWithoutDate"
+      - "listCma"
+      - "recordOutOfTimeDecision"
+      - "makeAnApplication"
+      - "manageFeeUpdate"
+      - "maintainCaseLinks"
+      - "applyForFTPAAppellant"
+      - "unlinkAppeal"
+      - "submitCase"
+      - "markAsReadyForUtTransfer"
+      - "removeDetainedStatus"
+      - "linkAppeal"
+      - "reinstateAppeal"
+      - "markAppealAsDetained"
+      - "updateDetentionLocation"
+      - "listCase"
+      - "uploadAdditionalEvidence"
+      - "endAppeal"
+      - "recordAdjournmentDetails"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "recordRemissionDecision"
+      - "draftHearingRequirements"
+      - "markAppealAsRemitted"
+      - "submitAppeal"
+      - "turnOnNotifications"
+      - "editAppeal"
+      - "startAppeal"
+      - "refundConfirmation"
+      - "editDocuments"
+    national-business-centre:
+      - "progressMigratedCase"
+      - "requestFeeRemission"
+      - "buildCase"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "removeLegalRepresentative"
+      - "uploadAddendumEvidenceAdminOfficer"
+      - "sendDecisionAndReasons"
+      - "markAppealAsAda"
+      - "restoreStateFromAdjourn"
+      - "editCaseListing"
+      - "asyncStitchingComplete"
+      - "adjournHearingWithoutDate"
+      - "listCma"
+      - "recordOutOfTimeDecision"
+      - "makeAnApplication"
+      - "manageFeeUpdate"
+      - "maintainCaseLinks"
+      - "applyForFTPAAppellant"
+      - "unlinkAppeal"
+      - "submitCase"
+      - "markAsReadyForUtTransfer"
+      - "removeDetainedStatus"
+      - "linkAppeal"
+      - "reinstateAppeal"
+      - "markAppealAsDetained"
+      - "updateDetentionLocation"
+      - "listCase"
+      - "editDocuments"
+      - "uploadAdditionalEvidence"
+      - "endAppeal"
+      - "recordAdjournmentDetails"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "recordRemissionDecision"
+      - "draftHearingRequirements"
+      - "markAppealAsRemitted"
+      - "submitAppeal"
+      - "turnOnNotifications"
+      - "editAppeal"
+      - "startAppeal"
+      - "refundConfirmation"
+    challenged-access-ctsc:
+      - "progressMigratedCase"
+      - "requestFeeRemission"
+      - "buildCase"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "removeLegalRepresentative"
+      - "uploadAddendumEvidenceAdminOfficer"
+      - "sendDecisionAndReasons"
+      - "markAppealAsAda"
+      - "restoreStateFromAdjourn"
+      - "editCaseListing"
+      - "asyncStitchingComplete"
+      - "adjournHearingWithoutDate"
+      - "listCma"
+      - "recordOutOfTimeDecision"
+      - "makeAnApplication"
+      - "manageFeeUpdate"
+      - "maintainCaseLinks"
+      - "applyForFTPAAppellant"
+      - "unlinkAppeal"
+      - "submitCase"
+      - "markAsReadyForUtTransfer"
+      - "removeDetainedStatus"
+      - "linkAppeal"
+      - "reinstateAppeal"
+      - "markAppealAsDetained"
+      - "updateDetentionLocation"
+      - "listCase"
+      - "editDocuments"
+      - "uploadAdditionalEvidence"
+      - "endAppeal"
+      - "recordAdjournmentDetails"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "recordRemissionDecision"
+      - "draftHearingRequirements"
+      - "markAppealAsRemitted"
+      - "submitAppeal"
+      - "turnOnNotifications"
+      - "editAppeal"
+      - "startAppeal"
+      - "refundConfirmation"
+    challenged-access-admin:
+      - "progressMigratedCase"
+      - "requestFeeRemission"
+      - "buildCase"
+      - "markAppealPaid"
+      - "decisionWithoutHearing"
+      - "removeLegalRepresentative"
+      - "uploadAddendumEvidenceAdminOfficer"
+      - "sendDecisionAndReasons"
+      - "markAppealAsAda"
+      - "restoreStateFromAdjourn"
+      - "editCaseListing"
+      - "asyncStitchingComplete"
+      - "adjournHearingWithoutDate"
+      - "listCma"
+      - "recordOutOfTimeDecision"
+      - "makeAnApplication"
+      - "manageFeeUpdate"
+      - "maintainCaseLinks"
+      - "applyForFTPAAppellant"
+      - "unlinkAppeal"
+      - "submitCase"
+      - "markAsReadyForUtTransfer"
+      - "removeDetainedStatus"
+      - "linkAppeal"
+      - "reinstateAppeal"
+      - "markAppealAsDetained"
+      - "updateDetentionLocation"
+      - "listCase"
+      - "editDocuments"
+      - "uploadAdditionalEvidence"
+      - "endAppeal"
+      - "recordAdjournmentDetails"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "recordRemissionDecision"
+      - "draftHearingRequirements"
+      - "markAppealAsRemitted"
+      - "submitAppeal"
+      - "turnOnNotifications"
+      - "editAppeal"
+      - "startAppeal"
       - "refundConfirmation"
     caseworker-ia-homeofficeapc:
       - "startApplication"
@@ -1835,41 +2208,243 @@ security:
       - "applyForCosts"
       - "respondToCosts"
       - "addEvidenceForCosts"
+    # These events are used by the bails service, they will need to be migrated to the judge access management roles - see DIAC-855
     caseworker-ia-iacjudge:
-      - "endAppeal"
-      - "sendDecisionAndReasons"
-      - "changeDirectionDueDate"
-      - "sendDirection"
-      - "leadershipJudgeFtpaDecision"
-      - "residentJudgeFtpaDecision"
-      - "linkAppeal"
-      - "unlinkAppeal"
-      - "updateHearingAdjustments"
-      - "reinstateAppeal"
-      - "editAppealAfterSubmit"
-      - "decideAnApplication"
-      - "requestNewHearingRequirements"
-      - "asyncStitchingComplete"
       - "uploadSignedDecisionNotice"
-      - "endApplication"
+      - "changeBailDirectionDueDate"
+      - "maintainBailCaseLinks"
+      - "createBailCaseLink"
       - "uploadDocuments"
+      - "forceCaseToHearing"
+      - "recordTheDecision"
+      - "endApplication"
       - "sendBailDirection"
       - "editBailDocuments"
-      - "changeBailDirectionDueDate"
-      - "createCaseLink"
-      - "maintainCaseLinks"
-      - "createBailCaseLink"
-      - "maintainBailCaseLinks"
-      - "recordTheDecision"
-      - "decideFtpaApplication"
-      - "updateTribunalDecision"
+    judge:
       - "adaSuitabilityReview"
-      - "transferOutOfAda"
+      - "sendDirection"
       - "reviewHearingRequirements"
-      - "editAppeal"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
       - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
       - "decideCostsApplication"
-      - "forceCaseToHearing"
+    senior-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    leadership-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    fee-paid-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    lead-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    hearing-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    ftpa-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    hearing-panel-judge:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
+    challenged-access-judiciary:
+      - "adaSuitabilityReview"
+      - "sendDirection"
+      - "reviewHearingRequirements"
+      - "sendDecisionAndReasons"
+      - "transferOutOfAda"
+      - "asyncStitchingComplete"
+      - "maintainCaseLinks"
+      - "residentJudgeFtpaDecision"
+      - "unlinkAppeal"
+      - "decideFtpaApplication"
+      - "linkAppeal"
+      - "updateHearingAdjustments"
+      - "reinstateAppeal"
+      - "requestNewHearingRequirements"
+      - "endAppeal"
+      - "considerMakingCostsOrder"
+      - "decideAnApplication"
+      - "createCaseLink"
+      - "editAppealAfterSubmit"
+      - "changeDirectionDueDate"
+      - "updateTribunalDecision"
+      - "leadershipJudgeFtpaDecision"
+      - "editAppeal"
+      - "decideCostsApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
@@ -1902,6 +2477,9 @@ idam:
     url: ${S2S_URL:http://127.0.0.1:4502}
   s2s-authorised:
     services: ${IA_S2S_AUTHORIZED_SERVICES:ccd,ccd_data,ccd_gw,ccd_ps,iac}
+
+role-assignment-service:
+  url: ${ROLE_ASSIGNMENT_URL:http://localhost:8991}
 
 ### Email addresses
 
@@ -2062,6 +2640,7 @@ customerServices:
   emailAddress: ${IA_CUSTOMER_SERVICES_EMAIL:contactia@justice.gov.uk}
   internalCaseEmailAddress: ${IA_CUSTOMER_SERVICES_UNREPRESENTED_EMAIL:IAC-ADA-HW@justice.gov.uk}
   telephoneNumber: ${IA_CUSTOMER_SERVICES_TELEPHONE:0300 123 1711}
+  appealIaEmailAddress: ${IA_CUSTOMER_SERVICES_APPEAL_EMAIL:AppealIA@Justice.gov.uk}
 
 appellantDaysToWait:
   afterSubmission: 28
