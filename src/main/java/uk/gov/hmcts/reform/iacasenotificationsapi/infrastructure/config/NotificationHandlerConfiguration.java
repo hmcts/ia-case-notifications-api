@@ -2556,7 +2556,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
                 && isListAssistIntegrated(callback.getCaseDetails().getCaseData())
-                && isInternalCase(callback.getCaseDetails().getCaseData()),
+                && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
