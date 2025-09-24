@@ -36,6 +36,7 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
         SystemDateProvider systemDateProvider
     ) {
         this.refundRequestedAipSmsTemplateId = refundRequestedAipSmsTemplateId;
+        this.refundRequestedAipPaPayLaterSmsTemplateId = refundRequestedAipPaPayLaterSmsTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
