@@ -81,8 +81,6 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
                 ? "14 days after remission request sent"
                 : "14 days after refund request sent";
 
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
         return
             ImmutableMap
                 .<String, String>builder()
