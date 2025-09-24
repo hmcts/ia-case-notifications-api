@@ -61,7 +61,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
         aipAppellantRefundRequestedNotificationSms = new AiPAppellantRefundRequestedNotificationSms(
             refundRequestedAipSmsTemplateId,
-            refundRequestedAipPaPayLaterSmsTemplateId
+            refundRequestedAipPaPayLaterSmsTemplateId,
             recipientsFinder,
             iaAipFrontendUrl,
             14,
