@@ -26,6 +26,7 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
 
     public AiPAppellantRefundRequestedNotificationSms(
         @Value("${govnotify.template.requestFeeRemission.appellant.sms}") String refundRequestedAipSmsTemplateId,
+        @Value("${govnotify.template.requestFeeRemission.appellant.paPayLater.sms}") String refundRequestedAipPaPayLaterSmsTemplateId,
         RecipientsFinder recipientsFinder,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
@@ -39,7 +40,20 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
     }
 
     @Override
-    public String getTemplateId() {
+    public String getTemplateId(AsylumCase asylumCase) {
+        Optional<AppealType> maybeAppealType = asylumCase.read(APPEAL_TYPE, AppealType.class);
+
+        if (maybeAppealType.isPresent() && maybeAppealType.get() == AppealType.PA) {
+            Optional<String> maybePaymentOption = asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class);
+
+            if (maybePaymentOption.isPresent()) {
+                String paymentOption = maybePaymentOption.get();
+                if ("payLater".equals(paymentOption) || "payOffline".equals(paymentOption)) {
+                    return refundRequestedAipPaPayLaterSmsTemplateId;
+                }
+            }
+        }
+
         return refundRequestedAipSmsTemplateId;
     }
 
@@ -58,6 +72,9 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
         requireNonNull(callback, "callback must not be null");
 
         final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
+        final String correctDateKey = getTemplateId(asylumCase).equals(refundRequestedAipPaPayLaterEmailTemplateId)
+                ? "14 days after remission request sent"
+                : "14 days after refund request sent";
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
@@ -66,7 +83,7 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("linkToService", iaAipFrontendUrl)
-                .put("14 days after remission request sent", refundRequestDueDate)
+                .put(correctDateKey, refundRequestDueDate)
                 .build();
     }
 }

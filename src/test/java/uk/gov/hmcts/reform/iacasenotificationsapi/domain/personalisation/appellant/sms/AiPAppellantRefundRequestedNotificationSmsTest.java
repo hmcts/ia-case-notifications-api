@@ -115,8 +115,38 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
+    }
+
+    @Test
+    void should_return_personalisation_for_payLater_payOffline() {
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class))
+                .thenReturn(Optional.of(AppealType.PA));
+
+        when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class))
+                .thenReturn(Optional.of("payLater"));
+
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of("A1234567"));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of("HO123456"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
+                .thenReturn(Optional.of("Test"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
+                .thenReturn(Optional.of("User"));
+
+        Map<String, String> personalisation = aipAppellantRefundRequestedNotificationSms.getPersonalisation(asylumCase);
+
         assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
+    }
 
 
+    @Test
+    void should_return_personalisation_for_standard_refund() {
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.EA));
+
+        Map<String, String> personalisation = aipAppellantRefundRequestedNotificationSms.getPersonalisation(callback);
+
+        assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after refund request sent"));
     }
 }
