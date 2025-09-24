@@ -97,7 +97,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> aipAppellantRefundRequestedNotificationSms.getPersonalisation(null))
+        assertThatThrownBy(() -> aipAppellantRefundRequestedNotificationSms.getPersonalisation((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
