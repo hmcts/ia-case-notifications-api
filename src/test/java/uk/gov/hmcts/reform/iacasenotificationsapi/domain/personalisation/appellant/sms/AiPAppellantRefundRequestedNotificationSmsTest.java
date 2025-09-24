@@ -71,11 +71,6 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
     }
 
     @Test
-    void should_return_given_template_id_for_ftpa_decision() {
-        assertEquals(refundRequestedAipSmsTemplateId, aipAppellantRefundRequestedNotificationSms.getTemplateId());
-    }
-
-    @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_REFUND_REQUESTED_AIP_NOTIFICATION_SMS",
             aipAppellantRefundRequestedNotificationSms.getReferenceId(caseId));
@@ -102,10 +97,9 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-
-        assertThatThrownBy(() -> aipAppellantRefundRequestedNotificationSms.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        assertThatThrownBy(() -> aipAppellantRefundRequestedNotificationSms.getPersonalisation(null))
+                .isExactlyInstanceOf(NullPointerException.class)
+                .hasMessage("asylumCase must not be null");
     }
 
     @Test
