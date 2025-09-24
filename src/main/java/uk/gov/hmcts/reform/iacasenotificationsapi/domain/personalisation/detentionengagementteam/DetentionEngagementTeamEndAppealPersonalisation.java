@@ -8,6 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 
 @Slf4j
 @Service
@@ -64,6 +62,11 @@ public class DetentionEngagementTeamEndAppealPersonalisation implements EmailWit
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
+            return Collections.emptySet();
+        }
+
         return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
@@ -74,10 +77,6 @@ public class DetentionEngagementTeamEndAppealPersonalisation implements EmailWit
         return ImmutableMap.<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaSubjectPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
                 .build();
     }

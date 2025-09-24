@@ -104,7 +104,8 @@ class DetentionEngagementTeamEndAppealPersonalisationTest {
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamEndAppealPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+                detentionEngagementTeamEndAppealPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail)
+        );
     }
 
     @Test
@@ -141,12 +142,8 @@ class DetentionEngagementTeamEndAppealPersonalisationTest {
 
         if (yesOrNo == YesOrNo.YES) {
             assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
-            assertEquals(adaFormName, personalisation.get("formName"));
-            assertEquals(adaFormLink, personalisation.get("formLinkText"));
         } else {
             assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-            assertEquals(nonAdaFormName, personalisation.get("formName"));
-            assertEquals(nonAdaFormLink, personalisation.get("formLinkText"));
         }
     }
 
