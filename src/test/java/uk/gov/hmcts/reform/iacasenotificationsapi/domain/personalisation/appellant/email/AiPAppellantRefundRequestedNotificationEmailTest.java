@@ -78,7 +78,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
     @Test
     void should_return_pa_pay_later_template_id_when_pa_appeal_type_and_pay_later() {
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
-        when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payLater"));
+        when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payLater"));
 
         String templateId = aipAppellantRefundRequestedNotificationEmail.getTemplateId(asylumCase);
 
@@ -88,7 +88,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
     @Test
     void should_return_default_template_id_when_pa_appeal_type_and_pay_now() {
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
-        when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payNow"));
+        when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payNow"));
 
         String templateId = aipAppellantRefundRequestedNotificationEmail.getTemplateId(asylumCase);
 
@@ -157,7 +157,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         when(asylumCase.read(APPEAL_TYPE, AppealType.class))
                 .thenReturn(Optional.of(AppealType.PA));
 
-        when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class))
+        when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class))
                 .thenReturn(Optional.of("payLater"));
 
         // Mock other required fields (appeal reference, HO ref, names, etc.)
