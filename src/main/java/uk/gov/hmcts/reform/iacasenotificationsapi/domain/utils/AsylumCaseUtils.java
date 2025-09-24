@@ -502,4 +502,11 @@ public class AsylumCaseUtils {
             .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
             .orElse(false);
     }
+
+    public static Boolean remissionDecisionPartiallyGranted(AsylumCase asylumCase) {
+        return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                .map(decision -> PARTIALLY_APPROVED == decision)
+                .orElse(false);
+    }
+
 }
