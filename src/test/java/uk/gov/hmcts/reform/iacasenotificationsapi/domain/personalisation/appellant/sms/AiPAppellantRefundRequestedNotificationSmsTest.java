@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
@@ -41,7 +42,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
     private Long caseId = 12345L;
     private String refundRequestedAipSmsTemplateId = "refundRequestedAipSmsTemplateId";
-    private String refundRequestedAipPaPayLaterSMsTemplateId = "refundRequestedAipPaPayLaterSmsTemplateId";
+    private String refundRequestedAipPaPayLaterSmsTemplateId = "refundRequestedAipPaPayLaterSmsTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String mockedAppellantMobilePhone = "07123456789";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
