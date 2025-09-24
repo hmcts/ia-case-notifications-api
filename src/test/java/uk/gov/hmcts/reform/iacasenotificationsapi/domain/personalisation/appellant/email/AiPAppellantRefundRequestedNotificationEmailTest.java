@@ -160,7 +160,6 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class))
                 .thenReturn(Optional.of("payLater"));
 
-        // Mock other required fields (appeal reference, HO ref, names, etc.)
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of("A1234567"));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
@@ -170,10 +169,8 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
                 .thenReturn(Optional.of("User"));
 
-        // Execute
         Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(asylumCase);
 
-        // ✅ This should now pass
         assertEquals(systemDateProvider.dueDate(14), personalisation.get("14 days after remission request sent"));
     }
 
