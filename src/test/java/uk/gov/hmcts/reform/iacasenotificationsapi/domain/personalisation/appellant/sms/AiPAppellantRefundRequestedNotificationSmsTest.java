@@ -41,6 +41,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
     private Long caseId = 12345L;
     private String refundRequestedAipSmsTemplateId = "refundRequestedAipSmsTemplateId";
+    private String refundRequestedAipPaPayLaterSMsTemplateId = "refundRequestedAipPaPayLaterSmsTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String mockedAppellantMobilePhone = "07123456789";
     private String mockedAppealReferenceNumber = "someReferenceNumber";

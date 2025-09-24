@@ -75,7 +75,7 @@ public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificati
         requireNonNull(callback, "callback must not be null");
 
         final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
-        final String correctDateKey = getTemplateId(asylumCase).equals(refundRequestedAipPaPayLaterEmailTemplateId)
+        final String correctDateKey = getTemplateId(asylumCase).equals(refundRequestedAipPaPayLaterSmsTemplateId)
                 ? "14 days after remission request sent"
                 : "14 days after refund request sent";
 
