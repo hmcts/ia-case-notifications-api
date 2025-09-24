@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 public class AiPAppellantRefundRequestedNotificationSms implements SmsNotificationPersonalisation {
 
     private final String refundRequestedAipSmsTemplateId;
+    private final String refundRequestedAipPaPayLaterSmsTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
