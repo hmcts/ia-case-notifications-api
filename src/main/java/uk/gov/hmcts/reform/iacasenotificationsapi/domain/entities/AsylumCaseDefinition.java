@@ -287,6 +287,8 @@ public enum AsylumCaseDefinition {
 
     PA_APPEAL_TYPE_PAYMENT_OPTION(
         "paAppealTypePaymentOption", new TypeReference<String>(){}),
+    PA_APPEAL_TYPE_AIP_PAYMENT_OPTION(
+            "paAppealTypeAipPaymentOption", new TypeReference<String>(){}),
     EA_HU_APPEAL_TYPE_PAYMENT_OPTION(
             "eaHuAppealTypePaymentOption", new TypeReference<String>() {}),
 

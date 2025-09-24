@@ -49,7 +49,7 @@ public class AiPAppellantRefundRequestedNotificationEmail implements EmailNotifi
         Optional<AppealType> maybeAppealType = asylumCase.read(APPEAL_TYPE, AppealType.class);
 
         if (maybeAppealType.isPresent() && maybeAppealType.get() == AppealType.PA) {
-            Optional<String> maybePaymentOption = asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class);
+            Optional<String> maybePaymentOption = asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class);
 
             if (maybePaymentOption.isPresent()) {
                 String paymentOption = maybePaymentOption.get();
