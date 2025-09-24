@@ -5484,28 +5484,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealInTimeNotificationHandler(
-        @Qualifier("internalSubmitAppealInTimeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                boolean isAppealOnTime = asylumCase
-                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
-                    .map(outOfTime -> outOfTime == NO).orElse(false);
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isInternalCase(asylumCase)
-                    && isAppealOnTime
-                    && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isAppellantInDetention(asylumCase);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEndAppealAutomaticallyNotificationHandler(
         @Qualifier("internalEndAppealAutomaticallyNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
