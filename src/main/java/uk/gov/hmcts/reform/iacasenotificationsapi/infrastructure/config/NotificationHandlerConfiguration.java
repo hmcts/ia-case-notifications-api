@@ -7069,11 +7069,10 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
                        && isInternalCase(asylumCase)
-                       && !isAppellantInDetention(asylumCase)
+                       && (!isAppellantInDetention(asylumCase)
                         || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                         && isDetainedInFacilityType(asylumCase, OTHER))
-                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
-                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)));
             },
             notificationGenerators,
             getErrorHandler()

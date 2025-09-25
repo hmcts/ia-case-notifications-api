@@ -436,7 +436,9 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasBeenSubmittedAsLegalRepresentedInternalCase(AsylumCase asylumCase) {
-        return asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
+        return asylumCase.read(IS_ADMIN, YesOrNo.class)
+                .map(yesOrNo -> Objects.equals(YES, yesOrNo)).orElse(false)
+                && asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
                 .map(yesOrNo -> Objects.equals(NO, yesOrNo)).orElse(false);
     }
 
