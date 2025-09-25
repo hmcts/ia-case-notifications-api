@@ -7150,7 +7150,8 @@ public class NotificationHandlerConfiguration {
                             || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                                 && isDetainedInFacilityType(asylumCase, OTHER))
                             || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
-                       && isApproved
+                       && isApproved 
+                       && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();
             },
             notificationGenerators,
