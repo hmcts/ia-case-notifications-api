@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -68,8 +69,19 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
                 .orElseThrow(() -> new RequiredFieldMissingException("Previous Detention location is missing"));
         String newDetentionFacilityName = getDetentionFacilityName(asylumCase);
 
-        String oldDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocationName);
-        String newDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(newDetentionFacilityName);
+        String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class)
+                .orElse("");
+
+        String oldDetentionLocation = "";
+        String newDetentionLocation = "";
+
+        if (detentionFacility.equals("other")) {
+            oldDetentionLocation = previousDetentionLocationName;
+            newDetentionLocation = newDetentionFacilityName;
+        } else {
+            oldDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocationName);
+            newDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(newDetentionFacilityName);
+        }
 
         return ImmutableMap
                 .<String, String>builder()
