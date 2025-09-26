@@ -5526,8 +5526,26 @@ public class NotificationHandlerConfiguration {
                     && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON);
+                    && isAppellantInDetention(asylumCase);
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalEndAppealAutomaticallyIrcPrisonNotificationHandler(
+            @Qualifier("internalEndAppealAutomaticallyNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
+                            && isInternalCase(asylumCase)
+                            && !isAcceleratedDetainedAppeal(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON);
+                }, notificationGenerators
         );
     }
 
