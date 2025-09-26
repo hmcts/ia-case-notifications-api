@@ -35,8 +35,6 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
-    private static final String HEARING_CHANNEL_CODE_VIDEO = "VID";
-    private static final String HEARING_CHANNEL_CODE_TELEPHONE = "TEL";
 
 
     private AsylumCaseUtils() {
@@ -496,7 +494,7 @@ public class AsylumCaseUtils {
                 .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
                 .orElse(false);
     }
-    
+
     public static Boolean remissionDecisionPartiallyGrantedOrRefused(AsylumCase asylumCase) {
         return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
             .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
@@ -507,6 +505,15 @@ public class AsylumCaseUtils {
         return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                 .map(decision -> PARTIALLY_APPROVED == decision)
                 .orElse(false);
+    }
+
+
+    public static boolean isInternalNonDetainedCase(AsylumCase asylumCase) {
+        return isInternalCase(asylumCase) && !isAppellantInDetention(asylumCase);
+    }
+
+    public static boolean internalNonDetainedWithAddressAvailable(AsylumCase asylumCase) {
+        return hasAppellantAddressInCountryOrOutOfCountry(asylumCase) && isInternalNonDetainedCase(asylumCase);
     }
 
 }
