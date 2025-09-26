@@ -5526,7 +5526,7 @@ public class NotificationHandlerConfiguration {
                     && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                    && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON);
             }, notificationGenerators
         );
     }
