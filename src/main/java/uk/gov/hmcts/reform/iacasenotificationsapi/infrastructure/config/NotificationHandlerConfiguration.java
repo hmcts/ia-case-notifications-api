@@ -4331,7 +4331,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == SUBMIT_APPEAL
                     && isOutOfTime.equals(YesOrNo.YES)
                     && isFeeExemptAppeal(asylumCase)
-                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                     && !isAcceleratedDetainedAppeal(asylumCase);
 
@@ -4378,7 +4378,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == SUBMIT_APPEAL
                     && isOutOfTime.equals(YesOrNo.NO)
                     && isPaymentPending
-                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                     && !isAcceleratedDetainedAppeal(asylumCase);
 
@@ -4430,7 +4430,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == SUBMIT_APPEAL
                     && isOutOfTime.equals(YesOrNo.YES)
                     && isPaymentPending
-                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                     && !isAcceleratedDetainedAppeal(asylumCase);
 
@@ -6484,7 +6484,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == Event.SUBMIT_APPEAL
-                       && isInternalCase(asylumCase)
+                       && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                        && isRemissionPresent
                        && isSubmissionOutOfTime(asylumCase);
@@ -6511,7 +6511,7 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                             && isSubmissionOutOfTime(asylumCase)
                             && isRemissionApproved;
