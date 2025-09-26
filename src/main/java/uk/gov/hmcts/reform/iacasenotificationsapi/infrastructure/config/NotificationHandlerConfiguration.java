@@ -1068,8 +1068,28 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
-                    && isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase)
+                    && !isAipJourney(asylumCase);
+
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> respondentReviewInternalIrcPrisonNotificationHandler(
+            @Qualifier("respondentReviewInternalIrcPrisonNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
+                            && isInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                            && isAipJourney(asylumCase);
+
+                }, notificationGenerators
         );
     }
 
