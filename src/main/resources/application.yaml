@@ -1905,7 +1905,6 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
-      - "hearingCancelled"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1949,6 +1948,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1992,6 +1992,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2035,6 +2036,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "editDocuments"
+      - "hearingCancelled"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2078,6 +2080,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2121,6 +2124,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2164,6 +2168,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2456,6 +2461,7 @@ security:
       - "caseListing"
       - "sendPaymentReminderNotification"
       - "recordRemissionReminder"
+      - "hearingCancelled"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
