@@ -6907,6 +6907,26 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    public PreSubmitCallbackHandler<AsylumCase> internalUpdateTribunalDecisionRule31IrcPrisonHandler(
+            @Qualifier("internalUpdateTribunalDecisionRule31IrcPrisonNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && isRule31ReasonUpdatingDecision(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalCaseDecideApplicationByAppellantLetterHandler(
         @Qualifier("internalDecideApplicationAppellantLetterNotificationGenerator")
