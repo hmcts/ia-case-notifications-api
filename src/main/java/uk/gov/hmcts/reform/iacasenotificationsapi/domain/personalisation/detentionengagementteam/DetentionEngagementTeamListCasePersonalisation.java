@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_LIST_CASE_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
@@ -79,7 +80,7 @@ public class DetentionEngagementTeamListCasePersonalisation implements EmailWith
 
     private JSONObject getInternalDetainedCaseListedLetterInJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_LIST_CASE_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_CASE_LISTED_LETTER_BUNDLE));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal detained case listed letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal detained case listed letter in compatible format");
