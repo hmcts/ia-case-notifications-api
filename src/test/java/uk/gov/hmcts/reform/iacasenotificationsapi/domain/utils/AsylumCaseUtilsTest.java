@@ -50,6 +50,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLoggedUserIsHomeOffice;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isNotInternalOrIsInternalWithLegalRepresentation;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalNonDetainedCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
@@ -94,7 +96,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGener
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
 
-    @Mock
+    @Mock(lenient = true)
     private AsylumCase asylumCase;
     @Spy
     private AsylumCase asylumCaseSpy;
@@ -672,7 +674,7 @@ public class AsylumCaseUtilsTest {
 
         assertFalse(isHearingChannel(asylumCase, "INTER"));
     }
-    
+
     @ParameterizedTest
     @ValueSource(strings = {"PARTIALLY_APPROVED", "REJECTED"})
     void should_return_true_for_remission_decision_partially_granted_or_refused(String remissionDecisionValue) {
@@ -720,6 +722,82 @@ public class AsylumCaseUtilsTest {
         Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.empty());
 
         assertFalse(remissionDecisionPartiallyGranted(asylumCase));
+    }
+
+    @Test
+    void should_return_true_for_internal_non_detained_case() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertTrue(AsylumCaseUtils.isInternalNonDetainedCase(asylumCase));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "NO, NO, false",
+        "YES, YES, false",
+        "YES, NO, true"
+    })
+    void should_return_correct_value_for_internal_non_detained_case(YesOrNo isAdmin, YesOrNo inDetention, boolean expected) {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(inDetention));
+
+        assertEquals(expected, isInternalNonDetainedCase(asylumCase));
+    }
+
+    @Test
+    void should_return_true_for_internal_non_detained_with_in_country_address() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+
+        assertTrue(internalNonDetainedWithAddressAvailable(asylumCase));
+    }
+
+    @Test
+    void should_return_true_for_internal_non_detained_with_out_of_country_address() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+
+        assertTrue(internalNonDetainedWithAddressAvailable(asylumCase));
+    }
+
+    @Test
+    void should_return_false_for_internal_non_detained_without_address() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+
+        assertFalse(internalNonDetainedWithAddressAvailable(asylumCase));
+    }
+
+    @Test
+    void should_return_false_for_non_internal_case_with_address() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
+
+        assertFalse(internalNonDetainedWithAddressAvailable(asylumCase));
+    }
+
+    @Test
+    void should_return_false_for_internal_detained_case_with_address() {
+        Mockito.when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YES));
+        Mockito.when(asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
+
+        assertFalse(internalNonDetainedWithAddressAvailable(asylumCase));
     }
 
 }
