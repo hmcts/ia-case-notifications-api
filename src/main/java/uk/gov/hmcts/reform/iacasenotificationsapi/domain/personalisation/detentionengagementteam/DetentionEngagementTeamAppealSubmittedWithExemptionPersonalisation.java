@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -32,18 +33,18 @@ public class DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation 
 
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
-    private final DetentionFacilityEmailService detentionFacilityEmailService;
+    private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation(
             @Value("${govnotify.template.detained-iaft-email-template}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
-            DetentionFacilityEmailService detentionFacilityEmailService,
+            DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
-        this.detentionFacilityEmailService = detentionFacilityEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
@@ -63,7 +64,7 @@ public class DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation 
             return Collections.emptySet();
         }
 
-        return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
