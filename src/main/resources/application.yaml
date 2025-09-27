@@ -66,6 +66,7 @@ govnotify:
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:
+    detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
