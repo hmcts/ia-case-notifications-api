@@ -48,13 +48,16 @@ public class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersona
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        String email = detentionFacilityEmailService.getDetentionEmailAddress(asylumCase);
+
+        log.error("getDetentionEmailAddress returned email: {}", email);
 
         return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-
+        log.error("inside getReferenceId");
         return caseId + "_INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON";
     }
 
