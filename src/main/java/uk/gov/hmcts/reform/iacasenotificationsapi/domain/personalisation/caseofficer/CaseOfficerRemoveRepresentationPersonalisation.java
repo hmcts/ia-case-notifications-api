@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseof
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -61,7 +62,11 @@ public class CaseOfficerRemoveRepresentationPersonalisation implements EmailNoti
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
+        if (isAppellantInDetention(asylumCase)) {
+            return Collections.emptySet();
+        } else {
+            return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
+        }
     }
 
     @Override
