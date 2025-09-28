@@ -56,6 +56,7 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
+        "isAdmin": "Yes",
         "appellantsRepresentation": "Yes",
         "appellantInDetention": "Yes",
         "appellantInUk": "Yes",
