@@ -62,6 +62,9 @@ public class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersona
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+
+        log.error("inside DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation getPersonalisationForLink");
+
         return ImmutableMap
             .<String, Object>builder()
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))

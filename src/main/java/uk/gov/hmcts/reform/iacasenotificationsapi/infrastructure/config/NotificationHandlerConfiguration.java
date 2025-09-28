@@ -6956,6 +6956,8 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                    log.error("inside internalUpdateTribunalDecisionRule31IrcPrisonNotificationHandler");
+
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION;
                             //&& isInternalCase(asylumCase)

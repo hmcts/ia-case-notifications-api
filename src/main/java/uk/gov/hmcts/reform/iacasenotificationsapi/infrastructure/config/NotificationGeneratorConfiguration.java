@@ -5254,6 +5254,8 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
+        log.error("inside internalUpdateTribunalDecisionRule31IrcPrisonNotificationGenerator");
+
         return List.of(
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(Collections.singleton(detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation)),
