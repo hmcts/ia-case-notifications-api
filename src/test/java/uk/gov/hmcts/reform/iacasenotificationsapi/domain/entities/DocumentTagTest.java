@@ -86,6 +86,7 @@ class DocumentTagTest {
         assertEquals("detainedLegalRepRemovedIrcPrisonLetter", DocumentTag.DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER.toString());
         assertEquals("internalDetainedLateRemissionPartiallyGrantedOrRefusedTemplateLetter", DocumentTag.INTERNAL_DETAINED_LATE_REMISSION_PARTIALLY_GRANTED_OR_REFUSED_TEMPLATE_LETTER.toString());
         assertEquals("internalDetainedUpdateTribunalDecisionRule31IrcPrisonTemplateLetter", DocumentTag.INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_TEMPLATE_LETTER.toString());
+        assertEquals("internalDetainedAppealSubmittedWithExemptionLetter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER.toString());
 
     }
 

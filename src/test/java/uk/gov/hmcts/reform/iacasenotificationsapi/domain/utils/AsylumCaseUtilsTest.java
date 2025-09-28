@@ -506,8 +506,8 @@ public class AsylumCaseUtilsTest {
         Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
 
-        assertTrue(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
-        assertTrue(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+        assertTrue(isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertTrue(isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
     }
 
     @Test
@@ -515,16 +515,16 @@ public class AsylumCaseUtilsTest {
         Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         Mockito.when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
 
-        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
-        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+        assertFalse(isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertFalse(isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
     }
 
     @Test
     void should_return_false_when_appellant_is_not_in_detention_for_multipole_facility_types() {
         Mockito.when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
 
-        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
-        assertFalse(AsylumCaseUtils.isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
+        assertFalse(isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC));
+        assertFalse(isDetainedInOneOfFacilityTypes(asylumCase, DetentionFacility.IRC, DetentionFacility.PRISON));
     }
 
     @Test

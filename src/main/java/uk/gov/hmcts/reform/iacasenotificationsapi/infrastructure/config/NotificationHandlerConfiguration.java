@@ -4489,6 +4489,30 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealSubmittedWithExemptionEmailInternalNotificationHandler(
+        @Qualifier("appealSubmittedWithExemptionEmailInternalNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                YesOrNo isOutOfTime =
+                    asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isOutOfTime.equals(NO)
+                    && isFeeExemptAppeal(asylumCase)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordOfTimeDecisionCannotProceedEmailNotificationHandler(
         @Qualifier("recordOfTimeDecisionCannotProceedEmailNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -7061,10 +7085,12 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
-                    && isInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
+                       && isInternalCase(asylumCase)
+                       && (!isAppellantInDetention(asylumCase)
+                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER))
+                        || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)));
             },
             notificationGenerators,
             getErrorHandler()
@@ -7184,7 +7210,7 @@ public class NotificationHandlerConfiguration {
                             || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                                 && isDetainedInFacilityType(asylumCase, OTHER))
                             || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
-                       && isApproved
+                       && isApproved 
                        && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();
             },
