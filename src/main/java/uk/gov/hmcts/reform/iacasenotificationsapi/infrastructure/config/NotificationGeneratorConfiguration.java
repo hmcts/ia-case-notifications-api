@@ -5250,13 +5250,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalUpdateTribunalDecisionRule31IrcPrisonNotificationGenerator")
     public List<NotificationGenerator> internalUpdateTribunalDecisionRule31IrcPrisonNotificationGenerator(
-            DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation,
+            DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation)),
+                        newArrayList(Collections.singleton(detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation)),
                         notificationSender,
                         notificationIdAppender
                 )
