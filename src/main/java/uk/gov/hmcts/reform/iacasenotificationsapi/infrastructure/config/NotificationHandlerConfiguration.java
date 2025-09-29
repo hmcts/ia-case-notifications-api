@@ -6560,17 +6560,12 @@ public class NotificationHandlerConfiguration {
                             .map(decision -> APPROVED == decision)
                             .orElse(false);
 
-                    boolean paymentPaid = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
-
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                             && isSubmissionOutOfTime(asylumCase)
-                            && isRemissionApproved
-                            && !paymentPaid;
+                            && isRemissionApproved;
                 },
                 notificationGenerators,
                 getErrorHandler()
