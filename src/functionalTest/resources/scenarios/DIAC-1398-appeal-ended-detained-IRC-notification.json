@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 13980,
+      "id": 1398,
       "eventId": "endAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -15,6 +15,7 @@
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
+          "appellantsRepresentation": "No",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -41,9 +42,15 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
+        "isAdmin": "Yes",
+        "appellantInDetention": "Yes",
+        "isAcceleratedDetainedAppeal": "No",
+        "appellantsRepresentation": "No",
         "notificationsSent": [
           {
-            "id": "13980_INTERNAL_DET_END_APPEAL_EMAIL",
+            "id": "1398_INTERNAL_DET_END_APPEAL_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
