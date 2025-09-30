@@ -110,7 +110,7 @@ class DetentionEngagementTeamEndAppealPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_when_no_detention_facility() {
+    void should_throw_exception_when_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
 
@@ -120,7 +120,7 @@ class DetentionEngagementTeamEndAppealPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_when_other_detention_facility() {
+    void should_throw_exception_when_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not valid"));
 
