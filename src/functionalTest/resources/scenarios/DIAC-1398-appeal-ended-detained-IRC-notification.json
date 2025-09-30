@@ -1,10 +1,10 @@
 {
-  "description": "DIAC-1398 Appeal ended - Detained (in IRC or Prison) notification",
+  "description": "DIAC-1398 Appeal ended - Detained IRC notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1398,
+      "id": 13980,
       "eventId": "endAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -14,6 +14,7 @@
           "ircName": "Brookhouse",
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal": "No",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -42,7 +43,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1398_INTERNAL_DET_END_APPEAL_EMAIL",
+            "id": "13980_INTERNAL_DET_END_APPEAL_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -50,7 +51,7 @@
     },
     "notifications": [
       {
-        "reference": "1398_INTERNAL_DET_END_APPEAL_EMAIL",
+        "reference": "13980_INTERNAL_DET_END_APPEAL_EMAIL",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE IN PERSON",
         "body": [
