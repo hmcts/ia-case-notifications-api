@@ -62,11 +62,6 @@ public class DetentionEngagementTeamEndAppealPersonalisation implements EmailWit
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-        if (detentionFacility.isEmpty() || detentionFacility.get().equals("other")) {
-            return Collections.emptySet();
-        }
-
         return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
