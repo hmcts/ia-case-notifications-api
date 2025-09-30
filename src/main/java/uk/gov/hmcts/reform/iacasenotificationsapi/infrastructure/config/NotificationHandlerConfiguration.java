@@ -5535,6 +5535,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(Event.UPDATE_DETENTION_LOCATION)
+                    && !isInternalCase(asylumCase)
                     && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
