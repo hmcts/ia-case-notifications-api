@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1398 Appeal ended - Detained (in IRC or Prison) notification",
+  "description": "DIAC-1398 Appeal ended - Detained IRC notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
@@ -13,7 +13,6 @@
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "isAdmin": "Yes",
-          "isAcceleratedDetainedAppeal": "Yes",
           "appellantInDetention": "Yes",
           "notificationAttachmentDocuments": [
             {
