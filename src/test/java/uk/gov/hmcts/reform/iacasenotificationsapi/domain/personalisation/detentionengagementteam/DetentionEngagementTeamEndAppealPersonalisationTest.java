@@ -100,6 +100,7 @@ class DetentionEngagementTeamEndAppealPersonalisationTest {
     @Test
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
@@ -109,15 +110,23 @@ class DetentionEngagementTeamEndAppealPersonalisationTest {
     }
 
     @Test
-    void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
+    public void should_throw_exception_when_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertEquals(Collections.emptySet(), detentionEngagementTeamEndAppealPersonalisation.getRecipientsList(asylumCase));
+        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
+
+        assertThatThrownBy(() -> detentionEngagementTeamEndAppealPersonalisation.getRecipientsList(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("Detention facility is not present");
     }
 
     @Test
-    void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
+    public void should_throw_exception_when_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals(Collections.emptySet(), detentionEngagementTeamEndAppealPersonalisation.getRecipientsList(asylumCase));
+        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not valid"));
+
+        assertThatThrownBy(() -> detentionEngagementTeamEndAppealPersonalisation.getRecipientsList(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("Detention facility is not valid");
     }
 
     @Test
