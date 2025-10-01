@@ -50,7 +50,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
     private DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation;
 
     DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_TEMPLATE_LETTER);
+            "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_APPEAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_LETTER);
     IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
 
     DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisationTest() {
@@ -130,7 +130,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetainedUpdateTribunalDecisionRule31IrcPrisonTemplateLetter document not available");
+                .hasMessage("internalAppealDetainedUpdateTribunalDecisionRule31IrcPrisonLetter document not available");
     }
 
     @Test

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_TEMPLATE_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_APPEAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
 @Slf4j
@@ -80,7 +80,7 @@ public class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersona
 
     private JSONObject getInternalUpdateTribunalDecisionRule31IrcPrisonDocumentInJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_TEMPLATE_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_APPEAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Update Tribunal Decision changed document in compatible format", e);
             throw new IllegalStateException("Failed to get Update Tribunal Decision changed document in compatible format");
