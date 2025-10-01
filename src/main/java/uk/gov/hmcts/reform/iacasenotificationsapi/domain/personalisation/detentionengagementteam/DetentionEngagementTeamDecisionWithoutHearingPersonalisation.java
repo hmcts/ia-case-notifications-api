@@ -68,6 +68,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
                 .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
                 .build();
     }
+
     private JSONObject getAppealDecidedLetterJsonObject(AsylumCase asylumCase) {
         try {
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_DECISION_WITHOUT_HEARING));
