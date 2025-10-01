@@ -6871,9 +6871,10 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                            && isInternalCase(asylumCase)
-                            && (!isAppellantInDetention(asylumCase)
-                            || isDetainedInFacilityType(asylumCase, OTHER));                        
+                            && ((isInternalCase(asylumCase) &&
+                            !isAppellantInDetention(asylumCase))
+                            || (isAppellantInDetention(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER)));                        
                 },
                 notificationGenerators,
                 getErrorHandler()
