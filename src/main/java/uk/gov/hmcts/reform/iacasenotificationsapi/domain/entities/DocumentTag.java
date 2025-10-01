@@ -89,6 +89,7 @@ public enum DocumentTag {
     DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER("detainedLegalRepRemovedIrcPrisonLetter"),
     INTERNAL_DETAINED_LATE_REMISSION_PARTIALLY_GRANTED_OR_REFUSED_TEMPLATE_LETTER("internalDetainedLateRemissionPartiallyGrantedOrRefusedTemplateLetter"),
     INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER("internalDetainedAppealSubmittedWithExemptionLetter"),
+    INTERNAL_DETAINED_DECISION_WITHOUT_HEARING("internalDetainedDecisionWithoutHearing"),
 
     @JsonEnumDefaultValue
     NONE("");

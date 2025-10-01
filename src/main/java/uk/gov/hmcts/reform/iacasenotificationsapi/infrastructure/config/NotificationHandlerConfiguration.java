@@ -2669,6 +2669,26 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedDecisionWithoutHearingAppellantNotificationHandler(
+            @Qualifier("internalDetainedDecisionWithoutHearingAppellantNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == DECISION_WITHOUT_HEARING
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCmaRequirementsAipNotificationHandler(

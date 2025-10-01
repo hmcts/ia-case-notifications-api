@@ -1229,6 +1229,8 @@ govnotify:
         email: 8f071df1-61e6-44f3-baae-58209d42ab62
         sms: 380ea39c-a4f7-43ed-99f1-cd9c78060070
         letter: 620b880f-9d99-4ba9-b2e6-7c5fe317c6dc
+      detentionEngagementTeam:
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     adaSuitabilityReview:
       legalRep:
         unsuitable:
