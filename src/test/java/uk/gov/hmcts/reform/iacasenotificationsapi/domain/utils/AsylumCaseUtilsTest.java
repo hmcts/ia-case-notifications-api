@@ -53,6 +53,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalNonDetainedCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
@@ -800,4 +801,20 @@ public class AsylumCaseUtilsTest {
         assertFalse(internalNonDetainedWithAddressAvailable(asylumCase));
     }
 
+    @Test
+    void should_return_true_for_remission_decision_granted() {
+        RemissionDecision remissionDecision = RemissionDecision.APPROVED;
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
+
+        assertTrue(remissionDecisionGranted(asylumCase));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"PARTIALLY_APPROVED", "REJECTED"})
+    void should_return_false_for_remission_decision_not_approved(String remissionDecisionValue) {
+        RemissionDecision remissionDecision = RemissionDecision.valueOf(remissionDecisionValue);
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
+
+        assertFalse(remissionDecisionGranted(asylumCase));
+    }
 }
