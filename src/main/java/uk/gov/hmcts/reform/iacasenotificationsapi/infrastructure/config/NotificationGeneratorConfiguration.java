@@ -1069,6 +1069,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("respondentReviewInternalIrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> respondentReviewInternalIrcPrisonNotificationGenerator(
+            DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamRespondentReviewPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
 
     @Bean("respondentEvidenceAipNotificationGenerator")
     public List<NotificationGenerator> respondentEvidenceAipNotificationGenerator(
@@ -4155,6 +4170,21 @@ public class NotificationGeneratorConfiguration {
     @Bean("lateRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
     public List<NotificationGenerator> lateRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
             DetLateRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(personalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("lateRemissionPartiallyGrantedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> lateRemissionPartiallyGrantedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
+            DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisation personalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
