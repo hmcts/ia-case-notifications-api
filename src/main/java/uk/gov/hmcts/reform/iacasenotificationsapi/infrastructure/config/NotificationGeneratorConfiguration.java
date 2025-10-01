@@ -4167,6 +4167,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("lateRemissionRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> lateRemissionRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
+            DetLateRemissionRefusedInPrisonOrIrcAipManualPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(personalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("appealSubmittedWithExemptionEmailInternalNotificationGenerator")
     public List<NotificationGenerator> appealSubmittedWithExemptionEmailInternalNotificationHandler(
         DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation appealSubmittedWithExemptionPersonalisation,
