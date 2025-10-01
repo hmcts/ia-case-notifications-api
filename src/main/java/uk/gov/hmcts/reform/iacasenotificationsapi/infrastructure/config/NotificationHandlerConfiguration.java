@@ -7247,15 +7247,15 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PostSubmitCallbackHandler<AsylumCase>  hearingCancelledProductionDetainedNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase>  hearingCancelledProductionDetainedNotificationHandler(
             @Qualifier("hearingCancelledProductionDetainedNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
-        return new PostSubmitNotificationHandler(
+        return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
                     return callback.getEvent() == HEARING_CANCELLED
-                            && callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
                             && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
                             && isHearingChannel(asylumCase, "INTER");
