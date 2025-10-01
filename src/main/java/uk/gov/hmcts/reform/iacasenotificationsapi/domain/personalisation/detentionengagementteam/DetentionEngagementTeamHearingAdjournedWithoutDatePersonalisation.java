@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -26,7 +27,7 @@ public class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation i
 
     private final String internalDetainedAdjournWithoutDateTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private final DetEmailService detEmailService;
+    private final DetentionEmailService detentionEmailService;
     private final PersonalisationProvider personalisationProvider;
     private String adaPrefix;
     private String nonAdaPrefix;
@@ -34,14 +35,14 @@ public class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation i
 
     public DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation(
             @Value("${govnotify.template.adjournHearingWithoutDate.detentionEngagementTeam.email}") String internalDetainedAdjournWithoutDateTemplateId,
-            DetEmailService detEmailService,
+            DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient,
             PersonalisationProvider personalisationProvider,
             @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix
     ) {
         this.internalDetainedAdjournWithoutDateTemplateId = internalDetainedAdjournWithoutDateTemplateId;
-        this.detEmailService = detEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
         this.personalisationProvider = personalisationProvider;
         this.adaPrefix = adaPrefix;
@@ -55,7 +56,7 @@ public class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation i
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return detEmailService.getRecipientsList(asylumCase);
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override

@@ -10,7 +10,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.compareString
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMe
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -56,7 +56,9 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    private final String ctscEmail = "ctsc@hmcts.com";
     private final Long caseId = 12345L;
+    private DetentionEmailService detentionEmailService;
     private DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation;
 
     DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
@@ -75,9 +77,11 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(doc)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonDocument);
 
+        detentionEmailService = new DetentionEmailService(detEmailService,ctscEmail);
+
         detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation = new DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation(
             templateId,
-            detEmailService,
+            detentionEmailService,
             documentDownloadClient,
             personalisationProvider,
             adaPrefix,
@@ -103,7 +107,7 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
+        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
             detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
@@ -112,13 +116,17 @@ class DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisationTest {
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertEquals(Collections.emptySet(), detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase));
+        assertThatThrownBy(() -> detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("Detention facility is not present");
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals(Collections.emptySet(), detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase));
+        assertThatThrownBy(() -> detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("Detention facility is not valid");
     }
 
     @ParameterizedTest
