@@ -43,6 +43,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
         this.personalisationProvider = personalisationProvider;
         this.documentDownloadClient = documentDownloadClient;
     }
+
     @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_INTERNAL_DET_DECISION_WITHOUT_HEARING_EMAIL";
