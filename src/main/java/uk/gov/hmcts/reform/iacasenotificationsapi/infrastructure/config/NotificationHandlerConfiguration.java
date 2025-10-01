@@ -6874,7 +6874,8 @@ public class NotificationHandlerConfiguration {
                             && ((isInternalCase(asylumCase) &&
                             !isAppellantInDetention(asylumCase))
                             || (isAppellantInDetention(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER)));                        
+                            && isDetainedInFacilityType(asylumCase, OTHER)));     
+                    
                 },
                 notificationGenerators,
                 getErrorHandler()
