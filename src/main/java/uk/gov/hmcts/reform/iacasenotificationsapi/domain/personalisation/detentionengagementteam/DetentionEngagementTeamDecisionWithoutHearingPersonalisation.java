@@ -48,6 +48,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     public String getReferenceId(Long caseId) {
         return caseId + "_INTERNAL_DET_DECISION_WITHOUT_HEARING_EMAIL";
     }
+
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         return detentionEngagementTeamEndAppealTemplateId;
