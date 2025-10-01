@@ -66,6 +66,7 @@ govnotify:
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:
+    detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -120,9 +121,7 @@ govnotify:
         sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
         letter:
           inTime:
-            withExemption:
-              legallyRepresented: a50c2b6c-d3ff-4d54-b8c7-f62bd57d624a
-              aip: f161d437-d17d-421b-8118-48ec0f2c5446
+            withExemption: f161d437-d17d-421b-8118-48ec0f2c5446
             withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
           outOfTime:
             withExemption: 3049a8fc-8d13-47d0-84dd-a6997229a8e1
@@ -788,6 +787,10 @@ govnotify:
       detentionEngagementTeam:
         production:
           email: f97b30d5-c41c-4b85-a18c-8d4efa1a0f3e
+    hearingCancelled:
+      detentionEngagementTeam:
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1933,6 +1936,7 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -1946,6 +1950,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1967,6 +1972,7 @@ security:
       - "maintainCaseLinks"
       - "applyForFTPAAppellant"
       - "unlinkAppeal"
+      - "editDocuments"
       - "submitCase"
       - "markAsReadyForUtTransfer"
       - "removeDetainedStatus"
@@ -1988,6 +1994,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2030,6 +2037,8 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "editDocuments"
+      - "hearingCancelled"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2059,6 +2068,7 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2072,6 +2082,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2101,6 +2112,7 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2114,6 +2126,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2143,6 +2156,7 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2156,6 +2170,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2448,6 +2463,7 @@ security:
       - "caseListing"
       - "sendPaymentReminderNotification"
       - "recordRemissionReminder"
+      - "hearingCancelled"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"

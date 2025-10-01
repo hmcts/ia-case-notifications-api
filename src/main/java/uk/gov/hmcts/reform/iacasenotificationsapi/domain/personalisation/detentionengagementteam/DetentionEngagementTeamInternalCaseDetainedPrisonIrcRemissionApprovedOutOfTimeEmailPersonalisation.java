@@ -18,25 +18,25 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_GRANTED_IRC_PRISON_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation implements EmailWithLinkNotificationPersonalisation {
-    private final String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
+public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcRemissionApprovedOutOfTimeEmailPersonalisation implements EmailWithLinkNotificationPersonalisation {
+
+    private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
     private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
-    public DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation(
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.nonAdaInTimeDetainedPrisonIrc.email}")
-        String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId,
-        @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
-        DetentionEmailService detentionEmailService,
-        DocumentDownloadClient documentDownloadClient
+    public DetentionEngagementTeamInternalCaseDetainedPrisonIrcRemissionApprovedOutOfTimeEmailPersonalisation(
+            @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String detentionEngagementTeamTemplateId,
+            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
+            DetentionEmailService detentionEmailService,
+            DocumentDownloadClient documentDownloadClient
     ) {
-        this.appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId = appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
+        this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
@@ -44,8 +44,9 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWit
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED";
+        return caseId + "_INTERNAL_DETAINED_APPEAL_OUT_OF_TIME_REMISSION_APPROVED";
     }
+
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
@@ -54,7 +55,7 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWit
 
     @Override
     public String getTemplateId() {
-        return appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
+        return detentionEngagementTeamTemplateId;
     }
 
     @Override
@@ -62,19 +63,19 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWit
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap
-            .<String, Object>builder()
-            .put("subjectPrefix", nonAdaPrefix)
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("documentLink", getAppealSubmittedLetterJsonObject(asylumCase))
-            .build();
+                .<String, Object>builder()
+                .put("subjectPrefix", nonAdaPrefix)
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("documentLink", getAppealSubmittedLetterJsonObject(asylumCase))
+                .build();
     }
 
     private JSONObject getAppealSubmittedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_GRANTED_IRC_PRISON_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal Appeal submission Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal Appeal submission Letter in compatible format");

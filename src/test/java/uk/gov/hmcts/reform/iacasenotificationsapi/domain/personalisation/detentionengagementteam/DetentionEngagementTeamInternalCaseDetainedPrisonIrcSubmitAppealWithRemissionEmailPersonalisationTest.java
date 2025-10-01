@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -41,7 +41,7 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemiss
     IdValue<DocumentWithMetadata> appealSubmittedBundle = new IdValue<>("1", internalAppealSubmissionDoc);
 
     @Mock
-    private DetentionFacilityEmailService detentionFacilityEmailService;
+    private DetentionEmailService detentionEmailService;
 
     @Mock
     private DocumentDownloadClient documentDownloadClient;
@@ -57,7 +57,7 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemiss
                 new DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation(
                         TEMPLATE_ID,
                         NON_ADA_PREFIX,
-                        detentionFacilityEmailService,
+                        detentionEmailService,
                         documentDownloadClient
                 );
     }
@@ -70,7 +70,7 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemiss
 
     @Test
     void should_return_recipients_list() {
-        when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn("detention@example.com");
+        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn("detention@example.com");
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 

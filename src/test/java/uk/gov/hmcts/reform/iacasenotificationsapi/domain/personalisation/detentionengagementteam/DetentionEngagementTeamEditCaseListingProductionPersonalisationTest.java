@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 import uk.gov.service.notify.NotificationClientException;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,27 +98,6 @@ class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
         when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(personalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
-    }
-
-    @Test
-    void getRecipientsList_should_return_empty_set_if_not_in_detention() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
-
-        assertEquals(Collections.emptySet(), personalisation.getRecipientsList(asylumCase));
-    }
-
-    @Test
-    public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-
-        assertEquals(Collections.emptySet(), personalisation.getRecipientsList(asylumCase));
-    }
-
-    @Test
-    public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-
-        assertEquals(Collections.emptySet(), personalisation.getRecipientsList(asylumCase));
     }
 
     @Test

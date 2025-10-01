@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -17,17 +17,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 class DetentionEmailServiceTest {
 
+    private final String ctscEmail = "ctsc@hmcts.net";
     @Mock
     private DetEmailService detEmailService;
 
     @Mock
-    private PrisonEmailMappingService prisonEmailMappingService;
-
-    @Mock
     private AsylumCase asylumCase;
 
-    @InjectMocks
     private DetentionEmailService detentionEmailService;
+
+    @BeforeEach
+    void setUp() {
+        detentionEmailService = new DetentionEmailService(detEmailService, ctscEmail);
+    }
 
     @Test
     void should_return_det_email_for_irc() {
@@ -38,41 +40,15 @@ class DetentionEmailServiceTest {
 
         assertEquals("irc@example.com", email);
         verify(detEmailService).getDetEmailAddress(asylumCase);
-        verifyNoInteractions(prisonEmailMappingService);
     }
 
     @Test
     void should_return_prison_email_for_prison_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
-        when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.of("HMP Test"));
-        when(prisonEmailMappingService.getPrisonEmail("HMP Test")).thenReturn(Optional.of("prison@example.com"));
 
         String email = detentionEmailService.getDetentionEmailAddress(asylumCase);
 
-        assertEquals("prison@example.com", email);
-    }
-
-    @Test
-    void should_throw_if_prison_email_not_found() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
-        when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.of("HMP Unknown"));
-        when(prisonEmailMappingService.getPrisonEmail("HMP Unknown")).thenReturn(Optional.empty());
-
-        IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
-
-        assertEquals("Prison email address not found for Prison: HMP Unknown", ex.getMessage());
-    }
-
-    @Test
-    void should_throw_if_prison_name_not_present() {
-        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
-        when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.empty());
-
-        IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
-
-        assertEquals("Prison name is not present", ex.getMessage());
+        assertEquals(ctscEmail, email);
     }
 
     @Test
@@ -83,5 +59,15 @@ class DetentionEmailServiceTest {
                 () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Detention facility is not present", ex.getMessage());
+    }
+
+    @Test
+    void should_throw_if_detention_facility_not_valid() {
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class,
+                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
+
+        assertEquals("Detention facility is not valid", ex.getMessage());
     }
 }
