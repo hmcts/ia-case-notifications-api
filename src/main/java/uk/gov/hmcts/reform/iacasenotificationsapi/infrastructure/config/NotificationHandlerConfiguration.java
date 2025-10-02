@@ -4443,15 +4443,13 @@ public class NotificationHandlerConfiguration {
                 YesOrNo isOutOfTime =
                     asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
 
-                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
-                    .map(status -> status == PAYMENT_PENDING)
-                    .orElse(false);
-
+                RemissionType remissionType = asylumCase
+                    .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == SUBMIT_APPEAL
                     && isOutOfTime.equals(YesOrNo.YES)
-                    && isPaymentPending
+                    && remissionType.equals(NO_REMISSION)
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                     && !isAcceleratedDetainedAppeal(asylumCase);
