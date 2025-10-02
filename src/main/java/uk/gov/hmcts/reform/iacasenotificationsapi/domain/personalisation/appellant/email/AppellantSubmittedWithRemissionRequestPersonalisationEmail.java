@@ -9,8 +9,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -18,6 +20,7 @@ import static java.util.Objects.requireNonNull;
 @Service
 public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implements EmailNotificationPersonalisation {
     private final String submittedRemissionRequestEmailTemplateId;
+    private final String submittedRemissionRequestPaPayLaterEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final SystemDateProvider systemDateProvider;
     private final int daysToWaitAfterHearingRequirementsSubmitted;
