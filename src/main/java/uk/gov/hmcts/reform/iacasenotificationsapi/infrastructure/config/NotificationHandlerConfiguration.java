@@ -5656,7 +5656,8 @@ public class NotificationHandlerConfiguration {
                 return callback.getEvent() == Event.END_APPEAL
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isInternalCase(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
             }, notificationGenerators
         );
     }
