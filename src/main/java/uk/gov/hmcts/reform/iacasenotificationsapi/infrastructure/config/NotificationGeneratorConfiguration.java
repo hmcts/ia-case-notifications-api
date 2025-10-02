@@ -2504,22 +2504,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdjournHearingWithoutDateNotificationGenerator")
-    public List<NotificationGenerator> internalAdjournHearingWithoutDateNotificationGenerator(
-        DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("adjournHearingWithoutDateIntegratedNotificationGenerator")
     public List<NotificationGenerator> adjournHearingWithoutDateNotificationIntegratedGenerator(
         LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
