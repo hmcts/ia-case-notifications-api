@@ -64,7 +64,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1405_INTERNAL_DETAINED_LATE_REMISSION_REFUSED_APPELLANT_LETTER",
+            "id": "1405_INTERNAL_DETAINED_LATE_REMISSION_REFUSED_IN_PRISON_OR_IRC",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
