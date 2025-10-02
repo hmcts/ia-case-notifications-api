@@ -75,6 +75,7 @@ public enum DocumentTag {
     INTERNAL_REINSTATE_APPEAL_LETTER("internalReinstateAppealLetter"),
     INTERNAL_ADJOURN_HEARING_WITHOUT_DATE("internalAdjournHearingWithoutDate"),
     INTERNAL_END_APPEAL_LETTER_BUNDLE("internalEndAppealLetterBundle"),
+    INTERNAL_CASE_LISTED_LETTER("internalCaseListedLetter"),
     INTERNAL_CASE_LISTED_LETTER_BUNDLE("internalCaseListedLetterBundle"),
     INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE("internalEditCaseListingLetterBundle"),
     INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE("internalOutOfTimeDecisionLetter"),

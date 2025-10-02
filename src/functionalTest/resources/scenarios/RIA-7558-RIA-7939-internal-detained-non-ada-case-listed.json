@@ -23,7 +23,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalListCaseLetter",
+                "tag": "internalCaseListedLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -59,7 +59,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7558_CASE_LISTED_HOME_OFFICE",
+            "id": "7558_DETAINED_CASE_LISTED_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
