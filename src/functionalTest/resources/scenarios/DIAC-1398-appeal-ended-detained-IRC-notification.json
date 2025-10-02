@@ -15,7 +15,7 @@
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "appellantsRepresentation": "No",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -47,7 +47,7 @@
         "isAdmin": "Yes",
         "appellantInDetention": "Yes",
         "isAcceleratedDetainedAppeal": "No",
-        "appellantsRepresentation": "No",
+        "appellantsRepresentation": "Yes",
         "notificationsSent": [
           {
             "id": "1398_INTERNAL_DET_END_APPEAL_EMAIL",
