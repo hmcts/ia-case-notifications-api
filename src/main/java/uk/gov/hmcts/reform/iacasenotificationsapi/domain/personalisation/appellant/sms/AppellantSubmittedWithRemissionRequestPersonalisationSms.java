@@ -23,6 +23,7 @@ import static java.util.Objects.requireNonNull;
 public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements SmsNotificationPersonalisation {
     private final String submittedRemissionRequestSmsTemplateId;
     private final String submittedRemissionRequestPaPayLaterSmsTemplateId;
+    private final String submittedRemissionRequestPaPayLaterEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
@@ -34,6 +35,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
         @Value("${govnotify.template.appealSubmitted.appellant.remission.paPayLater.sms}") String submittedRemissionRequestPaPayLaterSmsTemplateId,
         @Value("${appellantDaysToWait.afterHearingRequirementsSubmitted}") int daysAfterAppealSubmitted,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
@@ -41,6 +43,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
         this.submittedRemissionRequestPaPayLaterSmsTemplateId = submittedRemissionRequestPaPayLaterSmsTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
         this.systemDateProvider = systemDateProvider;
         this.daysAfterAppealSubmitted = daysAfterAppealSubmitted;
     }

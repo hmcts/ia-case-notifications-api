@@ -27,6 +27,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
     private final SystemDateProvider systemDateProvider;
     private final int daysToWaitAfterHearingRequirementsSubmitted;
     private final String iaAipFrontendUrl;
+    private final int daysToWaitAfterSubmittingAppealRemission;
 
 
     public AppellantSubmittedWithRemissionRequestPersonalisationEmail(
@@ -34,6 +35,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
         @Value("${govnotify.template.appealSubmitted.appellant.remission.paPayLater.email}") String submittedRemissionRequestPaPayLaterEmailTemplateId,
         @Value("${appellantDaysToWait.afterHearingRequirementsSubmitted}") int daysToWaitAfterHearingRequirementsSubmitted,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        @Value("${appellantDaysToWait.afterSubmittingAppealRemission}") int daysToWaitAfterSubmittingAppealRemission,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
@@ -41,6 +43,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
         this.submittedRemissionRequestPaPayLaterEmailTemplateId = submittedRemissionRequestPaPayLaterEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
+        this.daysToWaitAfterSubmittingAppealRemission = daysToWaitAfterSubmittingAppealRemission;
         this.daysToWaitAfterHearingRequirementsSubmitted = daysToWaitAfterHearingRequirementsSubmitted;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
     }
