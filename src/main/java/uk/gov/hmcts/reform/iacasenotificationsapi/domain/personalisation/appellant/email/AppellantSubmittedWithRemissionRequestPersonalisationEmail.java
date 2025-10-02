@@ -10,6 +10,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION;
 
 import java.util.Map;
 import java.util.Optional;
@@ -75,6 +77,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
 
         requireNonNull(asylumCase, "asylumCase must not be null");
+        final String refundRequestDueDate = systemDateProvider.dueDate(daysToWaitAfterSubmittingAppealRemission);
         if (getTemplateId(asylumCase).equals(submittedRemissionRequestPaPayLaterEmailTemplateId)) {
             return ImmutableMap
                     .<String, String>builder()
