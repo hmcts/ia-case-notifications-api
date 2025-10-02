@@ -23,6 +23,7 @@
           "legalAidAccountNumber": "1A234B",
           "remissionDecisionReason": "The evidence provided does not support the remission request. The legal aid documentation submitted is incomplete and does not meet the required criteria.",
           "appellantInUk": "Yes",
+          "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -54,6 +55,7 @@
         "legalAidAccountNumber": "1A234B",
         "remissionDecisionReason": "The evidence provided does not support the remission request. The legal aid documentation submitted is incomplete and does not meet the required criteria.",
         "appellantInUk": "Yes",
+        "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",

@@ -24,6 +24,7 @@
           "asylumSupportReference": "20/02/1234",
           "remissionDecisionReason": "The asylum support reference provided could not be verified. No active asylum support was found for the reference number submitted.",
           "appellantInUk": "Yes",
+          "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -56,6 +57,7 @@
         "asylumSupportReference": "20/02/1234",
         "remissionDecisionReason": "The asylum support reference provided could not be verified. No active asylum support was found for the reference number submitted.",
         "appellantInUk": "Yes",
+        "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
