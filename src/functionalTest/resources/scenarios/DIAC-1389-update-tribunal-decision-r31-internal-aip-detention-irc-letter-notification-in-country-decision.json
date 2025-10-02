@@ -7,7 +7,7 @@
     "input": {
       "id": 1389,
       "eventId": "updateTribunalDecision",
-      "state": "ftpaDecided",
+      "state": "decided",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {

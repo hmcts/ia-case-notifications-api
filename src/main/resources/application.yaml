@@ -67,6 +67,7 @@ govnotify:
   timeout: 5000
   template:
     detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
+    detained-iaft-5-email-template: 5d16344c-a62c-48b5-a068-21cf0275e47c
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -1442,9 +1443,6 @@ govnotify:
           smsUpdatedDocument: 308e47c0-38aa-4664-917b-9a25de7fcc6d
           smsUpdatedBoth: d6d4985f-cf1a-4c23-9915-ff1da99390a2
           letter: bea3f22d-cce7-4b42-9daf-0324dcb2500d
-        detentionEngagementTeam:
-          ircPrison:
-            email: 3c3f0f1e-4d0e-4f3b-8e2e-1a5e2f3c4e1fs
       rule32:
         legalrep:
           email: 6b948ce8-b9aa-4b36-aa21-9b4c0ba6ff6e

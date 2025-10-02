@@ -31,7 +31,7 @@ public class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersona
     private final String ircValue = "immigrationRemovalCentre";
 
     public DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation(
-        @Value("${govnotify.template.updateTribunalDecision.rule31.detentionEngagementTeam.ircPrison.email}") String internalUpdateTribunalDecisionRule31IrcPrisonTemplateId,
+        @Value("${govnotify.template.detained-iaft-5-email-template}") String internalUpdateTribunalDecisionRule31IrcPrisonTemplateId,
         DetentionFacilityEmailService detentionFacilityEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
