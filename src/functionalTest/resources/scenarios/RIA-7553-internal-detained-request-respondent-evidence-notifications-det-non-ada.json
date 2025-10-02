@@ -14,6 +14,16 @@
           "currentCaseStateVisibleToLegalRepresentative": "awaitingRespondentEvidence",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
+          "appellantsRepresentation" : "Yes",
+          "appellantHasFixedAddress": "Yes",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "directions": [

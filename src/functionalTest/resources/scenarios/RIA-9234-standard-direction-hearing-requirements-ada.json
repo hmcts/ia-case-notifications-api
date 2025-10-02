@@ -14,6 +14,15 @@
           "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "isAcceleratedDetainedAppeal": "Yes",
+          "legalRepHasAddress": "Yes",
+          "legalRepAddressUK": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
           "directions": [
             {
               "id": "1",
@@ -40,6 +49,15 @@
         "appellantsRepresentation": "No",
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "isAcceleratedDetainedAppeal": "Yes",
+        "legalRepHasAddress": "Yes",
+        "legalRepAddressUK": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
         "directions": [
           {
             "id": "1",
