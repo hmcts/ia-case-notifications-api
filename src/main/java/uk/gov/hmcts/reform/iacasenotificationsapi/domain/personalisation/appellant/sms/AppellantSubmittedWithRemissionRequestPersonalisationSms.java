@@ -25,7 +25,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
     private final String submittedRemissionRequestPaPayLaterSmsTemplateId;
     private final String submittedRemissionRequestPaPayLaterEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
-    private final int daysToWaitAfterHearingRequirementsSubmitted;
+    private final int daysToWaitAfterSubmittingAppealRemission;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterAppealSubmitted;
