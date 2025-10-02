@@ -71,19 +71,6 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
-        final String dueDate = systemDateProvider.dueDate(daysAfterAppealSubmitted);
-
-        return
-            ImmutableMap
-                .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appealSubmittedDaysAfter", dueDate)
-                .put("Hyperlink to service", iaAipFrontendUrl)
-                .build();
-    }
-    @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
 
         requireNonNull(asylumCase, "asylumCase must not be null");
         if (getTemplateId(asylumCase).equals(submittedRemissionRequestPaPayLaterEmailTemplateId)) {
