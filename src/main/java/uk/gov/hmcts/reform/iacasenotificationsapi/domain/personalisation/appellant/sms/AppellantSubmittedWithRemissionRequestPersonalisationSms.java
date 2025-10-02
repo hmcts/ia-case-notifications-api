@@ -18,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 @Service
 public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements SmsNotificationPersonalisation {
     private final String submittedRemissionRequestSmsTemplateId;
+    private final String submittedRemissionRequestPaPayLaterSmsTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
@@ -26,12 +27,14 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
 
     public AppellantSubmittedWithRemissionRequestPersonalisationSms(
         @Value("${govnotify.template.appealSubmitted.appellant.remission.sms}") String submittedRemissionRequestSmsTemplateId,
+        @Value("${govnotify.template.appealSubmitted.appellant.remission.paPayLater.sms}") String submittedRemissionRequestPaPayLaterSmsTemplateId,
         @Value("${appellantDaysToWait.afterHearingRequirementsSubmitted}") int daysAfterAppealSubmitted,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
         this.submittedRemissionRequestSmsTemplateId = submittedRemissionRequestSmsTemplateId;
+        this.submittedRemissionRequestPaPayLaterSmsTemplateId = submittedRemissionRequestPaPayLaterSmsTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.systemDateProvider = systemDateProvider;
@@ -40,7 +43,19 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
 
 
     @Override
-    public String getTemplateId() {
+    public String getTemplateId(AsylumCase asylumCase) {
+        Optional<AppealType> maybeAppealType = asylumCase.read(APPEAL_TYPE, AppealType.class);
+
+        if (maybeAppealType.isPresent() && maybeAppealType.get() == AppealType.PA) {
+            Optional<String> maybePaymentOption = asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class);
+
+            if (maybePaymentOption.isPresent()) {
+                String paymentOption = maybePaymentOption.get();
+                if ("payLater".equals(paymentOption) || "payOffline".equals(paymentOption)) {
+                    return submittedRemissionRequestPaPayLaterSmsTemplateId;
+                }
+            }
+        }
         return submittedRemissionRequestSmsTemplateId;
     }
 
@@ -66,6 +81,30 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
                 .put("appealSubmittedDaysAfter", dueDate)
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .build();
+    }
+    @Override
+    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        if (getTemplateId(asylumCase).equals(submittedRemissionRequestPaPayLaterEmailTemplateId)) {
+            return ImmutableMap
+                    .<String, String>builder()
+                    .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                    .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                    .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                    .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                    .put("Hyperlink to service", iaAipFrontendUrl)
+                    .put("14 days after remission request sent", refundRequestDueDate)
+                    .build();
+        } else {
+            return
+                    ImmutableMap
+                            .<String, String>builder()
+                            .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                            .put("appealSubmittedDaysAfter", dueDate)
+                            .put("Hyperlink to service", iaAipFrontendUrl)
+                            .build();
+        }
     }
 
 }

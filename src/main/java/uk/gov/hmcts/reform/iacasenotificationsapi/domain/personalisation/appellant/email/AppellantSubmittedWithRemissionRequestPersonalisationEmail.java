@@ -26,12 +26,14 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
 
     public AppellantSubmittedWithRemissionRequestPersonalisationEmail(
         @Value("${govnotify.template.appealSubmitted.appellant.remission.email}") String submittedRemissionRequestEmailTemplateId,
+        @Value("${govnotify.template.appealSubmitted.appellant.remission.paPayLater.email}") String submittedRemissionRequestPaPayLaterEmailTemplateId,
         @Value("${appellantDaysToWait.afterHearingRequirementsSubmitted}") int daysToWaitAfterHearingRequirementsSubmitted,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         SystemDateProvider systemDateProvider
     ) {
         this.submittedRemissionRequestEmailTemplateId = submittedRemissionRequestEmailTemplateId;
+        this.submittedRemissionRequestPaPayLaterEmailTemplateId = submittedRemissionRequestPaPayLaterEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
         this.daysToWaitAfterHearingRequirementsSubmitted = daysToWaitAfterHearingRequirementsSubmitted;
@@ -40,7 +42,19 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
 
 
     @Override
-    public String getTemplateId() {
+    public String getTemplateId(AsylumCase asylumCase) {
+        Optional<AppealType> maybeAppealType = asylumCase.read(APPEAL_TYPE, AppealType.class);
+
+        if (maybeAppealType.isPresent() && maybeAppealType.get() == AppealType.PA) {
+            Optional<String> maybePaymentOption = asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class);
+
+            if (maybePaymentOption.isPresent()) {
+                String paymentOption = maybePaymentOption.get();
+                if ("payLater".equals(paymentOption) || "payOffline".equals(paymentOption)) {
+                    return submittedRemissionRequestPaPayLaterEmailTemplateId;
+                }
+            }
+        }
         return submittedRemissionRequestEmailTemplateId;
     }
 
@@ -56,19 +70,32 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmail implemen
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
-        final String dueDate = systemDateProvider.dueDate(daysToWaitAfterHearingRequirementsSubmitted);
 
-        return
-            ImmutableMap
-                .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("appealSubmittedDaysAfter", dueDate)
-                .put("Hyperlink to service", iaAipFrontendUrl)
-                .build();
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        if (getTemplateId(asylumCase).equals(submittedRemissionRequestPaPayLaterEmailTemplateId)) {
+            return ImmutableMap
+                    .<String, String>builder()
+                    .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                    .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                    .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                    .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                    .put("Hyperlink to service", iaAipFrontendUrl)
+                    .put("14 days after remission request sent", refundRequestDueDate)
+                    .build();
+        } else {
+            final String dueDate = systemDateProvider.dueDate(daysToWaitAfterHearingRequirementsSubmitted);
+
+            return
+                    ImmutableMap
+                            .<String, String>builder()
+                            .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                            .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                            .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                            .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                            .put("appealSubmittedDaysAfter", dueDate)
+                            .put("Hyperlink to service", iaAipFrontendUrl)
+                            .build();
+        }
     }
 
 }
