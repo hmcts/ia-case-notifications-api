@@ -82,16 +82,6 @@
           "Legal representative name: ",
           "{$customerServices.emailAddress}"
         ]
-      },
-      {
-        "reference": "7553_INTERNAL_DETAINED_APPEAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER",
-        "recipient": "det-irc-brookhouse@example.com",
-        "subject": "IAFT – SERVE BY POST: Home Office directed to upload bundle",
-        "body": [
-          "Home Office reference: A1234567",
-          "HMCTS reference: PA/12345/2019",
-          "Appellant name: Talha Awan"
-        ]
       }
     ]
   }
