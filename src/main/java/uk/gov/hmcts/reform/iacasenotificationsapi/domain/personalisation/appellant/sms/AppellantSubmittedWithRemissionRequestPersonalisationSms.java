@@ -23,7 +23,6 @@ import static java.util.Objects.requireNonNull;
 public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements SmsNotificationPersonalisation {
     private final String submittedRemissionRequestSmsTemplateId;
     private final String submittedRemissionRequestPaPayLaterSmsTemplateId;
-    private final String submittedRemissionRequestPaPayLaterEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final int daysToWaitAfterSubmittingAppealRemission;
     private final String iaAipFrontendUrl;
