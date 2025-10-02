@@ -2618,7 +2618,8 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
                     && isAppellantInDetention(callback.getCaseDetails().getCaseData())
-                    && isInternalCase(callback.getCaseDetails().getCaseData()),
+                    && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
+                    && isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON),
             notificationGenerator
         );
     }
@@ -6908,10 +6909,9 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == ADJOURN_HEARING_WITHOUT_DATE
-                            && ((isInternalCase(asylumCase) &&
-                            !isAppellantInDetention(asylumCase))
-                            || (isAppellantInDetention(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER)));
+                            && isInternalCase(asylumCase)
+                            && (!isAppellantInDetention(asylumCase)
+                            || isDetainedInFacilityType(asylumCase, OTHER));
 
                 },
                 notificationGenerators,
