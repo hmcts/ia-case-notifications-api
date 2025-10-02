@@ -69,7 +69,7 @@
       {
         "reference": "7558_INTERNAL_DETAINED_CASE_LISTED_DET",
         "recipient": "det-irc-brookhouse@example.com",
-        "subject": "IAFT – SERVE IN PERSON: Hearing details",
+        "subject": "IAFT – SERVE IN PERSON",
         "body": [
           "Home Office reference: A1234567",
           "HMCTS reference: PA/12345/2019",
