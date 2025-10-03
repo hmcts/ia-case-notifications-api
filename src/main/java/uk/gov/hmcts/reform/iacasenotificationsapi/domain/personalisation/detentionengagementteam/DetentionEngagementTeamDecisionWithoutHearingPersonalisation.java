@@ -36,7 +36,8 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     public DetentionEngagementTeamDecisionWithoutHearingPersonalisation(
             @Value("${govnotify.template.decisionWithoutHearing.detentionEngagementTeam.email}") String detentionEngagementTeamDecisionWithoutHearingTemplateId,
             DetentionEmailService detentionEmailService,
-            PersonalisationProvider personalisationProvider, DocumentDownloadClient documentDownloadClient
+            PersonalisationProvider personalisationProvider,
+            DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamEndAppealTemplateId = detentionEngagementTeamDecisionWithoutHearingTemplateId;
         this.detentionEmailService = detentionEmailService;
