@@ -5527,7 +5527,7 @@ public class NotificationHandlerConfiguration {
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase)
                     && isAppellantInDetention(asylumCase) 
-                    && !isDetainedInFacilityType(asylumCase, DetentionFacility.OTHER);
+                    && !isDetainedInFacilityType(asylumCase, OTHER);
             }, notificationGenerators
         );
     }
