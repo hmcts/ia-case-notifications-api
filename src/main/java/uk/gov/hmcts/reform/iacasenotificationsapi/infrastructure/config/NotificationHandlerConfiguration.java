@@ -1068,8 +1068,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
-                    && isInternalCase(asylumCase)
-                    && !isAipJourney(asylumCase);
+                    && isInternalCase(asylumCase);
 
             }, notificationGenerators
         );
@@ -1087,7 +1086,7 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
                             && isInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                            && isAipJourney(asylumCase);
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase);
 
                 }, notificationGenerators
         );
