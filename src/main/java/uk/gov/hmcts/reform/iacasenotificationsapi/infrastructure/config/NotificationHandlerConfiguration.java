@@ -2679,8 +2679,11 @@ public class NotificationHandlerConfiguration {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                    log.info("Entering internal detained decision without hearing pre submit handler");
+
+
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == DECISION_WITHOUT_HEARING
+                            && callback.getEvent() == Event.DECISION_WITHOUT_HEARING
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
@@ -4956,7 +4959,7 @@ public class NotificationHandlerConfiguration {
 
                 final String stitchStatus = getStitchStatus(callback);
 
-                log.info("Entering notification handler config with values: event {}and state {} stitch status {}",
+                log.info("Entering notification handler config with values: event {} and state {} stitch status {}",
                     callback.getEvent(), callback.getCaseDetails().getState(), stitchStatus);
 
                 return

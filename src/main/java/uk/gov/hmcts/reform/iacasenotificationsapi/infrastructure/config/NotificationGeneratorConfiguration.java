@@ -2636,11 +2636,11 @@ public class NotificationGeneratorConfiguration {
     ) {
 
         return singletonList(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(detentionEngagementTeamDecisionWithoutHearingPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamDecisionWithoutHearingPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
