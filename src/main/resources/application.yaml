@@ -66,6 +66,7 @@ govnotify:
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:
+    detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -504,7 +505,7 @@ govnotify:
       appellant:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
       detentionEngagementTeam:
-        email: cef6603c-b5dd-4e63-b438-1e93644bad5c
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
         production:
           email: 73985562-43a4-417e-b201-175e8bf36682
     endAppealBeforeListing:
@@ -1904,7 +1905,6 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
-      - "hearingCancelled"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1948,6 +1948,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1991,6 +1992,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2034,6 +2036,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "editDocuments"
+      - "hearingCancelled"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2077,6 +2080,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2120,6 +2124,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2163,6 +2168,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2455,6 +2461,7 @@ security:
       - "caseListing"
       - "sendPaymentReminderNotification"
       - "recordRemissionReminder"
+      - "hearingCancelled"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
