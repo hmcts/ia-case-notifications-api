@@ -4565,6 +4565,35 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> lateRemissionRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
+            @Qualifier("lateRemissionRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    boolean rejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                            .map(decision -> REJECTED == decision)
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && paymentPaid
+                            && rejected
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+
+                }, notificationGenerators
+        );
+    }
+    
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealSubmittedWithExemptionEmailInternalNotificationHandler(
         @Qualifier("appealSubmittedWithExemptionEmailInternalNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
