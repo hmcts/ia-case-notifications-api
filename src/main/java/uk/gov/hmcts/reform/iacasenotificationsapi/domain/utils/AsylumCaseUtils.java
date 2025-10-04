@@ -23,6 +23,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
@@ -35,8 +36,6 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
-    private static final String HEARING_CHANNEL_CODE_VIDEO = "VID";
-    private static final String HEARING_CHANNEL_CODE_TELEPHONE = "TEL";
 
 
     private AsylumCaseUtils() {
@@ -80,6 +79,12 @@ public class AsylumCaseUtils {
 
     public static boolean isAriaMigrated(AsylumCase asylumCase) {
         return asylumCase.read(IS_ARIA_MIGRATED, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
+    }
+
+    public static boolean isRemissionApproved(AsylumCase asylumCase) {
+        Optional<RemissionDecision> remissionDecision = asylumCase.read(REMISSION_DECISION, RemissionDecision.class);
+
+        return remissionDecision.isPresent() && remissionDecision.get().equals(RemissionDecision.APPROVED);
     }
 
     public static Optional<FtpaDecisionOutcomeType> getFtpaDecisionOutcomeType(AsylumCase asylumCase) {
@@ -436,7 +441,9 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasBeenSubmittedAsLegalRepresentedInternalCase(AsylumCase asylumCase) {
-        return asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
+        return asylumCase.read(IS_ADMIN, YesOrNo.class)
+                .map(yesOrNo -> Objects.equals(YES, yesOrNo)).orElse(false)
+                && asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
                 .map(yesOrNo -> Objects.equals(NO, yesOrNo)).orElse(false);
     }
 
@@ -496,7 +503,7 @@ public class AsylumCaseUtils {
                 .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
                 .orElse(false);
     }
-    
+
     public static Boolean remissionDecisionPartiallyGrantedOrRefused(AsylumCase asylumCase) {
         return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
             .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
@@ -507,6 +514,20 @@ public class AsylumCaseUtils {
         return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                 .map(decision -> PARTIALLY_APPROVED == decision)
                 .orElse(false);
+    }
+
+    public static Boolean remissionDecisionGranted(AsylumCase asylumCase) {
+        return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                .map(decision -> APPROVED == decision)
+                .orElse(false);
+    }
+
+    public static boolean isInternalNonDetainedCase(AsylumCase asylumCase) {
+        return isInternalCase(asylumCase) && !isAppellantInDetention(asylumCase);
+    }
+
+    public static boolean internalNonDetainedWithAddressAvailable(AsylumCase asylumCase) {
+        return hasAppellantAddressInCountryOrOutOfCountry(asylumCase) && isInternalNonDetainedCase(asylumCase);
     }
 
 }
