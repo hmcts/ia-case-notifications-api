@@ -4137,6 +4137,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedAppealRemissionGrantedInTimeLetter")
+    public List<NotificationGenerator> internalDetainedAppealRemissionGrantedInTimeLetter(
+        DetentionEngagementTeamRemissionGrantedInTimePersonalisation internalDetainedAppealRemissionGrantedInTimeLetter,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(internalDetainedAppealRemissionGrantedInTimeLetter)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("appealSubmittedLateWithFeeEmailInternalNotificationGenerator")
     public List<NotificationGenerator> appealSubmittedLateWithFeeEmailInternalNotificationHandler(
         DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisation appealSubmittedLateWithFeePersonalisation,

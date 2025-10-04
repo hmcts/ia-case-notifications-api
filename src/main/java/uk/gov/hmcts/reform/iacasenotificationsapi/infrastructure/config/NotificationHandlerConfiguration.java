@@ -52,6 +52,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
@@ -4435,6 +4436,31 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealRemissionGrantedInTimeEmailNotificationHandler(
+        @Qualifier("internalDetainedAppealRemissionGrantedInTimeLetter")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean submissionInTime = asylumCase
+                        .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                        .map(yesOrNo -> yesOrNo == YesOrNo.NO)
+                        .orElse(false);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                        && isInternalCase(asylumCase) && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && submissionInTime
+                        && isRemissionApproved(asylumCase)
+                        && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                        && !isAcceleratedDetainedAppeal(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedOutOfTimeDecisionAllowedEmailNotificationHandler(
             @Qualifier("internalDetainedOutOfTimeDecisionAllowedEmailNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
@@ -4592,7 +4618,7 @@ public class NotificationHandlerConfiguration {
                 }, notificationGenerators
         );
     }
-    
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> appealSubmittedWithExemptionEmailInternalNotificationHandler(
         @Qualifier("appealSubmittedWithExemptionEmailInternalNotificationGenerator")
@@ -7307,7 +7333,7 @@ public class NotificationHandlerConfiguration {
                             || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                                 && isDetainedInFacilityType(asylumCase, OTHER))
                             || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
-                       && isApproved 
+                       && isApproved
                        && !isOutOfTimeAppeal
                        && lateRemissionType.isEmpty();
             },
