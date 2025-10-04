@@ -46,7 +46,7 @@ spring:
         jwt:
           jwk-set-uri: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}/o/jwks
   cache:
-    cache-names: userInfoCache
+    cache-names: userInfoCache, systemUserTokenCache
     caffeine:
       spec: expireAfterAccess=3600s
 featureFlag:
@@ -1626,6 +1626,7 @@ tsvStringsFileLocation: strings.tsv
 
 ia_system_user: ${IA_SYSTEM_USERNAME:system-user}
 ia_system_user_password: ${IA_SYSTEM_PASSWORD:system-password}
+ia_system_user_scope: "openid profile authorities acr roles create-user manage-user search-user"
 
 security:
   anonymousPaths:
@@ -2478,6 +2479,7 @@ document_management.url: ${DM_URL:http://127.0.0.1:4506}
 #OpenID
 idam:
   baseUrl: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}
+  redirectUrl: ${IA_IDAM_REDIRECT_URI:http://localhost:3002/oauth2/callback}
   s2s-auth:
     totp_secret: ${IA_S2S_SECRET:AAAAAAAAAAAAAAAC}
     microservice: ${IA_S2S_MICROSERVICE:ia}
