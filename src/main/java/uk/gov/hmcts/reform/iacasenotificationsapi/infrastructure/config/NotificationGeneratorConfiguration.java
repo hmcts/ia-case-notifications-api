@@ -4137,6 +4137,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedAppealRemissionGrantedInTimeLetter")
+    public List<NotificationGenerator> internalDetainedAppealRemissionGrantedInTimeLetter(
+        DetentionEngagementTeamRemissionGrantedInTimePersonalisation internalDetainedAppealRemissionGrantedInTimeLetter,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(internalDetainedAppealRemissionGrantedInTimeLetter)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("appealSubmittedLateWithFeeEmailInternalNotificationGenerator")
     public List<NotificationGenerator> appealSubmittedLateWithFeeEmailInternalNotificationHandler(
         DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisation appealSubmittedLateWithFeePersonalisation,
@@ -4185,6 +4200,21 @@ public class NotificationGeneratorConfiguration {
     @Bean("lateRemissionPartiallyGrantedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
     public List<NotificationGenerator> lateRemissionPartiallyGrantedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
             DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(personalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("lateRemissionRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
+    public List<NotificationGenerator> lateRemissionRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
+            DetLateRemissionRefusedInPrisonOrIrcAipManualPersonalisation personalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
@@ -5081,7 +5111,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("listCaseInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> listCaseInternalDetainedNotificationGenerator(
         DetentionEngagementTeamListCasePersonalisation detentionEngagementTeamListCasePersonalisation,
-        HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
@@ -5090,7 +5119,17 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(Collections.singleton(detentionEngagementTeamListCasePersonalisation)),
                 notificationSender,
                 notificationIdAppender
-            ),
+            )
+        );
+    }
+
+    @Bean("listCaseInternalNotificationGenerator")
+    public List<NotificationGenerator> listCaseInternalNotificationGenerator(
+        HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
             new EmailNotificationGenerator(
                 newArrayList(Collections.singleton(homeOfficeListCasePersonalisation)),
                 notificationSender,
