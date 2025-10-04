@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -27,16 +27,15 @@ public class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersona
 
     private final String internalUpdateTribunalDecisionRule31IrcPrisonTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private final DetentionFacilityEmailService detentionFacilityEmailService;
-    private final String ircValue = "immigrationRemovalCentre";
+    private final DetentionEmailService detentionEmailService;
 
     public DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation(
         @Value("${govnotify.template.detained-iaft-5-email-template}") String internalUpdateTribunalDecisionRule31IrcPrisonTemplateId,
-        DetentionFacilityEmailService detentionFacilityEmailService,
+        DetentionEmailService detentionEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
         this.internalUpdateTribunalDecisionRule31IrcPrisonTemplateId = internalUpdateTribunalDecisionRule31IrcPrisonTemplateId;
-        this.detentionFacilityEmailService = detentionFacilityEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
@@ -48,25 +47,18 @@ public class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersona
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        String email = detentionFacilityEmailService.getDetentionEmailAddress(asylumCase);
-
-        log.error("getDetentionEmailAddress returned email: {}", email);
-
-        return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+        String email = detentionEmailService.getDetentionEmailAddress(asylumCase);
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        log.error("inside getReferenceId");
         return caseId + "_INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON";
     }
 
     @Override
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
-
-        log.error("inside DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation getPersonalisationForLink");
 
         return ImmutableMap
             .<String, Object>builder()

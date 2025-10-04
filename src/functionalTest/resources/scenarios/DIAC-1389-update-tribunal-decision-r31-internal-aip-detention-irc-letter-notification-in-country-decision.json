@@ -45,7 +45,8 @@
             ]
           },
           "updateTribunalDecisionAndReasonsFinalCheck": "No",
-          "updatedAppealDecision": "Allowed"
+          "updatedAppealDecision": "Allowed",
+          "appealDecision": "Dismissed"
         }
       }
     }
@@ -72,6 +73,8 @@
         "isDlrmSetAsideEnabled": "Yes",
         "updateTribunalDecisionList": "underRule31",
         "listCaseHearingCentre": "taylorHouse",
+        "updatedAppealDecision": "Allowed",
+        "appealDecision": "Dismissed",
         "notificationsSent": [
           {
             "id": "1389_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",

@@ -25,7 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -38,7 +38,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
     @Mock
     private DocumentDownloadClient documentDownloadClient;
     @Mock
-    private DetentionFacilityEmailService detentionFacilityEmailService;
+    private DetentionEmailService detentionEmailService;
     @Mock
     JSONObject jsonDocument;
     private String templateId = "templateId";
@@ -69,7 +69,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
         detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation =
                 new DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation(
                         templateId,
-                        detentionFacilityEmailService,
+                        detentionEmailService,
                         documentDownloadClient
                 );
     }
@@ -92,7 +92,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
     void should_return_given_det_email_address() {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+        when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
                 detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
@@ -130,7 +130,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalAppealDetainedUpdateTribunalDecisionRule31IrcPrisonLetter document not available");
+                .hasMessage("internalDetainedAppealUpdateTribunalDecisionRule31IrcPrisonLetter document not available");
     }
 
     @Test

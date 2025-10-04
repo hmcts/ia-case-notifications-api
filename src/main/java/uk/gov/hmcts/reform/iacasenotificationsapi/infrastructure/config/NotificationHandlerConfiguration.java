@@ -7022,17 +7022,6 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-
-
-                    boolean condition = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
-                            && isInternalCase(asylumCase)
-                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && isRule31ReasonUpdatingDecision(asylumCase);
-
-                    log.error("inside internalUpdateTribunalDecisionRule31IrcPrisonNotificationHandler condintion: " + condition);
-
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                             && isInternalCase(asylumCase)
