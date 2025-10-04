@@ -13,11 +13,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DetentionFacili
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_DETENTION_LOCATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantOrLegalRepAddressLetterPersonalisation;
@@ -25,6 +27,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
 
 @Service
+@Slf4j
 public class LegalRepresentativeLetterUpdateDetentionLocationPersonalisation implements LetterNotificationPersonalisation {
     private final String templateId;
     private final CustomerServicesProvider customerServicesProvider;
@@ -58,18 +61,30 @@ public class LegalRepresentativeLetterUpdateDetentionLocationPersonalisation imp
     @Override
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
-
+        log.info("Sending email notification for update detention location");
         AsylumCase asylumCase =
                 callback
                         .getCaseDetails()
                         .getCaseData();
 
+
         String previousDetentionLocationName = asylumCase.read(PREVIOUS_DETENTION_LOCATION, String.class)
                 .orElseThrow(() -> new RequiredFieldMissingException("Previous Detention location is missing"));
         String newDetentionFacilityName = getDetentionFacilityName(asylumCase);
 
-        String oldDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocationName);
-        String newDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(newDetentionFacilityName);
+        String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class)
+                .orElse("");
+
+        String oldDetentionLocation = "";
+        String newDetentionLocation = "";
+
+        if (detentionFacility.equals("other")) {
+            oldDetentionLocation = previousDetentionLocationName;
+            newDetentionLocation = newDetentionFacilityName;
+        } else {
+            oldDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocationName);
+            newDetentionLocation = detentionFacilityNameFinder.getDetentionFacility(newDetentionFacilityName);
+        }
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
