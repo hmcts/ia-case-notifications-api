@@ -8,10 +8,11 @@
       "eventId": "updateTribunalDecision",
       "state": "ftpaDecided",
       "caseData": {
-        "template": "minimal-appeal-submitted.json",
+        "template": "minimal-internal-appeal-submittedjson",
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
+          "appellantInDetention": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "isDlrmSetAsideEnabled": "Yes",
           "listCaseHearingCentre": "taylorHouse",
@@ -26,6 +27,22 @@
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
+          },
+          "typesOfUpdateTribunalDecision": {
+            "value": {
+              "code": "dismissed",
+              "label": "Yes, change decision to Dismissed"
+            },
+            "list_items": [
+              {
+                "code": "dismissed",
+                "label": "Yes, change decision to Dismissed"
+              },
+              {
+                "code": "allowed",
+                "label": "No"
+              }
+            ]
           }
         }
       }
@@ -35,10 +52,11 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-appeal-submitted.json",
+      "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
+        "appellantInDetention": "No",
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "isDlrmSetAsideEnabled": "Yes",
         "listCaseHearingCentre": "taylorHouse",
@@ -53,6 +71,22 @@
           "PostTown": "Example Town",
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
+        },
+        "typesOfUpdateTribunalDecision": {
+          "value": {
+            "code": "dismissed",
+            "label": "Yes, change decision to Dismissed"
+          },
+          "list_items": [
+            {
+              "code": "dismissed",
+              "label": "Yes, change decision to Dismissed"
+            },
+            {
+              "code": "allowed",
+              "label": "No"
+            }
+          ]
         },
         "notificationsSent": [
           {
