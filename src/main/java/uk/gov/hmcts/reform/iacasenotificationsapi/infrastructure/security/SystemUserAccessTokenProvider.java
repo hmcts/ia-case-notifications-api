@@ -66,6 +66,15 @@ public class SystemUserAccessTokenProvider implements AccessTokenProvider {
             tokenRequest.add("scope", systemUserScope);
 
             Token tokenResponse = idamApi.token(tokenRequest);
+            
+            if (tokenResponse == null || tokenResponse.getAccessToken() == null || tokenResponse.getAccessToken().trim().isEmpty()) {
+                log.error("IDAM returned null or empty access token");
+                throw new IdentityManagerResponseException(
+                    "Could not get system user token from IDAM",
+                    new IllegalStateException("Access token is null or empty")
+                );
+            }
+            
             String accessToken = "Bearer " + tokenResponse.getAccessToken();
             
             log.debug("Successfully retrieved system user access token");
