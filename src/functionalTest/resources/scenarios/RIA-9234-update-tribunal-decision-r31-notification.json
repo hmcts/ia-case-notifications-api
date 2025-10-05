@@ -8,7 +8,7 @@
       "eventId": "updateTribunalDecision",
       "state": "ftpaDecided",
       "caseData": {
-        "template": "minimal-internal-appeal-submittedjson",
+        "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
