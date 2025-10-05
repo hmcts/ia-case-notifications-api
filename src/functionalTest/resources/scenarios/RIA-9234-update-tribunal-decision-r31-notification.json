@@ -25,6 +25,22 @@
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
+          },
+          "typesOfUpdateTribunalDecision": {
+            "value": {
+              "code": "dismissed",
+              "label": "Yes, change decision to Dismissed"
+            },
+            "list_items": [
+              {
+                "code": "dismissed",
+                "label": "Yes, change decision to Dismissed"
+              },
+              {
+                "code": "allowed",
+                "label": "No"
+              }
+            ]
           }
         }
       }
@@ -51,6 +67,22 @@
           "PostTown": "Example Town",
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
+        },
+        "typesOfUpdateTribunalDecision": {
+          "value": {
+            "code": "dismissed",
+            "label": "Yes, change decision to Dismissed"
+          },
+          "list_items": [
+            {
+              "code": "dismissed",
+              "label": "Yes, change decision to Dismissed"
+            },
+            {
+              "code": "allowed",
+              "label": "No"
+            }
+          ]
         },
         "notificationsSent": [
           {
