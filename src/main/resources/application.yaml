@@ -67,6 +67,7 @@ govnotify:
   timeout: 5000
   template:
     detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
+    detained-iaft-5-email-template: 5d16344c-a62c-48b5-a068-21cf0275e47c
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
