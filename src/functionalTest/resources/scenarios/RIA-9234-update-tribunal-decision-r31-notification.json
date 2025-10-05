@@ -17,6 +17,7 @@
           "listCaseHearingCentre": "taylorHouse",
           "legalRepresentativeEmailAddress": "sample@mail.com",
           "updateTribunalDecisionList": "underRule31",
+          "appellantInUk": "Yes",
           "legalRepHasAddress": "Yes",
           "legalRepAddressUK": {
             "County": "",
@@ -25,22 +26,6 @@
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
-          },
-          "typesOfUpdateTribunalDecision": {
-            "value": {
-              "code": "dismissed",
-              "label": "Yes, change decision to Dismissed"
-            },
-            "list_items": [
-              {
-                "code": "dismissed",
-                "label": "Yes, change decision to Dismissed"
-              },
-              {
-                "code": "allowed",
-                "label": "No"
-              }
-            ]
           }
         }
       }
@@ -59,6 +44,7 @@
         "listCaseHearingCentre": "taylorHouse",
         "legalRepresentativeEmailAddress": "sample@mail.com",
         "updateTribunalDecisionList": "underRule31",
+        "appellantInUk": "Yes",
         "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {
           "County": "",
@@ -67,22 +53,6 @@
           "PostTown": "Example Town",
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
-        },
-        "typesOfUpdateTribunalDecision": {
-          "value": {
-            "code": "dismissed",
-            "label": "Yes, change decision to Dismissed"
-          },
-          "list_items": [
-            {
-              "code": "dismissed",
-              "label": "Yes, change decision to Dismissed"
-            },
-            {
-              "code": "allowed",
-              "label": "No"
-            }
-          ]
         },
         "notificationsSent": [
           {
