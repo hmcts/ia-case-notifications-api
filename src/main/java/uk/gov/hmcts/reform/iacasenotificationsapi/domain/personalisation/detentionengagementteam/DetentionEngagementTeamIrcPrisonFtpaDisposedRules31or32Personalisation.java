@@ -6,7 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
@@ -28,15 +28,15 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
     private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
-    public DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation(
-            @Value("${govnotify.template.det-iaft-email-template}") String detentionEngagementTeamTemplateId,
+    public DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation(
+            @Value("${govnotify.template.det-email-template}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient
@@ -49,7 +49,7 @@ public class DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation 
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_WITH_EXEMPTION";
+        return caseId + "_AIP_MANUAL_IRC_PRISON_DISPOSED_RULES_31_OR_32_FTPA";
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DetentionEngagementTeamAppealSubmittedWithExemptionPersonalisation 
 
     private JSONObject getAppealCanProceedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal 'Appeal can proceed' Letter in compatible format", e);
             throw new IllegalStateException("Failed to get Internal 'Appeal can proceed' Letter in compatible format");
