@@ -1094,7 +1094,7 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.REQUEST_RESPONDENT_REVIEW
                             && isInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                            && isAipJourney(asylumCase);
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase);
 
                 }, notificationGenerators
         );
