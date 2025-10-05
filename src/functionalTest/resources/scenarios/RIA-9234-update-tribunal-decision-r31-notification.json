@@ -16,7 +16,16 @@
           "isDlrmSetAsideEnabled": "Yes",
           "listCaseHearingCentre": "taylorHouse",
           "legalRepresentativeEmailAddress": "sample@mail.com",
-          "updateTribunalDecisionList": "underRule31"
+          "updateTribunalDecisionList": "underRule31",
+          "legalRepHasAddress": "Yes",
+          "legalRepAddressUK": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          }
         }
       }
     }
@@ -34,13 +43,22 @@
         "listCaseHearingCentre": "taylorHouse",
         "legalRepresentativeEmailAddress": "sample@mail.com",
         "updateTribunalDecisionList": "underRule31",
+        "legalRepHasAddress": "Yes",
+        "legalRepAddressUK": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
         "notificationsSent": [
           {
             "id": "923430_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923430_LEGAL_REPRESENTATIVE_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
+            "id": "923430_INTERNAL_UPDATE_TRIBUNAL_DECISION_RULE31_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
