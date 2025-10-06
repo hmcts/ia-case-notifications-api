@@ -1,12 +1,12 @@
 {
   "description": "DIAC-1341 Record adjournment details - Cancellation of Production Notice - Detained ",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": false,
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 2959123,
+      "id": 13410,
       "eventId": "recordAdjournmentDetails",
       "state": "preHearing",
       "caseData": {
@@ -31,7 +31,7 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "2959123_RECORD_ADJOURNMENT_DETAILS_PRODUCTION_DET",
+            "id": "13410_RECORD_ADJOURNMENT_DETAILS_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "2959123_RECORD_ADJOURNMENT_DETAILS_PRODUCTION_DET",
+        "reference": "13410_RECORD_ADJOURNMENT_DETAILS_PRODUCTION_DET",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – SERVE IN PERSON: Hearing adjourned",
         "body": [
