@@ -1051,16 +1051,10 @@ public class NotificationGeneratorConfiguration {
     @Bean("respondentReviewInternalNotificationGenerator")
     public List<NotificationGenerator> respondentReviewInternalNotificationGenerator(
         RespondentDirectionPersonalisation respondentDirectionPersonalisation,
-        DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamRespondentReviewPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
             new EmailNotificationGenerator(
                 newArrayList(respondentDirectionPersonalisation),
                 notificationSender,
@@ -5302,6 +5296,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalUpdateTribunalDecisionRule31IrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateTribunalDecisionRule31IrcPrisonNotificationGenerator(
+            DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalMaintainCaseUnlinkAppealNotificationGenerator")
     public List<NotificationGenerator> internalMaintainCaseUnlinkAppealNotificationGenerator(
         DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation,
@@ -5719,6 +5728,22 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("updateTribunalDecisionRule31HoNotificationGenerator")
+    public List<NotificationGenerator> updateTribunalDecisionRule31HoNotificationGenerator(
+            RespondentUpdateTribunalDecisionRule31PersonalisationEmail respondentUpdateTribunalDecisionRule31PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentUpdateTribunalDecisionRule31PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
