@@ -93,6 +93,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserRole;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -7386,15 +7387,25 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase>  hearingCancelledProductionDetainedNotificationHandler(
             @Qualifier("hearingCancelledProductionDetainedNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
+
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+                    Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
+                            ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
+                            : Optional.empty();
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
+                            .map(value -> YES == value)
+                            .orElse(false);
                     return callback.getEvent() == HEARING_CANCELLED
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
                             && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                            && isHearingChannel(asylumCase, "INTER");
+                            && isHearingChannel(asylumCase, "INTER")
+                            && listCaseHearingDateBefore.isPresent()
+                            && shouldTriggerReviewInterpreterTask;
                 }, notificationGenerators
         );
     }
@@ -7408,11 +7419,15 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
+                        .map(value -> YES == value)
+                        .orElse(false);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
                     && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                    && isHearingChannel(asylumCase, "INTER");
+                    && isHearingChannel(asylumCase, "INTER")
+                    && shouldTriggerReviewInterpreterTask;
             }, notificationGenerators
         );
     }
