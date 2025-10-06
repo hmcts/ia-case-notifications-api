@@ -7386,15 +7386,23 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase>  hearingCancelledProductionDetainedNotificationHandler(
             @Qualifier("hearingCancelledProductionDetainedNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
+
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    final AsylumCase asylumBeforeCase = callback.getCaseDetailsBefore().get().getCaseData();
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    Optional<String> listCaseHearingDateBefore = asylumBeforeCase.read(LIST_CASE_HEARING_DATE, String.class);
+                    boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
+                            .map(value -> YES == value)
+                            .orElse(false);
                     return callback.getEvent() == HEARING_CANCELLED
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
                             && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                            && isHearingChannel(asylumCase, "INTER");
+                            && isHearingChannel(asylumBeforeCase, "INTER")
+                            && listCaseHearingDateBefore.isPresent()
+                            && shouldTriggerReviewInterpreterTask;
                 }, notificationGenerators
         );
     }
@@ -7408,11 +7416,15 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
+                        .map(value -> YES == value)
+                        .orElse(false);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
                     && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                    && isHearingChannel(asylumCase, "INTER");
+                    && isHearingChannel(asylumCase, "INTER")
+                    && shouldTriggerReviewInterpreterTask;
             }, notificationGenerators
         );
     }
