@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadSystemUserClient;
 import uk.gov.service.notify.NotificationClientException;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
     private DetentionEmailService detentionEmailService;
 
     @Mock
-    private DocumentDownloadClient documentDownloadClient;
+    private DocumentDownloadSystemUserClient documentDownloadClient;
 
     @Mock
     private AsylumCase asylumCase;
