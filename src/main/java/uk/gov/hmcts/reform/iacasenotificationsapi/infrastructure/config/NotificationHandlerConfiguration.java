@@ -7392,13 +7392,9 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
-                    Optional<String> listCaseHearingDateBefore;
-                    if (caseDetailsBefore.isPresent()) {
-                        AsylumCase asylumBeforeCase = caseDetailsBefore.get().getCaseData();
-                        listCaseHearingDateBefore = asylumBeforeCase.read(LIST_CASE_HEARING_DATE, String.class);
-                    } else {
-                        listCaseHearingDateBefore = Optional.empty();
-                    }
+                    Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
+                            ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
+                            : Optional.empty();
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
                     boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
                             .map(value -> YES == value)
