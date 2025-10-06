@@ -1,26 +1,24 @@
 {
-  "description": "RIA-9234 Update Tribunal Decision Rule 31 Notification for admin and represented cases",
+  "description": "DIAC-1389 Update Tribunal Decision Rule 31 Internal AiP Manual Detained in IRC Prison Email Notification",
+  "launchDarklyKey": "dlrm-setaside-feature-flag:true",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 923430,
+      "id": 1389,
       "eventId": "updateTribunalDecision",
-      "state": "ftpaDecided",
+      "state": "decided",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantsRepresentation": "No",
-          "appellantInDetention": "No",
-          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "isDlrmSetAsideEnabled": "Yes",
-          "listCaseHearingCentre": "taylorHouse",
-          "legalRepresentativeEmailAddress": "sample@mail.com",
-          "updateTribunalDecisionList": "underRule31",
+          "appellantsRepresentation": "Yes",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "immigrationRemovalCentre",
           "appellantInUk": "Yes",
-          "legalRepHasAddress": "Yes",
-          "legalRepAddressUK": {
+          "appellantHasFixedAddress": "Yes",
+          "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
             "PostCode": "NE21JX",
@@ -28,7 +26,9 @@
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
           },
-          "updatedAppealDecision": "Allowed",
+          "isDlrmSetAsideEnabled": "Yes",
+          "updateTribunalDecisionList": "underRule31",
+          "listCaseHearingCentre": "taylorHouse",
           "typesOfUpdateTribunalDecision": {
             "value": {
               "code": "dismissed",
@@ -44,7 +44,10 @@
                 "label": "No"
               }
             ]
-          }
+          },
+          "updateTribunalDecisionAndReasonsFinalCheck": "No",
+          "updatedAppealDecision": "Allowed",
+          "appealDecision": "Dismissed"
         }
       }
     }
@@ -56,16 +59,11 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantsRepresentation": "No",
-        "appellantInDetention": "No",
-        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "isDlrmSetAsideEnabled": "Yes",
-        "listCaseHearingCentre": "taylorHouse",
-        "legalRepresentativeEmailAddress": "sample@mail.com",
-        "updateTribunalDecisionList": "underRule31",
+        "appellantsRepresentation": "Yes",
+        "appellantInDetention": "Yes",
         "appellantInUk": "Yes",
-        "legalRepHasAddress": "Yes",
-        "legalRepAddressUK": {
+        "appellantHasFixedAddress": "Yes",
+        "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
           "PostCode": "NE21JX",
@@ -73,30 +71,18 @@
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
         },
+        "isDlrmSetAsideEnabled": "Yes",
+        "updateTribunalDecisionList": "underRule31",
+        "listCaseHearingCentre": "taylorHouse",
         "updatedAppealDecision": "Allowed",
-        "typesOfUpdateTribunalDecision": {
-          "value": {
-            "code": "dismissed",
-            "label": "Yes, change decision to Dismissed"
-          },
-          "list_items": [
-            {
-              "code": "dismissed",
-              "label": "Yes, change decision to Dismissed"
-            },
-            {
-              "code": "allowed",
-              "label": "No"
-            }
-          ]
-        },
+        "appealDecision": "Dismissed",
         "notificationsSent": [
           {
-            "id": "923430_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
+            "id": "1389_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923430_INTERNAL_UPDATE_TRIBUNAL_DECISION_RULE31_LETTER",
+            "id": "1389_INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

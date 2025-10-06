@@ -46,7 +46,7 @@ spring:
         jwt:
           jwk-set-uri: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}/o/jwks
   cache:
-    cache-names: userInfoCache
+    cache-names: userInfoCache, systemUserTokenCache
     caffeine:
       spec: expireAfterAccess=3600s
 featureFlag:
@@ -67,6 +67,7 @@ govnotify:
   timeout: 5000
   template:
     detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
+    detained-iaft-5-email-template: 5d16344c-a62c-48b5-a068-21cf0275e47c
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -213,6 +214,10 @@ govnotify:
             letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
           partiallyApproved:
             letter: 7e81f236-db91-4f42-b3b2-a7e56edf5957
+      detentionEngagementTeam:
+        approved:
+          onTime:
+            email: bce666a3-9267-4f9b-8d89-58d932bd94a1
 
     editPaymentMethod:
       adminOfficer:
@@ -331,7 +336,7 @@ govnotify:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
       detentionTeam:
-        email: 816d35c8-e4b8-45d3-a4fe-789c1badc408
+        email: 7542be99-2359-4e1f-bc73-5ee44d79ea9f
       respondent:
         email: 6c9d4e44-7eba-4058-a928-20da6f447d74
         detention:
@@ -1626,6 +1631,7 @@ tsvStringsFileLocation: strings.tsv
 
 ia_system_user: ${IA_SYSTEM_USERNAME:system-user}
 ia_system_user_password: ${IA_SYSTEM_PASSWORD:system-password}
+ia_system_user_scope: "openid profile authorities acr roles create-user manage-user search-user"
 
 security:
   anonymousPaths:
@@ -2478,6 +2484,7 @@ document_management.url: ${DM_URL:http://127.0.0.1:4506}
 #OpenID
 idam:
   baseUrl: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}
+  redirectUrl: ${IA_IDAM_REDIRECT_URI:http://localhost:3002/oauth2/callback}
   s2s-auth:
     totp_secret: ${IA_S2S_SECRET:AAAAAAAAAAAAAAAC}
     microservice: ${IA_S2S_MICROSERVICE:ia}
