@@ -19,7 +19,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HomeOfficeEmailFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -48,14 +48,18 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 @SuppressWarnings("unchecked")
 public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationTest {
 
-    @Mock PersonalisationProvider personalisationProvider;
-    @Mock Callback<AsylumCase> callback;
-    @Mock CaseDetails<AsylumCase> caseDetails;
-    @Mock AsylumCase asylumCase;
+    @Mock
+    PersonalisationProvider personalisationProvider;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     private final String adaPrefix = "ADA - SERVE BY POST";
     @Mock
-    private DetEmailService detEmailService;
+    private DetentionEmailService detEmailService;
     @Mock
     HomeOfficeEmailFinder homeOfficeEmailFinder;
 
@@ -77,10 +81,10 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     @BeforeEach
     public void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamNonStandardDirectionPersonalisation = new DetentionEngagementTeamNonStandardDirectionPersonalisation(
-            templateId,
-            detEmailService,
-            documentDownloadClient,
-            personalisationProvider
+                templateId,
+                detEmailService,
+                documentDownloadClient,
+                personalisationProvider
         );
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -91,7 +95,7 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     @Test
     public void should_return_give_reference_id() {
         assertEquals(caseId + "_INTERNAL_NON_STANDARD_DIRECTION_DET",
-            detentionEngagementTeamNonStandardDirectionPersonalisation.getReferenceId(caseId));
+                detentionEngagementTeamNonStandardDirectionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -115,14 +119,14 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixesForInternalAppealByPost(detentionEngagementTeamNonStandardDirectionPersonalisation);
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(getPersonalisation());
 
         Map<String, Object> personalisation =
-            detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink(callback);
+                detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink(callback);
         //assert the personalisation map values
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
         assertEquals(jsonObject, personalisation.get("documentLink"));
@@ -133,19 +137,19 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     public void should_throw_exception_when_personalisation_when_callback_is_null() {
 
         assertThatThrownBy(() -> detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .hasMessage("asylumCase must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+                .hasMessage("asylumCase must not be null")
+                .isExactlyInstanceOf(NullPointerException.class);
 
     }
 
     private Map<String, String> getPersonalisation() {
 
         return ImmutableMap
-            .<String, String>builder()
-            .put("appealReferenceNumber", "PA/12345/001")
-            .put("homeOfficeReference", "A1234567")
-            .put("appellantGivenNames", "Talha")
-            .put("appellantFamilyName", "Awan")
-            .build();
+                .<String, String>builder()
+                .put("appealReferenceNumber", "PA/12345/001")
+                .put("homeOfficeReference", "A1234567")
+                .put("appellantGivenNames", "Talha")
+                .put("appellantFamilyName", "Awan")
+                .build();
     }
 }

@@ -1678,6 +1678,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
                     && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder);
             },
             notificationGenerators
