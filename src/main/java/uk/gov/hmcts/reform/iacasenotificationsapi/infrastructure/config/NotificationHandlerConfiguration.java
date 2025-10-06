@@ -93,6 +93,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.TimeExtensionStatus;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserRole;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
@@ -7390,9 +7391,15 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final AsylumCase asylumBeforeCase = callback.getCaseDetailsBefore().get().getCaseData();
+                    final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+                    Optional<String> listCaseHearingDateBefore;
+                    if (caseDetailsBefore.isPresent()) {
+                        AsylumCase asylumBeforeCase = caseDetailsBefore.get().getCaseData();
+                        listCaseHearingDateBefore = asylumBeforeCase.read(LIST_CASE_HEARING_DATE, String.class);
+                    } else {
+                        listCaseHearingDateBefore = Optional.empty();
+                    }
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-                    Optional<String> listCaseHearingDateBefore = asylumBeforeCase.read(LIST_CASE_HEARING_DATE, String.class);
                     boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
                             .map(value -> YES == value)
                             .orElse(false);
@@ -7400,7 +7407,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
                             && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                            && isHearingChannel(asylumBeforeCase, "INTER")
+                            && isHearingChannel(asylumCase, "INTER")
                             && listCaseHearingDateBefore.isPresent()
                             && shouldTriggerReviewInterpreterTask;
                 }, notificationGenerators
