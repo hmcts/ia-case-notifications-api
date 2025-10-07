@@ -50,6 +50,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInFacilityType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isDetainedInOneOfFacilityTypes;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingDetailsUpdated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
@@ -7392,20 +7393,33 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
-                    Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
-                            ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
-                            : Optional.empty();
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-                    boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
-                            .map(value -> YES == value)
-                            .orElse(false);
                     return callback.getEvent() == HEARING_CANCELLED
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
                             && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
+                            && isHearingChannel(asylumCase, "INTER");
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase>  editCaseListingProductionDetainedWhenHearingDetailsUpdatedNotificationHandler(
+            @Qualifier("editCaseListingProductionDetainedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+                    Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+
+                    return callback.getEvent() == EDIT_CASE_LISTING
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isAppellantInDetention(asylumCase)
+                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
                             && isHearingChannel(asylumCase, "INTER")
-                            && listCaseHearingDateBefore.isPresent()
-                            && shouldTriggerReviewInterpreterTask;
+                            && isHearingDetailsUpdated(asylumCase, caseDetailsBefore);
                 }, notificationGenerators
         );
     }
@@ -7419,15 +7433,11 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
-                boolean shouldTriggerReviewInterpreterTask = asylumCase.read(SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK, YesOrNo.class)
-                        .map(value -> YES == value)
-                        .orElse(false);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
                     && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                    && isHearingChannel(asylumCase, "INTER")
-                    && shouldTriggerReviewInterpreterTask;
+                    && isHearingChannel(asylumCase, "INTER");
             }, notificationGenerators
         );
     }

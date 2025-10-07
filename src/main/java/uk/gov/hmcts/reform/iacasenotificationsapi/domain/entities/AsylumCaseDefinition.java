@@ -625,9 +625,6 @@ public enum AsylumCaseDefinition {
 
     HEARING_CHANNEL(
             "hearingChannel", new TypeReference<DynamicList>(){}),
-
-    SHOULD_TRIGGER_REVIEW_INTERPRETER_TASK(
-            "shouldTriggerReviewInterpreterTask", new TypeReference<YesOrNo>(){}),
     ;
 
 
