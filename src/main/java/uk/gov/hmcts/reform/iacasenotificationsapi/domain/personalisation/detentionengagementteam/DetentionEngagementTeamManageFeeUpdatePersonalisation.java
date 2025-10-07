@@ -57,13 +57,13 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if(!isAppellantInDetention(asylumCase)){
+        if (!isAppellantInDetention(asylumCase)) {
             return Collections.emptySet();
         }
         return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
     }
 
-        @Override
+    @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET";
     }
