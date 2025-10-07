@@ -7424,9 +7424,9 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
-                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();                   
                     Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    
                     return callback.getEvent() == HEARING_CANCELLED
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
@@ -7437,22 +7437,26 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase>  editCaseListingProductionDetainedWhenHearingDetailsUpdatedNotificationHandler(
-            @Qualifier("editCaseListingProductionDetainedNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase>  editCaseListingCancelledProductionDetainedNotificationHandler(
+            @Qualifier("hearingCancelledProductionDetainedNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
-                    Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
+                        ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
+                        : Optional.empty();
 
                     return callback.getEvent() == EDIT_CASE_LISTING
-                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isAppellantInDetention(asylumCase)
-                            && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                            && isHearingChannel(asylumCase, "INTER")
-                            && isHearingDetailsUpdated(asylumCase, caseDetailsBefore);
+                        && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && isAppellantInDetention(asylumCase)
+                        && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
+                        && isHearingDetailsUpdated(asylumCase, caseDetailsBefore)
+                        && listCaseHearingDateBefore.isPresent()
+                        && isHearingChannel(caseDetailsBefore, "INTER");                        
+                        
                 }, notificationGenerators
         );
     }
@@ -7465,17 +7469,15 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
-                Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
-                        ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
-                        : Optional.empty();
+
                 Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
                     && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                    && isHearingChannel(asylumCase, "INTER")
-                    && listCaseHearingDateBefore.isPresent();
+                    && isHearingDetailsUpdated(asylumCase, caseDetailsBefore)
+                    && isHearingChannel(asylumCase, "INTER");
+                
             }, notificationGenerators
         );
     }
