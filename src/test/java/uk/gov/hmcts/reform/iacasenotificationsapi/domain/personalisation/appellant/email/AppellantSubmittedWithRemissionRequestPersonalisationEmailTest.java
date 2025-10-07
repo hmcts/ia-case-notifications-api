@@ -76,7 +76,17 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantSubmittedWithRemissionRequestPersonalisationEmail.getTemplateId());
+        String actualTemplateId = appellantSubmittedWithRemissionRequestPersonalisationEmail.getTemplateId(asylumCase);
+        assertEquals(emailTemplateId, actualTemplateId);
+    }
+
+    @Test
+    public void should_return_pa_pay_later_template_id_when_pa_and_payLater() {
+        when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
+        when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class)).thenReturn(Optional.of("payLater"));
+
+        String actualTemplateId = appellantSubmittedWithRemissionRequestPersonalisationEmail.getTemplateId(asylumCase);
+        assertEquals(paPayLaterEmailTemplateId, actualTemplateId);
     }
 
     @Test
