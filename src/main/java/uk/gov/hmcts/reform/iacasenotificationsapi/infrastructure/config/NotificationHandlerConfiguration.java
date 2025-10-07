@@ -7432,12 +7432,17 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+                Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
+                        ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
+                        : Optional.empty();
                 Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
                     && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
-                    && isHearingChannel(asylumCase, "INTER");
+                    && isHearingChannel(asylumCase, "INTER")
+                    && listCaseHearingDateBefore.isPresent();
             }, notificationGenerators
         );
     }
