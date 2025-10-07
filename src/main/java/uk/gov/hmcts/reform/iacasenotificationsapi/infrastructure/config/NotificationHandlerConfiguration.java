@@ -7444,9 +7444,18 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
+                    
                     final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
-                    Optional<String> listCaseHearingDateBefore = caseDetailsBefore.isPresent()
-                        ? caseDetailsBefore.get().getCaseData().read(LIST_CASE_HEARING_DATE, String.class)
+
+                    AsylumCase asylumCaseBefore = null;
+                    
+                    if (caseDetailsBefore.isPresent()) {
+                        asylumCaseBefore = caseDetailsBefore.get().getCaseData();
+                    }
+                        
+                    Optional<String> listCaseHearingDateBefore = asylumCaseBefore != null
+                        ? asylumCaseBefore.read(LIST_CASE_HEARING_DATE, String.class)
                         : Optional.empty();
 
                     return callback.getEvent() == EDIT_CASE_LISTING
@@ -7455,7 +7464,7 @@ public class NotificationHandlerConfiguration {
                         && detentionFacility.isPresent() && !detentionFacility.get().equals("other")
                         && isHearingDetailsUpdated(asylumCase, caseDetailsBefore)
                         && listCaseHearingDateBefore.isPresent()
-                        && isHearingChannel(caseDetailsBefore, "INTER");                        
+                        && isHearingChannel(asylumCaseBefore, "INTER");                        
                         
                 }, notificationGenerators
         );
@@ -7469,7 +7478,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
+                final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();                
+                
                 Optional<String> detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class);
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
