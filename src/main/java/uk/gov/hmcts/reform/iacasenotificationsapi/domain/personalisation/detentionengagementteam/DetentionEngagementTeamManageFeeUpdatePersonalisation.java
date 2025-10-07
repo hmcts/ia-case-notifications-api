@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -58,6 +57,9 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if(!isAppellantInDetention(asylumCase)){
+            return Collections.emptySet();
+        }
         return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
     }
 
