@@ -42,7 +42,8 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     SystemDateProvider systemDateProvider;
 
     private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
+    private String smsTemplateId = "someSmsTemplateId";
+    private String paPayLaterSmsTemplateId = "somePaPayLaterSmsTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -58,8 +59,10 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
         appellantSubmittedWithRemissionRequestPersonalisationSms = new AppellantSubmittedWithRemissionRequestPersonalisationSms(
             emailTemplateId,
+            somePaPayLaterSmsTemplateId,
             14,
             iaAipFrontendUrl,
+            14,
             recipientsFinder,
             systemDateProvider);
     }
