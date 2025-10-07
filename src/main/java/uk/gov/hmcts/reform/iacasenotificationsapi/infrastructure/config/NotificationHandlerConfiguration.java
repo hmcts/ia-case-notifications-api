@@ -5750,7 +5750,8 @@ public class NotificationHandlerConfiguration {
                 return callback.getEvent() == MANAGE_FEE_UPDATE
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
-                    && isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase)
+                    && (hasBeenSubmittedByAppellantInternalCase(asylumCase) || isDetainedInOneOfFacilityTypes(asylumCase, PRISON,IRC));
             }, notificationGenerators
         );
     }
