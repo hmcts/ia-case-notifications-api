@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
@@ -48,7 +50,7 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
-    private final String nonAdaPrefix = "IAFT - SERVE BY POST";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     @Mock
     private DetentionEmailService detEmailService;
     @Mock
@@ -110,8 +112,7 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
 
     @Test
     public void should_return_given_personalisation() {
-        // Initialize the nonAdaPrefix field using reflection
-        org.springframework.test.util.ReflectionTestUtils.setField(detentionEngagementTeamNonStandardDirectionPersonalisation, "nonAdaPrefix", nonAdaPrefix);
+        ReflectionTestUtils.setField(detentionEngagementTeamNonStandardDirectionPersonalisation, "nonAdaPrefix", nonAdaPrefix);
         
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(getPersonalisation());
 
