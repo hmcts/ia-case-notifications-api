@@ -41,6 +41,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
 
     private Long caseId = 12345L;
     private String emailTemplateId = "someEmailTemplateId";
+    private String paPayLaterEmailTemplateId = "paPayLaterEmailTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -64,6 +65,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
         appellantSubmittedWithRemissionRequestPersonalisationEmail =
             new AppellantSubmittedWithRemissionRequestPersonalisationEmail(
                 emailTemplateId,
+                paPayLaterEmailTemplateId,
                 14,
                 iaAipFrontendUrl,
                 recipientsFinder,
