@@ -58,7 +58,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantSubmittedWithRemissionRequestPersonalisationSms = new AppellantSubmittedWithRemissionRequestPersonalisationSms(
-            emailTemplateId,
+            smsTemplateId,
             somePaPayLaterSmsTemplateId,
             14,
             iaAipFrontendUrl,
@@ -69,7 +69,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantSubmittedWithRemissionRequestPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantSubmittedWithRemissionRequestPersonalisationSms.getTemplateId());
     }
 
     @Test
@@ -79,12 +79,12 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     }
 
     @Test
-    public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
+    public void should_return_given_sms_list_from_subscribers_in_asylum_case() {
 
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
-            "", //email
-            YesOrNo.NO, // wants email
+            "", //sms
+            YesOrNo.NO, // wants sms
             mockedAppellantMobilePhone, //mobileNumber
             YesOrNo.YES // wants sms
         );
