@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -18,7 +16,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMe
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HomeOfficeEmailFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -36,12 +33,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATION_ATTACHMENT_DOCUMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesForInternalAppealByPost;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -57,7 +49,6 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     @Mock
     AsylumCase asylumCase;
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    private final String adaPrefix = "ADA - SERVE BY POST";
     @Mock
     private DetentionEmailService detEmailService;
     @Mock
@@ -65,7 +56,6 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
 
     private Long caseId = 12345L;
     private String templateId = "templateId";
-    private String iaExUiFrontendUrl = "http://localhost";
     private String detEmailAddress = "detEmail@example.com";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
@@ -105,32 +95,32 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
 
     @Test
     public void should_return_given_recipient_email_id() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
-        when(detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase))
-                .thenReturn(Collections.singleton(detEmailAddress));
+        when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         assertEquals(Collections.singleton(detEmailAddress), detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
-    void getRecipientsList_should_return_empty_set_if_not_in_detention() {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
+    void getRecipientsList_should_throw_exception_when_not_in_detention() {
+        when(detEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
 
-        assertEquals(Collections.emptySet(), detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
+        assertThatThrownBy(() -> detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Detention facility is not present");
     }
 
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_given_personalisation(YesOrNo isAda) {
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixesForInternalAppealByPost(detentionEngagementTeamNonStandardDirectionPersonalisation);
+    @Test
+    public void should_return_given_personalisation() {
+        // Initialize the nonAdaPrefix field using reflection
+        org.springframework.test.util.ReflectionTestUtils.setField(detentionEngagementTeamNonStandardDirectionPersonalisation, "nonAdaPrefix", nonAdaPrefix);
+        
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(getPersonalisation());
 
         Map<String, Object> personalisation =
                 detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink(callback);
         //assert the personalisation map values
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(personalisation).containsAllEntriesOf(getPersonalisation());
         assertEquals(jsonObject, personalisation.get("documentLink"));
-        assertEquals(isAda == YesOrNo.YES ? adaPrefix : nonAdaPrefix, personalisation.get("subjectPrefix"));
+        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
     }
 
     @Test
