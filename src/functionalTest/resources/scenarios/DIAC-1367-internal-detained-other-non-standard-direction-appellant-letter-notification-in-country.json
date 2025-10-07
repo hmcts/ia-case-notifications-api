@@ -14,7 +14,7 @@
           "appellantsRepresentation": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "other",
+          "detentionFacility": "immigrationRemovalCentre",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
             "County": "",
