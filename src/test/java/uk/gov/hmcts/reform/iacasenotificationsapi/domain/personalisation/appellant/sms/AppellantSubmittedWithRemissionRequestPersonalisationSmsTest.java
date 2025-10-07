@@ -59,7 +59,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
         appellantSubmittedWithRemissionRequestPersonalisationSms = new AppellantSubmittedWithRemissionRequestPersonalisationSms(
             smsTemplateId,
-            somePaPayLaterSmsTemplateId,
+            paPayLaterSmsTemplateId,
             14,
             iaAipFrontendUrl,
             14,
