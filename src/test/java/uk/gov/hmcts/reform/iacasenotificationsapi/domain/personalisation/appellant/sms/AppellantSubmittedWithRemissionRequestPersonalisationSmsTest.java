@@ -69,7 +69,8 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(smsTemplateId, appellantSubmittedWithRemissionRequestPersonalisationSms.getTemplateId());
+        String actualTemplateId = appellantSubmittedWithRemissionRequestPersonalisationSms.getTemplateId(asylumCase);
+        assertEquals(smsTemplateId, actualTemplateId);
     }
 
     @Test
