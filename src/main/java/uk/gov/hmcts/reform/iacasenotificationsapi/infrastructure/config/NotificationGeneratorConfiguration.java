@@ -2498,22 +2498,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalAdjournHearingWithoutDateNotificationGenerator")
-    public List<NotificationGenerator> internalAdjournHearingWithoutDateNotificationGenerator(
-        DetentionEngagementTeamHearingAdjournedWithoutDatePersonalisation detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamHearingAdjournedWithoutDatePersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("adjournHearingWithoutDateIntegratedNotificationGenerator")
     public List<NotificationGenerator> adjournHearingWithoutDateNotificationIntegratedGenerator(
         LegalRepresentativeAdjournHearingWithoutDatePersonalisation legalRepresentativeAdjournHearingWithoutDatePersonalisation,
@@ -4146,6 +4130,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("detainedAppealHearingAdjournedNoDateAppellantEmail")
+    public List<NotificationGenerator> detainedAppealHearingAdjournedNoDateAppellantEmail(
+        DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation detentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationGenerator")
     public List<NotificationGenerator> remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualEmailInternalNotificationHandler(
         DetRemissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation remissionPartiallyGrantedOrRefusedInPrisonOrIrcAipManualPersonalisation,
@@ -4169,9 +4168,9 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
                 new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(personalisation)),
-                        notificationSender,
-                        notificationIdAppender
+                    newArrayList(Collections.singleton(personalisation)),
+                    notificationSender,
+                    notificationIdAppender
                 )
         );
     }
