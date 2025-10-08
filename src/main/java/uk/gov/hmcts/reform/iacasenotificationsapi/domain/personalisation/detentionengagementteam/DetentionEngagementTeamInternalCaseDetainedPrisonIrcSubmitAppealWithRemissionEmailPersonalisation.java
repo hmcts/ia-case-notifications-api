@@ -30,7 +30,7 @@ public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWit
     private final DocumentDownloadClient documentDownloadClient;
 
     public DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation(
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.nonAdaInTimeDetainedPrisonIrc.email}")
+        @Value("${govnotify.template.det-email-template}")
         String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId,
         @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
         DetentionEmailService detentionEmailService,

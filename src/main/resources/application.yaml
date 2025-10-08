@@ -68,6 +68,7 @@ govnotify:
   template:
     detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     detained-iaft-5-email-template: 5d16344c-a62c-48b5-a068-21cf0275e47c
+    det-email-template: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -771,6 +772,8 @@ govnotify:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+        appellant:
+          email: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
@@ -2635,6 +2638,7 @@ detentionEngagementTeamIrcEmailAddresses:
   Derwentside: ${IA_DET_IRC_DERWENTSIDE_EMAIL:det-irc-derwentside@example.com}
   Dungavel: ${IA_DET_IRC_DUNGAVEL_EMAIL:det-irc-dungavel@example.com}
   Harmondsworth: ${IA_DET_IRC_HARMONDSWORTH_EMAIL:det-irc-harmondsworth@example.com}
+  Swinderby: ${IA_DET_IRC_SWINDERBY_EMAIL:det-irc-swinderby@example.com}
   TinsleyHouse: ${IA_DET_IRC_TINSLEYHOUSE_EMAIL:det-irc-tinsleyhouse@example.com}
   Yarlswood: ${IA_DET_IRC_YARLSWOOD_EMAIL:det-irc-yarlswood@example.com}
 
