@@ -5686,7 +5686,8 @@ public class NotificationHandlerConfiguration {
                     && Objects.equals(Event.END_APPEAL_AUTOMATICALLY, callback.getEvent())
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                    && isAppellantInDetention(asylumCase) 
+                    && !isDetainedInFacilityType(asylumCase, OTHER);
             }, notificationGenerators
         );
     }
