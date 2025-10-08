@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.NationalityGovUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -528,6 +529,21 @@ public class AsylumCaseUtils {
 
     public static boolean internalNonDetainedWithAddressAvailable(AsylumCase asylumCase) {
         return hasAppellantAddressInCountryOrOutOfCountry(asylumCase) && isInternalNonDetainedCase(asylumCase);
+    }
+
+    public static boolean isHearingDetailsUpdated(AsylumCase asylumCase,
+                                                  Optional<CaseDetails<AsylumCase>> caseDetailsBefore) {
+        boolean result = false;
+        if (caseDetailsBefore.isPresent()) {
+            AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
+            result = !asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+                    .equals(asylumCaseBefore.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                || !asylumCase.read(LIST_CASE_HEARING_DATE, String.class)
+                    .equals(asylumCaseBefore.read(LIST_CASE_HEARING_DATE, String.class))
+                || !asylumCase.read(HEARING_CHANNEL, DynamicList.class)
+                    .equals(asylumCaseBefore.read(HEARING_CHANNEL, DynamicList.class));
+        }
+        return result;
     }
 
 }
