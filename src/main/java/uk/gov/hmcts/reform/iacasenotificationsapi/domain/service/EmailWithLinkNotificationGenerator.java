@@ -32,7 +32,7 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-        log.info("Entering email generation");
+        System.out.println("Entering email generation");
 
         ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
             .setCorrectEmail(asylumCase);
@@ -53,8 +53,8 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
         EmailWithLinkNotificationPersonalisation emailNotificationPersonalisation = personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
-        log.info("event in create email: {}", callback.getEvent());
-        log.info("Subscriber emails {}", subscriberEmails);
+        System.out.println("event in create email: " + callback.getEvent());
+        System.out.println("Subscriber emails " + subscriberEmails);
 
         return subscriberEmails.stream()
             .filter(StringUtils::isNotBlank)
@@ -72,8 +72,8 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
         final String referenceId,
         final Callback<AsylumCase> callback) {
 
-        log.info(" reference id in send email: {}", referenceId);
-        log.info(" template id in send email: {}", personalisation.getTemplateId());
+        System.out.println((" reference id in send email: " + referenceId));
+        System.out.println((" template id in send email: " + personalisation.getTemplateId()));
 
         String emailTemplateId = personalisation.getTemplateId() == null
             ?
