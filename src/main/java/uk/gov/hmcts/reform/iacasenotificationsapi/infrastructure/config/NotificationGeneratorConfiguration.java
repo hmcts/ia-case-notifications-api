@@ -2635,6 +2635,8 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
+        log.info("Entering internal detained decision without hearing notification generator");
+
         return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(detentionEngagementTeamDecisionWithoutHearingPersonalisation),

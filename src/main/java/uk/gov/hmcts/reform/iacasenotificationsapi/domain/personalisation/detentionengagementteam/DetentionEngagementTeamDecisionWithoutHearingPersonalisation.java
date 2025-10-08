@@ -29,6 +29,8 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     private final DetentionEmailService detentionEmailService;
     private final PersonalisationProvider personalisationProvider;
     private final DocumentDownloadClient documentDownloadClient;
+
+    @Value("${govnotify.emailPrefix.adaInPerson}")
     private String adaSubjectPrefix;
     @Value("${govnotify.emailPrefix.nonAdaInPerson}")
     private String nonAdaPrefix;
@@ -71,7 +73,10 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     }
 
     private JSONObject getAppealDecidedLetterJsonObject(AsylumCase asylumCase) {
+
         try {
+            log.info("Entering internal detained decision without hearing getAppealDecidedLetterJsonObject");
+
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_DECISION_WITHOUT_HEARING));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal End Appeal decision Letter in compatible format", e);

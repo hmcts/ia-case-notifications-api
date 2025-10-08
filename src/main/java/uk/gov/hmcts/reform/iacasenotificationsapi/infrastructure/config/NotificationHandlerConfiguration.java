@@ -2681,6 +2681,9 @@ public class NotificationHandlerConfiguration {
 
                     log.info("Entering internal detained decision without hearing pre submit handler");
 
+                    log.info("Is internal case: {}", isInternalCase(asylumCase));
+                    log.info("hasBeenSubmittedByAppellantInternalCase: {}", hasBeenSubmittedByAppellantInternalCase(asylumCase));
+                    log.info("isDetainedInOneOfFacilityTypes: {}", isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON));
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.DECISION_WITHOUT_HEARING
