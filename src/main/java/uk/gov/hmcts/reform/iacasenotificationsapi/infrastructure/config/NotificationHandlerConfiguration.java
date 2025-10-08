@@ -4413,16 +4413,22 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
 
                 boolean submissionInTime = asylumCase
                         .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                         .map(yesOrNo -> yesOrNo == YesOrNo.NO)
                         .orElse(false);
 
+                boolean paymentPaid = caseDetailsBefore.isPresent()
+                        ? caseDetailsBefore.get().getCaseData().read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                        .map(paymentStatus -> paymentStatus == PAID).orElse(false) : false;
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                         && isInternalCase(asylumCase) && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                         && submissionInTime
+                        && !paymentPaid
                         && isRemissionApproved(asylumCase)
                         && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                         && !isAcceleratedDetainedAppeal(asylumCase);
