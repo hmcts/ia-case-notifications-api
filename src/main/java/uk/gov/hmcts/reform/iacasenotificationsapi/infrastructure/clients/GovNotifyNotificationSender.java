@@ -56,6 +56,8 @@ public class GovNotifyNotificationSender implements NotificationSender<AsylumCas
             Map<String, Object> personalisation,
             String reference
     ) {
+        System.out.println("Reached gov notify send email with link");
+
         return senderHelper.sendEmailWithLink(
                 templateId,
                 emailAddress,

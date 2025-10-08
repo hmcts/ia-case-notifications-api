@@ -53,9 +53,6 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
         EmailWithLinkNotificationPersonalisation emailNotificationPersonalisation = personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
 
-        System.out.println("event in create email: " + callback.getEvent());
-        System.out.println("Subscriber emails " + subscriberEmails);
-
         return subscriberEmails.stream()
             .filter(StringUtils::isNotBlank)
             .map(email ->
@@ -72,15 +69,12 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
         final String referenceId,
         final Callback<AsylumCase> callback) {
 
-        System.out.println((" reference id in send email: " + referenceId));
-        System.out.println((" template id in send email: " + personalisation.getTemplateId(callback.getCaseDetails().getCaseData())));
-
         String emailTemplateId = personalisation.getTemplateId() == null
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
 
-        System.out.println((" email template id in send email: " + personalisation.getTemplateId(callback.getCaseDetails().getCaseData())));
-
+        System.out.println((" email template id in send email: " + emailTemplateId));
+        System.out.println((" personalisation map: " + personalisation.getPersonalisationForLink(callback)));
 
         return notificationSender.sendEmailWithLink(
                         emailTemplateId,

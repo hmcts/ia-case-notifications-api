@@ -59,8 +59,6 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        log.info("Recipients list: {}", Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase)));
-
         return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
@@ -68,7 +66,8 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) throws IOException, NotificationClientException {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        log.info("doc link: {}", getAppealDecidedLetterJsonObject(asylumCase));
+        System.out.println("Reached personalisation for link");
+        System.out.println("doc link: " + getAppealDecidedLetterJsonObject(asylumCase));
 
         return ImmutableMap.<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaSubjectPrefix : nonAdaPrefix)
@@ -78,9 +77,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     }
 
     private JSONObject getAppealDecidedLetterJsonObject(AsylumCase asylumCase) {
-
         try {
-
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_DECISION_WITHOUT_HEARING));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get Internal End Appeal decision Letter in compatible format", e);
