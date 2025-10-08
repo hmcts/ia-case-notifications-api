@@ -88,6 +88,10 @@ public class NotificationSenderHelper<T extends CaseData> {
         Logger logger
     ) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
+        logger.info("Reached send email with link ");
+        logger.info("templateid: {}", templateId );
+
+
         return recentDeliveryReceiptCache.get(
             emailAddress + reference,
             k -> {
@@ -111,6 +115,7 @@ public class NotificationSenderHelper<T extends CaseData> {
                     return notificationId;
 
                 } catch (NotificationClientException e) {
+                    logger.error("Failed to send email using GovNotify for case reference {}", reference, e);
                     throw new NotificationServiceResponseException("Failed to send email using GovNotify", e);
                 }
             }

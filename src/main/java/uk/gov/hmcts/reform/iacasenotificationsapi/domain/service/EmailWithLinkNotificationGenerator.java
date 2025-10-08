@@ -73,12 +73,13 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
         final Callback<AsylumCase> callback) {
 
         System.out.println((" reference id in send email: " + referenceId));
-        System.out.println((" template id in send email: " + personalisation.getTemplateId()));
+        System.out.println((" template id in send email: " + personalisation.getTemplateId(callback.getCaseDetails().getCaseData())));
 
         String emailTemplateId = personalisation.getTemplateId() == null
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
 
+        System.out.println((" email template id in send email: " + personalisation.getTemplateId(callback.getCaseDetails().getCaseData())));
 
 
         return notificationSender.sendEmailWithLink(

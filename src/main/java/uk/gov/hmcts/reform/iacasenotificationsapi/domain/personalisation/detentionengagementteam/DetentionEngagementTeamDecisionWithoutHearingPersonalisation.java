@@ -25,7 +25,7 @@ import uk.gov.service.notify.NotificationClientException;
 @Service
 public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String detentionEngagementTeamEndAppealTemplateId;
+    private final String detentionEngagementTeamDecisionWithoutHearingTemplateId;
     private final DetentionEmailService detentionEmailService;
     private final PersonalisationProvider personalisationProvider;
     private final DocumentDownloadClient documentDownloadClient;
@@ -41,7 +41,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
             PersonalisationProvider personalisationProvider,
             DocumentDownloadClient documentDownloadClient
     ) {
-        this.detentionEngagementTeamEndAppealTemplateId = detentionEngagementTeamDecisionWithoutHearingTemplateId;
+        this.detentionEngagementTeamDecisionWithoutHearingTemplateId = detentionEngagementTeamDecisionWithoutHearingTemplateId;
         this.detentionEmailService = detentionEmailService;
         this.personalisationProvider = personalisationProvider;
         this.documentDownloadClient = documentDownloadClient;
@@ -54,7 +54,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return detentionEngagementTeamEndAppealTemplateId;
+        return detentionEngagementTeamDecisionWithoutHearingTemplateId;
     }
 
     @Override
