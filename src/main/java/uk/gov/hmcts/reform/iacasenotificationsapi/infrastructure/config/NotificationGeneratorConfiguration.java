@@ -2707,6 +2707,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appellantInternalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> appellantInternalDetainedNonStandardDirectionGenerator(
+            DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("hoInternalNonStandardDirectionGenerator")
     public List<NotificationGenerator> hoInternalNonStandardDirectionGenerator(
         DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
