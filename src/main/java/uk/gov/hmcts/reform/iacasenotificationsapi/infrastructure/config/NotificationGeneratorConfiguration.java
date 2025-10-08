@@ -2639,7 +2639,7 @@ public class NotificationGeneratorConfiguration {
 
         return singletonList(
             new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamDecisionWithoutHearingPersonalisation),
+                newArrayList(Collections.singleton(detentionEngagementTeamDecisionWithoutHearingPersonalisation)),
                 notificationSender,
                 notificationIdAppender
             )
