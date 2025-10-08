@@ -4554,13 +4554,16 @@ public class NotificationHandlerConfiguration {
                             .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
                             .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
+                    Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && paymentPaid
                             && remissionDecisionGranted(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && !isAcceleratedDetainedAppeal(asylumCase);
+                            && !isAcceleratedDetainedAppeal(asylumCase)
+                            && lateRemissionType.isPresent();
 
                 }, notificationGenerators
         );
