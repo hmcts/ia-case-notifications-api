@@ -14,6 +14,7 @@
           "detentionFacility": "immigrationRemovalCentre",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
           "directions": [
             {
