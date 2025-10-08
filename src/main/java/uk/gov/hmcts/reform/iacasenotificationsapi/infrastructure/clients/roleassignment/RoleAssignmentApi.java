@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.roleassignment
 )
 public interface RoleAssignmentApi {
     String SERVICE_AUTHORIZATION = "ServiceAuthorization";
+
     @PostMapping(value = "/am/role-assignments/query", consumes = "application/json")
     RoleAssignmentResource queryRoleAssignments(
         @RequestHeader(AUTHORIZATION) String userToken,
