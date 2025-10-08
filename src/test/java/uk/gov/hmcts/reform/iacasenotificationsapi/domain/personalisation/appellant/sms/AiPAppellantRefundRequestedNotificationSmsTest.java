@@ -78,6 +78,7 @@ class AiPAppellantRefundRequestedNotificationSmsTest {
 
     @Test
     void should_throw_exception_on_recipients_when_case_is_null() {
+
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
