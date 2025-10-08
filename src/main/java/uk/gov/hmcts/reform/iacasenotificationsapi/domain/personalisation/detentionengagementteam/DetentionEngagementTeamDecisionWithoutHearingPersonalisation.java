@@ -67,12 +67,11 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         System.out.println("Reached personalisation for link");
-        System.out.println("doc link: " + getAppealDecidedLetterJsonObject(asylumCase));
 
         return ImmutableMap.<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaSubjectPrefix : nonAdaPrefix)
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
+                .put("documentLink", "debug")
                 .build();
     }
 
