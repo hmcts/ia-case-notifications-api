@@ -4424,6 +4424,8 @@ public class NotificationHandlerConfiguration {
                         ? caseDetailsBefore.get().getCaseData().read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
                         .map(paymentStatus -> paymentStatus == PAID).orElse(false) : false;
 
+                Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                         && isInternalCase(asylumCase) && hasBeenSubmittedByAppellantInternalCase(asylumCase)
@@ -4431,6 +4433,7 @@ public class NotificationHandlerConfiguration {
                         && !paymentPaid
                         && isRemissionApproved(asylumCase)
                         && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                        && lateRemissionType.isEmpty()
                         && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
         );
