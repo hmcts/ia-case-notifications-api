@@ -2,9 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detent
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_EDIT_CASE_LISTING_LETTER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -60,9 +58,9 @@ public class DetentionEngagementTeamEditCaseListingPersonalisation implements Em
         if (!isAppellantInDetention(asylumCase)) {
             return Collections.emptySet();
         }
-
         return detEmailService.getRecipientsList(asylumCase);
     }
+
 
     @Override
     public String getReferenceId(Long caseId) {

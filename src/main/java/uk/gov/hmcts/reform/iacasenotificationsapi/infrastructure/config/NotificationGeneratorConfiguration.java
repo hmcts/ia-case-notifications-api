@@ -5213,6 +5213,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editCaseListingInternalDetainedIrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalDetainedIrcPrisonNotificationGenerator(
+            DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detentionEngagementTeamEditCaseListingPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+
+        );
+    }
+
     @Bean("internalDetainedManageFeeUpdateNotificationGenerator")
     public List<NotificationGenerator> internalDetainedManageFeeUpdateNotificationGenerator(
             DetentionEngagementTeamManageFeeUpdatePersonalisation detentionEngagementTeamManageFeeUpdatePersonalisation,
