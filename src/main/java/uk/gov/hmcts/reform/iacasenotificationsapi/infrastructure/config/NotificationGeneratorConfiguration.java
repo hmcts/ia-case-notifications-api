@@ -3531,9 +3531,9 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new EmailWithLinkNotificationGenerator(
-                    newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
-                    notificationSender,
-                    notificationIdAppender
+                newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
+                notificationSender,
+                notificationIdAppender
             ),
             new EmailNotificationGenerator(
                 newArrayList(
