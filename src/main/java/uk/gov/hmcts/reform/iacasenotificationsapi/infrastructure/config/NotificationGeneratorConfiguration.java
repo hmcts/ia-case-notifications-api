@@ -3502,8 +3502,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("decideARespondentApplicationInternalHONotificationGenerator")
-    public List<NotificationGenerator> decideARespondentApplicationInternalHONotificationGenerator(
+    @Bean("decideARespondentApplicationInternalHoNotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationInternalHoNotificationGenerator(
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender

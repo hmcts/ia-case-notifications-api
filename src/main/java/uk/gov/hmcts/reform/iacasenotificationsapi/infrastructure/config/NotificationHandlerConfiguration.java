@@ -3703,8 +3703,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalHONotificationHandler(
-        @Qualifier("decideARespondentApplicationInternalHONotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalHoNotificationHandler(
+        @Qualifier("decideARespondentApplicationInternalHoNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) ->
