@@ -95,6 +95,7 @@ public enum DocumentTag {
     INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER("internalDetainedLateRemissionGrantedTemplateLetter"),
     INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER("internalDetainedAppealSubmittedWithExemptionLetter"),
     INTERNAL_DETAINED_LATE_REMISSION_REFUSED_TEMPLATE_LETTER("internalDetainedLateRemissionRefusedTemplateLetter"),
+    HOME_OFFICE_APPLICATION_DECIDED_LETTER("homeOfficeApplicationDecidedLetter"),
 
     @JsonEnumDefaultValue
     NONE("");
