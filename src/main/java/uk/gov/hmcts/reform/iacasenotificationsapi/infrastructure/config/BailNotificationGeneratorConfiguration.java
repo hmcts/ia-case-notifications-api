@@ -484,6 +484,30 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
+
+    @Bean("nocWithoutOldLegalRepNotificationGenerator")
+    public List<BailNotificationGenerator> nocWithoutOldLegalRepNotificationGenerator(
+        AdminOfficerBailNocChangedLrPersonalisation adminOfficerBailNocChangedLrPersonalisation,
+        HomeOfficeBailNocChangedLrPersonalisation homeOfficeBailNocChangedLrPersonalisation,
+        ApplicantBailNocChangedLrPersonalisationSms applicantBailNocChangedLrPersonalisationSms,
+        BailGovNotifyNotificationSender notificationSender,
+        BailNotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new BailEmailNotificationGenerator(
+                newArrayList(adminOfficerBailNocChangedLrPersonalisation,
+                    homeOfficeBailNocChangedLrPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new BailSmsNotificationGenerator(
+                newArrayList(applicantBailNocChangedLrPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("caseListingBailSummaryDirectionNotificationGenerator")
     public List<BailNotificationGenerator> caseListingBailSummaryDirectionNotificationGenerator(
         HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
