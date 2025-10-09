@@ -15,8 +15,7 @@
           "appellantsRepresentation": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "immigrationRemovalCentre",
-          "ircName": "Brookhouse",
+          "detentionFacility": "other",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
             "County": "",
