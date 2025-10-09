@@ -88,9 +88,6 @@ public class NotificationSenderHelper<T extends CaseData> {
         Logger logger
     ) {
         recentDeliveryReceiptCache = getOrCreateDeliveryReceiptCache(deduplicateSendsWithinSeconds);
-        logger.info("Reached send email with link ");
-        logger.info("templateid: {}", templateId);
-
         return recentDeliveryReceiptCache.get(
             emailAddress + reference,
             k -> {

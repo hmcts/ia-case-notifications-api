@@ -32,8 +32,6 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-        System.out.println("Entering email generation");
-
         ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
             .setCorrectEmail(asylumCase);
 

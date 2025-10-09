@@ -68,8 +68,8 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
 
         return ImmutableMap.<String, Object>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaSubjectPrefix : nonAdaPrefix)
-                .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
                 .put("documentLink", getAppealDecidedLetterJsonObject(asylumCase))
+                .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
                 .build();
     }
 
