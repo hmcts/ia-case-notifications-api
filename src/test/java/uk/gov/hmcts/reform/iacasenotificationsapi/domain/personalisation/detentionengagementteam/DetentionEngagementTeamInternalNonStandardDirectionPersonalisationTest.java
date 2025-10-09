@@ -98,16 +98,19 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     @Test
     public void should_return_given_recipient_email_id() {
         when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detEmailAddress);
+        // Mock the appellant to be in detention
+        when(asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION, uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.class))
+            .thenReturn(Optional.of(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES));
         assertEquals(Collections.singleton(detEmailAddress), detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
-    void getRecipientsList_should_throw_exception_when_not_in_detention() {
-        when(detEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
+    void getRecipientsList_should_return_empty_set_when_not_in_detention() {
+        // Mock the appellant to not be in detention
+        when(asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION, uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.class))
+            .thenReturn(Optional.of(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO));
 
-        assertThatThrownBy(() -> detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Detention facility is not present");
+        assertEquals(Collections.emptySet(), detentionEngagementTeamNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
