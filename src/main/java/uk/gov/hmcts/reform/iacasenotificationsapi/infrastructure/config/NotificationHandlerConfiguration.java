@@ -3703,8 +3703,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalNotificationHandler(
-        @Qualifier("decideARespondentApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalHONotificationHandler(
+        @Qualifier("decideARespondentApplicationInternalHONotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) ->
@@ -3717,17 +3717,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> adaDecideARespondentApplicationInternalNotificationHandler(
-            @Qualifier("adaDecideARespondentApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalAppellantNotificationHandler(
+            @Qualifier("decideARespondentApplicationInternalAppellantNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) ->
-                    callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                        && isInternalCase(callback.getCaseDetails().getCaseData())
-                        && isApplicationCreatedByRespondent(callback.getCaseDetails().getCaseData())
-                        && isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == DECIDE_AN_APPLICATION
+                            && isApplicationCreatedByRespondent(asylumCase)
+                            && isInternalWithoutLegalRepresentation(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+
+                }, notificationGenerators
         );
     }
 
@@ -7662,25 +7667,7 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> homeOfficeApplicationDecidedNotificationHandler(
-        @Qualifier("homeOfficeApplicationDecidedNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
 
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == DECIDE_AN_APPLICATION
-                    && isApplicationCreatedByRespondent(asylumCase)
-                    && isInternalWithoutLegalRepresentation(asylumCase)
-                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                    && !isAcceleratedDetainedAppeal(asylumCase);
-
-            }, notificationGenerators
-        );
-    }
 
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)

@@ -3502,8 +3502,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("decideARespondentApplicationInternalNotificationGenerator")
-    public List<NotificationGenerator> decideARespondentApplicationInternalNotificationGenerator(
+    @Bean("decideARespondentApplicationInternalHONotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationInternalHONotificationGenerator(
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -3521,27 +3521,18 @@ public class NotificationGeneratorConfiguration {
     }
 
 
-    @Bean("adaDecideARespondentApplicationInternalNotificationGenerator")
-    public List<NotificationGenerator> adaDecideARespondentApplicationInternalNotificationGenerator(
-        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-        DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
+    @Bean("decideARespondentApplicationInternalAppellantNotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationInternalAppellantNotificationGenerator(
+            DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation detHomeOfficeApplicationDecidedPersonalisationhomeOfficeApplicationDecidedPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new EmailNotificationGenerator(
-                newArrayList(
-                    homeOfficeDecideAnApplicationPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(detHomeOfficeApplicationDecidedPersonalisationhomeOfficeApplicationDecidedPersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
