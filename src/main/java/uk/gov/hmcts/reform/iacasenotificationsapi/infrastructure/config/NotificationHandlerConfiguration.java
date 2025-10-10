@@ -3695,7 +3695,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationInternalNotificationHandler(
         @Qualifier("decideAnApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
@@ -3731,12 +3730,34 @@ public class NotificationHandlerConfiguration {
         @Qualifier("decideARespondentApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isApplicationCreatedByRespondent(callback.getCaseDetails().getCaseData()),
-            notificationGenerators
+                    && isInternalCase(asylumCase)
+                    && isApplicationCreatedByRespondent(asylumCase)
+                    && !(isInternalWithoutLegalRepresentation(asylumCase) && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC) && !isAcceleratedDetainedAppeal(asylumCase));
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationInternalAppellantNotificationHandler(
+            @Qualifier("decideARespondentApplicationInternalAppellantNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == DECIDE_AN_APPLICATION
+                            && isApplicationCreatedByRespondent(asylumCase)
+                            && isInternalWithoutLegalRepresentation(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+
+                }, notificationGenerators
         );
     }
 
