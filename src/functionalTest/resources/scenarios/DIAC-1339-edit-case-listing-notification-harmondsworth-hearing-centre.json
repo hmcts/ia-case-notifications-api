@@ -19,7 +19,6 @@
           "appellantInDetention": "Yes",
           "detentionFacility": "prison",
           "prisonName": "Albany",
-          "shouldTriggerReviewInterpreterTask": "Yes",
           "hearingChannel": {
             "value": {
               "code": "INTER",
@@ -67,7 +66,6 @@
         "listCaseHearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "shouldTriggerReviewInterpreterTask": "Yes",
         "notificationsSent": [
           {
             "id": "13392_CASE_RE_LISTED_HOME_OFFICE",
