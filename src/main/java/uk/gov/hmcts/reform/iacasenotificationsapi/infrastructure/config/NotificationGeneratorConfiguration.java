@@ -2688,22 +2688,31 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("appellantInternalNonStandardDirectionGenerator")
     public List<NotificationGenerator> appellantInternalNonStandardDirectionGenerator(
-        DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
         RespondentNonStandardDirectionOfAppellantPersonalization respondentNonStandardDirectionOfAppellantPersonalization,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new EmailNotificationGenerator(
-                newArrayList(respondentNonStandardDirectionOfAppellantPersonalization),
-                notificationSender,
-                notificationIdAppender
-            )
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentNonStandardDirectionOfAppellantPersonalization),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("appellantInternalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> appellantInternalDetainedNonStandardDirectionGenerator(
+            DetentionEngagementTeamNonStandardDirectionPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(personalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -6560,6 +6569,21 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationGenerator")
+    public List<NotificationGenerator> internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationGenerator(
+        DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation personalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(personalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
