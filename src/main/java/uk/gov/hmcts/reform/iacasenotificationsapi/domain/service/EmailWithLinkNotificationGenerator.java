@@ -71,9 +71,6 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
             ?
             personalisation.getTemplateId(callback.getCaseDetails().getCaseData()) : personalisation.getTemplateId();
 
-        System.out.println((" email template id in send email: " + emailTemplateId));
-        System.out.println((" personalisation map: " + personalisation.getPersonalisationForLink(callback)));
-
         return notificationSender.sendEmailWithLink(
                         emailTemplateId,
                         email,

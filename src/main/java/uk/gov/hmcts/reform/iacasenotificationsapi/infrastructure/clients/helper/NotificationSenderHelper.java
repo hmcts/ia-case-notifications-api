@@ -111,7 +111,6 @@ public class NotificationSenderHelper<T extends CaseData> {
                     return notificationId;
 
                 } catch (NotificationClientException e) {
-                    logger.error("Failed to send email using GovNotify for case reference {}", reference, e);
                     throw new NotificationServiceResponseException("Failed to send email using GovNotify", e);
                 }
             }
