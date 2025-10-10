@@ -1,10 +1,10 @@
 {
-  "description": "DIAC-1400 Send Email with letter link notification to DET for Mark appeal as remitted - detained IRC)",
+  "description": "DIAC-1400 Send Email with letter link notification to DET for Mark appeal as remitted - detained Prison)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 14001,
+      "id": 14002,
       "eventId": "markAppealAsRemitted",
       "state": "ftpaDecided",
       "caseData": {
@@ -13,8 +13,8 @@
           "isAdmin": "Yes",
           "appellantsRepresentation": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "immigrationRemovalCentre",
-          "ircName": "Brookhouse",
+          "detentionFacility": "prison",
+          "prisonName": "Aylesbury",
           "sourceOfRemittal": "Upper Tribunal",
           "appellantInUk": "Yes"
         }
@@ -33,7 +33,7 @@
         "sourceOfRemittal": "Upper Tribunal",
         "notificationsSent": [
           {
-            "id": "14001_INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER",
+            "id": "14002_INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
