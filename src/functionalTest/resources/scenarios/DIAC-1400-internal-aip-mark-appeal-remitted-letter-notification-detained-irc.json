@@ -1,5 +1,6 @@
 {
   "description": "DIAC-1400 Send Email with letter link notification to DET for Mark appeal as remitted - detained IRC)",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
