@@ -5,7 +5,7 @@
     "credentials": "AdminOfficer",
     "input": {
       "id": 8344,
-      "eventId": "markAppealAsRemitted",
+      "eventId": "",
       "state": "ftpaDecided",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
