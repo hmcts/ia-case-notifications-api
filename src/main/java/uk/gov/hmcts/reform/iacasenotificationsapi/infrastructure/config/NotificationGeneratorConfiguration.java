@@ -3472,7 +3472,6 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
             HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
             DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-            LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3525,6 +3524,30 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
                 notificationSender,
                 notificationIdAppender
+            ),
+            new EmailNotificationGenerator(
+                newArrayList(
+                    homeOfficeDecideAnApplicationPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+
+    @Bean("decideARespondentApplicationInternalAppellantNotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationInternalAppellantNotificationGenerator(
+        DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation detHomeOfficeApplicationDecidedPersonalisationhomeOfficeApplicationDecidedPersonalisation,
+        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailWithLinkNotificationGenerator(
+                    newArrayList(Collections.singleton(detHomeOfficeApplicationDecidedPersonalisationhomeOfficeApplicationDecidedPersonalisation)),
+                    notificationSender,
+                    notificationIdAppender
             ),
             new EmailNotificationGenerator(
                 newArrayList(

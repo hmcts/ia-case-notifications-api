@@ -94,6 +94,7 @@ class DocumentTagTest {
         assertEquals("internalDetainedLateRemissionRefusedTemplateLetter", DocumentTag.INTERNAL_DETAINED_LATE_REMISSION_REFUSED_TEMPLATE_LETTER.toString());
         assertEquals("internalDetainedAppealRemittedAipIrcPrisonLetter", DocumentTag.INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER.toString());
         assertEquals("internalDetainedIrcPrisonFtpaDisposedRules31Or32Letter", DocumentTag.INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER.toString());
+        assertEquals("homeOfficeApplicationDecidedLetter", DocumentTag.HOME_OFFICE_APPLICATION_DECIDED_LETTER.toString());
 
     }
 
