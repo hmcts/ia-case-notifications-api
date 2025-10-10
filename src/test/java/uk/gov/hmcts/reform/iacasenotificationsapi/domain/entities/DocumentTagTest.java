@@ -93,11 +93,12 @@ class DocumentTagTest {
         assertEquals("internalDetainedAppealSubmittedWithExemptionLetter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_WITH_EXEMPTION_LETTER.toString());
         assertEquals("internalDetainedLateRemissionRefusedTemplateLetter", DocumentTag.INTERNAL_DETAINED_LATE_REMISSION_REFUSED_TEMPLATE_LETTER.toString());
         assertEquals("internalDetainedAppealRemittedAipIrcPrisonLetter", DocumentTag.INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER.toString());
+        assertEquals("internalDetainedIrcPrisonFtpaDisposedRules31Or32Letter", DocumentTag.INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER.toString());
 
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(92, DocumentTag.values().length);
+        assertEquals(93, DocumentTag.values().length);
     }
 }
