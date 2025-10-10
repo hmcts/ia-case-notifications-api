@@ -99,6 +99,6 @@ class DocumentTagTest {
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(93, DocumentTag.values().length);
+        assertEquals(94, DocumentTag.values().length);
     }
 }
