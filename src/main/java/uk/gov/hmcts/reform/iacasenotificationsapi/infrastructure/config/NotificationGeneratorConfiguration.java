@@ -6572,6 +6572,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationGenerator")
+    public List<NotificationGenerator> internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationGenerator(
+        DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation personalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(personalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("internalMarkAsRemittedAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalMarkAsRemittedAppellantLetterNotificationGenerator(
         AppellantInternalMarkAsRemittedLetterPersonalisation appellantInternalMarkAsRemittedLetterPersonalisation,

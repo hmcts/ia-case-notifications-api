@@ -7199,6 +7199,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationHandler(
+        @Qualifier("internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalCaseDecideApplicationByAppellantLetterHandler(
         @Qualifier("internalDecideApplicationAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
