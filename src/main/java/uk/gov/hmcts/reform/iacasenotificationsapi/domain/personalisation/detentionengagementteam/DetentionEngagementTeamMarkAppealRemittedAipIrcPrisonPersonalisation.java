@@ -18,66 +18,65 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation implements EmailWithLinkNotificationPersonalisation {
-    private final String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
-    private final String nonAdaPrefix;
-    private final DetentionEmailService detentionEmailService;
-    private final DocumentDownloadClient documentDownloadClient;
+public class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    public DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemissionEmailPersonalisation(
-        @Value("${govnotify.template.det-email-template}")
-        String appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId,
-        @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
+    private final String internalMarkAppealRemittedAipIrcPrisonTemplateId;
+    private final DocumentDownloadClient documentDownloadClient;
+    private final DetentionEmailService detentionEmailService;
+
+    public DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation(
+        @Value("${govnotify.template.det-email-template}") String internalMarkAppealRemittedAipIrcPrisonTemplateId,
         DetentionEmailService detentionEmailService,
         DocumentDownloadClient documentDownloadClient
     ) {
-        this.appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId = appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
-        this.nonAdaPrefix = nonAdaPrefix;
+        this.internalMarkAppealRemittedAipIrcPrisonTemplateId = internalMarkAppealRemittedAipIrcPrisonTemplateId;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
 
     @Override
-    public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED";
+    public String getTemplateId() {
+
+        return internalMarkAppealRemittedAipIrcPrisonTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        String email = detentionEmailService.getDetentionEmailAddress(asylumCase);
         return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
-    public String getTemplateId() {
-        return appealSubmittedNonAdaInTimeDetainedPrisonIrcTemplateId;
+    public String getReferenceId(Long caseId) {
+        return caseId + "_INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER";
     }
 
     @Override
-    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) throws IOException, NotificationClientException {
+    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap
             .<String, Object>builder()
-            .put("subjectPrefix", nonAdaPrefix)
+            .put("subjectPrefix", "IAFT - SERVE IN PERSON")
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("documentLink", getAppealSubmittedLetterJsonObject(asylumCase))
+            .put("documentLink", getInternalMarkAppealRemittedAipIrcPrisonDocumentInJsonObject(asylumCase))
             .build();
     }
 
-    private JSONObject getAppealSubmittedLetterJsonObject(AsylumCase asylumCase) {
+    private JSONObject getInternalMarkAppealRemittedAipIrcPrisonDocumentInJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal Appeal submission Letter in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal Appeal submission Letter in compatible format");
+            log.error("Failed to get Mark Appeal as Remitted changed document in compatible format", e);
+            throw new IllegalStateException("Failed to get Mark Appeal as Remitted changed document in compatible format");
         }
     }
 }

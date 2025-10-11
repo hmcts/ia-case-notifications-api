@@ -68,6 +68,7 @@ govnotify:
   template:
     detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
     detained-iaft-5-email-template: 5d16344c-a62c-48b5-a068-21cf0275e47c
+    det-email-template: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -771,6 +772,8 @@ govnotify:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+        appellant:
+          email: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
@@ -1226,7 +1229,7 @@ govnotify:
         letter: c8f81920-5b59-4db6-b565-d4c997181618
       detentionEngagementTeam:
         nonAda:
-          email: 0eb6e602-b92d-4e28-93c1-9ab94d22387e
+          email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     decisionWithoutHearing:
       homeOffice:
         email: 991d5898-cdc1-4a8c-8927-456106aab084
@@ -1348,6 +1351,7 @@ govnotify:
           email: 03cb8170-abe1-42f1-9cfd-8526e1635294
     editCaseListing:
       detentionEngagementTeam:
+#        3d3ca452-5de2-4674-bc4f-ea4d98386a36
         email: 698cccf8-99b5-4360-b2b5-8aedb9667e21
         production:
           email: 1b456113-9c31-41be-9fe8-dc2f2f9a10b1
@@ -1911,6 +1915,7 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
+      - "markAppealAsRemitted"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
