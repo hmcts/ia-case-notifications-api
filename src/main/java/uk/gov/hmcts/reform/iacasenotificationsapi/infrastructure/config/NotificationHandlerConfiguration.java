@@ -2774,6 +2774,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> editAppealAfterSubmitDetainedIrcPrisonInternalCaseNotificationHandler(
+            @Qualifier("editAppealAfterSubmitDetainedIrcPrisonInternalCaseNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON);
+                },
+                notificationGenerator
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationHandler(
         @Qualifier("ftpaApplicationDecisionRefusedOrNotAdmittedAppellantNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
