@@ -3,7 +3,6 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-
         classpath("net.serenity-bdd:serenity-gradle-plugin:4.2.16")
         classpath("au.com.dius.pact:au.com.dius.pact.gradle.plugin:4.4.0-beta.1")
     }

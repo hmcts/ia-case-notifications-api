@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
+
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDENDUM_EVIDENCE_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
@@ -26,6 +29,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.REMISSION_DECISION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.RESPOND_TO_COSTS_LIST;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME;
+
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.calculateFeeDifference;
@@ -53,6 +57,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalNonDetainedCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.retrieveLatestApplyForCosts;
@@ -74,20 +79,11 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplyForCosts;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DynamicList;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Value;
+
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -639,6 +635,36 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
+    void shouldReturnTrue_whenRemissionDecisionIsApproved() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
+
+        boolean result = AsylumCaseUtils.isRemissionApproved(asylumCase);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalse_whenRemissionDecisionIsRejected() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.REJECTED));
+
+        boolean result = AsylumCaseUtils.isRemissionApproved(asylumCase);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void shouldReturnFalse_whenRemissionDecisionIsEmpty() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.empty());
+
+        boolean result = AsylumCaseUtils.isRemissionApproved(asylumCase);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
     void should_return_true_when_is_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
                 new Value("INTER", "In Person"),
@@ -800,4 +826,137 @@ public class AsylumCaseUtilsTest {
         assertFalse(internalNonDetainedWithAddressAvailable(asylumCase));
     }
 
+    @Test
+    void should_return_true_for_remission_decision_granted() {
+        RemissionDecision remissionDecision = RemissionDecision.APPROVED;
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
+
+        assertTrue(remissionDecisionGranted(asylumCase));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"PARTIALLY_APPROVED", "REJECTED"})
+    void should_return_false_for_remission_decision_not_approved(String remissionDecisionValue) {
+        RemissionDecision remissionDecision = RemissionDecision.valueOf(remissionDecisionValue);
+        Mockito.when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
+
+        assertFalse(remissionDecisionGranted(asylumCase));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void should_return_true_when_hearing_centre_updated() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        CaseDetails<AsylumCase> caseDetailsBefore = Mockito.mock(CaseDetails.class);
+        AsylumCase asylumCaseBefore = mock(AsylumCase.class);
+
+        Mockito.when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+
+        setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.MANCHESTER));
+
+        assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void should_return_false_when_hearing_details_not_updated() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        CaseDetails<AsylumCase> caseDetailsBefore = mock(CaseDetails.class);
+        AsylumCase asylumCaseBefore = mock(AsylumCase.class);
+
+        Mockito.when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+
+        setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
+
+        assertFalse(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
+    }
+
+    @Test
+    void should_return_false_when_case_details_before_empty() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+
+        assertFalse(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.empty()));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void should_return_true_when_hearing_date_updated() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        CaseDetails<AsylumCase> caseDetailsBefore = mock(CaseDetails.class);
+        AsylumCase asylumCaseBefore = mock(AsylumCase.class);
+
+        Mockito.when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+
+        setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
+                .thenReturn(Optional.of("2023-10-02"));
+
+        assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void should_return_true_when_hearing_channel_updated() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        CaseDetails<AsylumCase> caseDetailsBefore = mock(CaseDetails.class);
+        AsylumCase asylumCaseBefore = mock(AsylumCase.class);
+
+        Mockito.when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+
+        setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
+                .thenReturn(Optional.of(new DynamicList(new Value("telephone", "Telephone"), List.of(new Value("telephone", "Telephone")))));
+
+        assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void should_return_true_when_all_updated() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        CaseDetails<AsylumCase> caseDetailsBefore = mock(CaseDetails.class);
+        AsylumCase asylumCaseBefore = mock(AsylumCase.class);
+
+        Mockito.when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+
+        setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.MANCHESTER));
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
+                .thenReturn(Optional.of("2023-10-02"));
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
+                .thenReturn(Optional.of(new DynamicList(new Value("telephone", "Telephone"), List.of(new Value("telephone", "Telephone")))));
+
+        assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
+    }
+
+
+    void setupHearingDataNotUpdated(AsylumCase asylumCase, AsylumCase asylumCaseBefore) {
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+        Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
+                .thenReturn(Optional.of("2023-10-01"));
+        Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
+                .thenReturn(Optional.of("2023-10-01"));
+
+        Mockito.when(asylumCase.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
+                .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
+        Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
+                .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
+    }
 }
