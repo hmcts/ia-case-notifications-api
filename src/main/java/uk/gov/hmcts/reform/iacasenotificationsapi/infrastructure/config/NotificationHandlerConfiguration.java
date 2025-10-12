@@ -7252,7 +7252,8 @@ public class NotificationHandlerConfiguration {
                 getErrorHandler()
            );
     }
-  
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationHandler(
         @Qualifier("internalAipManualCaseDisposeUnderRule31Or32AppellantNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
