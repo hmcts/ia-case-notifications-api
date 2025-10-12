@@ -36,7 +36,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisation implem
     private String nonAdaPrefix;
 
     public DetentionEngagementTeamDecisionWithoutHearingPersonalisation(
-            @Value("${govnotify.template.decisionWithoutHearing.detentionEngagementTeam.email}") String detentionEngagementTeamDecisionWithoutHearingTemplateId,
+            @Value("${govnotify.template.det-email-template}") String detentionEngagementTeamDecisionWithoutHearingTemplateId,
             DetentionEmailService detentionEmailService,
             PersonalisationProvider personalisationProvider,
             DocumentDownloadClient documentDownloadClient
