@@ -2828,25 +2828,34 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> editAppealAfterSubmitInternalCaseNotificationGenerator(
         LegalRepresentativeEditAppealAfterSubmitPersonalisation legalRepresentativeEditAppealAfterSubmitPersonalisation,
         RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
-        DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    respondentEditAppealAfterSubmitPersonalisation,
-                    legalRepresentativeEditAppealAfterSubmitPersonalisation
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                respondentEditAppealAfterSubmitPersonalisation,
+                                legalRepresentativeEditAppealAfterSubmitPersonalisation
 
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamEditAppealPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("editAppealAfterSubmitDetainedIrcPrisonInternalCaseNotificationGenerator")
+    public List<NotificationGenerator> editAppealAfterSubmitDetainedIrcPrisonInternalCaseNotificationGenerator(
+            DetentionEngagementTeamEditAppealPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(personalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
