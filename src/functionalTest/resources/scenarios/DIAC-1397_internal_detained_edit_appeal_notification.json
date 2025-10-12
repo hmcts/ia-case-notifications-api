@@ -19,7 +19,6 @@
           "isAcceleratedDetainedAppeal": "No",
           "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
           "appellantsRepresentation": "Yes",
-          "isAdmin": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
