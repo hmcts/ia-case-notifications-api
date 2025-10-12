@@ -1,25 +1,29 @@
 {
-  "description": "RIA-7688: internal detained non-ada case home office (Adjourn) application decided (Granted)",
+  "description": "DIAC-1397: internal detained edit appeal notification to DET",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7688,
-      "eventId": "decideAnApplication",
-      "state": "appealSubmitted",
+      "id": 1397,
+      "eventId": "editAppealAfterSubmit",
+      "state": "*",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
+          "currentCaseStateVisibleToHomeOfficeAll": "prepareForHearing",
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
-          "decideAnApplicationId": "1",
+          "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "homeOfficeApplicationDecidedLetter",
+                "tag": "internalEditAppealLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -28,33 +32,6 @@
                 "suppliedBy": "",
                 "description": "",
                 "dateUploaded": "{$TODAY}"
-              }
-            }
-          ],
-          "makeAnApplications": [
-            {
-              "id": "1",
-              "value": {
-                "type":"Adjourn",
-                "details":"",
-                "evidence":[
-                  {
-                    "id": "1",
-                    "value": {
-                      "document_url": "http://document-store/AAA",
-                      "document_filename": "Annexure-E.pdf",
-                      "document_binary_url": "http://document-store/AAA/binary"
-                    }
-                  }
-                ],
-                "applicant":"Respondent",
-                "date":"",
-                "decision":"Granted",
-                "state":"caseBuilding",
-                "applicantRole":"caseworker-ia-homeofficeapc",
-                "decisionReason":"A reason for the decision",
-                "decisionDate":"{$TODAY}",
-                "decisionMaker": "Tribunal Caseworker"
               }
             }
           ]
@@ -70,20 +47,23 @@
       "replacements": {
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
-	      "appellantInDetention": "Yes",
+        "appellantInDetention": "Yes",
         "isAcceleratedDetainedAppeal": "No",
-        "decideAnApplicationId": "1",
-        "notificationsSent":[
+        "notificationsSent": [
           {
-            "id":"7688_HOME_OFFICE_APPLICATION_DECIDED",
-            "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "id": "1397_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1397_INTERNAL_DET_EDIT_APPEAL_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
         "notificationAttachmentDocuments": [
           {
             "id": "1",
             "value": {
-              "tag": "homeOfficeApplicationDecidedLetter",
+              "tag": "internalEditAppealLetter",
               "document": {
                 "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                 "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
