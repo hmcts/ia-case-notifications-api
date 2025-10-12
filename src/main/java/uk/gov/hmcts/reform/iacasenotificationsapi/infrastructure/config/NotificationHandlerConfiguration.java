@@ -2706,6 +2706,26 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedDecisionWithoutHearingAppellantNotificationHandler(
+            @Qualifier("internalDetainedDecisionWithoutHearingAppellantNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.DECISION_WITHOUT_HEARING
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCmaRequirementsAipNotificationHandler(
@@ -5108,7 +5128,7 @@ public class NotificationHandlerConfiguration {
 
                 final String stitchStatus = getStitchStatus(callback);
 
-                log.info("Entering notification handler config with values: event {}and state {} stitch status {}",
+                log.info("Entering notification handler config with values: event {} and state {} stitch status {}",
                     callback.getEvent(), callback.getCaseDetails().getState(), stitchStatus);
 
                 return

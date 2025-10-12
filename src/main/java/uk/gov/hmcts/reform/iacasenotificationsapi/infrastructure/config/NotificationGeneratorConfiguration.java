@@ -2606,6 +2606,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedDecisionWithoutHearingAppellantNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedDecisionWithoutHearingAppellantNotificationGenerator(
+            DetentionEngagementTeamDecisionWithoutHearingPersonalisation detentionEngagementTeamDecisionWithoutHearingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamDecisionWithoutHearingPersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("requestCmaRequirementsAipNotificationGenerator")
     public List<NotificationGenerator> requestCmaRequirementsAipNotificationGenerator(
         AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail,
