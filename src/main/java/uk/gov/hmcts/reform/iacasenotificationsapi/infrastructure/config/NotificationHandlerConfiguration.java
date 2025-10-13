@@ -2308,7 +2308,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                    && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
                     && !isDetainedInFacilityType(callback.getCaseDetails().getCaseData(), OTHER),
             notificationGenerator
         );
