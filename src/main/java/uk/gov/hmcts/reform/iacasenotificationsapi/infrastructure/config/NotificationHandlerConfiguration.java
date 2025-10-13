@@ -5870,9 +5870,9 @@ public class NotificationHandlerConfiguration {
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isAppellantInDetention(asylumCase)
                     && isInternalCase(asylumCase)
-                    && !hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
-                    && !isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                    && !isPaymentInstructed;
+                    && !(hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                        && isPaymentInstructed);
             }, notificationGenerators
         );
     }
