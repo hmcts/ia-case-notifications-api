@@ -5301,6 +5301,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedManageFeeUpdatePaymentInstructedAipIrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedManageFeeUpdatePaymentInstructedAipIrcPrisonNotificationGenerator(
+            DetentionEngagementTeamManageFeeUpdatePaymentInstructedAipManualIrcPrisonPersonalisation personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(Collections.singleton(personalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalDetainedApplyForFtpaRespondentNotificationGenerator")
     public List<NotificationGenerator> internalDetainedApplyForFtpaRespondentNotificationGenerator(
         DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation,
