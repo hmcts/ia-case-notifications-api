@@ -7113,4 +7113,30 @@ public class NotificationGeneratorConfiguration {
                 }
         );
     }
+
+    @Bean("aipmDetainedInPrisonOrIrcReinstateAppealNotificationGenerator")
+    public List<NotificationGenerator> aipmDetainedInPrisonOrIrcReinstateAppealNotificationGenerator(
+            AipmDetainedInPrisonOrIrcReinstateAppealPersonalisation personalisation,
+            HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                            homeOfficeReinstateAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                            personalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+
+        );
+    }
 }
