@@ -1,5 +1,6 @@
 {
   "description": "DIAC-1376 Appeal fee changed(Additional payment required) - Detained in other - ICC - letter",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

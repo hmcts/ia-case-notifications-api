@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetEmailService;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -28,7 +28,7 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
 
     private final String internalDetainedManageFeeUpdateTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private final DetEmailService detEmailService;
+    private final DetentionEmailService detEmailService;
     private final PersonalisationProvider personalisationProvider;
     private String adaPrefix;
     private String nonAdaPrefix;
@@ -36,7 +36,7 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
 
     public DetentionEngagementTeamManageFeeUpdatePersonalisation(
             @Value("${govnotify.template.manageFeeUpdate.detentionEngagementTeam.email}") String internalDetainedManageFeeUpdateTemplateId,
-            DetEmailService detEmailService,
+            DetentionEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient,
             @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
@@ -60,8 +60,7 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
         if (!isAppellantInDetention(asylumCase)) {
             return Collections.emptySet();
         }
-
-        return detEmailService.getRecipientsList(asylumCase);
+        return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
