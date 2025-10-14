@@ -65,6 +65,7 @@
         "feeUpdateReason": "appealNotValid",
         "isDlrmSetAsideEnabled": "Yes",
         "feeAmountGbp": "14000",
+        "feeUpdateTribunalAction": "additionalPayment",
         "notificationsSent": [
           {
             "id": "8249_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET",
