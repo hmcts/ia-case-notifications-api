@@ -5853,29 +5853,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedManageFeeUpdateNotificationHandler(
-        @Qualifier("internalDetainedManageFeeUpdateNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                boolean isPaymentInstructed = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
-                        .map(action -> action.equals(ADDITIONAL_PAYMENT))
-                        .orElse(false);
-
-                return callback.getEvent() == MANAGE_FEE_UPDATE
-                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isAppellantInDetention(asylumCase)
-                    && isInternalCase(asylumCase)
-                    && !(hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
-                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                        && isPaymentInstructed);
-            }, notificationGenerators
-        );
-    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedManageFeeUpdateAipIrcPrisonNotificationHandler(
@@ -5894,7 +5871,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAppellantInDetention(asylumCase)
                             && isInternalCase(asylumCase)
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
                             && isPaymentInstructed;
                 }, notificationGenerators
