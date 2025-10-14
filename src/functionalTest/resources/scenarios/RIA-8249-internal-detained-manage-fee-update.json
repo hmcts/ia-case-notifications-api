@@ -23,6 +23,7 @@
           "isDlrmSetAsideEnabled": "Yes",
           "paymentDate": "10 Oct 2000",
           "feeAmountGbp": "14000",
+          "feeUpdateTribunalAction": "additionalPayment",
           "feeUpdateRecorded": {
             "values": [
               "feeUpdateRecorded"
