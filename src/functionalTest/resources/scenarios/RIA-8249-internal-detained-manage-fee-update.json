@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedAppeal": "No",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
@@ -54,6 +55,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "Yes",
         "isAcceleratedAppeal": "No",
         "detentionFacility": "immigrationRemovalCentre",

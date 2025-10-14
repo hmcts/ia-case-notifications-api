@@ -35,7 +35,7 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
 
 
     public DetentionEngagementTeamManageFeeUpdatePersonalisation(
-            @Value("${govnotify.template.manageFeeUpdate.detentionEngagementTeam.email}") String internalDetainedManageFeeUpdateTemplateId,
+            @Value("${govnotify.template.det-email-template}") String internalDetainedManageFeeUpdateTemplateId,
             DetEmailService detEmailService,
             DocumentDownloadClient documentDownloadClient,
             @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
@@ -75,7 +75,7 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
 
         return ImmutableMap
                 .<String, Object>builder()
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("subjectPrefix", "IAFT - SERVE IN PERSON")
                 .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
                 .put("documentLink", getInternalDetainedManageFeeUpdateLetterInJsonObject(asylumCase))
                 .build();
