@@ -1,0 +1,83 @@
+{
+  "description": "DIAC-1406 Manage fee update AIP Manual Additional Payment Prison Notification",
+  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 14062,
+      "eventId": "manageFeeUpdate",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
+          "appellantInUk": "Yes",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "prison",
+          "prisonName": "Albany",
+          "isDlrmSetAsideEnabled": "Yes",
+          "feeUpdateTribunalAction": "additionalPayment",
+          "feeAmountGbp": "1000",
+          "previousFeeAmountGbp": "1000",
+          "manageFeeRequestedAmount": "1000",
+          "ccdReferenceNumberForDisplay": "test",
+          "feeUpdateReason": "appealNotValid",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
+        "appellantInUk": "Yes",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "prison",
+        "prisonName": "Albany",
+        "isDlrmSetAsideEnabled": "Yes",
+        "feeUpdateTribunalAction": "additionalPayment",
+        "feeAmountGbp": "1000",
+        "previousFeeAmountGbp": "1000",
+        "manageFeeRequestedAmount": "1000",
+        "ccdReferenceNumberForDisplay": "test",
+        "feeUpdateReason": "appealNotValid",
+        "subscriptions": [
+          {
+            "id": "1",
+            "value": {
+              "subscriber": "appellant",
+              "email": "{$TEST_CITIZEN_USERNAME}",
+              "wantsEmail": "Yes",
+              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+              "wantsSms": "Yes"
+            }
+          }
+        ],
+        "notificationsSent": [
+          {
+            "id": "14062_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_MANUAL_IRC_PRISON_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}
