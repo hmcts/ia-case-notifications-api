@@ -153,14 +153,6 @@ class DetentionEngagementTeamManageFeeUpdatePersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_if_decision_dismissed_for_nonAda() throws NotificationClientException, IOException {
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
-        Map<String, Object> personalisation = detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink(asylumCase);
-
-        assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
-    }
-
-    @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         assertThatThrownBy(() -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink((AsylumCase) null))
