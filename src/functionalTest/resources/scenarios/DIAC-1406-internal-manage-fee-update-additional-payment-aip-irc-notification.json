@@ -1,6 +1,5 @@
 {
   "description": "DIAC-1406 Manage fee update AIP Manual Additional Payment IRC Notification",
-  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
