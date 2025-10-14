@@ -59,7 +59,7 @@ public class DetentionEngagementTeamManageFeeUpdatePaymentInstructedAipManualIrc
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET";
+        return caseId + "_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_MANUAL_IRC_PRISON_DET";
     }
 
     @Override
