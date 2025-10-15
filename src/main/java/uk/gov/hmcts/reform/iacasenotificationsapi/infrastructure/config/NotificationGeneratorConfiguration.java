@@ -2054,8 +2054,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("changeHearingCentreInternalNotificationGenerator")
-    public List<NotificationGenerator> changeHearingCentreInternalNotificationGenerator(
+    @Bean("internalDetainedChangeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedChangeHearingCentreNotificationGenerator(
         DetentionEngagementTeamChangeHearingCentrePersonalisation detentionEngagementTeamChangeHearingCentrePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
