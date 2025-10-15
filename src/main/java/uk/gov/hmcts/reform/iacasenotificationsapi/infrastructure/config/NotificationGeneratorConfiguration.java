@@ -2204,25 +2204,30 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam")
+    @Bean("respondentFtpaSubmittedNotificationGenerator")
     public List<NotificationGenerator> respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentFtpaSubmittedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("internalDetainedApplyForFtpaRespondentNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedApplyForFtpaRespondentNotificationGenerator(
         DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-
-        return Arrays.asList(new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementApplyForFtpaRespondentPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new EmailNotificationGenerator(
-                newArrayList(
-                    respondentFtpaSubmittedPersonalisation
-                ),
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementApplyForFtpaRespondentPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -5300,22 +5305,6 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
-
-    @Bean("internalDetainedApplyForFtpaRespondentNotificationGenerator")
-    public List<NotificationGenerator> internalDetainedApplyForFtpaRespondentNotificationGenerator(
-        DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementApplyForFtpaRespondentPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
 
     @Bean("internalDetainedTransferOutOfAdaNotificationGenerator")
     public List<NotificationGenerator> internalDetainedTransferOutOfAdaNotificationGenerator(

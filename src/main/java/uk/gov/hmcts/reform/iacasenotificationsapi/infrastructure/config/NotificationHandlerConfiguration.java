@@ -2385,17 +2385,32 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedApplyForFtpaRespondentNotificationHandler(
-        @Qualifier("respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> respondentFtpaSubmittedNotificationHandler(
+        @Qualifier("respondentFtpaSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
-                    && isInternalCase(asylumCase);
-            }, notificationGenerators
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
+                            && isInternalCase(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedApplyForFtpaRespondentNotificationHandler(
+       @Qualifier("internalDetainedApplyForFtpaRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
+                            && isInternalWithoutLegalRepresentation(asylumCase);
+                }, notificationGenerators
         );
     }
 
