@@ -52,6 +52,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingDetailsUpdated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalNonDetainedCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
@@ -3674,11 +3675,29 @@ public class NotificationHandlerConfiguration {
         @Qualifier("reinstateAppealInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                AsylumCase caseData = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REINSTATE_APPEAL
-                    && isInternalCase(callback.getCaseDetails().getCaseData()),
+                    && (isInternalNonDetainedCase(caseData) || isDetainedInFacilityType(caseData, OTHER) || isInternalWithLegalRepresentation(caseData));
+            },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipmDetainedInPrisonOrIrcReinstateAppealNotificationHandler(
+            @Qualifier("aipmDetainedInPrisonOrIrcReinstateAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.REINSTATE_APPEAL
+                            && isInternalWithoutLegalRepresentation(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
+                },
+                notificationGenerators
         );
     }
 
@@ -7114,9 +7133,8 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && (
                             !isAppellantInDetention(asylumCase)
-                                || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                                    && isDetainedInFacilityType(asylumCase, OTHER))
-                                || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER))
+                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
                         );
             },
             notificationGenerators,
