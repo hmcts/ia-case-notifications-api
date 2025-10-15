@@ -6386,8 +6386,7 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                             && isInternalCase(asylumCase)
-                            && isRule31ReasonUpdatingDecision(asylumCase)
-                            && !isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
+                            && isRule31ReasonUpdatingDecision(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7285,7 +7284,8 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == MARK_APPEAL_AS_REMITTED
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && !isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
