@@ -767,7 +767,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                     && isRespondent
                     && isAppellantInDetention(asylumCase)
-                    && isInternalCase(asylumCase);
+                    && isInternalWithoutLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
