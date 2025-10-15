@@ -2648,7 +2648,7 @@ detentionEngagementTeamIrcEmailAddresses:
   # See README.md for local development setup instructions
 prison:
   email:
-    mappings: "{   \"prisonEmailMappings\": {     \"Addiewell\": \"det-prison-addiewell@example.com\",     \"Albany\": \"det-prison-albany@example.com\"}}"
+    mappings: ${IA_DET_PRISON_EMAIL_MAPPINGS:}
 
 detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
 
