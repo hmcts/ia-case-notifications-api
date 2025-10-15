@@ -7840,9 +7840,8 @@ public class NotificationHandlerConfiguration {
     }
 
     private boolean isUpdatedTribunalDecisionAndReasonsDocument(AsylumCase asylumCase) {
-        YesOrNo isUpdatedDocument = asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)
-                .orElseThrow(() -> new IllegalStateException("updateTribunalDecisionAndReasonsFinalCheck is not present"));
-        return isUpdatedDocument.equals(YesOrNo.YES);
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
