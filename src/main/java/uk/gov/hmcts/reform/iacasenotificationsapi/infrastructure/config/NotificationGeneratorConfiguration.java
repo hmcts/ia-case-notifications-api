@@ -3480,7 +3480,6 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> decideAnApplicationLegalRepNotificationGenerator(
         LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation,
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3497,35 +3496,25 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-
-    @Bean("decideAnApplicationInternalNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
-            HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
+    @Bean("decideAnApplicationInternalHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationInternalHomeOfficeNotificationGenerator(
+        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
     ) {
-
-        return List.of(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(
-                                detentionEngagementTeamDecideAnApplicationPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                        homeOfficeDecideAnApplicationPersonalisation
                 ),
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                homeOfficeDecideAnApplicationPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                )
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
-    @Bean("decideAnApplicationDetInternalNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationDetInternalNotificationGenerator(
+    @Bean("internalDetainedDecideAnApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedDecideAnApplicationNotificationGenerator(
             DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender

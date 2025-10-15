@@ -3765,32 +3765,39 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationInternalNotificationHandler(
-        @Qualifier("decideAnApplicationInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationInternalHomeOfficeNotificationHandler(
+        @Qualifier("decideAnApplicationInternalHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.DECIDE_AN_APPLICATION
+                        && isInternalCase(asylumCase)
+                        && isApplicationCreatedByAdmin(asylumCase);
+            },
             notificationGenerators
         );
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> decideAnApplicationDetInternalNotificationHandler(
-            @Qualifier("decideAnApplicationDetInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedDecideAnApplicationNotificationHandler(
+        @Qualifier("internalDetainedDecideAnApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                                && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
-                                && (isInternalCase(callback.getCaseDetails().getCaseData()) || isDetainedInOneOfFacilityTypes(callback.getCaseDetails().getCaseData(),IRC,PRISON))
-                                && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
-                                && isApplicationCreatedByAdmin(callback.getCaseDetails().getCaseData()),
-                notificationGenerators
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.DECIDE_AN_APPLICATION
+                        && isInternalWithoutLegalRepresentation(asylumCase)
+                        && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                        && !isAcceleratedDetainedAppeal(asylumCase)
+                        && isApplicationCreatedByAdmin(asylumCase);
+            },
+            notificationGenerators
         );
     }
 
