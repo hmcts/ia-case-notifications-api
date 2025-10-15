@@ -6386,7 +6386,8 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                             && isInternalCase(asylumCase)
-                            && isRule31ReasonUpdatingDecision(asylumCase);
+                            && isRule31ReasonUpdatingDecision(asylumCase)
+                            && isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7836,6 +7837,12 @@ public class NotificationHandlerConfiguration {
 
         return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
             .map(reason -> reason.equals("underRule32")).orElse(false);
+    }
+
+    private boolean isUpdatedTribunalDecisionAndReasonsDocument(AsylumCase asylumCase) {
+        YesOrNo isUpdatedDocument = asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)
+                .orElseThrow(() -> new IllegalStateException("updateTribunalDecisionAndReasonsFinalCheck is not present"));
+        return isUpdatedDocument.equals(YesOrNo.YES);
     }
 
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
