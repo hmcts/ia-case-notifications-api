@@ -5790,11 +5790,14 @@ public class NotificationHandlerConfiguration {
         @Qualifier("internalDetAppealDecidedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(Event.SEND_DECISION_AND_REASONS)
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && isAppellantInDetention(asylumCase);
+            },
             notificationGenerators
         );
     }
