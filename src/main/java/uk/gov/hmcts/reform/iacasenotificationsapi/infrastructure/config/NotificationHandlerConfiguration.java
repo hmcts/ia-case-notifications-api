@@ -715,7 +715,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                     && isAppellant
-                    && isInternalCase(asylumCase);
+                    && isInternalWithoutLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -741,7 +741,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
                     && isAppellantAndRespondent
-                    && isInternalCase(asylumCase);
+                    && isInternalWithoutLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
