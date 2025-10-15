@@ -2092,26 +2092,32 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("ftpaSubmittedDetentionEngagementTeamNotificationGenerator")
-    public List<NotificationGenerator> ftpaSubmittedDetentionEngagementTeamNotificationGenerator(
-        DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation,
+    @Bean("ftpaSubmittedRespondentAppellantNotificationGenerator")
+    public List<NotificationGenerator> ftpaSubmittedRespondentNotificationGenerator(
         RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamFtpaSubmittedPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     respondentAppellantFtpaSubmittedPersonalisation
                 ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("internalDetainedFtpaSubmittedNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedFtpaSubmittedNotificationGenerator(
+        DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamFtpaSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
