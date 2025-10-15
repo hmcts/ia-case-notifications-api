@@ -5866,8 +5866,7 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == Event.EDIT_CASE_LISTING
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
-                            && isInternalCase(asylumCase);
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
                 }, notificationGenerators
         );
     }
@@ -7852,8 +7851,7 @@ public class NotificationHandlerConfiguration {
     }
 
     private boolean isNotInternalOrIsInternalWithLegalRepresentation(AsylumCase asylumCase) {
-        return (!isInternalCase(asylumCase) ||
-            isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
+        return (!isInternalCase(asylumCase) || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
     }
 
     private boolean isInternalWithoutLegalRepresentation(AsylumCase asylumCase) {
