@@ -7266,7 +7266,8 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && isRule31ReasonUpdatingDecision(asylumCase);
+                            && isRule31ReasonUpdatingDecision(asylumCase)
+                            && !isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7284,8 +7285,7 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == MARK_APPEAL_AS_REMITTED
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && !isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
                 },
                 notificationGenerators,
                 getErrorHandler()
