@@ -37,15 +37,11 @@ public class DetentionEngagementTeamManageFeeUpdatePersonalisation implements Em
             @Value("${govnotify.template.det-email-template}") String internalDetainedManageFeeUpdateTemplateId,
             DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient,
-            @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
-            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             PersonalisationProvider personalisationProvider
     ) {
         this.internalDetainedManageFeeUpdateTemplateId = internalDetainedManageFeeUpdateTemplateId;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
-        this.adaPrefix = adaPrefix;
-        this.nonAdaPrefix = nonAdaPrefix;
         this.personalisationProvider = personalisationProvider;
     }
 
