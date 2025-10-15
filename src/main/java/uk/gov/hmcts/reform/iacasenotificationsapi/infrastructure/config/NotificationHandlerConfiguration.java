@@ -3552,8 +3552,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> markAsPaidInternalDetAndHoNotificationHandler(
-        @Qualifier("markAsPaidInternalDetAndHoNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeMarkAsPaidNotificationHandler(
+        @Qualifier("homeOfficeMarkAsPaidNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -3581,6 +3581,40 @@ public class NotificationHandlerConfiguration {
                     && paymentStatus.get().equals(PaymentStatus.PAID)
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMarkAsPaidNotificationHandler(
+        @Qualifier("internalDetainedMarkAsPaidNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                State currentState = callback.getCaseDetails().getState();
+
+                boolean isCorrectAppealTypePA = asylumCase
+                        .read(APPEAL_TYPE, AppealType.class)
+                        .map(type -> type == PA).orElse(false);
+
+                boolean isCorrectAppealTypeAndStateHUorEA =
+                        isEaHuEuAppeal(asylumCase)
+                                && (currentState == State.APPEAL_SUBMITTED);
+
+                Optional<PaymentStatus> paymentStatus = asylumCase
+                        .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.MARK_APPEAL_PAID
+                        && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
+                        && paymentStatus.isPresent()
+                        && !paymentStatus.equals(Optional.empty())
+                        && paymentStatus.get().equals(PaymentStatus.PAID)
+                        && isInternalWithoutLegalRepresentation(asylumCase)
+                        && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
         );
     }
