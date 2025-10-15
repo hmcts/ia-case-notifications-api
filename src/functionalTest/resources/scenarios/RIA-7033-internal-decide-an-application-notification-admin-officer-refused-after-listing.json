@@ -12,6 +12,8 @@
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "ariaListingReference": "PA/12345/2019",
           "listCaseHearingCentre": "taylorHouse",
           "decideAnApplicationId": "1",

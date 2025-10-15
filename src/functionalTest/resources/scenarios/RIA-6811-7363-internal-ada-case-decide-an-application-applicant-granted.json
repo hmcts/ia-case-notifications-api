@@ -78,6 +78,7 @@
         "appellantFamilyName": "User",
         "appealType": "refusalOfEu",
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
         "decideAnApplicationId": "1",
         "notificationsSent":[
