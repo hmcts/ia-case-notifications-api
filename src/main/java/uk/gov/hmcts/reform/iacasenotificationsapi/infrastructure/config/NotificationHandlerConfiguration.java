@@ -5283,19 +5283,17 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> detainedAppealHearingAdjournedNoDateAppellantEmailNotificationHandler(
-            @Qualifier("detainedAppealHearingAdjournedNoDateAppellantEmail")
-            List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("detainedAppealHearingAdjournedNoDateAppellantEmail") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
-                            && isAppellantInDetention(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && !isAcceleratedDetainedAppeal(asylumCase);
-                }, notificationGenerators
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ADJOURN_HEARING_WITHOUT_DATE
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+            }, notificationGenerators
         );
     }
 

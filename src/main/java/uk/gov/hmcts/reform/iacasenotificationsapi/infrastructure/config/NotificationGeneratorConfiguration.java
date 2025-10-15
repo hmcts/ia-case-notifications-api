@@ -4200,7 +4200,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(Collections.singleton(detentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation)),
                 notificationSender,
