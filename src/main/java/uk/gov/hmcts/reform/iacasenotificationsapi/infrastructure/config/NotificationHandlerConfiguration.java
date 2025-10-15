@@ -6639,8 +6639,7 @@ public class NotificationHandlerConfiguration {
                         && isDetainedInFacilityType(asylumCase, OTHER))
                         || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
                     && !isSubmissionOutOfTime(asylumCase)
-                    && isPaymentPending
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                    && isPaymentPending;
 
             },
             notificationGenerators,
