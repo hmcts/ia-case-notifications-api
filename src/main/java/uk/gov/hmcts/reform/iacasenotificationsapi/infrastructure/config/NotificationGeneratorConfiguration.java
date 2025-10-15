@@ -3530,20 +3530,13 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("decideARespondentApplicationInternalNotificationGenerator")
-    public List<NotificationGenerator> decideARespondentApplicationInternalNotificationGenerator(
-        DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
+    @Bean("decideARespondentApplicationHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationHomeOfficeNotificationGenerator(
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeDecideAnApplicationPersonalisation
@@ -3554,6 +3547,20 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedDecideARespondentApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedDecideARespondentApplicationNotificationGenerator(
+        DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 
     @Bean("decideARespondentApplicationInternalAppellantNotificationGenerator")
     public List<NotificationGenerator> decideARespondentApplicationInternalAppellantNotificationGenerator(
