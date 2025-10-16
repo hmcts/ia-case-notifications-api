@@ -3837,10 +3837,9 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                        && isInternalWithoutLegalRepresentation(asylumCase)
+                        && callback.getEvent() == DECIDE_AN_APPLICATION
                         && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                        && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                        && (isInternalWithoutLegalRepresentation(asylumCase) || isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON))
                         && !isAcceleratedDetainedAppeal(asylumCase)
                         && isApplicationCreatedByAdmin(asylumCase);
             },
