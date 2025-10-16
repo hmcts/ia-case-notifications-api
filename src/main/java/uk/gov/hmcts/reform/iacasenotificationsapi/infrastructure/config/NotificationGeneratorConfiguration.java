@@ -332,8 +332,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("endAppealInternalHoNotificationHandler")
-    public List<NotificationGenerator> endAppealInternalHoNotificationHandler(
+    @Bean("endAppealInternalHoNotificationGenerator")
+    public List<NotificationGenerator> endAppealInternalHoNotificationGenerator(
         HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
