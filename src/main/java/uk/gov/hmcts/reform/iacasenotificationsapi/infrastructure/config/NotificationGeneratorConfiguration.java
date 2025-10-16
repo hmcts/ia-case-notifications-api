@@ -5400,11 +5400,12 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            ),
+            // SUPPRESSING UNTIL NABA NEEDED
+            // new EmailWithLinkNotificationGenerator(
+            //    newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation)),
+            //    notificationSender,
+            //    notificationIdAppender
+            //),
             new EmailNotificationGenerator(
                 newArrayList(Collections.singleton(homeOfficeCaseUnlinkPersonalisation)),
                 notificationSender,
