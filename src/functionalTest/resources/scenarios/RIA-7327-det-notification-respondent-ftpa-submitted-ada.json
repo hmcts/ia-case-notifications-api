@@ -1,6 +1,6 @@
 {
   "description": "RIA-7327 Detention engagement team Notification of respondent's ftpa application submitted Ada",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
@@ -18,6 +18,7 @@
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -53,18 +54,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "7327_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
-        "recipient": "det-irc-brookhouse@example.com",
-        "subject": "ADA – SERVE IN PERSON: FTPA submitted by respondent",
-        "body": [
-          "Home Office reference: A1234567",
-          "HMCTS reference: PA/12345/2019",
-          "Appellant name: Talha Awan"
-        ]
-      }
-    ]
+    }
   }
 }

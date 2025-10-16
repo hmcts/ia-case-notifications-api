@@ -2094,20 +2094,12 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("ftpaSubmittedDetentionEngagementTeamNotificationGenerator")
     public List<NotificationGenerator> ftpaSubmittedDetentionEngagementTeamNotificationGenerator(
-        DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation,
         RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamFtpaSubmittedPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
             new EmailNotificationGenerator(
                 newArrayList(
                     respondentAppellantFtpaSubmittedPersonalisation
