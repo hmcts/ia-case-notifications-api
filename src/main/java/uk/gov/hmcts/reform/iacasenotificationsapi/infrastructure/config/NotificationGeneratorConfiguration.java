@@ -3504,18 +3504,18 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalDetainedDecideAnApplicationNotificationGenerator")
     public List<NotificationGenerator> internalDetainedDecideAnApplicationNotificationGenerator(
-            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
+        DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(
-                                detentionEngagementTeamDecideAnApplicationPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                )
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                        detentionEngagementTeamDecideAnApplicationPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 

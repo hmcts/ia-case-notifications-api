@@ -3823,7 +3823,6 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == DECIDE_AN_APPLICATION
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && (isInternalWithoutLegalRepresentation(asylumCase) || isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON))
-                    && !isAcceleratedDetainedAppeal(asylumCase)
                     && isApplicationCreatedByAdmin(asylumCase);
             },
             notificationGenerators
