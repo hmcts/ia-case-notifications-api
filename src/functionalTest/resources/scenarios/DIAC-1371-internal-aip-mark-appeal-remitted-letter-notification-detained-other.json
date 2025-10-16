@@ -50,7 +50,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1371_INTERNAL_APPEAL_REMITTED_APPELLANT_LETTER",
+            "id": "1371_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
