@@ -2301,19 +2301,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedRespondentAppellantNotificationHandler(
-            @Qualifier("ftpaSubmittedRespondentAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) ->
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                                && isInternalCase(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedFtpaSubmittedNotificationHandler(
             @Qualifier("internalDetainedFtpaSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
 
@@ -2322,6 +2309,19 @@ public class NotificationHandlerConfiguration {
                         callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                                 && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
                                 && isInternalWithoutLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedRespondentAppellantNotificationHandler(
+            @Qualifier("ftpaSubmittedRespondentAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                                && isInternalCase(callback.getCaseDetails().getCaseData()),
                 notificationGenerator
         );
     }
@@ -2397,6 +2397,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedApplyForFtpaRespondentNotificationHandler(
+        @Qualifier("internalDetainedApplyForFtpaRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
+                        && isInternalWithoutLegalRepresentation(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> respondentFtpaSubmittedNotificationHandler(
         @Qualifier("respondentFtpaSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
@@ -2407,21 +2422,6 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
                             && isInternalCase(asylumCase);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedApplyForFtpaRespondentNotificationHandler(
-        @Qualifier("internalDetainedApplyForFtpaRespondentNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
-                            && isInternalWithoutLegalRepresentation(asylumCase);
                 }, notificationGenerators
         );
     }
@@ -3552,6 +3552,40 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMarkAsPaidNotificationHandler(
+        @Qualifier("internalDetainedMarkAsPaidNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                State currentState = callback.getCaseDetails().getState();
+
+                boolean isCorrectAppealTypePA = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == PA).orElse(false);
+
+                boolean isCorrectAppealTypeAndStateHUorEA =
+                    isEaHuEuAppeal(asylumCase)
+                            && (currentState == State.APPEAL_SUBMITTED);
+
+                Optional<PaymentStatus> paymentStatus = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.MARK_APPEAL_PAID
+                    && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
+                    && paymentStatus.isPresent()
+                    && !paymentStatus.equals(Optional.empty())
+                    && paymentStatus.get().equals(PaymentStatus.PAID)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && !isAcceleratedDetainedAppeal(asylumCase);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> homeOfficeMarkAsPaidNotificationHandler(
         @Qualifier("homeOfficeMarkAsPaidNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -3581,40 +3615,6 @@ public class NotificationHandlerConfiguration {
                     && paymentStatus.get().equals(PaymentStatus.PAID)
                     && isInternalCase(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMarkAsPaidNotificationHandler(
-        @Qualifier("internalDetainedMarkAsPaidNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                State currentState = callback.getCaseDetails().getState();
-
-                boolean isCorrectAppealTypePA = asylumCase
-                        .read(APPEAL_TYPE, AppealType.class)
-                        .map(type -> type == PA).orElse(false);
-
-                boolean isCorrectAppealTypeAndStateHUorEA =
-                        isEaHuEuAppeal(asylumCase)
-                                && (currentState == State.APPEAL_SUBMITTED);
-
-                Optional<PaymentStatus> paymentStatus = asylumCase
-                        .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && callback.getEvent() == Event.MARK_APPEAL_PAID
-                        && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
-                        && paymentStatus.isPresent()
-                        && !paymentStatus.equals(Optional.empty())
-                        && paymentStatus.get().equals(PaymentStatus.PAID)
-                        && isInternalWithoutLegalRepresentation(asylumCase)
-                        && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
         );
     }
