@@ -2301,6 +2301,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedFtpaSubmittedNotificationHandler(
+            @Qualifier("internalDetainedFtpaSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
+                                && isInternalWithoutLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                notificationGenerator
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> ftpaSubmittedRespondentAppellantNotificationHandler(
         @Qualifier("ftpaSubmittedRespondentAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
 
@@ -2309,19 +2322,6 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
                     && isInternalCase(callback.getCaseDetails().getCaseData()),
-                notificationGenerator
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedFtpaSubmittedNotificationHandler(
-        @Qualifier("internalDetainedFtpaSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerator) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                    && isInternalWithoutLegalRepresentation(callback.getCaseDetails().getCaseData()),
                 notificationGenerator
         );
     }
