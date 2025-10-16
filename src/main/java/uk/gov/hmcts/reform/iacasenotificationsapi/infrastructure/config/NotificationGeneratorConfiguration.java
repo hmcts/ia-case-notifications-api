@@ -6549,22 +6549,25 @@ public class NotificationGeneratorConfiguration {
     @Bean("appellantInternalHomeOfficeApplyForFtpaLetterNotificationGenerator")
     public List<NotificationGenerator> appellantInternalHomeOfficeApplyForFtpaNonDetainedOrOocLetterNotificationGenerator(
         AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation,
+        RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return singletonList(
+        return Arrays.asList(
             new LetterNotificationGenerator(
                 newArrayList(
                     appellantInternalHomeOfficeNonDetainedAndOutOfCountryPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
-                }
-            }
+            ),
+            new EmailNotificationGenerator(
+                newArrayList(
+                        respondentFtpaSubmittedPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 

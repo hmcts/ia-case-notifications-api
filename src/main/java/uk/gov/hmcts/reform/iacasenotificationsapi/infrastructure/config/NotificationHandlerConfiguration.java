@@ -2280,7 +2280,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
                     && !isAipJourney(callback.getCaseDetails().getCaseData())
-                    && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                    && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2363,7 +2363,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
                     && !isAipJourney(callback.getCaseDetails().getCaseData())
-                    && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
+                    && !isInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2392,7 +2392,9 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_RESPONDENT
-                    && isInternalCase(asylumCase);
+                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
             }, notificationGenerators
         );
     }
