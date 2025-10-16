@@ -6047,10 +6047,11 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == UPDATE_HEARING_ADJUSTMENTS
-                    && isInternalCase(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                return false; // Suppressing until NABA needed
+                //                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                //                    && callback.getEvent() == UPDATE_HEARING_ADJUSTMENTS
+                //                    && isInternalCase(asylumCase)
+                //                    && isAppellantInDetention(asylumCase);
             }, notificationGenerators
         );
     }
