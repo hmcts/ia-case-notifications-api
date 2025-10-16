@@ -1915,6 +1915,7 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
+      - "markAppealAsRemitted"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -19,38 +18,35 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_EDIT_APPEAL_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamEditAppealPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String internalDetEditAppealTemplateId;
+    private final String detentionEngagementTeamTemplateId;
+    private final String nonAdaPrefix;
     private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
-    private final PersonalisationProvider personalisationProvider;
-    private String nonAdaPrefix;
 
-    public DetentionEngagementTeamEditAppealPersonalisation(
-            @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String templateId,
+    public AipmDetainedInPrisonOrIrcReinstateAppealPersonalisation(
+            @Value("${govnotify.template.det-email-template}") String detentionEngagementTeamTemplateId,
+            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetentionEmailService detentionEmailService,
-            DocumentDownloadClient documentDownloadClient,
-            PersonalisationProvider personalisationProvider,
-            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix
+            DocumentDownloadClient documentDownloadClient
     ) {
-        this.internalDetEditAppealTemplateId = templateId;
+        this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
+        this.nonAdaPrefix = nonAdaPrefix;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
-        this.personalisationProvider = personalisationProvider;
-        this.nonAdaPrefix = nonAdaPrefix;
     }
 
     @Override
-    public String getTemplateId() {
-        return internalDetEditAppealTemplateId;
+    public String getReferenceId(Long caseId) {
+        return caseId + "_AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER";
     }
 
     @Override
@@ -68,28 +64,31 @@ public class DetentionEngagementTeamEditAppealPersonalisation implements EmailWi
     }
 
     @Override
-    public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DET_EDIT_APPEAL_EMAIL";
+    public String getTemplateId() {
+        return detentionEngagementTeamTemplateId;
     }
 
     @Override
-    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) {
+    public Map<String, Object> getPersonalisationForLink(AsylumCase asylumCase) throws IOException, NotificationClientException {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap
                 .<String, Object>builder()
                 .put("subjectPrefix", nonAdaPrefix)
-                .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                .put("documentLink", getInternalEditAppealDocumentInJsonObject(asylumCase))
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("documentLink", getAppealCanProceedLetterJsonObject(asylumCase))
                 .build();
     }
 
-    private JSONObject getInternalEditAppealDocumentInJsonObject(AsylumCase asylumCase) {
+    private JSONObject getAppealCanProceedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_EDIT_APPEAL_LETTER));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal Detained edit appeal document in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal Detained edit appeal document in compatible format");
+            log.error("Failed to get Internal 'Appeal can proceed' Letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal 'Appeal can proceed' Letter in compatible format");
         }
     }
 }
