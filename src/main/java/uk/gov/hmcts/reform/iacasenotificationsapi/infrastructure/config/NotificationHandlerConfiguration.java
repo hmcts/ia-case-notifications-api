@@ -6569,7 +6569,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> markAppealAsRemittedInternalHoNotificationHandler(
-        @Qualifier("markAppealAsRemittedInternalHoNotificationHandler") List<NotificationGenerator> notificationGenerators
+        @Qualifier("markAppealAsRemittedInternalHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
