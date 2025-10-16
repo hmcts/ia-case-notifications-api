@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ListingEvent;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
@@ -531,7 +533,32 @@ public class BailNotificationHandlerConfiguration {
     ) {
         return new BailPostSubmitNotificationHandler(
             (callbackStage, callback) -> {
-                return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                boolean hasLrEmail = Optional.ofNullable(callback.getCaseDetails())
+                    .map(CaseDetails::getCaseData)
+                    .flatMap(bailCase -> bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
+                    .filter((email) -> !email.isEmpty())
+                    .isPresent();
+                return hasLrEmail
+                    && callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && callback.getEvent() == Event.NOC_REQUEST_BAIL;
+            },
+            bailNotificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<BailCase> nocWithoutOldLegalRepNotificationHandler(
+        @Qualifier("nocWithoutOldLegalRepNotificationGenerator") List<BailNotificationGenerator> bailNotificationGenerators
+    ) {
+        return new BailPostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+                boolean hasLrEmail = Optional.ofNullable(callback.getCaseDetails())
+                    .map(CaseDetails::getCaseData)
+                    .flatMap(bailCase -> bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
+                    .filter((email) -> !email.isEmpty())
+                    .isPresent();
+                return !hasLrEmail
+                    && callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                     && callback.getEvent() == Event.NOC_REQUEST_BAIL;
             },
             bailNotificationGenerators
@@ -648,43 +675,43 @@ public class BailNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandlerWithoutLegalRep(
-            @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
-            List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
+        List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
-                (callbackStage, callback) -> {
-                    boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
-                    if (isAllowedBailCase) {
-                        BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return !isLegallyRepresented(bailCase);
-                    } else {
-                        return false;
-                    }
-                },
-                bailNotificationGenerators,
-                getErrorHandler()
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return !isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
         );
     }
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandlerWithLegalRep(
-            @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
-            List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
+        List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
-                (callbackStage, callback) -> {
-                    boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
-                    if (isAllowedBailCase) {
-                        BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return isLegallyRepresented(bailCase);
-                    } else {
-                        return false;
-                    }
-                },
-                bailNotificationGenerators,
-                getErrorHandler()
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
         );
     }
 
