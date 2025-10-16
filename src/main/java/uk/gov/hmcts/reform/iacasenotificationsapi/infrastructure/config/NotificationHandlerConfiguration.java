@@ -52,6 +52,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingDetailsUpdated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalNonDetainedCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
@@ -2308,7 +2309,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.APPLY_FOR_FTPA_APPELLANT
-                    && isInternalCase(callback.getCaseDetails().getCaseData()),
+                    && !isDetainedInFacilityType(callback.getCaseDetails().getCaseData(), OTHER),
             notificationGenerator
         );
     }
@@ -3674,11 +3675,29 @@ public class NotificationHandlerConfiguration {
         @Qualifier("reinstateAppealInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                AsylumCase caseData = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REINSTATE_APPEAL
-                    && isInternalCase(callback.getCaseDetails().getCaseData()),
+                    && (isInternalNonDetainedCase(caseData) || isDetainedInFacilityType(caseData, OTHER) || isInternalWithLegalRepresentation(caseData));
+            },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipmDetainedInPrisonOrIrcReinstateAppealNotificationHandler(
+            @Qualifier("aipmDetainedInPrisonOrIrcReinstateAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.REINSTATE_APPEAL
+                            && isInternalWithoutLegalRepresentation(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
+                },
+                notificationGenerators
         );
     }
 
@@ -5847,8 +5866,7 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == Event.EDIT_CASE_LISTING
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
-                            && isInternalCase(asylumCase);
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
                 }, notificationGenerators
         );
     }
@@ -6628,8 +6646,7 @@ public class NotificationHandlerConfiguration {
                         && isDetainedInFacilityType(asylumCase, OTHER))
                         || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
                     && !isSubmissionOutOfTime(asylumCase)
-                    && isPaymentPending
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                    && isPaymentPending;
 
             },
             notificationGenerators,
@@ -7122,9 +7139,8 @@ public class NotificationHandlerConfiguration {
                        && isInternalCase(asylumCase)
                        && (
                             !isAppellantInDetention(asylumCase)
-                                || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                                    && isDetainedInFacilityType(asylumCase, OTHER))
-                                || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
+                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase) && isDetainedInFacilityType(asylumCase, OTHER))
+                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase))
                         );
             },
             notificationGenerators,
@@ -7256,7 +7272,8 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && isRule31ReasonUpdatingDecision(asylumCase);
+                            && isRule31ReasonUpdatingDecision(asylumCase)
+                            && !isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7828,6 +7845,11 @@ public class NotificationHandlerConfiguration {
             .map(reason -> reason.equals("underRule32")).orElse(false);
     }
 
+    private boolean isUpdatedTribunalDecisionAndReasonsDocument(AsylumCase asylumCase) {
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
         return isInternalCase(asylumCase)
             && directionFinder
@@ -7837,8 +7859,7 @@ public class NotificationHandlerConfiguration {
     }
 
     private boolean isNotInternalOrIsInternalWithLegalRepresentation(AsylumCase asylumCase) {
-        return (!isInternalCase(asylumCase) ||
-            isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
+        return (!isInternalCase(asylumCase) || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
     }
 
     private boolean isInternalWithoutLegalRepresentation(AsylumCase asylumCase) {

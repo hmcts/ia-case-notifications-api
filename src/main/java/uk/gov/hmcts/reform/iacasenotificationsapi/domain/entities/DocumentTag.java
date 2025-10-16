@@ -76,6 +76,7 @@ public enum DocumentTag {
     INTERNAL_ADJOURN_HEARING_WITHOUT_DATE("internalAdjournHearingWithoutDate"),
     INTERNAL_END_APPEAL_LETTER_BUNDLE("internalEndAppealLetterBundle"),
     INTERNAL_CASE_LISTED_LETTER("internalCaseListedLetter"),
+    INTERNAL_EDIT_CASE_LISTING_LETTER("internalEditCaseListingLetter"),
     INTERNAL_CASE_LISTED_LETTER_BUNDLE("internalCaseListedLetterBundle"),
     INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE("internalEditCaseListingLetterBundle"),
     INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE("internalOutOfTimeDecisionLetter"),
@@ -99,6 +100,8 @@ public enum DocumentTag {
     INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER("internalDetainedAppealRemittedAipIrcPrisonLetter"),
     INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER("internalDetainedIrcPrisonFtpaDisposedRules31Or32Letter"),
     HOME_OFFICE_APPLICATION_DECIDED_LETTER("homeOfficeApplicationDecidedLetter"),
+    AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER("aipmDetainedInPrisonOrIrcReinstateAppealLetter"),
+
 
     @JsonEnumDefaultValue
     NONE("");

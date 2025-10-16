@@ -17,8 +17,9 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -75,7 +76,9 @@ public class AsylumCaseUtils {
     }
 
     public static boolean legalRepInCountryAppeal(AsylumCase asylumCase) {
-        return asylumCase.read(LEGAL_REP_HAS_ADDRESS, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(false);
+        return asylumCase.read(LEGAL_REP_HAS_ADDRESS, YesOrNo.class)
+            .map(value -> value.equals(YesOrNo.YES))
+            .orElse(false);
     }
 
     public static boolean isAriaMigrated(AsylumCase asylumCase) {
@@ -123,11 +126,21 @@ public class AsylumCaseUtils {
     public static DocumentWithMetadata getLetterForNotification(AsylumCase asylumCase, DocumentTag documentTag) {
         Optional<List<IdValue<DocumentWithMetadata>>> optionalNotificationLetters = asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS);
         return optionalNotificationLetters
-                .orElse(Collections.emptyList())
+                .orElse(emptyList())
                 .stream()
                 .map(IdValue::getValue)
                 .filter(d -> d.getTag() == documentTag)
                 .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
+    }
+
+    public static DocumentWithMetadata getBundledLetter(AsylumCase asylumCase, DocumentTag documentTag) {
+        Optional<List<IdValue<DocumentWithMetadata>>> optionalNotificationLetters = asylumCase.read(LETTER_BUNDLE_DOCUMENTS);
+        return optionalNotificationLetters
+            .orElse(emptyList())
+            .stream()
+            .map(IdValue::getValue)
+            .filter(d -> d.getTag() == documentTag)
+            .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
     }
 
     private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {
@@ -146,7 +159,7 @@ public class AsylumCaseUtils {
         Optional<List<IdValue<DocumentWithMetadata>>> maybeExistingAdditionalEvidenceDocuments =
                 asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS);
         if (maybeExistingAdditionalEvidenceDocuments.isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         return maybeExistingAdditionalEvidenceDocuments.get();
@@ -403,17 +416,25 @@ public class AsylumCaseUtils {
     }
 
     public static Set<String> getAppellantAddressInCountryOrOoc(final AsylumCase asylumCase) {
-        return inCountryAppeal(asylumCase) ? Collections.singleton(getAppellantAddressAsList(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_"))) :
-                Collections.singleton(getAppellantAddressAsListOoc(asylumCase).stream()
-                        .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        return inCountryAppeal(asylumCase) ? singleton(getAppellantAddressAsList(asylumCase)
+            .stream()
+            .map(item -> item.replaceAll("\\s", ""))
+            .collect(joining("_"))) :
+                singleton(getAppellantAddressAsListOoc(asylumCase).stream()
+                        .map(item -> item.replaceAll("\\s", "")).collect(joining("_")));
     }
 
     public static Set<String> getLegalRepAddressInCountryOrOoc(final AsylumCase asylumCase) {
-        return legalRepInCountryAppeal(asylumCase) ? Collections.singleton(getLegalRepresentativeAddressAsList(asylumCase).stream()
-                .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_"))) :
-                Collections.singleton(getLegalRepresentativeAddressOocAsList(asylumCase).stream()
-                        .map(item -> item.replaceAll("\\s", "")).collect(Collectors.joining("_")));
+        if (legalRepInCountryAppeal(asylumCase)) {
+            return singleton(getLegalRepresentativeAddressAsList(asylumCase)
+                .stream()
+                .map(item -> item.replaceAll("\\s", ""))
+                .collect(joining("_")));
+        }
+        return singleton(getLegalRepresentativeAddressOocAsList(asylumCase)
+            .stream()
+            .map(item -> item.replaceAll("\\s", ""))
+            .collect(joining("_")));
     }
 
     public static String getLegalRepEmailInternalOrLegalRepJourney(final AsylumCase asylumCase) {
@@ -442,10 +463,15 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasBeenSubmittedAsLegalRepresentedInternalCase(AsylumCase asylumCase) {
-        return asylumCase.read(IS_ADMIN, YesOrNo.class)
-                .map(yesOrNo -> Objects.equals(YES, yesOrNo)).orElse(false)
-                && asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
-                .map(yesOrNo -> Objects.equals(NO, yesOrNo)).orElse(false);
+        Boolean isInternal = asylumCase.read(IS_ADMIN, YesOrNo.class)
+            .map(yesOrNo -> Objects.equals(YES, yesOrNo))
+            .orElse(false);
+
+        Boolean isLegallyRepresented = asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
+            .map(yesOrNo -> Objects.equals(NO, yesOrNo))
+            .orElse(false);
+
+        return isInternal && isLegallyRepresented;
     }
 
     public static List<String> getAppellantOrLegalRepAddressLetterPersonalisation(AsylumCase asylumCase) {

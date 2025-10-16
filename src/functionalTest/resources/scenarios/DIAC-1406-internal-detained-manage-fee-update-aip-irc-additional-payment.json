@@ -1,10 +1,10 @@
 {
-  "description": "RIA-8249 Manage Fee Update notification (internal case creation) for Detained",
+  "description": "DIAC-1406 Manage fee update AIP Manual Additional Payment IRC Notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8249,
+      "id": 14061,
       "eventId": "manageFeeUpdate",
       "state": "appealSubmitted",
       "caseData": {
@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedAppeal": "No",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
@@ -22,6 +23,7 @@
           "isDlrmSetAsideEnabled": "Yes",
           "paymentDate": "10 Oct 2000",
           "feeAmountGbp": "14000",
+          "feeUpdateTribunalAction": "additionalPayment",
           "feeUpdateRecorded": {
             "values": [
               "feeUpdateRecorded"
@@ -54,6 +56,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInDetention": "Yes",
         "isAcceleratedAppeal": "No",
         "detentionFacility": "immigrationRemovalCentre",
@@ -63,9 +66,10 @@
         "feeUpdateReason": "appealNotValid",
         "isDlrmSetAsideEnabled": "Yes",
         "feeAmountGbp": "14000",
+        "feeUpdateTribunalAction": "additionalPayment",
         "notificationsSent": [
           {
-            "id": "8249_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET",
+            "id": "14061_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

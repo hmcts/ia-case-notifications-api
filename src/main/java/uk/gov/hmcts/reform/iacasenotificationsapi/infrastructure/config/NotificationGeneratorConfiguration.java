@@ -5251,17 +5251,11 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("editCaseListingInternalDetainedNotificationGenerator")
     public List<NotificationGenerator> editCaseListingInternalDetainedNotificationGenerator(
-        DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation,
         HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamEditCaseListingPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            ),
             new EmailNotificationGenerator(
                 newArrayList(Collections.singleton(homeOfficeEditListingPersonalisation)),
                 notificationSender,
@@ -7126,6 +7120,32 @@ public class NotificationGeneratorConfiguration {
                         return new Message("success","body");
                     }
                 }
+        );
+    }
+
+    @Bean("aipmDetainedInPrisonOrIrcReinstateAppealNotificationGenerator")
+    public List<NotificationGenerator> aipmDetainedInPrisonOrIrcReinstateAppealNotificationGenerator(
+            AipmDetainedInPrisonOrIrcReinstateAppealPersonalisation personalisation,
+            HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                            homeOfficeReinstateAppealPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                            personalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+
         );
     }
 }
