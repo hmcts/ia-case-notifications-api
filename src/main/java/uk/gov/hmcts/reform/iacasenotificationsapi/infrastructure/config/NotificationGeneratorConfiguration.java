@@ -6015,8 +6015,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("markAppealAsRemittedInternalHoNotificationHandler")
-    public List<NotificationGenerator> markAppealAsRemittedInternalHoNotificationHandler(
+    @Bean("markAppealAsRemittedInternalHoNotificationGenerator")
+    public List<NotificationGenerator> markAppealAsRemittedInternalHoNotificationGenerator(
         HomeOfficeMarkAppealAsRemittedPersonalisation homeOfficeMarkAppealAsRemittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
