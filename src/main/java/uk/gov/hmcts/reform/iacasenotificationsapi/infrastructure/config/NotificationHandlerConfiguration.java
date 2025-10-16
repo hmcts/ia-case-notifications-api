@@ -6120,10 +6120,12 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && List.of(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE).contains(callback.getEvent())
-                    && isInternalCase(asylumCase)
-                    && isAppellantInDetention(asylumCase);
+                // Suppressing until NABA needed
+                return false;
+                // return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                // && List.of(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE).contains(callback.getEvent())
+                // && isInternalCase(asylumCase)
+                // && isAppellantInDetention(asylumCase);
             }, notificationGenerators
         );
     }
