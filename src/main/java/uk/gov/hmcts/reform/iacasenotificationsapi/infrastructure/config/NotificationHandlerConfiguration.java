@@ -5227,8 +5227,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appealEndedAutomaticallyHoNotificationHandler(
-            @Qualifier("appealEndedAutomaticallyHoNotificationHandler") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> appealEndedAutomaticallyHoNotificationGenerator(
+            @Qualifier("appealEndedAutomaticallyHoNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
