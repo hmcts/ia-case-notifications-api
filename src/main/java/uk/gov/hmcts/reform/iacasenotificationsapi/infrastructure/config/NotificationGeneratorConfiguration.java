@@ -5126,13 +5126,14 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamMarkAsPaidPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
+            // SUPPRESSING UNTIL NABA NEEDED
+            // new EmailWithLinkNotificationGenerator(
+            //    newArrayList(
+            //        detentionEngagementTeamMarkAsPaidPersonalisation
+            //    ),
+            //    notificationSender,
+            //    notificationIdAppender
+            //),
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeSubmitAppealPersonalisation
