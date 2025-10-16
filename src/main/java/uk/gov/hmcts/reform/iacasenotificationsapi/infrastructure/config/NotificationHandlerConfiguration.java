@@ -5779,7 +5779,8 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(Event.SEND_DECISION_AND_REASONS)
                     && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+                    && isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                    && false, // suppressing until NABA needed
             notificationGenerators
         );
     }
