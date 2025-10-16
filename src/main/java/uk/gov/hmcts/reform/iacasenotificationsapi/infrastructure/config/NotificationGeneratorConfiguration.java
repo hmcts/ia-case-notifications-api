@@ -5421,11 +5421,12 @@ public class NotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseLinkAppealPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            ),
+            // SUPPRESSING UNTIL NABA NEEDED
+            // new EmailWithLinkNotificationGenerator(
+            //    newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseLinkAppealPersonalisation)),
+            //    notificationSender,
+            //    notificationIdAppender
+            // ),
             new EmailNotificationGenerator(
                 newArrayList(Collections.singleton(homeOfficeCaseLinkPersonalisation)),
                 notificationSender,
