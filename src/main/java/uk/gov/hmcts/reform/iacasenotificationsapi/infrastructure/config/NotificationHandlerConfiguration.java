@@ -7271,7 +7271,8 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && isRule31ReasonUpdatingDecision(asylumCase);
+                            && isRule31ReasonUpdatingDecision(asylumCase)
+                            && !isUpdatedTribunalDecisionAndReasonsDocument(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7841,6 +7842,11 @@ public class NotificationHandlerConfiguration {
 
         return asylumCase.read(UPDATE_TRIBUNAL_DECISION_LIST, String.class)
             .map(reason -> reason.equals("underRule32")).orElse(false);
+    }
+
+    private boolean isUpdatedTribunalDecisionAndReasonsDocument(AsylumCase asylumCase) {
+        return asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)
+                .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
     }
 
     private boolean isInternalNonStdDirectionWithParty(AsylumCase asylumCase, Parties party, DirectionFinder directionFinder) {
