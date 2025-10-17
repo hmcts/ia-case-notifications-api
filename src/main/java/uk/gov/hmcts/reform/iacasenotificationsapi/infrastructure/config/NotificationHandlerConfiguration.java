@@ -5801,22 +5801,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetAppealDecidedNotificationHandler(
-        @Qualifier("internalDetAppealDecidedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent().equals(Event.SEND_DECISION_AND_REASONS)
-                    && isInternalWithoutLegalRepresentation(asylumCase)
-                    && isAppellantInDetention(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedEndAppealAutomaticallyNotificationHandler(
