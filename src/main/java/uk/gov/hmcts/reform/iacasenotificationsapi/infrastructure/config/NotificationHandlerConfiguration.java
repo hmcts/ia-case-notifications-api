@@ -1658,26 +1658,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appellantRespondentInternalNonStandardDirectionHandler(
-        @Qualifier("appellantRespondentInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
-        DirectionFinder directionFinder) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase =
-                    callback
-                        .getCaseDetails()
-                        .getCaseData();
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DIRECTION
-                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder);
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedNonStandardDirectionHandler(
         @Qualifier("internalDetainedNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
         DirectionFinder directionFinder) {
@@ -1689,7 +1669,25 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.RESPONDENT, directionFinder);
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantRespondentInternalNonStandardDirectionHandler(
+        @Qualifier("appellantRespondentInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SEND_DIRECTION
+                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder);
             },
             notificationGenerators
         );
@@ -1731,29 +1729,6 @@ public class NotificationHandlerConfiguration {
             notificationGenerators
         );
     }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appellantInternalDetainedNonStandardDirectionHandler(
-            @Qualifier("appellantInternalDetainedNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
-                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder);
-                },
-                notificationGenerators
-        );
-    }
-
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordApplicationNotificationHandler(

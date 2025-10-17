@@ -2691,19 +2691,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("appellantRespondentInternalNonStandardDirectionGenerator")
-    public List<NotificationGenerator> appellantRespondentInternalNonStandardDirectionGenerator(
+    @Bean("internalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> internalDetainedNonStandardDirectionGenerator(
         DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
-        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
-            ),
+            )
+        );
+    }
+
+    @Bean("appellantRespondentInternalNonStandardDirectionGenerator")
+    public List<NotificationGenerator> appellantRespondentInternalNonStandardDirectionGenerator(
+        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(respondentNonStandardDirectionPersonalisation),
                 notificationSender,
@@ -2721,36 +2730,6 @@ public class NotificationGeneratorConfiguration {
         return List.of(
                 new EmailNotificationGenerator(
                         newArrayList(respondentNonStandardDirectionOfAppellantPersonalization),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("appellantInternalDetainedNonStandardDirectionGenerator")
-    public List<NotificationGenerator> appellantInternalDetainedNonStandardDirectionGenerator(
-            DetentionEngagementTeamNonStandardDirectionPersonalisation personalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(personalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("internalDetainedNonStandardDirectionGenerator")
-    public List<NotificationGenerator> internalDetainedNonStandardDirectionGenerator(
-        DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return singletonList(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
