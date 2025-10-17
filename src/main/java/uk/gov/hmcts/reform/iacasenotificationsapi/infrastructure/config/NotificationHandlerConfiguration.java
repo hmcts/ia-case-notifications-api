@@ -3800,23 +3800,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalDetainedDecideARespondentApplicationNotificationHandler(
-            @Qualifier("internalDetainedDecideARespondentApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.DECIDE_AN_APPLICATION
-                            && isInternalWithoutLegalRepresentation(asylumCase)
-                            && isApplicationCreatedByRespondent(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC);
-                }, notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> decideARespondentApplicationHomeOfficeNotificationHandler(
         @Qualifier("decideARespondentApplicationHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 

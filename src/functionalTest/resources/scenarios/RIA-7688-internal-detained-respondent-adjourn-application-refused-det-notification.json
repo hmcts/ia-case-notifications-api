@@ -19,7 +19,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalDecideHomeOfficeApplicationLetter",
+                "tag": "homeOfficeApplicationDecidedLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -83,7 +83,7 @@
           {
             "id": "1",
             "value": {
-              "tag": "internalDecideHomeOfficeApplicationLetter",
+              "tag": "homeOfficeApplicationDecidedLetter",
               "document": {
                 "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                 "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
