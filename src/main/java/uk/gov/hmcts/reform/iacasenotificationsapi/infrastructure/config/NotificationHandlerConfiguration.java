@@ -5939,21 +5939,19 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedManageFeeUpdateNotificationHandler(
         @Qualifier("internalDetainedManageFeeUpdateNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isPaymentInstructed = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
-                        .map(action -> action.equals(ADDITIONAL_PAYMENT))
-                        .orElse(false);
+                    .map(action -> action.equals(ADDITIONAL_PAYMENT))
+                    .orElse(false);
 
                 return callback.getEvent() == MANAGE_FEE_UPDATE
-                        && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && isAppellantInDetention(asylumCase)
-                        && isInternalCase(asylumCase)
-                        && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                        && isPaymentInstructed;
+                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && isPaymentInstructed;
             }, notificationGenerators
         );
     }

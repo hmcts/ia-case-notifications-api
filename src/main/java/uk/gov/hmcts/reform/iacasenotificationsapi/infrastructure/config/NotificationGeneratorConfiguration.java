@@ -5301,16 +5301,16 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalDetainedManageFeeUpdateNotificationGenerator")
     public List<NotificationGenerator> internalDetainedManageFeeUpdateNotificationGenerator(
-            DetentionEngagementTeamManageFeeUpdatePersonalisation detentionEngagementTeamManageFeeUpdatePersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
+        DetentionEngagementTeamManageFeeUpdatePersonalisation detentionEngagementTeamManageFeeUpdatePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(Collections.singleton(detentionEngagementTeamManageFeeUpdatePersonalisation)),
-                        notificationSender,
-                        notificationIdAppender
-                )
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(Collections.singleton(detentionEngagementTeamManageFeeUpdatePersonalisation)),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
