@@ -1891,7 +1891,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> homeOfficeHearingBundleReadyNotificationGenerator(
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeHearingBundleReadyNotificationHandler(
         @Qualifier("homeOfficeHearingBundleReadyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(

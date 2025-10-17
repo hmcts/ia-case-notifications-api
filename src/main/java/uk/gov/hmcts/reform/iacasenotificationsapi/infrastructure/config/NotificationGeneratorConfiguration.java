@@ -1587,7 +1587,8 @@ public class NotificationGeneratorConfiguration {
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeHearingBundleReadyPersonalisation),
                 notificationSender,
-                notificationIdAppender)
+                notificationIdAppender
+            )
         );
     }
 
