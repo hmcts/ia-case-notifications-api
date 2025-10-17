@@ -63,6 +63,7 @@ public class DetentionEngagementApplyForFtpaRespondentPersonalisation implements
 
         return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
     }
+
     @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT";
