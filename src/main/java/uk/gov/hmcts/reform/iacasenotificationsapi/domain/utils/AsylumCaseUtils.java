@@ -133,6 +133,16 @@ public class AsylumCaseUtils {
                 .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
     }
 
+    public static DocumentWithMetadata getBundledLetter(AsylumCase asylumCase, DocumentTag documentTag) {
+        Optional<List<IdValue<DocumentWithMetadata>>> optionalNotificationLetters = asylumCase.read(LETTER_BUNDLE_DOCUMENTS);
+        return optionalNotificationLetters
+            .orElse(emptyList())
+            .stream()
+            .map(IdValue::getValue)
+            .filter(d -> d.getTag() == documentTag)
+            .findFirst().orElseThrow(() -> new IllegalStateException(documentTag + " document not available"));
+    }
+
     private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {
         return asylumCase.read(field, String.class)
                 .orElseThrow(() -> new RequiredFieldMissingException(field.name() + " is missing"));
@@ -453,10 +463,15 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasBeenSubmittedAsLegalRepresentedInternalCase(AsylumCase asylumCase) {
-        return asylumCase.read(IS_ADMIN, YesOrNo.class)
-                .map(yesOrNo -> Objects.equals(YES, yesOrNo)).orElse(false)
-                && asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
-                .map(yesOrNo -> Objects.equals(NO, yesOrNo)).orElse(false);
+        Boolean isInternal = asylumCase.read(IS_ADMIN, YesOrNo.class)
+            .map(yesOrNo -> Objects.equals(YES, yesOrNo))
+            .orElse(false);
+
+        Boolean isLegallyRepresented = asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)
+            .map(yesOrNo -> Objects.equals(NO, yesOrNo))
+            .orElse(false);
+
+        return isInternal && isLegallyRepresented;
     }
 
     public static List<String> getAppellantOrLegalRepAddressLetterPersonalisation(AsylumCase asylumCase) {
