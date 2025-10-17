@@ -1,25 +1,26 @@
 {
-  "description": "RIA-7547 Send appeal submitted notification to DET(Internal, non-Ada, In-time)",
+  "description": "DIAC-1398 Appeal ended - Detained IRC notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "CaseOfficer",
     "input": {
-      "id": 7547,
-      "eventId": "submitAppeal",
+      "id": 1398,
+      "eventId": "endAppeal",
       "state": "appealSubmitted",
       "caseData": {
-        "template": "minimal-internal-appeal-submitted.json",
+        "template": "minimal-appeal-submitted.json",
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
-          "isAcceleratedDetainedAppeal": "No",
+          "isAdmin": "Yes",
           "appellantInDetention": "Yes",
-          "submissionOutOfTime": "No",
+          "isAcceleratedDetainedAppeal": "No",
+          "appellantsRepresentation": "Yes",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
               "value": {
-                "tag": "internalAppealSubmission",
+                "tag": "endAppeal",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -39,27 +40,21 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-internal-appeal-submitted.json",
+      "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
+        "isAdmin": "Yes",
+        "appellantInDetention": "Yes",
+        "isAcceleratedDetainedAppeal": "No",
+        "appellantsRepresentation": "Yes",
         "notificationsSent": [
           {
-            "id": "7547_INTERNAL_NON_ADA_APPEAL_SUBMITTED",
+            "id": "1398_INTERNAL_DET_END_APPEAL_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "7547_INTERNAL_NON_ADA_APPEAL_SUBMITTED",
-        "recipient": "det-irc-brookhouse@example.com",
-        "subject": "IAFT – SERVE IN PERSON: Appeal details have been sent",
-        "body": [
-          "Home Office reference: A1234567",
-          "HMCTS reference: PA/12345/2019",
-          "Appellant name: Talha Awan"
-        ]
-      }
-    ]
+    }
   }
 }
