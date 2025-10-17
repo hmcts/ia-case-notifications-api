@@ -5560,24 +5560,33 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalLegalOfficerUploadAddendumEvidenceNotificationGenerator")
-    public List<NotificationGenerator> internalLegalOfficerUploadAddendumEvidenceNotificationGenerator(
+    @Bean("internalDetainedLegalOfficerUploadAddendumEvidenceNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedLegalOfficerUploadAddendumEvidenceNotificationGenerator(
         DetentionEngagementTeamLegalOfficerUploadAddendumEvidence detentionEngagementTeamLegalOfficerUploadAddendumEvidence,
-        HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(
                     detentionEngagementTeamLegalOfficerUploadAddendumEvidence
                 ),
                 notificationSender,
                 notificationIdAppender
-            ),
+            )
+        );
+    }
+
+    @Bean("homeOfficeLegalOfficerUploadAddendumEvidenceNotificationGenerator")
+    public List<NotificationGenerator> homeOfficeLegalOfficerUploadAddendumEvidenceNotificationGenerator(
+        HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    homeOfficeUploadAddendumEvidencePersonalisation
+                        homeOfficeUploadAddendumEvidencePersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

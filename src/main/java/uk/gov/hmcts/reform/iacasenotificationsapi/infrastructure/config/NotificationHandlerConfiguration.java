@@ -6160,8 +6160,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalLegalOfficerUploadAddendumEvidenceNotificationHandler(
-        @Qualifier("internalLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedLegalOfficerUploadAddendumEvidenceNotificationHandler(
+        @Qualifier("internalDetainedLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -6171,7 +6171,6 @@ public class NotificationHandlerConfiguration {
                 if (latestAddendum.isEmpty()) {
                     return false;
                 }
-
 
                 final String legalOfficerAddendumUploadedByLabel = "TCW";
                 final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
@@ -6188,7 +6187,41 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
-                    && isInternalCase(asylumCase);
+                    && isInternalWithoutLegalRepresentation(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeLegalOfficerUploadAddendumEvidenceNotificationHandler(
+        @Qualifier("homeOfficeLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                Optional<IdValue<DocumentWithMetadata>> latestAddendum = getLatestAddendumEvidenceDocument(asylumCase);
+                if (latestAddendum.isEmpty()) {
+                    return false;
+                }
+
+                final String legalOfficerAddendumUploadedByLabel = "TCW";
+                final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
+
+                DocumentWithMetadata addendum = latestAddendum.get().getValue();
+
+                if (addendum.getSuppliedBy() == null || addendum.getUploadedBy() == null) {
+                    return false;
+                }
+
+                if (!addendum.getUploadedBy().equals(legalOfficerAddendumUploadedByLabel) || !addendum.getSuppliedBy().equals(legalOfficerAddendumUploadSuppliedByLabel)) {
+                    return false;
+                }
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
+                        && isInternalCase(asylumCase);
 
             }, notificationGenerators
         );
