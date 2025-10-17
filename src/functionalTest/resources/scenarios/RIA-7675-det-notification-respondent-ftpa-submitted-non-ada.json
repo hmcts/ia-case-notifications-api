@@ -50,11 +50,11 @@
         "appellantsRepresentation" : "Yes",
         "notificationsSent": [
           {
-            "id": "7675_FTPA_SUBMITTED_RESPONDENT",
+            "id": "7675_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7675_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
+            "id": "7675_FTPA_SUBMITTED_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
