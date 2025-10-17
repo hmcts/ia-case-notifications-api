@@ -2675,6 +2675,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> internalDetainedNonStandardDirectionGenerator(
+        DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("bothPartiesNonStandardDirectionGenerator")
     public List<NotificationGenerator> bothPartiesNonStandardDirectionGenerator(
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
@@ -2685,21 +2700,6 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("internalDetainedNonStandardDirectionGenerator")
-    public List<NotificationGenerator> internalDetainedNonStandardDirectionGenerator(
-        DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return singletonList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
