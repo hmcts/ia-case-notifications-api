@@ -4627,7 +4627,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
                         && outOfTimeDecisionType == OutOfTimeDecisionType.APPROVED
-                        && isInternalCase(asylumCase)
+                        && isInternalWithoutLegalRepresentation(asylumCase)
                         && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
 
             }, notificationGenerators
