@@ -158,8 +158,23 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalMaintainCaseLinkAppealNotificationHandler(
-        @Qualifier("internalMaintainCaseLinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMaintainCaseLinkAppealNotificationHandler(
+        @Qualifier("internalDetainedMaintainCaseLinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && Event.CREATE_CASE_LINK.equals(callback.getEvent())
+                        && isInternalWithoutLegalRepresentation(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeMaintainCaseLinkAppealNotificationHandler(
+        @Qualifier("homeOfficeMaintainCaseLinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
