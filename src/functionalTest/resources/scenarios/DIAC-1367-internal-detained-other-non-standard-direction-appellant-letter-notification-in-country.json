@@ -1,5 +1,6 @@
 {
   "description": "DIAC-1367 Send Non Standard Direction to Appellant In Country letter notification on Internal Detained in Other Appeal.",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",

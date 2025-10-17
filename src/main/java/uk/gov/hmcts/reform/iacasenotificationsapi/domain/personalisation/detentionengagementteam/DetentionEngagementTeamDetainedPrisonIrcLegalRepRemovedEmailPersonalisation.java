@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadSystemUserClient;
 import uk.gov.service.notify.NotificationClientException;
 
 import java.io.IOException;
@@ -28,18 +28,18 @@ public class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersona
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
     private final DetentionEmailService detentionEmailService;
-    private final DocumentDownloadClient documentDownloadClient;
+    private final DocumentDownloadSystemUserClient documentDownloadSystemUserClient;
 
     public DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisation(
             @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetentionEmailService detentionEmailService,
-            DocumentDownloadClient documentDownloadClient
+            DocumentDownloadSystemUserClient documentDownloadSystemUserClient
     ) {
         this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
         this.detentionEmailService = detentionEmailService;
-        this.documentDownloadClient = documentDownloadClient;
+        this.documentDownloadSystemUserClient = documentDownloadSystemUserClient;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersona
 
     private JSONObject getAppealSubmittedLetterJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER));
+            return documentDownloadSystemUserClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER));
         } catch (IOException | NotificationClientException e) {
             log.error("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", e);
             throw new IllegalStateException("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format");

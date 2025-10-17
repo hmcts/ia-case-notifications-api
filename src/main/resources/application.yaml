@@ -46,7 +46,7 @@ spring:
         jwt:
           jwk-set-uri: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}/o/jwks
   cache:
-    cache-names: userInfoCache
+    cache-names: userInfoCache, systemUserTokenCache
     caffeine:
       spec: expireAfterAccess=3600s
 featureFlag:
@@ -66,6 +66,9 @@ govnotify:
   key: ${IA_GOV_NOTIFY_KEY}
   timeout: 5000
   template:
+    detained-iaft-email-template: 18e6cd66-54c6-463c-a54f-3e5aa880bc01
+    detained-iaft-5-email-template: 5d16344c-a62c-48b5-a068-21cf0275e47c
+    det-email-template: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
     forceCaseProgression:
       caseBuilding.to.caseUnderReview:
         legalRep:
@@ -212,6 +215,10 @@ govnotify:
             letter: 590ee79d-a47c-47a0-9d31-a804aad483c2
           partiallyApproved:
             letter: 7e81f236-db91-4f42-b3b2-a7e56edf5957
+      detentionEngagementTeam:
+        approved:
+          onTime:
+            email: bce666a3-9267-4f9b-8d89-58d932bd94a1
 
     editPaymentMethod:
       adminOfficer:
@@ -330,7 +337,7 @@ govnotify:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
       detentionTeam:
-        email: 816d35c8-e4b8-45d3-a4fe-789c1badc408
+        email: 7542be99-2359-4e1f-bc73-5ee44d79ea9f
       respondent:
         email: 6c9d4e44-7eba-4058-a928-20da6f447d74
         detention:
@@ -504,7 +511,7 @@ govnotify:
       appellant:
         sms: b7aba09e-4df5-486f-9107-f7721db52a02
       detentionEngagementTeam:
-        email: cef6603c-b5dd-4e63-b438-1e93644bad5c
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
         production:
           email: 73985562-43a4-417e-b201-175e8bf36682
     endAppealBeforeListing:
@@ -714,7 +721,7 @@ govnotify:
       caseOfficer:
         email: 09d9305f-dc5d-4fb0-b89d-3998c7b609bb
       detentionEngagementTeam:
-        email: 23bfcd0d-e47c-4f51-ae51-19e21492fc0e
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
       otherLegalRep:
         email: 3219c9a3-afc7-4439-bb2e-90de798f98a8
       otherHomeOffice:
@@ -765,6 +772,8 @@ govnotify:
         email: b1c38360-82de-4aa7-bbe1-a395d73376b5
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+        appellant:
+          email: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
       nonDetained:
         homeOffice:
           email: 59774cb8-1360-448b-ad65-192c1157a7ee
@@ -1342,6 +1351,7 @@ govnotify:
           email: 03cb8170-abe1-42f1-9cfd-8526e1635294
     editCaseListing:
       detentionEngagementTeam:
+#        3d3ca452-5de2-4674-bc4f-ea4d98386a36
         email: 698cccf8-99b5-4360-b2b5-8aedb9667e21
         production:
           email: 1b456113-9c31-41be-9fe8-dc2f2f9a10b1
@@ -1625,6 +1635,7 @@ tsvStringsFileLocation: strings.tsv
 
 ia_system_user: ${IA_SYSTEM_USERNAME:system-user}
 ia_system_user_password: ${IA_SYSTEM_PASSWORD:system-password}
+ia_system_user_scope: "openid profile authorities acr roles create-user manage-user search-user"
 
 security:
   anonymousPaths:
@@ -1904,7 +1915,7 @@ security:
       - "makeNewApplication"
       - "sendBailDirection"
       - "createBailCaseLink"
-      - "hearingCancelled"
+      - "markAppealAsRemitted"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1948,6 +1959,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1991,6 +2003,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2034,6 +2047,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "editDocuments"
+      - "hearingCancelled"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2077,6 +2091,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2120,6 +2135,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2163,6 +2179,7 @@ security:
       - "editAppeal"
       - "startAppeal"
       - "refundConfirmation"
+      - "hearingCancelled"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2455,6 +2472,7 @@ security:
       - "caseListing"
       - "sendPaymentReminderNotification"
       - "recordRemissionReminder"
+      - "hearingCancelled"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
@@ -2471,6 +2489,7 @@ document_management.url: ${DM_URL:http://127.0.0.1:4506}
 #OpenID
 idam:
   baseUrl: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}
+  redirectUrl: ${IA_IDAM_REDIRECT_URI:http://localhost:3002/oauth2/callback}
   s2s-auth:
     totp_secret: ${IA_S2S_SECRET:AAAAAAAAAAAAAAAC}
     microservice: ${IA_S2S_MICROSERVICE:ia}
@@ -2621,6 +2640,7 @@ detentionEngagementTeamIrcEmailAddresses:
   Derwentside: ${IA_DET_IRC_DERWENTSIDE_EMAIL:det-irc-derwentside@example.com}
   Dungavel: ${IA_DET_IRC_DUNGAVEL_EMAIL:det-irc-dungavel@example.com}
   Harmondsworth: ${IA_DET_IRC_HARMONDSWORTH_EMAIL:det-irc-harmondsworth@example.com}
+  Swinderby: ${IA_DET_IRC_SWINDERBY_EMAIL:det-irc-swinderby@example.com}
   TinsleyHouse: ${IA_DET_IRC_TINSLEYHOUSE_EMAIL:det-irc-tinsleyhouse@example.com}
   Yarlswood: ${IA_DET_IRC_YARLSWOOD_EMAIL:det-irc-yarlswood@example.com}
 
