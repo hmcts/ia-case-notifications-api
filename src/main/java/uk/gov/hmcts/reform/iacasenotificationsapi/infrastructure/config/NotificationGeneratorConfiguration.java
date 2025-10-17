@@ -2742,19 +2742,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("hoInternalNonStandardDirectionGenerator")
-    public List<NotificationGenerator> hoInternalNonStandardDirectionGenerator(
+    @Bean("internalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> internalDetainedNonStandardDirectionGenerator(
         DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("homeOfficeNonStandardDirectionGenerator")
+    public List<NotificationGenerator> homeOfficeNonStandardDirectionGenerator(
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(respondentNonStandardDirectionPersonalisation),
                 notificationSender,
