@@ -5137,21 +5137,30 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("markAsPaidInternalDetAndHoNotificationGenerator")
-    public List<NotificationGenerator> markAsPaidInternalDetAndHoNotificationHandler(
+    @Bean("internalDetainedMarkAsPaidAndHoNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedMarkAsPaidAndHoNotificationGenerator(
         DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                        detentionEngagementTeamMarkAsPaidPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("homeOfficeMarkAsPaidAndHoNotificationGenerator")
+    public List<NotificationGenerator> homeOfficeMarkAsPaidAndHoNotificationGenerator(
         HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation, //identical notification already existing for different event, reusing it.
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamMarkAsPaidPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeSubmitAppealPersonalisation

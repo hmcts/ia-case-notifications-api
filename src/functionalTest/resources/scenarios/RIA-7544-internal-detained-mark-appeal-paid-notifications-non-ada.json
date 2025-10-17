@@ -15,6 +15,8 @@
           "paymentStatus": "Paid",
           "currentCaseStateVisibleToHomeOfficeAll":"appealSubmitted",
           "appellantInDetention": "Yes",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
