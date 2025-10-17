@@ -1873,19 +1873,38 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyInternalDetNotificationHandler(
-        @Qualifier("HearingBundleReadyInternalDetNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedHearingBundleReadyNotificationHandler(
+        @Qualifier("internalDetainedHearingBundleReadyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
-                                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                                    && isInternalCase(callback.getCaseDetails().getCaseData());
-                },
-                notificationGenerators
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return  callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
+                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                    && isInternalWithoutLegalRepresentation(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeHearingBundleReadyNotificationGenerator(
+        @Qualifier("homeOfficeHearingBundleReadyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
+                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                    && isInternalCase(asylumCase);
+            },
+            notificationGenerators
         );
     }
 

@@ -1562,19 +1562,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("HearingBundleReadyInternalDetNotificationGenerator")
-    public List<NotificationGenerator> hearingBundleReadyInternalDetNotificationGenerator(
+    @Bean("internalDetainedHearingBundleReadyNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedHearingBundleReadyNotificationGenerator(
+            DetentionEngagementTeamHearingBundleReadyPersonalisation detentionEngagementTeamHearingBundleReadyPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                    newArrayList(detentionEngagementTeamHearingBundleReadyPersonalisation),
+                    notificationSender,
+                    notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("homeOfficeHearingBundleReadyNotificationGenerator")
+    public List<NotificationGenerator> homeOfficeHearingBundleReadyNotificationGenerator(
         HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation,
-        DetentionEngagementTeamHearingBundleReadyPersonalisation detentionEngagementTeamHearingBundleReadyPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamHearingBundleReadyPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeHearingBundleReadyPersonalisation),
                 notificationSender,
