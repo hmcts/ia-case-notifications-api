@@ -197,14 +197,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("caseUnlinkAppealNotificationGenerator")
     public List<NotificationGenerator> caseUnlinkAppealNotificationGenerator(
-        LegalRepresentativeCaseUnlinkAppealPersonalisation legalRepresentativeCaseUnlinkAppealPersonalisation,
         HomeOfficeCaseUnlinkPersonalisation homeOfficeCaseUnlinkPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return singletonList(
             new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeCaseUnlinkAppealPersonalisation, homeOfficeCaseUnlinkPersonalisation),
+                newArrayList(homeOfficeCaseUnlinkPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
