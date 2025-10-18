@@ -29,7 +29,7 @@ public class DetentionEngagementApplyForFtpaRespondentPersonalisation implements
 
     private final String internalDetApplyForFtpaRespondentTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
-    private final DetentionEmailService detEmailService;
+    private final DetentionEmailService detentionEmailService;
     private final PersonalisationProvider personalisationProvider;
     private final String adaPrefix;
     private final String nonAdaPrefix;
@@ -37,13 +37,13 @@ public class DetentionEngagementApplyForFtpaRespondentPersonalisation implements
     public DetentionEngagementApplyForFtpaRespondentPersonalisation(
             @Value("${govnotify.template.applyForFtpa.homeOffice.detentionEngagementTeam.email}") String internalDetApplyForFtpaRespondentTemplateId,
             DocumentDownloadClient documentDownloadClient,
-            DetentionEmailService detEmailService,
+            DetentionEmailService detentionEmailService,
             PersonalisationProvider personalisationProvider,
             @Value("${govnotify.emailPrefix.adaInPerson}") String adaPrefix,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix) {
         this.internalDetApplyForFtpaRespondentTemplateId = internalDetApplyForFtpaRespondentTemplateId;
         this.documentDownloadClient = documentDownloadClient;
-        this.detEmailService = detEmailService;
+        this.detentionEmailService = detentionEmailService;
         this.personalisationProvider = personalisationProvider;
         this.adaPrefix = adaPrefix;
         this.nonAdaPrefix = nonAdaPrefix;
@@ -61,7 +61,7 @@ public class DetentionEngagementApplyForFtpaRespondentPersonalisation implements
             return Collections.emptySet();
         }
 
-        return Collections.singleton(detEmailService.getDetentionEmailAddress(asylumCase));
+        return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
     }
 
     @Override
