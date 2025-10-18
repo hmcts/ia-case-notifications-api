@@ -5355,18 +5355,11 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalMaintainCaseUnlinkAppealNotificationGenerator")
     public List<NotificationGenerator> internalMaintainCaseUnlinkAppealNotificationGenerator(
-        DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation,
         HomeOfficeCaseUnlinkPersonalisation homeOfficeCaseUnlinkPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
-            // SUPPRESSING UNTIL NABA NEEDED
-            // new EmailWithLinkNotificationGenerator(
-            //    newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation)),
-            //    notificationSender,
-            //    notificationIdAppender
-            //),
             new EmailNotificationGenerator(
                 newArrayList(Collections.singleton(homeOfficeCaseUnlinkPersonalisation)),
                 notificationSender,
@@ -5377,18 +5370,11 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalMaintainCaseLinkAppealNotificationGenerator")
     public List<NotificationGenerator> internalMaintainCaseLinkAppealNotificationGenerator(
-        DetentionEngagementTeamMaintainCaseLinkAppealPersonalisation detentionEngagementTeamMaintainCaseLinkAppealPersonalisation,
         HomeOfficeCaseLinkPersonalisation homeOfficeCaseLinkPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
-            // SUPPRESSING UNTIL NABA NEEDED
-            // new EmailWithLinkNotificationGenerator(
-            //    newArrayList(Collections.singleton(detentionEngagementTeamMaintainCaseLinkAppealPersonalisation)),
-            //    notificationSender,
-            //    notificationIdAppender
-            // ),
             new EmailNotificationGenerator(
                 newArrayList(Collections.singleton(homeOfficeCaseLinkPersonalisation)),
                 notificationSender,
