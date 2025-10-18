@@ -14,6 +14,7 @@
           "ircName": "Harmondsworth",
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "notificationAttachmentDocuments": [
             {
@@ -45,6 +46,7 @@
         "ircName": "Harmondsworth",
         "isAdmin": "Yes",
         "appellantInDetention": "Yes",
+        "appellantsRepresentation": "Yes",
         "isAcceleratedDetainedAppeal": "No",
         "notificationsSent": [
           {

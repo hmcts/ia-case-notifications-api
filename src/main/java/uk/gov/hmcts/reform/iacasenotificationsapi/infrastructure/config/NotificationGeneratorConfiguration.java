@@ -1870,7 +1870,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("uploadAddendumEvidenceAdminOfficerInternal")
     public List<NotificationGenerator> uploadAddendumEvidenceAdminOfficerInternal(
         HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation,
-        DetentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation,
         LegalRepresentativeUploadAddendumEvidencePersonalisation legalRepresentativeUploadAddendumEvidencePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -1881,13 +1880,6 @@ public class NotificationGeneratorConfiguration {
                 newArrayList(
                     homeOfficeUploadAddendumEvidencePersonalisation,
                     legalRepresentativeUploadAddendumEvidencePersonalisation),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation
-                ),
                 notificationSender,
                 notificationIdAppender
             )
@@ -5406,23 +5398,6 @@ public class NotificationGeneratorConfiguration {
         return List.of(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(Collections.singleton(detentionEngagementTeamRequestResponseAmendPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("internalUploadAddendumEvidenceNotificationGenerator")
-    public List<NotificationGenerator> internalUploadAddendumEvidenceNotificationGenerator(
-        DetentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamUploadAddendumEvidenceAdminOfficerPersonalisation
-                ),
                 notificationSender,
                 notificationIdAppender
             )

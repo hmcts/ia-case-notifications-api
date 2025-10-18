@@ -957,7 +957,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return (callback.getEvent() == Event.REQUEST_HEARING_REQUIREMENTS_FEATURE
-                    && isInternalCase(asylumCase)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
                     && isAppellantInDetention(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase));
             },
@@ -1802,7 +1802,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPLOAD_HOME_OFFICE_APPEAL_RESPONSE
-                    && isInternalCase(asylumCase)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
                     && isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators
@@ -3194,7 +3194,7 @@ public class NotificationHandlerConfiguration {
                        && isRespondentApplication
                        && validDecisionOutcomeTypes.contains(decisionOutcomeType)
                        && isAppellantInDetention(asylumCase)
-                       && isInternalCase(asylumCase);
+                       && isInternalWithoutLegalRepresentation(asylumCase);
             },
             notificationGenerators
         );
@@ -5777,11 +5777,12 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> internalRequestCaseBuildingNotificationHandler(
         @Qualifier("internalRequestCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
+        // TODO: should aipm be suppressed also?
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(Event.REQUEST_CASE_BUILDING)
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isInternalWithoutLegalRepresentation(callback.getCaseDetails().getCaseData())
                     && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -5830,7 +5831,7 @@ public class NotificationHandlerConfiguration {
 
                 return callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isInternalCase(asylumCase)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
                     && isAppellantInDetention(asylumCase)
                     && !isAcceleratedDetainedAppeal(asylumCase);
             }, notificationGenerators
@@ -6065,7 +6066,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REQUEST_RESPONSE_AMEND
-                    && isInternalCase(asylumCase)
+                    && isInternalWithoutLegalRepresentation(asylumCase)
                     && isAppellantInDetention(asylumCase);
             }, notificationGenerators
         );

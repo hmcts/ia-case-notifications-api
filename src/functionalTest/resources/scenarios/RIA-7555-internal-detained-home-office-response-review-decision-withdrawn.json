@@ -14,6 +14,7 @@
           "ircName": "Brookhouse",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "appealReviewOutcome": "decisionWithdrawn",
           "notificationAttachmentDocuments": [
             {
@@ -45,6 +46,7 @@
         "ircName": "Brookhouse",
         "isAcceleratedDetainedAppeal": "No",
         "appellantInDetention": "Yes",
+        "appellantsRepresentation": "Yes",
         "appealReviewOutcome": "decisionWithdrawn",
         "notificationsSent": [
           {
