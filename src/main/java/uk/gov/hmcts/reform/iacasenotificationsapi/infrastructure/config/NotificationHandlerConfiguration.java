@@ -158,8 +158,23 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalMaintainCaseLinkAppealNotificationHandler(
-        @Qualifier("internalMaintainCaseLinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMaintainCaseLinkAppealNotificationHandler(
+        @Qualifier("internalDetainedMaintainCaseLinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && Event.CREATE_CASE_LINK.equals(callback.getEvent())
+                        && isInternalWithoutLegalRepresentation(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeMaintainCaseLinkAppealNotificationHandler(
+        @Qualifier("homeOfficeMaintainCaseLinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -189,8 +204,23 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalMaintainCaseUnlinkAppealNotificationHandler(
-        @Qualifier("internalMaintainCaseUnlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMaintainCaseUnlinkAppealNotificationHandler(
+        @Qualifier("internalDetainedMaintainCaseUnlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && Event.MAINTAIN_CASE_LINKS.equals(callback.getEvent())
+                    && isInternalWithoutLegalRepresentation(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeMaintainCaseUnlinkAppealNotificationHandler(
+        @Qualifier("homeOfficeMaintainCaseUnlinkAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -1626,16 +1656,32 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appellantRespondentInternalDetainedNonStandardDirectionHandler(
+        @Qualifier("appellantRespondentInternalDetainedNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SEND_DIRECTION
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> appellantRespondentInternalNonStandardDirectionHandler(
         @Qualifier("appellantRespondentInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
         DirectionFinder directionFinder) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                AsylumCase asylumCase =
-                    callback
-                        .getCaseDetails()
-                        .getCaseData();
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
@@ -1646,19 +1692,17 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hoInternalNonStandardDirectionHandler(
-        @Qualifier("hoInternalNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+    public PreSubmitCallbackHandler<AsylumCase> respondentInternalDetainedNonStandardDirectionHandler(
+        @Qualifier("respondentInternalDetainedNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
         DirectionFinder directionFinder) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                AsylumCase asylumCase =
-                    callback
-                        .getCaseDetails()
-                        .getCaseData();
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isInternalNonStdDirectionWithParty(asylumCase, Parties.RESPONDENT, directionFinder);
             },
             notificationGenerators
@@ -1672,10 +1716,7 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                AsylumCase asylumCase =
-                    callback
-                        .getCaseDetails()
-                        .getCaseData();
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
@@ -1686,27 +1727,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> appellantInternalDetainedNonStandardDirectionHandler(
-            @Qualifier("appellantInternalDetainedNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
-            DirectionFinder directionFinder) {
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeNonStandardDirectionHandler(
+        @Qualifier("homeOfficeNonStandardDirectionGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
 
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SEND_DIRECTION
-                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
-                            && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder);
-                },
-                notificationGenerators
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SEND_DIRECTION
+                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.RESPONDENT, directionFinder);
+            },
+            notificationGenerators
         );
     }
-
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordApplicationNotificationHandler(
@@ -1871,19 +1906,38 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> hearingBundleReadyInternalDetNotificationHandler(
-        @Qualifier("HearingBundleReadyInternalDetNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedHearingBundleReadyNotificationHandler(
+        @Qualifier("internalDetainedHearingBundleReadyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    return
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
-                                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
-                                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
-                                    && isInternalCase(callback.getCaseDetails().getCaseData());
-                },
-                notificationGenerators
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return  callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
+                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                    && isInternalWithoutLegalRepresentation(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeHearingBundleReadyNotificationHandler(
+        @Qualifier("homeOfficeHearingBundleReadyNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.ASYNC_STITCHING_COMPLETE
+                    && callback.getCaseDetails().getState() != State.FTPA_DECIDED
+                    && "DONE".equalsIgnoreCase(getStitchStatus(callback))
+                    && isInternalCase(asylumCase);
+            },
+            notificationGenerators
         );
     }
 
@@ -3539,8 +3593,42 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> markAsPaidInternalDetAndHoNotificationHandler(
-        @Qualifier("markAsPaidInternalHoNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedMarkAsPaidAndHoNotificationHandler(
+        @Qualifier("internalDetainedMarkAsPaidAndHoNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    State currentState = callback.getCaseDetails().getState();
+
+                    boolean isCorrectAppealTypePA = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    boolean isCorrectAppealTypeAndStateHUorEA =
+                            isEaHuEuAppeal(asylumCase)
+                                    && (currentState == State.APPEAL_SUBMITTED);
+
+                    Optional<PaymentStatus> paymentStatus = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.MARK_APPEAL_PAID
+                            && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
+                            && paymentStatus.isPresent()
+                            && !paymentStatus.equals(Optional.empty())
+                            && paymentStatus.get().equals(PaymentStatus.PAID)
+                            && isInternalWithoutLegalRepresentation(asylumCase)
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeMarkAsPaidAndHoNotificationHandler(
+        @Qualifier("homeOfficeMarkAsPaidAndHoNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -3685,8 +3773,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reinstateAppealInternalNotificationHandler(
-        @Qualifier("reinstateAppealInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeLegalRepReinstateAppealInternalNotificationHandler(
+        @Qualifier("homeOfficeLegalRepReinstateAppealInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -3694,6 +3782,22 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REINSTATE_APPEAL
                     && (isInternalNonDetainedCase(caseData) || isDetainedInFacilityType(caseData, OTHER) || isInternalWithLegalRepresentation(caseData));
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedReinstateAppealNotificationHandler(
+        @Qualifier("internalDetainedReinstateAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.REINSTATE_APPEAL
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
             },
             notificationGenerators
         );
@@ -4572,7 +4676,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && callback.getEvent() == RECORD_OUT_OF_TIME_DECISION
                         && outOfTimeDecisionType == OutOfTimeDecisionType.APPROVED
-                        && isInternalCase(asylumCase)
+                        && isInternalWithoutLegalRepresentation(asylumCase)
                         && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
 
             }, notificationGenerators
@@ -5873,17 +5977,17 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedEditCaseListingIrcPrisonNotificationHandler(
-            @Qualifier("editCaseListingInternalDetainedIrcPrisonNotificationGenerator") List<NotificationGenerator> notificationGenerators
+        @Qualifier("editCaseListingInternalDetainedIrcPrisonNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    return callback.getEvent() == Event.EDIT_CASE_LISTING
-                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
-                }, notificationGenerators
+                return callback.getEvent() == Event.EDIT_CASE_LISTING
+                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+            }, notificationGenerators
         );
     }
 
@@ -5891,21 +5995,19 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedManageFeeUpdateNotificationHandler(
         @Qualifier("internalDetainedManageFeeUpdateNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isPaymentInstructed = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
-                        .map(action -> action.equals(ADDITIONAL_PAYMENT))
-                        .orElse(false);
+                    .map(action -> action.equals(ADDITIONAL_PAYMENT))
+                    .orElse(false);
 
                 return callback.getEvent() == MANAGE_FEE_UPDATE
-                        && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                        && isAppellantInDetention(asylumCase)
-                        && isInternalCase(asylumCase)
-                        && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                        && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
-                        && isPaymentInstructed;
+                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, PRISON, IRC)
+                    && isPaymentInstructed;
             }, notificationGenerators
         );
     }
@@ -6095,8 +6197,8 @@ public class NotificationHandlerConfiguration {
 
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalLegalOfficerUploadAddendumEvidenceNotificationHandler(
-        @Qualifier("internalLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedLegalOfficerUploadAddendumEvidenceNotificationHandler(
+        @Qualifier("internalDetainedLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -6106,7 +6208,6 @@ public class NotificationHandlerConfiguration {
                 if (latestAddendum.isEmpty()) {
                     return false;
                 }
-
 
                 final String legalOfficerAddendumUploadedByLabel = "TCW";
                 final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
@@ -6123,7 +6224,41 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
-                    && isInternalCase(asylumCase);
+                    && isInternalWithoutLegalRepresentation(asylumCase);
+
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> homeOfficeLegalOfficerUploadAddendumEvidenceNotificationHandler(
+        @Qualifier("homeOfficeLegalOfficerUploadAddendumEvidenceNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                Optional<IdValue<DocumentWithMetadata>> latestAddendum = getLatestAddendumEvidenceDocument(asylumCase);
+                if (latestAddendum.isEmpty()) {
+                    return false;
+                }
+
+                final String legalOfficerAddendumUploadedByLabel = "TCW";
+                final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
+
+                DocumentWithMetadata addendum = latestAddendum.get().getValue();
+
+                if (addendum.getSuppliedBy() == null || addendum.getUploadedBy() == null) {
+                    return false;
+                }
+
+                if (!addendum.getUploadedBy().equals(legalOfficerAddendumUploadedByLabel) || !addendum.getSuppliedBy().equals(legalOfficerAddendumUploadSuppliedByLabel)) {
+                    return false;
+                }
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent().equals(UPLOAD_ADDENDUM_EVIDENCE)
+                        && isInternalCase(asylumCase);
 
             }, notificationGenerators
         );
@@ -7595,7 +7730,6 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> editCaseListingProductionDetainedNotificationHandler(
         @Qualifier("editCaseListingProductionDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();

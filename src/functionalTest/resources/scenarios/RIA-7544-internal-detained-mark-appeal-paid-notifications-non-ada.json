@@ -17,6 +17,8 @@
           "isAdmin": "Yes",
           "appellantsRepresentation": "Yes",
           "appellantInDetention": "Yes",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
@@ -53,6 +55,10 @@
         "notificationsSent": [
           {
             "id": "7947_PENDING_PAYMENT_PAID_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "7947_INTERNAL_DET_MARK_APPEAL_AS_PAID_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {

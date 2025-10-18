@@ -14,6 +14,8 @@
           "outOfTimeDecisionType": "approved",
           "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "No",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "notificationAttachmentDocuments": [

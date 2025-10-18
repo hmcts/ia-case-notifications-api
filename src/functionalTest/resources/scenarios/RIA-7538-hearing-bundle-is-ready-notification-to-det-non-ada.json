@@ -13,6 +13,8 @@
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
           "appellantInDetention": "Yes",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "listCaseHearingCentre": "harmondsworth",
           "ariaListingReference": "LP/12345/2019",

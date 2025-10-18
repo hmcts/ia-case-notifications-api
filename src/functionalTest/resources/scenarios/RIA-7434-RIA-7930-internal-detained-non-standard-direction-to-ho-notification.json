@@ -12,6 +12,8 @@
         "replacements": {
           "ircName": "Brookhouse",
           "detentionFacility": "immigrationRemovalCentre",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted",
