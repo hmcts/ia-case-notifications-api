@@ -332,8 +332,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("endAppealInternalNotificationGenerator")
-    public List<NotificationGenerator> endAppealInternalNotificationGenerator(
+    @Bean("endAppealInternalHoNotificationGenerator")
+    public List<NotificationGenerator> endAppealInternalHoNotificationGenerator(
         HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -2054,8 +2054,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("changeHearingCentreInternalNotificationGenerator")
-    public List<NotificationGenerator> changeHearingCentreInternalNotificationGenerator(
+    @Bean("internalDetainedChangeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedChangeHearingCentreNotificationGenerator(
         DetentionEngagementTeamChangeHearingCentrePersonalisation detentionEngagementTeamChangeHearingCentrePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -2092,22 +2092,14 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("ftpaSubmittedDetentionEngagementTeamNotificationGenerator")
-    public List<NotificationGenerator> ftpaSubmittedDetentionEngagementTeamNotificationGenerator(
-        DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation,
+    @Bean("internalDetainedFtpaSubmittedNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedFtpaSubmittedNotificationGenerator(
         RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementTeamFtpaSubmittedPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     respondentAppellantFtpaSubmittedPersonalisation
@@ -2204,25 +2196,30 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam")
-    public List<NotificationGenerator> respondentFtpaSubmittedNotificationGeneratorDetentionEngagementTeam(
+    @Bean("internalDetainedApplyForFtpaRespondentNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedApplyForFtpaRespondentNotificationGenerator(
+            DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(detentionEngagementApplyForFtpaRespondentPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("respondentFtpaSubmittedHoNotificationGenerator")
+    public List<NotificationGenerator> respondentFtpaSubmittedHoNotificationGeneratorDetentionEngagementTeam(
         RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation,
-        DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-
-        return Arrays.asList(new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                    detentionEngagementApplyForFtpaRespondentPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ),
+        return singletonList(
             new EmailNotificationGenerator(
-                newArrayList(
-                    respondentFtpaSubmittedPersonalisation
-                ),
+                newArrayList(respondentFtpaSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -3475,7 +3472,6 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> decideAnApplicationLegalRepNotificationGenerator(
         LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation,
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3492,64 +3488,47 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-
-    @Bean("decideAnApplicationInternalNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationInternalNotificationGenerator(
-            HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
-            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
-    ) {
-
-        return List.of(
-                new EmailWithLinkNotificationGenerator(
-                        newArrayList(
-                                detentionEngagementTeamDecideAnApplicationPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                homeOfficeDecideAnApplicationPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
-    @Bean("decideAnApplicationDetInternalNotificationGenerator")
-    public List<NotificationGenerator> decideAnApplicationDetInternalNotificationGenerator(
-            DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
+    @Bean("internalDetainedDecideAnApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedDecideAnApplicationNotificationGenerator(
+        DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(
-                    detentionEngagementTeamDecideAnApplicationPersonalisation
+                        detentionEngagementTeamDecideAnApplicationPersonalisation
                 ),
-                    notificationSender,
-                    notificationIdAppender
-                )
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
-    @Bean("decideARespondentApplicationInternalNotificationGenerator")
-    public List<NotificationGenerator> decideARespondentApplicationInternalNotificationGenerator(
-        DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
+    @Bean("decideAnApplicationInternalHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> decideAnApplicationInternalHomeOfficeNotificationGenerator(
         HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-
-        return Arrays.asList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                        homeOfficeDecideAnApplicationPersonalisation
+                ),
                 notificationSender,
                 notificationIdAppender
-            ),
+            )
+        );
+    }
+
+    @Bean("decideARespondentApplicationHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> decideARespondentApplicationHomeOfficeNotificationGenerator(
+        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeDecideAnApplicationPersonalisation
@@ -3560,26 +3539,32 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDetainedDecideARespondentApplicationNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedDecideARespondentApplicationNotificationGenerator(
+        DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamDecideARespondentApplicationPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 
     @Bean("decideARespondentApplicationInternalAppellantNotificationGenerator")
     public List<NotificationGenerator> decideARespondentApplicationInternalAppellantNotificationGenerator(
         DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation detHomeOfficeApplicationDecidedPersonalisationhomeOfficeApplicationDecidedPersonalisation,
-        HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                     newArrayList(Collections.singleton(detHomeOfficeApplicationDecidedPersonalisationhomeOfficeApplicationDecidedPersonalisation)),
                     notificationSender,
                     notificationIdAppender
-            ),
-            new EmailNotificationGenerator(
-                newArrayList(
-                    homeOfficeDecideAnApplicationPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
             )
         );
     }
@@ -4193,7 +4178,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
                 newArrayList(Collections.singleton(detentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation)),
                 notificationSender,
@@ -4628,6 +4613,22 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("appealEndedAutomaticallyHoNotificationGenerator")
+    public List<NotificationGenerator> appealEndedAutomaticallyHoNotificationGenerator(
+            HomeOfficeEndAppealAutomaticallyPersonalisation homeOfficeEndAppealAutomaticallyPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeEndAppealAutomaticallyPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -5103,37 +5104,28 @@ public class NotificationGeneratorConfiguration {
 
     }
 
-    @Bean("internalEndAppealAutomaticallyNotificationGenerator")
-    public List<NotificationGenerator> internalEndAppealAutomaticallyNotificationGenerator(
+    @Bean("internalDetainedEndAppealAutomaticallyNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedEndAppealAutomaticallyNotificationGenerator(
         DetentionEngagementTeamEndAppealAutomaticallyPersonalisation detentionEngagementTeamEndAppealAutomaticallyPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamEndAppealAutomaticallyPersonalisation)),
+                newArrayList(detentionEngagementTeamEndAppealAutomaticallyPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
         );
     }
 
-    @Bean("markAsPaidInternalDetAndHoNotificationGenerator")
-    public List<NotificationGenerator> markAsPaidInternalDetAndHoNotificationHandler(
-        DetentionEngagementTeamMarkAsPaidPersonalisation detentionEngagementTeamMarkAsPaidPersonalisation,
+    @Bean("markAsPaidInternalHoNotificationGenerator")
+    public List<NotificationGenerator> markAsPaidInternalHoNotificationGenerator(
         HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation, //identical notification already existing for different event, reusing it.
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
-            // SUPPRESSING UNTIL NABA NEEDED
-            // new EmailWithLinkNotificationGenerator(
-            //    newArrayList(
-            //        detentionEngagementTeamMarkAsPaidPersonalisation
-            //    ),
-            //    notificationSender,
-            //    notificationIdAppender
-            //),
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
                     homeOfficeSubmitAppealPersonalisation
@@ -5296,22 +5288,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalDetainedApplyForFtpaRespondentNotificationGenerator")
-    public List<NotificationGenerator> internalDetainedApplyForFtpaRespondentNotificationGenerator(
-        DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementApplyForFtpaRespondentPersonalisation)),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-
     @Bean("internalDetainedTransferOutOfAdaNotificationGenerator")
     public List<NotificationGenerator> internalDetainedTransferOutOfAdaNotificationGenerator(
         DetentionEngagementTeamTransferOutOfAdaPersonalisation detentionEngagementTeamTransferOutOfAdaPersonalisation,
@@ -5342,21 +5318,6 @@ public class NotificationGeneratorConfiguration {
             ),
             new EmailNotificationGenerator(
                 newArrayList(adminOfficerFtpaDecisionAppellantPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("internalUpdateHearingAdjustmentsNotificationGenerator")
-    public List<NotificationGenerator> internalUpdateHearingAdjustmentsNotificationGenerator(
-        DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisation detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(Collections.singleton(detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation)),
                 notificationSender,
                 notificationIdAppender
             )
@@ -6019,25 +5980,13 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("markAppealAsRemittedNonDetainedNotificationGenerator")
-    public List<NotificationGenerator> markAppealAsRemittedNonDetainedNotificationGenerator(
-        AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail,
-        AppellantMarkAppealAsRemittedNonDetainedPersonalisationSms appellantMarkAppealAsRemittedNonDetainedPersonalisationSms,
+    @Bean("markAppealAsRemittedInternalHoNotificationGenerator")
+    public List<NotificationGenerator> markAppealAsRemittedInternalHoNotificationGenerator(
         HomeOfficeMarkAppealAsRemittedPersonalisation homeOfficeMarkAppealAsRemittedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
         return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new SmsNotificationGenerator(
-                newArrayList(appellantMarkAppealAsRemittedNonDetainedPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            ),
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeMarkAppealAsRemittedPersonalisation),
                 notificationSender,
@@ -6376,30 +6325,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalEndAppealDetainedOtherAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalEndAppealDetainedOtherAppellantLetterNotificationGenerator(
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender,
-        DocumentDownloadClient documentDownloadClient
-    ) {
-
-        DocumentTag documentTag = DocumentTag.INTERNAL_END_APPEAL_LETTER_BUNDLE;
-
-        return singletonList(
-            new PrecompiledLetterNotificationGenerator(
-                newArrayList(
-                    documentTag
-                ),
-                notificationSender,
-                notificationIdAppender,
-                documentDownloadClient) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
-                }
-            }
-        );
-    }
 
     @Bean("internalCaseAdjournedWithoutTimeLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseAdjournedWithoutTimeLetterNotificationGenerator(
@@ -6599,12 +6524,7 @@ public class NotificationGeneratorConfiguration {
                 ),
                 notificationSender,
                 notificationIdAppender
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
-                }
-            }
+            )
         );
     }
 
