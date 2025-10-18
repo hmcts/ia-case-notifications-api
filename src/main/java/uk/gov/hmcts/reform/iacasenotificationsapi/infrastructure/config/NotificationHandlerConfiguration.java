@@ -7540,7 +7540,7 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEditCaseListingNotificationHandler(
-            @Qualifier("editCaseListingInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators // call the same qualifier reListCaseNotificationGenerator ?
+            @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {

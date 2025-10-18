@@ -6689,20 +6689,20 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("editCaseListingInternalNotificationGenerator")
-    public List<NotificationGenerator> editCaseListingInternalLetterNotificationGenerator(
-            AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-                new EmailNotificationGenerator(
-                        newArrayList(Collections.singleton(adminOfficerReListCasePersonalisation)),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
+//    @Bean("editCaseListingInternalNotificationGenerator")
+//    public List<NotificationGenerator> editCaseListingInternalLetterNotificationGenerator(
+//            AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
+//            GovNotifyNotificationSender notificationSender,
+//            NotificationIdAppender notificationIdAppender) {
+//
+//        return List.of(
+//                new EmailNotificationGenerator(
+//                        newArrayList(Collections.singleton(adminOfficerReListCasePersonalisation)),
+//                        notificationSender,
+//                        notificationIdAppender
+//                )
+//        );
+//    }
 
     @Bean("hearingCancelledProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> hearingCancelledProductionDetainedNotificationGenerator(
