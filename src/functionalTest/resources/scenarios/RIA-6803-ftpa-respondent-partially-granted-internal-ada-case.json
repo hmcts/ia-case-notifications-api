@@ -18,6 +18,7 @@
           "appealType": "refusalOfEu",
           "isAdmin": "Yes",
           "appellantInDetention": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
           "ftpaRespondentRjDecisionOutcomeType": "partiallyGranted",
           "ftpaApplicantType": "respondent",
@@ -74,6 +75,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "detentionFacility": "immigrationRemovalCentre",
+        "appellantsRepresentation": "Yes",
         "ircName": "Brookhouse",
         "currentCaseStateVisibleToJudge": "ftpaSubmitted",
         "listCaseHearingCentre": "birmingham",

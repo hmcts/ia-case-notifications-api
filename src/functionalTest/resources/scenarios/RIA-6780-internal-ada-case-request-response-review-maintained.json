@@ -17,7 +17,9 @@
           "appellantFamilyName": "User",
           "appealType": "refusalOfEu",
           "isAdmin": "Yes",
+          "appellantInDetention": "Yes",
           "isAcceleratedDetainedAppeal": "Yes",
+          "appellantsRepresentation": "Yes",
           "appealReviewOutcome": "decisionMaintained",
           "listCaseHearingDate": "2024-05-03T14:25:15.000",
           "notificationAttachmentDocuments": [
@@ -53,6 +55,8 @@
         "appellantFamilyName": "User",
         "appealType": "refusalOfEu",
         "isAdmin": "Yes",
+        "appellantInDetention": "Yes",
+        "appellantsRepresentation": "Yes",
         "isAcceleratedDetainedAppeal": "Yes",
         "appealReviewOutcome": "decisionMaintained",
         "listCaseHearingDate": "2024-05-03T14:25:15.000",
