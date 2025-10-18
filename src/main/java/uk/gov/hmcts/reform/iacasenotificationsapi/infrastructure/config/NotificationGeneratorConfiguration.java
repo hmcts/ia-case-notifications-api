@@ -5152,12 +5152,13 @@ public class NotificationGeneratorConfiguration {
     @Bean("listCaseInternalNotificationGenerator")
     public List<NotificationGenerator> listCaseInternalNotificationGenerator(
         HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation,
+        CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new EmailNotificationGenerator(
-                newArrayList(Collections.singleton(homeOfficeListCasePersonalisation)),
+                newArrayList(homeOfficeListCasePersonalisation, caseOfficerListCasePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -6663,8 +6664,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("editCaseListingInternalNotificationGenerator")
-    public List<NotificationGenerator> editCaseListingInternalNotificationGenerator(
+    @Bean("editCaseListingInternalLetterNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalLetterNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
@@ -6685,6 +6686,21 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("editCaseListingInternalNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalLetterNotificationGenerator(
+            AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(adminOfficerReListCasePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
