@@ -2682,7 +2682,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
                 notificationSender,
@@ -2691,23 +2691,23 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("appellantInternalDetainedNonStandardDirectionGenerator")
-    public List<NotificationGenerator> appellantInternalDetainedNonStandardDirectionGenerator(
-        DetentionEngagementTeamNonStandardDirectionPersonalisation personalisation,
+    @Bean("appellantRespondentInternalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> appellantRespondentInternalDetainedNonStandardDirectionGenerator(
+        DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return List.of(
+        return singletonList(
             new EmailWithLinkNotificationGenerator(
-                newArrayList(personalisation),
+                newArrayList(detentionEngagementTeamNonStandardDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
         );
     }
 
-    @Bean("internalDetainedNonStandardDirectionGenerator")
-    public List<NotificationGenerator> internalDetainedNonStandardDirectionGenerator(
+    @Bean("respondentInternalDetainedNonStandardDirectionGenerator")
+    public List<NotificationGenerator> respondentInternalDetainedNonStandardDirectionGenerator(
         DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -2742,12 +2742,12 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return List.of(
-                new EmailNotificationGenerator(
-                        newArrayList(respondentNonStandardDirectionOfAppellantPersonalization),
-                        notificationSender,
-                        notificationIdAppender
-                )
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(respondentNonStandardDirectionOfAppellantPersonalization),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
