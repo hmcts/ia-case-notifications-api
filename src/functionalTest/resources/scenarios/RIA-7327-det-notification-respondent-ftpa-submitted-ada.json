@@ -1,6 +1,6 @@
 {
   "description": "RIA-7327 Detention engagement team Notification of respondent's ftpa application submitted Ada",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
