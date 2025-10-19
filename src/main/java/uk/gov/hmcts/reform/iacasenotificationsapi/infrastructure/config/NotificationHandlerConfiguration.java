@@ -1699,7 +1699,7 @@ public class NotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
-    
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> recordApplicationNotificationHandler(
         @Qualifier("recordApplicationNotificationGenerator") List<NotificationGenerator> notificationGenerators,
