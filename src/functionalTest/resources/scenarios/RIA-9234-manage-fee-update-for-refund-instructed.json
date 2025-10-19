@@ -13,6 +13,9 @@
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "newFeeAmount": "2000",
+          "paymentStatus": "Paid",
+          "feeUpdateReason": "appealNotValid",
           "legalRepHasAddress": "Yes",
           "legalRepAddressUK": {
             "County": "",
@@ -47,21 +50,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "92349_LEGAL_REPRESENTATIVE_REFUND_INSTRUCTED",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Refund instructed",
-        "body": [
-          "PA/12345/2019",
-          "CASE001",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      }
-    ]
+    }
   }
 }
