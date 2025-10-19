@@ -1805,7 +1805,7 @@ public class NotificationGeneratorConfiguration {
 
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList( caseOfficerUploadAddendumEvidencePersonalisation),
+                        newArrayList(caseOfficerUploadAddendumEvidencePersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
