@@ -33,7 +33,7 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "92349_LEGAL_REPRESENTATIVE_REFUND_INSTRUCTED",
+            "id": "92349_INTERNAL_MANAGE_FEE_UPDATE_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
