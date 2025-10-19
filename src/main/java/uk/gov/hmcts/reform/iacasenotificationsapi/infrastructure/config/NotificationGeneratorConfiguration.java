@@ -1251,7 +1251,7 @@ public class NotificationGeneratorConfiguration {
 
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
             ? newArrayList(respondentNonStandardDirectionPersonalisation)
-            : Collections.emptyList();
+            : emptyList();
 
         return Arrays.asList(
             new EmailNotificationGenerator(
@@ -1325,6 +1325,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editCaseListingInternalLrNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalLrNotificationGenerator(
+        HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
+        HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation,
+        CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3631 - editCaseListing
+        List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
+            ? newArrayList(homeOfficeEditListingPersonalisation, homeOfficeEditListingNoChangePersonalisation, caseOfficerEditListingPersonalisation)
+            : newArrayList(caseOfficerEditListingPersonalisation);
+
+        return Arrays.asList(
+            new EditListingEmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("editCaseListingAdaRepNotificationGenerator")
     public List<NotificationGenerator> editCaseListingAdaRepNotificationGenerator(
         HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
@@ -1337,6 +1359,26 @@ public class NotificationGeneratorConfiguration {
             : newArrayList(legalRepresentativeEditListingPersonalisation);
 
         return Arrays.asList(
+            new EditListingEmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("editCaseListingAdaInternalLrNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingAdaInternalLrNotificationGenerator(
+        HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        List<EmailNotificationPersonalisation> personalisations = List.of();
+        if (isHomeOfficeGovNotifyEnabled) {
+            personalisations = newArrayList(homeOfficeEditListingPersonalisation);
+        }
+
+        return List.of(
             new EditListingEmailNotificationGenerator(
                 personalisations,
                 notificationSender,
