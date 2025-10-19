@@ -3429,23 +3429,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalDetainedReinstateAppealNotificationGenerator")
-    public List<NotificationGenerator> internalDetainedReinstateAppealNotificationGenerator(
-            DetentionEngagementTeamReinstateAppealPersonalisation detentionEngagementTeamReinstateAppealPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
-    ) {
-        return singletonList(
-            new EmailWithLinkNotificationGenerator(
-                newArrayList(
-                        detentionEngagementTeamReinstateAppealPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("makeAnApplicationNotificationGenerator")
     public List<NotificationGenerator> makeAnApplicationNotificationHandler(
         LegalRepresentativeMakeAnApplicationPersonalisation legalRepresentativeMakeApplicationPersonalisation,
