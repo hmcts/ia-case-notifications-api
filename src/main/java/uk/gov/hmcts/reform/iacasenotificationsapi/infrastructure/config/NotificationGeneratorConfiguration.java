@@ -2743,7 +2743,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("hoInternalNonStandardDirectionGenerator")
-    public List<NotificationGenerator> homeOfficeNonStandardDirectionGenerator(
+    public List<NotificationGenerator> hoInternalNonStandardDirectionGenerator(
         DetentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation,
         RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
         GovNotifyNotificationSender notificationSender,
