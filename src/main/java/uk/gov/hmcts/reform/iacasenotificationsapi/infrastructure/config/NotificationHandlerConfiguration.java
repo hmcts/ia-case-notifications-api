@@ -402,7 +402,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
+                    && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
+                    && !isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
@@ -412,7 +413,8 @@ public class NotificationHandlerConfiguration {
         @Qualifier("appealOutcomeAdminNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == Event.SEND_DECISION_AND_REASONS,
+                && callback.getEvent() == Event.SEND_DECISION_AND_REASONS
+                && !isInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
