@@ -17,7 +17,16 @@
           "reinstateAppealReason": "Withdraw",
           "reinstatedDecisionMaker": "Admin Officer",
           "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
-          "appellantsRepresentation": "No"
+          "appellantsRepresentation": "No",
+          "legalRepHasAddress": "Yes",
+          "legalRepAddressUK": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          }
         }
       }
     }

@@ -13,6 +13,15 @@
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepHasAddress": "Yes",
+          "legalRepAddressUK": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
           "feeUpdateCompletedStages": [
             "feeUpdateRecorded",
             "feeUpdateRefundApproved",

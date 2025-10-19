@@ -20,6 +20,15 @@
           "isAcceleratedDetainedAppeal": "No",
           "legalRepEmail": "ia-law-firm-a@fake.hmcts.net",
           "appellantsRepresentation": "No",
+          "legalRepHasAddress": "Yes",
+          "legalRepAddressUK": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
           "notificationAttachmentDocuments": [
             {
               "id": "1",
