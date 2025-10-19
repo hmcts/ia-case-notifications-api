@@ -81,7 +81,7 @@
         ]
       },
       {
-        "reference": "1002_CASE_LISTED_CASE_OFFICER",
+        "reference": "7558_CASE_LISTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
