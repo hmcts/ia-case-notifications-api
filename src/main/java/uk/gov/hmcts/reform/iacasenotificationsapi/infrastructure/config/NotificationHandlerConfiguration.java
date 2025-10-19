@@ -3412,7 +3412,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isCorrectAppealType
                     && !isInternalCase(asylumCase)
-                    && (paPaymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                    && ((paPaymentOption.equals("payLater") || paPaymentOption.equals("payOffline")) || isRemissionOptedForEaOrHuOrPaAppeal(callback));
             }, notificationGenerators
         );
     }
@@ -3436,7 +3436,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(asylumCase)
                     && isCorrectAppealType
-                    && (paPaymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                    && ((paPaymentOption.equals("payLater") || paPaymentOption.equals("payOffline")) || isRemissionOptedForEaOrHuOrPaAppeal(callback));
             }, notificationGenerators
         );
     }
