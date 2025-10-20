@@ -7033,6 +7033,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationHandler(
+            @Qualifier("internalCaseListedLrLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == LIST_CASE
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> digitalCaseListedAppellantDetainedInOtherLetterNotificationHandler(
         @Qualifier("internalCaseListedAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -7517,6 +7536,22 @@ public class NotificationHandlerConfiguration {
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && (internalNonDetainedWithAddressAvailable(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalEditCaseListingLrLetterNotificationHandler(
+            @Qualifier("editCaseListingInternalLrLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callback.getEvent() == Event.EDIT_CASE_LISTING
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
