@@ -72,6 +72,8 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "isAdmin": "Yes",
+        "appellantsRepresentation": "No",
         "appealReferenceNumber": "PA/12345/2023",
         "listCaseHearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
