@@ -60,9 +60,11 @@
                 "description": "",
                 "dateUploaded": "{$TODAY}"
               }
-            },
+            }
+          ],
+          "letterBundleDocuments": [
             {
-              "id": "2",
+              "id": "1",
               "value": {
                 "tag": "internalCaseListedLrLetterBundle",
                 "document": {
