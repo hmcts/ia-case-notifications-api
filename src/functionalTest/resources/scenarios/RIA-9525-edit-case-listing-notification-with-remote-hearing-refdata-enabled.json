@@ -64,17 +64,6 @@
     },
     "notifications": [
       {
-        "reference": "952510_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: case re-listed",
-        "body": [
-          "PA/12345/2023",
-          "3 Sep 2023",
-          "14:25",
-          "Remote hearing"
-        ]
-      },
-      {
         "reference": "952510_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.harmondsworth}",
         "subject": "Immigration and Asylum appeal: case re-listed",

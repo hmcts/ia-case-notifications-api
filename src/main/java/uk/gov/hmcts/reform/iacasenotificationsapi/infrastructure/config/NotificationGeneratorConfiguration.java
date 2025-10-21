@@ -5195,6 +5195,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editCaseListingInternalDetainedNoChangeNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalDetainedNoChangeNotificationGenerator(
+            HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(homeOfficeEditListingNoChangePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("editCaseListingInternalDetainedIrcPrisonNotificationGenerator")
     public List<NotificationGenerator> editCaseListingInternalDetainedIrcPrisonNotificationGenerator(
         DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation,
