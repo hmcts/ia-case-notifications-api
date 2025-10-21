@@ -785,7 +785,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return (callback.getEvent() == LIST_CASE
                         && isRepJourney(callback.getCaseDetails().getCaseData())
-                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                        && !isInternalCase(asylumCase)
                         && !isAcceleratedDetainedAppeal(asylumCase));
                 } else {
                     return false;
@@ -1717,7 +1717,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_CASE_LISTING
                     && isRepJourney(callback.getCaseDetails().getCaseData())
-                    && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(callback.getCaseDetails().getCaseData())
                     && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
