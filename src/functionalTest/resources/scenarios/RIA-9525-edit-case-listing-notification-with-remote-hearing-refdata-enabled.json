@@ -71,7 +71,7 @@
         ]
       },
       {
-        "reference": "952510_CASE_RE_LISTED_CASE_OFFICER",
+        "reference": "952510_RE_LIST_CASE_ADMIN_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
