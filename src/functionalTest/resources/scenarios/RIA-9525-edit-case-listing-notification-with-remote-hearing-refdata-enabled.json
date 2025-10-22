@@ -75,8 +75,8 @@
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: re-list case",
         "body": [
-          "PA/12345/2019",
-          "LP/12345/2019",
+          "PA/12345/2023",
+          "LP/12345/2023",
           "Talha Awan",
           "{$iaExUiFrontendUrl}"
         ]
