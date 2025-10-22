@@ -1,5 +1,6 @@
 {
   "description": "DIAC-1746 Send case listed to LR Manual Letter",
+  "disabled": "true",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
