@@ -3276,7 +3276,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("submitAppealPendingPaymentInternalNotificationGenerator")
     public List<NotificationGenerator> submitAppealPendingPaymentInternalNotificationGenerator(
         HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
-        AdminOfficerAppealSubmittedPendingPaymentPersonalisation adminOfficerAppealSubmittedPendingPaymentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
