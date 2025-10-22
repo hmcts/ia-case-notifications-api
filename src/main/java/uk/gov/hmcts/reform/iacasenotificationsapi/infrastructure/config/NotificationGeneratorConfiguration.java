@@ -19,7 +19,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAdjournHearingWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAppealOutcomePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAppealSubmittedPayOfflinePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAppealSubmittedPendingPaymentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerChangeToHearingRequirementsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerDecidedOrEndedAppealPendingPayment;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerEditPaymentMethodPersonalisation;
@@ -3256,15 +3255,14 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> submitAppealPendingPaymentNotificationHandler(
         LegalRepresentativeAppealSubmittedPendingPaymentPersonalisation legalRepresentativeAppealSubmittedPendingPaymentPersonalisation,
         HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
-        AdminOfficerAppealSubmittedPendingPaymentPersonalisation adminOfficerAppealSubmittedPendingPaymentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ? newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, homeOfficeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation)
-            : newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation);
+            ? newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, homeOfficeAppealSubmittedPendingPaymentPersonalisation)
+            : newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation);
 
         return singletonList(
             new EmailNotificationGenerator(
@@ -3285,8 +3283,8 @@ public class NotificationGeneratorConfiguration {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
-            ? newArrayList(homeOfficeAppealSubmittedPendingPaymentPersonalisation, adminOfficerAppealSubmittedPendingPaymentPersonalisation)
-            : newArrayList(adminOfficerAppealSubmittedPendingPaymentPersonalisation);
+            ? newArrayList(homeOfficeAppealSubmittedPendingPaymentPersonalisation)
+            : newArrayList();
 
         return singletonList(
             new EmailNotificationGenerator(
