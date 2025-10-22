@@ -31,8 +31,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
     ) {
         this.adminOfficerAppealSubmittedPendingPaymentTemplateId = adminOfficerAppealSubmittedPendingPaymentTemplateId;
-        this.adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId =
-            adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
         this.feesAdminOfficerEmailAddress = feesAdminOfficerEmailAddress;
         this.paymentExceptionsAdminOfficerEmailAddress = paymentExceptionsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
