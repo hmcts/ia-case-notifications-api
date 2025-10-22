@@ -72,7 +72,7 @@
       },
       {
         "reference": "952510_RE_LIST_CASE_ADMIN_OFFICER",
-        "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
+        "recipient": "IACReformlisting@gmail.com",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
