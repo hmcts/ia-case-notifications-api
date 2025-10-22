@@ -2045,14 +2045,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("changeHearingCentreNotificationGenerator")
     public List<NotificationGenerator> changeHearingCentreNotificationGenerator(
-        LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation,
         CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeChangeHearingCentrePersonalisation, caseOfficerChangeHearingCentrePersonalisation),
+                newArrayList(caseOfficerChangeHearingCentrePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -3287,24 +3286,6 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 personalisations,
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
-    public List<NotificationGenerator> paymentPendingPaidNotificationHandler(
-        LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    legalRepresentativePendingPaymentPaidPersonalisation
-                ),
                 notificationSender,
                 notificationIdAppender
             )

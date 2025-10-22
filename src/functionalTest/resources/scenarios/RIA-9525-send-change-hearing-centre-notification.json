@@ -1,5 +1,6 @@
 {
   "description": "RIA-9525 Case Officer changed the designated hearing centre for admin and represented cases",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
