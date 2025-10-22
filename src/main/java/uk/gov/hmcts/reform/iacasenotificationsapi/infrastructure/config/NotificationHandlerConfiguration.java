@@ -83,6 +83,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType;
@@ -785,7 +786,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return (callback.getEvent() == LIST_CASE
                         && isRepJourney(callback.getCaseDetails().getCaseData())
-                        && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                        && !isInternalCase(asylumCase)
                         && !isAcceleratedDetainedAppeal(asylumCase));
                 } else {
                     return false;
@@ -1717,7 +1718,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_CASE_LISTING
                     && isRepJourney(callback.getCaseDetails().getCaseData())
-                    && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(callback.getCaseDetails().getCaseData())
                     && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -5772,17 +5773,37 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedEditCaseListingNotificationHandler(
-        @Qualifier("editCaseListingInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
+            @Qualifier("editCaseListingInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    final CaseDetails<AsylumCase> asylumCaseCaseDetailsBefore = callback.getCaseDetailsBefore().orElse(null);
 
-                return callback.getEvent() == Event.EDIT_CASE_LISTING
-                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isInternalCase(asylumCase);
-            }, notificationGenerators
+                    return callback.getEvent() == Event.EDIT_CASE_LISTING
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && !isEditListingContentUnchanged(asylumCase, asylumCaseCaseDetailsBefore.getCaseData())
+                            && isInternalCase(asylumCase);
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedEditCaseListingNoChangeNotificationHandler(
+            @Qualifier("editCaseListingInternalDetainedNoChangeNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    final CaseDetails<AsylumCase> asylumCaseCaseDetailsBefore = callback.getCaseDetailsBefore().orElse(null);
+
+                    return callback.getEvent() == Event.EDIT_CASE_LISTING
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isEditListingContentUnchanged(asylumCase, asylumCaseCaseDetailsBefore.getCaseData())
+                            && isInternalCase(asylumCase);
+                }, notificationGenerators
         );
     }
 
@@ -6923,6 +6944,25 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationHandler(
+            @Qualifier("internalCaseListedLrLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == LIST_CASE
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> digitalCaseListedAppellantDetainedInOtherLetterNotificationHandler(
         @Qualifier("internalCaseListedAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -7430,6 +7470,22 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalEditCaseListingLrLetterNotificationHandler(
+            @Qualifier("editCaseListingInternalLrLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callback.getEvent() == Event.EDIT_CASE_LISTING
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalEditCaseListingNotificationHandler(
             @Qualifier("reListCaseNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -7737,5 +7793,32 @@ public class NotificationHandlerConfiguration {
     private boolean isDlrmFeeRefundEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_FEE_REFUND_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+    }
+
+    private boolean isEditListingContentUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
+        return
+                isDateOfHearingUnchanged(caseData, caseDataBefore) && isHearingCentreUnchanged(caseData, caseDataBefore)
+                        && isHearingChannelUnchanged(caseData, caseDataBefore);
+    }
+
+    private boolean isHearingCentreUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
+        // HearingCentre should always have values here. If not something is really wrong. This is assuming it will always be there.
+        return
+                caseData.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null)
+                        == caseDataBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null);
+    }
+
+    private boolean isDateOfHearingUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
+        // Date string value comparision is good enough here.
+        return
+                caseData.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class).orElse("")
+                        .equalsIgnoreCase(caseDataBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class).orElse(""));
+    }
+
+    private boolean isHearingChannelUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
+        return
+                caseData.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class).orElse(null)
+                        == caseDataBefore.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class).orElse(null);
+
     }
 }

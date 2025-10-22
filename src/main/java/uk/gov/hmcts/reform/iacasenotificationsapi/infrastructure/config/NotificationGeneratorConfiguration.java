@@ -5195,6 +5195,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("editCaseListingInternalDetainedNoChangeNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalDetainedNoChangeNotificationGenerator(
+            HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+                new EmailNotificationGenerator(
+                        newArrayList(Collections.singleton(homeOfficeEditListingNoChangePersonalisation)),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("editCaseListingInternalDetainedIrcPrisonNotificationGenerator")
     public List<NotificationGenerator> editCaseListingInternalDetainedIrcPrisonNotificationGenerator(
         DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation,
@@ -6320,6 +6335,31 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalCaseListedLrLetterNotificationGenerator")
+    public List<NotificationGenerator> internalCaseListedAppellantLrNotificationGenerator(
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_CASE_LISTED_LR_LETTER_BUNDLE;
+
+        return singletonList(
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("internalReinstateAppealAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalReinstateAppealAppellantLetterNotificationGenerator(
         AppellantInternalReinstateAppealLetterPersonalisation appellantInternalReinstateAppealLetterPersonalisation,
@@ -6579,6 +6619,31 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("editCaseListingInternalLrLetterNotificationGenerator")
+    public List<NotificationGenerator> editCaseListingInternalLrLetterNotificationGenerator(
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER_BUNDLE;
+
+        return singletonList(
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
