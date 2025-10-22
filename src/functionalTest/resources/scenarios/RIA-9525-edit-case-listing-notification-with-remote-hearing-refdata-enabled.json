@@ -72,8 +72,8 @@
       },
       {
         "reference": "952510_RE_LIST_CASE_ADMIN_OFFICER",
-        "recipient": "IACReformlisting@gmail.com",
-        "subject": "Immigration and Asylum appeal: case re-listed",
+        "recipient": "{reviewHearingRequirementsAdminOfficerEmailAddress}",
+        "subject": "Immigration and Asylum appeal: re-list case",
         "body": [
           "PA/12345/2023",
           "3 Sep 2023",
