@@ -119,7 +119,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicati
 @Configuration
 public class NotificationHandlerConfiguration {
     private static final String RESPONDENT_APPLICANT = "Respondent";
-    private static final String IS_APPELLANT = "The appellant";
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
@@ -1197,7 +1196,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    // TODO: ?
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealHoNotificationHandler(
         @Qualifier("submitAppealHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
@@ -3012,8 +3010,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && (isPaAppealType
-                    && paAppealTypePaymentOption.equals("payLater"));
+                    && !isInternalWithoutLegalRepresentation(asylumCase)
+                    && (isPaAppealType && paAppealTypePaymentOption.equals("payLater"));
             },
             notificationGenerators,
             getErrorHandler()
@@ -3380,8 +3378,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineInternalNotificationHandler(
-        @Qualifier("submitAppealPayOfflineInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineInternalAdminNotificationHandler(
+        @Qualifier("submitAppealPayOfflineInternalAdminNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -3399,6 +3397,32 @@ public class NotificationHandlerConfiguration {
                     && isInternalCase(asylumCase)
                     && isCorrectAppealType
                     && ((paPaymentOption.equals("payLater") || paPaymentOption.equals("payOffline")) || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                // Is this meant to be triggered for HU, EA, because the current logic only allows PA despite the check for isRemissionOptedForEaOrHuOrPaAppeal
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineInternalHoNotificationHandler(
+        @Qualifier("submitAppealPayOfflineInternalHoNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isCorrectAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == PA).orElse(false);
+
+                String paPaymentOption = asylumCase
+                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SUBMIT_APPEAL
+                    && isInternalCase(asylumCase)
+                    && isCorrectAppealType
+                    && (paPaymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                // Is this meant to be triggered for HU, EA, because the current logic only allows allows PA despite the check for isRemissionOptedForEaOrHuOrPaAppeal
             }, notificationGenerators
         );
     }
@@ -5368,7 +5392,6 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-    // TODO: must be the one triggered when we select PAY NOW
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealLrHoWaysToPayPaPayNowInternalNotificationHandler(
         @Qualifier("submitAppealLrHoWaysToPayPaPayNowInternalNotificationGenerator")
