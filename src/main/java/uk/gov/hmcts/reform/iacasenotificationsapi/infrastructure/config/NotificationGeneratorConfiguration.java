@@ -2059,6 +2059,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalLrChangeHearingCentreNotificationGenerator")
+    public List<NotificationGenerator> internalLrChangeHearingCentreNotificationGenerator(
+            CaseOfficerChangeHearingCentrePersonalisation caseOfficerChangeHearingCentrePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerChangeHearingCentrePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalDetainedChangeHearingCentreNotificationGenerator")
     public List<NotificationGenerator> internalDetainedChangeHearingCentreNotificationGenerator(
         DetentionEngagementTeamChangeHearingCentrePersonalisation detentionEngagementTeamChangeHearingCentrePersonalisation,
