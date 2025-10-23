@@ -45,7 +45,7 @@
     },
     "notifications": [
       {
-        "reference": "7031_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "95253_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
