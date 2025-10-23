@@ -33,8 +33,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
         @Value("${govnotify.template.appealSubmitted.adminOfficer.pendingPaymentEaHu.email}")
             String adminOfficerAppealSubmittedPendingPaymentTemplateId,
         @NotNull(message = "pendingPaymentAdminOfficerWithRemissionTemplateId cannot be null")
-        @Value("${govnotify.template.appealSubmitted.adminOfficer.remission.email}")
-            String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId,
         @Value("${feesAdminOfficerEmailAddress}")
             String feesAdminOfficerEmailAddress,
         @Value("${paymentExceptionsAdminOfficerEmailAddress}")
@@ -56,13 +54,6 @@ public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        RemissionType remissionType = asylumCase
-            .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-
-        if (Arrays.asList(HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION)
-            .contains(remissionType)) {
-            return adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
-        }
         return adminOfficerAppealSubmittedPendingPaymentTemplateId;
     }
 
