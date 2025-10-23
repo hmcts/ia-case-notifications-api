@@ -4836,6 +4836,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalLrRemoveDetentionStatusNotificationGenerator")
+    public List<NotificationGenerator> internalLrRemoveDetentionStatusNotificationGenerator(
+            HomeOfficeRemoveDetentionStatusPersonalisation homeOfficeRemoveDetentionStatusPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeRemoveDetentionStatusPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("removeDetentionStatusLegalRepManualNotificationGenerator")
     public List<NotificationGenerator> removeDetentionStatusLegalRepManualNotificationGenerator(
         LegalRepresentativeRemoveDetentionStatusLetterPersonalisation legalRepresentativeRemoveDetentionStatusLetterPersonalisation,
