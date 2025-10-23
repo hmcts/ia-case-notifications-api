@@ -22,7 +22,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 public class AdminOfficerAppealSubmittedPendingPaymentPersonalisation implements EmailNotificationPersonalisation {
 
     private final String adminOfficerAppealSubmittedPendingPaymentTemplateId;
-    private final String adminOfficerAppealSubmittedPendingPaymentWithRemissionTemplateId;
     private final String feesAdminOfficerEmailAddress;
     private final String paymentExceptionsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
