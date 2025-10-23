@@ -1197,6 +1197,7 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    // TODO: ?
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealHoNotificationHandler(
         @Qualifier("submitAppealHoNotificationGenerator") List<NotificationGenerator> notificationGenerators
@@ -3510,10 +3511,6 @@ public class NotificationHandlerConfiguration {
 
                 State currentState = callback.getCaseDetails().getState();
 
-                boolean isCorrectAppealTypePA = asylumCase
-                    .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == PA).orElse(false);
-
                 boolean isCorrectAppealTypeAndStateHUorEA =
                     isEaHuEuAppeal(asylumCase)
                         && (currentState == State.APPEAL_SUBMITTED);
@@ -3523,7 +3520,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.MARK_APPEAL_PAID
-                    && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
+                    && (isCorrectAppealTypeAndStateHUorEA)
                     && paymentStatus.isPresent()
                     && !paymentStatus.equals(Optional.empty())
                     && paymentStatus.get().equals(PaymentStatus.PAID)
@@ -5363,8 +5360,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
                     && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                    && (isPaAppealType
-                    && paAppealTypePaymentOption.equals("payNow"))
+                    && (isPaAppealType && paAppealTypePaymentOption.equals("payNow"))
                     && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
@@ -5372,6 +5368,7 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    // TODO: must be the one triggered when we select PAY NOW
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealLrHoWaysToPayPaPayNowInternalNotificationHandler(
         @Qualifier("submitAppealLrHoWaysToPayPaPayNowInternalNotificationGenerator")
@@ -5392,8 +5389,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(asylumCase)
                     && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                    && (isPaAppealType
-                    && paAppealTypePaymentOption.equals("payNow"))
+                    && (isPaAppealType && paAppealTypePaymentOption.equals("payNow"))
                     && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
