@@ -92,6 +92,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
         String templateId = appellantSubmittedWithRemissionRequestPersonalisationSms.getTemplateId(asylumCase);
         assertEquals(smsTemplateId, templateId);
+    }
 
     @Test
     public void should_return_given_reference_id() {
