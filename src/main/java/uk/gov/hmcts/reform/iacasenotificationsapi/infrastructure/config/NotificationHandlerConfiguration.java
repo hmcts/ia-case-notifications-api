@@ -2569,7 +2569,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == Event.FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS
-                && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+                && isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                && !hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
