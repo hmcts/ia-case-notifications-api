@@ -638,6 +638,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalLrRespondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator")
+    public List<NotificationGenerator> internalLrRespondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3116 - changeDirectionDueDate (requestEvidenceBundle, amendRequestBundle, requestRespondentReview, awaitingRespondentEvidence)
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        isHomeOfficeGovNotifyEnabled ? newArrayList(respondentChangeDirectionDueDatePersonalisation) : emptyList(),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     // An Appellant notification to be sent similar to LR once the templates are ready in future
     @Bean("respondentChangeDirectionDueDateForHomeOfficeApiEventsAipNotificationGenerator")
     public List<NotificationGenerator> respondentChangeDirectionDueDateForHomeOfficeApiEventsAipNotificationGenerator(
