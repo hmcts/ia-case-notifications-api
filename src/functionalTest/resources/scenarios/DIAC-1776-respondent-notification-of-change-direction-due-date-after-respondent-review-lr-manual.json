@@ -1,0 +1,64 @@
+{
+  "description": "DIAC-1776 Send respondent notification of change direction due date after respondent review LR Manual",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "CaseOfficer",
+    "input": {
+      "id": 1776,
+      "eventId": "changeDirectionDueDate",
+      "state": "finalBundling",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "No",
+          "currentCaseStateVisibleToLegalRepresentative": "finalBundling",
+          "currentCaseStateVisibleToHomeOfficeAll": "finalBundling",
+          "directionEditExplanation": "Upload additional evidence",
+          "directionEditDateDue": "{$TODAY+14}",
+          "directionEditParties": "respondent",
+          "notificationsSent": [],
+          "listCaseHearingCentre": "birmingham"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "isAdmin": "Yes",
+        "appellantsRepresentation": "No",
+        "directionEditExplanation": "Upload additional evidence",
+        "directionEditDateDue": "{$TODAY+14}",
+        "directionEditParties": "respondent",
+        "notificationsSent": [
+          {
+            "id": "1776_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ],
+        "listCaseHearingCentre": "birmingham"
+      }
+    },
+    "notifications": [
+      {
+        "reference": "1776_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+        "recipient": "{$homeOfficeEmailAddresses.birmingham}",
+        "subject": "Immigration and Asylum appeal: change to direction due date",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "Upload additional evidence",
+          "{$TODAY+14|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      }
+    ]
+  }
+}
