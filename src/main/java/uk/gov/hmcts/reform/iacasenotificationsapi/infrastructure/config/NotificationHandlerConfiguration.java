@@ -3010,7 +3010,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && !isInternalWithoutLegalRepresentation(asylumCase)
+                    && !isInternalCase(asylumCase)
                     && (isPaAppealType && paAppealTypePaymentOption.equals("payLater"));
             },
             notificationGenerators,
