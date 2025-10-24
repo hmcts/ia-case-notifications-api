@@ -59,7 +59,7 @@
       {
         "reference": "7031_APPEAL_SUBMITTED_PENDING_PAYMENT_ADMIN_OFFICER",
         "recipient": "{$PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL}",
-        "subject": "Immigration and Asylum appeal: appeal submitted with remission application",
+        "subject": "Immigration and Asylum appeal: appeal submitted pending payment",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
