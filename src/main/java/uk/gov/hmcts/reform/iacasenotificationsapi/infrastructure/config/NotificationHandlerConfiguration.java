@@ -3554,7 +3554,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                     && isCorrectAppealType
                     && isApproved
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
 
             }, notificationGenerators
         );
