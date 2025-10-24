@@ -636,7 +636,7 @@ public class NotificationHandlerConfiguration {
                     && isRespondent
                     && isOneOfHomeOfficeApiNotifications(callback)
                     && isRepJourney(asylumCase)
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -663,7 +663,7 @@ public class NotificationHandlerConfiguration {
                             && isRespondent
                             && isOneOfHomeOfficeApiNotifications(callback)
                             && isRepJourney(asylumCase)
-                            && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                            && isInternalWithLegalRepresentation(asylumCase);
                 },
                 notificationGenerators
         );
