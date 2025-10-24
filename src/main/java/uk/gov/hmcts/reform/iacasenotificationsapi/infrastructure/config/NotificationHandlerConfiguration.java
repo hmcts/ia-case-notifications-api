@@ -6301,13 +6301,36 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                     && !isAipJourney(asylumCase)
-                    && isRule32ReasonUpdatingDecision(asylumCase);
+                    && isRule32ReasonUpdatingDecision(asylumCase)
+                    && !isInternalWithLegalRepresentation(asylumCase);
 
             },
             notificationGenerators,
             getErrorHandler()
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalLrUpdateTribunalDecisionRule32NotificationHandler(
+            @Qualifier("internalLrUpdateTribunalDecisionRule32NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
+                            && !isAipJourney(asylumCase)
+                            && isRule32ReasonUpdatingDecision(asylumCase)
+                            && isInternalWithLegalRepresentation(asylumCase);
+
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> updateTribunalDecisionRule32AipNotificationHandler(
