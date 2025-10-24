@@ -89,6 +89,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSms implements
                     .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                     .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                     .put("Hyperlink to service", iaAipFrontendUrl)
+                    .put("linkToService", iaAipFrontendUrl)
                     .put("14 days after remission request sent", refundRequestDueDate)
                     .build();
         } else {
