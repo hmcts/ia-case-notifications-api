@@ -529,6 +529,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalLrRespondentChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> internalLrRespondentChangeDirectionDueDateNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentChangeDirectionDueDatePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     // An Appellant notification to be sent similar to LR once the templates are ready in future
     @Bean("respondentChangeDirectionDueDateAipNotificationGenerator")
     public List<NotificationGenerator> respondentChangeDirectionDueDateAipNotificationGenerator(

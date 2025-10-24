@@ -495,9 +495,37 @@ public class NotificationHandlerConfiguration {
                     && isRespondent
                     && !isOneOfHomeOfficeApiNotifications(callback)
                     && isRepJourney(asylumCase)
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalLrRespondentChangeDirectionDueDateNotificationHandler(
+            @Qualifier("internalLrRespondentChangeDirectionDueDateNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators,
+            DirectionFinder directionFinder) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean isRespondent = asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                            .map(Parties -> Parties.equals(Parties.RESPONDENT))
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE
+                            && isRespondent
+                            && !isOneOfHomeOfficeApiNotifications(callback)
+                            && isRepJourney(asylumCase)
+                            && isInternalWithLegalRepresentation(asylumCase);
+                },
+                notificationGenerators
         );
     }
 
