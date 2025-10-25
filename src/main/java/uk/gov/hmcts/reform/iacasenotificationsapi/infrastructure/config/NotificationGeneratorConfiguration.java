@@ -3244,15 +3244,32 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitAppealPayOfflineInternalNotificationGenerator")
-    public List<NotificationGenerator> submitAppealPayOfflineInternalNotificationGenerator(
+    @Bean("submitAppealPayOfflineInternalAdminNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPayOfflineInternalAdminNotificationGenerator(
         AdminOfficerAppealSubmittedPayOfflinePersonalisation adminOfficerAppealSubmittedPayOfflinePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        //RIA-6682
+        List<EmailNotificationPersonalisation> personalisations = newArrayList(adminOfficerAppealSubmittedPayOfflinePersonalisation);
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                personalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("submitAppealPayOfflineInternalHoNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPayOfflineInternalHoNotificationGenerator(
         HomeOfficeAppealSubmittedPayOfflinePersonalisation homeOfficeAppealSubmittedPayOfflinePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
         //RIA-6682
-        List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation, adminOfficerAppealSubmittedPayOfflinePersonalisation);
+        List<EmailNotificationPersonalisation> personalisations = newArrayList(homeOfficeAppealSubmittedPayOfflinePersonalisation);
 
         return singletonList(
             new EmailNotificationGenerator(
