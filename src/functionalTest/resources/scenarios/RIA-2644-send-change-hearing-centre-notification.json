@@ -1,5 +1,6 @@
 {
   "description": "RIA-2644 Case Officer changed the designated hearing centre",
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
