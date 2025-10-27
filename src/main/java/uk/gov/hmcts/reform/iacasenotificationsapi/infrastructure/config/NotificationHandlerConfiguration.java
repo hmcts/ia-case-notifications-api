@@ -119,7 +119,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicati
 @Configuration
 public class NotificationHandlerConfiguration {
     private static final String RESPONDENT_APPLICANT = "Respondent";
-    private static final String IS_APPELLANT = "The appellant";
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> forceCaseProgressionNotificationHandler(
@@ -3011,8 +3010,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && (isPaAppealType
-                    && paAppealTypePaymentOption.equals("payLater"));
+                    && !isInternalCase(asylumCase)
+                    && (isPaAppealType && paAppealTypePaymentOption.equals("payLater"));
             },
             notificationGenerators,
             getErrorHandler()
@@ -3379,8 +3378,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineInternalNotificationHandler(
-        @Qualifier("submitAppealPayOfflineInternalNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineInternalAdminNotificationHandler(
+        @Qualifier("submitAppealPayOfflineInternalAdminNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
@@ -3398,6 +3397,32 @@ public class NotificationHandlerConfiguration {
                     && isInternalCase(asylumCase)
                     && isCorrectAppealType
                     && ((paPaymentOption.equals("payLater") || paPaymentOption.equals("payOffline")) || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                // Is this meant to be triggered for HU, EA, because the current logic only allows PA despite the check for isRemissionOptedForEaOrHuOrPaAppeal
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealPayOfflineInternalHoNotificationHandler(
+        @Qualifier("submitAppealPayOfflineInternalHoNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isCorrectAppealType = asylumCase
+                    .read(APPEAL_TYPE, AppealType.class)
+                    .map(type -> type == PA).orElse(false);
+
+                String paPaymentOption = asylumCase
+                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SUBMIT_APPEAL
+                    && isInternalCase(asylumCase)
+                    && isCorrectAppealType
+                    && (paPaymentOption.equals("payOffline") || isRemissionOptedForEaOrHuOrPaAppeal(callback));
+                // Is this meant to be triggered for HU, EA, because the current logic only allows allows PA despite the check for isRemissionOptedForEaOrHuOrPaAppeal
             }, notificationGenerators
         );
     }
@@ -3510,10 +3535,6 @@ public class NotificationHandlerConfiguration {
 
                 State currentState = callback.getCaseDetails().getState();
 
-                boolean isCorrectAppealTypePA = asylumCase
-                    .read(APPEAL_TYPE, AppealType.class)
-                    .map(type -> type == PA).orElse(false);
-
                 boolean isCorrectAppealTypeAndStateHUorEA =
                     isEaHuEuAppeal(asylumCase)
                         && (currentState == State.APPEAL_SUBMITTED);
@@ -3523,7 +3544,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.MARK_APPEAL_PAID
-                    && (isCorrectAppealTypePA || isCorrectAppealTypeAndStateHUorEA)
+                    && (isCorrectAppealTypeAndStateHUorEA)
                     && paymentStatus.isPresent()
                     && !paymentStatus.equals(Optional.empty())
                     && paymentStatus.get().equals(PaymentStatus.PAID)
@@ -5363,8 +5384,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
                     && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                    && (isPaAppealType
-                    && paAppealTypePaymentOption.equals("payNow"))
+                    && (isPaAppealType && paAppealTypePaymentOption.equals("payNow"))
                     && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
@@ -5392,8 +5412,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(asylumCase)
                     && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
-                    && (isPaAppealType
-                    && paAppealTypePaymentOption.equals("payNow"))
+                    && (isPaAppealType && paAppealTypePaymentOption.equals("payNow"))
                     && !isAcceleratedDetainedAppeal(asylumCase);
             },
             notificationGenerators,
