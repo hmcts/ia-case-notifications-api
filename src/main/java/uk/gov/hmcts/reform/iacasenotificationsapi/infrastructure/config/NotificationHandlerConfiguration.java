@@ -3491,7 +3491,7 @@ public class NotificationHandlerConfiguration {
                     && paymentStatus.isPresent()
                     && !paymentStatus.equals(Optional.empty())
                     && paymentStatus.get().equals(PaymentStatus.PAID)
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
             }, notificationGenerators
         );
     }
