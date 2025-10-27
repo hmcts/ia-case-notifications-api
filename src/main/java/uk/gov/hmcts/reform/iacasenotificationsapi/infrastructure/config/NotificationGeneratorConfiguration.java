@@ -529,6 +529,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalLrRespondentChangeDirectionDueDateNotificationGenerator")
+    public List<NotificationGenerator> internalLrRespondentChangeDirectionDueDateNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentChangeDirectionDueDatePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     // An Appellant notification to be sent similar to LR once the templates are ready in future
     @Bean("respondentChangeDirectionDueDateAipNotificationGenerator")
     public List<NotificationGenerator> respondentChangeDirectionDueDateAipNotificationGenerator(
@@ -620,6 +635,22 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("internalLrRespondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator")
+    public List<NotificationGenerator> internalLrRespondentChangeDirectionDueDateForHomeOfficeApiEventsNotificationGenerator(
+            RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        // RIA-3116 - changeDirectionDueDate (requestEvidenceBundle, amendRequestBundle, requestRespondentReview, awaitingRespondentEvidence)
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        isHomeOfficeGovNotifyEnabled ? newArrayList(respondentChangeDirectionDueDatePersonalisation) : emptyList(),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
