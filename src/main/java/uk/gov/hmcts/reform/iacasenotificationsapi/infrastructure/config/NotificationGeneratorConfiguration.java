@@ -2878,7 +2878,6 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("editAppealAfterSubmitInternalCaseNotificationGenerator")
     public List<NotificationGenerator> editAppealAfterSubmitInternalCaseNotificationGenerator(
-        LegalRepresentativeEditAppealAfterSubmitPersonalisation legalRepresentativeEditAppealAfterSubmitPersonalisation,
         RespondentEditAppealAfterSubmitPersonalisation respondentEditAppealAfterSubmitPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
@@ -2886,9 +2885,7 @@ public class NotificationGeneratorConfiguration {
         return List.of(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                respondentEditAppealAfterSubmitPersonalisation,
-                                legalRepresentativeEditAppealAfterSubmitPersonalisation
-
+                                respondentEditAppealAfterSubmitPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
