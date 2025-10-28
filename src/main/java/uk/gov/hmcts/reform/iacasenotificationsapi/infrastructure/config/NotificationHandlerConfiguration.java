@@ -7091,7 +7091,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationGenerator(
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationHandler(
             @Qualifier("internalCaseListedLrLetterNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
