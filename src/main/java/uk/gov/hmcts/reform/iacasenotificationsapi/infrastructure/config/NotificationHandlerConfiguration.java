@@ -7070,25 +7070,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationHandler(
-            @Qualifier("internalCaseListedLrLetterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == LIST_CASE
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
-                },
-                notificationGenerators,
-                getErrorHandler()
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> digitalCaseListedAppellantDetainedInOtherLetterNotificationHandler(
         @Qualifier("internalCaseListedAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -7110,7 +7091,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationGenerator(
+    public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationHandler(
             @Qualifier("internalCaseListedLrLetterNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
