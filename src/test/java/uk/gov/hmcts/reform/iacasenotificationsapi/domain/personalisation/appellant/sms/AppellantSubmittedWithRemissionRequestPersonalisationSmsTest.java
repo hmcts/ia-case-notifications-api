@@ -51,16 +51,16 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantSubmittedWithRemissionRequestPersonalisationSms = new AppellantSubmittedWithRemissionRequestPersonalisationSms(
-                smsTemplateId,
-                paPayLaterSmsTemplateId,
-                14,
-                iaAipFrontendUrl,
-                14,
-                recipientsFinder,
-                systemDateProvider);
+            smsTemplateId,
+            paPayLaterSmsTemplateId,
+            14,
+            iaAipFrontendUrl,
+            14,
+            recipientsFinder,
+            systemDateProvider);
     }
 
     @Test
@@ -97,18 +97,18 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
-                appellantSubmittedWithRemissionRequestPersonalisationSms.getReferenceId(caseId));
+            appellantSubmittedWithRemissionRequestPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_sms_list_from_subscribers_in_asylum_case() {
 
         Subscriber subscriber = new Subscriber(
-                SubscriberType.APPELLANT, //subscriberType
-                "", //email
-                YesOrNo.NO, // wants email
-                mockedAppellantMobilePhone, //mobileNumber
-                YesOrNo.YES // wants sms
+            SubscriberType.APPELLANT, //subscriberType
+            "", //email
+            YesOrNo.NO, // wants email
+            mockedAppellantMobilePhone, //mobileNumber
+            YesOrNo.YES // wants sms
         );
 
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS)).thenCallRealMethod();
@@ -125,8 +125,8 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
         assertThatThrownBy(() -> appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+            .isExactlyInstanceOf(NullPointerException.class)
+            .hasMessage("asylumCase must not be null");
     }
 
     @Test
