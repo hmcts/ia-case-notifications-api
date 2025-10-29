@@ -113,10 +113,10 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS)).thenCallRealMethod();
         when(asylumCase.read(SUBSCRIPTIONS))
-                .thenReturn(Optional.of(Collections.singletonList(new IdValue<>("1", subscriber))));
+            .thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
 
         assertTrue(appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
@@ -140,11 +140,11 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     public void should_return_personalisation_when_all_information_given() {
 
         final String dueDate = LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 
         Map<String, String> personalisation =
-                appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
+            appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(dueDate, personalisation.get("appealSubmittedDaysAfter"));
@@ -155,13 +155,13 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     @Test
     public void should_return_personalisation_when_only_mandatory_information_given() {
         final String dueDate = LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         when(systemDateProvider.dueDate(14)).thenReturn(dueDate);
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
+            appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals(dueDate, personalisation.get("appealSubmittedDaysAfter"));
