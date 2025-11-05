@@ -1,16 +1,17 @@
 {
-  "description": "RIA-8333 internal case disposed under rule 31 in country letter",
+  "description": "RIA-8333 internal case disposed under rule 32 in country letter",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
       "id": 8333,
       "eventId": "decideFtpaApplication",
-      "state": "*",
+      "state": "ftpaDecided",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "currentCaseStateVisibleToJudge": "ftpaDecided",
           "appellantsRepresentation": "Yes",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",

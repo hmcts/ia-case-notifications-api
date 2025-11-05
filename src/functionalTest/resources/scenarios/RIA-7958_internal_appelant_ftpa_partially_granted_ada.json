@@ -12,6 +12,7 @@
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
+          "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ircName": "Brookhouse",
           "listCaseHearingCentre": "bradford",
           "listCaseHearingLength": "60",

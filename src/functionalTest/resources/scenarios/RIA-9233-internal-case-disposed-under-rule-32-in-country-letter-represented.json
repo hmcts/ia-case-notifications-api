@@ -6,11 +6,12 @@
     "input": {
       "id": 9233,
       "eventId": "decideFtpaApplication",
-      "state": "*",
+      "state": "ftpaSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "appellantsRepresentation": "No",
           "appellantInDetention": "No",
           "appellantInUk": "Yes",
