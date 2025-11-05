@@ -5827,8 +5827,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalLrUpdateTribunalDecisionRule32NotificationGenerator")
-    public List<NotificationGenerator> internalLrUpdateTribunalDecisionRule32NotificationGenerator(
+    @Bean("internalUpdateTribunalDecisionRule32HoNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateTribunalDecisionRule32HoNotificationGenerator(
             RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
