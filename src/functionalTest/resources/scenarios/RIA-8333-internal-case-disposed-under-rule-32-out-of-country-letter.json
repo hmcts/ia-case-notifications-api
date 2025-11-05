@@ -55,6 +55,10 @@
         "ccdReferenceNumberForDisplay": "1111222233334444",
         "notificationsSent": [
           {
+            "id": "8333_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
             "id": "8333_INTERNAL_CASE_DISPOSE_UNDER_RULE_31_OR_32_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
