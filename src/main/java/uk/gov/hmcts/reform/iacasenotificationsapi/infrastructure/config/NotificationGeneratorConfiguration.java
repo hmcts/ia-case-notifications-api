@@ -3006,6 +3006,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalFtpaApplicationDecisionAppellantHoNotificationGenerator")
+    public List<NotificationGenerator> internalFtpaApplicationDecisionAppellantHoNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionAppellantPersonalisation homeOfficeFtpaApplicationDecisionAppellantPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeFtpaApplicationDecisionAppellantPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator")
     public List<NotificationGenerator> ftpaApplicationDecisionRefusedOrNotAdmittedRespondentNotificationGenerator(
         HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
@@ -3048,21 +3063,6 @@ public class NotificationGeneratorConfiguration {
             ),
             new SmsNotificationGenerator(
                 List.of(appellantFtpaApplicationDecisionPersonalisationSms),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
-    @Bean("internalRespondentFtpaApplicationHoNotificationGenerator")
-    public List<NotificationGenerator> internalRespondentFtpaApplicationHoNotificationGenerator(
-        HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
-
-        return Arrays.asList(
-            new EmailNotificationGenerator(
-                newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -3195,6 +3195,21 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("internalFtpaApplicationDecisionRespondentHoNotificationGenerator")
+    public List<NotificationGenerator> internalFtpaApplicationDecisionRespondentHoNotificationGenerator(
+            HomeOfficeFtpaApplicationDecisionRespondentPersonalisation homeOfficeFtpaApplicationDecisionRespondentPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeFtpaApplicationDecisionRespondentPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -5681,6 +5696,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalDecideFtpaApplicationHoRule31OrRule32NotificationGenerator")
+    public List<NotificationGenerator> internalDecideFtpaApplicationHoRule31OrRule32NotificationGenerator(
+            HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeFtpaApplicationDecidedRule31Rule32Personalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("aipReheardUnderRule35AppelantNotificationGenerator")
     public List<NotificationGenerator> aipReheardUnderRule35AppelantNotificationGenerator(
         RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail,
@@ -5721,6 +5754,22 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("internalDecideFtpaApplicationReheardUnderRule35HoNotificationGenerator")
+    public List<NotificationGenerator> internalDecideFtpaApplicationReheardUnderRule35HoNotificationGenerator(
+            RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(respondentReheardUnderRule35PersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
