@@ -50,7 +50,7 @@
         "ftpaApplicantType": "respondent",
         "ftpaRespondentSubmitted": "Yes",
         "ftpaRespondentRjDecisionOutcomeType": "remadeRule32",
-        "ftpaAppellantDecisionRemadeRule32": "remadeRule32",
+        "ftpaRespondentDecisionRemadeRule32": "remadeRule32",
         "ftpaRespondentDecisionRemadeRule32Text": "Rule 32 decision text",
         "ccdReferenceNumberForDisplay": "1111222233334444",
         "notificationsSent": [
