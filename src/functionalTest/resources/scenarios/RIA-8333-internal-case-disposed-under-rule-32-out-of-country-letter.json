@@ -1,5 +1,5 @@
 {
-  "description": "RIA-8333 internal case disposed under rule 31 out of country letter",
+  "description": "RIA-8333 internal case disposed under rule 32 out of country letter",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -24,6 +24,7 @@
           "ftpaApplicantType": "respondent",
           "ftpaRespondentSubmitted": "Yes",
           "ftpaRespondentRjDecisionOutcomeType": "remadeRule32",
+          "ftpaAppellantDecisionRemadeRule32": "remadeRule32",
           "ftpaRespondentDecisionRemadeRule32Text": "Rule 32 decision text",
           "ccdReferenceNumberForDisplay": "1111222233334444"
         }
@@ -49,6 +50,7 @@
         "ftpaApplicantType": "respondent",
         "ftpaRespondentSubmitted": "Yes",
         "ftpaRespondentRjDecisionOutcomeType": "remadeRule32",
+        "ftpaAppellantDecisionRemadeRule32": "remadeRule32",
         "ftpaRespondentDecisionRemadeRule32Text": "Rule 32 decision text",
         "ccdReferenceNumberForDisplay": "1111222233334444",
         "notificationsSent": [
