@@ -3079,7 +3079,9 @@ public class NotificationHandlerConfiguration {
                         || isGrantedOrPartiallyGrantedOutcome(asylumCase,
                         FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
                         || isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
-                        FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE));
+                        FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE))
+                        && hasThisNotificationNotSentBefore(asylumCase, callback,
+                        "_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT");
             },
             notificationGenerators
         );
@@ -3438,7 +3440,9 @@ public class NotificationHandlerConfiguration {
                             || isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
                             FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
                             || isGrantedOrPartiallyGrantedOutcome(asylumCase,
-                            FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE));
+                            FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE))
+                            && hasThisNotificationNotSentBefore(asylumCase, callback,
+                            "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
                 },
                 notificationGenerators
         );
