@@ -209,3 +209,19 @@ java:
           alias: HO_APPLY_FOR_COSTS_EMAIL
         - name: ia-det-prison-email-mappings
           alias: IA_DET_PRISON_EMAIL_MAPPINGS
+        - name: det-irc-brookhouse-email
+          alias: IA_DET_IRC_BROOKHOUSE_EMAIL
+        - name: det-irc-colnbrook-email
+          alias: IA_DET_IRC_COLNBROOK_EMAIL
+        - name: det-irc-derwentside-email
+          alias: IA_DET_IRC_DERWENTSIDE_EMAIL
+        - name: det-irc-dungavel-email
+          alias: IA_DET_IRC_DUNGAVEL_EMAIL
+        - name: det-irc-harmondsworth-email
+          alias: IA_DET_IRC_HARMONDSWORTH_EMAIL
+        - name: det-irc-swinderby-email
+          alias: IA_DET_IRC_SWINDERBY_EMAIL
+        - name: det-irc-tinsleyhouse-email
+          alias: IA_DET_IRC_TINSLEYHOUSE_EMAIL
+        - name: det-irc-yarlswood-email
+          alias: IA_DET_IRC_YARLSWOOD_EMAIL
