@@ -5,13 +5,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.HU;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.PA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.APPELLANT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.RESPONDENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeTribunalAction.ADDITIONAL_PAYMENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_GRANTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOutcomeType.FTPA_REFUSED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
@@ -35,7 +33,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getFtpaDecisionOutcomeType;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
@@ -3048,6 +3045,47 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalFtpaApplicationDecisionAppellantHoNotificationHandler(
+            @Qualifier("internalFtpaApplicationDecisionAppellantHoNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isReheardDecisionOutcome = asylumCase
+                        .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                        .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
+                                || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                        .orElse(false);
+
+                if (!isReheardDecisionOutcome) {
+                    isReheardDecisionOutcome = asylumCase
+                            .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
+                                    FtpaDecisionOutcomeType.class)
+                            .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
+                                    || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
+                            .orElse(false);
+                }
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
+                        || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                        || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
+                        && isInternalCase(asylumCase)
+                        && ((isReheardDecisionOutcome
+                        && !isDlrmSetAsideEnabled(asylumCase))
+                        || isGrantedOrPartiallyGrantedOutcome(asylumCase,
+                        FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE)
+                        || isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
+                        FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE));
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> submitAppealLegalRepPayLaterNotificationHandler(
         @Qualifier("submitAppealLegalRepPayLaterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -3182,38 +3220,6 @@ public class NotificationHandlerConfiguration {
 
         return isAllowedOrDismissedOrRefusedOrNotAdmittedDecisionOutcome;
     }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalRespondentFtpaApplicationHoNotificationHandler(
-        @Qualifier("internalRespondentFtpaApplicationHoNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                boolean isRespondentApplication = asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
-                    .map(applicantType -> RESPONDENT == applicantType).orElse(false);
-                FtpaDecisionOutcomeType decisionOutcomeType = getFtpaDecisionOutcomeType(asylumCase)
-                    .orElse(null);
-                Set<FtpaDecisionOutcomeType> validDecisionOutcomeTypes = Set.of(
-                    FTPA_REFUSED,
-                    FTPA_GRANTED,
-                    FTPA_NOT_ADMITTED,
-                    FTPA_PARTIALLY_GRANTED
-                );
-
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
-                    || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION)
-                    && isRespondentApplication
-                    && validDecisionOutcomeTypes.contains(decisionOutcomeType)
-                    && isInternalCase(asylumCase);
-            },
-            notificationGenerators
-        );
-    }
-
 
     /**
      * To find if the decision outcome was granted or partially granted. It checks the leadership judge outcome,
@@ -3390,6 +3396,51 @@ public class NotificationHandlerConfiguration {
                     "_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT");
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalFtpaApplicationDecisionRespondentHoNotificationHandler(
+            @Qualifier("internalFtpaApplicationDecisionRespondentHoNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        //RIA-3631 - ftpsResidentJudgeDecision
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
+                            FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()
+                    ));
+
+                    if (!isDlrmSetAsideEnabled(asylumCase)) {
+                        ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString());
+                    }
+
+                    boolean isReheardDecisionOutcome = asylumCase
+                            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                            .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
+                            .orElse(false);
+                    if (!isReheardDecisionOutcome) {
+                        isReheardDecisionOutcome = asylumCase
+                                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
+                                        FtpaDecisionOutcomeType.class)
+                                .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
+                                .orElse(false);
+                    }
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && (callback.getEvent() == Event.LEADERSHIP_JUDGE_FTPA_DECISION
+                            || callback.getEvent() == Event.RESIDENT_JUDGE_FTPA_DECISION
+                            || callback.getEvent() == Event.DECIDE_FTPA_APPLICATION)
+                            && isInternalCase(asylumCase)
+                            && (isReheardDecisionOutcome
+                            || isNotAdmittedOrRefusesOrRemade32Outcome(asylumCase,
+                            FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE)
+                            || isGrantedOrPartiallyGrantedOutcome(asylumCase,
+                            FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE));
+                },
+                notificationGenerators
         );
     }
 
@@ -6295,10 +6346,31 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
                     && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase)
                     && isDlrmSetAsideEnabled(asylumCase)
-                    && !isAipJourney(asylumCase);
+                    && !isAipJourney(asylumCase)
+                    && !isInternalCase(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDecideFtpaApplicationHoRule31OrRule32NotificationHandler(
+            @Qualifier("internalDecideFtpaApplicationHoRule31OrRule32NotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                            && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase)
+                            && isDlrmSetAsideEnabled(asylumCase)
+                            && isInternalCase(asylumCase);
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
@@ -6376,7 +6448,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
                     && !isAipJourney(asylumCase)
                     && isRule32ReasonUpdatingDecision(asylumCase)
-                    && !isInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
 
             },
             notificationGenerators,
@@ -6385,8 +6457,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> internalLrUpdateTribunalDecisionRule32NotificationHandler(
-            @Qualifier("internalLrUpdateTribunalDecisionRule32NotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> internalUpdateTribunalDecisionRule32HoNotificationHandler(
+            @Qualifier("internalUpdateTribunalDecisionRule32HoNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -6395,9 +6467,8 @@ public class NotificationHandlerConfiguration {
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.UPDATE_TRIBUNAL_DECISION
-                            && !isAipJourney(asylumCase)
                             && isRule32ReasonUpdatingDecision(asylumCase)
-                            && isInternalWithLegalRepresentation(asylumCase);
+                            && isInternalCase(asylumCase);
 
                 },
                 notificationGenerators,
@@ -6461,11 +6532,33 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
                     && isDlrmSetAsideEnabled(asylumCase)
                     && isReheard35DecisionOutcome(asylumCase)
-                    && !isAipJourney(asylumCase);
+                    && !isAipJourney(asylumCase)
+                    && !isInternalCase(asylumCase);
 
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDecideFtpaApplicationReheardUnderRule35HoNotificationHandler(
+            @Qualifier("internalDecideFtpaApplicationReheardUnderRule35HoNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
+                            && isDlrmSetAsideEnabled(asylumCase)
+                            && isReheard35DecisionOutcome(asylumCase)
+                            && isInternalCase(asylumCase);
+
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
@@ -7294,7 +7387,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_FTPA_APPLICATION
-                    && isInternalWithoutLegalRepresentation(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isFtpaDecisionOutcomeTypeUnderRule31OrRule32(asylumCase);
             },
             notificationGenerators,
