@@ -805,6 +805,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("submitAppealInTimeRepNotificationGenerator")
+    public List<NotificationGenerator> submitAppealInTimeRepNotificationGenerator(
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeSubmitAppealPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("paymentAppealAipNotificationGenerator")
     public List<NotificationGenerator> paymentAppealAipNotificationGenerator(
         AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
