@@ -114,6 +114,7 @@
         "body": [
           "PA/12345/2019",
           "13 Aug 2019",
+          "some outcome reason",
           "{$iaAipFrontendUrl}"
         ]
       }
