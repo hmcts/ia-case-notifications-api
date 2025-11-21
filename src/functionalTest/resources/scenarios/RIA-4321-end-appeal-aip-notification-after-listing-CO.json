@@ -113,7 +113,9 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
+          "Judge",
           "13 Aug 2019",
+          "Withdrawn",
           "some outcome reason",
           "{$iaAipFrontendUrl}"
         ]
