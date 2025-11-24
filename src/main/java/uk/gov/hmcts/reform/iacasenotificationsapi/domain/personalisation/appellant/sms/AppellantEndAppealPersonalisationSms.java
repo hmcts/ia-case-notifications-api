@@ -66,7 +66,6 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
                                 .map(date -> LocalDate.parse(date).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
                                 .orElse(""))
                         .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
-                        .put("reasonsOfOutcome", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
                         .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
                         .build();
