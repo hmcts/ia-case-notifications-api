@@ -29,6 +29,7 @@ public class DetEmailServiceTest {
             ImmutableMap
                     .<String, String>builder()
                     .put("Brookhouse", "det-irc-brookhouse@example.com")
+                    .put("Campsfield House", "det-irc-campsfieldhouse@example.com")
                     .put("Colnbrook", "det-irc-colnbrook@example.com")
                     .put("Derwentside", "det-irc-derwentside@example.com")
                     .put("Dungavel", "det-irc-dungavel@example.com")
