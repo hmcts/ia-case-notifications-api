@@ -58,11 +58,11 @@
         "endAppealOutcomeReason": "some outcome reason",
         "notificationsSent": [
           {
-            "id": "34889657_END_APPEAL_AIP_APPELLANT_SMS",
+            "id": "34889657_END_APPEAL_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34889657_END_APPEAL_AIP_APPELLANT_EMAIL",
+            "id": "34889657_END_APPEAL_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
