@@ -109,16 +109,6 @@
         ]
       },
       {
-        "reference": "4827_END_APPEAL_AIP_APPELLANT_SMS",
-        "recipient": "{$TEST_CITIZEN_MOBILE}",
-        "subject": "",
-        "body": [
-          "PA/12345/2019",
-          "13 Aug 2019",
-          "{$iaAipFrontendUrl}"
-        ]
-      },
-      {
         "reference": "4827_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
         "recipient": "{$ctscAdminPendingPaymentEmailAddress}",
         "subject": "Immigration and Asylum appeal: An unpaid appeal has been decided or ended",
