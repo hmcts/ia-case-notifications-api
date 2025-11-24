@@ -1168,38 +1168,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealInTimeRepNotificationHandler(
-        @Qualifier("submitAppealInTimeRepNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                boolean isAppealOnTime = asylumCase
-                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
-                    .map(outOfTime -> outOfTime == NO).orElse(false);
-
-                RemissionOption remissionOption = asylumCase
-                    .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
-
-                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isRepJourney(asylumCase)
-                    && isAppealOnTime
-                    && !isEaHuEuAppeal(asylumCase)
-                    && !isDlrmFeeRemissionEnabled(asylumCase))
-                    || (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isAipJourney(asylumCase)
-                    && isAppealOnTime
-                    && !isEaHuEuAppeal(asylumCase)
-                    && isDlrmFeeRemissionEnabled(asylumCase)
-                    && remissionOption == RemissionOption.NO_REMISSION);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> paymentPaidPostSubmitAipNotificationHandler(
         @Qualifier("paymentAppealAipNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
