@@ -805,22 +805,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitAppealInTimeRepNotificationGenerator")
-    public List<NotificationGenerator> submitAppealInTimeRepNotificationGenerator(
-        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return List.of(
-            new EmailNotificationGenerator(
-                newArrayList(homeOfficeSubmitAppealPersonalisation),
-                notificationSender,
-                notificationIdAppender
-            )
-        );
-    }
-
     @Bean("paymentAppealAipNotificationGenerator")
     public List<NotificationGenerator> paymentAppealAipNotificationGenerator(
         AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms,
@@ -3267,6 +3251,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("submitAppealLegalRepNotificationGenerator")
     public List<NotificationGenerator> submitAppealLegalRepNotificationHandler(
         LegalRepresentativeAppealSubmittedPersonalisation legalRepresentativeAppealSubmittedPersonalisation,
+        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3274,7 +3259,8 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeAppealSubmittedPersonalisation
+                    legalRepresentativeAppealSubmittedPersonalisation,
+                    homeOfficeSubmitAppealPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
