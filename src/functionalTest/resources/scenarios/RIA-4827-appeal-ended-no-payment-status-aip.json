@@ -58,10 +58,6 @@
         "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "4827_END_APPEAL_AIP_APPELLANT_SMS",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "4827_END_APPEAL_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
@@ -109,16 +105,6 @@
           "13 Aug 2019",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
-        ]
-      },
-      {
-        "reference": "4827_END_APPEAL_AIP_APPELLANT_SMS",
-        "recipient": "{$TEST_CITIZEN_MOBILE}",
-        "subject": "",
-        "body": [
-          "PA/12345/2019",
-          "13 Aug 2019",
-          "{$iaAipFrontendUrl}"
         ]
       },
       {
