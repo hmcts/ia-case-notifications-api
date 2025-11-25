@@ -68,7 +68,7 @@ public class AppellantEndAppealPersonalisationSms implements SmsNotificationPers
                         .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
                         .put("reasonsOfOutcome", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON, String.class).orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
+                        .put("direct link to judges' review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
                         .build();
     }
 
