@@ -115,7 +115,7 @@ public class AppellantEndAppealPersonalisationSmsTest {
 
         assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
+        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges' review page"));
         assertEquals(endAppealApprover, personalisation.get("endAppealApprover"));
         assertEquals(LocalDate.parse(endAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("endAppealDate"));
         assertEquals(outcomeOfAppeal, personalisation.get("outcomeOfAppeal"));
@@ -131,6 +131,6 @@ public class AppellantEndAppealPersonalisationSmsTest {
 
         assertEquals("", personalisation.get("Appeal Ref Number"));
         assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
+        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges' review page"));
     }
 }
