@@ -35,6 +35,7 @@
         "replacements": {
           "paymentStatus": "Paid"
         }
+      }
     }
   },
   "expectation": {
