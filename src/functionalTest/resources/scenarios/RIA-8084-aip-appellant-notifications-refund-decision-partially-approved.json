@@ -15,6 +15,7 @@
           "amountRemitted": "140",
           "isDlrmFeeRefundEnabled": "Yes",
           "isLateRemissionRequest": "Yes",
+          "paymentStatus": "Paid",
           "subscriptions": [
             {
               "id": "1",
