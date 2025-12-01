@@ -30,6 +30,12 @@
           ],
           "notificationsSent": []
         }
+      },
+      "caseDataBefore": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "paymentStatus": "Paid"
+        }
       }
     }
   },
