@@ -7810,9 +7810,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean paymentPaid = asylumCase
+                        .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                        .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_DECISION
                     && isAipJourney(asylumCase)
+                    && paymentPaid
                     && isDlrmFeeRefundEnabled(asylumCase)
                     && isLateRemissionRequest(asylumCase);
             },
