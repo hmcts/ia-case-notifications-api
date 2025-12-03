@@ -177,6 +177,8 @@ java:
           alias: IA_NBC_EMAIL
         - name: ctsc-email
           alias: IA_CTSC_EMAIL
+        - name: ctsc-det-email
+          alias: IA_DET_CTSC_EMAIL
         - name: launch-darkly-sdk-key
           alias: LAUNCH_DARKLY_SDK_KEY
         - name: bail-hearing-centre-bradford-email

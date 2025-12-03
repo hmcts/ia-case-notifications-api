@@ -2650,6 +2650,7 @@ applyForCostsHomeOfficeEmailAddress: ${HO_APPLY_FOR_COSTS_EMAIL:ho-apply-for-cos
 
 nbcEmailAddress: ${IA_NBC_EMAIL}
 ctscEmailAddress: ${IA_CTSC_EMAIL}
+ctscDetEmailAddress: ${IA_CTSC_DET_EMAIL}
 ctscAdminPendingPaymentEmailAddress: ${IA_CTSC_ADMIN_PENDING_PAYMENT_EMAIL:pendingPayment@example.com}
 upperTribunalPermissionApplicationsEmailAddress: ${IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL:UTIACpermissionapplications@grantedpartgranted.fake.com}
 bailHomeOfficeEmailAddress: ${IA_BAIL_HOME_OFFICE_EMAIL:ho-bail-alar@example.com}
