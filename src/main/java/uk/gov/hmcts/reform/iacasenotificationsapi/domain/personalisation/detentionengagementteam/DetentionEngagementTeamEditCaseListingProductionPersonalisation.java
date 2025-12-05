@@ -31,7 +31,7 @@ public class DetentionEngagementTeamEditCaseListingProductionPersonalisation imp
         @Value("${govnotify.template.editCaseListing.detentionEngagementTeam.production.email}") String editCaseListingProductionDetainedTemplateId,
         DetentionFacilityEmailService detentionFacilityEmailService,
         DateTimeExtractor dateTimeExtractor,
-        HearingDetailsFinder hearingDetailsFinder,
+        HearingDetailsFinder hearingDetailsFinder
     ) {
         this.editCaseListingProductionDetainedTemplateId = editCaseListingProductionDetainedTemplateId;
         this.detentionFacilityEmailService = detentionFacilityEmailService;
