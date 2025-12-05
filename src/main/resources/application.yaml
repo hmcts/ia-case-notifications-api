@@ -1477,7 +1477,7 @@ govnotify:
       appellant:
         email: ad550328-3529-443a-be7e-b9109e1926ab
         sms: a898d622-e399-4dfd-b86d-cc92be0c777d
-        letter: 24c26241-2fad-494b-91a8-f4dcb26e4e28
+        letter: 66bb3224-eeac-4e59-90c3-458cb556bfb3
     recordRefundDecision:
       appellant:
         approved:
@@ -2680,7 +2680,7 @@ detentionEngagementTeamIrcEmailAddresses:
   # See README.md for local development setup instructions
 prison:
   email:
-    mappings: ${IA_DET_PRISON_EMAIL_MAPPINGS:}
+    mappings: "{   \"prisonEmailMappings\": {     \"Addiewell\": \"det-prison-addiewell@example.com\",     \"Albany\": \"det-prison-albany@example.com\"}}"
 
 detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
 
