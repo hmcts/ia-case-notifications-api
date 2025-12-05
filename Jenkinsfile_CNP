@@ -129,7 +129,7 @@ def secrets = [
         secret('utiac-permission-applications-email', 'IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL'),
         secret('nbc-email', 'IA_NBC_EMAIL'),
         secret('ctsc-email', 'IA_CTSC_EMAIL'),
-        secret('ctsc-det-email', 'IA_CTSC_DET_EMAIL'),
+        secret('ia-customer-serivce-appeal-email', 'IA_CTSC_DET_EMAIL'),
 
         secret('launch-darkly-sdk-key', 'LAUNCH_DARKLY_SDK_KEY'),
         secret('ia-config-validator-secret', 'IA_CONFIG_VALIDATOR_SECRET'),
