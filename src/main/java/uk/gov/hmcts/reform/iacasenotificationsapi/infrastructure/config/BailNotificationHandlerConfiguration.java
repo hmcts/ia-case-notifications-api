@@ -169,12 +169,12 @@ public class BailNotificationHandlerConfiguration {
     ) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
-                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                boolean isAllowedBailCase = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && (callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE
+                    || callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE_CONDITIONAL_GRANT);
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return ((callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE)
-                        && isLegallyRepresented(bailCase));
+                    return isLegallyRepresented(bailCase);
                 } else {
                     return false;
                 }
@@ -190,12 +190,12 @@ public class BailNotificationHandlerConfiguration {
     ) {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
-                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                boolean isAllowedBailCase = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && (callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE
+                    || callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE_CONDITIONAL_GRANT);
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return ((callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE)
-                        && !isLegallyRepresented(bailCase));
+                    return !isLegallyRepresented(bailCase);
                 } else {
                     return false;
                 }
@@ -648,43 +648,43 @@ public class BailNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandlerWithoutLegalRep(
-            @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
-            List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
+        List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
-                (callbackStage, callback) -> {
-                    boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
-                    if (isAllowedBailCase) {
-                        BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return !isLegallyRepresented(bailCase);
-                    } else {
-                        return false;
-                    }
-                },
-                bailNotificationGenerators,
-                getErrorHandler()
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return !isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
         );
     }
 
     @Bean
     public PreSubmitCallbackHandler<BailCase> bailChangeTribunalCentreNotificationHandlerWithLegalRep(
-            @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
-            List<BailNotificationGenerator> bailNotificationGenerators
+        @Qualifier("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
+        List<BailNotificationGenerator> bailNotificationGenerators
     ) {
         return new BailNotificationHandler(
-                (callbackStage, callback) -> {
-                    boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
-                    if (isAllowedBailCase) {
-                        BailCase bailCase = callback.getCaseDetails().getCaseData();
-                        return isLegallyRepresented(bailCase);
-                    } else {
-                        return false;
-                    }
-                },
-                bailNotificationGenerators,
-                getErrorHandler()
+            (callbackStage, callback) -> {
+                boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CHANGE_TRIBUNAL_CENTRE);
+                if (isAllowedBailCase) {
+                    BailCase bailCase = callback.getCaseDetails().getCaseData();
+                    return isLegallyRepresented(bailCase);
+                } else {
+                    return false;
+                }
+            },
+            bailNotificationGenerators,
+            getErrorHandler()
         );
     }
 
