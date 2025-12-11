@@ -360,6 +360,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_IN_UK(
         "appellantInUk", new TypeReference<YesOrNo>() {}),
 
+    HAS_SPONSOR(
+            "hasSponsor", new TypeReference<YesOrNo>() {}),
+
     APPEAL_OUT_OF_COUNTRY(
         "appealOutOfCountry", new TypeReference<YesOrNo>() {}),
 

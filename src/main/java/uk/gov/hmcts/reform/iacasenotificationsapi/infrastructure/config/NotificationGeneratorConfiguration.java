@@ -134,6 +134,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respond
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentTurnOnNotificationsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentUpdateTribunalDecisionRule31PersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentUpdateTribunalDecisionRule32PersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponsor.SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.uppertribunal.UpperTribunalMarkAsReadyForUtTransferPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
@@ -4103,6 +4104,24 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("sponsoredManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
+    public List<NotificationGenerator> sponsoredManageFeeUpdateAdditionalPaymentRequestedNotificationHandler(
+            SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation sponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                (EmailNotificationPersonalisation) sponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 

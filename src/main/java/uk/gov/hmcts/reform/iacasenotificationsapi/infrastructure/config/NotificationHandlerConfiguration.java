@@ -1408,7 +1408,6 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_RESPONSE_AMEND
-                    && isRepJourney(callback.getCaseDetails().getCaseData())
                     && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -4105,6 +4104,34 @@ public class NotificationHandlerConfiguration {
         );
 
     }
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> sponsoredManageFeeUpdateAdditionalPaymentRequestedNotificationHandler(
+            @Qualifier("sponsoredManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean additionalPaymentRequested = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
+                            .map(action -> ADDITIONAL_PAYMENT == action)
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.MANAGE_FEE_UPDATE
+                            && additionalPaymentRequested
+                            && isRepJourney(asylumCase)
+                            && isSponsored(asylumCase)
+                            && isDlrmFeeRefundEnabled(asylumCase)
+                            && isAppellantInDetention(asylumCase);
+                },
+                notificationGenerators
+        );
+
+    }
 
     @Bean
     public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionLrNotificationHandler(
@@ -5391,6 +5418,12 @@ public class NotificationHandlerConfiguration {
         return asylumCase.read(IS_INTEGRATED, YesOrNo.class)
             .map(isIntegrated -> isIntegrated == YES)
             .orElse(false);
+    }
+
+    private boolean isSponsored(AsylumCase asylumCase ){
+        return asylumCase.read(HAS_SPONSOR, YesOrNo.class)
+                .map(isSponsored->isSponsored == YES)
+                .orElse(false);
     }
 
     private boolean hasRepEmail(AsylumCase asylumCase) {
