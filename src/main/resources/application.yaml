@@ -109,6 +109,10 @@ govnotify:
           disposal:
             email: 5bd628ef-1793-4885-b2cf-b2003137164b
     appealSubmitted:
+      sponsor:
+        letter:
+          outOfTime:
+            withFee: 823d5412-b528-4a17-bdd1-ae66d9b6dadb
       legalRep:
         paid:
           email: b14216a7-30b4-4d50-aa0f-290d6c3a0d1b

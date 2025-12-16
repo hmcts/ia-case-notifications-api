@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.MANCHESTER;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus;
 
 @SuppressWarnings("OperatorWrap")
 public class AsylumCaseTest {
@@ -151,5 +153,103 @@ public class AsylumCaseTest {
         assertThat(documents.getValue().getDateSent()).isEqualTo("some-other-date");
 
         assertThat(documents.getValue().getExplanation()).isEqualTo("some-explanation");
+    }
+
+    @Test
+    public void readAsBoolean_returns_true_when_yes_or_no_field_is_yes() throws IOException {
+
+        String caseData = "{\"appellantInDetention\": \"Yes\"}";
+        AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
+
+        boolean result = asylumCase.readAsBoolean(APPELLANT_IN_DETENTION);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void readAsBoolean_returns_false_when_yes_or_no_field_is_no() throws IOException {
+
+        String caseData = "{\"appellantInDetention\": \"No\"}";
+        AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
+
+        boolean result = asylumCase.readAsBoolean(APPELLANT_IN_DETENTION);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void readAsBoolean_returns_false_when_yes_or_no_field_is_missing() {
+
+        AsylumCase asylumCase = new AsylumCase();
+
+        boolean result = asylumCase.readAsBoolean(APPELLANT_IN_DETENTION);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void readAsBoolean_throws_exception_when_field_is_not_yes_or_no() throws IOException {
+
+        String caseData = "{\"appealReferenceNumber\": \"PA/50222/2019\"}";
+        AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
+
+        assertThatThrownBy(() -> asylumCase.readAsBoolean(APPEAL_REFERENCE_NUMBER))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("AsylumCaseDefinition appealReferenceNumber is not of type YesOrNo");
+    }
+
+    @Test
+    public void readAsBoolean_with_predicate_returns_true_when_predicate_matches() throws IOException {
+
+        String caseData = "{\"paymentStatus\": \"Paid\"}";
+        AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
+
+        boolean result = asylumCase.readAsBoolean(
+            PAYMENT_STATUS,
+            (PaymentStatus status) -> status.equals(PaymentStatus.PAID)
+        );
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void readAsBoolean_with_predicate_returns_false_when_predicate_does_not_match() throws IOException {
+
+        String caseData = "{\"paymentStatus\": \"Paid\"}";
+        AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
+
+        boolean result = asylumCase.readAsBoolean(
+            PAYMENT_STATUS,
+            (PaymentStatus status) -> status.equals(PaymentStatus.PAYMENT_PENDING)
+        );
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void readAsBoolean_with_predicate_returns_false_when_field_is_missing() {
+
+        AsylumCase asylumCase = new AsylumCase();
+
+        boolean result = asylumCase.readAsBoolean(
+            PAYMENT_STATUS,
+            (PaymentStatus status) -> status.equals(PaymentStatus.PAID)
+        );
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    public void readAsBoolean_with_predicate_works_with_string_fields() throws IOException {
+
+        String caseData = "{\"appealReferenceNumber\": \"PA/50222/2019\"}";
+        AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
+
+        boolean result = asylumCase.readAsBoolean(
+            APPEAL_REFERENCE_NUMBER,
+            (String ref) -> ref.startsWith("PA/")
+        );
+
+        assertThat(result).isTrue();
     }
 }

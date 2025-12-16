@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -84,6 +85,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -958,5 +960,85 @@ public class AsylumCaseUtilsTest {
                 .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
         Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
                 .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
+    }
+
+    @Test
+    void should_return_sponsor_address_as_list() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        AddressUk sponsorAddress = mock(AddressUk.class);
+
+        when(asylumCase.read(AsylumCaseDefinition.SPONSOR_ADDRESS, AddressUk.class))
+            .thenReturn(Optional.of(sponsorAddress));
+        when(sponsorAddress.getAddressLine1()).thenReturn(Optional.of("10"));
+        when(sponsorAddress.getAddressLine2()).thenReturn(Optional.of("Sponsor Street"));
+        when(sponsorAddress.getAddressLine3()).thenReturn(Optional.of("Sponsor Area"));
+        when(sponsorAddress.getPostTown()).thenReturn(Optional.of("SponsorTown"));
+        when(sponsorAddress.getPostCode()).thenReturn(Optional.of("SP1 2ON"));
+
+        List<String> result = AsylumCaseUtils.getSponserAddressAsList(asylumCase);
+
+        assertThat(result).asList().containsExactly("10", "Sponsor Street", "Sponsor Area", "SponsorTown", "SP1 2ON");
+    }
+
+    @Test
+    void should_return_sponsor_address_as_list_without_optional_lines() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        AddressUk sponsorAddress = mock(AddressUk.class);
+
+        when(asylumCase.read(AsylumCaseDefinition.SPONSOR_ADDRESS, AddressUk.class))
+            .thenReturn(Optional.of(sponsorAddress));
+        when(sponsorAddress.getAddressLine1()).thenReturn(Optional.of("10"));
+        when(sponsorAddress.getAddressLine2()).thenReturn(Optional.empty());
+        when(sponsorAddress.getAddressLine3()).thenReturn(Optional.empty());
+        when(sponsorAddress.getPostTown()).thenReturn(Optional.of("SponsorTown"));
+        when(sponsorAddress.getPostCode()).thenReturn(Optional.of("SP1 2ON"));
+
+        List<String> result = AsylumCaseUtils.getSponserAddressAsList(asylumCase);
+
+        assertThat(result).asList().containsExactly("10", "SponsorTown", "SP1 2ON");
+    }
+
+    @Test
+    void should_throw_exception_when_sponsor_address_not_present() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+
+        when(asylumCase.read(AsylumCaseDefinition.SPONSOR_ADDRESS, AddressUk.class))
+            .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> AsylumCaseUtils.getSponserAddressAsList(asylumCase))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("sponsor address is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_sponsor_address_line_1_not_present() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        AddressUk sponsorAddress = mock(AddressUk.class);
+
+        when(asylumCase.read(AsylumCaseDefinition.SPONSOR_ADDRESS, AddressUk.class))
+            .thenReturn(Optional.of(sponsorAddress));
+        when(sponsorAddress.getAddressLine1()).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> AsylumCaseUtils.getSponserAddressAsList(asylumCase))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("sponsor address line 1 is not present");
+    }
+
+    @Test
+    void should_return_sponsor_address_in_country_or_ooc() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        AddressUk sponsorAddress = mock(AddressUk.class);
+
+        when(asylumCase.read(AsylumCaseDefinition.SPONSOR_ADDRESS, AddressUk.class))
+            .thenReturn(Optional.of(sponsorAddress));
+        when(sponsorAddress.getAddressLine1()).thenReturn(Optional.of("10"));
+        when(sponsorAddress.getAddressLine2()).thenReturn(Optional.of("Sponsor Street"));
+        when(sponsorAddress.getAddressLine3()).thenReturn(Optional.empty());
+        when(sponsorAddress.getPostTown()).thenReturn(Optional.of("SponsorTown"));
+        when(sponsorAddress.getPostCode()).thenReturn(Optional.of("SP1 2ON"));
+
+        Set<String> result = AsylumCaseUtils.getSponsorAddressInCountryOrOoc(asylumCase);
+
+        assertThat(result).isEqualTo(Set.of("10_SponsorStreet_SponsorTown_SP12ON"));
     }
 }
