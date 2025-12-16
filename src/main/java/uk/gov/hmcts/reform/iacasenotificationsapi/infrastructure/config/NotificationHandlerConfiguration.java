@@ -1144,7 +1144,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean isAppealOnTime = asylumCase
-                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                    .read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == NO).orElse(false);
 
                 RemissionOption remissionOption = asylumCase
@@ -1179,7 +1179,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentPaid = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -1201,7 +1201,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
 
                 boolean payLater = asylumCase
@@ -1257,7 +1257,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentPaid = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 boolean payLater = asylumCase
@@ -1304,7 +1304,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean isOutOfTimeAppeal = asylumCase
-                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                    .read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
                 RemissionOption remissionOption = asylumCase
@@ -1743,7 +1743,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean isApplicationRefused = asylumCase
-                    .read(AsylumCaseDefinition.APPLICATION_DECISION, String.class)
+                    .read(APPLICATION_DECISION, String.class)
                     .map(decision -> decision.equals(ApplicationDecision.REFUSED.toString()))
                     .orElse(false);
 
@@ -1919,7 +1919,7 @@ public class NotificationHandlerConfiguration {
     private String getStitchStatus(Callback<AsylumCase> callback) {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-        Optional<List<IdValue<Bundle>>> maybeCaseBundles = asylumCase.read(AsylumCaseDefinition.CASE_BUNDLES);
+        Optional<List<IdValue<Bundle>>> maybeCaseBundles = asylumCase.read(CASE_BUNDLES);
 
         final List<Bundle> caseBundles = maybeCaseBundles.map(idValues -> idValues
             .stream()
@@ -1937,7 +1937,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                final String instructStatus = asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_HEARING_BUNDLE_READY_INSTRUCT_STATUS, String.class)
+                final String instructStatus = asylumCase.read(
+                        HOME_OFFICE_HEARING_BUNDLE_READY_INSTRUCT_STATUS, String.class)
                     .orElse("");
 
                 return
@@ -2481,7 +2482,7 @@ public class NotificationHandlerConfiguration {
                 boolean isAipJourney = isAipJourney(asylumCase);
 
                 final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions =
-                    asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
+                    asylumCase.read(TIME_EXTENSIONS);
 
                 final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
                     .orElse(Collections.emptyList()).stream()
@@ -2513,7 +2514,7 @@ public class NotificationHandlerConfiguration {
                 boolean isAipJourney = isAipJourney(asylumCase);
 
                 final Optional<List<IdValue<TimeExtension>>> maybeTimeExtensions =
-                    asylumCase.read(AsylumCaseDefinition.TIME_EXTENSIONS);
+                    asylumCase.read(TIME_EXTENSIONS);
 
                 final Optional<IdValue<TimeExtension>> maybeTargetTimeExtension = maybeTimeExtensions
                     .orElse(Collections.emptyList()).stream()
@@ -2990,7 +2991,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 PaymentStatus paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class).orElse(PAYMENT_PENDING);
+                    .read(PAYMENT_STATUS, PaymentStatus.class).orElse(PAYMENT_PENDING);
 
                 boolean isCorrectAppealType = asylumCase
                     .read(APPEAL_TYPE, AppealType.class)
@@ -3016,14 +3017,14 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isReheardDecisionOutcome = asylumCase
-                    .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                    .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                     .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
                         || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
                     .orElse(false);
 
                 if (!isReheardDecisionOutcome) {
                     isReheardDecisionOutcome = asylumCase
-                        .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
+                        .read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
                             FtpaDecisionOutcomeType.class)
                         .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
                             || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
@@ -3054,14 +3055,14 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isReheardDecisionOutcome = asylumCase
-                        .read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                        .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                         .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
                                 || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
                         .orElse(false);
 
                 if (!isReheardDecisionOutcome) {
                     isReheardDecisionOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
+                            .read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE,
                                     FtpaDecisionOutcomeType.class)
                             .map(decision -> decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString())
                                     || decision.toString().equals(FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()))
@@ -3100,7 +3101,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA).orElse(false);
 
                 String paAppealTypePaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -3377,12 +3378,12 @@ public class NotificationHandlerConfiguration {
                 }
 
                 boolean isReheardDecisionOutcome = asylumCase
-                    .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                    .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                     .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                     .orElse(false);
                 if (!isReheardDecisionOutcome) {
                     isReheardDecisionOutcome = asylumCase
-                        .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
+                        .read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
                             FtpaDecisionOutcomeType.class)
                         .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                         .orElse(false);
@@ -3419,12 +3420,12 @@ public class NotificationHandlerConfiguration {
                     }
 
                     boolean isReheardDecisionOutcome = asylumCase
-                            .read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
+                            .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                             .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                             .orElse(false);
                     if (!isReheardDecisionOutcome) {
                         isReheardDecisionOutcome = asylumCase
-                                .read(AsylumCaseDefinition.FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
+                                .read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
                                         FtpaDecisionOutcomeType.class)
                                 .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
                                 .orElse(false);
@@ -3475,7 +3476,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA).orElse(false);
 
                 String paPaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -3499,7 +3500,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA).orElse(false);
 
                 String paPaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -3524,7 +3525,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA).orElse(false);
 
                 String paPaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -3592,7 +3593,7 @@ public class NotificationHandlerConfiguration {
                         && (currentState == State.APPEAL_SUBMITTED);
 
                 Optional<PaymentStatus> paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+                    .read(PAYMENT_STATUS, PaymentStatus.class);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.MARK_APPEAL_PAID
@@ -3621,7 +3622,7 @@ public class NotificationHandlerConfiguration {
                         && (currentState == State.APPEAL_SUBMITTED);
 
                 Optional<PaymentStatus> paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+                    .read(PAYMENT_STATUS, PaymentStatus.class);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.MARK_APPEAL_PAID
@@ -3649,7 +3650,7 @@ public class NotificationHandlerConfiguration {
                         && (currentState == State.APPEAL_SUBMITTED);
 
                 Optional<PaymentStatus> paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+                    .read(PAYMENT_STATUS, PaymentStatus.class);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.MARK_APPEAL_PAID
@@ -3695,7 +3696,7 @@ public class NotificationHandlerConfiguration {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         String eaHuAppealTypePaymentOption = asylumCase
-            .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+            .read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
         State asylumCaseState = callback.getCaseDetails().getState();
         RemissionType remissionType = asylumCase.read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
@@ -4255,12 +4256,12 @@ public class NotificationHandlerConfiguration {
                 boolean isPaAppealType = isPaAppeal(asylumCase);
 
                 String eaHuAppealTypePaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
                 String paAppealTypePaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 Optional<PaymentStatus> paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+                    .read(PAYMENT_STATUS, PaymentStatus.class);
 
                 boolean maybeFeeUpdateRecorded = asylumCase
                     .read(FEE_UPDATE_RECORDED, CheckValues.class)
@@ -4627,12 +4628,12 @@ public class NotificationHandlerConfiguration {
                 final Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
 
                 boolean submissionInTime = asylumCase
-                        .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                        .read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                         .map(yesOrNo -> yesOrNo == YesOrNo.NO)
                         .orElse(false);
 
                 boolean paymentPaid = caseDetailsBefore.isPresent()
-                        ? caseDetailsBefore.get().getCaseData().read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                        ? caseDetailsBefore.get().getCaseData().read(PAYMENT_STATUS, PaymentStatus.class)
                         .map(paymentStatus -> paymentStatus == PAID).orElse(false) : false;
 
                 Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
@@ -4715,7 +4716,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentPaid = asylumCase
-                        .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                        .read(PAYMENT_STATUS, PaymentStatus.class)
                         .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -4740,7 +4741,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     boolean paymentPaid = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .read(PAYMENT_STATUS, PaymentStatus.class)
                             .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -4765,7 +4766,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     boolean paymentPaid = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .read(PAYMENT_STATUS, PaymentStatus.class)
                             .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                     Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
@@ -4793,7 +4794,7 @@ public class NotificationHandlerConfiguration {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                     boolean paymentPaid = asylumCase
-                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .read(PAYMENT_STATUS, PaymentStatus.class)
                             .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                     boolean rejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
@@ -4870,7 +4871,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
 
                 boolean payLater = asylumCase
@@ -4910,7 +4911,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
 
                 boolean payLater = asylumCase
@@ -4948,7 +4949,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
 
                 boolean isPaAppealType = asylumCase
@@ -4976,7 +4977,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
 
                 boolean isPaAppealType = asylumCase
@@ -5094,7 +5095,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .read(PAYMENT_STATUS, PaymentStatus.class)
                     .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
 
                 boolean payLater = asylumCase
@@ -5144,7 +5145,7 @@ public class NotificationHandlerConfiguration {
                     );
 
                 Optional<PaymentStatus> paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+                    .read(PAYMENT_STATUS, PaymentStatus.class);
 
                 return callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                     && callback.getEvent() == Event.PAYMENT_APPEAL
@@ -5458,7 +5459,7 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 Optional<PaymentStatus> paymentStatus = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class);
+                    .read(PAYMENT_STATUS, PaymentStatus.class);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPDATE_PAYMENT_STATUS
@@ -5487,7 +5488,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA).orElse(false);
 
                 String paAppealTypePaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -5515,7 +5516,7 @@ public class NotificationHandlerConfiguration {
                     .map(type -> type == PA).orElse(false);
 
                 String paAppealTypePaymentOption = asylumCase
-                    .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
@@ -6907,7 +6908,7 @@ public class NotificationHandlerConfiguration {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean isRemissionApproved = asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION, RemissionDecision.class)
+                    boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                             .map(decision -> APPROVED == decision)
                             .orElse(false);
 
@@ -7572,7 +7573,7 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 boolean isOutOfTimeAppeal = asylumCase
-                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                    .read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
@@ -7638,7 +7639,7 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 boolean isOutOfTimeAppeal = asylumCase
-                    .read(AsylumCaseDefinition.SUBMISSION_OUT_OF_TIME, YesOrNo.class)
+                    .read(SUBMISSION_OUT_OF_TIME, YesOrNo.class)
                     .map(outOfTime -> outOfTime == YES).orElse(false);
 
                 Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
@@ -7812,7 +7813,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean paymentPaid = caseDetailsBefore.map(
                         asylumCaseCaseDetails -> asylumCaseCaseDetails.getCaseData().read(
-                                AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                                PAYMENT_STATUS, PaymentStatus.class)
                         .map(paymentStatus -> paymentStatus == PAID).orElse(false))
                         .orElse(false);
 
@@ -7923,6 +7924,34 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedSponsorSubmitAppealOutOfTimeWithFeeLetterNotificationHandler(
+        @Qualifier("internalDetainedSubmitAppealWithFeeOutOfTimeSponsorLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isPaymentPending = asylumCase.readAsBoolean(PAYMENT_STATUS, PAYMENT_PENDING::equals);
+                boolean isOutOfTime = asylumCase.readAsBoolean(SUBMISSION_OUT_OF_TIME);
+                boolean hasSponsor = asylumCase.readAsBoolean(HAS_SPONSOR);
+                boolean sponsorAuthorised = asylumCase.readAsBoolean(SPONSOR_AUTHORISATION);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isAppellantInDetention(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isPaymentPending
+                    && isOutOfTime
+                    && hasSponsor
+                    && sponsorAuthorised;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
@@ -8016,21 +8045,21 @@ public class NotificationHandlerConfiguration {
     private boolean isHearingCentreUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
         // HearingCentre should always have values here. If not something is really wrong. This is assuming it will always be there.
         return
-                caseData.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null)
-                        == caseDataBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null);
+                caseData.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null)
+                        == caseDataBefore.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null);
     }
 
     private boolean isDateOfHearingUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
         // Date string value comparision is good enough here.
         return
-                caseData.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class).orElse("")
-                        .equalsIgnoreCase(caseDataBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class).orElse(""));
+                caseData.read(LIST_CASE_HEARING_DATE, String.class).orElse("")
+                        .equalsIgnoreCase(caseDataBefore.read(LIST_CASE_HEARING_DATE, String.class).orElse(""));
     }
 
     private boolean isHearingChannelUnchanged(AsylumCase caseData, AsylumCase caseDataBefore) {
         return
-                caseData.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class).orElse(null)
-                        == caseDataBefore.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class).orElse(null);
+                caseData.read(IS_REMOTE_HEARING, YesOrNo.class).orElse(null)
+                        == caseDataBefore.read(IS_REMOTE_HEARING, YesOrNo.class).orElse(null);
 
     }
 }
