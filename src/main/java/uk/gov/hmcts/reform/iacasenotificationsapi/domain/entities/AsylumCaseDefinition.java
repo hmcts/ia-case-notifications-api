@@ -363,6 +363,18 @@ public enum AsylumCaseDefinition {
     HAS_SPONSOR(
             "hasSponsor", new TypeReference<YesOrNo>() {}),
 
+    SPONSOR_GIVEN_NAMES(
+            "sponsorGivenNames", new TypeReference<String>(){}),
+
+    SPONSOR_FAMILY_NAME(
+            "sponsorFamilyName", new TypeReference<String>(){}),
+
+    SPONSOR_ADDRESS(
+            "sponsorAddress", new TypeReference<AddressUk>(){}),
+
+    SPONSOR_AUTHORISATION(
+            "sponsorAuthorisation", new TypeReference<YesOrNo>(){}),
+
     APPEAL_OUT_OF_COUNTRY(
         "appealOutOfCountry", new TypeReference<YesOrNo>() {}),
 
