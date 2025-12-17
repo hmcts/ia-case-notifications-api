@@ -4122,6 +4122,8 @@ public class NotificationHandlerConfiguration {
                             .map(action -> ADDITIONAL_PAYMENT == action)
                             .orElse(false);
 
+                    boolean sponsorAuthorised = asylumCase.readAsBoolean(SPONSOR_AUTHORISATION);
+
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MANAGE_FEE_UPDATE
                             && additionalPaymentRequested
@@ -4129,6 +4131,7 @@ public class NotificationHandlerConfiguration {
                             && isDlrmFeeRefundEnabled(asylumCase)
                             && isAppellantInDetention(asylumCase)
                             && isSponsored(asylumCase)
+                            && sponsorAuthorised
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase);
                 },
                 notificationGenerators
