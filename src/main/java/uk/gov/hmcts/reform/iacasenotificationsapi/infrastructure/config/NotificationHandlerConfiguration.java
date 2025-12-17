@@ -4104,6 +4104,7 @@ public class NotificationHandlerConfiguration {
         );
 
     }
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> sponsoredManageFeeUpdateAdditionalPaymentRequestedNotificationHandler(
             @Qualifier("sponsoredManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
@@ -5420,9 +5421,9 @@ public class NotificationHandlerConfiguration {
             .orElse(false);
     }
 
-    private boolean isSponsored(AsylumCase asylumCase ){
+    private boolean isSponsored(AsylumCase asylumCase) {
         return asylumCase.read(HAS_SPONSOR, YesOrNo.class)
-                .map(isSponsored->isSponsored == YES)
+                .map(isSponsored -> isSponsored == YES)
                 .orElse(false);
     }
 

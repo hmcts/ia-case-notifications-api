@@ -69,7 +69,7 @@ public class SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation implem
         final String dueDate = systemDateProvider.dueDate(daysToWaitAfterManageFeeUpdate);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
-        .<String, String>builder()
+            .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
@@ -82,7 +82,7 @@ public class SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation implem
                 .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
                 .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("dueDate", dueDate);
-            List<String> address =  getSponserAddressAsList(asylumCase);
+        List<String> address =  getSponserAddressAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
