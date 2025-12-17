@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponso
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getSponserAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getSponsorAddressInCountryOrOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -46,10 +48,8 @@ public class SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation implem
     }
 
     @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return featureToggler.getValue("dlrm-telephony-feature-flag", false)
-                ? SponsorEmailNotificationPersonalisation.super.getRecipientsList(asylumCase)
-                : Collections.emptySet();
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        return getSponsorAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation implem
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_LEGAL_REPRESENTATIVE_ADDITIONAL_PAYMENT_REQUESTED";
+        return caseId + "_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED";
     }
 
     @Override
@@ -68,22 +68,26 @@ public class SponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation implem
 
         final String dueDate = systemDateProvider.dueDate(daysToWaitAfterManageFeeUpdate);
 
-        return
-                ImmutableMap
-                        .<String, String>builder()
-                        .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                        .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                        .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                        .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                        .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                        .put("linkToOnlineService", iaExUiFrontendUrl)
-                        .put("originalFee", convertAsylumCaseFeeValue(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class).orElse("")))
-                        .put("newFee", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
-                        .put("additionalFee", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
-                        .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
-                        .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
-                        .put("dueDate", dueDate)
-                        .build();
+        ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
+        .<String, String>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("originalFee", convertAsylumCaseFeeValue(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("newFee", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("additionalFee", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
+                .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
+                .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
+                .put("dueDate", dueDate);
+            List<String> address =  getSponserAddressAsList(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
+        }
+        return personalizationBuilder.build();
     }
 }
 

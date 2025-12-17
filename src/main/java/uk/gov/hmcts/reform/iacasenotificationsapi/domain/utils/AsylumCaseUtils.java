@@ -283,6 +283,36 @@ public class AsylumCaseUtils {
         return appellantAddressAsList;
     }
 
+    public static List<String> getSponserAddressAsList(final AsylumCase asylumCase) {
+        AddressUk address = asylumCase
+                .read(SPONSOR_ADDRESS, AddressUk.class)
+                .orElseThrow(() -> new IllegalStateException("sponsor address is not present"));
+
+        List<String> sponsorAddressAsList = new ArrayList<>();
+
+        sponsorAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("sponsor address line 1 is not present")));
+        String addressLine2 = address.getAddressLine2().orElse(null);
+        String addressLine3 = address.getAddressLine3().orElse(null);
+
+        if (addressLine2 != null) {
+            sponsorAddressAsList.add(addressLine2);
+        }
+        if (addressLine3 != null) {
+            sponsorAddressAsList.add(addressLine3);
+        }
+        sponsorAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("sponsor address postTown is not present")));
+        sponsorAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("sponsor address postCode is not present")));
+
+        return sponsorAddressAsList;
+    }
+
+    public static Set<String> getSponsorAddressInCountryOrOoc(final AsylumCase asylumCase) {
+        return singleton(getSponserAddressAsList(asylumCase)
+                .stream()
+                .map(item -> item.replaceAll("\\s", ""))
+                .collect(joining("_")));
+    }
+
     public static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
 
         String oocAddressLine1 = asylumCase

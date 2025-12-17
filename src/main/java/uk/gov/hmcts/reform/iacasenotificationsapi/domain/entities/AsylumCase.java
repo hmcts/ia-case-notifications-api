@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.function.Predicate;
+
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 
 public class AsylumCase extends HashMap<String, Object> implements CaseData {
 
@@ -41,5 +44,28 @@ public class AsylumCase extends HashMap<String, Object> implements CaseData {
     public <T> void write(AsylumCaseDefinition asylumCaseDefinition, T value) {
         this.put(asylumCaseDefinition.value(), value);
     }
+
+    public boolean readAsBoolean(AsylumCaseDefinition asylumCaseDefinition) {
+        Optional<?> value = this.read(asylumCaseDefinition);
+
+        if (value.isPresent()) {
+            if (!(value.get() instanceof YesOrNo)) {
+                throw new IllegalArgumentException(
+                        "AsylumCaseDefinition " + asylumCaseDefinition.value()
+                                + " is not of type YesOrNo"
+                );
+            }
+            return value.get() == YesOrNo.YES;
+        }
+
+        return false;
+    }
+
+    public <T> boolean readAsBoolean(AsylumCaseDefinition asylumCaseDefinition, Predicate<T> predicate) {
+        return this.<T>read(asylumCaseDefinition)
+                .map(predicate::test)
+                .orElse(false);
+    }
+
 
 }

@@ -4115,13 +4115,18 @@ public class NotificationGeneratorConfiguration {
     ) {
 
         return singletonList(
-                new EmailNotificationGenerator(
+                new LetterNotificationGenerator(
                         newArrayList(
-                                (EmailNotificationPersonalisation) sponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation
+                                sponsorManageFeeUpdateAdditionalPaymentLetterPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
-                )
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
