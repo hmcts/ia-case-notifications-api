@@ -132,6 +132,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respond
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentTurnOnNotificationsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentUpdateTribunalDecisionRule31PersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentUpdateTribunalDecisionRule32PersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponsor.SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.uppertribunal.UpperTribunalMarkAsReadyForUtTransferPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
@@ -3491,7 +3492,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalMakeAnApplicationNotificationGenerator")
     public List<NotificationGenerator> internalMakeAnApplicationNotificationHandler(
-        HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,        
+        HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3499,7 +3500,7 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    homeOfficeMakeAnApplicationPersonalisation                    
+                    homeOfficeMakeAnApplicationPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -7148,6 +7149,29 @@ public class NotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
+    public List<NotificationGenerator> sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator (
+        SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 }

@@ -1,0 +1,91 @@
+{
+  "description": "DIAC-1417 Send a letter notification to the sponsor for a detained internal case when event update fee is used",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 1417,
+      "eventId": "submitAppeal",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
+          "appellantInUk": "Yes",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "other",
+          "appealType":"refusalOfHumanRights",
+          "paymentStatus": "Payment pending",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
+          "sponsorGivenNames": "Mary",
+          "sponsorFamilyName": "Smith",
+          "sponsorAuthorisation": "Yes",
+          "hasSponsor": "Yes",
+          "sponsorAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          }
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
+        "appellantInUk": "Yes",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "other",
+        "appealType":"refusalOfHumanRights",
+        "paymentStatus": "Payment pending",
+        "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
+        "sponsorGivenNames": "Mary",
+        "sponsorFamilyName": "Smith",
+        "sponsorAuthorisation": "Yes",
+        "hasSponsor": "Yes",
+        "sponsorAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
+        "notificationsSent": [
+          {
+            "id": "1417_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1417_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+
+        ]
+      }
+    }
+  }
+}

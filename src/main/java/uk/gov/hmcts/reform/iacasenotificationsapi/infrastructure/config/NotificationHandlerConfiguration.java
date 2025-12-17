@@ -4107,6 +4107,42 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationHandler(
+            @Qualifier("sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean additionalPaymentRequested = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
+                            .map(action -> ADDITIONAL_PAYMENT == action)
+                            .orElse(false);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.MANAGE_FEE_UPDATE
+                            && additionalPaymentRequested
+                            && isRepJourney(asylumCase)
+                            && isDlrmFeeRefundEnabled(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && isSponsored(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+
+    }
+
+    private boolean isSponsored(AsylumCase asylumCase) {
+        return asylumCase.read(HAS_SPONSOR, YesOrNo.class)
+                .map(isSponsored -> isSponsored == YES)
+                .orElse(false);
+    }
+
+    @Bean
     public PostSubmitCallbackHandler<AsylumCase> nocRequestDecisionLrNotificationHandler(
         @Qualifier("nocRequestDecisionLrNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
