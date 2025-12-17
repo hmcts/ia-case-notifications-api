@@ -4120,13 +4120,15 @@ public class NotificationHandlerConfiguration {
                     boolean additionalPaymentRequested = asylumCase.read(FEE_UPDATE_TRIBUNAL_ACTION, FeeTribunalAction.class)
                             .map(action -> ADDITIONAL_PAYMENT == action)
                             .orElse(false);
+                    boolean sponsorAuth = asylumCase.readAsBoolean(SPONSOR_AUTHORISATION);
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MANAGE_FEE_UPDATE
                             && additionalPaymentRequested
                             && isRepJourney(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isSponsored(asylumCase)
-                            && isDlrmFeeRefundEnabled(asylumCase)
+                            && sponsorAuth
                             && isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators
