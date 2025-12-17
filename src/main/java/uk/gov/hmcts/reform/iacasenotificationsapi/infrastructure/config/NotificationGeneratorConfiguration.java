@@ -7153,8 +7153,8 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator")
-    public List<NotificationGenerator> sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator (
-        SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation,
+    public List<NotificationGenerator> sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedNotificationGenerator(
+        SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -7162,7 +7162,7 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
                 new LetterNotificationGenerator(
                         newArrayList(
-                                SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation
+                                sponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
