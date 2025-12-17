@@ -190,8 +190,14 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
                 APPELLANT_FAMILY_NAMES,
                 SOME_LEGAL_REP_REF_NUMBER);
 
+            Scenario emptyValuesScenario = new Scenario(
+                    "",
+                    "",
+                    "",
+                    "");
 
             scenarios.add(someValuesScenario);
+            scenarios.add(emptyValuesScenario);
 
             return scenarios;
         }

@@ -1408,6 +1408,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_RESPONSE_AMEND
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
                     && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
