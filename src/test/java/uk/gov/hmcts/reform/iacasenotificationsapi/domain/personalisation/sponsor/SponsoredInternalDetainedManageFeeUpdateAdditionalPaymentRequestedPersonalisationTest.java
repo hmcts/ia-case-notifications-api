@@ -128,7 +128,7 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
             assertEquals("160.00", result.get("newFee"));
             assertEquals("20.00", result.get("additionalFee"));
 
-            assertEquals("Some reason", result.get("feeUpdateReason"));
+            assertEquals("Some reason", result.get("feeUpdateReasonSelected"));
             assertEquals("1234-1234", result.get("onlineCaseReferenceNumber"));
 
             assertEquals("01 Jan 2026", result.get("dueDate"));
@@ -173,7 +173,7 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
             assertEquals("", result.get("originalFee"));
             assertEquals("", result.get("newFee"));
             assertEquals("", result.get("additionalFee"));
-            assertEquals("", result.get("feeUpdateReason"));
+            assertEquals("", result.get("feeUpdateReasonSelected"));
             assertEquals("", result.get("onlineCaseReferenceNumber"));
             assertEquals("02 Jan 2026", result.get("dueDate"));
             assertEquals("addr1", result.get("address_line_1"));
