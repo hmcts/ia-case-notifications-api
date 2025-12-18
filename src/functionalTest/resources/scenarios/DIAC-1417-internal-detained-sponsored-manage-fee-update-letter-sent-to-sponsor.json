@@ -76,16 +76,13 @@
         "isAcceleratedAppeal": "No",
         "detentionFacility": "immigrationRemovalCentre",
         "ircName": "Brookhouse",
-
         "hasSponsor": "Yes",
         "sponsorAuthorisation": "Yes",
-
         "feeUpdateTribunalAction": "additionalPayment",
-
         "notificationsSent": [
           {
             "id": "1417_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+            "value": ""
           }
         ]
       }
