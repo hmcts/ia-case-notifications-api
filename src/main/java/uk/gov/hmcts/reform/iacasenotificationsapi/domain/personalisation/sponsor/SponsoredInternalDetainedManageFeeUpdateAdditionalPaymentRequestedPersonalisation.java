@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -27,24 +26,20 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysToWaitAfterManageFeeUpdate;
-    private final FeatureToggler featureToggler;
-
 
     public SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation(
             @NotNull(message = "manageFeeUpdateAdditionalPaymentTemplateId cannot be null")
-            @Value("${govnotify.template.manageFeeUpdate.legalRep.additionalPayment.email}") String manageFeeUpdateAdditionalPaymentTemplateId,
+            @Value("${govnotify.template.manageFeeUpdate.sponsor.letter}") String manageFeeUpdateAdditionalPaymentTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             SystemDateProvider systemDateProvider,
-            @Value("${legalRepDaysToWait.afterManageFeeUpdate}") int daysToWaitAfterManageFeeUpdate,
-            FeatureToggler featureToggler
+            @Value("${legalRepDaysToWait.afterManageFeeUpdate}") int daysToWaitAfterManageFeeUpdate
     ) {
         this.manageFeeUpdateAdditionalPaymentTemplateId = manageFeeUpdateAdditionalPaymentTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysToWaitAfterManageFeeUpdate = daysToWaitAfterManageFeeUpdate;
-        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -79,9 +74,10 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
                 .put("originalFee", convertAsylumCaseFeeValue(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class).orElse("")))
                 .put("newFee", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
                 .put("additionalFee", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
-                .put("feeUpdateReason", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
+                .put("feeUpdateReasonSelected", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
                 .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("dueDate", dueDate);
+
         List<String> address =  getSponserAddressAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {

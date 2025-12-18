@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponsor;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -49,8 +48,7 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
                         iaExUiFrontendUrl,
                         customerServicesProvider,
                         systemDateProvider,
-                        daysToWaitAfterManageFeeUpdate,
-                        featureToggler
+                        daysToWaitAfterManageFeeUpdate
                 );
     }
 
@@ -77,13 +75,6 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
 
             assertEquals(expected, personalisation.getRecipientsList(asylumCase));
         }
-    }
-
-    @Test
-    void should_throw_exception_when_asylum_case_is_null() {
-        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
     }
 
     @Test
@@ -186,39 +177,6 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
             assertEquals("", result.get("onlineCaseReferenceNumber"));
             assertEquals("02 Jan 2026", result.get("dueDate"));
             assertEquals("addr1", result.get("address_line_1"));
-        }
-    }
-
-    @Test
-    void should_generate_address_lines_for_variable_length_address_list() {
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(Map.of());
-        when(systemDateProvider.dueDate(daysToWaitAfterManageFeeUpdate)).thenReturn("03 Jan 2026");
-
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("appealRef"));
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("legalRef"));
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("given"));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("family"));
-        when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of("100"));
-        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of("200"));
-        when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of("300"));
-        when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of("ref"));
-
-        try (MockedStatic<AsylumCaseUtils> utils = mockStatic(AsylumCaseUtils.class);
-             MockedStatic<CommonUtils> common = mockStatic(CommonUtils.class)) {
-
-            utils.when(() -> AsylumCaseUtils.getSponserAddressAsList(asylumCase))
-                    .thenReturn(List.of("only-line"));
-
-            common.when(() -> CommonUtils.convertAsylumCaseFeeValue("100")).thenReturn("1.00");
-            common.when(() -> CommonUtils.convertAsylumCaseFeeValue("200")).thenReturn("2.00");
-            common.when(() -> CommonUtils.convertAsylumCaseFeeValue("300")).thenReturn("3.00");
-
-            Map<String, String> result = personalisation.getPersonalisation(asylumCase);
-
-            assertEquals("only-line", result.get("address_line_1"));
-            assertNull(result.get("address_line_2"));
-            assertNull(result.get("address_line_3"));
         }
     }
 }

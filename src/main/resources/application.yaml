@@ -1202,6 +1202,8 @@ govnotify:
         email: b3181829-da2c-4526-9c84-ba0130274a27
         sms: 97ac746b-1e37-4b17-873f-2f010548b7f8
         letter: d74e5a52-8e4b-4ba3-8a16-fb495804e38d
+      sponsor:
+        letter: d74e5a52-8e4b-4ba3-8a16-fb495804e38d
       detentionEngagementTeam:
         email: cc477164-29dd-4d0b-bf83-d38400270ccf
     recordOutOfTimeDecision:
