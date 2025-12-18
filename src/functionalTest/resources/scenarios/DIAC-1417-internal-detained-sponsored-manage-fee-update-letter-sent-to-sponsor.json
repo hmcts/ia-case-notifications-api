@@ -5,13 +5,14 @@
     "credentials": "AdminOfficer",
     "input": {
       "id": 1417,
-      "eventId": "manageFeeUpdate",
+      "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "Yes",
+          "isDlrmFeeRemissionEnabled": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "other",
