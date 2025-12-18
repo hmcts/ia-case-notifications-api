@@ -4127,7 +4127,6 @@ public class NotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.MANAGE_FEE_UPDATE
                             && additionalPaymentRequested
-                            && isDlrmFeeRefundEnabled(asylumCase)
                             && isAppellantInDetention(asylumCase)
                             && isSponsored(asylumCase)
                             && sponsorAuthorised
