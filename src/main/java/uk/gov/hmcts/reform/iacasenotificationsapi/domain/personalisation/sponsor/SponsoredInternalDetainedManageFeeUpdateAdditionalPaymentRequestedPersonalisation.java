@@ -28,7 +28,6 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
     private final int daysToWaitAfterManageFeeUpdate;
 
     public SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation(
-            @NotNull(message = "manageFeeUpdateAdditionalPaymentTemplateId cannot be null")
             @Value("${govnotify.template.manageFeeUpdate.sponsor.letter}") String manageFeeUpdateAdditionalPaymentTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
