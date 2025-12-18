@@ -5,7 +5,7 @@
     "credentials": "AdminOfficer",
     "input": {
       "id": 1417,
-      "eventId": "submitAppeal",
+      "eventId": "manageFeeUpdate",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
