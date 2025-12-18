@@ -11,10 +11,11 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "other",
-          "appealType": "refusalOfHumanRights",
+          "appellantsRepresentation": "Yes",
+          "isAcceleratedAppeal": "No",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Brookhouse",
 
           "hasSponsor": "Yes",
           "sponsorAuthorisation": "Yes",
@@ -29,25 +30,36 @@
             "AddressLine2": "Example Street"
           },
 
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "feeUpdateReason": "appealNotValid",
+
+          "previousFeeAmountGbp": "14000",
+          "feeAmountGbp": "16000",
+          "manageFeeRequestedAmount": "2000",
 
           "feeUpdateTribunalAction": "additionalPayment",
-          "feeAmountGbp": "16000",
-          "previousFeeAmountGbp": "14000",
-          "manageFeeRequestedAmount": "2000",
-          "feeUpdateReason": "caseUpdate",
 
-          "paymentStatus": "Payment pending",
+          "feeUpdateRecorded": {
+            "values": [
+              "feeUpdateRecorded"
+            ]
+          },
 
-          "isInternalCase": "Yes",
-          "journeyType": "appellant"
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalDetainedManageFeeUpdateLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
         }
       }
     }
@@ -58,6 +70,18 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
+        "appellantInDetention": "Yes",
+        "isAcceleratedAppeal": "No",
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Brookhouse",
+
+        "hasSponsor": "Yes",
+        "sponsorAuthorisation": "Yes",
+
+        "feeUpdateTribunalAction": "additionalPayment",
+
         "notificationsSent": [
           {
             "id": "1417_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED",
