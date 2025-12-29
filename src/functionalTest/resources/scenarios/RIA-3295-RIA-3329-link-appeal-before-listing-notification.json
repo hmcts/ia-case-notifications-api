@@ -52,7 +52,7 @@
       },
       {
         "reference": "1234_LINK_APPEAL_HOME_OFFICE",
-        "recipient": "{$endAppealHomeOfficeEmailAddress}",
+        "recipient": "{$lartHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal linked",
         "body": [
           "PA/12345/2019",

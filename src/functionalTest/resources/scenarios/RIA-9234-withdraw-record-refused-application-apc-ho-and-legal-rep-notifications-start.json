@@ -51,7 +51,7 @@
       "notifications": [
         {
           "reference": "923432_RECORD_APPLICATION_HOME_OFFICE",
-          "recipient": "{$endAppealHomeOfficeEmailAddress}",
+          "recipient": "{$lartHomeOfficeEmailAddress}",
           "subject": "Immigration and Asylum appeal: application for withdraw refused",
           "body": [
             "PA/12345/2019",

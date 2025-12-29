@@ -77,7 +77,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
 
     private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private String endAppealHomeOfficeEmailAddress = "ho-end-appeal@example.com";
+    private String reinstateHomeOfficeEmailAddress = "ho-end-appeal@example.com";
     private String homeOfficeHearingCentreEmail = "ho-taylorhouse@example.com";
 
     private String customerServicesTelephone = "555 555 555";
@@ -108,7 +108,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             homeOfficeReinstateAppealAfterListingTemplateId,
             apcPrivateBetaInboxHomeOfficeEmailAddress,
             lartHomeOfficeEmailAddress,
-            endAppealHomeOfficeEmailAddress,
+            reinstateHomeOfficeEmailAddress,
             iaExUiFrontendUrl,
             customerServicesProvider,
             appealService,
@@ -175,7 +175,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
         for (State state : List.of(ADJOURNED, FTPA_SUBMITTED, FTPA_DECIDED, DECISION)) {
             when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
             Set<String> recipientsList = homeOfficeReinstateAppealPersonalisation.getRecipientsList(asylumCase);
-            assertTrue(recipientsList.contains(endAppealHomeOfficeEmailAddress));
+            assertTrue(recipientsList.contains(reinstateHomeOfficeEmailAddress));
         }
     }
 

@@ -29,7 +29,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
     private final EmailAddressFinder emailAddressFinder;
     private final String respondentEmailAddressUntilRespondentReview;
     private final String respondentEmailAddressAtRespondentReview;
-    private final String endAppealEmailAddresses;
+    private final String lartHomeOfficeEmailAddress;
 
     private final PersonalisationProvider personalisationProvider;
     @Value("${govnotify.emailPrefix.ada}")
@@ -45,7 +45,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
             @Value("${respondentEmailAddresses.nonStandardDirectionUntilListing}")
             String respondentEmailAddressUntilRespondentReview,
             @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentEmailAddressAtRespondentReview,
-            @Value("${endAppealHomeOfficeEmailAddress}") String endAppealEmailAddresses,
+            @Value("${lartHomeOfficeEmailAddress}") String lartHomeOfficeEmailAddress,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder,
             PersonalisationProvider personalisationProvider,
@@ -56,7 +56,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
         this.markReadyForUtTransferAfterListingTemplateId = markReadyForUtTransferAfterListingTemplateId;
         this.respondentEmailAddressUntilRespondentReview = respondentEmailAddressUntilRespondentReview;
         this.respondentEmailAddressAtRespondentReview = respondentEmailAddressAtRespondentReview;
-        this.endAppealEmailAddresses = endAppealEmailAddresses;
+        this.lartHomeOfficeEmailAddress = lartHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.emailAddressFinder = emailAddressFinder;
         this.personalisationProvider = personalisationProvider;
@@ -76,7 +76,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
         if (AsylumCaseUtils.isAipJourney(asylumCase)) {
             return (isAppealListed(asylumCase))
                 ? Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)) :
-                Collections.singleton(endAppealEmailAddresses);
+                Collections.singleton(lartHomeOfficeEmailAddress);
         } else {
             return Collections.singleton(getRespondentEmailAddress(asylumCase));
         }

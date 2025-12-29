@@ -22,7 +22,7 @@ public class RecordApplicationRespondentFinder {
     private final Map<HearingCentre, String> homeOfficeEmailAddresses;
 
     public RecordApplicationRespondentFinder(
-        @Value("${endAppealHomeOfficeEmailAddress}") String recordApplicationHomeOfficeEmailAddress,
+        @Value("${lartHomeOfficeEmailAddress}") String recordApplicationHomeOfficeEmailAddress,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentReviewEmailAddress,
         Map<HearingCentre, String> homeOfficeEmailAddresses) {
 

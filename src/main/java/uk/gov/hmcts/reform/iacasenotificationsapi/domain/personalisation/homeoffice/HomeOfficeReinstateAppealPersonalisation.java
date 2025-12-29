@@ -28,7 +28,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
     private final String homeOfficeReinstateAppealAfterListingTemplateId;
     private final String apcHomeOfficeEmailAddress;
     private final String lartHomeOfficeEmailAddress;
-    private final String endAppealEmailAddresses;
+    private final String reinstateHomeOfficeEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
     private final AppealService appealService;
     private final String iaExUiFrontendUrl;
@@ -47,7 +47,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
             @Value("${govnotify.template.reinstateAppeal.homeOffice.afterListing.email}") String homeOfficeReinstateAppealAfterListingTemplateId,
             @Value("${apcHomeOfficeEmailAddress}") String apcHomeOfficeEmailAddress,
             @Value("${lartHomeOfficeEmailAddress}") String lartHomeOfficeEmailAddress,
-            @Value("${endAppealHomeOfficeEmailAddress}") String endAppealEmailAddresses,
+            @Value("${lartHomeOfficeEmailAddress}") String reinstateHomeOfficeEmailAddress,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             AppealService appealService,
@@ -57,7 +57,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
         this.homeOfficeReinstateAppealAfterListingTemplateId = homeOfficeReinstateAppealAfterListingTemplateId;
         this.apcHomeOfficeEmailAddress = apcHomeOfficeEmailAddress;
         this.lartHomeOfficeEmailAddress = lartHomeOfficeEmailAddress;
-        this.endAppealEmailAddresses = endAppealEmailAddresses;
+        this.reinstateHomeOfficeEmailAddress = reinstateHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.appealService = appealService;
@@ -104,7 +104,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
                     State.LISTING).contains(stateBeforeEndAppeal)) {
             return Collections.singleton(lartHomeOfficeEmailAddress);
         } else {
-            return Collections.singleton(endAppealEmailAddresses);
+            return Collections.singleton(reinstateHomeOfficeEmailAddress);
         }
     }
 

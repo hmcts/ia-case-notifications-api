@@ -40,7 +40,7 @@ public class HomeOfficeAppealExitedOnlinePersonalisation implements EmailNotific
         @NotNull(message = "appealExitedOnlineBeforeListingHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.removeAppealFromOnlineBeforeListing.homeOffice.email}") String appealExitedOnlineBeforeListingTemplateId,
         @NotNull(message = "appealExitedOnlineAfterListingHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.removeAppealFromOnlineAfterListing.homeOffice.email}") String appealExitedOnlineAfterListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        @NotNull(message = "home_office email cannot be null") @Value("${endAppealHomeOfficeEmailAddress}") String homeOfficeEmailAddresses,
+        @NotNull(message = "home_office email cannot be null") @Value("${lartHomeOfficeEmailAddress}") String homeOfficeEmailAddresses,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider
     ) {

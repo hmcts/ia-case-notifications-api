@@ -35,7 +35,7 @@ public class HomeOfficeRecordApplicationPersonalisation implements EmailNotifica
     public HomeOfficeRecordApplicationPersonalisation(
         @Value("${govnotify.template.recordRefusedApplicationBeforeListing.homeOffice.email}") String recordRefusedApplicationHomeOfficeBeforeListingTemplateId,
         @Value("${govnotify.template.recordRefusedApplicationAfterListing.homeOffice.email}") String recordRefusedApplicationHomeOfficeAfterListingTemplateId,
-        @Value("${endAppealHomeOfficeEmailAddress}") String recordApplicationHomeOfficeEmailAddress,
+        @Value("${lartHomeOfficeEmailAddress}") String recordApplicationHomeOfficeEmailAddress,
         @Value("${respondentEmailAddresses.respondentReviewDirection}") String respondentReviewEmailAddress,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         Map<HearingCentre, String> homeOfficeEmailAddresses,

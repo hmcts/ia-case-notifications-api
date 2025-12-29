@@ -41,7 +41,7 @@ public class HomeOfficeLinkAppealPersonalisation implements EmailNotificationPer
         @NotNull(message = "linkAppealHomeOfficeAfterTemplateId cannot be null")
         @Value("${govnotify.template.linkAppealAfterListing.homeOffice.email}")
             String linkAppealHomeOfficeAfterListingTemplateId,
-        @Value("${endAppealHomeOfficeEmailAddress}") String linkAppealEmailAddress,
+        @Value("${lartHomeOfficeEmailAddress}") String linkAppealEmailAddress,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider,
         AppealService appealService) {

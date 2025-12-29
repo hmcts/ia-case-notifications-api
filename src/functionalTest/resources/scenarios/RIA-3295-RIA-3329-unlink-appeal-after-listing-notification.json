@@ -54,7 +54,7 @@
       },
       {
         "reference": "1234_UNLINK_APPEAL_HOME_OFFICE",
-        "recipient": "{$endAppealHomeOfficeEmailAddress}",
+        "recipient": "{$lartHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal unlinked",
         "body": [
           "PA/12345/2019",

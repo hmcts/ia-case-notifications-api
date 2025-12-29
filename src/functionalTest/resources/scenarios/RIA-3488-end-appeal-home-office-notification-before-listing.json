@@ -44,7 +44,7 @@
     "notifications": [
       {
         "reference": "348896532_END_APPEAL_HOME_OFFICE",
-        "recipient": "{$endAppealHomeOfficeEmailAddress}",
+        "recipient": "{$lartHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal ended – Withdrawn",
         "body": [
           "PA/12345/2019",
