@@ -132,6 +132,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respond
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentTurnOnNotificationsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentUpdateTribunalDecisionRule31PersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentUpdateTribunalDecisionRule32PersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponsor.SponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponsor.SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.uppertribunal.UpperTribunalMarkAsReadyForUtTransferPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EditListingEmailNotificationGenerator;
@@ -6554,6 +6555,29 @@ public class NotificationGeneratorConfiguration {
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("sponsoredInternalRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+    public List<NotificationGenerator> sponsoredInternalRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator(
+            SponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation sponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                sponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender

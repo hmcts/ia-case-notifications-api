@@ -7355,6 +7355,40 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> sponsoredInternalRemissionPartiallyGrantedOrRefusedLetterNotificationHandler(
+            @Qualifier("sponsoredInternalRemissionPartiallyGrantedOrRefusedLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean sponsorAuthorised = asylumCase.readAsBoolean(SPONSOR_AUTHORISATION);
+
+                    boolean isRemissionPartiallyApprovedOrRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                            .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
+                            .orElse(false);
+
+                    Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == RECORD_REMISSION_DECISION
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isAppellantInDetention(asylumCase)
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                            && isRemissionPartiallyApprovedOrRejected
+                            && lateRemissionType.isEmpty()
+                            && isSponsored(asylumCase)
+                            && sponsorAuthorised;
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalCaseDisposeUnderRule31Or32AppellantLetterHandler(
         @Qualifier("internalCaseDisposeUnderRule31Or32AppellantLetterGenerator")
         List<NotificationGenerator> notificationGenerators) {
