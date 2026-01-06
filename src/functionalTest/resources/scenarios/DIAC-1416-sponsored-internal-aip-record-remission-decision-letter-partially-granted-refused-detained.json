@@ -11,7 +11,6 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantsRepresentation": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "other",
           "appellantInUk": "Yes",
@@ -43,7 +42,6 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantsRepresentation": "Yes",
         "appellantInDetention": "Yes",
         "detentionFacility": "other",
         "appellantInUk": "Yes",
