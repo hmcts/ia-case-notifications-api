@@ -52,7 +52,7 @@ public class SponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetter
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER";
+        return caseId + "_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_SPONSOR_LETTER";
     }
 
     @Override
