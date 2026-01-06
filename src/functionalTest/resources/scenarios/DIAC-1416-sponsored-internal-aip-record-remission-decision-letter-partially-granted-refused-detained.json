@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1331 Send letter to appellant for record remission decision (partially approved) - ICC detained in Other",
+  "description": "DIAC-1416 Send letter to sponsor for record remission decision denied or rejected - ICC detained",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -47,7 +47,11 @@
         "appellantInDetention": "Yes",
         "detentionFacility": "other",
         "appellantInUk": "Yes",
-        "appellantAddress": {
+        "hasSponsor": "Yes",
+        "sponsorAuthorisation": "Yes",
+        "sponsorGivenNames": "Mary",
+        "sponsorFamilyName": "Smith",
+        "sponsorAddress": {
           "County": "",
           "Country": "United Kingdom",
           "PostCode": "NE21JX",
