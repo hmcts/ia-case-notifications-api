@@ -29,7 +29,7 @@ public class SponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetter
     private final SystemDateProvider systemDateProvider;
 
     public SponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation(
-            @Value("${govnotify.template.remissionDecision.appellant.partiallyApproved.letter}") String sponsoredAppellantInternalRemissionDecisionLetterTemplateId,
+            @Value("${govnotify.template.remissionDecision.sponsor.partiallyApprovedOrRejected.letter}") String sponsoredAppellantInternalRemissionDecisionLetterTemplateId,
             @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
             CustomerServicesProvider customerServicesProvider,
             SystemDateProvider systemDateProvider
