@@ -118,7 +118,7 @@ class SponsoredAppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersona
     @Test
     void should_return_given_reference_id() {
         assertEquals(
-                ccdCaseId + "_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER",
+                ccdCaseId + "_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_SPONSOR_LETTER",
                 personalisation.getReferenceId(ccdCaseId)
         );
     }
