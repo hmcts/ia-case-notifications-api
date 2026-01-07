@@ -111,6 +111,8 @@ govnotify:
     appealSubmitted:
       sponsor:
         letter:
+          inTime:
+            withFee: d70da0bd-baad-4ae8-ad0a-777b8c7aecc3
           outOfTime:
             withFee: 823d5412-b528-4a17-bdd1-ae66d9b6dadb
       legalRep:

@@ -7952,6 +7952,35 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> internalDetainedSponsorSubmitAppealWithFeeLetterNotificationHandler(
+        @Qualifier("internalDetainedSubmitAppealWithFeeSponsorLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean isPaymentPending = asylumCase.readAsBoolean(PAYMENT_STATUS, PAYMENT_PENDING::equals);
+                boolean isOutOfTime = asylumCase.readAsBoolean(SUBMISSION_OUT_OF_TIME);
+                boolean hasSponsor = asylumCase.readAsBoolean(HAS_SPONSOR);
+                boolean sponsorAuthorised = asylumCase.readAsBoolean(SPONSOR_AUTHORISATION);
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == SUBMIT_APPEAL
+                    && isAppellantInDetention(asylumCase)
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isPaymentPending
+                    && !isOutOfTime
+                    && hasSponsor
+                    && sponsorAuthorised;
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);

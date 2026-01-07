@@ -7150,4 +7150,27 @@ public class NotificationGeneratorConfiguration {
             }
         );
     }
+
+    @Bean("internalDetainedSubmitAppealWithFeeSponsorLetterNotificationGenerator")
+    public List<NotificationGenerator> internalDetainedSubmitAppealOutOfTimeWithFeeSponsorLetterNotificationGenerator(
+        SponsorInternalDetainedAppealSubmittedWithFeePersonalisation sponsorInternalDetainedCaseSubmittedWithFeePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    sponsorInternalDetainedCaseSubmittedWithFeePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success", "body");
+                }
+            }
+        );
+    }
 }
