@@ -7157,7 +7157,7 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                        && callback.getEvent() == LIST_CASE
-                       && (isInternalCase(asylumCase) || hasAppellantEmailOrMobileNumber(asylumCase))
+                       && (isInternalCase(asylumCase) || !hasAppellantEmailOrMobileNumber(asylumCase))
                        && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                        && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
