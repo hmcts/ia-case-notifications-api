@@ -15,7 +15,8 @@
           "listCaseHearingCentre": "glasgow",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
-          "remoteVideoCallTribunalResponse": "Some tribunal response"
+          "remoteVideoCallTribunalResponse": "Some tribunal response",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -38,6 +39,7 @@
         "listCaseHearingCentre": "glasgow",
         "listCaseHearingDate": "2019-05-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "2008_CASE_RE_LISTED_HOME_OFFICE",

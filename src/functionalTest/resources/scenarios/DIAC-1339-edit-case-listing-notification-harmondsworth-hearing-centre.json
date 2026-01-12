@@ -19,6 +19,7 @@
           "appellantInDetention": "Yes",
           "detentionFacility": "prison",
           "prisonName": "Albany",
+          "mobileNumber": "07983000000",
           "hearingChannel": {
             "value": {
               "code": "INTER",
@@ -82,6 +83,7 @@
         "listCaseHearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "13392_CASE_RE_LISTED_HOME_OFFICE",
