@@ -7669,7 +7669,9 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (internalNonDetainedWithAddressAvailable(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
+                    && (internalNonDetainedWithAddressAvailable(asylumCase)
+                        || isDetainedInFacilityType(asylumCase, OTHER)
+                        || !hasAppellantEmailOrMobileNumber(asylumCase));
             }, notificationGenerators
         );
     }
