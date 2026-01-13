@@ -16,7 +16,8 @@
           "listCaseHearingCentre": "bradford",
           "listCaseHearingDate": "2023-02-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "remoteVideoCallTribunalResponse": "Some tribunal response"
+          "remoteVideoCallTribunalResponse": "Some tribunal response",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -25,7 +26,8 @@
           "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "taylorHouse",
           "listCaseHearingDate": "2023-05-03T14:25:15.000",
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "mobileNumber": "07983000000"
         }
       }
     }

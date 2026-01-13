@@ -19,7 +19,8 @@
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "remoteVideoCallTribunalResponse": "Some tribunal response",
-          "isIntegrated": "Yes"
+          "isIntegrated": "Yes",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -47,6 +48,7 @@
         "listCaseHearingCentreAddress": "Birmingham Civil and Family Justice Centre, Priory Courts, 33 Bull Street, B4 6DS",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "1016_CASE_RE_LISTED_HOME_OFFICE",

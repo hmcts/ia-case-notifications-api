@@ -25,6 +25,7 @@
           "isCaseUsingLocationRefData": "Yes",
           "isRemoteHearing": "No",
           "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
+          "mobileNumber": "07983000000",
           "subscriptions": [
             {
               "id": "1",
@@ -65,6 +66,7 @@
         "appealReferenceNumber": "PA/12345/2023",
         "listCaseHearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
+        "mobileNumber": "07983000000",
         "subscriptions": [
           {
             "id": "1",

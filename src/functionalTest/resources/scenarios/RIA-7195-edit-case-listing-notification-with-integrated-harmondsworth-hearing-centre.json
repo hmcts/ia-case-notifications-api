@@ -17,7 +17,8 @@
           "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "isIntegrated": "Yes"
+          "isIntegrated": "Yes",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -42,6 +43,7 @@
         "listCaseHearingCentreAddress": "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "1022_CASE_RE_LISTED_HOME_OFFICE",
