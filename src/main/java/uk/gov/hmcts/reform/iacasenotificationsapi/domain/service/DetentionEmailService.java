@@ -11,11 +11,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @Service
 public class DetentionEmailService {
     private final DetEmailService detEmailService;
-    private final String ctscEmailAddress;
+    private final String ctscDetEmailAddress;
 
-    public DetentionEmailService(DetEmailService detEmailService, @Value("${ctscEmailAddress}") String ctscEmailAddress) {
+    public DetentionEmailService(DetEmailService detEmailService, @Value("${ctscDetEmailAddress}") String ctscDetEmailAddress) {
         this.detEmailService = detEmailService;
-        this.ctscEmailAddress = ctscEmailAddress;
+        this.ctscDetEmailAddress = ctscDetEmailAddress;
     }
 
     public String getDetentionEmailAddress(AsylumCase asylumCase) {
@@ -25,7 +25,7 @@ public class DetentionEmailService {
             if (detentionFacility.get().equals("immigrationRemovalCentre")) {
                 return detEmailService.getDetEmailAddress(asylumCase);
             } else if (detentionFacility.get().equals("prison")) {
-                return  this.ctscEmailAddress;
+                return  this.ctscDetEmailAddress;
             } else {
                 throw new IllegalStateException("Detention facility is not valid");
             }
