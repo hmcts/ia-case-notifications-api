@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 12134,
+      "id": 12135,
       "eventId": "editCaseListing",
       "state": "finalBundling",
       "caseData": {
@@ -116,11 +116,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "12134_CASE_RE_LISTED_NO_CHANGE_HOME_OFFICE",
+            "id": "12135_CASE_RE_LISTED_NO_CHANGE_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "12134_INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE",
+            "id": "12135_CASE_RE_LISTED_NO_CHANGE_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "12135_INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
