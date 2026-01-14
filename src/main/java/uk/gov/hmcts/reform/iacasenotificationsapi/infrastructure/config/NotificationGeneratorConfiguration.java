@@ -6284,28 +6284,6 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("internalSubmitAppealWithFeeOutOfTimeLegalRepLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeLegalRepLetterNotificationGenerator(
-            LegalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation legalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
-    ) {
-
-        return singletonList(
-                new LetterNotificationGenerator(
-                        newArrayList(
-                                legalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                ) {
-                    @Override
-                    public Message getSuccessMessage() {
-                        return new Message("success","body");
-                    }
-                }
-        );
-    }
     @Bean("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
             AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
@@ -6317,6 +6295,29 @@ public class NotificationGeneratorConfiguration {
                 new LetterNotificationGenerator(
                         newArrayList(
                                 appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("internalSubmitAppealWithFeeOutOfTimeLegalRepLetterNotificationGenerator")
+    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeLegalRepLetterNotificationGenerator(
+            LegalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation legalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                legalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
