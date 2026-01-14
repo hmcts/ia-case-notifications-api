@@ -6086,6 +6086,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("internalProgressMigratedCaseOutOfTimeWithFeeAppellantLetterNotificationHandler")
+    public List<NotificationGenerator> internalProgressMigratedCaseOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+            AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("internalSubmitAppealOnTimeWithRemissionAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalSubmitAppealOnTimeWithExemptionAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation appellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation,
