@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1314 Send letter notification to APPELLANT for Submit Appeal out of time fee to pay - detained in other type of detention facility",
+  "description": "DIAC-13142 Send letter notification to LEGAL REP for Submit Appeal out of time fee to pay - detained in other type of detention facility",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -54,7 +54,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1314_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_LEGA_REP_LETTER",
+            "id": "13142_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_LEGA_REP_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
