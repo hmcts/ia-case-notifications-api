@@ -13,6 +13,7 @@
           "isAdmin": "Yes",
           "appellantsRepresentation": "Yes",
           "legalRepresentativeEmailAddress": "rep@mail.com",
+          "legalRepHasAddress": "Yes",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "other",
@@ -20,6 +21,14 @@
           "appealType":"refusalOfHumanRights",
           "paymentStatus": "Payment pending",
           "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
+          "legalRepAddressUK": {
             "County": "",
             "Country": "United Kingdom",
             "PostCode": "NE21JX",
@@ -41,12 +50,21 @@
         "appellantsRepresentation": "Yes",
         "legalRepresentativeEmailAddress": "rep@mail.com",
         "appellantInUk": "Yes",
+        "legalRepHasAddress": "Yes",
         "appellantInDetention": "Yes",
         "detentionFacility": "other",
         "submissionOutOfTime": "Yes",
         "appealType":"refusalOfHumanRights",
         "paymentStatus": "Payment pending",
         "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
+        "legalRepAddressUK": {
           "County": "",
           "Country": "United Kingdom",
           "PostCode": "NE21JX",

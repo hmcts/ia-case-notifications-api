@@ -5847,11 +5847,13 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
+                    boolean legalRep = asylumCase.read(LEGAL_REP_HAS_ADDRESS, YesOrNo.class).map(address -> address == YES).orElse(false);
                     boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == Event.SUBMIT_APPEAL
                             && isInternalCase(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && legalRep
                             && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                             && isSubmissionOutOfTime(asylumCase)
                             && isPaymentPending;
