@@ -19,7 +19,7 @@
           "submissionOutOfTime": "Yes",
           "appealType":"refusalOfHumanRights",
           "paymentStatus": "Payment pending",
-          "legalRepAddressUK": {
+          "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
             "PostCode": "NE21JX",
@@ -46,7 +46,7 @@
         "submissionOutOfTime": "Yes",
         "appealType":"refusalOfHumanRights",
         "paymentStatus": "Payment pending",
-        "legalRepAddressUK": {
+        "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
           "PostCode": "NE21JX",
