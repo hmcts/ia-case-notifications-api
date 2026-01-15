@@ -12,10 +12,9 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "Yes",
+          "legalRepresentativeEmailAddress": "rep@mail.com",
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
-          "legalRepresentativeEmailAddress": "rep@mail.com",
-
           "detentionFacility": "other",
           "submissionOutOfTime": "Yes",
           "appealType":"refusalOfHumanRights",

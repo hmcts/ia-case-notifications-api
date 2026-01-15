@@ -5853,7 +5853,6 @@ public class NotificationHandlerConfiguration {
                             && callback.getEvent() == Event.SUBMIT_APPEAL
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && hasRepEmail(asylumCase)
                             && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
                             && isSubmissionOutOfTime(asylumCase)
                             && isPaymentPending;

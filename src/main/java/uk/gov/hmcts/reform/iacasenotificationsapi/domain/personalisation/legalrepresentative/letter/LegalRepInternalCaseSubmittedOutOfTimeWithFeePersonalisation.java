@@ -44,8 +44,8 @@ public class LegalRepInternalCaseSubmittedOutOfTimeWithFeePersonalisation implem
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getLegalRepAddressInCountryOrOoc(asylumCase);
-    }
+        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
+                getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);    }
 
     @Override
     public String getReferenceId(Long caseId) {
