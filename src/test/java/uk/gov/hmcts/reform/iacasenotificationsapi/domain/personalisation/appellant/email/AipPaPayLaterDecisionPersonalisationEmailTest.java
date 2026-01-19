@@ -39,8 +39,8 @@ class AipPaPayLaterDecisionPersonalisationEmailTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
-        aipPaPayLaterDecisionPersonalisationEmail = new aipPaPayLaterDecisionPersonalisationEmail(
-                paPayLaterDecisionTemplateId,
+        aipPaPayLaterDecisionPersonalisationEmail = new AipPaPayLaterDecisionPersonalisationEmail(
+                aipPaPayLaterCDecisionTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
         );
@@ -55,8 +55,6 @@ class AipPaPayLaterDecisionPersonalisationEmailTest {
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
-        when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         Map<String, String> personalisation =
