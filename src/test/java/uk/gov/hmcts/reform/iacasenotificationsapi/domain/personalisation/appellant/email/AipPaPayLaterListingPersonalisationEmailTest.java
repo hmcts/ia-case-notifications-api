@@ -33,8 +33,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
     private Long caseId = 12345L;
     private String aipPaPayLaterListingTemplateId = "aipPaPayLaterListingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
+    private String feeAmount = "40.00";
     private String someTestDateEmail = "14/14/2024";
     private AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail;
 
