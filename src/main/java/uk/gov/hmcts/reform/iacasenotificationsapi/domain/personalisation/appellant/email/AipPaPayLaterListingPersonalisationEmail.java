@@ -34,16 +34,7 @@ public class AipPaPayLaterListingPersonalisationEmail implements EmailNotificati
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        RemissionDecision remissionDecision = asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION, RemissionDecision.class)
-                .orElseThrow(() -> new IllegalStateException("Remission decision not found"));
-
-        if (remissionDecision.equals(RemissionDecision.PARTIALLY_APPROVED)) {
-            return paymentPartiallyApprovedReminderTemplateId;
-        } else if (remissionDecision.equals(RemissionDecision.REJECTED)) {
-            return paymentRejectedReminderTemplateId;
-        }
-        throw new IllegalStateException("error retrieving remission decision");
+        return paPayLaterListingTemplateId;
     }
 
     @Override
