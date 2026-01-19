@@ -1397,6 +1397,15 @@ govnotify:
         email: 390843b2-0cab-4860-8e12-be98b9db2ca4
       legalRep:
         email: ec2e4278-9638-499c-b2cb-0ac6307e6071
+    caseBuilding:
+      paPayLater:
+        email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+    listing:
+      paPayLater:
+        email: f2f9ddb7-e063-472e-b67d-a5a7882a464a
+    decision:
+      paPayLater:
+        email: d72c84b8-b92d-4ce3-9938-fd86818576a5
     turnOnNotifications:
       homeOffice:
         beforeListing:
