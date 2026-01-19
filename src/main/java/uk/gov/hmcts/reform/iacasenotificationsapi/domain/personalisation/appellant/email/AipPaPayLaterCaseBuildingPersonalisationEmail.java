@@ -23,7 +23,7 @@ public class AipPaPayLaterCaseBuildingPersonalisationEmail implements EmailNotif
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public AipRemissionRequestAutomaticReminderEmail(
+    public AipPaPayLaterCaseBuildingPersonalisationEmail(
             @Value("${govnotify.template.caseBuilding.paPayLater.email}") String paPayLaterCaseBuildingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
     ) {

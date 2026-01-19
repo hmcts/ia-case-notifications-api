@@ -23,7 +23,7 @@ public class AipPaPayLaterDecisionPersonalisationEmail implements EmailNotificat
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public AipRemissionRequestAutomaticReminderEmail(
+    public AipPaPayLaterDecisionPersonalisationEmail(
             @Value("${govnotify.template.decision.paPayLater.email}") String paPayLaterDecisionTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
     ) {
