@@ -40,8 +40,6 @@ class AipPaPayLaterListingPersonalisationEmailTest {
     @BeforeEach
     public void setup() {
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-
         aipPaPayLaterListingPersonalisationEmail = new AipPaPayLaterListingPersonalisationEmail(
                 paPayLaterListingTemplateId,
                 iaAipFrontendUrl,
@@ -62,6 +60,6 @@ class AipPaPayLaterListingPersonalisationEmailTest {
         Map<String, String> personalisation =
                 aipPaPayLaterListingPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
+        assertEquals(feeAmount, personalisation.get("feeAmount"));
     }
 }
