@@ -33,7 +33,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
     private Long caseId = 12345L;
     private String aipPaPayLaterListingTemplateId = "aipPaPayLaterListingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
-    private String feeAmount = "40.00";
+    private String feeAmount = "400.00";
     private String someTestDateEmail = "14/14/2024";
     private AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail;
 
@@ -49,7 +49,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_AIP_PA_PAY_LATER_LISTING_EMAIL",
+        assertEquals(caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_EMAIL",
                 aipPaPayLaterListingPersonalisationEmail.getReferenceId(caseId));
     }
 
