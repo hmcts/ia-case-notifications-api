@@ -27,19 +27,19 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String aipPaPayLaterCaseBuildingTeplateId = "aipPaPayLaterCaseBuildingTeplateId";
+    private String aipPaPayLaterCaseBuildingTemplateId = "aipPaPayLaterCaseBuildingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String amountLeftToPay = "4000";
     private String amountLeftToPayInGbp = "40.00";
     private String someTestDateEmail = "14/14/2024";
-    private AipPaPayLaterCaseBuildingEmail aipPaPayLaterCaseBuildingEmail;
+    private AipPaPayLaterCaseBuildingPersonalisationEmail aipPaPayLaterCaseBuildingPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
-        aipPaPayLaterCaseBuildingEmail = new AipPaPayLaterCaseBuildingPersonalisationEmail(
+        aipPaPayLaterCaseBuildingPersonalisationEmail = new aipPaPayLaterCaseBuildingPersonalisationEmail(
                 paPayLaterCaseBuildingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
@@ -49,7 +49,7 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_AIP_PA_PAY_LATER_CASE_BUILDING_EMAIL",
-                aipPaPayLaterCaseBuildingEmail.getReferenceId(caseId));
+                aipPaPayLaterCaseBuildingPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -60,7 +60,7 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         Map<String, String> personalisation =
-                aipRemissionRequestAutomaticReminderEmail.getPersonalisation(asylumCase);
+                aipPaPayLaterCaseBuildingPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
     }

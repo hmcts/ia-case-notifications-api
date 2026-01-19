@@ -31,19 +31,19 @@ class AipPaPayLaterListingPersonalisationEmailTest {
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String aipPaPayLaterListingTeplateId = "aipPaPayLaterListingTeplateId";
+    private String aipPaPayLaterListingTemplateId = "aipPaPayLaterListingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String amountLeftToPay = "4000";
     private String amountLeftToPayInGbp = "40.00";
     private String someTestDateEmail = "14/14/2024";
-    private AipPaPayLaterListingEmail aipPaPayLaterListingEmail;
+    private AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
-        aipPaPayLaterListingEmail = new AipPaPayLaterListingPersonalisationEmail(
+        aipPaPayLaterListingPersonalisationEmail = new AipPaPayLaterListingPersonalisationEmail(
                 paPayLaterListingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
@@ -53,7 +53,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_AIP_PA_PAY_LATER_LISTING_EMAIL",
-                aipPaPayLaterListingEmail.getReferenceId(caseId));
+                aipPaPayLaterListingPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -64,7 +64,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         Map<String, String> personalisation =
-                aipRemissionRequestAutomaticReminderEmail.getPersonalisation(asylumCase);
+                aipPaPayLaterListingPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
     }
