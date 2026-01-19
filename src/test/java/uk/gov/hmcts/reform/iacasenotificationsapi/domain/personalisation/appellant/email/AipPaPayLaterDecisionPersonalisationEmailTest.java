@@ -56,7 +56,7 @@ class AipPaPayLaterDecisionPersonalisationEmailTest {
                 .thenReturn(Optional.of("400000"));
 
         Map<String, String> personalisation =
-                aipPaPayLaterCaseBuildingPersonalisationEmail.getPersonalisation(asylumCase);
+                aipPaPayLaterDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("4000.00", personalisation.get("feeAmount"));
     }
