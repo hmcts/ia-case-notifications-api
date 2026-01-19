@@ -29,7 +29,7 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
     private Long caseId = 12345L;
     private String aipPaPayLaterCaseBuildingTemplateId = "aipPaPayLaterCaseBuildingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
-    private String feeAmount = "40.00";
+    private String feeAmount = "4000";
     private String someTestDateEmail = "14/14/2024";
     private AipPaPayLaterCaseBuildingPersonalisationEmail aipPaPayLaterCaseBuildingPersonalisationEmail;
 
