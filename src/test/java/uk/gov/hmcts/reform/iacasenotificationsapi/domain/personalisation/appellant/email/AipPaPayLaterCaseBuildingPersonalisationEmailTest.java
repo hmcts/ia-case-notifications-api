@@ -52,11 +52,13 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
+        when(asylumCase.read(FEE_AMOUNT_GBP, String.class))
+                .thenReturn(Optional.of("400000"));
 
         Map<String, String> personalisation =
                 aipPaPayLaterCaseBuildingPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(feeAmount, personalisation.get("feeAmount"));
+        assertEquals("4000.00", personalisation.get("feeAmount"));
     }
+
 }
