@@ -53,7 +53,7 @@ public class AipPaPayLaterCaseBuildingPersonalisationEmail implements EmailNotif
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class).orElse("")))
+                .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
                 .build();
     }
 }

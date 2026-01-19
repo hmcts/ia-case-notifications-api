@@ -44,7 +44,7 @@ public class AipPaPayLaterListingPersonalisationEmail implements EmailNotificati
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_AIP_PA_PAY_LATER_DECISION_EMAIL";
+        return caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_EMAIL";
     }
 
     @Override
@@ -53,7 +53,7 @@ public class AipPaPayLaterListingPersonalisationEmail implements EmailNotificati
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class).orElse("")))
+                .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
                 .build();
     }
 }
