@@ -41,7 +41,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
     public void setup() {
 
         aipPaPayLaterListingPersonalisationEmail = new AipPaPayLaterListingPersonalisationEmail(
-                paPayLaterListingTemplateId,
+                aipPaPayLaterListingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
         );

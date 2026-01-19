@@ -37,7 +37,7 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
     public void setup() {
 
         aipPaPayLaterCaseBuildingPersonalisationEmail = new AipPaPayLaterCaseBuildingPersonalisationEmail(
-                paPayLaterCaseBuildingTemplateId,
+                aipPaPayLaterCaseBuildingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
         );
