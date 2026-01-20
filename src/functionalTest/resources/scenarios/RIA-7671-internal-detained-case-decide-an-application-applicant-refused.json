@@ -16,6 +16,7 @@
           "appellantFamilyName": "User",
           "appealType": "refusalOfEu",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "isAcceleratedDetainedAppeal": "No",
           "appellantInDetention": "Yes",
           "decideAnApplicationId": "1",
@@ -55,7 +56,7 @@
                 "date":"",
                 "decision":"Refused",
                 "state":"caseBuilding",
-                "applicantRole":"caseworker-ia-admofficer",
+                "applicantRole":"ctsc",
                 "decisionReason":"A reason for the decision",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Tribunal Caseworker"

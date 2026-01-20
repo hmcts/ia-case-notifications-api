@@ -12,6 +12,8 @@
         "replacements": {
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "decideAnApplicationId": "1",
           "notificationAttachmentDocuments": [
             {
@@ -40,7 +42,7 @@
                 "date":"",
                 "decision":"Refused",
                 "state":"appealSubmitted",
-                "applicantRole":"caseworker-ia-admofficer",
+                "applicantRole":"ctsc",
                 "decisionReason":"No Reason given",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Judge"

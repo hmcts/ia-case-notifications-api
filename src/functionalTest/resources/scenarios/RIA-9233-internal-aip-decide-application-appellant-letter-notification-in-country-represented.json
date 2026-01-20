@@ -1,5 +1,6 @@
 {
   "description": "RIA-9233 Send letter notification to Legal Rep for Decide Application (by appellant) - In country (internal case creation - represented)",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
@@ -25,7 +26,7 @@
                 "date":"",
                 "decision":"Granted",
                 "state":"appealSubmitted",
-                "applicantRole": "caseworker-ia-admofficer",
+                "applicantRole": "ctsc",
                 "decisionReason":"No Reason given",
                 "decisionDate":"{$TODAY}",
                 "decisionMaker": "Judge"
@@ -68,7 +69,7 @@
               "date":"",
               "decision":"Granted",
               "state":"appealSubmitted",
-              "applicantRole":"caseworker-ia-admofficer",
+              "applicantRole":"ctsc",
               "decisionReason":"No Reason given",
               "decisionDate":"{$TODAY}",
               "decisionMaker": "Judge"

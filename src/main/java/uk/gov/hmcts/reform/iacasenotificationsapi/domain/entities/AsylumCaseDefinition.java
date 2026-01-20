@@ -53,6 +53,9 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_REFERENCE_NUMBER(
             "legalRepReferenceNumber", new TypeReference<String>(){}),
 
+    LEGAL_REP_REF_NUMBER_PAPER_J(
+            "legalRepRefNumberPaperJ", new TypeReference<String>(){}),
+
     APPEAL_REFERENCE_NUMBER(
             "appealReferenceNumber", new TypeReference<String>(){}),
 
@@ -92,11 +95,17 @@ public enum AsylumCaseDefinition {
     LEGAL_REP_FAMILY_NAME(
         "legalRepFamilyName", new TypeReference<String>(){}),
 
+    LEGAL_REP_FAMILY_NAME_PAPER_J(
+        "legalRepFamilyNamePaperJ", new TypeReference<String>(){}),
+
     LEGAL_REP_COMPANY_NAME(
             "legalRepCompanyName", new TypeReference<String>(){}),
 
     LEGAL_REP_COMPANY(
         "legalRepCompany", new TypeReference<String>(){}),
+
+    LEGAL_REP_COMPANY_PAPER_J(
+        "legalRepCompanyPaperJ", new TypeReference<String>(){}),
 
     LEGAL_REP_COMPANY_ADDRESS(
             "legalRepCompanyAddress", new TypeReference<AddressUk>(){}),
@@ -287,6 +296,8 @@ public enum AsylumCaseDefinition {
 
     PA_APPEAL_TYPE_PAYMENT_OPTION(
         "paAppealTypePaymentOption", new TypeReference<String>(){}),
+    PA_APPEAL_TYPE_AIP_PAYMENT_OPTION(
+            "paAppealTypeAipPaymentOption", new TypeReference<String>(){}),
     EA_HU_APPEAL_TYPE_PAYMENT_OPTION(
             "eaHuAppealTypePaymentOption", new TypeReference<String>() {}),
 
@@ -470,6 +481,8 @@ public enum AsylumCaseDefinition {
         "ircName", new TypeReference<String>(){}),
     DETENTION_FACILITY(
         "detentionFacility", new TypeReference<String>(){}),
+    DETENTION_BUILDING(
+        "detentionBuilding", new TypeReference<String>(){}),
     PREVIOUS_DETENTION_LOCATION(
             "previousDetentionLocation", new TypeReference<String>() {}),
     PRISON_NAME(
@@ -608,6 +621,12 @@ public enum AsylumCaseDefinition {
 
     TTL(
             "TTL", new TypeReference<TtlCcdObject>(){}),
+
+    PRISON_NOMS(
+            "prisonNOMSNumber", new TypeReference<PrisonNomsNumber>(){}),
+
+    HEARING_CHANNEL(
+            "hearingChannel", new TypeReference<DynamicList>(){}),
 
     LATEST_EDIT_APPEAL_NOTIFICATION_DATE(
             "latestEditAppealNotificationDate", new TypeReference<String>(){}),

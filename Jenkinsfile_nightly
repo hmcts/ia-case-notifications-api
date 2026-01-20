@@ -123,6 +123,7 @@ def secrets = [
 
                 secret('customer-services-telephone', 'IA_CUSTOMER_SERVICES_TELEPHONE'),
                 secret('customer-services-email', 'IA_CUSTOMER_SERVICES_EMAIL'),
+                secret('customer-services-appeal-email', 'IA_CUSTOMER_SERVICES_APPEAL_EMAIL'),
                 secret('fees-admin-officer-email', 'FEES_ADMIN_OFFICER_EMAIL'),
                 secret('payment-exceptions-admin-officer-email', 'PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL'),
 
@@ -137,6 +138,7 @@ def secrets = [
                 secret('utiac-permission-applications-email', 'IA_UPPER_TRIBUNAL_PERMISSION_APPLICATIONS_EMAIL'),
                 secret('nbc-email', 'IA_NBC_EMAIL'),
                 secret('ctsc-email', 'IA_CTSC_EMAIL'),
+                secret('ia-customer-serivce-appeal-email', 'IA_CTSC_DET_EMAIL'),
 
                 secret('launch-darkly-sdk-key', 'LAUNCH_DARKLY_SDK_KEY'),
                 secret('ia-config-validator-secret', 'IA_CONFIG_VALIDATOR_SECRET'),
@@ -158,7 +160,19 @@ def secrets = [
                 secret('bail-test-applicant-mobile', 'IA_TEST_APPLICANT_MOBILE'),
 
                 secret('system-username', 'IA_SYSTEM_USERNAME'),
-                secret('system-password', 'IA_SYSTEM_PASSWORD')
+                secret('system-password', 'IA_SYSTEM_PASSWORD'),
+
+                secret('ia-det-prison-email-mappings', 'IA_DET_PRISON_EMAIL_MAPPINGS'),
+
+                secret('det-irc-brookhouse-email', 'IA_DET_IRC_BROOKHOUSE_EMAIL'),
+                secret('det-irc-campsfieldhouse-email', 'IA_DET_IRC_CAMPSFIELDHOUSE_EMAIL'),
+                secret('det-irc-colnbrook-email', 'IA_DET_IRC_COLNBROOK_EMAIL'),
+                secret('det-irc-derwentside-email', 'IA_DET_IRC_DERWENTSIDE_EMAIL'),
+                secret('det-irc-harmondsworth-email', 'IA_DET_IRC_DUNGAVEL_EMAIL'),
+                secret('det-irc-dungavel-email', 'IA_DET_IRC_HARMONDSWORTH_EMAIL'),
+                secret('det-irc-swinderby-email', 'IA_DET_IRC_SWINDERBY_EMAIL'),
+                secret('det-irc-tinsleyhouse-email', 'IA_DET_IRC_TINSLEYHOUSE_EMAIL'),
+                secret('det-irc-yarlswood-email', 'IA_DET_IRC_YARLSWOOD_EMAIL')
         ]
 ]
 
@@ -187,6 +201,7 @@ withNightlyPipeline(type, product, component) {
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.OPEN_ID_IDAM_URL = "https://idam-web-public.aat.platform.hmcts.net"
     env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    env.ROLE_ASSIGNMENT_URL = "http://am-role-assignment-service-aat.service.core-compute-aat.internal"
 
     loadVaultSecrets(secrets)
 
