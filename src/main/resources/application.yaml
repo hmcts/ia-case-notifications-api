@@ -1400,12 +1400,15 @@ govnotify:
     caseBuilding:
       paPayLater:
         email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+        sms: 0a039334-5604-4f8a-b38b-0c1df140cb9c
     listing:
       paPayLater:
         email: f2f9ddb7-e063-472e-b67d-a5a7882a464a
+        sms: 0a039334-5604-4f8a-b38b-0c1df140cb9c
     decision:
       paPayLater:
         email: d72c84b8-b92d-4ce3-9938-fd86818576a5
+        sms: 0a039334-5604-4f8a-b38b-0c1df140cb9c
     turnOnNotifications:
       homeOffice:
         beforeListing:
