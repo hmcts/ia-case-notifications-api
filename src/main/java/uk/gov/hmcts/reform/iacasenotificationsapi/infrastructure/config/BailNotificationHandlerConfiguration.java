@@ -7,14 +7,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ListingEvent;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PostSubmitCallbackStage;
@@ -62,16 +67,20 @@ public class BailNotificationHandlerConfiguration {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_BAIL_APPLICATION;
 
-                if (canBeHandled) {
-                    BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return !isInternalCase(bailCase);
-                } else {
-                    return false;
-                }
+                BailCase bailCase = callback.getCaseDetails().getCaseData();
+                return canBeHandled && !isInternalCase(bailCase) && isLastEditNotificationNotToday(bailCase);
             },
             bailNotificationGenerators,
             getErrorHandler()
         );
+    }
+
+
+    boolean isLastEditNotificationNotToday(BailCase bailCase) {
+        return !Objects.equals(
+            bailCase
+                .read(LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.class)
+                .orElse(null), LocalDate.now());
     }
 
     @Bean

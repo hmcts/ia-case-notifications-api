@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.LocalDate;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CheckValues;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.*;
@@ -540,7 +541,7 @@ public enum AsylumCaseDefinition {
     IS_VIRTUAL_HEARING("isVirtualHearing", new TypeReference<YesOrNo>(){}),
 
     NOTIFICATIONS("notifications", new TypeReference<List<IdValue<StoredNotification>>>(){}),
-  
+
     LISTING_LOCATION(
         "listingLocation", new TypeReference<DynamicList>(){}),
 
@@ -627,6 +628,9 @@ public enum AsylumCaseDefinition {
 
     HEARING_CHANNEL(
             "hearingChannel", new TypeReference<DynamicList>(){}),
+
+    LAST_EDIT_APPEAL_NOTIFICATION_DATE(
+        "lastEditAppealNotificationDate", new TypeReference<LocalDate>(){}),
     ;
 
 

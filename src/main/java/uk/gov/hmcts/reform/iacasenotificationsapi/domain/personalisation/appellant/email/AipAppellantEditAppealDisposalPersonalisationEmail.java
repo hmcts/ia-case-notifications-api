@@ -70,7 +70,7 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
         } else {
             appellantFullName = appellantGivenamesOpt.orElse("") + " " + appellantFamilyNameOpt.orElse("");
         }
-        return
+        Map<String, String> res =
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -79,5 +79,8 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
                 .put("linkToOnlineService", iaAipFrontendUrl)
                 .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
                 .build();
+
+        asylumCase.write(AsylumCaseDefinition.LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now());
+        return res;
     }
 }

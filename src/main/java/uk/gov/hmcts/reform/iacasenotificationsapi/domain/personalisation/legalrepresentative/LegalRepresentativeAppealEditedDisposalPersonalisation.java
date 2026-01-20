@@ -72,6 +72,7 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisation implements L
             .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .build();
 
+        asylumCase.write(AsylumCaseDefinition.LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now());
         return res;
     }
 }
