@@ -3404,8 +3404,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("paPayLaterCaseBuildingNotificationGenerator")
     public List<NotificationGenerator> paPayLaterCaseBuildingNotificationHandler(
-            PaPayLaterCaseBuildingEmailPersonalisation paPayLaterCaseBuildingEmailPersonalisation,
-            PaPayLaterCaseBuildingSmsPersonalisation paPayLaterCaseBuildingSmsPersonalisation,
+            PaPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail,
+            PaPayLaterCaseBuildingPersonalisationSms paPayLaterCaseBuildingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3413,14 +3413,14 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                paPayLaterCaseBuildingEmailPersonalisation
+                                paPayLaterCaseBuildingPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(
-                                paPayLaterCaseBuildingSmsPersonalisation
+                                paPayLaterCaseBuildingPersonalisationSms
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -3430,8 +3430,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("paPayLaterListingNotificationGenerator")
     public List<NotificationGenerator> paPayLaterListingNotificationHandler(
-            PaPayLaterListingEmailPersonalisation paPayLaterListingEmailPersonalisation,
-            PaPayLaterListingSmsPersonalisation paPayLaterListingSmsPersonalisation,
+            PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail,
+            PaPayLaterListingSmsPersonalisation paPayLaterListingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3439,14 +3439,14 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                paPayLaterListingEmailPersonalisation
+                                paPayLaterListingPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(
-                                paPayLaterListingSmsPersonalisation
+                                paPayLaterListingPersonalisationSms
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -3456,8 +3456,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("paPayLaterDecisionNotificationGenerator")
     public List<NotificationGenerator> paPayLaterDecisionNotificationHandler(
-            PaPayLaterDecisionEmailPersonalisation paPayLaterDecisionEmailPersonalisation,
-            PaPayLaterDecisionSmsPersonalisation paPayLaterDecisionSmsPersonalisation,
+            PaPayLaterDecisionPersonalisationEmail paPayLaterDecisionPersonalisationEmail,
+            PaPayLaterDecisionPersonalisationSms paPayLaterDecisionPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3465,14 +3465,14 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                paPayLaterDecisionEmailPersonalisation
+                                paPayLaterDecisionPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(
-                                paPayLaterDecisionSmsPersonalisation
+                                paPayLaterDecisionPersonalisationSms
                         ),
                         notificationSender,
                         notificationIdAppender
