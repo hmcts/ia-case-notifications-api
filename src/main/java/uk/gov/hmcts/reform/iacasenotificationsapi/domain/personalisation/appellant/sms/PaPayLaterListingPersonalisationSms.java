@@ -53,6 +53,11 @@ public class PaPayLaterListingPersonalisationSms implements SmsNotificationPerso
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+        AsylumCase asylumCase =
+                callback
+                        .getCaseDetails()
+                        .getCaseData();
+
         final String dueDate = systemDateProvider.dueDate(daysAfterNotificationSent);
 
         return ImmutableMap
