@@ -19,11 +19,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -113,7 +111,7 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
         // given
         // when
         Map<String, String> personalisation =
-                aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
+            aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
         assertEquals("someAppellantGivenNames someAppellantFamilyName", personalisation.get("appellantFullName"));
@@ -132,12 +130,12 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
 
         // when
         Map<String, String> personalisation =
-                aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
+            aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
         assertThat(personalisation).isNotEmpty();
         assertEquals("Appellant", personalisation.get("appellantFullName"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        verify(asylumCase).write(eq(LAST_EDIT_APPEAL_NOTIFICATION_DATE), any(LocalDate.class));
+        verify(asylumCase).write(LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now());
     }
 }

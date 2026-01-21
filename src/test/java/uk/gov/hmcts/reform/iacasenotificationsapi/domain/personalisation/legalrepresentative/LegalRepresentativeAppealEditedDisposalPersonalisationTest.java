@@ -18,10 +18,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -117,6 +115,6 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
         assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        verify(asylumCase).write(eq(LAST_EDIT_APPEAL_NOTIFICATION_DATE), any(LocalDate.class));
+        verify(asylumCase).write(LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now());
     }
 }
