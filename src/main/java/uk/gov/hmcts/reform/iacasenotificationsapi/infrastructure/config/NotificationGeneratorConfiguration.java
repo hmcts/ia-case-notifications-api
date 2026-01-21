@@ -3410,7 +3410,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return singletonList(
+        return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
                                 paPayLaterCaseBuildingPersonalisationEmail
@@ -3436,7 +3436,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return singletonList(
+        return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
                                 paPayLaterListingPersonalisationEmail
@@ -3462,7 +3462,7 @@ public class NotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender
     ) {
 
-        return singletonList(
+        return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
                                 paPayLaterDecisionPersonalisationEmail
