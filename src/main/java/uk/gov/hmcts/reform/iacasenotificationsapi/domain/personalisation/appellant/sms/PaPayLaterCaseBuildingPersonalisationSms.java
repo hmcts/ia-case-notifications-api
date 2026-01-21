@@ -20,6 +20,9 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
     private final String paPayLaterCaseBuildingTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
+    private final CustomerServicesProvider customerServicesProvider;
+    private final SystemDateProvider systemDateProvider;
+    private final int daysAfterNotificationSent;
 
     public PaPayLaterCaseBuildingPersonalisationSms(
             @Value("${govnotify.template.caseBuilding.paPayLater.sms}") String paPayLaterCaseBuildingTemplateId,
