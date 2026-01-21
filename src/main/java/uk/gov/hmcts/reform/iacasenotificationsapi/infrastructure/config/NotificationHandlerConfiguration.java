@@ -5577,9 +5577,12 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_APPEAL;
+                if (!canBeHandled) {
+                    return false;
+                }
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                return canBeHandled && isRepJourney(asylumCase) && !isInternalCase(asylumCase)
+                return isRepJourney(asylumCase) && !isInternalCase(asylumCase)
                     && isLastEditNotificationNotToday(asylumCase);
             },
             notificationGenerators,
@@ -5617,8 +5620,11 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_APPEAL;
+                if (!canBeHandled) {
+                    return false;
+                }
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return canBeHandled && isLastEditNotificationNotToday(asylumCase) && isAipJourney(asylumCase);
+                return isLastEditNotificationNotToday(asylumCase) && isAipJourney(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()

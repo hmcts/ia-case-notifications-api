@@ -63,9 +63,11 @@ public class BailNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_BAIL_APPLICATION;
-
+                if (!canBeHandled) {
+                    return false;
+                }
                 BailCase bailCase = callback.getCaseDetails().getCaseData();
-                return canBeHandled && !isInternalCase(bailCase) && isLastEditNotificationNotToday(bailCase);
+                return !isInternalCase(bailCase) && isLastEditNotificationNotToday(bailCase);
             },
             bailNotificationGenerators,
             getErrorHandler()
