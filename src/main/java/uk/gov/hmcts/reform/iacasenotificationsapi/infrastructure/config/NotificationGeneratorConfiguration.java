@@ -3405,7 +3405,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("paPayLaterCaseBuildingNotificationGenerator")
     public List<NotificationGenerator> paPayLaterCaseBuildingNotificationHandler(
             PaPayLaterCaseBuildingEmailPersonalisation paPayLaterCaseBuildingEmailPersonalisation,
-            PaPayLaterCaseBuildingSmsPersonalisation paPayLaterCaseBuildingSmsPersonalisation
+            PaPayLaterCaseBuildingSmsPersonalisation paPayLaterCaseBuildingSmsPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
