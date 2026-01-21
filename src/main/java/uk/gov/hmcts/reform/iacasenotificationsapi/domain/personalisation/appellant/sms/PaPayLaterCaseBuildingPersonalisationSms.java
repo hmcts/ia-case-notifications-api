@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -15,24 +14,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class AipPaPayLaterListingPersonalisationSms implements SmsNotificationPersonalisation {
+public class AipPaPayLaterCaseBuildingPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String paPayLaterListingTemplateId;
+    private final String paPayLaterCaseBuildingTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public AipPaPayLaterListingPersonalisationSms(
-            @Value("${govnotify.template.listing.paPayLater.sms}") String paPayLaterListingTemplateId,
+    public AipPaPayLaterCaseBuildingPersonalisationSms(
+            @Value("${govnotify.template.caseBuilding.paPayLater.sms}") String paPayLaterCaseBuildingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
     ) {
-        this.paPayLaterListingTemplateId = paPayLaterListingTemplateId;
+        this.paPayLaterCaseBuildingTemplateId = paPayLaterCaseBuildingTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return paPayLaterListingTemplateId;
+        return paPayLaterCaseBuildingTemplateId;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class AipPaPayLaterListingPersonalisationSms implements SmsNotificationPe
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_SMS";
+        return caseId + "_AIP_PA_PAY_LATER_CASE_BUILDING_SMS";
     }
 
     @Override

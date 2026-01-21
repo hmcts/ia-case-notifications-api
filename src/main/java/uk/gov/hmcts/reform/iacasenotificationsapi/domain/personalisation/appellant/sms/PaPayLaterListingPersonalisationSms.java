@@ -1,8 +1,7 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -11,18 +10,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class AipPaPayLaterListingPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AipPaPayLaterListingPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String paPayLaterListingTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public AipPaPayLaterListingPersonalisationEmail(
-            @Value("${govnotify.template.listing.paPayLater.email}") String paPayLaterListingTemplateId,
+    public AipPaPayLaterListingPersonalisationSms(
+            @Value("${govnotify.template.listing.paPayLater.sms}") String paPayLaterListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
     ) {
         this.paPayLaterListingTemplateId = paPayLaterListingTemplateId;
@@ -37,12 +36,12 @@ public class AipPaPayLaterListingPersonalisationEmail implements EmailNotificati
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_EMAIL";
+        return caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_SMS";
     }
 
     @Override
@@ -51,8 +50,8 @@ public class AipPaPayLaterListingPersonalisationEmail implements EmailNotificati
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("linkToService", iaAipFrontendUrl)
                 .build();
     }
 }
-
