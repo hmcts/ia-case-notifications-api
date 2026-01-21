@@ -7784,10 +7784,18 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                     return callback.getCaseDetails().getState() == State.CASE_BUILDING
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
                             && paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
@@ -7801,10 +7809,18 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                     return callback.getCaseDetails().getState() == State.LISTING
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
                             && paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
@@ -7818,10 +7834,18 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                     return callback.getCaseDetails().getState() == State.DECISION
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
                             && paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
