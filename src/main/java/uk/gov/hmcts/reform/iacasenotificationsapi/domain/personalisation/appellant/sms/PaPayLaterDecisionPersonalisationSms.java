@@ -23,6 +23,7 @@ public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPers
 
     public PaPayLaterDecisionPersonalisationSms(
             @Value("${govnotify.template.decision.paPayLater.sms}") String paPayLaterDecisionTemplateId,
+            @Value("${appellantDaysToWait.letter.afterManageFeeEvent}") int daysAfterNotificationSent,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder,
             SystemDateProvider systemDateProvider
     ) {

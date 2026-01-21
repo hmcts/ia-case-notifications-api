@@ -23,6 +23,7 @@ public class PaPayLaterListingPersonalisationSms implements SmsNotificationPerso
 
     public PaPayLaterListingPersonalisationSms(
             @Value("${govnotify.template.listing.paPayLater.sms}") String paPayLaterListingTemplateId,
+            @Value("${appellantDaysToWait.letter.afterManageFeeEvent}") int daysAfterNotificationSent,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder,
             SystemDateProvider systemDateProvider
     ) {
