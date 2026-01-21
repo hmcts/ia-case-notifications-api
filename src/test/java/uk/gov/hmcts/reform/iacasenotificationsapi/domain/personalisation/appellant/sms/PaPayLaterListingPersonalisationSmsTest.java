@@ -28,7 +28,7 @@ class PaPayLaterListingPersonalisationSmsTest {
     private Long caseId = 12345L;
     private String paPayLaterListingTemplateId = "paPayLaterListingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
-    private String feeAmount = "400000";
+    private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String someTestDateSms = "14/14/2024";
     private PaPayLaterListingPersonalisationSms paPayLaterListingPersonalisationSms;
 
@@ -51,12 +51,12 @@ class PaPayLaterListingPersonalisationSmsTest {
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(asylumCase.read(FEE_AMOUNT_GBP, String.class))
-                .thenReturn(Optional.of("400000"));
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         Map<String, String> personalisation =
                 paPayLaterListingPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("4000.00", personalisation.get("feeAmount"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
     }
 }
