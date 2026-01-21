@@ -136,6 +136,6 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
         assertThat(personalisation).isNotEmpty();
         assertEquals("Appellant", personalisation.get("appellantFullName"));
         assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        verify(asylumCase).write(LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now());
+        verify(asylumCase).write(LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 }

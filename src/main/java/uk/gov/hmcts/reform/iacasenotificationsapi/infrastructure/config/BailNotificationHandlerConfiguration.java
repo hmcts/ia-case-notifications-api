@@ -6,10 +6,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.START_APPLICATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
@@ -67,19 +66,12 @@ public class BailNotificationHandlerConfiguration {
                     return false;
                 }
                 BailCase bailCase = callback.getCaseDetails().getCaseData();
-                return !isInternalCase(bailCase) && isLastEditNotificationNotToday(bailCase);
+                return !isInternalCase(bailCase) &&
+                    isLastEditNotificationNotToday(bailCase.read(LAST_EDIT_APPLICATION_NOTIFICATION_DATE, String.class));
             },
             bailNotificationGenerators,
             getErrorHandler()
         );
-    }
-
-
-    boolean isLastEditNotificationNotToday(BailCase bailCase) {
-        return !Objects.equals(
-            bailCase
-                .read(LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.class)
-                .orElse(null), LocalDate.now());
     }
 
     @Bean

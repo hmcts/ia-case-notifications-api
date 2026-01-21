@@ -62,7 +62,7 @@ public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmai
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .build();
-        bailCase.write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now());
+        bailCase.write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
         return res;
     }
 }

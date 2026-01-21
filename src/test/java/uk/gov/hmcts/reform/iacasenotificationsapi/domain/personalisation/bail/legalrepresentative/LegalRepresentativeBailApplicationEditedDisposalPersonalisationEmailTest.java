@@ -104,7 +104,7 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertNotNull(personalisation.get("editingDate"));
         verify(bailCase, times(1))
-            .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now());
+            .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 
     @Test
@@ -123,6 +123,6 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
         assertEquals("", personalisation.get("legalRepName"));
         assertEquals("", personalisation.get("legalRepFamilyName"));
         verify(bailCase, times(1))
-            .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now());
+            .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 }

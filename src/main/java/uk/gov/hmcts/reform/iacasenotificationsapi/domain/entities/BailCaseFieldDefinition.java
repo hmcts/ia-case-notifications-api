@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.time.LocalDate;
 import java.util.List;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -315,7 +314,7 @@ public enum BailCaseFieldDefinition {
     TTL(
         "TTL", new TypeReference<TtlCcdObject>(){}),
     LAST_EDIT_APPLICATION_NOTIFICATION_DATE(
-        "lastEditApplicationNotificationDate", new TypeReference<LocalDate>(){}),
+        "lastEditApplicationNotificationDate", new TypeReference<String>(){}),
     ;
 
     private final String value;

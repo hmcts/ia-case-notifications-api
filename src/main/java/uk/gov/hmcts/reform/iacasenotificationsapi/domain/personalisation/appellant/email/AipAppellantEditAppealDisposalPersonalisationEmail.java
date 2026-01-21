@@ -80,7 +80,7 @@ public class AipAppellantEditAppealDisposalPersonalisationEmail implements Email
                 .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
                 .build();
 
-        asylumCase.write(AsylumCaseDefinition.LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now());
+        asylumCase.write(AsylumCaseDefinition.LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
         return res;
     }
 }

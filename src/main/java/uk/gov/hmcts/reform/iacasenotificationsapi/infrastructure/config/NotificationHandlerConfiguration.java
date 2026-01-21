@@ -33,6 +33,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.TIMEOUT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
@@ -56,7 +57,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -5583,7 +5583,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return isRepJourney(asylumCase) && !isInternalCase(asylumCase)
-                    && isLastEditNotificationNotToday(asylumCase);
+                    && isLastEditNotificationNotToday(asylumCase.read(LAST_EDIT_APPEAL_NOTIFICATION_DATE, String.class));
             },
             notificationGenerators,
             getErrorHandler()
@@ -5624,18 +5624,12 @@ public class NotificationHandlerConfiguration {
                     return false;
                 }
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return isLastEditNotificationNotToday(asylumCase) && isAipJourney(asylumCase);
+                return isAipJourney(asylumCase)
+                    && isLastEditNotificationNotToday(asylumCase.read(LAST_EDIT_APPEAL_NOTIFICATION_DATE, String.class));
             },
             notificationGenerators,
             getErrorHandler()
         );
-    }
-
-    boolean isLastEditNotificationNotToday(AsylumCase asylumCase) {
-        return !Objects.equals(
-            asylumCase
-                .read(AsylumCaseDefinition.LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.class)
-                .orElse(null), LocalDate.now());
     }
 
     @Bean
