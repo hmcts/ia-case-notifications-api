@@ -49,6 +49,7 @@ public class PaPayLaterDecisionPersonalisationEmail implements EmailNotification
                 }
             }
         }
+        return null;
     }
 
     @Override

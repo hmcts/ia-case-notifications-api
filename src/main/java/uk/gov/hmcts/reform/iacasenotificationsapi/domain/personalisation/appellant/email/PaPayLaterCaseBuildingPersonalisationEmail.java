@@ -49,6 +49,7 @@ public class PaPayLaterCaseBuildingPersonalisationEmail implements EmailNotifica
                 }
             }
         }
+        return null;
     }
 
     @Override

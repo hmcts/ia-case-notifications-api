@@ -48,6 +48,7 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
                 }
             }
         }
+        return null;
     }
 
     @Override

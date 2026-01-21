@@ -48,6 +48,7 @@ public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPers
                 }
             }
         }
+        return null;
     }
 
     @Override
