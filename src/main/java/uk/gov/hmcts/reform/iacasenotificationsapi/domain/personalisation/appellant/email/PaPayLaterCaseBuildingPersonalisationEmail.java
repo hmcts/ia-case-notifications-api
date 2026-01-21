@@ -6,7 +6,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
