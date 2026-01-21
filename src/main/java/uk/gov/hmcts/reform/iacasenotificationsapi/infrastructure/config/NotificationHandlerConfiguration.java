@@ -7784,7 +7784,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
-                    return callback.getCaseDetails().getState() == State.CASE_BUILDING;
+                    return callback.getCaseDetails().getState() == State.CASE_BUILDING
+                            && ((paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
         );
@@ -7797,7 +7798,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
-                    return callback.getCaseDetails().getState() == State.LISTING;
+                    return callback.getCaseDetails().getState() == State.LISTING
+                            && ((paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
         );
@@ -7810,7 +7812,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
-                    return callback.getCaseDetails().getState() == State.DECISION;
+                    return callback.getCaseDetails().getState() == State.DECISION
+                            && ((paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
         );
