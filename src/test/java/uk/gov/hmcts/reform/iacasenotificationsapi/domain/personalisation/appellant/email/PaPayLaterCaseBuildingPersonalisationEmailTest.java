@@ -18,24 +18,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
+class PaPayLaterCaseBuildingPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String aipPaPayLaterCaseBuildingTemplateId = "aipPaPayLaterCaseBuildingTemplateId";
+    private String paPayLaterCaseBuildingTemplateId = "paPayLaterCaseBuildingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String feeAmount = "400000";
     private String someTestDateEmail = "14/14/2024";
-    private AipPaPayLaterCaseBuildingPersonalisationEmail aipPaPayLaterCaseBuildingPersonalisationEmail;
+    private paPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
-        aipPaPayLaterCaseBuildingPersonalisationEmail = new AipPaPayLaterCaseBuildingPersonalisationEmail(
-                aipPaPayLaterCaseBuildingTemplateId,
+        paPayLaterCaseBuildingPersonalisationEmail = new paPayLaterCaseBuildingPersonalisationEmail(
+                paPayLaterCaseBuildingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
         );
@@ -43,8 +43,8 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_AIP_PA_PAY_LATER_CASE_BUILDING_EMAIL",
-                aipPaPayLaterCaseBuildingPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_PA_PAY_LATER_CASE_BUILDING_EMAIL",
+                paPayLaterCaseBuildingPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -54,7 +54,7 @@ class AipPaPayLaterCaseBuildingPersonalisationEmailTest {
                 .thenReturn(Optional.of("400000"));
 
         Map<String, String> personalisation =
-                aipPaPayLaterCaseBuildingPersonalisationEmail.getPersonalisation(asylumCase);
+                paPayLaterCaseBuildingPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("4000.00", personalisation.get("feeAmount"));
     }
