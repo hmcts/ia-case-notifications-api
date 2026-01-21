@@ -41,7 +41,7 @@ public class PaPayLaterListingPersonalisationSms implements SmsNotificationPerso
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_SMS";
+        return caseId + "_PA_PAY_LATER_CASE_LISTING_SMS";
     }
 
     @Override

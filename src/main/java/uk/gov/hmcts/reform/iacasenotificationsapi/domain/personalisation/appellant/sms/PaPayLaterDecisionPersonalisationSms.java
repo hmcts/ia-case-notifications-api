@@ -41,7 +41,7 @@ public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPers
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_AIP_PA_PAY_LATER_DECISION_SMS";
+        return caseId + "_PA_PAY_LATER_DECISION_SMS";
     }
 
     @Override
