@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class AipPaPayLaterDecisionPersonalisationSms implements SmsNotificationPersonalisation {
+public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String paPayLaterDecisionTemplateId;
     private final RecipientsFinder recipientsFinder;
