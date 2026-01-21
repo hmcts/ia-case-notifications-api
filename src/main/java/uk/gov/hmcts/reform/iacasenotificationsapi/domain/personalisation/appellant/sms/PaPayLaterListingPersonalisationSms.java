@@ -20,6 +20,9 @@ public class PaPayLaterListingPersonalisationSms implements SmsNotificationPerso
     private final String paPayLaterListingTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
+    private final CustomerServicesProvider customerServicesProvider;
+    private final SystemDateProvider systemDateProvider;
+    private final int daysAfterNotificationSent;
 
     public PaPayLaterListingPersonalisationSms(
             @Value("${govnotify.template.listing.paPayLater.sms}") String paPayLaterListingTemplateId,
@@ -50,7 +53,7 @@ public class PaPayLaterListingPersonalisationSms implements SmsNotificationPerso
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         AsylumCase asylumCase =

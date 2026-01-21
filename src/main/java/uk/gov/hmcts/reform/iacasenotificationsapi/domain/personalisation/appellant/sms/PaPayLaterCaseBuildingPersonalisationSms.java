@@ -50,7 +50,7 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         AsylumCase asylumCase =
