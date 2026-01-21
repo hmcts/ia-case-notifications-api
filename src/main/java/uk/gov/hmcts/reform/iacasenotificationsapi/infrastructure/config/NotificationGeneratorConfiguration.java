@@ -3431,7 +3431,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("paPayLaterListingNotificationGenerator")
     public List<NotificationGenerator> paPayLaterListingNotificationHandler(
             PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail,
-            PaPayLaterListingSmsPersonalisation paPayLaterListingPersonalisationSms,
+            PaPayLaterListingPersonalisationSms paPayLaterListingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
