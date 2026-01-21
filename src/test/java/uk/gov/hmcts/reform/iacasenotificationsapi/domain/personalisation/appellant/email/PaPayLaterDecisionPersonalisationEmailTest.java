@@ -18,24 +18,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AipPaPayLaterDecisionPersonalisationEmailTest {
+class PaPayLaterDecisionPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String aipPaPayLaterCDecisionTemplateId = "aipPaPayLaterDecisionTemplateId";
+    private String paPayLaterCDecisionTemplateId = "paPayLaterDecisionTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String feeAmount = "400000";
     private String someTestDateEmail = "14/14/2024";
-    private AipPaPayLaterDecisionPersonalisationEmail aipPaPayLaterDecisionPersonalisationEmail;
+    private PaPayLaterDecisionPersonalisationEmail paPayLaterDecisionPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
-        aipPaPayLaterDecisionPersonalisationEmail = new AipPaPayLaterDecisionPersonalisationEmail(
-                aipPaPayLaterCDecisionTemplateId,
+        paPayLaterDecisionPersonalisationEmail = new PaPayLaterDecisionPersonalisationEmail(
+                paPayLaterCDecisionTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
         );
@@ -43,8 +43,8 @@ class AipPaPayLaterDecisionPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_AIP_PA_PAY_LATER_DECISION_EMAIL",
-                aipPaPayLaterDecisionPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_PA_PAY_LATER_DECISION_EMAIL",
+                paPayLaterDecisionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -54,7 +54,7 @@ class AipPaPayLaterDecisionPersonalisationEmailTest {
                 .thenReturn(Optional.of("400000"));
 
         Map<String, String> personalisation =
-                aipPaPayLaterDecisionPersonalisationEmail.getPersonalisation(asylumCase);
+                paPayLaterDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("4000.00", personalisation.get("feeAmount"));
     }

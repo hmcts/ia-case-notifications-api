@@ -19,24 +19,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AipPaPayLaterListingPersonalisationEmailTest {
+class aPayLaterListingPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String aipPaPayLaterListingTemplateId = "aipPaPayLaterListingTemplateId";
+    private String paPayLaterListingTemplateId = "paPayLaterListingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String feeAmount = "400000";
     private String someTestDateEmail = "14/14/2024";
-    private AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail;
+    private PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
-        aipPaPayLaterListingPersonalisationEmail = new AipPaPayLaterListingPersonalisationEmail(
-                aipPaPayLaterListingTemplateId,
+        paPayLaterListingPersonalisationEmail = new PaPayLaterListingPersonalisationEmail(
+                paPayLaterListingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
         );
@@ -44,8 +44,8 @@ class AipPaPayLaterListingPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_AIP_PA_PAY_LATER_CASE_LISTING_EMAIL",
-                aipPaPayLaterListingPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_PA_PAY_LATER_CASE_LISTING_EMAIL",
+                paPayLaterListingPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -55,7 +55,7 @@ class AipPaPayLaterListingPersonalisationEmailTest {
                 .thenReturn(Optional.of("400000"));
 
         Map<String, String> personalisation =
-                aipPaPayLaterListingPersonalisationEmail.getPersonalisation(asylumCase);
+                paPayLaterListingPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("4000.00", personalisation.get("feeAmount"));
     }
