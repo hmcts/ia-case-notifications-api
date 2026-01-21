@@ -29,7 +29,7 @@ class PaPayLaterCaseBuildingPersonalisationEmailTest {
     private String iaAipFrontendUrl = "http://localhost";
     private String feeAmount = "400000";
     private String someTestDateEmail = "14/14/2024";
-    private paPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail;
+    private PaPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
