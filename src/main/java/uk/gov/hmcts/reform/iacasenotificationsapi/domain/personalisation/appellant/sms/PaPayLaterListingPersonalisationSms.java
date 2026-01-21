@@ -20,7 +20,7 @@ public class PaPayLaterListingPersonalisationSms implements SmsNotificationPerso
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public AipPaPayLaterListingPersonalisationSms(
+    public PaPayLaterListingPersonalisationSms(
             @Value("${govnotify.template.listing.paPayLater.sms}") String paPayLaterListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
     ) {
