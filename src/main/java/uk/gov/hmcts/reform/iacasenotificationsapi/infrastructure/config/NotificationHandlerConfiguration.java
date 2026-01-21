@@ -7799,7 +7799,7 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     return callback.getCaseDetails().getState() == State.LISTING
-                            && ((paPaymentOption.equals("payLater");
+                            && paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
         );
@@ -7813,7 +7813,7 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     return callback.getCaseDetails().getState() == State.DECISION
-                            && ((paPaymentOption.equals("payLater");
+                            && paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
         );
