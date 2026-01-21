@@ -56,7 +56,7 @@ class PaPayLaterCaseBuildingPersonalisationSmsTest {
         Map<String, String> personalisation =
                 paPayLaterCaseBuildingPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
     }
 
 }
