@@ -7785,7 +7785,7 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     return callback.getCaseDetails().getState() == State.CASE_BUILDING
-                            && ((paPaymentOption.equals("payLater");
+                            && paPaymentOption.equals("payLater");
 
                 }, notificationGenerators
         );
