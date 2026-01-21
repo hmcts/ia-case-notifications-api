@@ -31,7 +31,21 @@ public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPers
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return paPayLaterDecisionTemplateId;
+
+        Optional<AppealType> maybeAppealType = asylumCase.read(APPEAL_TYPE, AppealType.class);
+
+        if (maybeAppealType.isPresent() && maybeAppealType.get() == AppealType.PA) {
+            Optional<String> maybePaymentAipOption = asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class);
+            Optional<String> maybePaymentOption = asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class);
+
+            if (maybePaymentAipOption.isPresent() || maybePaymentOption.isPresent()) {
+                String paymentAipOption = maybePaymentAipOption.get();
+                String paymentOption = maybePaymentOption.get();
+                if ("payLater".equals(paymentAipOption) || "payLater".equals(paymentOption)) {
+                    return paPayLaterDecisionTemplateId;
+                }
+            }
+        }
     }
 
     @Override

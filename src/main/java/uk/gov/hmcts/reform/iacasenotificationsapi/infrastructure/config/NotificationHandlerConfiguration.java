@@ -7778,6 +7778,45 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> paPayLaterCaseBuildingNotificationHandler(
+            @Qualifier("paPayLaterCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    return callback.getCaseDetails().getState() == State.CASE_BUILDING;
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> paPayLaterListingNotificationHandler(
+            @Qualifier("paPayLaterListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    return callback.getCaseDetails().getState() == State.LISTING;
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> paPayLaterDecisionNotificationHandler(
+            @Qualifier("paPayLaterDecisionNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    return callback.getCaseDetails().getState() == State.DECISION;
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSendPaymentReminderEmailNotificationHandler(
         @Qualifier("sendPaymentReminderInternalNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

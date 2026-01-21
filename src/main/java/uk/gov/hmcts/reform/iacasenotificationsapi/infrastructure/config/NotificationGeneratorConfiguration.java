@@ -3402,6 +3402,84 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("paPayLaterCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> paPayLaterCaseBuildingNotificationHandler(
+            PaPayLaterCaseBuildingEmailPersonalisation paPayLaterCaseBuildingEmailPersonalisation,
+            PaPayLaterCaseBuildingSmsPersonalisation paPayLaterCaseBuildingSmsPersonalisation
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                paPayLaterCaseBuildingEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                paPayLaterCaseBuildingSmsPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("paPayLaterListingNotificationGenerator")
+    public List<NotificationGenerator> paPayLaterListingNotificationHandler(
+            PaPayLaterListingEmailPersonalisation paPayLaterListingEmailPersonalisation,
+            PaPayLaterListingSmsPersonalisation paPayLaterListingSmsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                paPayLaterListingEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                paPayLaterListingSmsPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("paPayLaterDecisionNotificationGenerator")
+    public List<NotificationGenerator> paPayLaterDecisionNotificationHandler(
+            PaPayLaterDecisionEmailPersonalisation paPayLaterDecisionEmailPersonalisation,
+            PaPayLaterDecisionSmsPersonalisation paPayLaterDecisionSmsPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                paPayLaterDecisionEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                paPayLaterDecisionSmsPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("reinstateAppealNotificationGenerator")
     public List<NotificationGenerator> reinstateAppealNotificationHandler(
         LegalRepresentativeReinstateAppealPersonalisation legalRepresentativeReinstateAppealPersonalisation,
