@@ -7784,6 +7784,9 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
+                    String paPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
                     return callback.getCaseDetails().getState() == State.CASE_BUILDING
                             && paPaymentOption.equals("payLater");
 
@@ -7798,6 +7801,9 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
+                    String paPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
                     return callback.getCaseDetails().getState() == State.LISTING
                             && paPaymentOption.equals("payLater");
 
@@ -7811,6 +7817,9 @@ public class NotificationHandlerConfiguration {
     ) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
+
+                    String paPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                     return callback.getCaseDetails().getState() == State.DECISION
                             && paPaymentOption.equals("payLater");
