@@ -34,7 +34,7 @@ class PaPayLaterCaseBuildingPersonalisationEmailTest {
     @BeforeEach
     public void setup() {
 
-        paPayLaterCaseBuildingPersonalisationEmail = new paPayLaterCaseBuildingPersonalisationEmail(
+        paPayLaterCaseBuildingPersonalisationEmail = new PaPayLaterCaseBuildingPersonalisationEmail(
                 paPayLaterCaseBuildingTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder

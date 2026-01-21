@@ -19,7 +19,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class aPayLaterListingPersonalisationEmailTest {
+class PayLaterListingPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
