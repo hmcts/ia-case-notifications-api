@@ -305,7 +305,7 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, emptyList());
         verifyNoMoreInteractions(notificationIdAppender);
 
-        verify(asylumCase, never()).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+        verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
     @Test

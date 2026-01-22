@@ -334,7 +334,7 @@ public class NotificationGeneratorTest {
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
         verifyNoMoreInteractions(notificationIdAppender);
 
-        verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+        verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
     @Test
