@@ -35,7 +35,7 @@ class PaPayLaterCaseBuildingPersonalisationSmsTest {
     @Mock
     private SystemDateProvider systemDateProvider;
 
-    private PaPayLaterCaseBuildingPersonalisationSms personalisation;
+    private PaPayLaterCaseBuildingPersonalisationSmsTest personalisation;
 
     private final Long caseId = 12345L;
     private final String templateId = "PaPayLaterCaseBuildingTemplateId";
