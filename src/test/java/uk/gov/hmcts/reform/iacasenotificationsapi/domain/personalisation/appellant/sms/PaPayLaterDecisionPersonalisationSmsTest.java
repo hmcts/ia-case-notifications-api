@@ -79,7 +79,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
 
-        Map<String, String> personalisationMap =
+        Map<String, String> personalisation =
                 personalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
