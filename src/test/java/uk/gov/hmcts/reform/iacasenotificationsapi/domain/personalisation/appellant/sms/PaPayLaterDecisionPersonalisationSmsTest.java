@@ -1,3 +1,4 @@
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
