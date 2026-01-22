@@ -66,7 +66,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
                 .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         Map<String, String> personalisationMap =
-                personalisation.getPersonalisation(callback);
+                personalisation.getPersonalisation(asylumCase);
 
         assertEquals(
                 mockedAppealReferenceNumber,
