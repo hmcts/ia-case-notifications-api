@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
@@ -22,7 +21,6 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
     private final String paPayLaterCaseBuildingTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
-    private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterNotificationSent;
 
@@ -56,23 +54,34 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
 
     @Override
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
+        requireNonNull(callback, "callback must not be null");
+        requireNonNull(callback.getCaseDetails(), "caseDetails must not be null");
 
         AsylumCase asylumCase =
                 callback
                         .getCaseDetails()
                         .getCaseData();
 
+        requireNonNull(asylumCase, "asylumCase must not be null");
+
         final String dueDate = systemDateProvider.dueDate(daysAfterNotificationSent);
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("previousDecisionHearingFeeOption", normalizeDecisionHearingOptionText(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
-                .put("updatedDecisionHearingFeeOption", normalizeDecisionHearingOptionText(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
-                .put("newFee", convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
+                .put("appealReferenceNumber",
+                        asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("previousDecisionHearingFeeOption",
+                        normalizeDecisionHearingOptionText(
+                                asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
+                .put("updatedDecisionHearingFeeOption",
+                        normalizeDecisionHearingOptionText(
+                                asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
+                .put("newFee",
+                        convertAsylumCaseFeeValue(
+                                asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
                 .put("dueDate", dueDate)
                 .put("linkToService", iaAipFrontendUrl)
                 .build();
     }
+
 }
