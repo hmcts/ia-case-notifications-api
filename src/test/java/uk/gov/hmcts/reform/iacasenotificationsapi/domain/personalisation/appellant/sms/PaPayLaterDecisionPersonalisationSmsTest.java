@@ -25,12 +25,6 @@ class PaPayLaterDecisionPersonalisationSmsTest {
     private AsylumCase asylumCase;
 
     @Mock
-    private Callback<AsylumCase> callback;
-
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-
-    @Mock
     private RecipientsFinder recipientsFinder;
 
     @Mock
