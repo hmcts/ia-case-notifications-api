@@ -42,6 +42,8 @@ class PaPayLaterDecisionPersonalisationSmsTest {
     private final String iaAipFrontendUrl = "http://localhost";
     private final int daysAfterNotificationSent = 14;
     private String appealReferenceNumber = "appealReferenceNumber";
+    private String withHearing = "decisionWithHearing";
+    private String withoutHearing = "decisionWithoutHearing";
     private int daysAfterRemissionDecision = 14;
     private String newFeeAmount = "8000";
 
