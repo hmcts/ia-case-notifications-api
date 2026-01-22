@@ -67,7 +67,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(
-                caseId + "_PA_PAY_LATER_CASE_BUILDING_SMS",
+                caseId + "_PA_PAY_LATER_DECISION_SMS",
                 paPayLaterDecisionPersonalisationSms.getReferenceId(caseId)
         );
     }

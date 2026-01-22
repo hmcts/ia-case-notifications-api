@@ -2,7 +2,12 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECISION_HEARING_FEE_OPTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NEW_FEE_AMOUNT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_DECISION_HEARING_FEE_OPTION;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,19 +35,27 @@ class PaPayLaterListingPersonalisationSmsTest {
     @Mock
     private SystemDateProvider systemDateProvider;
 
-    private PaPayLaterListingPersonalisationSms personalisation;
+    private PaPayLaterListingPersonalisationSms paPayLaterListingPersonalisationSms;
 
     private final Long caseId = 12345L;
     private final String templateId = "PaPayLaterListingTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final int daysAfterNotificationSent = 14;
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedDueDate = "14/04/2024";
+    private String appealReferenceNumber = "appealReferenceNumber";
+    private String withHearing = "decisionWithHearing";
+    private String withoutHearing = "decisionWithoutHearing";
+    private int daysAfterRemissionDecision = 14;
+    private String newFeeAmount = "8000";
 
     @BeforeEach
     void setup() {
 
-        personalisation = new PaPayLaterListingPersonalisationSms(
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
+        when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
+        when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
+
+        paPayLaterListingPersonalisationSms = new PaPayLaterListingPersonalisationSms(
                 templateId,
                 daysAfterNotificationSent,
                 iaAipFrontendUrl,
@@ -55,22 +68,24 @@ class PaPayLaterListingPersonalisationSmsTest {
     void should_return_given_reference_id() {
         assertEquals(
                 caseId + "_PA_PAY_LATER_LISTING_SMS",
-                personalisation.getReferenceId(caseId)
+                paPayLaterListingPersonalisationSms.getReferenceId(caseId)
         );
     }
 
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+        final String dueDate = LocalDate.now().plusDays(daysAfterRemissionDecision)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
 
-        Map<String, String> personalisationMap =
-                personalisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation =
+                paPayLaterListingPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(
-                mockedAppealReferenceNumber,
-                personalisationMap.get("appealReferenceNumber")
-        );
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals("Decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
+        assertEquals("Decision without hearing", personalisation.get("updatedDecisionHearingFeeOption"));
+        assertEquals("80.00", personalisation.get("newFee"));
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
     }
 }
