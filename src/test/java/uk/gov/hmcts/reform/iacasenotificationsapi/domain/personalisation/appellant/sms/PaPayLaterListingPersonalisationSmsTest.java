@@ -50,11 +50,6 @@ class PaPayLaterListingPersonalisationSmsTest {
     @BeforeEach
     void setup() {
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
-        when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
-        when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
-
         paPayLaterListingPersonalisationSms = new PaPayLaterListingPersonalisationSms(
                 templateId,
                 daysAfterNotificationSent,
