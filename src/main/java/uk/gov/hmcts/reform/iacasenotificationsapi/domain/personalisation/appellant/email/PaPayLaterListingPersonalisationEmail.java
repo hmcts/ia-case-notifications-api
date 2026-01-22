@@ -32,7 +32,7 @@ public class PaPayLaterListingPersonalisationEmail implements EmailNotificationP
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-            return paPayLaterListingTemplateId;
+        return paPayLaterListingTemplateId;
     }
 
     @Override
