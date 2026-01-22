@@ -35,7 +35,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
     @Mock
     private SystemDateProvider systemDateProvider;
 
-    private PaPayLaterDecisionPersonalisationSms personalisation;
+    private PaPayLaterDecisionPersonalisationSms paPayLaterDecisionPersonalisationSms;
 
     private final Long caseId = 12345L;
     private final String templateId = "PaPayLaterDecisionTemplateId";
@@ -68,7 +68,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
     void should_return_given_reference_id() {
         assertEquals(
                 caseId + "_PA_PAY_LATER_CASE_BUILDING_SMS",
-                personalisation.getReferenceId(caseId)
+                paPayLaterDecisionPersonalisationSms.getReferenceId(caseId)
         );
     }
 
@@ -80,7 +80,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
         when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
 
         Map<String, String> personalisation =
-                personalisation.getPersonalisation(asylumCase);
+                paPayLaterDecisionPersonalisationSms.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals("Decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
