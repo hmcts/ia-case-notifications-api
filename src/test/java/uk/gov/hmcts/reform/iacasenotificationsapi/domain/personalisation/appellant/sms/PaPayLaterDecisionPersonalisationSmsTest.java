@@ -55,7 +55,7 @@ class PaPayLaterDecisionPersonalisationSmsTest {
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
 
-        personalisation = new PaPayLaterDecisionPersonalisationSms(
+        paPayLaterDecisionPersonalisationSms = new PaPayLaterDecisionPersonalisationSms(
                 templateId,
                 daysAfterNotificationSent,
                 iaAipFrontendUrl,
