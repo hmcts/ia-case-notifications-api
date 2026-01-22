@@ -55,11 +55,6 @@ class PaPayLaterCaseBuildingPersonalisationSmsTest {
                 recipientsFinder,
                 systemDateProvider
         );
-
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(systemDateProvider.dueDate(daysAfterNotificationSent))
-                .thenReturn(mockedDueDate);
     }
 
     @Test
