@@ -20,19 +20,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @Service
 public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String paPayLaterCaseBuildingTemplateId;
+    private final String templateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterNotificationSent;
 
     public PaPayLaterCaseBuildingPersonalisationSms(
-            @Value("${govnotify.template.caseBuilding.paPayLater.sms}") String paPayLaterCaseBuildingTemplateId,
+            @Value("${govnotify.template.decision.paPayLater.sms}") String templateId,
             @Value("${appellantDaysToWait.letter.afterManageFeeEvent}") int daysAfterNotificationSent,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder,
+            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+            RecipientsFinder recipientsFinder,
             SystemDateProvider systemDateProvider
     ) {
-        this.paPayLaterCaseBuildingTemplateId = paPayLaterCaseBuildingTemplateId;
+        this.templateId = templateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.systemDateProvider = systemDateProvider;
@@ -41,7 +42,7 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return paPayLaterCaseBuildingTemplateId;
+        return templateId;
     }
 
     @Override
@@ -54,36 +55,27 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
         return caseId + "_PA_PAY_LATER_CASE_BUILDING_SMS";
     }
 
-    @Override
-    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
-        requireNonNull(callback, "callback must not be null");
-        requireNonNull(callback.getCaseDetails(), "caseDetails must not be null");
-
-        AsylumCase asylumCase =
-                callback
-                        .getCaseDetails()
-                        .getCaseData();
-
+    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         final String dueDate = systemDateProvider.dueDate(daysAfterNotificationSent);
 
-        return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber",
-                        asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+        return ImmutableMap.<String, String>builder()
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("previousDecisionHearingFeeOption",
-                        normalizeDecisionHearingOptionText(
-                                asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
+                        normalizeDecisionHearingOptionText(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
                 .put("updatedDecisionHearingFeeOption",
-                        normalizeDecisionHearingOptionText(
-                                asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
+                        normalizeDecisionHearingOptionText(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
                 .put("newFee",
-                        convertAsylumCaseFeeValue(
-                                asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
+                        convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
                 .put("dueDate", dueDate)
                 .put("linkToService", iaAipFrontendUrl)
                 .build();
     }
 
+    @Override
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "callback must not be null");
+        return getPersonalisation(callback.getCaseDetails().getCaseData());
+    }
 }

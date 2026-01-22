@@ -39,27 +39,25 @@ class PaPayLaterListingPersonalisationSmsTest {
     @Mock
     private SystemDateProvider systemDateProvider;
 
-    private PaPayLaterListingPersonalisationSms paPayLaterListingPersonalisationSms;
+    private PaPayLaterListingPersonalisationSms personalisation;
 
     private final Long caseId = 12345L;
     private final String templateId = "PaPayLaterListingTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final int daysAfterNotificationSent = 14;
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String withHearing = "decisionWithHearing";
-    private String withoutHearing = "decisionWithoutHearing";
-    private int daysAfterRemissionDecision = 14;
-    private String newFeeAmount = "8000";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String withHearing = "decisionWithHearing";
+    private final String withoutHearing = "decisionWithoutHearing";
+    private final String newFeeAmount = "8000";
 
     @BeforeEach
     void setup() {
-
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
 
-        paPayLaterListingPersonalisationSms = new PaPayLaterListingPersonalisationSms(
+        personalisation = new PaPayLaterListingPersonalisationSms(
                 templateId,
                 daysAfterNotificationSent,
                 iaAipFrontendUrl,
@@ -69,27 +67,21 @@ class PaPayLaterListingPersonalisationSmsTest {
     }
 
     @Test
-    void should_return_given_reference_id() {
-        assertEquals(
-                caseId + "_PA_PAY_LATER_LISTING_SMS",
-                paPayLaterListingPersonalisationSms.getReferenceId(caseId)
-        );
+    void should_return_reference_id() {
+        assertEquals(caseId + "_PA_PAY_LATER_LISTING_SMS", personalisation.getReferenceId(caseId));
     }
 
     @Test
-    void should_return_personalisation_when_all_mandatory_information_given() {
+    void should_return_personalisation_when_all_information_given() {
+        final String dueDate = "14 Apr 2026";
+        when(systemDateProvider.dueDate(daysAfterNotificationSent)).thenReturn(dueDate);
 
-        final String dueDate = LocalDate.now().plusDays(daysAfterRemissionDecision)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-        when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
+        Map<String, String> map = personalisation.getPersonalisation(asylumCase);
 
-        Map<String, String> personalisation =
-                paPayLaterListingPersonalisationSms.getPersonalisation(asylumCase);
-
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("Decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
-        assertEquals("Decision without hearing", personalisation.get("updatedDecisionHearingFeeOption"));
-        assertEquals("80.00", personalisation.get("newFee"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
+        assertEquals(appealReferenceNumber, map.get("appealReferenceNumber"));
+        assertEquals("Decision with hearing", map.get("previousDecisionHearingFeeOption"));
+        assertEquals("Decision without hearing", map.get("updatedDecisionHearingFeeOption"));
+        assertEquals("80.00", map.get("newFee"));
+        assertEquals(dueDate, map.get("dueDate"));
     }
 }
