@@ -13,13 +13,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.BailGov
 public class BailSmsNotificationGenerator implements BailNotificationGenerator {
 
     private final List<BailSmsNotificationPersonalisation> personalisationList;
-    private final BailNotificationIdAppender notificationIdAppender;
+    private final NotificationIdAppender notificationIdAppender;
     private final BailGovNotifyNotificationSender notificationSender;
 
     public BailSmsNotificationGenerator(
         List<BailSmsNotificationPersonalisation> aipPersonalisationList,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         this.personalisationList = aipPersonalisationList;
         this.notificationSender = notificationSender;
@@ -34,7 +34,7 @@ public class BailSmsNotificationGenerator implements BailNotificationGenerator {
         personalisationList.forEach(personalisation -> {
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createSms(personalisation, bailCase, referenceId, callback);
-            notificationIdAppender.appendAll(bailCase, referenceId, notificationIds);
+            notificationIdAppender.appendAllBail(bailCase, referenceId, notificationIds);
         });
     }
 
