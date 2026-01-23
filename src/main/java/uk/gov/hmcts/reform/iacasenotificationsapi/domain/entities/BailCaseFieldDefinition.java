@@ -249,6 +249,8 @@ public enum BailCaseFieldDefinition {
         "detentionFacility", new TypeReference<String>() {}),
     NOTIFICATIONS_SENT(
         "notificationsSent", new TypeReference<List<IdValue<String>>>() {}),
+    NOTIFICATIONS(
+        "notifications", new TypeReference<List<IdValue<StoredNotification>>>(){}),
     SUBMIT_NOTIFICATION_STATUS(
         "submitNotificationStatus", new TypeReference<String>() {}),
     RECORD_DECISION_TYPE(

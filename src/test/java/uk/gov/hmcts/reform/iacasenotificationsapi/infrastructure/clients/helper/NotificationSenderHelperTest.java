@@ -1,6 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.io.InputStream;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.StoredNotification;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -34,6 +43,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS;
@@ -45,6 +55,8 @@ public class NotificationSenderHelperTest {
 
     private static final org.slf4j.Logger LOG = getLogger(NotificationSenderHelperTest.class);
 
+    private static class UnknownCase extends HashMap<String, Object> implements CaseData {}
+
     @Mock
     private RetryableNotificationClient notificationClient;
     @Mock
@@ -54,11 +66,26 @@ public class NotificationSenderHelperTest {
     @Mock
     private AsylumCase asylumCase;
     @Mock
+    private Callback<BailCase> bailCallback;
+    @Mock
+    private CaseDetails<BailCase> bailCaseDetails;
+    @Mock
+    private BailCase bailCase;
+    @Mock
+    private Callback<UnknownCase> unknownCallback;
+    @Mock
+    private CaseDetails<UnknownCase> unknownCaseDetails;
+    @Mock
+    private UnknownCase unknownCase;
+    @Mock
     private StoredNotification storedNotificationMock;
     @Mock
     private StoredNotification storedNotificationMock2;
 
     private NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<AsylumCase>();
+    private NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<BailCase>();
+    private NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<UnknownCase>();
+
     @Mock
     private InputStream stream;
 
@@ -785,5 +812,155 @@ public class NotificationSenderHelperTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals("", result.get(0));
+    }
+
+
+    @Test
+    void storeFailedNotification_should_store_for_asylum_case() throws Exception {
+        when(asylumCallback.getCaseDetails()).thenReturn(asylumCaseDetails);
+        when(asylumCaseDetails.getCaseData()).thenReturn(asylumCase);
+        when(asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS)).thenReturn(Optional.empty());
+        String exceptionMessage = "Status code: 400 {\"errors\":[{\"error\":\"InvalidPhoneError\",\"message\":\"some error message\"}],\"status_code\":400}";
+        NotificationClientException exception = new NotificationClientException(exceptionMessage);
+        when(notificationClient.sendEmail(any(), any(), any(), any())).thenThrow(exception);
+        senderHelper.sendEmail(
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG,
+            asylumCallback
+        );
+
+        ArgumentCaptor<List<IdValue<StoredNotification>>> captor = ArgumentCaptor.forClass(List.class);
+        verify(asylumCase).write(eq(AsylumCaseDefinition.NOTIFICATIONS), captor.capture());
+        List<IdValue<StoredNotification>> notifications = captor.getValue();
+        assertEquals(1, notifications.size());
+        StoredNotification storedNotification = notifications.get(0).getValue();
+        assertEquals("N/A", storedNotification.getNotificationId());
+        assertEquals(emailAddress, storedNotification.getNotificationSentTo());
+        assertEquals("N/A", storedNotification.getNotificationBody());
+        assertEquals("Email", storedNotification.getNotificationMethod());
+        assertEquals("Failed", storedNotification.getNotificationStatus());
+        assertEquals(reference, storedNotification.getNotificationReference());
+        assertEquals(reference, storedNotification.getNotificationSubject());
+        assertEquals("Some error message", storedNotification.getNotificationErrorMessage());
+    }
+
+    @Test
+    void storeFailedNotification_should_store_for_bail_case() throws Exception {
+        when(bailCallback.getCaseDetails()).thenReturn(bailCaseDetails);
+        when(bailCaseDetails.getCaseData()).thenReturn(bailCase);
+        when(bailCase.read(BailCaseFieldDefinition.NOTIFICATIONS)).thenReturn(Optional.empty());
+        String exceptionMessage = "Status code: 400 {\"errors\":[{\"error\":\"InvalidPhoneError\",\"message\":\"some error message\"}],\"status_code\":400}";
+        NotificationClientException exception = new NotificationClientException(exceptionMessage);
+        when(notificationClient.sendEmail(any(), any(), any(), any())).thenThrow(exception);
+        bailSenderHelper.sendEmail(
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG,
+            bailCallback
+        );
+
+        ArgumentCaptor<List<IdValue<StoredNotification>>> captor = ArgumentCaptor.forClass(List.class);
+        verify(bailCase).write(eq(BailCaseFieldDefinition.NOTIFICATIONS), captor.capture());
+        List<IdValue<StoredNotification>> notifications = captor.getValue();
+        assertEquals(1, notifications.size());
+        StoredNotification storedNotification = notifications.get(0).getValue();
+        assertEquals("N/A", storedNotification.getNotificationId());
+        assertEquals(emailAddress, storedNotification.getNotificationSentTo());
+        assertEquals("N/A", storedNotification.getNotificationBody());
+        assertEquals("Email", storedNotification.getNotificationMethod());
+        assertEquals("Failed", storedNotification.getNotificationStatus());
+        assertEquals(reference, storedNotification.getNotificationReference());
+        assertEquals(reference, storedNotification.getNotificationSubject());
+        assertEquals("Some error message", storedNotification.getNotificationErrorMessage());
+    }
+
+    @Test
+    void storeFailedNotification_should_log_for_unsupported_type() throws NotificationClientException {
+        Logger responseLogger = (Logger) LOG;
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        responseLogger.addAppender(listAppender);
+        when(unknownCallback.getCaseDetails()).thenReturn(unknownCaseDetails);
+        when(unknownCaseDetails.getCaseData()).thenReturn(unknownCase);
+        NotificationClientException exception = new NotificationClientException("some error message");
+        when(notificationClient.sendEmail(any(), any(), any(), any())).thenThrow(exception);
+        unknownSenderHelper.sendEmail(
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            responseLogger,
+            unknownCallback
+        );
+        List<ILoggingEvent> logEvents = listAppender.list;
+        assertEquals(3, logEvents.size());
+        assertEquals("Attempting to send email notification to GovNotify: our-reference",
+            logEvents.get(0).getFormattedMessage());
+        assertEquals("Failed to send email using GovNotify for case reference our-reference",
+            logEvents.get(1).getFormattedMessage());
+        assertEquals("Unsupported case data type for storing failed notification: " +
+                "uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelperTest$UnknownCase",
+            logEvents.get(2).getFormattedMessage());
+        verifyNoMoreInteractions(asylumCase, bailCase);
+    }
+
+    @Test
+    void getSortedNotifications_should_append_and_sort() throws NotificationClientException {
+        StoredNotification.StoredNotificationBuilder notificationBuilder = StoredNotification.builder()
+            .notificationStatus("Failed")
+            .notificationSentTo("some-email")
+            .notificationBody("some-body")
+            .notificationMethod("email")
+            .notificationSubject("some-subject");
+
+        StoredNotification pastNotification = notificationBuilder
+            .notificationId("past")
+            .notificationDateSent(ZonedDateTime.now().minusYears(1).toLocalDateTime().toString())
+            .notificationReference("past-ref")
+            .build();
+        StoredNotification futureNotification = notificationBuilder
+            .notificationId("future")
+            .notificationDateSent(ZonedDateTime.now().plusYears(1).toLocalDateTime().toString())
+            .notificationReference("future-ref")
+            .build();
+        IdValue<StoredNotification> pastIdValue = new IdValue<>("1", pastNotification);
+        IdValue<StoredNotification> futureIdValue = new IdValue<>("2", futureNotification);
+
+        List<IdValue<StoredNotification>> maybeExisting = List.of(pastIdValue, futureIdValue);
+        when(asylumCallback.getCaseDetails()).thenReturn(asylumCaseDetails);
+        when(asylumCaseDetails.getCaseData()).thenReturn(asylumCase);
+        when(asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS)).thenReturn(Optional.of(maybeExisting));
+        NotificationClientException exception = new NotificationClientException("some error message");
+        when(notificationClient.sendEmail(any(), any(), any(), any())).thenThrow(exception);
+
+        senderHelper.sendEmail(
+            templateId,
+            emailAddress,
+            personalisation,
+            reference,
+            notificationClient,
+            deduplicateSendsWithinSeconds,
+            LOG,
+            asylumCallback
+        );
+
+        ArgumentCaptor<List<IdValue<StoredNotification>>> captor = ArgumentCaptor.forClass(List.class);
+        verify(asylumCase).write(eq(AsylumCaseDefinition.NOTIFICATIONS), captor.capture());
+        List<IdValue<StoredNotification>> notifications = captor.getValue();
+        assertEquals(3, notifications.size());
+        assertEquals("future-ref", notifications.get(0).getValue().getNotificationReference());
+        assertEquals(reference, notifications.get(1).getValue().getNotificationReference());
+        assertEquals("past-ref", notifications.get(2).getValue().getNotificationReference());
     }
 }
