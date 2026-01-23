@@ -55,7 +55,9 @@ public class NotificationSenderHelperTest {
 
     private static final org.slf4j.Logger LOG = getLogger(NotificationSenderHelperTest.class);
 
-    private static class UnknownCase extends HashMap<String, Object> implements CaseData {}
+    private static class UnknownCase extends HashMap<String, Object> implements CaseData {
+        // noop
+    }
 
     @Mock
     private RetryableNotificationClient notificationClient;
