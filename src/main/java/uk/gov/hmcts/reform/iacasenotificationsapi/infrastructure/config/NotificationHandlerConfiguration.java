@@ -4566,6 +4566,33 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> appealSubmittedLateWithExemptionEmailLegalRepManualNotificationHandler(
+            @Qualifier("appealSubmittedLateWithExemptionEmailLegalRepManualNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isOoc = asylumCase.read(APPELLANT_HAS_FIXED_ADDRESS_ADMIN_J, YesOrNo.class)
+                            .map(flag -> flag.equals(YES))
+                            .orElse(false);
+                    YesOrNo isOutOfTime =
+                            asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(YesOrNo.NO);
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == SUBMIT_APPEAL
+                            && isOutOfTime.equals(YesOrNo.YES)
+                            && isInternalWithLegalRepresentation(asylumCase)
+                            && !isFeeExemptAppeal(asylumCase)
+                            && (isAppellantInDetention(asylumCase) || isOoc || !isAppellantInDetention(asylumCase))
+                            && !isAcceleratedDetainedAppeal(asylumCase);
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedAppealHoUploadBundleEmailNotificationHandler(
             @Qualifier("internalDetainedAppealHoUploadBundle")
             List<NotificationGenerator> notificationGenerators) {

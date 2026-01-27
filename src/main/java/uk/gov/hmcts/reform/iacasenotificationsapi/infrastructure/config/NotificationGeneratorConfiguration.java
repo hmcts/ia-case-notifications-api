@@ -4,6 +4,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -4116,6 +4117,21 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("appealSubmittedLateWithExemptionEmailLegalRepManualNotificationGenerator")
+    public List<NotificationGenerator> appealSubmittedLateWithExemptionEmailLegalRepManualNotificationHandler(
+            LegalRepresentativeAppealSubmittedLateWithFeePersonalisation legalRepresentativeAppealSubmittedLateWithFeePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(legalRepresentativeAppealSubmittedLateWithFeePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
