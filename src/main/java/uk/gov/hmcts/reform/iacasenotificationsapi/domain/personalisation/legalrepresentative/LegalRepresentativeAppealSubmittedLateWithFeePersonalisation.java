@@ -12,7 +12,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +48,13 @@ public class LegalRepresentativeAppealSubmittedLateWithFeePersonalisation implem
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getLegalRepAddressInCountryOrOoc(asylumCase);
+        List<String> address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+
+        String formatted = address.stream()
+                .map(item -> item.replaceAll("\\s", ""))
+                .collect(java.util.stream.Collectors.joining("_"));
+
+        return java.util.Collections.singleton(formatted);
     }
 
     @Override
