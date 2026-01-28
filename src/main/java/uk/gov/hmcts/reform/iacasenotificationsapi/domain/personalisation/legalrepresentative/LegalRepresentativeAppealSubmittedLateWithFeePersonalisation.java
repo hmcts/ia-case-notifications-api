@@ -48,13 +48,7 @@ public class LegalRepresentativeAppealSubmittedLateWithFeePersonalisation implem
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        List<String> address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
-        String formatted = address.stream()
-                .map(item -> item.replaceAll("\\s", ""))
-                .collect(java.util.stream.Collectors.joining("_"));
-
-        return java.util.Collections.singleton(formatted);
+        return getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override

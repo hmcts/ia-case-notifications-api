@@ -102,18 +102,6 @@ class LegalRepAppealSubmittedOutOfTimeWithFeePersonalisationTest {
     }
 
     @Test
-    void should_return_address_in_correct_format_appellant_in_country() {
-        appellantInCountryDataSetup();
-        assertTrue(legalRepCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
-    }
-
-    @Test
-    void should_return_address_in_correct_format_appellant_out_of_country() {
-        appellantOutOfCountryDataSetup();
-        assertTrue(legalRepCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
-    }
-
-    @Test
     void should_return_address_in_correct_format_legalRep_in_country() {
         legalRepInCountryDataSetup();
         assertTrue(legalRepCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
@@ -123,17 +111,6 @@ class LegalRepAppealSubmittedOutOfTimeWithFeePersonalisationTest {
     void should_return_address_in_correct_format_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
         assertTrue(legalRepCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
-    }
-
-    @Test
-    void should_throw_exception_when_cannot_find_address_for_appellant_in_country() {
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-
-        assertThatThrownBy(() -> legalRepCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
     }
 
     @Test
