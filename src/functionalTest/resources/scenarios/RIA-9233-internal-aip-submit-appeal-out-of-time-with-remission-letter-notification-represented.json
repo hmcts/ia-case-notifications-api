@@ -11,13 +11,15 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantsRepresentation": "Yes",
+          "appellantsRepresentation": "No",
           "appellantInUk": "Yes",
-          "appellantInDetention": "Yes",
-          "detentionFacility": "other",
+          "appellantInDetention": "No",
           "submissionOutOfTime": "Yes",
-          "appealType":"refusalOfHumanRights",
-          "paymentStatus": "Payment pending",
+          "isRemissionsEnabled": "Yes",
+          "remissionType":"hoWaiverRemission",
+          "remissionOption": "feeWaiverFromHo",
+          "appealType":"refusalOfEu",
+          "eaHuAppealTypePaymentOption": "payLater",
           "legalRepHasAddress": "Yes",
           "legalRepAddressUK": {
             "County": "",
@@ -38,13 +40,15 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantsRepresentation": "Yes",
+        "appellantsRepresentation": "No",
         "appellantInUk": "Yes",
-        "appellantInDetention": "Yes",
-        "detentionFacility": "other",
+        "appellantInDetention": "No",
         "submissionOutOfTime": "Yes",
-        "appealType":"refusalOfHumanRights",
-        "paymentStatus": "Payment pending",
+        "isRemissionsEnabled": "Yes",
+        "remissionType":"hoWaiverRemission",
+        "remissionOption": "feeWaiverFromHo",
+        "appealType":"refusalOfEu",
+        "eaHuAppealTypePaymentOption": "payLater",
         "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {
           "County": "",
@@ -56,11 +60,7 @@
         },
         "notificationsSent": [
           {
-            "id": "9233_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "9233_LEGAL_REP_MANUAL_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER:",
+            "id": "9233_INTERNAL_SUBMIT_APPEAL_OUT_OF_TIME_WITH_REMISSION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
