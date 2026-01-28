@@ -11,10 +11,12 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInUk": "Yes",
-          "appellantsRepresentation": "No",
-          "appellantInDetention": "No",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "other",
           "submissionOutOfTime": "Yes",
+          "appealType":"refusalOfHumanRights",
           "paymentStatus": "Payment pending",
           "legalRepHasAddress": "Yes",
           "legalRepAddressUK": {
@@ -36,10 +38,12 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInUk": "Yes",
-        "appellantsRepresentation": "No",
-        "appellantInDetention": "No",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "other",
         "submissionOutOfTime": "Yes",
+        "appealType":"refusalOfHumanRights",
         "paymentStatus": "Payment pending",
         "legalRepHasAddress": "Yes",
         "legalRepAddressUK": {
