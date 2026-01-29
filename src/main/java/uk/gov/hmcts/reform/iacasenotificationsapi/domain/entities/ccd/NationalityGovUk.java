@@ -163,7 +163,7 @@ public enum NationalityGovUk {
     OM("Oman"),
     PK("Pakistan"),
     PW("Palau (known also as Belau)"),
-    PS("Occupied Palestinian Territories"),
+    PS("Palestine"),
     PA("Panama"),
     PG("Papua New Guinea"),
     PY("Paraguay"),
