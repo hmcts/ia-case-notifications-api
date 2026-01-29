@@ -42,7 +42,7 @@ public class PaPayLaterListingPersonalisationEmail implements EmailNotificationP
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_PA_PAY_LATER_ISTING_EMAIL";
+        return caseId + "_PA_PAY_LATER_LISTING_EMAIL";
     }
 
     @Override
