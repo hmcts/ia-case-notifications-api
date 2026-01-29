@@ -7196,9 +7196,7 @@ public class NotificationHandlerConfiguration {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == LIST_CASE
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                    return false;
                 },
                 notificationGenerators,
                 getErrorHandler()
