@@ -7796,7 +7796,7 @@ public class NotificationHandlerConfiguration {
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
 
-                    return callback.getCaseDetails().getState() == State.CASE_BUILDING
+                    return callback.getEvent() == BUILD_CASE
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && (paPaymentOption.equals("payLater")
@@ -7825,7 +7825,7 @@ public class NotificationHandlerConfiguration {
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
 
-                    return callback.getCaseDetails().getState() == State.LISTING
+                    return callback.getEvent() == LIST_CASE
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && (paPaymentOption.equals("payLater")
@@ -7853,9 +7853,8 @@ public class NotificationHandlerConfiguration {
 
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
-                    State currentState = callback.getCaseDetails().getState();
 
-                    return currentState == State.DECISION
+                    return callback.getEvent() == SEND_DECISION_AND_REASONS
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && (paPaymentOption.equals("payLater")
