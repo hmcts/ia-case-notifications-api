@@ -7853,8 +7853,9 @@ public class NotificationHandlerConfiguration {
 
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
+                    State currentState = callback.getCaseDetails().getState();
 
-                    return callback.getCaseDetails().getState() == State.DECISION
+                    return currentState == State.DECISION
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && (paPaymentOption.equals("payLater")
