@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.parameters.P;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ListingEvent;
@@ -533,14 +534,18 @@ public class BailNotificationHandlerConfiguration {
     ) {
         return new BailPostSubmitNotificationHandler(
             (callbackStage, callback) -> {
-                boolean hasLrEmail = Optional.ofNullable(callback.getCaseDetails())
-                    .map(CaseDetails::getCaseData)
-                    .flatMap(bailCase -> bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
-                    .filter((email) -> !email.isEmpty())
-                    .isPresent();
-                return hasLrEmail
-                    && callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                    && callback.getEvent() == Event.NOC_REQUEST_BAIL;
+                boolean isNocBail = (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                        && callback.getEvent() == Event.NOC_REQUEST_BAIL);
+
+                if (!isNocBail) {
+                    return false;
+                }
+
+                return Optional.ofNullable(callback.getCaseDetails())
+                        .map(CaseDetails::getCaseData)
+                        .map(this::hasLREmail)
+                        .orElse(false);
+
             },
             bailNotificationGenerators
         );
@@ -552,14 +557,17 @@ public class BailNotificationHandlerConfiguration {
     ) {
         return new BailPostSubmitNotificationHandler(
             (callbackStage, callback) -> {
-                boolean hasLrEmail = Optional.ofNullable(callback.getCaseDetails())
-                    .map(CaseDetails::getCaseData)
-                    .flatMap(bailCase -> bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
-                    .filter((email) -> !email.isEmpty())
-                    .isPresent();
-                return !hasLrEmail
-                    && callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                    && callback.getEvent() == Event.NOC_REQUEST_BAIL;
+                boolean isNocBail = (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                        && callback.getEvent() == Event.NOC_REQUEST_BAIL);
+
+                if (!isNocBail) {
+                    return false;
+                }
+
+                return Optional.ofNullable(callback.getCaseDetails())
+                        .map(CaseDetails::getCaseData)
+                        .map(bailCase -> !hasLREmail(bailCase))
+                        .orElse(true); // want it to trigger if theres no LR email
             },
             bailNotificationGenerators
         );
@@ -762,5 +770,11 @@ public class BailNotificationHandlerConfiguration {
 
     private boolean isInitialListing(BailCase bailCase) {
         return (bailCase.read(LISTING_EVENT, ListingEvent.class).orElse(ListingEvent.INITIAL)) == ListingEvent.INITIAL;
+    }
+
+    private boolean hasLREmail(BailCase bailCase) {
+        return bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)
+                .filter((email) -> !email.isEmpty())
+                .isPresent();
     }
 }
