@@ -40,10 +40,6 @@
         "appealType":"revocationOfProtection",
         "notificationsSent": [
           {
-            "id": "952539git sadasdaad_APPEAL_SUBMITTED_LEGAL_REP",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "952539_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
@@ -51,19 +47,6 @@
       }
     },
     "notifications": [
-      {
-        "reference": "952539_APPEAL_SUBMITTED_LEGAL_REP",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
-        "body": [
-          "PA/12345/2019",
-          "REF54321",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      },
       {
         "reference": "952539_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
