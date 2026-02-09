@@ -3126,7 +3126,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isRpAndDcAppealType
                     && !isAcceleratedDetainedAppeal(asylumCase)
-                    && !isInternalCase(asylumCase);
+                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
