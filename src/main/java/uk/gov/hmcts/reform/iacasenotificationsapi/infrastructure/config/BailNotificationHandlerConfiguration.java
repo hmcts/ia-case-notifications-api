@@ -566,7 +566,7 @@ public class BailNotificationHandlerConfiguration {
                 return Optional.ofNullable(callback.getCaseDetails())
                         .map(CaseDetails::getCaseData)
                         .map(bailCase -> !hasLrEmail(bailCase))
-                        .orElse(false); // want it to trigger if theres no LR email
+                        .orElse(false);
             },
             bailNotificationGenerators
         );
