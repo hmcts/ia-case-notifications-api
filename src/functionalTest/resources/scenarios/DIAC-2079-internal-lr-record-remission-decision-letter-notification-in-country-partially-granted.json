@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2079 LR MAnual Send letter notification (no email) to LR for record remission decision (partially approved) - In country (internal case creation)",
+  "description": "DIAC-2079 LR Manual Send letter notification (no email) to LR for record remission decision (partially approved) - In country (internal case creation)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
