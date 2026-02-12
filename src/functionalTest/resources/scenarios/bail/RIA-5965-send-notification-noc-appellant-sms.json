@@ -27,6 +27,44 @@
       "body": "contains([_BAIL_NOC_CHANGED_LR_ADMIN])",
       "body": "contains([_BAIL_NOC_CHANGED_LR_LEGAL_REPRESENTATIVE])",
       "body": "contains([_BAIL_NOC_CHANGED_LR_HOME_OFFICE])"
+    },
+    "caseData": {
+      "template": "minimal-bail-application-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "5965__BAIL_APPLICATION_ENDED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "5965__BAIL_NOC_CHANGED_LR_ADMIN",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "5965__NOC_CHANGED_LR_APPLICANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "5965__BAIL_NOC_CHANGED_LR_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ],
+        "notifications": [
+          {
+            "reference": "5965_BAIL_APPLICATION_ENDED_HOME_OFFICE",
+            "recipient": "{$bailHomeOfficeEmailAddress}"
+          },
+          {
+            "reference": "5965_BAIL_NOC_CHANGED_LR_ADMIN",
+            "recipient": "{$bailHomeOfficeEmailAddress}"
+          },
+          {
+            "reference": "5965_BAIL_NOC_CHANGED_LR_LEGAL_REPRESENTATIVE",
+            "recipient": "{$TEST_LAW_FIRM_A_USERNAME}"
+          }
+
+        ]
+      }
     }
   }
 }
