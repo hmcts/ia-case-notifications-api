@@ -19,14 +19,12 @@ public class PaPayLaterListingPersonalisationEmail implements EmailNotificationP
 
     private final String paPayLaterListingTemplateId;
     private final RecipientsFinder recipientsFinder;
-    private final String iaAipFrontendUrl;
 
     public PaPayLaterListingPersonalisationEmail(
             @Value("${govnotify.template.listing.paPayLater.email}") String paPayLaterListingTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
     ) {
         this.paPayLaterListingTemplateId = paPayLaterListingTemplateId;
-        this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
 
@@ -52,6 +50,7 @@ public class PaPayLaterListingPersonalisationEmail implements EmailNotificationP
         return ImmutableMap
                 .<String, String>builder()
                 .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .build();
     }
 }

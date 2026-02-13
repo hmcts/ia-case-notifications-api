@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.normalizeDecisionHearingOptionText;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -15,7 +14,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
 public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPersonalisation {
@@ -23,21 +21,15 @@ public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPers
     private final String templateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
-    private final SystemDateProvider systemDateProvider;
-    private final int daysAfterNotificationSent;
 
     public PaPayLaterDecisionPersonalisationSms(
             @Value("${govnotify.template.decision.paPayLater.sms}") String templateId,
-            @Value("${appellantDaysToWait.letter.afterManageFeeEvent}") int daysAfterNotificationSent,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder,
-            SystemDateProvider systemDateProvider
+            RecipientsFinder recipientsFinder
     ) {
         this.templateId = templateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
-        this.systemDateProvider = systemDateProvider;
-        this.daysAfterNotificationSent = daysAfterNotificationSent;
     }
 
     @Override
@@ -58,17 +50,9 @@ public class PaPayLaterDecisionPersonalisationSms implements SmsNotificationPers
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        final String dueDate = systemDateProvider.dueDate(daysAfterNotificationSent);
-
         return ImmutableMap.<String, String>builder()
+                .put("feeAmount", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("previousDecisionHearingFeeOption",
-                        normalizeDecisionHearingOptionText(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
-                .put("updatedDecisionHearingFeeOption",
-                        normalizeDecisionHearingOptionText(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class).orElse("")))
-                .put("newFee",
-                        convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
-                .put("dueDate", dueDate)
                 .put("linkToService", iaAipFrontendUrl)
                 .build();
     }

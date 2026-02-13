@@ -28,8 +28,6 @@ class PaPayLaterListingPersonalisationEmailTest {
     private Long caseId = 12345L;
     private String paPayLaterListingTemplateId = "paPayLaterListingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
-    private String feeAmount = "400000";
-    private String someTestDateEmail = "14/14/2024";
     private PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail;
 
     @BeforeEach

@@ -3,9 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECISION_HEARING_FEE_OPTION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NEW_FEE_AMOUNT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_DECISION_HEARING_FEE_OPTION;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -42,23 +40,17 @@ class PaPayLaterCaseBuildingPersonalisationSmsTest {
     private final String iaAipFrontendUrl = "http://localhost";
     private final int daysAfterNotificationSent = 14;
     private final String appealReferenceNumber = "appealReferenceNumber";
-    private final String withHearing = "decisionWithHearing";
-    private final String withoutHearing = "decisionWithoutHearing";
-    private final String newFeeAmount = "8000";
+    private final String feeAmount = "14000";
 
     @BeforeEach
     void setup() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
-        when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
-        when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
+        when(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         personalisation = new PaPayLaterCaseBuildingPersonalisationSms(
                 templateId,
-                daysAfterNotificationSent,
                 iaAipFrontendUrl,
-                recipientsFinder,
-                systemDateProvider
+                recipientsFinder
         );
     }
 
@@ -75,9 +67,6 @@ class PaPayLaterCaseBuildingPersonalisationSmsTest {
         Map<String, String> map = personalisation.getPersonalisation(asylumCase);
 
         assertEquals(appealReferenceNumber, map.get("appealReferenceNumber"));
-        assertEquals("Decision with hearing", map.get("previousDecisionHearingFeeOption"));
-        assertEquals("Decision without hearing", map.get("updatedDecisionHearingFeeOption"));
-        assertEquals("80.00", map.get("newFee"));
-        assertEquals(dueDate, map.get("dueDate"));
+        assertEquals("140.00", map.get("feeAmount"));
     }
 }
