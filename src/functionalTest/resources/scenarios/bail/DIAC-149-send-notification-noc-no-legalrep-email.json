@@ -1,5 +1,5 @@
 {
-  "description": "RIA-5965 send NoC notification to legal representative",
+  "description": "DIAC-149 send NoC notification to legal representative",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdSubmitted",
@@ -12,6 +12,7 @@
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
           "isLegallyRepresentedForFlag": "Yes",
+          "legalRepEmail": "",
           "currentCaseStateVisibleToJudge": "applicationSubmitted",
           "currentCaseStateVisibleToHomeOffice": "applicationSubmitted",
           "currentCaseStateVisibleToAdminOfficer": "applicationSubmitted",
@@ -25,7 +26,6 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([_BAIL_NOC_CHANGED_LR_LEGAL_REPRESENTATIVE])",
       "body": "contains([_BAIL_NOC_CHANGED_LR_ADMIN])",
       "body": "contains([_BAIL_NOC_CHANGED_LR_HOME_OFFICE])"
     },
