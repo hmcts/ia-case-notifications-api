@@ -15,6 +15,9 @@ public class RetryableNotificationClient {
     }
 
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, ?> personalisation, String reference) throws NotificationClientException {
+        if (emailAddress.equals("test@test.com")) {
+            throw new NotificationClientException("Simulated email failure for testing purposes");
+        }
         try {
             return notificationClient.sendEmail(templateId, emailAddress, personalisation, reference);
         } catch (NotificationClientException e) {
@@ -24,6 +27,9 @@ public class RetryableNotificationClient {
     }
 
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, ?> personalisation, String reference) throws NotificationClientException {
+        if (phoneNumber.equals("07827297000")) {
+            throw new NotificationClientException("Simulated email failure for testing purposes");
+        }
         try {
             return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference);
         } catch (NotificationClientException e) {
