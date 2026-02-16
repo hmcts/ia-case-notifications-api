@@ -1509,7 +1509,14 @@ govnotify:
           email: 3b756f11-4c9c-4aac-9f39-b1d594a933b3
     editAppealPostSubmit:
       appellant:
-        letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
+        letter: e68faac4-cf30-4e0b-b746-a7bafHi Ram, 036dc65
+    removeStatutoryTimeframe24Weeks:
+      homeOffice:
+        email: 9c5130fe-c389-4e90-aa26-b8a6f6cc3f71
+      legalRep:
+        email: 9c5130fe-c389-4e90-aa26-b8a6f6cc3f71
+      appellant:
+        email: 9c5130fe-c389-4e90-aa26-b8a6f6cc3f71
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -2267,6 +2274,7 @@ security:
       - "endApplication"
       - "sendBailDirection"
       - "editBailDocuments"
+      - "removeStatutoryTimeframe24Weeks"
     judge:
       - "adaSuitabilityReview"
       - "sendDirection"
