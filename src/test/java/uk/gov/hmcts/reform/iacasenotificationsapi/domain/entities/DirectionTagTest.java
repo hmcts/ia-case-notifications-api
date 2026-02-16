@@ -22,6 +22,9 @@ public class DirectionTagTest {
         assertEquals("requestReasonsForAppeal", DirectionTag.REQUEST_REASONS_FOR_APPEAL.toString());
         assertEquals("requestClarifyingQuestions", DirectionTag.REQUEST_CLARIFYING_QUESTIONS.toString());
         assertEquals("requestCmaRequirements", DirectionTag.REQUEST_CMA_REQUIREMENTS.toString());
+        assertEquals("listingPaPayLater", DirectionTag.LISTING_PA_PAY_LATER.toString());
+        assertEquals("caseBuildingPaPayLater", DirectionTag.CASE_BUILDING_PA_PAY_LATER.toString());
+        assertEquals("decisionPaPayLater", DirectionTag.DECISION_PA_PAY_LATER.toString());
         assertEquals("", DirectionTag.NONE.toString());
     }
 
