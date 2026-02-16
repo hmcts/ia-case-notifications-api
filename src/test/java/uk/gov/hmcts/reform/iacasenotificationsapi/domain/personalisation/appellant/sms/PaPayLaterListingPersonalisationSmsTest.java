@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -57,6 +58,14 @@ class PaPayLaterListingPersonalisationSmsTest {
     @Test
     void should_return_reference_id() {
         assertEquals(caseId + "_PA_PAY_LATER_LISTING_SMS", personalisation.getReferenceId(caseId));
+    }
+
+    @Test
+    void should_throw_exception_on_personalisation_when_case_is_null() {
+        assertThatThrownBy(
+                () -> personalisation.getPersonalisation((AsylumCase) null))
+                .isExactlyInstanceOf(NullPointerException.class)
+                .hasMessage("asylumCase must not be null");
     }
 
     @Test
