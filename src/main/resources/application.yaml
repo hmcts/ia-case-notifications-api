@@ -1929,6 +1929,7 @@ security:
       - "sendBailDirection"
       - "createBailCaseLink"
       - "markAppealAsRemitted"
+      - "removeStatutoryTimeframe24Weeks"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2512,6 +2513,7 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+      - "removeStatutoryTimeframe24Weeks"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
