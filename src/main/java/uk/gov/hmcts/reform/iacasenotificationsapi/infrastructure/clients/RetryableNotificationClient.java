@@ -28,7 +28,7 @@ public class RetryableNotificationClient {
 
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, ?> personalisation, String reference) throws NotificationClientException {
         if (phoneNumber.equals("07827297000")) {
-            throw new NotificationClientException("Simulated email failure for testing purposes");
+            throw new NotificationClientException("Simulated sms failure for testing purposes");
         }
         try {
             return notificationClient.sendSms(templateId, phoneNumber, personalisation, reference);
