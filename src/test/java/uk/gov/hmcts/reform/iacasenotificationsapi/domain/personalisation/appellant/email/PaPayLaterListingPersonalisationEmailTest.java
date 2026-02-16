@@ -6,16 +6,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +34,7 @@ class PaPayLaterListingPersonalisationEmailTest {
     private String iaAipFrontendUrl = "http://localhost";
     private String appealReferenceNumber = "appealReferenceNumber";
     private PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail;
+    private String appellantEmail = "test@mail.com";
 
     @BeforeEach
     public void setup() {
@@ -42,6 +46,20 @@ class PaPayLaterListingPersonalisationEmailTest {
                 iaAipFrontendUrl,
                 recipientsFinder
         );
+    }
+
+    @Test
+    void should_return_approved_template_id() {
+        assertTrue(paPayLaterListingPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterListingTemplateId));
+    }
+
+    @Test
+    void should_return_appellant_email_address_from_asylum_case() {
+        Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
+                .thenReturn(Collections.singleton(appellantEmail));
+
+        assertTrue(paPayLaterListingPersonalisationEmail.getRecipientsList(asylumCase)
+                .contains(appellantEmail));
     }
 
     @Test

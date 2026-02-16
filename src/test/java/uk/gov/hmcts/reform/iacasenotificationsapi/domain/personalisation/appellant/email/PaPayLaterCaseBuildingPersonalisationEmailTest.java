@@ -5,16 +5,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +33,7 @@ class PaPayLaterCaseBuildingPersonalisationEmailTest {
     private String paPayLaterCaseBuildingTemplateId = "paPayLaterCaseBuildingTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private String feeAmount = "4000.00";
-    private String someTestDateEmail = "14/14/2024";
+    private String appellantEmail = "test@mail.com";
     private String appealReferenceNumber = "appealReferenceNumber";
     private PaPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail;
 
@@ -49,6 +53,20 @@ class PaPayLaterCaseBuildingPersonalisationEmailTest {
     void should_return_given_reference_id() {
         assertEquals(caseId + "_PA_PAY_LATER_CASE_BUILDING_EMAIL",
                 paPayLaterCaseBuildingPersonalisationEmail.getReferenceId(caseId));
+    }
+
+    @Test
+    void should_return_approved_template_id() {
+        assertTrue(paPayLaterCaseBuildingPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterCaseBuildingTemplateId));
+    }
+
+    @Test
+    void should_return_appellant_email_address_from_asylum_case() {
+        Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
+                .thenReturn(Collections.singleton(appellantEmail));
+
+        assertTrue(paPayLaterCaseBuildingPersonalisationEmail.getRecipientsList(asylumCase)
+                .contains(appellantEmail));
     }
 
     @Test

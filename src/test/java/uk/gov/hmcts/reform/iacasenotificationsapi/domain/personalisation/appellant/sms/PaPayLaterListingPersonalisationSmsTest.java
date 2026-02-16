@@ -2,9 +2,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,12 +14,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -42,6 +46,7 @@ class PaPayLaterListingPersonalisationSmsTest {
     private final int daysAfterNotificationSent = 14;
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String feeAmount = "14000";
+    private String appellantMobileNumber = "07781122334";
 
     @BeforeEach
     void setup() {
@@ -58,6 +63,20 @@ class PaPayLaterListingPersonalisationSmsTest {
     @Test
     void should_return_reference_id() {
         assertEquals(caseId + "_PA_PAY_LATER_LISTING_SMS", personalisation.getReferenceId(caseId));
+    }
+
+    @Test
+    void should_return_approved_template_id() {
+        assertTrue(personalisation.getTemplateId(asylumCase).contains(templateId));
+    }
+
+    @Test
+    void should_return_appellant_phone_number_from_asylum_case() {
+        Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
+                .thenReturn(Collections.singleton(appellantMobileNumber));
+
+        assertTrue(personalisation.getRecipientsList(asylumCase)
+                .contains(appellantMobileNumber));
     }
 
     @Test

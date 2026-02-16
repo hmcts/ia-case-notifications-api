@@ -5,16 +5,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +35,7 @@ class PaPayLaterDecisionPersonalisationEmailTest {
     private String feeAmount = "4000.00";
     private String appealReferenceNumber = "appealReferenceNumber";
     private PaPayLaterDecisionPersonalisationEmail paPayLaterDecisionPersonalisationEmail;
+    private String appellantEmail = "test@mail.com";
 
     @BeforeEach
     public void setup() {
@@ -46,6 +51,20 @@ class PaPayLaterDecisionPersonalisationEmailTest {
     void should_return_given_reference_id() {
         assertEquals(caseId + "_PA_PAY_LATER_DECISION_EMAIL",
                 paPayLaterDecisionPersonalisationEmail.getReferenceId(caseId));
+    }
+
+    @Test
+    void should_return_approved_template_id() {
+        assertTrue(paPayLaterDecisionPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterCDecisionTemplateId));
+    }
+
+    @Test
+    void should_return_appellant_email_address_from_asylum_case() {
+        Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
+                .thenReturn(Collections.singleton(appellantEmail));
+
+        assertTrue(paPayLaterDecisionPersonalisationEmail.getRecipientsList(asylumCase)
+                .contains(appellantEmail));
     }
 
     @Test
