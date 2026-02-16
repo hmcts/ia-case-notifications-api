@@ -4876,7 +4876,7 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-        log.info("in Generator removeStatutoryTimeframe24WeeksNotificationGenerator bean created successfully");
+        log.info("in handler chimpiri");
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
