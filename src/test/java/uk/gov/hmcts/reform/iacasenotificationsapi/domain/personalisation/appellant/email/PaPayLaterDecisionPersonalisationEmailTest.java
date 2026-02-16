@@ -27,13 +27,13 @@ class PaPayLaterDecisionPersonalisationEmailTest {
     private Long caseId = 12345L;
     private String paPayLaterCDecisionTemplateId = "paPayLaterDecisionTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
-    private String feeAmount = "400000";
-    private String someTestDateEmail = "14/14/2024";
+    private String feeAmount = "4000.00";
+    private String appealReferenceNumber = "appealReferenceNumber";
     private PaPayLaterDecisionPersonalisationEmail paPayLaterDecisionPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
-
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         paPayLaterDecisionPersonalisationEmail = new PaPayLaterDecisionPersonalisationEmail(
                 paPayLaterCDecisionTemplateId,
                 iaAipFrontendUrl,
@@ -56,6 +56,7 @@ class PaPayLaterDecisionPersonalisationEmailTest {
         Map<String, String> personalisation =
                 paPayLaterDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("4000.00", personalisation.get("feeAmount"));
+        assertEquals(feeAmount, personalisation.get("feeAmount"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
     }
 }
