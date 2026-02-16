@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2061 Send letter notification to for Submit Appeal out of time fee to pay - detained",
+  "description": "DIAC-2061 Send letter notification to for Submit Appeal out of time fee to pay - non detained",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
