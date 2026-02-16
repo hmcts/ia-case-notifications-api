@@ -491,7 +491,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailNocChangedLrPersonalisation homeOfficeBailNocChangedLrPersonalisation,
         ApplicantBailNocChangedLrPersonalisationSms applicantBailNocChangedLrPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
