@@ -7,9 +7,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
 
 @Service
 public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
@@ -30,7 +33,10 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
     public String getTemplateId(AsylumCase asylumCase) {
         return removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId;
     }
-
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+    }
     @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP";
