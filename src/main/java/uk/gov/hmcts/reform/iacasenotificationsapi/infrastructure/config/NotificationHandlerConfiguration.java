@@ -3477,9 +3477,6 @@ public class NotificationHandlerConfiguration {
                 String paPaymentOption = asylumCase
                     .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
-                log.info("submitAppealPayOfflineNotificationGenerator: event {} and state {} callbackStage {}",
-                        callback.getEvent(), callback.getCaseDetails().getState(), callbackStage);
-
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isCorrectAppealType
@@ -5693,12 +5690,12 @@ public class NotificationHandlerConfiguration {
                                     .getCaseDetails()
                                     .getCaseData();
 
-                    log.info("removeStatutoryTimeframe24WeeksNotificationGenerator: event {} and state {} callbackStage {}",
+                    log.info("removeStatutoryTimeframe24WeeksNotificationGenerator: event: {} and state: {} callbackStage: {}",
                             callback.getEvent(), callback.getCaseDetails().getState(), callbackStage);
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && Objects.equals(Event.REMOVE_STATUTORY_TIMEFRAME_24_WEEKS, callback.getEvent())
+                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+                    log.info("canSendNotifications: {}", canSendNotifications);
+                    return canSendNotifications;
                 },
                 notificationGenerators
         );
