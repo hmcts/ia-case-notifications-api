@@ -35,7 +35,7 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
     }
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+        return Collections.singleton("legalrep@xyz.com");
     }
     @Override
     public String getReferenceId(Long caseId) {

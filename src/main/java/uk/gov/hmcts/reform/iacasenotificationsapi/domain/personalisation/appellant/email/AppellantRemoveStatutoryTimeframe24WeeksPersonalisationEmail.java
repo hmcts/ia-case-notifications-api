@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,9 +38,8 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     }
 
     @Override
-    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return Collections.singleton("appeallant@xyz.com");
     }
 
     @Override
