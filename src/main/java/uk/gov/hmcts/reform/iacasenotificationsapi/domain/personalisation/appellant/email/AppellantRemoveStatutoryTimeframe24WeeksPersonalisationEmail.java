@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -15,6 +16,7 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 @Service
+@Slf4j
 public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String removeStatutoryTimeframe24WeeksAppellantTemplateId;
@@ -50,13 +52,13 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
+        log.info("Fixing APPELLANT_EMAIL");
         return ImmutableMap
                 .<String, String>builder()
                 .put("customerServicesTelephone", "1234")
                 .put("customerServicesEmail", "customerServicesEmail@xyz.com")
                 .put("AppealIAEmail", "AppealIAEmail@xyz.com")
-                .put("email_address", "emailaddress1@xyz.com")
+                .put("email_address", "emailaddressAppellant@xyz.com")
                 .put("homeOfficeReferenceNumber", "1212121212")
                 .put("appealReferenceNumber", "1212121212")
                 .put("ariaListingReference","1212121212")
