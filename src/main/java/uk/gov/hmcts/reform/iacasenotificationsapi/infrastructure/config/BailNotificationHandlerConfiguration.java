@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.START_APPLICATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,13 +64,12 @@ public class BailNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 boolean canBeHandled = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == EDIT_BAIL_APPLICATION;
-
-                if (canBeHandled) {
-                    BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return !isInternalCase(bailCase);
-                } else {
+                if (!canBeHandled) {
                     return false;
                 }
+                BailCase bailCase = callback.getCaseDetails().getCaseData();
+                return !isInternalCase(bailCase) &&
+                    isLastEditNotificationNotToday(bailCase.read(LAST_EDIT_APPLICATION_NOTIFICATION_DATE, String.class));
             },
             bailNotificationGenerators,
             getErrorHandler()

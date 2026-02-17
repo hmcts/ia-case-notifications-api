@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,6 +103,8 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
         assertEquals(legalRepFamilyName, personalisation.get("legalRepFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertNotNull(personalisation.get("editingDate"));
+        verify(bailCase, times(1))
+            .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 
     @Test
@@ -117,5 +122,7 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
         assertEquals("", personalisation.get("legalRepReference"));
         assertEquals("", personalisation.get("legalRepName"));
         assertEquals("", personalisation.get("legalRepFamilyName"));
+        verify(bailCase, times(1))
+            .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 }
