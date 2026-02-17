@@ -3480,6 +3480,60 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("legalRep{aPayLaterCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> legalRepPaPayLaterCaseBuildingNotificationHandler(
+            LegalRepPaPayLaterCaseBuildingPersonalisationEmail legalRepPaPayLaterCaseBuildingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepPaPayLaterCaseBuildingPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legalRepPaPayLaterListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepPaPayLaterListingNotificationHandler(
+            LegalRepPaPayLaterListingPersonalisationEmail legalRepPaPayLaterListingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepPaPayLaterListingPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legalRepPaPayLaterDecisionNotificationGenerator")
+    public List<NotificationGenerator> legalRepPaPayLaterDecisionNotificationHandler(
+            LegalRepPaPayLaterDecisionPersonalisationEmail legalRepPaPayLaterDecisionPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepPaPayLaterDecisionPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("reinstateAppealNotificationGenerator")
     public List<NotificationGenerator> reinstateAppealNotificationHandler(
         LegalRepresentativeReinstateAppealPersonalisation legalRepresentativeReinstateAppealPersonalisation,
