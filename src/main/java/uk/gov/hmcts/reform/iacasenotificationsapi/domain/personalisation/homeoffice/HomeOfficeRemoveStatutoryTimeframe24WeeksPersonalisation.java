@@ -55,7 +55,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE";
+        return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
     }
 
     @Override
@@ -64,12 +64,16 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse("appealReferenceNumber1"))
-                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse("ariaListingReference1"))
-                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse("homeOfficeReferenceNumber1"))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse("appellantGivenNames1"))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse("appellantFamilyName1"))
-                .put("transferOutOfAdaReason", asylumCase.read(AsylumCaseDefinition.TRANSFER_OUT_OF_ADA_REASON, String.class).orElse("transferOutOfAdaReason1"))
+                .put("customerServicesTelephone", "1234")
+                .put("customerServicesEmail", "customerServicesEmail@xyz.com")
+                .put("AppealIAEmail", "AppealIAEmail@xyz.com")
+                .put("homeOfficeReferenceNumber", "1212121212")
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("transferOutOfAdaReason", "transferOutOfAdaReason1")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }

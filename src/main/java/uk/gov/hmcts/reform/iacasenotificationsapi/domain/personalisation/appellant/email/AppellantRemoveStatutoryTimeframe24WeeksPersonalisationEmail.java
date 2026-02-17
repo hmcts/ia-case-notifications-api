@@ -9,7 +9,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +44,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE";
+        return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
     }
 
     @Override
@@ -54,11 +53,16 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse("appealReferenceNumber1"))
-                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse("ariaListingReference1"))
-                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("legalRepReferenceNumber1"))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse("appellantGivenNames1"))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse("appellantFamilyName1"))
+                .put("customerServicesTelephone", "1234")
+                .put("customerServicesEmail", "customerServicesEmail@xyz.com")
+                .put("AppealIAEmail", "AppealIAEmail@xyz.com")
+                .put("homeOfficeReferenceNumber", "1212121212")
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("transferOutOfAdaReason", "transferOutOfAdaReason1")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }

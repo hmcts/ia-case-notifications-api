@@ -4876,8 +4876,7 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-        log.info("in handler this is not calling");
-        return singletonList(
+         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
                                 appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,

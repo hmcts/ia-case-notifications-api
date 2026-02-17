@@ -5682,7 +5682,6 @@ public class NotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksNotificationHandler(
             @Qualifier("removeStatutoryTimeframe24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-        log.info("in handler this is OK");
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase =
@@ -5690,8 +5689,7 @@ public class NotificationHandlerConfiguration {
                                     .getCaseDetails()
                                     .getCaseData();
 
-                    log.info("removeStatutoryTimeframe24WeeksNotificationGenerator: event: {} and state: {} callbackStage: {}",
-                            callback.getEvent(), callback.getCaseDetails().getState(), callbackStage);
+
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
                     log.info("can send 24WeeksNotification: {}", canSendNotifications);
