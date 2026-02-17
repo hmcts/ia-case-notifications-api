@@ -4876,7 +4876,7 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-        log.info("in handler chimpiri");
+        log.info("in handler this is not calling");
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
