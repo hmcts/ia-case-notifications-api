@@ -48,8 +48,11 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton("homeOffice@xyz.com");
+        return (isAppealListed(asylumCase))
+                ? Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)) :
+                Collections.singleton(apcPrivateBetaInboxHomeOfficeEmailAddress);
     }
+
     @Override
     public String getReferenceId(Long caseId) {
         return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE";

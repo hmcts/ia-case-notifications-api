@@ -38,8 +38,9 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     }
 
     @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton("appeallant@xyz.com");
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+
     }
 
     @Override

@@ -5680,7 +5680,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksNotificationGenerator(
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksNotificationHandler(
             @Qualifier("removeStatutoryTimeframe24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         log.info("in handler this is OK");
         return new NotificationHandler(
