@@ -54,7 +54,7 @@ public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmai
     public Map<String, String> getPersonalisation(BailCase bailCase) {
         requireNonNull(bailCase, "bailCase must not be null");
 
-        return ImmutableMap
+        ImmutableMap<String, String> res = ImmutableMap
             .<String, String>builder()
             .put("legalRepReference", bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class).orElse(""))
             .put("legalRepName", bailCase.read(BailCaseFieldDefinition.LEGAL_REP_NAME, String.class).orElse(""))
@@ -62,5 +62,7 @@ public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmai
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .build();
+        bailCase.write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
+        return res;
     }
 }
