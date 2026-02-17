@@ -42,8 +42,7 @@ class LegalRepPaPayLaterCaseBuildingPersonalisationEmailTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
         legalRepPaPayLaterCaseBuildingPersonalisationEmail = new LegalRepPaPayLaterCaseBuildingPersonalisationEmail(
-                legalRepPaPayLaterCaseBuildingTemplateId,
-                recipientsFinder
+                legalRepPaPayLaterCaseBuildingTemplateId
         );
     }
 
