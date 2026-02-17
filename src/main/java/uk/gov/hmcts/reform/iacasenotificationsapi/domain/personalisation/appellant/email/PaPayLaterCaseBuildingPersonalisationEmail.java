@@ -22,7 +22,7 @@ public class PaPayLaterCaseBuildingPersonalisationEmail implements EmailNotifica
 
     public PaPayLaterCaseBuildingPersonalisationEmail(
             @Value("${govnotify.template.caseBuilding.paPayLater.email}") String paPayLaterCaseBuildingTemplateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
+            RecipientsFinder recipientsFinder
     ) {
         this.paPayLaterCaseBuildingTemplateId = paPayLaterCaseBuildingTemplateId;
         this.recipientsFinder = recipientsFinder;

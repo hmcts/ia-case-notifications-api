@@ -31,7 +31,6 @@ class PaPayLaterDecisionPersonalisationEmailTest {
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
     private String paPayLaterCDecisionTemplateId = "paPayLaterDecisionTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
     private String feeAmount = "4000.00";
     private String appealReferenceNumber = "appealReferenceNumber";
     private PaPayLaterDecisionPersonalisationEmail paPayLaterDecisionPersonalisationEmail;
@@ -42,7 +41,6 @@ class PaPayLaterDecisionPersonalisationEmailTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         paPayLaterDecisionPersonalisationEmail = new PaPayLaterDecisionPersonalisationEmail(
                 paPayLaterCDecisionTemplateId,
-                iaAipFrontendUrl,
                 recipientsFinder
         );
     }

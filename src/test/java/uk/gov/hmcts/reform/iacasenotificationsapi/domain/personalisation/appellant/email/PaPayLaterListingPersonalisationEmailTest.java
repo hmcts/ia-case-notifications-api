@@ -31,7 +31,6 @@ class PaPayLaterListingPersonalisationEmailTest {
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
     private String paPayLaterListingTemplateId = "paPayLaterListingTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
     private String appealReferenceNumber = "appealReferenceNumber";
     private PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail;
     private String appellantEmail = "test@mail.com";
@@ -43,7 +42,6 @@ class PaPayLaterListingPersonalisationEmailTest {
 
         paPayLaterListingPersonalisationEmail = new PaPayLaterListingPersonalisationEmail(
                 paPayLaterListingTemplateId,
-                iaAipFrontendUrl,
                 recipientsFinder
         );
     }

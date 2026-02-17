@@ -22,7 +22,7 @@ public class PaPayLaterListingPersonalisationEmail implements EmailNotificationP
 
     public PaPayLaterListingPersonalisationEmail(
             @Value("${govnotify.template.listing.paPayLater.email}") String paPayLaterListingTemplateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
+            RecipientsFinder recipientsFinder
     ) {
         this.paPayLaterListingTemplateId = paPayLaterListingTemplateId;
         this.recipientsFinder = recipientsFinder;

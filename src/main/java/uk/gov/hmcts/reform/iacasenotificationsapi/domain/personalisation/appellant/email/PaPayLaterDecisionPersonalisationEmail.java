@@ -22,7 +22,7 @@ public class PaPayLaterDecisionPersonalisationEmail implements EmailNotification
 
     public PaPayLaterDecisionPersonalisationEmail(
             @Value("${govnotify.template.decision.paPayLater.email}") String paPayLaterDecisionTemplateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl, RecipientsFinder recipientsFinder
+            RecipientsFinder recipientsFinder
     ) {
         this.paPayLaterDecisionTemplateId = paPayLaterDecisionTemplateId;
         this.recipientsFinder = recipientsFinder;
