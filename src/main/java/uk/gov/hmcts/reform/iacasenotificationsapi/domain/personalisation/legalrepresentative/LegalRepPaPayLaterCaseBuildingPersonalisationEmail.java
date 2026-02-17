@@ -6,24 +6,35 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
 public class LegalRepPaPayLaterCaseBuildingPersonalisationEmail implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String legalRepPaPayLaterCaseBuildingTemplateId;
+    private final RecipientsFinder recipientsFinder;
 
     public LegalRepPaPayLaterCaseBuildingPersonalisationEmail(
-            @Value("${govnotify.template.caseBuilding.paPayLater.email}") String legalRepPaPayLaterCaseBuildingTemplateId
+            @Value("${govnotify.template.caseBuilding.paPayLater.email}") String legalRepPaPayLaterCaseBuildingTemplateId,
+            RecipientsFinder recipientsFinder
     ) {
         this.legalRepPaPayLaterCaseBuildingTemplateId = legalRepPaPayLaterCaseBuildingTemplateId;
+        this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         return legalRepPaPayLaterCaseBuildingTemplateId;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
     }
 
     @Override
