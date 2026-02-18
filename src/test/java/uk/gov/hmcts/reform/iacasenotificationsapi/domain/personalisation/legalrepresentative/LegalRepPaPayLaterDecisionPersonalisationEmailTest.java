@@ -6,20 +6,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -27,8 +23,6 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
     private String paPayLaterDecisionTemplateId = "paPayLaterDecisionTemplateId";
     private String feeAmount = "4000.00";
@@ -40,8 +34,7 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
     public void setup() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         legalRepPaPayLaterDecisionPersonalisationEmail = new LegalRepPaPayLaterDecisionPersonalisationEmail(
-                paPayLaterDecisionTemplateId,
-                recipientsFinder
+                paPayLaterDecisionTemplateId
         );
     }
 
@@ -54,15 +47,6 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
     @Test
     void should_return_approved_template_id() {
         assertTrue(legalRepPaPayLaterDecisionPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterDecisionTemplateId));
-    }
-
-    @Test
-    void should_return_appellant_email_address_from_asylum_case() {
-        Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(appellantEmail));
-
-        assertTrue(legalRepPaPayLaterDecisionPersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(appellantEmail));
     }
 
     @Test
