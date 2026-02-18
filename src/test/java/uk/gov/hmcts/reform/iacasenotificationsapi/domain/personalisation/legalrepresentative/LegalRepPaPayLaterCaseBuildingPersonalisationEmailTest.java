@@ -23,11 +23,9 @@ class LegalRepPaPayLaterCaseBuildingPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
-    @Mock
     private Long caseId = 12345L;
     private String legalRepPaPayLaterCaseBuildingTemplateId = "LegalRepPaPayLaterCaseBuildingTemplateId";
     private String feeAmount = "4000.00";
-    private String appellantEmail = "test@mail.com";
     private String appealReferenceNumber = "appealReferenceNumber";
     private LegalRepPaPayLaterCaseBuildingPersonalisationEmail legalRepPaPayLaterCaseBuildingPersonalisationEmail;
 

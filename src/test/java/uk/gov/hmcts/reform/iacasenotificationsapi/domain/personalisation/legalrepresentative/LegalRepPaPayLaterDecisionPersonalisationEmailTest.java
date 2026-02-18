@@ -30,7 +30,7 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String paPayLaterCDecisionTemplateId = "paPayLaterDecisionTemplateId";
+    private String paPayLaterDecisionTemplateId = "paPayLaterDecisionTemplateId";
     private String feeAmount = "4000.00";
     private String appealReferenceNumber = "appealReferenceNumber";
     private LegalRepPaPayLaterDecisionPersonalisationEmail legalRepPaPayLaterDecisionPersonalisationEmail;
@@ -40,7 +40,7 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
     public void setup() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         legalRepPaPayLaterDecisionPersonalisationEmail = new LegalRepPaPayLaterDecisionPersonalisationEmail(
-                paPayLaterCDecisionTemplateId,
+                paPayLaterDecisionTemplateId,
                 recipientsFinder
         );
     }
@@ -53,7 +53,7 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
 
     @Test
     void should_return_approved_template_id() {
-        assertTrue(legalRepPaPayLaterDecisionPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterCDecisionTemplateId));
+        assertTrue(legalRepPaPayLaterDecisionPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterDecisionTemplateId));
     }
 
     @Test
