@@ -69,7 +69,7 @@ public class EmailAddressFinder {
     }
 
     public String getListCaseHomeOfficeEmailAddress(AsylumCase asylumCase) {
-        if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
+        if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase) || isHendonListCase(asylumCase)) {
             return getHomeOfficeEmailAddress(asylumCase);
         } else {
             return asylumCase
@@ -83,7 +83,7 @@ public class EmailAddressFinder {
     }
 
     public String getListCaseFtpaHomeOfficeEmailAddress(AsylumCase asylumCase) {
-        if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
+        if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase) || isHendonListCase(asylumCase)) {
             return getHomeOfficeFtpaEmailAddress(asylumCase);
         } else {
             return asylumCase
@@ -207,6 +207,11 @@ public class EmailAddressFinder {
                    .orElse(false);
     }
 
+    private boolean isHendonListCase(AsylumCase asylumCase) {
+        return  asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+                .map(hearingCentre -> hearingCentre == HearingCentre.HENDON)
+                .orElse(false);
+    };
 
 
     public String getListCaseCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
