@@ -4870,23 +4870,24 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("removeStatutoryTimeframe24WeeksNotificationGenerator")
     public List<NotificationGenerator> removeStatutoryTimeframe24WeeksNotificationGenerator(
-            AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
-            LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
-            HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficeTransferOutOfStf24WeeksPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender
+        AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
+        LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
+        HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficeTransferOutOfStf24WeeksPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
     ) {
-         return singletonList(
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
-                                legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
-                                homeOfficeTransferOutOfStf24WeeksPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
+                    legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
+                    homeOfficeTransferOutOfStf24WeeksPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+         );
     }
 
     @Bean("markAppealAsAdaNotificationGenerator")

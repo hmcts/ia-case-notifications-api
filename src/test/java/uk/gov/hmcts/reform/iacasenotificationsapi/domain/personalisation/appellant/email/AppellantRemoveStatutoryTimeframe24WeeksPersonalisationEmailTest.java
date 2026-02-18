@@ -10,6 +10,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Collections;
 import java.util.Map;
@@ -36,7 +37,8 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
 
     private final String emailTemplateId = "someEmailTemplateId";
 
@@ -76,7 +78,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         appellantRequestCmaRequirementsPersonalisationEmail = new AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
                 emailTemplateId,
                 iaAipFrontendUrl,
-                recipientsFinder
+                recipientsFinder, customerServicesProvider
         );
     }
 
@@ -88,7 +90,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE",
+        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL",
                 appellantRequestCmaRequirementsPersonalisationEmail.getReferenceId(caseId));
     }
 
@@ -140,11 +142,11 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantRequestCmaRequirementsPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("appealReferenceNumber1", personalisation.get("appealReferenceNumber"));
-        assertEquals("ariaListingReference1", personalisation.get("ariaListingReference"));
-        assertEquals("legalRepReferenceNumber1", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("appellantGivenNames1", personalisation.get("appellantGivenNames"));
-        assertEquals("appellantFamilyName1", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("ariaListingReference"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 }

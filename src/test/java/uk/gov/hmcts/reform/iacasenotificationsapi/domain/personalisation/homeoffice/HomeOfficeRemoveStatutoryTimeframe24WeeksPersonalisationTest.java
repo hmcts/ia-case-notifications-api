@@ -70,8 +70,8 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
                 beforeListingTemplateId,
                 beforeListingEmailAddress,
                 iaExUiFrontendUrl,
-                emailAddressFinder
-        );
+                emailAddressFinder,
+                customerServicesProvider);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE",
+        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL",
                 homeOfficePersonalisation.getReferenceId(caseId));
     }
 
@@ -139,11 +139,11 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         Map<String, String> personalisation =
                 homeOfficePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("appealReferenceNumber1", personalisation.get("appealReferenceNumber"));
-        assertEquals("ariaListingReference1", personalisation.get("ariaListingReference"));
-        assertEquals("homeOfficeReferenceNumber1", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("appellantGivenNames1", personalisation.get("appellantGivenNames"));
-        assertEquals("appellantFamilyName1", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("ariaListingReference"));
+        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

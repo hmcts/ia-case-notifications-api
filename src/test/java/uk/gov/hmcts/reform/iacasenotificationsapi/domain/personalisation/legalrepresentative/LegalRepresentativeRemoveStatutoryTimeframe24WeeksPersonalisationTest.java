@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Map;
 import java.util.Optional;
@@ -38,6 +39,8 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTe
     private final String legalRefNumber = "someLegalRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
 
     @Mock
     AsylumCase asylumCase;
@@ -55,7 +58,7 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTe
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(emailAddress));
         legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation = new LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation(
                 stf24WeeksTemplateId,
-                iaExUiFrontendUrl);
+                iaExUiFrontendUrl, customerServicesProvider);
     }
 
     @Test
@@ -73,7 +76,7 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTe
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP",
+        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL",
                 legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getReferenceId(caseId));
     }
 
@@ -119,11 +122,11 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTe
         Map<String, String> personalisation =
                 legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("appealReferenceNumber1", personalisation.get("appealReferenceNumber"));
-        assertEquals("ariaListingReference1", personalisation.get("ariaListingReference"));
-        assertEquals("legalRepReferenceNumber1", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("appellantGivenNames1", personalisation.get("appellantGivenNames"));
-        assertEquals("appellantFamilyName1", personalisation.get("appellantFamilyName"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("ariaListingReference"));
+        assertEquals("", personalisation.get("legalRepReferenceNumber"));
+        assertEquals("", personalisation.get("appellantGivenNames"));
+        assertEquals("", personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 

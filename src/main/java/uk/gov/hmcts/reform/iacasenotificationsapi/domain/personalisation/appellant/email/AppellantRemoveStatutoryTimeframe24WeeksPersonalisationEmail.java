@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Map;
 import java.util.Set;
@@ -22,15 +23,17 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private final String removeStatutoryTimeframe24WeeksAppellantTemplateId;
     private final String iaExUiFrontendUrl;
     private final RecipientsFinder recipientsFinder;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.email}") String removeStatutoryTimeframe24WeeksAppellantTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            RecipientsFinder recipientsFinder
-    ) {
+            RecipientsFinder recipientsFinder,
+            CustomerServicesProvider customerServicesProvider) {
         this.removeStatutoryTimeframe24WeeksAppellantTemplateId = removeStatutoryTimeframe24WeeksAppellantTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.recipientsFinder = recipientsFinder;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -52,20 +55,16 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        log.info("Fixing APPELLANT_EMAIL");
+
         return ImmutableMap
                 .<String, String>builder()
-                .put("customerServicesTelephone", "1234")
-                .put("customerServicesEmail", "customerServicesEmail@xyz.com")
-                .put("AppealIAEmail", "AppealIAEmail@xyz.com")
-                .put("email_address", "emailaddressAppellant@xyz.com")
-                .put("homeOfficeReferenceNumber", "1212121212")
-                .put("appealReferenceNumber", "1212121212")
-                .put("ariaListingReference","1212121212")
-                .put("legalRepReferenceNumber", "legalRepReferenceNumber1")
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("transferOutOfAdaReason", "transferOutOfAdaReason1")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }

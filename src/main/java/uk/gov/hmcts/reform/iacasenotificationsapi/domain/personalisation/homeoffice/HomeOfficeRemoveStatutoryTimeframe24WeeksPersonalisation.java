@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 import javax.validation.constraints.NotNull;
@@ -25,19 +26,19 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
 
     private final String apcPrivateBetaInboxHomeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
-
+    private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(
             @NotNull(message = "removeStatutoryTimeframe24WeeksHomeOfficeTemplateId cannot be null")
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.homeOffice.email}") String removeStatutoryTimeframe24WeeksHomeOfficeTemplateId,
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateBetaInboxHomeOfficeEmailAddress,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            EmailAddressFinder emailAddressFinder
-    ) {
+            EmailAddressFinder emailAddressFinder,
+            CustomerServicesProvider customerServicesProvider) {
         this.removeStatutoryTimeframe24WeeksHomeOfficeTemplateId = removeStatutoryTimeframe24WeeksHomeOfficeTemplateId;
         this.apcPrivateBetaInboxHomeOfficeEmailAddress = apcPrivateBetaInboxHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-
+        this.customerServicesProvider = customerServicesProvider;
         this.emailAddressFinder = emailAddressFinder;
     }
 
@@ -64,16 +65,13 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("customerServicesTelephone", "1234")
-                .put("customerServicesEmail", "customerServicesEmail@xyz.com")
-                .put("AppealIAEmail", "AppealIAEmail@xyz.com")
-                .put("homeOfficeReferenceNumber", "1212121212")
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
                 .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("transferOutOfAdaReason", "transferOutOfAdaReason1")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }

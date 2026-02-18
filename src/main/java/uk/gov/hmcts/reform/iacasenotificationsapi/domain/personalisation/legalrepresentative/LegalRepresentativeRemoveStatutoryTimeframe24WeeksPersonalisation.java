@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -22,14 +23,16 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
 
     private final String removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId;
     private final String iaExUiFrontendUrl;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation(
             @NotNull(message = "removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId cannot be null")
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.legalRep.email}") String removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
-    ) {
+            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            CustomerServicesProvider customerServicesProvider) {
         this.removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId = removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -53,17 +56,13 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
         log.info("Fixing LEGAL_REP_EMAIL");
         return ImmutableMap
                 .<String, String>builder()
-                .put("customerServicesTelephone", "1234")
-                .put("customerServicesEmail", "customerServicesEmail@xyz.com")
-                .put("AppealIAEmail", "AppealIAEmail@xyz.com")
-                .put("email_address", "emailaddressLegalRep@xyz.com")
-                .put("homeOfficeReferenceNumber", "1212121212")
-                .put("appealReferenceNumber", "1212121212")
-                .put("ariaListingReference","1212121212")
-                .put("legalRepReferenceNumber", "legalRepReferenceNumber1")
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("transferOutOfAdaReason", "transferOutOfAdaReason1")
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();
     }
