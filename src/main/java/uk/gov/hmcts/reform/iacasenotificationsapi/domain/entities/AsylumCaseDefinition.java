@@ -540,7 +540,7 @@ public enum AsylumCaseDefinition {
     IS_VIRTUAL_HEARING("isVirtualHearing", new TypeReference<YesOrNo>(){}),
 
     NOTIFICATIONS("notifications", new TypeReference<List<IdValue<StoredNotification>>>(){}),
-  
+
     LISTING_LOCATION(
         "listingLocation", new TypeReference<DynamicList>(){}),
 
@@ -627,6 +627,9 @@ public enum AsylumCaseDefinition {
 
     HEARING_CHANNEL(
             "hearingChannel", new TypeReference<DynamicList>(){}),
+
+    LAST_EDIT_APPEAL_NOTIFICATION_DATE(
+        "lastEditAppealNotificationDate", new TypeReference<String>(){}),
     ;
 
 

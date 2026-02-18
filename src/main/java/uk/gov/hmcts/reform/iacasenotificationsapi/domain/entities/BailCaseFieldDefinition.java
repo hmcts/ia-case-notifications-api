@@ -304,15 +304,18 @@ public enum BailCaseFieldDefinition {
     HO_SELECT_IMA_STATUS(
         "hoSelectImaStatus", new TypeReference<YesOrNo>() {}),
     IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED(
-            "isBailsLocationReferenceDataEnabled", new TypeReference<YesOrNo>() {}),
+        "isBailsLocationReferenceDataEnabled", new TypeReference<YesOrNo>() {}),
     REF_DATA_LISTING_LOCATION_DETAIL(
-            "refDataListingLocationDetail", new TypeReference<CourtVenue>() {}),
+        "refDataListingLocationDetail", new TypeReference<CourtVenue>() {}),
     IS_REMOTE_HEARING(
-            "isRemoteHearing", new TypeReference<YesOrNo>() {}),
+        "isRemoteHearing", new TypeReference<YesOrNo>() {}),
     CURRENT_CASE_STATE_VISIBLE_TO_ALL_USERS(
-            "currentCaseStateVisibleToAllUsers", new TypeReference<String>() {}),
+        "currentCaseStateVisibleToAllUsers", new TypeReference<String>() {}),
     TTL(
-            "TTL", new TypeReference<TtlCcdObject>(){});
+        "TTL", new TypeReference<TtlCcdObject>(){}),
+    LAST_EDIT_APPLICATION_NOTIFICATION_DATE(
+        "lastEditApplicationNotificationDate", new TypeReference<String>(){}),
+    ;
 
     private final String value;
     private final TypeReference typeReference;
