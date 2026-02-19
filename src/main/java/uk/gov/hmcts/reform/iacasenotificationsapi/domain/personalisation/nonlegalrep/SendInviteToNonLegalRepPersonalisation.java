@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep;
 
 import static java.util.Objects.requireNonNull;
 

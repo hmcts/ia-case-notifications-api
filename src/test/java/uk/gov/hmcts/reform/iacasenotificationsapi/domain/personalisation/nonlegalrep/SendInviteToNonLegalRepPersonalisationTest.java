@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
