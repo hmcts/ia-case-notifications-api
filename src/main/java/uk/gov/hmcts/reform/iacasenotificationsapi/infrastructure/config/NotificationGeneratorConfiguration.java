@@ -3480,7 +3480,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("legalRep{aPayLaterCaseBuildingNotificationGenerator")
+    @Bean("legalRepPaPayLaterCaseBuildingNotificationGenerator")
     public List<NotificationGenerator> legalRepPaPayLaterCaseBuildingNotificationHandler(
             LegalRepPaPayLaterCaseBuildingPersonalisationEmail legalRepPaPayLaterCaseBuildingPersonalisationEmail,
             GovNotifyNotificationSender notificationSender,

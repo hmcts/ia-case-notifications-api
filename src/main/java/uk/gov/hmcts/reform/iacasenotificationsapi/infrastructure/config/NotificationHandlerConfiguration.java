@@ -7851,7 +7851,13 @@ public class NotificationHandlerConfiguration {
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
+                    System.out.println("Event: " + callback.getEvent());
+                    System.out.println("Stage: " + callbackStage);
+                    System.out.println("Payment option: " + paPaymentOption);
+                    System.out.println("Appeal type correct: " + isCorrectAppealType);
+
                     return callback.getEvent() == BUILD_CASE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && isRepJourney(asylumCase)
@@ -7878,6 +7884,7 @@ public class NotificationHandlerConfiguration {
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                     return callback.getEvent() == LIST_CASE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && isRepJourney(asylumCase)
@@ -7904,6 +7911,7 @@ public class NotificationHandlerConfiguration {
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
                     return callback.getEvent() == SEND_DECISION_AND_REASONS
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
                             && isRepJourney(asylumCase)
