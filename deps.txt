@@ -291,7 +291,7 @@ compileClasspath - Compile classpath for source set 'main'.
 |    \--- io.github.openfeign:feign-jackson:11.0
 |         +--- io.github.openfeign:feign-core:11.0 -> 11.10
 |         \--- com.fasterxml.jackson.core:jackson-databind:2.10.0.pr3 -> 2.16.0 (*)
-+--- com.github.hmcts.java-logging:logging:6.0.1
++--- com.github.hmcts.java-logging:logging:8.0.0
 +--- com.github.hmcts.java-logging:logging-appinsights:6.0.1
 |    +--- org.springframework.boot:spring-boot-autoconfigure -> 2.7.18 (*)
 |    +--- com.microsoft.azure:applicationinsights-logging-logback:2.6.1
