@@ -447,6 +447,9 @@ public enum AsylumCaseDefinition {
     OTHER_DECISION_FOR_DISPLAY(
         "otherDecisionForDisplay", new TypeReference<String>() {}),
 
+    NLR_EMAIL(
+        "nlrEmail", new TypeReference<String>() {}),
+
     REQUEST_FEE_REMISSION_DATE(
         "requestFeeRemissionDate", new TypeReference<String>(){}),
     REMISSION_REJECTED_DATE_PLUS_14DAYS(
