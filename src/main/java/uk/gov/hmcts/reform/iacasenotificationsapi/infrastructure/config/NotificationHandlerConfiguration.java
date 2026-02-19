@@ -7902,10 +7902,21 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> generateSendInviteToNonLegalRepNotificationHandler(
-        @Qualifier("generateSendInviteToNonLegalRepNotificationHandler") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("generateSendInviteToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == SEND_INVITE_TO_NON_LEGAL_REP,
+            notificationGenerators
+        );
+    }
+
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateSendPipToNonLegalRepNotificationHandler(
+        @Qualifier("generateSendPipToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == SEND_PIP_TO_NON_LEGAL_REP,
             notificationGenerators
         );
     }

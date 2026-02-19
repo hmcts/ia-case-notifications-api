@@ -132,6 +132,7 @@ public enum Event {
     PROGRESS_MIGRATED_CASE("progressMigratedCase"),
     REFUND_CONFIRMATION("refundConfirmation"),
     SEND_INVITE_TO_NON_LEGAL_REP("sendInviteToNonLegalRep"),
+    SEND_PIP_TO_NON_LEGAL_REP("sendPipToNonLegalRep"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

@@ -1513,6 +1513,9 @@ govnotify:
     sendInviteToNonLegalRep:
       nlr:
         email: 7d3374d0-4dbb-4993-89d1-997c73eb7ed8
+    sendJoinAppealPin:
+      nlr:
+        email: adb7418a-d54d-4f3c-8cc5-47dfabca3bad
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1684,6 +1687,7 @@ security:
       - "applyForFTPAAppellant"
       - "requestFeeRemission"
       - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -2508,6 +2512,7 @@ security:
       - "changeHearingCentre"
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"

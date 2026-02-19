@@ -403,6 +403,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_PIN_IN_POST(
         "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
 
+    JOIN_APPEAL_PIN(
+        "joinAppealPin", new TypeReference<PinInPostDetails>(){}),
+
     APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
 
     IS_INTEGRATED(
