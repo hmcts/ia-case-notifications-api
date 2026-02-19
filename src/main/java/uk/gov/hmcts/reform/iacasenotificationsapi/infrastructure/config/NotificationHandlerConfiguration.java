@@ -7851,11 +7851,6 @@ public class NotificationHandlerConfiguration {
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
-                    System.out.println("Event: " + callback.getEvent());
-                    System.out.println("Stage: " + callbackStage);
-                    System.out.println("Payment option: " + paPaymentOption);
-                    System.out.println("Appeal type correct: " + isCorrectAppealType);
-
                     return callback.getEvent() == BUILD_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType

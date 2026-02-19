@@ -28,7 +28,6 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
     private String feeAmount = "4000.00";
     private String appealReferenceNumber = "appealReferenceNumber";
     private LegalRepPaPayLaterDecisionPersonalisationEmail legalRepPaPayLaterDecisionPersonalisationEmail;
-    private String appellantEmail = "test@mail.com";
 
     @BeforeEach
     public void setup() {
