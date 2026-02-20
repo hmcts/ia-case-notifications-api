@@ -3411,26 +3411,10 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
 
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
-                            FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()
-                    ));
-
-                    if (!isDlrmSetAsideEnabled(asylumCase)) {
-                        ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString());
-                    }
-
-                    boolean isReheardDecisionOutcome = asylumCase
-                            .read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
-                            .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
-                            .orElse(false);
-                    if (!isReheardDecisionOutcome) {
-                        isReheardDecisionOutcome = asylumCase
-                                .read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE,
-                                        FtpaDecisionOutcomeType.class)
-                                .map(decision -> ftpaDecisionOutcomeTypes.contains(decision.toString()))
-                                .orElse(false);
-                    }
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                List<String> ftpaDecisionOutcomeTypes = new ArrayList<>(List.of(
+                        FtpaDecisionOutcomeType.FTPA_REHEARD32.toString()
+                ));
 
                 if (!isDlrmSetAsideEnabled(asylumCase)) {
                     ftpaDecisionOutcomeTypes.add(FtpaDecisionOutcomeType.FTPA_REHEARD35.toString());
@@ -4757,9 +4741,9 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean paymentPaid = asylumCase
-                            .read(PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+                boolean paymentPaid = asylumCase
+                        .read(PAYMENT_STATUS, PaymentStatus.class)
+                        .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_DECISION
@@ -4782,9 +4766,9 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean paymentPaid = asylumCase
-                            .read(PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+                boolean paymentPaid = asylumCase
+                        .read(PAYMENT_STATUS, PaymentStatus.class)
+                        .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 Optional<RemissionType> lateRemissionType = asylumCase.read(LATE_REMISSION_TYPE, RemissionType.class);
 
@@ -4810,9 +4794,9 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean paymentPaid = asylumCase
-                            .read(PAYMENT_STATUS, PaymentStatus.class)
-                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+                boolean paymentPaid = asylumCase
+                        .read(PAYMENT_STATUS, PaymentStatus.class)
+                        .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
                 boolean rejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> REJECTED == decision)
@@ -6919,9 +6903,9 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                            .map(decision -> APPROVED == decision)
-                            .orElse(false);
+                boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                        .map(decision -> APPROVED == decision)
+                        .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_DECISION
