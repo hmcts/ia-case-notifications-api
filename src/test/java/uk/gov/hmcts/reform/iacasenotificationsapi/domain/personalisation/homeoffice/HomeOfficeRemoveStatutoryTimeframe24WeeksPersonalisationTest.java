@@ -27,134 +27,150 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
+/**
+ * Test class for HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
+@SuppressWarnings("PMD.TooManyFields")
+class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
+
+    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
+    private static final String ARIA_LISTING_REFERENCE_KEY = "ariaListingReference";
+    private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
+    private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
+    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+
+    private static final String BEFORE_LISTING_TEMPLATE_ID = "beforeListingTemplateId";
+    private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
+    private static final HearingCentre HEARING_CENTRE = HearingCentre.TAYLOR_HOUSE;
+    private static final String BEFORE_LISTING_EMAIL_ADDRESS = "homeoffice@example.com";
+    private static final String AFTER_LISTING_EMAIL_ADDRESS = "hearinge@example.com";
+    private static final String APPEAL_REFERENCE_NUMBER_VALUE = "someReferenceNumber";
+    private static final String ARIA_LISTING_REFERENCE_VALUE = "someAriaListingReference";
+    private static final String HOME_OFFICE_REF_NUMBER = "someHomeOfficeRefNumber";
+    private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
+    private static final String CUSTOMER_SERVICES_TELEPHONE = "555 555 555";
+    private static final String CUSTOMER_SERVICES_EMAIL = "cust.services@example.com";
+    private static final String MOCK_PREFIX = "mox prefix";
+    private static final Long CASE_ID = 12345L;
+    private static final String EXPECTED_REFERENCE_ID = CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
 
     @Mock
-    AsylumCase asylumCase;
+    private AsylumCase asylumCase;
+
     @Mock
-    EmailAddressFinder emailAddressFinder;
+    private EmailAddressFinder emailAddressFinder;
+
     @Mock
-    CustomerServicesProvider customerServicesProvider;
+    private CustomerServicesProvider customerServicesProvider;
 
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String beforeListingEmailAddress = "homeoffice@example.com";
-    private final String afterListingEmailAddress = "hearinge@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
-    private HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficePersonalisation;
+    private HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation personalisation;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+        setupAsylumCaseMocks();
+        setupCustomerServicesMocks();
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(afterListingEmailAddress);
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
-        homeOfficePersonalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(
-                beforeListingTemplateId,
-                beforeListingEmailAddress,
-                iaExUiFrontendUrl,
-                emailAddressFinder,
-                customerServicesProvider);
+        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider, MOCK_PREFIX);
     }
 
     @Test
-    public void should_return_given_template_id() {
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+    void shouldReturnGivenTemplateId() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
-
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.empty());
-        assertEquals(beforeListingTemplateId,
-                homeOfficePersonalisation.getTemplateId(asylumCase));
-    }
-
-    @Test
-    public void should_return_given_reference_id() {
-        Long caseId = 12345L;
-        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL",
-                homeOfficePersonalisation.getReferenceId(caseId));
-    }
-
-    @Test
-    public void should_return_given_email_address() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-        assertTrue(homeOfficePersonalisation.getRecipientsList(asylumCase).contains(beforeListingEmailAddress));
 
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-        assertTrue(homeOfficePersonalisation.getRecipientsList(asylumCase).contains(afterListingEmailAddress));
+        assertEquals(BEFORE_LISTING_TEMPLATE_ID, personalisation.getTemplateId(asylumCase));
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
-
-        assertThatThrownBy(() -> homeOfficePersonalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+    void shouldReturnGivenReferenceId() {
+        assertEquals(EXPECTED_REFERENCE_ID, personalisation.getReferenceId(CASE_ID));
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
+    void shouldReturnGivenEmailAddress() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+        assertTrue(personalisation.getRecipientsList(asylumCase).contains(BEFORE_LISTING_EMAIL_ADDRESS));
 
-        Map<String, String> personalisation =
-                homeOfficePersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HEARING_CENTRE));
+        assertTrue(personalisation.getRecipientsList(asylumCase).contains(AFTER_LISTING_EMAIL_ADDRESS));
     }
 
     @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
+    void shouldThrowExceptionOnPersonalisationWhenCaseIsNull() {
+        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null)).isExactlyInstanceOf(NullPointerException.class).hasMessage("asylumCase must not be null");
+    }
 
+    @Test
+    void shouldReturnPersonalisationWhenAllInformationGiven() {
+        Map<String, String> result = personalisation.getPersonalisation(asylumCase);
+
+        assertPersonalisationContainsAllFields(result);
+    }
+
+    @Test
+    void shouldReturnPersonalisationWhenAllMandatoryInformationGiven() {
+        setupEmptyAsylumCaseMocks();
+
+        Map<String, String> result = personalisation.getPersonalisation(asylumCase);
+
+        assertPersonalisationContainsMandatoryFields(result);
+    }
+
+    @Test
+    void shouldReturnFalseIfAppealNotYetListed() {
+        assertFalse(personalisation.isAppealListed(asylumCase));
+
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+
+        assertTrue(personalisation.isAppealListed(asylumCase));
+    }
+
+    private void setupAsylumCaseMocks() {
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(APPEAL_REFERENCE_NUMBER_VALUE));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ARIA_LISTING_REFERENCE_VALUE));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(APPELLANT_GIVEN_NAMES_VALUE));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REF_NUMBER));
+        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(AFTER_LISTING_EMAIL_ADDRESS);
+    }
+
+    private void setupEmptyAsylumCaseMocks() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-
-        Map<String, String> personalisation =
-                homeOfficePersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
-    @Test
-    public void should_return_false_if_appeal_not_yet_listed() {
-        assertFalse(homeOfficePersonalisation.isAppealListed(asylumCase));
+    private void setupCustomerServicesMocks() {
+        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(CUSTOMER_SERVICES_TELEPHONE);
+        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(CUSTOMER_SERVICES_EMAIL);
+    }
 
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+    private void assertPersonalisationContainsAllFields(Map<String, String> personalisation) {
+        assertEquals(APPEAL_REFERENCE_NUMBER_VALUE, personalisation.get(APPEAL_REFERENCE_NUMBER_KEY));
+        assertEquals(ARIA_LISTING_REFERENCE_VALUE, personalisation.get(ARIA_LISTING_REFERENCE_KEY));
+        assertEquals(HOME_OFFICE_REF_NUMBER, personalisation.get(HOME_OFFICE_REFERENCE_NUMBER_KEY));
+        assertEquals(APPELLANT_GIVEN_NAMES_VALUE, personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
+        assertEquals(APPELLANT_FAMILY_NAME_VALUE, personalisation.get(APPELLANT_FAMILY_NAME_KEY));
+        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_ONLINE_SERVICE_KEY));
+        assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
+    }
 
-        assertTrue(homeOfficePersonalisation.isAppealListed(asylumCase));
+    private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {
+        assertEquals("", personalisation.get(APPEAL_REFERENCE_NUMBER_KEY));
+        assertEquals("", personalisation.get(ARIA_LISTING_REFERENCE_KEY));
+        assertEquals("", personalisation.get(HOME_OFFICE_REFERENCE_NUMBER_KEY));
+        assertEquals("", personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
+        assertEquals("", personalisation.get(APPELLANT_FAMILY_NAME_KEY));
+        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_ONLINE_SERVICE_KEY));
+        assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
+        assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }
 }

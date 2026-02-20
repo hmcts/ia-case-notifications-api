@@ -27,6 +27,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
     private final String apcPrivateBetaInboxHomeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
+    private final String nonAdaPrefix;
 
     public HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(
             @NotNull(message = "removeStatutoryTimeframe24WeeksHomeOfficeTemplateId cannot be null")
@@ -34,12 +35,13 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateBetaInboxHomeOfficeEmailAddress,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder,
-            CustomerServicesProvider customerServicesProvider) {
+            CustomerServicesProvider customerServicesProvider, @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix) {
         this.removeStatutoryTimeframe24WeeksHomeOfficeTemplateId = removeStatutoryTimeframe24WeeksHomeOfficeTemplateId;
         this.apcPrivateBetaInboxHomeOfficeEmailAddress = apcPrivateBetaInboxHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.emailAddressFinder = emailAddressFinder;
+        this.nonAdaPrefix = nonAdaPrefix;
     }
 
     @Override
@@ -65,6 +67,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation implements
 
         return ImmutableMap
                 .<String, String>builder()
+                .put("subjectPrefix", nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))

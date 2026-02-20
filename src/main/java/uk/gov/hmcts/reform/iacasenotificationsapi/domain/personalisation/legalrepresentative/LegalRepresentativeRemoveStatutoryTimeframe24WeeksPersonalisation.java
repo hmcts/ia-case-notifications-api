@@ -24,15 +24,17 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
     private final String removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+    private final String nonAdaPrefix;
 
     public LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation(
             @NotNull(message = "removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId cannot be null")
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.legalRep.email}") String removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            CustomerServicesProvider customerServicesProvider) {
+            CustomerServicesProvider customerServicesProvider, @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix) {
         this.removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId = removeStatutoryTimeframe24WeeksLegalRepresentativeTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
+        this.nonAdaPrefix = nonAdaPrefix;
     }
 
     @Override
@@ -53,9 +55,9 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        log.info("Fixing LEGAL_REP_EMAIL");
         return ImmutableMap
                 .<String, String>builder()
+                .put("subjectPrefix", nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))

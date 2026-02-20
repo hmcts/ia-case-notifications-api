@@ -26,108 +26,141 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
-
+/**
+ * Test class for LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
+@SuppressWarnings("PMD.TooManyFields")
+class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
 
-    private final String stf24WeeksTemplateId = "stf24WeeksTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String emailAddress = "legal@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String legalRefNumber = "someLegalRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
+    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
+    private static final String ARIA_LISTING_REFERENCE_KEY = "ariaListingReference";
+    private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
+    private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
+    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+
+    private static final String STF_24_WEEKS_TEMPLATE_ID = "stf24WeeksTemplateId";
+    private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
+    private static final String EMAIL_ADDRESS = "legal@example.com";
+    private static final String APPEAL_REFERENCE_NUMBER_VALUE = "someReferenceNumber";
+    private static final String ARIA_LISTING_REFERENCE_VALUE = "someAriaListingReference";
+    private static final String LEGAL_REF_NUMBER = "someLegalRefNumber";
+    private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
+    private static final String MOCK_PREFIX = "some mock prefix";
+    private static final Long CASE_ID = 12345L;
+    private static final String EXPECTED_REFERENCE_ID =
+            CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
 
     @Mock
-    AsylumCase asylumCase;
-    private LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation;
+    private CustomerServicesProvider customerServicesProvider;
+
+    @Mock
+    private AsylumCase asylumCase;
+
+    private LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation personalisation;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+        setupAsylumCaseMocks();
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRefNumber));
-
-        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(emailAddress));
-        legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation = new LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation(
-                stf24WeeksTemplateId,
-                iaExUiFrontendUrl, customerServicesProvider);
+        personalisation = new LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation(
+                STF_24_WEEKS_TEMPLATE_ID,
+                IA_EX_UI_FRONTEND_URL,
+                customerServicesProvider,
+                MOCK_PREFIX
+        );
     }
 
     @Test
-    public void should_return_given_template_id() {
+    void shouldReturnGivenTemplateId() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
                 .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
-
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
                 .thenReturn(Optional.empty());
-        assertEquals(stf24WeeksTemplateId,
-                legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getTemplateId(asylumCase));
+
+        assertEquals(STF_24_WEEKS_TEMPLATE_ID, personalisation.getTemplateId(asylumCase));
     }
 
     @Test
-    public void should_return_given_reference_id() {
-        Long caseId = 12345L;
-        assertEquals(caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL",
-                legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getReferenceId(caseId));
+    void shouldReturnGivenReferenceId() {
+        assertEquals(EXPECTED_REFERENCE_ID, personalisation.getReferenceId(CASE_ID));
     }
 
     @Test
-    public void should_return_given_email_address() {
-        assertTrue(
-                legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getRecipientsList(asylumCase).contains(emailAddress));
+    void shouldReturnGivenEmailAddress() {
+        assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
     }
 
     @Test
-    public void should_throw_exception_on_personalisation_when_case_is_null() {
-
-        assertThatThrownBy(
-                () -> legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getPersonalisation((AsylumCase) null))
+    void shouldThrowExceptionOnPersonalisationWhenCaseIsNull() {
+        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given() {
+    void shouldReturnPersonalisationWhenAllInformationGiven() {
+        Map<String, String> result = personalisation.getPersonalisation(asylumCase);
 
-        Map<String, String> personalisation =
-                legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-
+        assertPersonalisationContainsAllFields(result);
     }
 
     @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
+    void shouldReturnPersonalisationWhenAllMandatoryInformationGiven() {
+        setupEmptyAsylumCaseMocks();
 
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        Map<String, String> result = personalisation.getPersonalisation(asylumCase);
 
-        Map<String, String> personalisation =
-                legalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertPersonalisationContainsMandatoryFields(result);
     }
 
+    private void setupAsylumCaseMocks() {
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of(APPEAL_REFERENCE_NUMBER_VALUE));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
+                .thenReturn(Optional.of(ARIA_LISTING_REFERENCE_VALUE));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
+                .thenReturn(Optional.of(APPELLANT_GIVEN_NAMES_VALUE));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
+                .thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of(LEGAL_REF_NUMBER));
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
+                .thenReturn(Optional.of(EMAIL_ADDRESS));
+    }
+
+    private void setupEmptyAsylumCaseMocks() {
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.empty());
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
+                .thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
+                .thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
+                .thenReturn(Optional.empty());
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.empty());
+    }
+
+    private void assertPersonalisationContainsAllFields(Map<String, String> personalisation) {
+        assertEquals(APPEAL_REFERENCE_NUMBER_VALUE, personalisation.get(APPEAL_REFERENCE_NUMBER_KEY));
+        assertEquals(ARIA_LISTING_REFERENCE_VALUE, personalisation.get(ARIA_LISTING_REFERENCE_KEY));
+        assertEquals(LEGAL_REF_NUMBER, personalisation.get(LEGAL_REP_REFERENCE_NUMBER_KEY));
+        assertEquals(APPELLANT_GIVEN_NAMES_VALUE, personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
+        assertEquals(APPELLANT_FAMILY_NAME_VALUE, personalisation.get(APPELLANT_FAMILY_NAME_KEY));
+        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_ONLINE_SERVICE_KEY));
+    }
+
+    private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {
+        assertEquals("", personalisation.get(APPEAL_REFERENCE_NUMBER_KEY));
+        assertEquals("", personalisation.get(ARIA_LISTING_REFERENCE_KEY));
+        assertEquals("", personalisation.get(LEGAL_REP_REFERENCE_NUMBER_KEY));
+        assertEquals("", personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
+        assertEquals("", personalisation.get(APPELLANT_FAMILY_NAME_KEY));
+        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_ONLINE_SERVICE_KEY));
+    }
 }

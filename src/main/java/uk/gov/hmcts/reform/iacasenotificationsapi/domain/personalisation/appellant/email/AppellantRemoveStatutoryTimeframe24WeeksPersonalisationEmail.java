@@ -24,16 +24,17 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private final String iaExUiFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
-
+    private final String nonAdaPrefix;
     public AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.email}") String removeStatutoryTimeframe24WeeksAppellantTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             RecipientsFinder recipientsFinder,
-            CustomerServicesProvider customerServicesProvider) {
+            CustomerServicesProvider customerServicesProvider, @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix) {
         this.removeStatutoryTimeframe24WeeksAppellantTemplateId = removeStatutoryTimeframe24WeeksAppellantTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
+        this.nonAdaPrefix = nonAdaPrefix;
     }
 
     @Override
@@ -58,10 +59,10 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
         return ImmutableMap
                 .<String, String>builder()
+                .put("subjectPrefix", nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
                 .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
