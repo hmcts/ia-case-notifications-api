@@ -16,21 +16,35 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
+
 @Service
 @Slf4j
 public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String removeStatutoryTimeframe24WeeksAppellantTemplateId;
+    private static final String REFERENCE_ID_SUFFIX = "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+    private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
+    private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
+    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
+    private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
+    private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
+    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+    private static final String EMPTY_STRING = "";
+
+    private final String templateId;
     private final String iaExUiFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final String nonAdaPrefix;
+
+
     public AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
-            @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.email}") String removeStatutoryTimeframe24WeeksAppellantTemplateId,
+            @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.email}") String templateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
             RecipientsFinder recipientsFinder,
-            CustomerServicesProvider customerServicesProvider, @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix) {
-        this.removeStatutoryTimeframe24WeeksAppellantTemplateId = removeStatutoryTimeframe24WeeksAppellantTemplateId;
+            CustomerServicesProvider customerServicesProvider) {
+        this.templateId = templateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -39,34 +53,32 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public String getTemplateId() {
-        return removeStatutoryTimeframe24WeeksAppellantTemplateId;
+        return templateId;
     }
 
     @Override
-    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
         return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+        return caseId + REFERENCE_ID_SUFFIX;
     }
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        return ImmutableMap
-                .<String, String>builder()
-                .put("subjectPrefix", nonAdaPrefix)
+        return ImmutableMap.<String, String>builder()
+                .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("linkToOnlineService", iaExUiFrontendUrl)
-                .build();
+                .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
+                .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
+                .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl).build();
     }
+
 }

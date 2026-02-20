@@ -73,9 +73,8 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         personalisation = new AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
                 EMAIL_TEMPLATE_ID,
                 IA_EX_UI_FRONTEND_URL,
-                recipientsFinder,
-                customerServicesProvider,
-                MOCK_PREFIX
+                MOCK_PREFIX, recipientsFinder,
+                customerServicesProvider
         );
     }
 

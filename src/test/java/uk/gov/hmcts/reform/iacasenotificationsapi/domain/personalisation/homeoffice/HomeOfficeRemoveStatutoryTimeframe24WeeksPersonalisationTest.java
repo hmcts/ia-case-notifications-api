@@ -74,7 +74,7 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         setupAsylumCaseMocks();
         setupCustomerServicesMocks();
 
-        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider, MOCK_PREFIX);
+        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider);
     }
 
     @Test
