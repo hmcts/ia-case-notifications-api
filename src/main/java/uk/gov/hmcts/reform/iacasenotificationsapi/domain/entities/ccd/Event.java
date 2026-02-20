@@ -133,6 +133,7 @@ public enum Event {
     REFUND_CONFIRMATION("refundConfirmation"),
     SEND_INVITE_TO_NON_LEGAL_REP("sendInviteToNonLegalRep"),
     SEND_PIP_TO_NON_LEGAL_REP("sendPipToNonLegalRep"),
+    JOIN_APPEAL_CONFIRMATION("joinAppealConfirmation"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

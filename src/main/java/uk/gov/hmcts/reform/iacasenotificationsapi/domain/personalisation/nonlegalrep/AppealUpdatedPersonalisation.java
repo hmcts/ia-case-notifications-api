@@ -10,46 +10,49 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class SendInviteToNonLegalRepPersonalisation implements EmailNotificationPersonalisation {
+public class AppealUpdatedPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String sendInviteToNonLegalRepTemplateId;
+    private final String joinAppealConfirmationTemplateId;
     private final String iaAipFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public SendInviteToNonLegalRepPersonalisation(
-        @Value("${govnotify.template.nlr.sendInviteToNonLegalRep.email}") String sendInviteToNonLegalRepTemplateId,
+    public AppealUpdatedPersonalisation(
+        @Value("${govnotify.template.nlr.appealUpdated.email}") String joinAppealConfirmationTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.sendInviteToNonLegalRepTemplateId = sendInviteToNonLegalRepTemplateId;
+        this.joinAppealConfirmationTemplateId = joinAppealConfirmationTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return sendInviteToNonLegalRepTemplateId;
+        return joinAppealConfirmationTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        String nlrEmail = asylumCase.read(AsylumCaseDefinition.NLR_EMAIL, String.class)
-            .orElseThrow(() -> new IllegalStateException("NLR email address is not present"));
-        return Collections.singleton(nlrEmail);
+        NonLegalRepDetails nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
+            .orElseThrow(() -> new IllegalStateException("NLR details is not present"));
+        return Collections.singleton(nlrDetails.getEmailAddress());
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_SEND_INVITE_TO_NON_LEGAL_REP";
+        return caseId + "_APPEAL_UPDATED_NON_LEGAL_REP";
     }
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+        NonLegalRepDetails nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
+            .orElse(null);
 
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
@@ -58,6 +61,8 @@ public class SendInviteToNonLegalRepPersonalisation implements EmailNotification
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("nlrGivenNames", nlrDetails != null ? nlrDetails.getGivenNames() : "Sir /")
+            .put("nlrFamilyName", nlrDetails != null ? nlrDetails.getFamilyName() : "Madam")
             .put("Hyperlink to service", iaAipFrontendUrl);
 
         return fields.build();

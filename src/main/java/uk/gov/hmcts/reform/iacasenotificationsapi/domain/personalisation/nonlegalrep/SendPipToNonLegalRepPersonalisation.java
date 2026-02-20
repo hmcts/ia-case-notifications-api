@@ -23,7 +23,7 @@ public class SendPipToNonLegalRepPersonalisation implements EmailNotificationPer
     private final CustomerServicesProvider customerServicesProvider;
 
     public SendPipToNonLegalRepPersonalisation(
-        @Value("${govnotify.template.sendJoinAppealPin.nlr.email}") String sendJoinAppealPinTemplateId,
+        @Value("${govnotify.template.nlr.sendJoinAppealPin.email}") String sendJoinAppealPinTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {

@@ -107,6 +107,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeTransferOutOfAdaPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAddendumEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAdditionalEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.AppealUpdatedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendInviteToNonLegalRepPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
@@ -7154,6 +7156,36 @@ public class NotificationGeneratorConfiguration {
         return List.of(
             new EmailNotificationGenerator(
                 newArrayList(sendPipToNonLegalRepPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateJoinAppealConfirmationNonLegalRepNotificationGenerator")
+    public List<NotificationGenerator> generateJoinAppealConfirmationNonLegalRepNotificationGenerator(
+        JoinAppealConfirmationPersonalisation joinAppealConfirmationPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(joinAppealConfirmationPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateAppealUpdatedNonLegalRepNotificationGenerator")
+    public List<NotificationGenerator> generateAppealUpdatedNonLegalRepNotificationGenerator(
+        AppealUpdatedPersonalisation appealUpdatedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(appealUpdatedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
