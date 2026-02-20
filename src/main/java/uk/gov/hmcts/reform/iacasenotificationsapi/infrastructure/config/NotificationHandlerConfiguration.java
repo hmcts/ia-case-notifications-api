@@ -4034,13 +4034,11 @@ public class NotificationHandlerConfiguration {
 
                 boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> REJECTED == decision)
-
-
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                    && !isInternalCase(asylumCase)
                     && isRejected
                     && isPaAppeal(asylumCase);
             },
