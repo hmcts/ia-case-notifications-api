@@ -34,7 +34,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.calculateFeeDifference;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.generateAppellantPinIfNotPresent;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.generateJoinAppealPinIfNotPresent;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.generateJoinAppealPinIfNotPresentOrUsed;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAddendumEvidenceDocuments;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicantAndRespondent;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getApplicationById;
@@ -447,7 +447,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(AsylumCaseDefinition.JOIN_APPEAL_PIN, PinInPostDetails.class))
             .thenReturn(Optional.of(existingPin));
 
-        assertEquals(existingPin, generateJoinAppealPinIfNotPresent(asylumCase));
+        assertEquals(existingPin, generateJoinAppealPinIfNotPresentOrUsed(asylumCase));
     }
 
     @Test
@@ -455,7 +455,28 @@ public class AsylumCaseUtilsTest {
         generatorMockedStatic.when(() -> AccessCodeGenerator.generateAccessCode())
             .thenReturn(generatedCode);
 
-        PinInPostDetails generatedPinDetails = generateJoinAppealPinIfNotPresent(asylumCaseSpy);
+        PinInPostDetails generatedPinDetails = generateJoinAppealPinIfNotPresentOrUsed(asylumCaseSpy);
+
+        assertEquals(generatedCode, generatedPinDetails.getAccessCode());
+        assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());
+        assertEquals(NO, generatedPinDetails.getPinUsed());
+    }
+
+    @Test
+    void generateJoinAppealPin_generate_new_pin_if_used() {
+        PinInPostDetails existingPin = PinInPostDetails.builder()
+            .accessCode("123")
+            .expiryDate(LocalDate.now().plusDays(30).toString())
+            .pinUsed(YesOrNo.YES)
+            .build();
+
+        when(asylumCase.read(AsylumCaseDefinition.JOIN_APPEAL_PIN, PinInPostDetails.class))
+            .thenReturn(Optional.of(existingPin));
+
+        generatorMockedStatic.when(() -> AccessCodeGenerator.generateAccessCode())
+            .thenReturn(generatedCode);
+
+        PinInPostDetails generatedPinDetails = generateJoinAppealPinIfNotPresentOrUsed(asylumCaseSpy);
 
         assertEquals(generatedCode, generatedPinDetails.getAccessCode());
         assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());

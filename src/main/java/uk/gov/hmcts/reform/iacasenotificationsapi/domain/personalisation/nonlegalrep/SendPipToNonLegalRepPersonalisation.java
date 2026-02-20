@@ -52,7 +52,7 @@ public class SendPipToNonLegalRepPersonalisation implements EmailNotificationPer
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        PinInPostDetails pip = AsylumCaseUtils.generateJoinAppealPinIfNotPresent(asylumCase);
+        PinInPostDetails pip = AsylumCaseUtils.generateJoinAppealPinIfNotPresentOrUsed(asylumCase);
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())

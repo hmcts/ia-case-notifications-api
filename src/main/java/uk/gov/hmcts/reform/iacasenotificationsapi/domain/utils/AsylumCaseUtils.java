@@ -253,8 +253,11 @@ public class AsylumCaseUtils {
     }
 
 
-    public static PinInPostDetails generateJoinAppealPinIfNotPresent(AsylumCase asylumCase) {
-        if (asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class).isEmpty()) {
+    public static PinInPostDetails generateJoinAppealPinIfNotPresentOrUsed(AsylumCase asylumCase) {
+        YesOrNo isPinUsedOrMissing = asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)
+            .map(PinInPostDetails::getPinUsed)
+            .orElse(YES);
+        if (isPinUsedOrMissing.equals(YES)) {
             asylumCase.write(JOIN_APPEAL_PIN, PinInPostDetails.builder()
                 .accessCode(AccessCodeGenerator.generateAccessCode())
                 .expiryDate(LocalDate.now().plusDays(30).toString())
