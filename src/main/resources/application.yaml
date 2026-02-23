@@ -1512,11 +1512,11 @@ govnotify:
         letter: e68faac4-cf30-4e0b-b746-a7bafHi Ram, 036dc65
     removeStatutoryTimeframe24Weeks:
       homeOffice:
-        email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
+        email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
       legalRep:
         email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
       appellant:
-        email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
+        email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
