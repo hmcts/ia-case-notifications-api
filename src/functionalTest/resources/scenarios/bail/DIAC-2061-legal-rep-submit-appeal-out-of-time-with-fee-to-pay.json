@@ -1,5 +1,6 @@
 {
   "description": "DIAC-2061 Send letter notification to LEGAL REP for Submit Appeal out of time fee to pay - detained",
+  "disabled": true,
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
