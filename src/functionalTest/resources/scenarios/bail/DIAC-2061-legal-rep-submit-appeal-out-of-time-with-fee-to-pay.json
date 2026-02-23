@@ -55,7 +55,7 @@
         },
         "notificationsSent": [
           {
-            "id": "2061_LEGAL_REP_MANUAL_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER",
+            "id": "2061__INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
