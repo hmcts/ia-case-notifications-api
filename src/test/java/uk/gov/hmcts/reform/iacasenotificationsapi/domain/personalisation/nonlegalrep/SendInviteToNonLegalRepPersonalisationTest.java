@@ -108,6 +108,7 @@ public class SendInviteToNonLegalRepPersonalisationTest {
         assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
         assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
         assertEquals(personalisation.get("Hyperlink to service"), aipFrontendUrl);
+        assertEquals(personalisation.get("createAnAccountLink"), aipFrontendUrl + "/create-account");
     }
 
     @Test
