@@ -50,7 +50,7 @@ public class SendInviteToNonLegalRepPersonalisation implements EmailNotification
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
+        String createAnAccountSlug = (iaAipFrontendUrl.endsWith("/") ? "" : "/") + "login?register=true";
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -58,7 +58,7 @@ public class SendInviteToNonLegalRepPersonalisation implements EmailNotification
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("createAnAccountLink", iaAipFrontendUrl + "/create-account")
+            .put("createAnAccountLink", iaAipFrontendUrl + createAnAccountSlug)
             .put("Hyperlink to service", iaAipFrontendUrl);
 
         return fields.build();

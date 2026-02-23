@@ -101,14 +101,41 @@ public class SendInviteToNonLegalRepPersonalisationTest {
             sendInviteToNonLegalRepPersonalisation.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
-        assertEquals(personalisation.get("appealReferenceNumber"), appealReferenceNumber);
-        assertEquals(personalisation.get("homeOfficeReferenceNumber"), homeOfficeReference);
-        assertEquals(personalisation.get("appellantGivenNames"), appellantGivenNames);
-        assertEquals(personalisation.get("appellantFamilyName"), appellantFamilyName);
-        assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
-        assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
-        assertEquals(personalisation.get("Hyperlink to service"), aipFrontendUrl);
-        assertEquals(personalisation.get("createAnAccountLink"), aipFrontendUrl + "/create-account");
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
+        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
+        assertEquals(aipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals("http://localhost/login?register=true", personalisation.get("createAnAccountLink"));
+    }
+
+
+    @Test
+    public void should_return_correct_createAnAccountLink_when_trailing_slash() {
+        final String aipFrontendUrlWithSlash = "http://localhost/";
+        sendInviteToNonLegalRepPersonalisation = new SendInviteToNonLegalRepPersonalisation(
+            templateId,
+            aipFrontendUrlWithSlash,
+            customerServicesProvider
+        );
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        Map<String, String> customerServicesPersonalisation = Map.of(
+            "customerServicesTelephone", customerServicesTelephone,
+            "customerServicesEmail", customerServicesEmail
+        );
+        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+
+        Map<String, String> personalisation =
+            sendInviteToNonLegalRepPersonalisation.getPersonalisation(callback);
+        assertFalse(personalisation.isEmpty());
+        assertEquals("http://localhost/login?register=true", personalisation.get("createAnAccountLink"));
     }
 
     @Test
