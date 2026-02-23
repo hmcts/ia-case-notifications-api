@@ -66,7 +66,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
 
         Set<String> emails = Collections.singleton(apcPrivateHomeOfficeEmailAddress);
-        log.info("HO Emails2 {}", emails);
+        log.info("HO Emails {}", emails);
         return emails;
     }
 

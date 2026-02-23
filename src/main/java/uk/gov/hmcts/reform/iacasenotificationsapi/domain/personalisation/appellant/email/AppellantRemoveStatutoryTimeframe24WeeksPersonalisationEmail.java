@@ -53,9 +53,11 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+        Set<String> emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
                 .map(Collections::singleton)
                 .orElse(Collections.emptySet());
+        log.info("Appellant emails {}", emails);
+        return emails;
     }
 
     @Override
