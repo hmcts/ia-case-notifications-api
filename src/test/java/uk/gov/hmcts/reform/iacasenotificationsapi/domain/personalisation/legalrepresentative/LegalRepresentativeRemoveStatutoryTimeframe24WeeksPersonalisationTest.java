@@ -22,7 +22,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
@@ -35,10 +34,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @SuppressWarnings("PMD.TooManyFields")
 class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
 
-    private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
-    private static final String HOME_OFFICE_REFERENCE_NUMBER_VALUE = "323232";
     private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
+    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
 
@@ -48,6 +46,8 @@ class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String LEGAL_REF_NUMBER = "someLegalRefNumber";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
+    private static final String APPEAL_REFERENCE_NUMBER_VALUE = "34445";
+
 
     private static final String MOCK_PREFIX = "some mock prefix";
     private static final Long CASE_ID = 12345L;
@@ -110,7 +110,7 @@ class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         assertEquals(APPELLANT_GIVEN_NAMES_VALUE, result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals(APPELLANT_FAMILY_NAME_VALUE, result.get(APPELLANT_FAMILY_NAME_KEY));
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
-        assertEquals(HOME_OFFICE_REFERENCE_NUMBER_VALUE, result.get(HOME_OFFICE_REFERENCE_NUMBER_KEY));
+        assertEquals(APPEAL_REFERENCE_NUMBER_VALUE, result.get(APPEAL_REFERENCE_NUMBER_KEY));
     }
 
     @Test
@@ -136,7 +136,8 @@ class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
                 .thenReturn(Optional.of(LEGAL_REF_NUMBER));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
                 .thenReturn(Optional.of(EMAIL_ADDRESS));
-        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REFERENCE_NUMBER_VALUE));
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of(APPEAL_REFERENCE_NUMBER_VALUE));
     }
 
     private void setupEmptyAsylumCaseMocks() {

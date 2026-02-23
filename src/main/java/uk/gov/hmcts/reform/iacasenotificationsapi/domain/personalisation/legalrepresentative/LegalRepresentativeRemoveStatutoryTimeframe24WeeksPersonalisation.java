@@ -23,7 +23,6 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
 
     private static final String REFERENCE_ID_SUFFIX = "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
-    private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
@@ -70,7 +69,6 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
 
         return ImmutableMap.<String, String>builder().put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
