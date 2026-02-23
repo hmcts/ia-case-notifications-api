@@ -58,7 +58,10 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+
+        Set<String> appellantEmails = recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        log.info("appellantEmails {}", appellantEmails);
+        return appellantEmails;
     }
 
     @Override

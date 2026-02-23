@@ -25,7 +25,6 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
     private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
-    private static final String ARIA_LISTING_REFERENCE_KEY = "ariaListingReference";
     private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
@@ -55,7 +54,9 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+        Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+        log.info("LegalRepresentative Emails {}", legalRepEmails);
+        return legalRepEmails;
     }
 
     @Override
@@ -71,7 +72,6 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(ARIA_LISTING_REFERENCE_KEY, asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(EMPTY_STRING))
                 .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))

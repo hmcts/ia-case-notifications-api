@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -20,6 +21,7 @@ import static java.util.Objects.requireNonNull;
 
 
 @Service
+@Slf4j
 public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
         implements EmailNotificationPersonalisation {
 
@@ -64,12 +66,17 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+
         if (isAppealListed(asylumCase)) {
-            return Collections.singleton(
+            Set<String> emails = Collections.singleton(
                     emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)
             );
+            log.info("HO Emails1 {}", emails);
+            return emails;
         }
-        return Collections.singleton(apcPrivateHomeOfficeEmailAddress);
+        Set<String> emails = Collections.singleton(apcPrivateHomeOfficeEmailAddress);
+        log.info("HO Emails2 {}", emails);
+        return emails;
     }
 
     @Override
