@@ -12,8 +12,9 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantInUk": "Yes",
-          "appellantsRepresentation": "No",
-          "appellantInDetention": "No",
+          "appellantsRepresentation": "Yes",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "prison",
           "submissionOutOfTime": "Yes",
           "paymentStatus": "Payment pending",
           "legalRepHasAddress": "Yes",
@@ -37,8 +38,9 @@
       "replacements": {
         "isAdmin": "Yes",
         "appellantInUk": "Yes",
-        "appellantsRepresentation": "No",
-        "appellantInDetention": "No",
+        "appellantsRepresentation": "Yes",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "prison",
         "submissionOutOfTime": "Yes",
         "paymentStatus": "Payment pending",
         "legalRepHasAddress": "Yes",
