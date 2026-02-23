@@ -10,7 +10,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +39,6 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String BEFORE_LISTING_TEMPLATE_ID = "beforeListingTemplateId";
     private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
     private static final String BEFORE_LISTING_EMAIL_ADDRESS = "homeoffice@example.com";
-    private static final String AFTER_LISTING_EMAIL_ADDRESS = "hearinge@example.com";
     private static final String APPEAL_REFERENCE_NUMBER_VALUE = "someReferenceNumber";
     private static final String ARIA_LISTING_REFERENCE_VALUE = "someAriaListingReference";
     private static final String HOME_OFFICE_REF_NUMBER = "someHomeOfficeRefNumber";
@@ -56,9 +54,6 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     private AsylumCase asylumCase;
 
     @Mock
-    private EmailAddressFinder emailAddressFinder;
-
-    @Mock
     private CustomerServicesProvider customerServicesProvider;
 
     private HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation personalisation;
@@ -68,7 +63,7 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         setupAsylumCaseMocks();
         setupCustomerServicesMocks();
 
-        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider);
+        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, customerServicesProvider);
     }
 
     @Test
@@ -117,7 +112,6 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(APPELLANT_GIVEN_NAMES_VALUE));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REF_NUMBER));
-        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(AFTER_LISTING_EMAIL_ADDRESS);
     }
 
     private void setupEmptyAsylumCaseMocks() {
