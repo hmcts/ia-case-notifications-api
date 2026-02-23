@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
 
 @Service
 @Slf4j
@@ -54,7 +54,7 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourney(asylumCase));
+        Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
         log.info("LegalRepresentative Emails {}", legalRepEmails);
         return legalRepEmails;
     }

@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 
 
 @Service
@@ -24,8 +24,6 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private static final String REFERENCE_ID_SUFFIX = "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
     private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
-    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
-    private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
@@ -33,7 +31,6 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     private final String templateId;
     private final String iaExUiFrontendUrl;
-    private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final String nonAdaPrefix;
 
@@ -42,11 +39,9 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.email}") String templateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
-            RecipientsFinder recipientsFinder,
             CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
         this.nonAdaPrefix = nonAdaPrefix;
     }
@@ -58,10 +53,9 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-
-        Set<String> appellantEmails = recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
-        log.info("appellantEmails {}", appellantEmails);
-        return appellantEmails;
+        return asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+                .map(Collections::singleton)
+                .orElse(Collections.emptySet());
     }
 
     @Override
@@ -77,8 +71,6 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl).build();

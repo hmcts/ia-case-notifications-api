@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -67,13 +65,6 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
 
-        if (isAppealListed(asylumCase)) {
-            Set<String> emails = Collections.singleton(
-                    emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)
-            );
-            log.info("HO Emails1 {}", emails);
-            return emails;
-        }
         Set<String> emails = Collections.singleton(apcPrivateHomeOfficeEmailAddress);
         log.info("HO Emails2 {}", emails);
         return emails;
@@ -92,19 +83,10 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(ARIA_LISTING_REFERENCE_KEY, asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(EMPTY_STRING))
-                .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
                 .build();
-    }
-
-    protected boolean isAppealListed(AsylumCase asylumCase) {
-        Optional<HearingCentre> hearingCentre = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
-        return hearingCentre.isPresent();
     }
 
 }

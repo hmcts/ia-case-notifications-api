@@ -107,7 +107,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_remove() {
+    void should_send_24weeks_remove_email_to_all_theree_users() {
 
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
@@ -147,7 +147,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     private static @NotNull Optional<List<IdValue<Subscriber>>> anySubscriptions() {
         Subscriber subscriber = new Subscriber(
                 SubscriberType.APPELLANT, //subscriberType
-                "mockedAppellantEmailAddress", //email
+                "ppellantInSubscription@gmail.com", //email
                 YesOrNo.YES, // wants email
                 "", //mobileNumber
                 YesOrNo.NO // wants sms
