@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -34,7 +33,6 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
-    private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final String nonAdaPrefix;
 
@@ -44,12 +42,10 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            EmailAddressFinder emailAddressFinder,
             CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
         this.apcPrivateHomeOfficeEmailAddress = apcPrivateHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
         this.nonAdaPrefix = nonAdaPrefix;
     }
