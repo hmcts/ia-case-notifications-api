@@ -1785,6 +1785,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1849,6 +1852,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1913,6 +1919,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -1977,6 +1986,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2021,6 +2033,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2065,6 +2080,9 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2109,6 +2127,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2153,6 +2174,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2197,6 +2221,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
