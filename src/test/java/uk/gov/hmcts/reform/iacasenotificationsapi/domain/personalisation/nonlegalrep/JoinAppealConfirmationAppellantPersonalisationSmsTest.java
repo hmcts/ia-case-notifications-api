@@ -146,6 +146,6 @@ public class JoinAppealConfirmationAppellantPersonalisationSmsTest {
 
         NullPointerException exception = assertThrows(NullPointerException.class,
             () -> joinAppealConfirmationAppellantPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
-        assertEquals("asylumCase must not be null", exception.getMessage());
+        assertEquals("callback must not be null", exception.getMessage());
     }
 }
