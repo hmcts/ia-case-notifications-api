@@ -1201,6 +1201,7 @@ govnotify:
           email: 68970ef0-72c7-4eea-957a-51d23c8e72b9
         additionalPayment:
           email: 1ceb95bc-0026-4dea-9843-ee1355676861
+          letter: d74e5a52-8e4b-4ba3-8a16-fb495804e38d
       appellant:
         email: b3181829-da2c-4526-9c84-ba0130274a27
         sms: 97ac746b-1e37-4b17-873f-2f010548b7f8

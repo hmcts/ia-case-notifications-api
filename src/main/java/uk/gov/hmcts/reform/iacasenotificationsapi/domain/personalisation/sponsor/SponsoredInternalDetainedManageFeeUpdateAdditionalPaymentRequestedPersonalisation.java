@@ -32,7 +32,7 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
 
     public SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation(
             @NotNull(message = "manageFeeUpdateAdditionalPaymentTemplateId cannot be null")
-            @Value("${govnotify.template.manageFeeUpdate.legalRep.additionalPayment.email}") String manageFeeUpdateAdditionalPaymentTemplateId,
+            @Value("${govnotify.template.manageFeeUpdate.legalRep.additionalPayment.letter}") String manageFeeUpdateAdditionalPaymentTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             SystemDateProvider systemDateProvider,
