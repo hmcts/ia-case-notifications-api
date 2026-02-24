@@ -450,6 +450,9 @@ public enum AsylumCaseDefinition {
     OTHER_DECISION_FOR_DISPLAY(
         "otherDecisionForDisplay", new TypeReference<String>() {}),
 
+    REVOKE_ACCESS_DL(
+        "revokeAccessDl", new TypeReference<DynamicList>(){}),
+
     NLR_EMAIL(
         "nlrEmail", new TypeReference<String>() {}),
 

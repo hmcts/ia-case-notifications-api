@@ -7903,6 +7903,16 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateRevokeAccessV2NotificationHandler(
+        @Qualifier("generateRevokeAccessV2NotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == REVOKE_CASE_ACCESS_V2,
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> generateSendInviteToNonLegalRepNotificationHandler(
         @Qualifier("generateSendInviteToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -7923,8 +7933,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> generateJoinAppealConfirmationNonLegalRepNotificationHandler(
-        @Qualifier("generateJoinAppealConfirmationNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> generateJoinAppealConfirmationNotificationHandler(
+        @Qualifier("generateJoinAppealConfirmationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == JOIN_APPEAL_CONFIRMATION,

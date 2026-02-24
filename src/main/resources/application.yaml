@@ -1517,8 +1517,13 @@ govnotify:
         email: adb7418a-d54d-4f3c-8cc5-47dfabca3bad
       joinAppealConfirmation:
         email: 92b3ec95-cfc1-417e-a2f4-4cf3e9f84e5d
+        appellant:
+          email: c56dcb93-7c07-4fcc-9d48-c7e9814b3643
+          sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
       appealUpdated:
         email: 1f917848-0dd7-4f2e-987a-e574658415b1
+    caseRevokedV2:
+      email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1787,6 +1792,7 @@ security:
       - "recordRemissionReminder"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     challenged-access-legal-operations:
       - "sendDirection"
@@ -1854,6 +1860,7 @@ security:
       - "recordRemissionReminder"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     senior-tribunal-caseworker:
       - "sendDirection"
@@ -1921,6 +1928,7 @@ security:
       - "recordRemissionReminder"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
@@ -1988,6 +1996,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     ctsc:
       - "progressMigratedCase"
@@ -2035,6 +2044,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     ctsc-team-leader:
       - "progressMigratedCase"
@@ -2082,6 +2092,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     national-business-centre:
       - "progressMigratedCase"
@@ -2129,6 +2140,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     challenged-access-ctsc:
       - "progressMigratedCase"
@@ -2176,6 +2188,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     challenged-access-admin:
       - "progressMigratedCase"
@@ -2223,6 +2236,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     caseworker-ia-homeofficeapc:
       - "startApplication"
@@ -2544,6 +2558,7 @@ security:
       - "hearingCancelled"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
+      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     caseworker-ia-homeofficebail:
       - "startApplication"
