@@ -24,7 +24,7 @@ public class CaseRevokedV2Personalisation implements EmailNotificationPersonalis
     private final CustomerServicesProvider customerServicesProvider;
 
     public CaseRevokedV2Personalisation(
-        @Value("${govnotify.template.nlr.caseRevokedV2.email}") String caseRevokedV2TemplateId,
+        @Value("${govnotify.template.caseRevokedV2.email}") String caseRevokedV2TemplateId,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.caseRevokedV2TemplateId = caseRevokedV2TemplateId;
