@@ -29,7 +29,7 @@ public class DetentionEngagementTeamHoUploadBundlePersonalisation implements Ema
 
     private final String detentionEngagementTeamTemplateId;
     private final String nonAdaPrefix;
-    private final String ctscEmailAddress;
+    private final String ctscDetEmailAddress;
     private final DetentionEmailService detentionEmailService;
     private final DocumentDownloadClient documentDownloadClient;
 
@@ -37,12 +37,12 @@ public class DetentionEngagementTeamHoUploadBundlePersonalisation implements Ema
             @Value("${govnotify.template.requestRespondentEvidenceDirection.detentionEngagementTeam.appellant.email}") String detentionEngagementTeamTemplateId,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String nonAdaPrefix,
             DetentionEmailService detentionEmailService,
-            @Value("${ctscEmailAddress}") String ctscEmailAddress,
+            @Value("${ctscDetEmailAddress}") String ctscDetEmailAddress,
             DocumentDownloadClient documentDownloadClient
     ) {
         this.detentionEngagementTeamTemplateId = detentionEngagementTeamTemplateId;
         this.nonAdaPrefix = nonAdaPrefix;
-        this.ctscEmailAddress = ctscEmailAddress;
+        this.ctscDetEmailAddress = ctscDetEmailAddress;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
     }
@@ -57,7 +57,7 @@ public class DetentionEngagementTeamHoUploadBundlePersonalisation implements Ema
         if (isDetainedInFacilityType(asylumCase, DetentionFacility.IRC)) {
             return Collections.singleton(detentionEmailService.getDetentionEmailAddress(asylumCase));
         } else {
-            return Collections.singleton(ctscEmailAddress);
+            return Collections.singleton(ctscDetEmailAddress);
         }
     }
 
