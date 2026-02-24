@@ -41,6 +41,15 @@ The following environment variables are required when running the api without it
 | IA_HEARING_CENTRE_BIRMINGHAM_EMAIL |  some-email |
 | IA_HEARING_CENTRE_HATTON_CROSS_EMAIL |  some-email |
 | IA_HEARING_CENTRE_GLASGOW_EMAIL |  some-email |
+| IA_HEARING_CENTRE_HENDON_EMAIL |  some-email |
+| IA_HEARING_CENTRE_YARLS_WOOD_EMAIL |  some-email |
+| IA_HEARING_CENTRE_BRADFORD_KEIGHLEY_EMAIL |  some-email |
+| IA_HEARING_CENTRE_MCC_MINSHULL_EMAIL |  some-email |
+| IA_HEARING_CENTRE_MCC_CROWN_SQUARE_EMAIL |  some-email |
+| IA_HEARING_CENTRE_MANCHESTER_MAGS_EMAIL |  some-email |
+| IA_HEARING_CENTRE_NTH_TYNE_MAGS_EMAIL |  some-email |
+| IA_HEARING_CENTRE_LEEDS_MAGS_EMAIL |  some-email |
+| IA_HEARING_CENTRE_ALLOA_SHERRIF_EMAIL |  some-email |
 | IA_HOME_OFFICE_BRADFORD_EMAIL |  some-email |
 | IA_HOME_OFFICE_MANCHESTER_EMAIL |  some-email |
 | IA_HOME_OFFICE_NEWPORT_EMAIL |  some-email |
