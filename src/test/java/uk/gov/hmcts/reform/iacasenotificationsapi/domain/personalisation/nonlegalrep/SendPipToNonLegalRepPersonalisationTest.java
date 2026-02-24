@@ -50,6 +50,7 @@ public class SendPipToNonLegalRepPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    private final String ccdNumber = "someCcdNumber";
 
     private SendPipToNonLegalRepPersonalisation sendPipToNonLegalRepPersonalisation;
 
@@ -96,6 +97,7 @@ public class SendPipToNonLegalRepPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdNumber));
         Map<String, String> customerServicesPersonalisation = Map.of(
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
@@ -116,6 +118,7 @@ public class SendPipToNonLegalRepPersonalisationTest {
         assertEquals(personalisation.get("Hyperlink to service"), aipFrontendUrl);
         assertEquals(personalisation.get("securityCode"), pipCode);
         assertEquals(personalisation.get("expirationDate"), pipExpiry);
+        assertEquals(personalisation.get("ccdReferenceNumberForDisplay"), ccdNumber);
     }
 
     @Test

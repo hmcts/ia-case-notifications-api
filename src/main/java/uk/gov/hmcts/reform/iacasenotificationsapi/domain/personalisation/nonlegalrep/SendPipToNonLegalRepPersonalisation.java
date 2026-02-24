@@ -60,6 +60,7 @@ public class SendPipToNonLegalRepPersonalisation implements EmailNotificationPer
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("ccdReferenceNumberForDisplay", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("securityCode", pip.getAccessCode())
             .put("expirationDate", defaultDateFormat(pip.getExpiryDate()))
             .put("Hyperlink to service", iaAipFrontendUrl);
