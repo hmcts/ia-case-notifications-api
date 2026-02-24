@@ -140,6 +140,7 @@ public class EventTest {
         assertEquals("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString());
         assertEquals("refundConfirmation", Event.REFUND_CONFIRMATION.toString());
         assertEquals("hearingCancelled", HEARING_CANCELLED.toString());
+        assertEquals("revokeCaseAccessV2", REVOKE_CASE_ACCESS_V2.toString());
         assertEquals("sendInviteToNonLegalRep", SEND_INVITE_TO_NON_LEGAL_REP.toString());
         assertEquals("sendPipToNonLegalRep", SEND_PIP_TO_NON_LEGAL_REP.toString());
         assertEquals("joinAppealConfirmation", JOIN_APPEAL_CONFIRMATION.toString());
@@ -164,6 +165,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(131, Event.values().length);
+        assertEquals(132, Event.values().length);
     }
 }
