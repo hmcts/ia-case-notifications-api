@@ -28,7 +28,6 @@ import javax.validation.constraints.NotNull;
 public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonalisation implements LetterNotificationPersonalisation {
     private final String manageFeeUpdateAdditionalPaymentTemplateId;
     private final String iaExUiFrontendUrl;
-    private final int afterManageFeeEvent;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysToWaitAfterManageFeeUpdate;
@@ -39,7 +38,6 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
             @NotNull(message = "manageFeeUpdateAdditionalPaymentTemplateId cannot be null")
             @Value("${govnotify.template.manageFeeUpdate.legalRep.additionalPayment.letter}") String manageFeeUpdateAdditionalPaymentTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            @Value("${appellantDaysToWait.letter.afterManageFeeEvent}") int afterManageFeeEvent, int afterManageFeeEvent1,
             CustomerServicesProvider customerServicesProvider,
             SystemDateProvider systemDateProvider,
             @Value("${legalRepDaysToWait.afterManageFeeUpdate}") int daysToWaitAfterManageFeeUpdate,
@@ -47,7 +45,6 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
     ) {
         this.manageFeeUpdateAdditionalPaymentTemplateId = manageFeeUpdateAdditionalPaymentTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.afterManageFeeEvent = afterManageFeeEvent1;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysToWaitAfterManageFeeUpdate = daysToWaitAfterManageFeeUpdate;
@@ -78,7 +75,7 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
                         .getCaseDetails()
                         .getCaseData();
 
-        final String dueDate = systemDateProvider.dueDate(afterManageFeeEvent);
+        final String dueDate = systemDateProvider.dueDate(daysToWaitAfterManageFeeUpdate);
 
         List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
