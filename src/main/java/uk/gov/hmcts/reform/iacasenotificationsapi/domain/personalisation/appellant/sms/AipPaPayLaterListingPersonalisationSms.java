@@ -44,7 +44,7 @@ public class AipPaPayLaterListingPersonalisationSms implements SmsNotificationPe
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_PA_PAY_LATER_LISTING_SMS";
+        return caseId + "_AIP_PA_PAY_LATER_LISTING_SMS";
     }
 
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
