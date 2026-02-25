@@ -7900,6 +7900,16 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateRevokeAccessV2NotificationHandler(
+        @Qualifier("generateRevokeAccessV2NotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == REVOKE_CASE_ACCESS_V2,
+            notificationGenerators
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
