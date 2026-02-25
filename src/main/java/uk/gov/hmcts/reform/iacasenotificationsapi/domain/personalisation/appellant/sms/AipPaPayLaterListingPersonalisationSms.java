@@ -16,13 +16,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class PaPayLaterListingPersonalisationSms implements SmsNotificationPersonalisation {
+public class AipPaPayLaterListingPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String templateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public PaPayLaterListingPersonalisationSms(
+    public AipPaPayLaterListingPersonalisationSms(
             @Value("${govnotify.template.decision.paPayLater.sms}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder

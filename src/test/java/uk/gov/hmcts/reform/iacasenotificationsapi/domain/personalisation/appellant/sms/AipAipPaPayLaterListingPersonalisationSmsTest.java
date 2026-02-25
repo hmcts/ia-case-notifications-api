@@ -27,7 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class PaPayLaterListingPersonalisationSmsTest {
+class AipAipPaPayLaterListingPersonalisationSmsTest {
 
     @Mock
     private AsylumCase asylumCase;
@@ -38,7 +38,7 @@ class PaPayLaterListingPersonalisationSmsTest {
     @Mock
     private SystemDateProvider systemDateProvider;
 
-    private PaPayLaterListingPersonalisationSms personalisation;
+    private AipPaPayLaterListingPersonalisationSms personalisation;
 
     private final Long caseId = 12345L;
     private final String templateId = "PaPayLaterListingTemplateId";
@@ -53,7 +53,7 @@ class PaPayLaterListingPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
-        personalisation = new PaPayLaterListingPersonalisationSms(
+        personalisation = new AipPaPayLaterListingPersonalisationSms(
                 templateId,
                 iaAipFrontendUrl,
                 recipientsFinder
@@ -62,7 +62,7 @@ class PaPayLaterListingPersonalisationSmsTest {
 
     @Test
     void should_return_reference_id() {
-        assertEquals(caseId + "_PA_PAY_LATER_LISTING_SMS", personalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_AIP_PA_PAY_LATER_LISTING_SMS", personalisation.getReferenceId(caseId));
     }
 
     @Test
