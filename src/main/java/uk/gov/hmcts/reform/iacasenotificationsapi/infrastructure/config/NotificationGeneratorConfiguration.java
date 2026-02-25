@@ -3402,10 +3402,10 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("paPayLaterCaseBuildingNotificationGenerator")
-    public List<NotificationGenerator> paPayLaterCaseBuildingNotificationHandler(
+    @Bean("aipPaPayLaterCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterCaseBuildingNotificationHandler(
             AipPaPayLaterCaseBuildingPersonalisationEmail aipPaPayLaterCaseBuildingPersonalisationEmail,
-            AipPaPayLaterCaseBuildingPersonalisationSms paPayLaterCaseBuildingPersonalisationSms,
+            AipPaPayLaterCaseBuildingPersonalisationSms aipPaPayLaterCaseBuildingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3420,7 +3420,7 @@ public class NotificationGeneratorConfiguration {
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(
-                                paPayLaterCaseBuildingPersonalisationSms
+                                aipPaPayLaterCaseBuildingPersonalisationSms
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -3428,8 +3428,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("paPayLaterListingNotificationGenerator")
-    public List<NotificationGenerator> paPayLaterListingNotificationHandler(
+    @Bean("aipPaPayLaterListingNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterListingNotificationHandler(
             AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail,
             AipPaPayLaterListingPersonalisationSms aipPaPayLaterListingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
@@ -3454,8 +3454,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("paPayLaterDecisionNotificationGenerator")
-    public List<NotificationGenerator> paPayLaterDecisionNotificationHandler(
+    @Bean("aipPaPayLaterDecisionNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterDecisionNotificationHandler(
             AipPaPayLaterDecisionPersonalisationEmail aipPaPayLaterDecisionPersonalisationEmail,
             AipPaPayLaterDecisionPersonalisationSms aipPaPayLaterDecisionPersonalisationSms,
             GovNotifyNotificationSender notificationSender,

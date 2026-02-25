@@ -7755,8 +7755,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> paPayLaterCaseBuildingNotificationHandler(
-            @Qualifier("paPayLaterCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayLaterCaseBuildingNotificationHandler(
+            @Qualifier("aipPaPayLaterCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
@@ -7782,8 +7782,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> paPayLaterListingNotificationHandler(
-            @Qualifier("paPayLaterListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayListingNotificationHandler(
+            @Qualifier("aipPaPayLaterListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
@@ -7809,8 +7809,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> paPayLaterDecisionNotificationHandler(
-            @Qualifier("paPayLaterDecisionNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayLaterDecisionNotificationHandler(
+            @Qualifier("aipPaPayLaterDecisionNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
