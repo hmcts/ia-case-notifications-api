@@ -2,23 +2,19 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.sponso
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalManageFeeUpdateLetterPersonalisation.formatFeeUpdateReason;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.convertAsylumCaseFeeValue;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.calculateFeeDifference;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getSponserAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getSponsorAddressInCountryOrOoc;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FeeUpdateReason;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -67,38 +63,27 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
     }
 
     @Override
-    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
-        requireNonNull(callback, "callback must not be null");
-
-        AsylumCase asylumCase =
-                callback
-                        .getCaseDetails()
-                        .getCaseData();
+    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
 
         final String dueDate = systemDateProvider.dueDate(daysToWaitAfterManageFeeUpdate);
-
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
-        String originalFeeTotal = asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class).orElse("");
-        String newFeeTotal = asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class).orElse("");
-        String feeDifference = calculateFeeDifference(originalFeeTotal, newFeeTotal);
-
-        String feeUpdateReason = formatFeeUpdateReason(asylumCase.read(AsylumCaseDefinition.FEE_UPDATE_REASON, FeeUpdateReason.class)
-                .orElseThrow(() -> new IllegalStateException("FeeUpdateReason is not present")));
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("originalFeeTotal", AsylumCaseUtils.convertAsylumCaseFeeValue(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class).orElse("")))
-                .put("newFeeTotal", AsylumCaseUtils.convertAsylumCaseFeeValue(asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class).orElse("")))
-                .put("feeDifference", feeDifference)
-                .put("feeUpdateReasonSelected", feeUpdateReason)
-                .put("onlineCaseRefNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .put("originalFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("newFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("feeDifference", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
+                .put("feeUpdateReasonSelected", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
+                .put("onlineCaseRefNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("dueDate14Days", dueDate);
+        List<String> address =  getSponserAddressAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));

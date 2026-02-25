@@ -133,14 +133,14 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
 
             assertEquals(iaExUiFrontendUrl, result.get("linkToOnlineService"));
 
-            assertEquals("140.00", result.get("originalFee"));
-            assertEquals("160.00", result.get("newFee"));
-            assertEquals("20.00", result.get("additionalFee"));
+            assertEquals("140.00", result.get("originalFeeTotal"));
+            assertEquals("160.00", result.get("newFeeTotal"));
+            assertEquals("20.00", result.get("feeDifference"));
 
-            assertEquals("Some reason", result.get("feeUpdateReason"));
-            assertEquals("1234-1234", result.get("onlineCaseReferenceNumber"));
+            assertEquals("Some reason", result.get("feeUpdateReasonSelected"));
+            assertEquals("1234-1234", result.get("onlineCaseRefNumber"));
 
-            assertEquals("01 Jan 2026", result.get("dueDate"));
+            assertEquals("01 Jan 2026", result.get("dueDate14Days"));
 
             assertEquals("line1", result.get("address_line_1"));
             assertEquals("line2", result.get("address_line_2"));
@@ -179,12 +179,12 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
             assertEquals("", result.get("legalRepReferenceNumber"));
             assertEquals("", result.get("appellantGivenNames"));
             assertEquals("", result.get("appellantFamilyName"));
-            assertEquals("", result.get("originalFee"));
-            assertEquals("", result.get("newFee"));
-            assertEquals("", result.get("additionalFee"));
-            assertEquals("", result.get("feeUpdateReason"));
-            assertEquals("", result.get("onlineCaseReferenceNumber"));
-            assertEquals("02 Jan 2026", result.get("dueDate"));
+            assertEquals("", result.get("originalFeeTotal"));
+            assertEquals("", result.get("newFeeTotal"));
+            assertEquals("", result.get("feeDifference"));
+            assertEquals("", result.get("feeUpdateReasonSelected"));
+            assertEquals("", result.get("onlineCaseRefNumber"));
+            assertEquals("02 Jan 2026", result.get("dueDate14Days"));
             assertEquals("addr1", result.get("address_line_1"));
         }
     }
