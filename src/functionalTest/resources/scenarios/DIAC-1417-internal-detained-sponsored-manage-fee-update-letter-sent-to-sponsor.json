@@ -81,8 +81,7 @@
         "feeUpdateTribunalAction": "additionalPayment",
         "notificationsSent": [
           {
-            "id": "1417_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED",
-            "value": ""
+            "id": "1417_DETAINED_SPONSORED_ADDITIONAL_PAYMENT_REQUESTED"
           }
         ]
       }
