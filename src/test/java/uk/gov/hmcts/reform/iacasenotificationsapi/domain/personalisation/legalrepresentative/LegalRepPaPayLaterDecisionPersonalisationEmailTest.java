@@ -39,7 +39,7 @@ class LegalRepPaPayLaterDecisionPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_PA_PAY_LATER_DECISION_EMAIL",
+        assertEquals(caseId + "_LR_PA_PAY_LATER_DECISION_EMAIL",
                 legalRepPaPayLaterDecisionPersonalisationEmail.getReferenceId(caseId));
     }
 

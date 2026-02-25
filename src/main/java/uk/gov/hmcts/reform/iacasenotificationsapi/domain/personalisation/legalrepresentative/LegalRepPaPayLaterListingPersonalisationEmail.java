@@ -28,7 +28,7 @@ public class LegalRepPaPayLaterListingPersonalisationEmail implements LegalRepre
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_PA_PAY_LATER_LISTING_EMAIL";
+        return caseId + "_LR_PA_PAY_LATER_LISTING_EMAIL";
     }
 
     @Override

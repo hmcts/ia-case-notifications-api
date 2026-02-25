@@ -15,22 +15,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class PaPayLaterCaseBuildingPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AipPaPayLaterCaseBuildingPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String paPayLaterCaseBuildingTemplateId;
+    private final String aipPaPayLaterCaseBuildingTemplateId;
     private final RecipientsFinder recipientsFinder;
 
-    public PaPayLaterCaseBuildingPersonalisationEmail(
-            @Value("${govnotify.template.caseBuilding.paPayLater.email}") String paPayLaterCaseBuildingTemplateId,
+    public AipPaPayLaterCaseBuildingPersonalisationEmail(
+            @Value("${govnotify.template.caseBuilding.paPayLater.email}") String aipPaPayLaterCaseBuildingTemplateId,
             RecipientsFinder recipientsFinder
     ) {
-        this.paPayLaterCaseBuildingTemplateId = paPayLaterCaseBuildingTemplateId;
+        this.aipPaPayLaterCaseBuildingTemplateId = aipPaPayLaterCaseBuildingTemplateId;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return paPayLaterCaseBuildingTemplateId;
+        return aipPaPayLaterCaseBuildingTemplateId;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PaPayLaterCaseBuildingPersonalisationEmail implements EmailNotifica
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_PA_PAY_LATER_CASE_BUILDING_EMAIL";
+        return caseId + "_AIP_PA_PAY_LATER_CASE_BUILDING_EMAIL";
     }
 
     @Override

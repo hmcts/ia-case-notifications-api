@@ -16,13 +16,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
-public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotificationPersonalisation {
+public class AipPaPayLaterCaseBuildingPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String templateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
 
-    public PaPayLaterCaseBuildingPersonalisationSms(
+    public AipPaPayLaterCaseBuildingPersonalisationSms(
             @Value("${govnotify.template.decision.paPayLater.sms}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder
@@ -44,7 +44,7 @@ public class PaPayLaterCaseBuildingPersonalisationSms implements SmsNotification
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_PA_PAY_LATER_CASE_BUILDING_SMS";
+        return caseId + "_AIP_PA_PAY_LATER_CASE_BUILDING_SMS";
     }
 
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {

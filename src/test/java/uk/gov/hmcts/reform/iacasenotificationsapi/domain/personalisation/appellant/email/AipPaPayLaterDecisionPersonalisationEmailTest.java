@@ -23,39 +23,37 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class PaPayLaterCaseBuildingPersonalisationEmailTest {
+class AipPaPayLaterDecisionPersonalisationEmailTest {
 
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     private Long caseId = 12345L;
-    private String paPayLaterCaseBuildingTemplateId = "paPayLaterCaseBuildingTemplateId";
+    private String paPayLaterCDecisionTemplateId = "paPayLaterDecisionTemplateId";
     private String feeAmount = "4000.00";
-    private String appellantEmail = "test@mail.com";
     private String appealReferenceNumber = "appealReferenceNumber";
-    private PaPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail;
+    private AipPaPayLaterDecisionPersonalisationEmail aipPaPayLaterDecisionPersonalisationEmail;
+    private String appellantEmail = "test@mail.com";
 
     @BeforeEach
     public void setup() {
-
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-
-        paPayLaterCaseBuildingPersonalisationEmail = new PaPayLaterCaseBuildingPersonalisationEmail(
-                paPayLaterCaseBuildingTemplateId,
+        aipPaPayLaterDecisionPersonalisationEmail = new AipPaPayLaterDecisionPersonalisationEmail(
+                paPayLaterCDecisionTemplateId,
                 recipientsFinder
         );
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_PA_PAY_LATER_CASE_BUILDING_EMAIL",
-                paPayLaterCaseBuildingPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_AIP_PA_PAY_LATER_DECISION_EMAIL",
+                aipPaPayLaterDecisionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_return_approved_template_id() {
-        assertTrue(paPayLaterCaseBuildingPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterCaseBuildingTemplateId));
+        assertTrue(aipPaPayLaterDecisionPersonalisationEmail.getTemplateId(asylumCase).contains(paPayLaterCDecisionTemplateId));
     }
 
     @Test
@@ -63,14 +61,14 @@ class PaPayLaterCaseBuildingPersonalisationEmailTest {
         Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(appellantEmail));
 
-        assertTrue(paPayLaterCaseBuildingPersonalisationEmail.getRecipientsList(asylumCase)
+        assertTrue(aipPaPayLaterDecisionPersonalisationEmail.getRecipientsList(asylumCase)
                 .contains(appellantEmail));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
         assertThatThrownBy(
-                () -> paPayLaterCaseBuildingPersonalisationEmail.getPersonalisation((AsylumCase) null))
+                () -> aipPaPayLaterDecisionPersonalisationEmail.getPersonalisation((AsylumCase) null))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage("asylumCase must not be null");
     }
@@ -82,10 +80,9 @@ class PaPayLaterCaseBuildingPersonalisationEmailTest {
                 .thenReturn(Optional.of("400000"));
 
         Map<String, String> personalisation =
-                paPayLaterCaseBuildingPersonalisationEmail.getPersonalisation(asylumCase);
+                aipPaPayLaterDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals(feeAmount, personalisation.get("feeAmount"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
     }
-
 }

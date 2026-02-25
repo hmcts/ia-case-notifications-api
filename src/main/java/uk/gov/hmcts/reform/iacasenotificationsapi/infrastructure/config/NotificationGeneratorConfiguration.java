@@ -3404,8 +3404,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("paPayLaterCaseBuildingNotificationGenerator")
     public List<NotificationGenerator> paPayLaterCaseBuildingNotificationHandler(
-            PaPayLaterCaseBuildingPersonalisationEmail paPayLaterCaseBuildingPersonalisationEmail,
-            PaPayLaterCaseBuildingPersonalisationSms paPayLaterCaseBuildingPersonalisationSms,
+            AipPaPayLaterCaseBuildingPersonalisationEmail aipPaPayLaterCaseBuildingPersonalisationEmail,
+            AipPaPayLaterCaseBuildingPersonalisationSms paPayLaterCaseBuildingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3413,7 +3413,7 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                paPayLaterCaseBuildingPersonalisationEmail
+                                aipPaPayLaterCaseBuildingPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -3430,7 +3430,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("paPayLaterListingNotificationGenerator")
     public List<NotificationGenerator> paPayLaterListingNotificationHandler(
-            PaPayLaterListingPersonalisationEmail paPayLaterListingPersonalisationEmail,
+            AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail,
             PaPayLaterListingPersonalisationSms paPayLaterListingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -3439,7 +3439,7 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                paPayLaterListingPersonalisationEmail
+                                aipPaPayLaterListingPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -3456,8 +3456,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("paPayLaterDecisionNotificationGenerator")
     public List<NotificationGenerator> paPayLaterDecisionNotificationHandler(
-            PaPayLaterDecisionPersonalisationEmail paPayLaterDecisionPersonalisationEmail,
-            PaPayLaterDecisionPersonalisationSms paPayLaterDecisionPersonalisationSms,
+            AipPaPayLaterDecisionPersonalisationEmail aipPaPayLaterDecisionPersonalisationEmail,
+            AipPaPayLaterDecisionPersonalisationSms aipPaPayLaterDecisionPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3465,14 +3465,14 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                paPayLaterDecisionPersonalisationEmail
+                                aipPaPayLaterDecisionPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(
-                                paPayLaterDecisionPersonalisationSms
+                                aipPaPayLaterDecisionPersonalisationSms
                         ),
                         notificationSender,
                         notificationIdAppender
