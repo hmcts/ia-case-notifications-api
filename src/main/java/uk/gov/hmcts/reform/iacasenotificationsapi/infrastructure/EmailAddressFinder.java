@@ -74,12 +74,11 @@ public class EmailAddressFinder {
         } else {
             return asylumCase
                 .read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
-                .map(it -> Optional.ofNullable(getEmailAddress(homeOfficeEmailAddresses, it))
-                    .orElseThrow(() -> new IllegalStateException("List case hearing centre email address not found: " + it.toString()))
+                .map(hc -> Optional.ofNullable(getEmailAddress(homeOfficeEmailAddresses, hc))
+                    .orElseThrow(() -> new IllegalStateException("List case hearing centre email address not found: " + hc))
                 )
                 .orElseThrow(() -> new IllegalStateException(listCaseHearingCentreIsNotPresent));
         }
-
     }
 
     public String getListCaseFtpaHomeOfficeEmailAddress(AsylumCase asylumCase) {

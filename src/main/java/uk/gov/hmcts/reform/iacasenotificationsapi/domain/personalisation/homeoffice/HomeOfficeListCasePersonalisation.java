@@ -59,11 +59,13 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
-            ? homeOfficeCaseListedAdaTemplateId
-            : asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-            ? listAssistHearingHomeOfficeCaseListedTemplateId : homeOfficeCaseListedNonAdaTemplateId;
+        if (isAcceleratedDetainedAppeal(asylumCase)) {
+            return homeOfficeCaseListedAdaTemplateId;
+        }
+        if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
+            return listAssistHearingHomeOfficeCaseListedTemplateId;
+        }
+        return homeOfficeCaseListedNonAdaTemplateId;
     }
 
     @Override
