@@ -1510,6 +1510,8 @@ govnotify:
     editAppealPostSubmit:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
+    caseRevokedV2:
+      email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
     nlr:
       sendInviteToNonLegalRep:
         email: 7d3374d0-4dbb-4993-89d1-997c73eb7ed8
@@ -1522,8 +1524,6 @@ govnotify:
           sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
       appealUpdated:
         email: 1f917848-0dd7-4f2e-987a-e574658415b1
-    caseRevokedV2:
-      email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1790,9 +1790,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     challenged-access-legal-operations:
       - "sendDirection"
@@ -1858,9 +1858,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     senior-tribunal-caseworker:
       - "sendDirection"
@@ -1926,9 +1926,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
@@ -1994,9 +1994,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     ctsc:
       - "progressMigratedCase"
@@ -2042,9 +2042,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     ctsc-team-leader:
       - "progressMigratedCase"
@@ -2090,9 +2090,9 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     national-business-centre:
       - "progressMigratedCase"
@@ -2138,9 +2138,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     challenged-access-ctsc:
       - "progressMigratedCase"
@@ -2186,9 +2186,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     challenged-access-admin:
       - "progressMigratedCase"
@@ -2234,9 +2234,9 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     caseworker-ia-homeofficeapc:
       - "startApplication"
@@ -2556,9 +2556,9 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+      - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
-      - "revokeCaseAccessV2"
       - "joinAppealConfirmation"
     caseworker-ia-homeofficebail:
       - "startApplication"
