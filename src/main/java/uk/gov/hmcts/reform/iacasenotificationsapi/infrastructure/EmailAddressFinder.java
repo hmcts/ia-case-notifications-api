@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static java.util.Arrays.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
 
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 @Service
 public class EmailAddressFinder {
 
+    private static final Set<HearingCentre> SHARED_HEARING_CENTRES = Set.of(HearingCentre.HENDON) ;
     public static final String NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING = "No email address for decisions made without hearing";
 
     private final String listCaseHearingCentreIsNotPresent = "listCaseHearingCentre is not present";
@@ -72,12 +74,19 @@ public class EmailAddressFinder {
         if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
             return getHomeOfficeEmailAddress(asylumCase);
         } else {
-            return asylumCase
-                .read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
-                .map(hc -> Optional.ofNullable(getEmailAddress(homeOfficeEmailAddresses, hc))
-                    .orElseThrow(() -> new IllegalStateException("List case hearing centre email address not found: " + hc))
-                )
-                .orElseThrow(() -> new IllegalStateException(listCaseHearingCentreIsNotPresent));
+            HearingCentre hearingCentre = asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException(LIST_CASE_HEARING_CENTRE.value() + " is not present"));
+
+            if (isASharedHearingCentre(hearingCentre)) {
+                hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class)
+                    .orElseThrow(() -> new IllegalStateException(HEARING_CENTRE.value() + " is not present"));
+            }
+
+            String emailAddress = getEmailAddress(homeOfficeEmailAddresses, hearingCentre);
+            if (emailAddress == null) {
+                throw new IllegalStateException("List case hearing centre email address not found: " + hearingCentre.getValue());
+            }
+            return emailAddress;
         }
     }
 
@@ -211,20 +220,31 @@ public class EmailAddressFinder {
     public String getListCaseCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
         if (isRemoteHearing(asylumCase)) {
             final HearingCentre hearingCentre = getHearingCentre(asylumCase, HEARING_CENTRE);
-            if (Arrays.asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
+            if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
                 return listCaseCaseOfficerEmailAddress;
             } else {
                 return getHearingCentreEmailAddress(asylumCase);
             }
         } else {
-            return asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).map(hearingCentre -> {
-                if (Arrays.asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
-                    return listCaseCaseOfficerEmailAddress;
-                } else {
-                    return getEmailAddress(hearingCentreEmailAddresses, hearingCentre);
-                }
-            }).orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
+            HearingCentre hearingCentre = asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
+
+            if (isASharedHearingCentre(hearingCentre)) {
+                hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class)
+                    .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+            }
+
+            if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
+                return listCaseCaseOfficerEmailAddress;
+            } else {
+                return getEmailAddress(hearingCentreEmailAddresses, hearingCentre);
+            }
+
         }
+    }
+
+    private static boolean isASharedHearingCentre(HearingCentre hearingCentre) {
+        return SHARED_HEARING_CENTRES.contains(hearingCentre);
     }
 
 }
