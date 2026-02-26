@@ -67,7 +67,7 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         final String dueDate = systemDateProvider.dueDate(daysToWaitAfterManageFeeUpdate);
-
+        final String newFeeTotal = asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("");
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -78,7 +78,7 @@ public class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedP
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("originalFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class).orElse("")))
-                .put("newFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(FEE_AMOUNT_GBP, String.class).orElse("")))
+                .put("newFeeTotal", convertAsylumCaseFeeValue(asylumCase.read(NEW_FEE_AMOUNT, String.class).orElse("")))
                 .put("feeDifference", convertAsylumCaseFeeValue(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class).orElse("")))
                 .put("feeUpdateReasonSelected", asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class).map(FeeUpdateReason::getNormalizedValue).orElse(""))
                 .put("onlineCaseRefNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
