@@ -101,7 +101,7 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("given"));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("family"));
         when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of("14000"));
-        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of("16000"));
+        when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of("16000"));
         when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of("2000"));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of("1234-1234"));
 
@@ -199,7 +199,7 @@ class SponsoredInternalDetainedManageFeeUpdateAdditionalPaymentRequestedPersonal
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("given"));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("family"));
         when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of("100"));
-        when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of("200"));
+        when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of("200"));
         when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of("300"));
         when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.empty());
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of("ref"));
