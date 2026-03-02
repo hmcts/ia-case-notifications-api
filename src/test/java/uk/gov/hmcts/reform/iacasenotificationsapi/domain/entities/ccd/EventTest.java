@@ -144,6 +144,7 @@ public class EventTest {
         assertEquals("sendInviteToNonLegalRep", SEND_INVITE_TO_NON_LEGAL_REP.toString());
         assertEquals("sendPipToNonLegalRep", SEND_PIP_TO_NON_LEGAL_REP.toString());
         assertEquals("joinAppealConfirmation", JOIN_APPEAL_CONFIRMATION.toString());
+        assertEquals("nlrPhoneNumberSubmitted", Event.NLR_PHONE_NUMBER_SUBMITTED.toString());
     }
 
     @Test
@@ -165,6 +166,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(132, Event.values().length);
+        assertEquals(133, Event.values().length);
     }
 }

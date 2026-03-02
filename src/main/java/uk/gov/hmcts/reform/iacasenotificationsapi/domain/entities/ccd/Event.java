@@ -135,6 +135,7 @@ public enum Event {
     SEND_INVITE_TO_NON_LEGAL_REP("sendInviteToNonLegalRep"),
     SEND_PIP_TO_NON_LEGAL_REP("sendPipToNonLegalRep"),
     JOIN_APPEAL_CONFIRMATION("joinAppealConfirmation"),
+    NLR_PHONE_NUMBER_SUBMITTED("nlrPhoneNumberSubmitted"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

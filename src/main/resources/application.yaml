@@ -1524,6 +1524,8 @@ govnotify:
           sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
       appealUpdated:
         email: 1f917848-0dd7-4f2e-987a-e574658415b1
+      nlrPhoneNumberSubmitted:
+        email: 29c3adcd-bf7f-4dd6-a509-0adcaf66de4d
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1697,6 +1699,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "nlrPhoneNumberSubmitted"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -2560,6 +2563,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "nlrPhoneNumberSubmitted"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"

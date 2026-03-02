@@ -7947,14 +7947,34 @@ public class NotificationHandlerConfiguration {
         @Qualifier("generateAppealUpdatedNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                List<Event> invalidNlrEvents = List.of(START_APPEAL);
+                List<Event> validNlrEvents = List.of(SUBMIT_REASONS_FOR_APPEAL);
                 if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     String nlrEmail =
                         asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
                             .map(NonLegalRepDetails::getEmailAddress)
                             .orElse(null);
-                    return !invalidNlrEvents.contains(callback.getEvent())
+                    return validNlrEvents.contains(callback.getEvent())
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                }
+                return false;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateNlrPhoneNumberSubmittedNotificationHandler(
+        @Qualifier("generateNlrPhoneNumberSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    String nlrEmail =
+                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                            .map(NonLegalRepDetails::getEmailAddress)
+                            .orElse(null);
+                    return callback.getEvent().equals(NLR_PHONE_NUMBER_SUBMITTED)
                         && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
                 }
                 return false;
