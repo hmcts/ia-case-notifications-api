@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 
 
@@ -53,7 +54,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Set<String> emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+        Set<String> emails = asylumCase.read(EMAIL, String.class)
                 .map(Collections::singleton)
                 .orElse(Collections.emptySet());
         log.info("Appellant emails {}", emails);
