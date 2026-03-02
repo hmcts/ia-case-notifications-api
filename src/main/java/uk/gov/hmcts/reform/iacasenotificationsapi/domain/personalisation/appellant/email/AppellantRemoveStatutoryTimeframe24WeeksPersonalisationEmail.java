@@ -26,7 +26,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+    private static final String LINK_TO_SERVICE_KEY = "linkToService";
     private static final String EMPTY_STRING = "";
 
     private final String templateId;
@@ -75,7 +75,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
-                .put(LINK_TO_ONLINE_SERVICE_KEY, iaAipFrontendUrl).build();
+                .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl).build();
     }
 
 }

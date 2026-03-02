@@ -30,11 +30,10 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     private static final String CUSTOMER_SERVICES_EMAIL_KEY = "customerServicesEmail";
     private static final String CUSTOMER_SERVICES_TELEPHONE_KEY = "customerServicesTelephone";
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
-    private static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
     private static final String HOME_OFFICE_REFERENCE_NUMBER_VALUE = "323232";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+    private static final String LINK_TO_SERVICE_KEY = "linkToService";
     private static final String EMAIL_ADDRESS = "appellant@example.com";
     private static final String MOCK_PREFIX = "Mock prefix";
     private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
@@ -92,10 +91,9 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
 
         assertEquals(APPELLANT_GIVEN_NAMES, result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals(APPELLANT_FAMILY_NAME, result.get(APPELLANT_FAMILY_NAME_KEY));
-        assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
+        assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_SERVICE_KEY));
         assertEquals(CUSTOMER_SERVICE_EMAIL, result.get(CUSTOMER_SERVICES_EMAIL_KEY));
         assertEquals(CUSTOMER_SERVICE_PHONE, result.get(CUSTOMER_SERVICES_TELEPHONE_KEY));
-        assertEquals(HOME_OFFICE_REFERENCE_NUMBER_VALUE, result.get(HOME_OFFICE_REFERENCE_NUMBER_KEY));
     }
 
     @Test
@@ -140,6 +138,6 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {
         assertEquals("", personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals("", personalisation.get(APPELLANT_FAMILY_NAME_KEY));
-        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_ONLINE_SERVICE_KEY));
+        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_SERVICE_KEY));
     }
 }
