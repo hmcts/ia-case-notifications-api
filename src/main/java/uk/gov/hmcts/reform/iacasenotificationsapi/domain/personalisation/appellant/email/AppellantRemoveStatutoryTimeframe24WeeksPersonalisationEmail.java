@@ -30,18 +30,18 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private static final String EMPTY_STRING = "";
 
     private final String templateId;
-    private final String iaExUiFrontendUrl;
+    private final String iaAipFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
     private final String nonAdaPrefix;
 
 
     public AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.email}") String templateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
             CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
-        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.nonAdaPrefix = nonAdaPrefix;
     }
@@ -75,7 +75,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
-                .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl).build();
+                .put(LINK_TO_ONLINE_SERVICE_KEY, iaAipFrontendUrl).build();
     }
 
 }
