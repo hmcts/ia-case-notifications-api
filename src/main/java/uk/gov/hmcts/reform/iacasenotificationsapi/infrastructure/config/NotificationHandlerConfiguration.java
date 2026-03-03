@@ -7916,8 +7916,18 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> generateSendInviteToNonLegalRepNotificationHandler(
         @Qualifier("generateSendInviteToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
-            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == SEND_INVITE_TO_NON_LEGAL_REP,
+            (callbackStage, callback) -> {
+                List<Event> validNlrEvents = List.of(SEND_INVITE_TO_NON_LEGAL_REP, SUBMIT_APPEAL);
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    String nlrEmail =
+                        asylumCase.read(NLR_EMAIL, String.class)
+                            .orElse(null);
+                    return validNlrEvents.contains(callback.getEvent())
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                }
+                return false;
+            },
             notificationGenerators
         );
     }
