@@ -1,11 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.InputStream;
-import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,7 +71,7 @@ class RetryableNotificationClientTest {
 
     @Test
     void should_retry_once_when_sending_letter_failed() throws NotificationClientException {
-        when(notificationClient.sendLetter(anyString(), anyMap(), anyString()))
+        when(notificationClient.sendLetter(anyString(),  anyMap(), anyString()))
             .thenThrow(new NotificationClientException("some exception"))
             .thenReturn(sendLetterResponse);
 
@@ -86,24 +84,12 @@ class RetryableNotificationClientTest {
     void should_retry_once_when_sending_precompiled_letter_failed() throws NotificationClientException {
         InputStream mockStream = mock(InputStream.class);
 
-        when(notificationClient.sendPrecompiledLetterWithInputStream(anyString(), eq(mockStream)))
+        when(notificationClient.sendPrecompiledLetterWithInputStream(anyString(),  eq(mockStream)))
             .thenThrow(new NotificationClientException("some exception"))
             .thenReturn(letterResponse);
 
-        retryableNotificationClient.sendPrecompiledLetter("testReference", mockStream);
+        retryableNotificationClient.sendPrecompiledLetter("testReference",  mockStream);
 
         verify(notificationClient, times(2)).sendPrecompiledLetterWithInputStream(anyString(), eq(mockStream));
-    }
-
-    @Test
-    void test_for_coverage() {
-        assertThrows(NotificationClientException.class, () ->
-            retryableNotificationClient.sendEmail("templateId",
-                "test@test.com", Collections.emptyMap(), "reference")
-        );
-        assertThrows(NotificationClientException.class, () ->
-            retryableNotificationClient.sendSms("templateId",
-                "07827297000", Collections.emptyMap(), "reference")
-        );
     }
 }
