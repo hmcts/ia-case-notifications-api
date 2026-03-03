@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.EA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.EU;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.HU;
@@ -84,6 +85,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOu
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
@@ -7906,6 +7908,87 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == REVOKE_CASE_ACCESS_V2,
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateSendInviteToNonLegalRepNotificationHandler(
+        @Qualifier("generateSendInviteToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                List<Event> validNlrEvents = List.of(SEND_INVITE_TO_NON_LEGAL_REP, SUBMIT_APPEAL);
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    String nlrEmail =
+                        asylumCase.read(NLR_EMAIL, String.class)
+                            .orElse(null);
+                    return validNlrEvents.contains(callback.getEvent())
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                }
+                return false;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateSendPipToNonLegalRepNotificationHandler(
+        @Qualifier("generateSendPipToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == SEND_PIP_TO_NON_LEGAL_REP,
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateJoinAppealConfirmationNotificationHandler(
+        @Qualifier("generateJoinAppealConfirmationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == JOIN_APPEAL_CONFIRMATION,
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateAppealUpdatedNonLegalRepNotificationHandler(
+        @Qualifier("generateAppealUpdatedNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                List<Event> validNlrEvents = List.of(SUBMIT_REASONS_FOR_APPEAL);
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    String nlrEmail =
+                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                            .map(NonLegalRepDetails::getEmailAddress)
+                            .orElse(null);
+                    return validNlrEvents.contains(callback.getEvent())
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                }
+                return false;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateNlrPhoneNumberSubmittedNotificationHandler(
+        @Qualifier("generateNlrPhoneNumberSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    String nlrEmail =
+                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                            .map(NonLegalRepDetails::getEmailAddress)
+                            .orElse(null);
+                    return callback.getEvent().equals(NLR_PHONE_NUMBER_SUBMITTED)
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                }
+                return false;
+            },
             notificationGenerators
         );
     }

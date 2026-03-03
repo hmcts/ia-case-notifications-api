@@ -114,7 +114,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalre
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeRemoveDetentionStatusLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.AppealUpdatedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.CaseRevokedV2Personalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationAppellantPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationAppellantPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.NlrPhoneNumberSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendInviteToNonLegalRepPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendPipToNonLegalRepPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAdjournHearingWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAppellantFtpaSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
@@ -7138,6 +7145,88 @@ public class NotificationGeneratorConfiguration {
         return List.of(
             new EmailNotificationGenerator(
                 newArrayList(caseRevokedV2Personalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateSendInviteToNonLegalRepNotificationGenerator")
+    public List<NotificationGenerator> generateSendInviteToNonLegalRepNotificationGenerator(
+        SendInviteToNonLegalRepPersonalisation sendInviteToNonLegalRepPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(sendInviteToNonLegalRepPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateSendPipToNonLegalRepNotificationGenerator")
+    public List<NotificationGenerator> generateSendPipToNonLegalRepNotificationGenerator(
+        SendPipToNonLegalRepPersonalisation sendPipToNonLegalRepPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(sendPipToNonLegalRepPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateJoinAppealConfirmationNotificationGenerator")
+    public List<NotificationGenerator> generateJoinAppealConfirmationNotificationGenerator(
+        JoinAppealConfirmationPersonalisation joinAppealConfirmationPersonalisation,
+        JoinAppealConfirmationAppellantPersonalisation joinAppealConfirmationAppellantPersonalisation,
+        JoinAppealConfirmationAppellantPersonalisationSms joinAppealConfirmationAppellantPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(joinAppealConfirmationPersonalisation, joinAppealConfirmationAppellantPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(joinAppealConfirmationAppellantPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateAppealUpdatedNonLegalRepNotificationGenerator")
+    public List<NotificationGenerator> generateAppealUpdatedNonLegalRepNotificationGenerator(
+        AppealUpdatedPersonalisation appealUpdatedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(appealUpdatedPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("generateNlrPhoneNumberSubmittedNotificationGenerator")
+    public List<NotificationGenerator> generateNlrPhoneNumberSubmittedNotificationGenerator(
+        NlrPhoneNumberSubmittedPersonalisation nlrPhoneNumberSubmittedPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(nlrPhoneNumberSubmittedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )

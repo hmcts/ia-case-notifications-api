@@ -252,6 +252,23 @@ public class AsylumCaseUtils {
                 .orElseThrow(() -> new IllegalStateException("Failed to generate appellantPinInPost."));
     }
 
+
+    public static PinInPostDetails generateJoinAppealPinIfNotPresentOrUsed(AsylumCase asylumCase) {
+        YesOrNo isPinUsedOrMissing = asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)
+            .map(PinInPostDetails::getPinUsed)
+            .orElse(YES);
+        if (isPinUsedOrMissing.equals(YES)) {
+            asylumCase.write(JOIN_APPEAL_PIN, PinInPostDetails.builder()
+                .accessCode(AccessCodeGenerator.generateAccessCode())
+                .expiryDate(LocalDate.now().plusDays(30).toString())
+                .pinUsed(YesOrNo.NO)
+                .build());
+        }
+
+        return asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)
+            .orElseThrow(() -> new IllegalStateException("Failed to generate joinAppealPin."));
+    }
+
     public static boolean isSubmissionOutOfTime(AsylumCase asylumCase) {
         return asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(NO).equals(YES);
     }
