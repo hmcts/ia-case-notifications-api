@@ -83,7 +83,7 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_APPEAL_UPDATED_NON_LEGAL_REP",
+        assertEquals(caseId + "_NON_LEGAL_REP_PHONE_NUMBER_SUBMITTED",
             nlrPhoneNumberSubmittedPersonalisation.getReferenceId(caseId));
     }
 
