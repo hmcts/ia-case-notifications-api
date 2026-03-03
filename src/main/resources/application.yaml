@@ -1525,7 +1525,7 @@ govnotify:
       appealUpdated:
         email: 1f917848-0dd7-4f2e-987a-e574658415b1
       nlrPhoneNumberSubmitted:
-        email: 29c3adcd-bf7f-4dd6-a509-0adcaf66de4d
+        email: 989c80f9-df20-4c15-876d-911c3beec88a
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
