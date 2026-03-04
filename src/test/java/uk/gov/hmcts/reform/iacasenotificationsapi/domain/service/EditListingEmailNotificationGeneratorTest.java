@@ -165,10 +165,10 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, callback);
         verify(notificationSender, never()).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
         verify(notificationIdAppender, never())
-            .appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
+            .appendAllAsylum(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender, never()).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -200,9 +200,9 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
         verify(notificationIdAppender, never())
-            .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
+            .appendAllAsylum(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender, never()).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -230,9 +230,9 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
         verify(notificationIdAppender, never())
-            .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
+            .appendAllAsylum(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender, never()).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -260,9 +260,9 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
         verify(notificationIdAppender, never())
-            .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
+            .appendAllAsylum(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender, never()).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -302,10 +302,10 @@ public class EditListingEmailNotificationGeneratorTest {
         notificationGenerator.generate(callback);
 
         verifyNoInteractions(notificationSender);
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, emptyList());
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, emptyList());
         verifyNoMoreInteractions(notificationIdAppender);
 
-        verify(asylumCase, never()).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+        verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
     @Test
@@ -328,9 +328,9 @@ public class EditListingEmailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
         verify(notificationIdAppender, never())
-            .appendAll(asylumCase, refId1, Collections.singletonList(notificationId1));
+            .appendAllAsylum(asylumCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender, never()).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
