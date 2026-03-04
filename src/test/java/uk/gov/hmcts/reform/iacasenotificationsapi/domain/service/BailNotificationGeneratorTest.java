@@ -45,7 +45,7 @@ public class BailNotificationGeneratorTest {
     @Mock
     BailGovNotifyNotificationSender notificationSender;
     @Spy
-    BailNotificationIdAppender notificationIdAppender;
+    NotificationIdAppender notificationIdAppender;
     @Mock
     Callback<BailCase> callback;
     @Mock
@@ -143,9 +143,9 @@ public class BailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(bailCase, refId1, Collections.singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllBail(bailCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(bailCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllBail(bailCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(bailCase, times(2)).write(NOTIFICATIONS_SENT, notificationsSent);
@@ -165,9 +165,9 @@ public class BailNotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(bailCase, refId1, Collections.singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllBail(bailCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(bailCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllBail(bailCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(bailCase, times(2)).write(NOTIFICATIONS_SENT, notificationsSent);
@@ -186,9 +186,9 @@ public class BailNotificationGeneratorTest {
         verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(bailCase, refId1, Collections.singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllBail(bailCase, refId1, Collections.singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(bailCase, refId2, Collections.singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllBail(bailCase, refId2, Collections.singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(bailCase, times(2)).write(NOTIFICATIONS_SENT, notificationsSent);
