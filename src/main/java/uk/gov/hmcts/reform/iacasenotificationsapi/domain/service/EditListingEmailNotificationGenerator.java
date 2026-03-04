@@ -58,13 +58,13 @@ public class EditListingEmailNotificationGenerator extends EmailNotificationGene
             noChangePersonalisationList.forEach(personalisation -> {
                 String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
                 List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
-                notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+                notificationIdAppender.appendAllAsylum(asylumCase, referenceId, notificationIds);
             });
         } else {
             withChangePersonalisationList.forEach(personalisation -> {
                 String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
                 List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
-                notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+                notificationIdAppender.appendAllAsylum(asylumCase, referenceId, notificationIds);
             });
 
         }
