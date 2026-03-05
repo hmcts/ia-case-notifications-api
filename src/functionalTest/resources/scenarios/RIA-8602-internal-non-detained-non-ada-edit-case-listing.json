@@ -20,6 +20,7 @@
           "listCaseHearingDate": "2023-05-03T14:25:15.000",
           "ariaListingReference" : "LP/12345/2019",
           "remoteVideoCallTribunalResponse": "Some tribunal response",
+          "mobileNumber": "07983000000",
           "notificationAttachmentDocuments": [
             {
               "id": "1",
@@ -63,6 +64,7 @@
         "listCaseHearingDate": "2023-05-03T14:25:15.000",
         "ariaListingReference" : "LP/12345/2019",
         "remoteVideoCallTribunalResponse": "Some tribunal response",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "7673_CASE_RE_LISTED_HOME_OFFICE",

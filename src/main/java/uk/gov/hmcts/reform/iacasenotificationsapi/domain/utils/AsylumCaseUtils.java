@@ -572,4 +572,10 @@ public class AsylumCaseUtils {
         return result;
     }
 
+    public static boolean hasAppellantEmailOrMobileNumber(AsylumCase asylumCase) {
+        boolean appellantHasEmail = !asylumCase.read(EMAIL, String.class).orElse("").equals("");
+        boolean appellantHasMobileNumber = !asylumCase.read(MOBILE_NUMBER, String.class).orElse("").equals("");
+        return appellantHasEmail || appellantHasMobileNumber;
+    }
+
 }

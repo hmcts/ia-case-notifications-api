@@ -36,6 +36,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantEmailOrMobileNumber;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
@@ -7142,10 +7143,10 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == LIST_CASE
-                    && isInternalCase(asylumCase)
-                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
-                    && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
+                       && callback.getEvent() == LIST_CASE
+                       && (isInternalCase(asylumCase) || !hasAppellantEmailOrMobileNumber(asylumCase))
+                       && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
+                       && hasAppellantAddressInCountryOrOutOfCountry(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -7645,7 +7646,9 @@ public class NotificationHandlerConfiguration {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (internalNonDetainedWithAddressAvailable(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
+                    && (internalNonDetainedWithAddressAvailable(asylumCase)
+                        || isDetainedInFacilityType(asylumCase, OTHER)
+                        || !hasAppellantEmailOrMobileNumber(asylumCase));
             }, notificationGenerators
         );
     }

@@ -25,7 +25,8 @@
           ],
           "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "remoteHearing",
-          "listCaseHearingDate": "2019-05-03T14:25:15.000"
+          "listCaseHearingDate": "2019-05-03T14:25:15.000",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -46,6 +47,7 @@
       "replacements": {
         "listCaseHearingCentre": "remoteHearing",
         "listCaseHearingDate": "2019-05-03T14:25:15.000",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "2006_CASE_RE_LISTED_HOME_OFFICE",

@@ -1,28 +1,33 @@
 {
-  "description": "DIAC-1747 Edit case listing LR Manual Letter",
+  "description": "DIAC-1213 LR Edit Case Listing non-detained case Mobile Number available, NO letter + attachment bundle in country",
   "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1747,
+      "id": 12136,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "isAdmin": "Yes",
-          "appellantsRepresentation": "No",
+          "isAdmin": "No",
+          "appellantInDetention": "No",
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2023",
           "listCaseHearingCentre": "harmondsworth",
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "appellantInDetention": "Yes",
-          "detentionFacility": "prison",
-          "prisonName": "Albany",
+          "appellantHasFixedAddress": "Yes",
           "mobileNumber": "07983000000",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
           "hearingChannel": {
             "value": {
               "code": "INTER",
@@ -61,20 +66,6 @@
                 "description": "",
                 "dateUploaded": "{$TODAY}"
               }
-            },
-            {
-              "id": "2",
-              "value": {
-                "tag": "internalEditCaseListingLrLetterBundle",
-                "document": {
-                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
-                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
-                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
-                },
-                "suppliedBy": "",
-                "description": "",
-                "dateUploaded": "{$TODAY}"
-              }
             }
           ]
         }
@@ -96,23 +87,33 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "isAdmin": "No",
+        "appellantInDetention": "No",
         "appealReferenceNumber": "PA/12345/2023",
         "listCaseHearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "appellantHasFixedAddress": "Yes",
         "mobileNumber": "07983000000",
+        "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
         "notificationsSent": [
           {
-            "id": "1747_CASE_RE_LISTED_HOME_OFFICE",
+            "id": "12136_CASE_RE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1747_INTERNAL_DETAINED_EDIT_CASE_LISTING_DET",
+            "id": "12136_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1747_INTERNAL_EDIT_CASE_LISTING_LR_LETTER_BUNDLE",
+            "id": "12136_CASE_RE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -120,7 +121,7 @@
     },
     "notifications": [
       {
-        "reference": "1747_CASE_RE_LISTED_HOME_OFFICE",
+        "reference": "12136_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -132,15 +133,15 @@
         ]
       },
       {
-        "reference": "1747_DETAINED_EDIT_CASE_LISTING_PRODUCTION_DET",
-        "recipient": "det-prison-albany@example.com",
-        "subject": "IAFT – Production Notice",
+        "reference": "12136_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
-          "Appellant name: Talha Awan",
+          "LP/12345/2023",
           "3 Sep 2023",
           "14:25",
-          "Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB"
+          "Talha Awan"
         ]
       }
     ]

@@ -17,7 +17,8 @@
           "listCaseHearingDate": "2023-09-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "isCaseUsingLocationRefData": "Yes",
-          "isRemoteHearing": "Yes"
+          "isRemoteHearing": "Yes",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -40,6 +41,7 @@
         "listCaseHearingCentre": "harmondsworth",
         "listCaseHearingDate": "2023-09-03T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "88572_CASE_RE_LISTED_HOME_OFFICE",

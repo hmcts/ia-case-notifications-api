@@ -15,7 +15,8 @@
           "listCaseHearingCentre": "bradford",
           "listCaseHearingDate": "2019-05-03T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "remoteVideoCallTribunalResponse": "Some tribunal response"
+          "remoteVideoCallTribunalResponse": "Some tribunal response",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -25,7 +26,8 @@
           "hearingCentre": "bradford",
           "listCaseHearingCentre": "remoteHearing",
           "listCaseHearingDate": "2019-05-01T13:30:15.000",
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "mobileNumber": "07983000000"
         }
       }
     }

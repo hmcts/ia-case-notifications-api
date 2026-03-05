@@ -14,7 +14,8 @@
           "ariaListingReference": "LP/12345/2019",
           "listCaseHearingCentre": "bradford",
           "listCaseHearingDate": "2019-05-03T13:30:15.000",
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "mobileNumber": "07983000000"
         }
       },
       "caseDataBefore": {
@@ -37,6 +38,7 @@
         "listCaseHearingCentre": "bradford",
         "listCaseHearingDate": "2019-05-03T13:30:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "mobileNumber": "07983000000",
         "notificationsSent": [
           {
             "id": "1050_CASE_RE_LISTED_NO_CHANGE_LEGAL_REPRESENTATIVE",
