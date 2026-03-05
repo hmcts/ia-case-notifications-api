@@ -5492,7 +5492,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                    && !isInternalCase(asylumCase)
+                    && isRepJourney(asylumCase)
                     && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                     && (isPaAppealType && paAppealTypePaymentOption.equals("payNow"))
                     && !isAcceleratedDetainedAppeal(asylumCase);
