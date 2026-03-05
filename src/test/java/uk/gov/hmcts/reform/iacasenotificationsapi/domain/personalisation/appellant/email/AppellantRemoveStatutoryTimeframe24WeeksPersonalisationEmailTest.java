@@ -19,14 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @SuppressWarnings("PMD.TooManyFields")
 class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
 
+    public static final String REVIEW_DATE = "2002-02-02";
     private static final String CUSTOMER_SERVICES_EMAIL_KEY = "customerServicesEmail";
     private static final String CUSTOMER_SERVICES_TELEPHONE_KEY = "customerServicesTelephone";
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
@@ -45,7 +47,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID =
             CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
-
+    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     @Mock
     private AsylumCase asylumCase;
 
@@ -94,6 +96,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_SERVICE_KEY));
         assertEquals(CUSTOMER_SERVICE_EMAIL, result.get(CUSTOMER_SERVICES_EMAIL_KEY));
         assertEquals(CUSTOMER_SERVICE_PHONE, result.get(CUSTOMER_SERVICES_TELEPHONE_KEY));
+        assertEquals("2 Feb 2002", result.get(COMPLETE_CASE_REVIEW_DATE_KEY));
     }
 
     @Test
@@ -112,8 +115,10 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
                 .thenReturn(Optional.of(APPELLANT_GIVEN_NAMES));
 
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REFERENCE_NUMBER_VALUE));
-        when(asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class))
+        when(asylumCase.read(EMAIL, String.class))
                 .thenReturn(Optional.of(EMAIL_ADDRESS));
+        when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class))
+                .thenReturn(Optional.of(REVIEW_DATE));
     }
 
     private void setupEmptyAsylumCaseMocks() {

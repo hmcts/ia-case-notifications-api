@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String EMPTY_STRING = "";
     private final String templateId;
     private final String iaExUiFrontendUrl;
@@ -80,6 +82,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
+                .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase))
                 .build();
     }
 

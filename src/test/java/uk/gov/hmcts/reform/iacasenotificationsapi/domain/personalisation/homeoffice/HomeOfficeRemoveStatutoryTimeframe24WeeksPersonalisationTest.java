@@ -21,6 +21,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
@@ -29,6 +30,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @SuppressWarnings("PMD.TooManyFields")
 class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
 
+    public static final String REVIEW_DATE = "2002-02-02";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
@@ -41,13 +43,13 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String ARIA_LISTING_REFERENCE_VALUE = "someAriaListingReference";
     private static final String HOME_OFFICE_REF_NUMBER_VALUE = "someHomeOfficeRefNumber";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
+    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
     private static final String CUSTOMER_SERVICES_TELEPHONE = "555 555 555";
     private static final String CUSTOMER_SERVICES_EMAIL = "cust.services@example.com";
     private static final String MOCK_PREFIX = "mox prefix";
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID = CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
-
     @Mock
     private AsylumCase asylumCase;
 
@@ -92,6 +94,7 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
         assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
+        assertEquals("2 Feb 2002", result.get(COMPLETE_CASE_REVIEW_DATE_KEY));
     }
 
     @Test
@@ -112,6 +115,8 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(APPELLANT_GIVEN_NAMES_VALUE));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REF_NUMBER_VALUE));
+        when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class))
+                .thenReturn(Optional.of(REVIEW_DATE));
     }
 
     private void setupEmptyAsylumCaseMocks() {

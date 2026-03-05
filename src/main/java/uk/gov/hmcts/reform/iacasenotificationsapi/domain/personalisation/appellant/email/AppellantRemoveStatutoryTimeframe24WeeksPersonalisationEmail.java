@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.Collections;
@@ -15,7 +16,6 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 
 
 @Service
@@ -27,6 +27,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
+    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String LINK_TO_SERVICE_KEY = "linkToService";
     private static final String EMPTY_STRING = "";
 
@@ -69,14 +70,15 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
         return ImmutableMap.<String, String>builder()
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
+                .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase))
                 .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl).build();
     }
+
 
 }
