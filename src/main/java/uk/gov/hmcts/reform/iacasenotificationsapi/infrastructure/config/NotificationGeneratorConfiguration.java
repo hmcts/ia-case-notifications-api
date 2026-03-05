@@ -105,6 +105,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRemoveRepresentationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeSubmitAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeTransferOutOfAdaPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAddendumEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAdditionalEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
@@ -4865,6 +4866,28 @@ public class NotificationGeneratorConfiguration {
                 notificationIdAppender
             )
         );
+    }
+
+    @Bean("removeStatutoryTimeframe24WeeksNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksNotificationGenerator(
+        AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
+        LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
+        HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficeTransferOutOfStf24WeeksPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
+                    legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
+                    homeOfficeTransferOutOfStf24WeeksPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+         );
     }
 
     @Bean("markAppealAsAdaNotificationGenerator")

@@ -5677,6 +5677,26 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksNotificationHandler(
+            @Qualifier("removeStatutoryTimeframe24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+
+                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+                    log.info("can send 24WeeksNotification: {}", canSendNotifications);
+                    return canSendNotifications;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalDetainedTransferOutOfAdaNotificationHandler(
         @Qualifier("internalDetainedTransferOutOfAdaNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
