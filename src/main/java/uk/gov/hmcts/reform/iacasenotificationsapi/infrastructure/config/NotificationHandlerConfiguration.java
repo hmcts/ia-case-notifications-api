@@ -7700,6 +7700,20 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledProductionDetainedNotificationHandler(
+            @Qualifier("cmrHearingCancelledProductionDetainedNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callback.getEvent() == CMR_HEARING_CANCELLED
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT;
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> editCaseListingCancelledProductionDetainedNotificationHandler(
         @Qualifier("hearingCancelledProductionDetainedNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

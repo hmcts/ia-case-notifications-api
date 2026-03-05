@@ -6805,6 +6805,28 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("cmrHearingCancelledProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> cmrHearingCancelledProductionDetainedNotificationGenerator(
+            DetentionEngagementTeamHearingCancelledProductionPersonalisation detentionEngagementTeamHearingCancelledProductionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamHearingCancelledProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("editCaseListingProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> editCaseListingProductionDetainedNotificationGenerator(
             DetentionEngagementTeamEditCaseListingProductionPersonalisation detentionEngagementTeamEditCaseListingProductionPersonalisation,
