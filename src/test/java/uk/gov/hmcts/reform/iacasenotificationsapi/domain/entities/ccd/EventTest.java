@@ -101,6 +101,7 @@ public class EventTest {
         assertEquals("submitApplication", SUBMIT_APPLICATION.toString());
         assertEquals("uploadBailSummary", UPLOAD_BAIL_SUMMARY.toString());
         assertEquals("uploadSignedDecisionNotice", UPLOAD_SIGNED_DECISION_NOTICE.toString());
+        assertEquals("uploadSignedDecisionNoticeConditionalGrant", UPLOAD_SIGNED_DECISION_NOTICE_CONDITIONAL_GRANT.toString());
         assertEquals("endApplication", END_APPLICATION.toString());
         assertEquals("uploadDocuments", UPLOAD_DOCUMENTS.toString());
         assertEquals("editBailDocuments", EDIT_BAIL_DOCUMENTS.toString());
