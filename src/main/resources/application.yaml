@@ -1906,6 +1906,7 @@ security:
     caseworker-ia-admofficer:
       - "editBailApplication"
       - "uploadSignedDecisionNotice"
+      - "uploadSignedDecisionNoticeConditionalGrant"
       - "caseListing"
       - "changeBailDirectionDueDate"
       - "maintainBailCaseLinks"
@@ -2258,6 +2259,7 @@ security:
       - "editAppeal"
       - "decideCostsApplication"
       - "uploadSignedDecisionNotice"
+      - "uploadSignedDecisionNoticeConditionalGrant"
       - "changeBailDirectionDueDate"
       - "maintainBailCaseLinks"
       - "createBailCaseLink"
