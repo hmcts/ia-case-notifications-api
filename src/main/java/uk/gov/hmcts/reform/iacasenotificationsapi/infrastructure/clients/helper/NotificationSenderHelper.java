@@ -13,6 +13,9 @@ import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.StoredNotification;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -28,7 +31,6 @@ import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS;
 
 @Slf4j
 @Component
@@ -71,7 +73,7 @@ public class NotificationSenderHelper<T extends CaseData> {
 
                 } catch (NotificationClientException e) {
                     logger.error("Failed to send email using GovNotify for case reference {}", reference, e);
-                    storeFailedNotification(callback, e, reference, "email", emailAddress);
+                    storeFailedNotification(callback, e, reference, "email", emailAddress, logger);
                 }
                 return Strings.EMPTY;
             }
@@ -152,7 +154,7 @@ public class NotificationSenderHelper<T extends CaseData> {
 
                 } catch (NotificationClientException e) {
                     logger.error("Failed to send sms using GovNotify for case reference {}", reference, e);
-                    storeFailedNotification(callback, e, reference, "sms", phoneNumber);
+                    storeFailedNotification(callback, e, reference, "sms", phoneNumber, logger);
                 }
                 return Strings.EMPTY;
             }
@@ -247,18 +249,43 @@ public class NotificationSenderHelper<T extends CaseData> {
     }
 
     private void storeFailedNotification(Callback<T> callback, NotificationClientException e,
-                                         String reference, String method, String phoneNumber) {
-        AsylumCase asylumCase = (AsylumCase) callback.getCaseDetails().getCaseData();
-        Optional<List<IdValue<StoredNotification>>> maybeExistingNotifications =
-            asylumCase.read(NOTIFICATIONS);
+                                         String reference, String method, String phoneNumber, Logger logger) {
+        CaseData caseData = callback.getCaseDetails().getCaseData();
+        if (caseData instanceof AsylumCase asylumCase) {
+            List<IdValue<StoredNotification>> sortedNotifications = getSortedNotifications(
+                asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS),
+                e,
+                reference,
+                method,
+                phoneNumber
+            );
+            asylumCase.write(AsylumCaseDefinition.NOTIFICATIONS, sortedNotifications);
+        } else if (caseData instanceof BailCase bailCase) {
+            List<IdValue<StoredNotification>> sortedNotifications = getSortedNotifications(
+                bailCase.read(BailCaseFieldDefinition.NOTIFICATIONS),
+                e,
+                reference,
+                method,
+                phoneNumber
+            );
+            bailCase.write(BailCaseFieldDefinition.NOTIFICATIONS, sortedNotifications);
+        } else {
+            logger.error("Unsupported case data type for storing failed notification: {}", caseData.getClass().getName());
+        }
+    }
+
+    private List<IdValue<StoredNotification>> getSortedNotifications(Optional<List<IdValue<StoredNotification>>> maybeExistingNotifications,
+                                                                     NotificationClientException e,
+                                                                     String reference,
+                                                                     String method,
+                                                                     String phoneNumber) {
         List<IdValue<StoredNotification>> allNotifications = maybeExistingNotifications.orElse(emptyList());
 
         String errorMessage = e.getMessage();
         StoredNotification storedNotification = getFailedNotification(errorMessage, reference,
             method, phoneNumber);
         allNotifications = append(storedNotification, allNotifications);
-        List<IdValue<StoredNotification>> sortedNotifications = sortNotificationsByDate(allNotifications);
-        asylumCase.write(NOTIFICATIONS, sortedNotifications);
+        return sortNotificationsByDate(allNotifications);
     }
 
     private static StoredNotification getFailedNotification(String errorMessage, String reference, String method,

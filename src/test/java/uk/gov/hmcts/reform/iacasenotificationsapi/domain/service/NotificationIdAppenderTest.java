@@ -3,18 +3,23 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 public class NotificationIdAppenderTest {
-
-    private final NotificationIdAppender notificationIdAppender = new NotificationIdAppender();
+    private NotificationIdAppender notificationIdAppender;
 
     private final IdValue<String> existingNotification1 = new IdValue<>("foo", "111-222");
     private final IdValue<String> existingNotification2 = new IdValue<>("bar", "333-444");
@@ -24,6 +29,11 @@ public class NotificationIdAppenderTest {
             existingNotification1,
             existingNotification2
         );
+
+    @BeforeEach
+    void setUp() {
+        notificationIdAppender = new NotificationIdAppender();
+    }
 
     @Test
     public void should_append_first_notification_without_qualifier() {
@@ -84,5 +94,46 @@ public class NotificationIdAppenderTest {
             .substring("foo_".length()))
             .matches(uuidRegex);
         assertEquals("777-888", actualNotificationsSent4.getValue());
+    }
+
+
+    @Test
+    void should_append_all_asylum_notifications() {
+        AsylumCase asylumCase = new AsylumCase();
+        asylumCase.write(AsylumCaseDefinition.NOTIFICATIONS_SENT, new ArrayList<>());
+
+        List<String> notificationIds = List.of("id1", "id2", "id3");
+        notificationIdAppender.appendAllAsylum(asylumCase, "ref", notificationIds);
+        assertEquals(3, asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS_SENT, List.class)
+            .orElse(Collections.emptyList()).size());
+    }
+
+    @Test
+    void should_append_all_asylum_notifications_when_none_exist() {
+        AsylumCase asylumCase = new AsylumCase();
+        List<String> notificationIds = List.of("id1", "id2", "id3");
+        notificationIdAppender.appendAllAsylum(asylumCase, "ref", notificationIds);
+        assertEquals(3, asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS_SENT, List.class)
+            .orElse(Collections.emptyList()).size());
+    }
+
+    @Test
+    void should_append_all_bail_notifications() {
+        BailCase bailCase = new BailCase();
+        bailCase.write(BailCaseFieldDefinition.NOTIFICATIONS_SENT, new ArrayList<>());
+
+        List<String> notificationIds = List.of("id1", "id2", "id3");
+        notificationIdAppender.appendAllBail(bailCase, "ref", notificationIds);
+        assertEquals(3, bailCase.read(BailCaseFieldDefinition.NOTIFICATIONS_SENT, List.class)
+            .orElse(Collections.emptyList()).size());
+    }
+
+    @Test
+    void should_append_all_bail_notifications_when_none_exist() {
+        BailCase bailCase = new BailCase();
+        List<String> notificationIds = List.of("id1", "id2", "id3");
+        notificationIdAppender.appendAllBail(bailCase, "ref", notificationIds);
+        assertEquals(3, bailCase.read(BailCaseFieldDefinition.NOTIFICATIONS_SENT, List.class)
+            .orElse(Collections.emptyList()).size());
     }
 }

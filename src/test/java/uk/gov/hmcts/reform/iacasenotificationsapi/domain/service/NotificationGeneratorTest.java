@@ -215,9 +215,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -236,9 +236,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId1, emailAddress1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -258,9 +258,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendSms(templateId1, phoneNumber1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendSms(templateId2, phoneNumber2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -280,9 +280,9 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendLetter(templateId1, address1, personalizationMap1, refId1, callback);
         verify(notificationSender).sendLetter(templateId2, address2, personalizationMap2, refId2, callback);
 
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, singletonList(notificationId1));
         verify(notificationIdAppender).append(notificationsSent, refId1, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
 
         verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
@@ -299,7 +299,7 @@ public class NotificationGeneratorTest {
 
         verify(notificationSender).sendPrecompiledLetter(refId3, mockInputStream);
         verify(notificationIdAppender).append(notificationsSent, refId3, notificationId1);
-        verify(notificationIdAppender).appendAll(asylumCase, refId3, singletonList(notificationId1));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId3, singletonList(notificationId1));
         verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
@@ -318,8 +318,8 @@ public class NotificationGeneratorTest {
     @Test
     public void should_not_send_notification_when_invalid_email_address() {
         notificationGenerator =
-                new EmailNotificationGenerator(aipEmailNotificationPersonalisationList, notificationSender,
-                        notificationIdAppender);
+            new EmailNotificationGenerator(aipEmailNotificationPersonalisationList, notificationSender,
+                notificationIdAppender);
 
         when(emailNotificationPersonalisation.getRecipientsList(asylumCase)).thenReturn(singleton(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING));
         when(emailNotificationPersonalisation1.getRecipientsList(asylumCase)).thenReturn(singleton(emailAddress2));
@@ -329,12 +329,12 @@ public class NotificationGeneratorTest {
         verify(notificationSender).sendEmail(templateId2, emailAddress2, personalizationMap2, refId2, callback);
         verifyNoMoreInteractions(notificationSender);
 
-        verify(notificationIdAppender).appendAll(asylumCase, refId1, emptyList());
-        verify(notificationIdAppender).appendAll(asylumCase, refId2, singletonList(notificationId2));
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId1, emptyList());
+        verify(notificationIdAppender).appendAllAsylum(asylumCase, refId2, singletonList(notificationId2));
         verify(notificationIdAppender).append(notificationsSent, refId2, notificationId2);
         verifyNoMoreInteractions(notificationIdAppender);
 
-        verify(asylumCase, times(1)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
+        verify(asylumCase, times(2)).write(AsylumCaseDefinition.NOTIFICATIONS_SENT, notificationsSent);
     }
 
     @Test

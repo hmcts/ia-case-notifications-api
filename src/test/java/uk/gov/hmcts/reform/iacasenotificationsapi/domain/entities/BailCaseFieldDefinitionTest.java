@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
-public class BailCaseDefinitionTest {
+public class BailCaseFieldDefinitionTest {
 
     List<BailCaseFieldDefinition> fieldsNamesWithDifferentNaming =
         Arrays.asList(SUPPORTER_DOB, SUPPORTER_2_DOB, SUPPORTER_3_DOB, SUPPORTER_4_DOB, TTL);
@@ -30,6 +30,6 @@ public class BailCaseDefinitionTest {
 
     @Test
     public void should_fail_if_new_fields_added_in_class() {
-        assertEquals(152, values().length);
+        assertEquals(153, values().length);
     }
 }
