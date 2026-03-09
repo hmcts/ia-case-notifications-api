@@ -477,7 +477,7 @@ dependencies {
 }
 
 dependencyCheck {
-    suppressionFile = 'config/owasp/suppressions.xml'
+    suppressionFile = 'https://raw.githubusercontent.com/hmcts/ia-owasp-suppressions/refs/heads/master/ia-case-notifications-api/suppressions.xml'
 }
 
 dependencyUpdates.resolutionStrategy = {
