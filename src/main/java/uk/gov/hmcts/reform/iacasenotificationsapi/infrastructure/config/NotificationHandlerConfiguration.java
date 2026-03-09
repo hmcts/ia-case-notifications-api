@@ -7770,10 +7770,15 @@ public class NotificationHandlerConfiguration {
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
 
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                     return callback.getEvent() == BUILD_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
+                            && paymentPaid
                             && isAipJourney(asylumCase)
                             && paAipPaymentOption.equals("payLater");
 
@@ -7797,10 +7802,15 @@ public class NotificationHandlerConfiguration {
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
 
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                     return callback.getEvent() == LIST_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
+                            && paymentPaid
                             && isAipJourney(asylumCase)
                             && paAipPaymentOption.equals("payLater");
 
@@ -7824,10 +7834,15 @@ public class NotificationHandlerConfiguration {
                     String paAipPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
 
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                     return callback.getEvent() == SEND_DECISION_AND_REASONS
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
+                            && paymentPaid
                             && isAipJourney(asylumCase)
                             && paAipPaymentOption.equals("payLater");
 
@@ -7851,10 +7866,15 @@ public class NotificationHandlerConfiguration {
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                     return callback.getEvent() == BUILD_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
+                            && paymentPaid
                             && isRepJourney(asylumCase)
                             && paPaymentOption.equals("payLater");
 
@@ -7878,10 +7898,15 @@ public class NotificationHandlerConfiguration {
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                     return callback.getEvent() == LIST_CASE
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
+                            && paymentPaid
                             && isRepJourney(asylumCase)
                             && paPaymentOption.equals("payLater");
 
@@ -7905,10 +7930,15 @@ public class NotificationHandlerConfiguration {
                     String paPaymentOption = asylumCase
                             .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
 
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
                     return callback.getEvent() == SEND_DECISION_AND_REASONS
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
+                            && paymentPaid
                             && isRepJourney(asylumCase)
                             && paPaymentOption.equals("payLater");
 
