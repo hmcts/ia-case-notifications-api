@@ -135,6 +135,9 @@ public enum Event {
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),
 
+    CMR_LISTING("cmrListing"),
+    CMR_RELISTING("cmrRelisting"),
+
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 

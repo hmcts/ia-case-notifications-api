@@ -205,6 +205,21 @@ public enum AsylumCaseDefinition {
     SUBMIT_HEARING_REQUIREMENTS_AVAILABLE(
         "submitHearingRequirementsAvailable", new TypeReference<YesOrNo>(){}),
 
+    HEARING_REQUIREMENT_VULNERABILITIES(
+            "hearingRequirementVulnerabilities", new TypeReference<YesOrNo>(){}),
+
+    HEARING_REQUIREMENT_MULTIMEDIA(
+            "hearingRequirementMultimedia", new TypeReference<YesOrNo>(){}),
+
+    HEARING_REQUIREMENT_SINGLE_SEX_COURT(
+            "hearingRequirementSingleSexCourt", new TypeReference<YesOrNo>(){}),
+
+    HEARING_REQUIREMENT_IN_CAMERA_COURT(
+            "hearingRequirementInCameraCourt", new TypeReference<YesOrNo>(){}),
+
+    HEARING_REQUIREMENT_OTHER(
+            "hearingRequirementOther", new TypeReference<YesOrNo>(){}),
+
     SUBMISSION_OUT_OF_TIME(
         "submissionOutOfTime", new TypeReference<YesOrNo>(){}),
 
