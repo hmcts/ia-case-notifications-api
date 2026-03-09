@@ -127,4 +127,30 @@ class LegalRepCmrRelistingPersonalisationTest {
                 personalisation.getReferenceId(caseId)
         );
     }
+
+    @Test
+    void should_build_personalisation() {
+
+        Map<String, String> result = personalisation.getPersonalisation(asylumCase);
+
+        assertEquals("ref", result.get("appealReferenceNumber"));
+        assertEquals("aria", result.get("ariaListingReference"));
+        assertEquals("lrn", result.get("legalRepReferenceNumber"));
+        assertEquals("John", result.get("appellantGivenNames"));
+        assertEquals("Smith", result.get("appellantFamilyName"));
+
+        assertEquals(frontendUrl, result.get("linkToOnlineService"));
+
+        assertEquals(hearingDate, result.get("hearingDate"));
+        assertEquals(hearingTime, result.get("hearingTime"));
+        assertEquals(hearingCentreAddress, result.get("hearingCentreAddress"));
+
+        assertEquals("Video hearing", result.get("remoteVideoCallTribunalResponse"));
+
+        assertEquals("No special adjustments are being made to accommodate vulnerabilities", result.get("hearingRequirementVulnerabilities"));
+        assertEquals("No multimedia equipment is being provided", result.get("hearingRequirementMultimedia"));
+        assertEquals("The court will not be single sex", result.get("hearingRequirementSingleSexCourt"));
+        assertEquals("The hearing will be held in public court", result.get("hearingRequirementInCameraCourt"));
+        assertEquals("No other adjustments are being made", result.get("hearingRequirementOther"));
+    }
 }

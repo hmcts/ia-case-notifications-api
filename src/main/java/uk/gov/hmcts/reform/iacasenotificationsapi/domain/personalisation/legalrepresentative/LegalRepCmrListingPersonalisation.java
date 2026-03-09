@@ -84,13 +84,7 @@ public class LegalRepCmrListingPersonalisation implements LegalRepresentativeEma
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
                 .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase))
-                .put("remoteVideoCallTribunalResponse", asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class).orElse(""))
-                .put("hearingRequirementVulnerabilities", asylumCase.read(HEARING_REQUIREMENT_VULNERABILITIES, String.class).orElse(""))
-                .put("hearingRequirementMultimedia", asylumCase.read(HEARING_REQUIREMENT_MULTIMEDIA, String.class).orElse(""))
-                .put("hearingRequirementSingleSexCourt", asylumCase.read(HEARING_REQUIREMENT_SINGLE_SEX_COURT, String.class).orElse(""))
-                .put("hearingRequirementInCameraCourt", asylumCase.read(HEARING_REQUIREMENT_IN_CAMERA_COURT, String.class).orElse(""))
-                .put("hearingRequirementOther", asylumCase.read(HEARING_REQUIREMENT_OTHER, String.class).orElse(""));
+                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
 
         PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);

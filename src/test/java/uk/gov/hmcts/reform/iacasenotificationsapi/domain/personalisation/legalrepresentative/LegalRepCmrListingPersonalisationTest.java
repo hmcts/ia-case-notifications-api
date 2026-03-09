@@ -40,7 +40,6 @@ class LegalRepCmrListingPersonalisationTest {
     private final String templateId = "templateId";
     private final String remoteTemplateId = "remoteTemplateId";
     private final String frontendUrl = "http://frontend";
-
     private final String hearingDateTime = "2024-01-01T10:00:00";
     private final String hearingDate = "2024-01-01";
     private final String hearingTime = "10:00";
@@ -61,14 +60,9 @@ class LegalRepCmrListingPersonalisationTest {
         ReflectionTestUtils.setField(personalisation, "adaPrefix", "Accelerated detained appeal");
         ReflectionTestUtils.setField(personalisation, "nonAdaPrefix", "Immigration and Asylum appeal");
 
-        when(hearingDetailsFinder.getHearingDateTime(asylumCase))
-                .thenReturn(hearingDateTime);
-
-        when(dateTimeExtractor.extractHearingDate(hearingDateTime))
-                .thenReturn(hearingDate);
-
-        when(dateTimeExtractor.extractHearingTime(hearingDateTime))
-                .thenReturn(hearingTime);
+        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
+        when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
+        when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase))
                 .thenReturn(hearingCentreAddress);
@@ -81,16 +75,12 @@ class LegalRepCmrListingPersonalisationTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of("ref"));
-
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
                 .thenReturn(Optional.of("aria"));
-
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of("lrn"));
-
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
                 .thenReturn(Optional.of("John"));
-
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
                 .thenReturn(Optional.of("Smith"));
 
@@ -99,16 +89,12 @@ class LegalRepCmrListingPersonalisationTest {
 
         when(asylumCase.read(HEARING_REQUIREMENT_VULNERABILITIES, String.class))
                 .thenReturn(Optional.of("vulnerabilities"));
-
         when(asylumCase.read(HEARING_REQUIREMENT_MULTIMEDIA, String.class))
                 .thenReturn(Optional.of("multimedia"));
-
         when(asylumCase.read(HEARING_REQUIREMENT_SINGLE_SEX_COURT, String.class))
                 .thenReturn(Optional.of("single sex"));
-
         when(asylumCase.read(HEARING_REQUIREMENT_IN_CAMERA_COURT, String.class))
                 .thenReturn(Optional.of("in camera"));
-
         when(asylumCase.read(HEARING_REQUIREMENT_OTHER, String.class))
                 .thenReturn(Optional.of("other"));
     }
@@ -140,5 +126,31 @@ class LegalRepCmrListingPersonalisationTest {
                 "123_CMR_LISTED_OR_REMOTE_LEGAL_REPRESENTATIVE_EMAIL",
                 personalisation.getReferenceId(caseId)
         );
+    }
+
+    @Test
+    void should_build_personalisation() {
+
+        Map<String, String> result = personalisation.getPersonalisation(asylumCase);
+
+        assertEquals("ref", result.get("appealReferenceNumber"));
+        assertEquals("aria", result.get("ariaListingReference"));
+        assertEquals("lrn", result.get("legalRepReferenceNumber"));
+        assertEquals("John", result.get("appellantGivenNames"));
+        assertEquals("Smith", result.get("appellantFamilyName"));
+
+        assertEquals(frontendUrl, result.get("linkToOnlineService"));
+
+        assertEquals(hearingDate, result.get("hearingDate"));
+        assertEquals(hearingTime, result.get("hearingTime"));
+        assertEquals(hearingCentreAddress, result.get("hearingCentreAddress"));
+
+        assertEquals("Video hearing", result.get("remoteVideoCallTribunalResponse"));
+
+        assertEquals("No special adjustments are being made to accommodate vulnerabilities", result.get("hearingRequirementVulnerabilities"));
+        assertEquals("No multimedia equipment is being provided", result.get("hearingRequirementMultimedia"));
+        assertEquals("The court will not be single sex", result.get("hearingRequirementSingleSexCourt"));
+        assertEquals("The hearing will be held in public court", result.get("hearingRequirementInCameraCourt"));
+        assertEquals("No other adjustments are being made", result.get("hearingRequirementOther"));
     }
 }
