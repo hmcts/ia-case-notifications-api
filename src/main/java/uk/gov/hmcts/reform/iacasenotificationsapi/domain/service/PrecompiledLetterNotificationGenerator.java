@@ -48,7 +48,7 @@ public class PrecompiledLetterNotificationGenerator implements NotificationGener
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+            notificationIdAppender.appendAllAsylum(asylumCase, referenceId, notificationIds);
         });
     }
 
