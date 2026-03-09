@@ -48,6 +48,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerChangeHearingCentrePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmaRequirementsSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrHearingCancelledPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerEditListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaDecisionPersonalisation;
@@ -6807,14 +6808,14 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("cmrHearingCancelledProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> cmrHearingCancelledProductionDetainedNotificationGenerator(
-            DetentionEngagementTeamHearingCancelledProductionPersonalisation detentionEngagementTeamHearingCancelledProductionPersonalisation,
+            CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                detentionEngagementTeamHearingCancelledProductionPersonalisation
+                                caseOfficerCmrHearingCancelledPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
