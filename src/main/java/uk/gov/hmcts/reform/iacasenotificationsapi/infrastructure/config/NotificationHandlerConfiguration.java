@@ -7778,7 +7778,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
-                            && paymentPaid
+                            && !paymentPaid
                             && isAipJourney(asylumCase)
                             && paAipPaymentOption.equals("payLater");
 
@@ -7810,7 +7810,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
-                            && paymentPaid
+                            && !paymentPaid
                             && isAipJourney(asylumCase)
                             && paAipPaymentOption.equals("payLater");
 
@@ -7842,7 +7842,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
-                            && paymentPaid
+                            && !paymentPaid
                             && isAipJourney(asylumCase)
                             && paAipPaymentOption.equals("payLater");
 
@@ -7874,7 +7874,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
-                            && paymentPaid
+                            && !paymentPaid
                             && isRepJourney(asylumCase)
                             && paPaymentOption.equals("payLater");
 
@@ -7906,7 +7906,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
-                            && paymentPaid
+                            && !paymentPaid
                             && isRepJourney(asylumCase)
                             && paPaymentOption.equals("payLater");
 
@@ -7938,7 +7938,7 @@ public class NotificationHandlerConfiguration {
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
-                            && paymentPaid
+                            && !paymentPaid
                             && isRepJourney(asylumCase)
                             && paPaymentOption.equals("payLater");
 
