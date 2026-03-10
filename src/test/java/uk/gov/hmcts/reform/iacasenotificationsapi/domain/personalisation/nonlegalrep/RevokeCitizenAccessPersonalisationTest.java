@@ -30,7 +30,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class CaseRevokedV2PersonalisationTest {
+public class RevokeCitizenAccessPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -52,11 +52,11 @@ public class CaseRevokedV2PersonalisationTest {
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
 
-    private CaseRevokedV2Personalisation caseRevokedV2Personalisation;
+    private RevokeCitizenAccessPersonalisation revokeCitizenAccessPersonalisation;
 
     @BeforeEach
     public void setUp() {
-        caseRevokedV2Personalisation = new CaseRevokedV2Personalisation(
+        revokeCitizenAccessPersonalisation = new RevokeCitizenAccessPersonalisation(
             templateId,
             customerServicesProvider
         );
@@ -65,7 +65,7 @@ public class CaseRevokedV2PersonalisationTest {
     @Test
     public void recipients_list_should_throw_if_no_dl() {
         IllegalStateException exception =
-            assertThrows(IllegalStateException.class, () -> caseRevokedV2Personalisation.getRecipientsList(asylumCase));
+            assertThrows(IllegalStateException.class, () -> revokeCitizenAccessPersonalisation.getRecipientsList(asylumCase));
         verify(asylumCase, times(1)).read(REVOKE_ACCESS_DL, DynamicList.class);
         assertEquals("Dynamic list of users to revoke access from is not present.", exception.getMessage());
     }
@@ -74,7 +74,7 @@ public class CaseRevokedV2PersonalisationTest {
     public void recipients_list_should_return_revoke_dl_value() {
         DynamicList dynamicList = new DynamicList(userValue, List.of(userValue));
         when(asylumCase.read(REVOKE_ACCESS_DL, DynamicList.class)).thenReturn(Optional.of(dynamicList));
-        Set<String> recipients = caseRevokedV2Personalisation.getRecipientsList(asylumCase);
+        Set<String> recipients = revokeCitizenAccessPersonalisation.getRecipientsList(asylumCase);
         verify(asylumCase, times(1)).read(REVOKE_ACCESS_DL, DynamicList.class);
         assertFalse(recipients.isEmpty());
         assertEquals(email, recipients.iterator().next());
@@ -84,7 +84,7 @@ public class CaseRevokedV2PersonalisationTest {
     public void recipients_list_should_return_revoke_empty_if_dl_has_null_value() {
         DynamicList dynamicList = new DynamicList(null, List.of(userValue));
         when(asylumCase.read(REVOKE_ACCESS_DL, DynamicList.class)).thenReturn(Optional.of(dynamicList));
-        Set<String> recipients = caseRevokedV2Personalisation.getRecipientsList(asylumCase);
+        Set<String> recipients = revokeCitizenAccessPersonalisation.getRecipientsList(asylumCase);
         verify(asylumCase, times(1)).read(REVOKE_ACCESS_DL, DynamicList.class);
         assertTrue(recipients.isEmpty());
     }
@@ -93,20 +93,20 @@ public class CaseRevokedV2PersonalisationTest {
     public void recipients_list_should_return_revoke_empty_if_dl_has_invalid_value_label() {
         DynamicList dynamicList = new DynamicList(new Value("someIdamCode", "invalidLabel"), List.of(userValue));
         when(asylumCase.read(REVOKE_ACCESS_DL, DynamicList.class)).thenReturn(Optional.of(dynamicList));
-        Set<String> recipients = caseRevokedV2Personalisation.getRecipientsList(asylumCase);
+        Set<String> recipients = revokeCitizenAccessPersonalisation.getRecipientsList(asylumCase);
         verify(asylumCase, times(1)).read(REVOKE_ACCESS_DL, DynamicList.class);
         assertTrue(recipients.isEmpty());
     }
 
     public void should_return_given_template_id() {
         assertEquals(templateId,
-            caseRevokedV2Personalisation.getTemplateId());
+            revokeCitizenAccessPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_CASE_REVOKED_V2_EMAIL",
-            caseRevokedV2Personalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_REVOKE_CITIZEN_ACCESS_EMAIL",
+            revokeCitizenAccessPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class CaseRevokedV2PersonalisationTest {
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
-            caseRevokedV2Personalisation.getPersonalisation(callback);
+            revokeCitizenAccessPersonalisation.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
         assertEquals(personalisation.get("appealReferenceNumber"), appealReferenceNumber);
@@ -141,7 +141,7 @@ public class CaseRevokedV2PersonalisationTest {
     public void should_throw_exception_when_callback_is_null() {
 
         NullPointerException exception = assertThrows(NullPointerException.class,
-            () -> caseRevokedV2Personalisation.getPersonalisation((Callback<AsylumCase>) null));
+            () -> revokeCitizenAccessPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
         assertEquals("callback must not be null", exception.getMessage());
     }
 }

@@ -7899,11 +7899,11 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> generateRevokeAccessV2NotificationHandler(
-        @Qualifier("generateRevokeAccessV2NotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> generateRevokeCitizenAccessNotificationHandler(
+        @Qualifier("generateRevokeCitizenAccessNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == REVOKE_CASE_ACCESS_V2,
+                && callback.getEvent() == REVOKE_CITIZEN_ACCESS,
             notificationGenerators
         );
     }
