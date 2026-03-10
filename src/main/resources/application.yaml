@@ -1512,6 +1512,20 @@ govnotify:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
     revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
+    nlr:
+      sendInviteToNonLegalRep:
+        email: 7d3374d0-4dbb-4993-89d1-997c73eb7ed8
+      sendJoinAppealPin:
+        email: adb7418a-d54d-4f3c-8cc5-47dfabca3bad
+      joinAppealConfirmation:
+        email: 92b3ec95-cfc1-417e-a2f4-4cf3e9f84e5d
+        appellant:
+          email: c56dcb93-7c07-4fcc-9d48-c7e9814b3643
+          sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
+      appealUpdated:
+        email: 1f917848-0dd7-4f2e-987a-e574658415b1
+      nlrPhoneNumberSubmitted:
+        email: 989c80f9-df20-4c15-876d-911c3beec88a
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1682,6 +1696,10 @@ security:
       - "uploadAddendumEvidenceLegalRep"
       - "applyForFTPAAppellant"
       - "requestFeeRemission"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
+      - "nlrPhoneNumberSubmitted"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -1776,6 +1794,9 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1841,6 +1862,9 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1906,6 +1930,9 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -1971,6 +1998,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2016,6 +2046,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2061,6 +2094,9 @@ security:
       - "editDocuments"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2106,6 +2142,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2151,6 +2190,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2196,6 +2238,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2515,6 +2560,10 @@ security:
       - "changeHearingCentre"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
+      - "nlrPhoneNumberSubmitted"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"

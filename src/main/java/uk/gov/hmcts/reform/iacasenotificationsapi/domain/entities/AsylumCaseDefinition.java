@@ -403,6 +403,9 @@ public enum AsylumCaseDefinition {
     APPELLANT_PIN_IN_POST(
         "appellantPinInPost", new TypeReference<PinInPostDetails>(){}),
 
+    JOIN_APPEAL_PIN(
+        "joinAppealPin", new TypeReference<PinInPostDetails>(){}),
+
     APPELLANT_HAS_FIXED_ADDRESS("appellantHasFixedAddress", new TypeReference<YesOrNo>(){}),
 
     IS_INTEGRATED(
@@ -449,6 +452,12 @@ public enum AsylumCaseDefinition {
 
     REVOKE_ACCESS_DL(
         "revokeAccessDl", new TypeReference<DynamicList>(){}),
+
+    NLR_EMAIL(
+        "nlrEmail", new TypeReference<String>() {}),
+
+    NLR_DETAILS(
+        "nlrDetails", new TypeReference<NonLegalRepDetails>(){}),
 
     REQUEST_FEE_REMISSION_DATE(
         "requestFeeRemissionDate", new TypeReference<String>(){}),
