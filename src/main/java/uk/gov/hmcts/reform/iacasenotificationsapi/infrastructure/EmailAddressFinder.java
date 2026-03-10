@@ -228,4 +228,13 @@ public class EmailAddressFinder {
         }
     }
 
+    public String getCmrHearingCancelledCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
+        final HearingCentre hearingCentre = getHearingCentre(asylumCase, HEARING_CENTRE);
+        if (Arrays.asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
+            return listCaseCaseOfficerEmailAddress;
+        } else {
+            return getHearingCentreEmailAddress(asylumCase);
+        }
+    }
+
 }

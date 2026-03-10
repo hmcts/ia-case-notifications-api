@@ -51,7 +51,7 @@ public class CaseOfficerCmrHearingCancelledPersonalisation implements EmailNotif
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+        return Collections.singleton(emailAddressFinder.getCmrHearingCancelledCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 
     @Override
