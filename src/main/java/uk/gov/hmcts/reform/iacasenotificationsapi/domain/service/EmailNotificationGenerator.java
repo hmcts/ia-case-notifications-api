@@ -45,7 +45,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
 
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createEmail(personalisation, asylumCase, referenceId, callback);
-            notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+            notificationIdAppender.appendAllAsylum(asylumCase, referenceId, notificationIds);
         });
     }
 
