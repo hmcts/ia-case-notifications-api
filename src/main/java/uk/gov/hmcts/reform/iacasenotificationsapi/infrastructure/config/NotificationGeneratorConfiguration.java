@@ -6476,6 +6476,35 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipCmrListingGenerator")
+    public List<NotificationGenerator> aipCmrListingGenerator(
+            AipCmrListingPersonalisationEmail aipCmrListingRelistingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(aipCmrListingRelistingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("aipCmrRelistingGenerator")
+    public List<NotificationGenerator> aipCmrRelistingGenerator(
+            AipCmrListingPersonalisationEmail aipCmrRelistingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(aipCmrRelistingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
     @Bean("internalCaseListedAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseListedAppellantLetterNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
