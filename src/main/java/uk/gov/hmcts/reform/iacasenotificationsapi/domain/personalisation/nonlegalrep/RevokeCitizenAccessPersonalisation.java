@@ -18,22 +18,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class CaseRevokedV2Personalisation implements EmailNotificationPersonalisation {
+public class RevokeCitizenAccessPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String caseRevokedV2TemplateId;
+    private final String revokeCitizenAccessTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public CaseRevokedV2Personalisation(
-        @Value("${govnotify.template.caseRevokedV2.email}") String caseRevokedV2TemplateId,
+    public RevokeCitizenAccessPersonalisation(
+        @Value("${govnotify.template.revokeCitizenAccess.email}") String revokeCitizenAccessTemplateId,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.caseRevokedV2TemplateId = caseRevokedV2TemplateId;
+        this.revokeCitizenAccessTemplateId = revokeCitizenAccessTemplateId;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId() {
-        return caseRevokedV2TemplateId;
+        return revokeCitizenAccessTemplateId;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CaseRevokedV2Personalisation implements EmailNotificationPersonalis
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CASE_REVOKED_V2_EMAIL";
+        return caseId + "_REVOKE_CITIZEN_ACCESS_EMAIL";
     }
 
     @Override

@@ -140,7 +140,7 @@ public class EventTest {
         assertEquals("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString());
         assertEquals("refundConfirmation", Event.REFUND_CONFIRMATION.toString());
         assertEquals("hearingCancelled", HEARING_CANCELLED.toString());
-        assertEquals("revokeCaseAccessV2", REVOKE_CASE_ACCESS_V2.toString());
+        assertEquals("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString());
         assertEquals("sendInviteToNonLegalRep", SEND_INVITE_TO_NON_LEGAL_REP.toString());
         assertEquals("sendPipToNonLegalRep", SEND_PIP_TO_NON_LEGAL_REP.toString());
         assertEquals("joinAppealConfirmation", JOIN_APPEAL_CONFIRMATION.toString());

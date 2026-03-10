@@ -33,7 +33,7 @@ public class LetterNotificationGenerator implements NotificationGenerator {
         personalisationList.forEach(personalisation -> {
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());
             List<String> notificationIds = createLetter(personalisation, asylumCase, referenceId, callback);
-            notificationIdAppender.appendAll(asylumCase, referenceId, notificationIds);
+            notificationIdAppender.appendAllAsylum(asylumCase, referenceId, notificationIds);
         });
     }
 

@@ -1510,7 +1510,7 @@ govnotify:
     editAppealPostSubmit:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
-    caseRevokedV2:
+    revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
     nlr:
       sendInviteToNonLegalRep:
@@ -1793,10 +1793,14 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1861,10 +1865,14 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1929,10 +1937,14 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -1997,10 +2009,14 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2045,10 +2061,14 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2093,10 +2113,14 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2141,10 +2165,14 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2189,10 +2217,14 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2237,10 +2269,14 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2559,11 +2595,15 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+<<<<<<< DIAC-2136-NLR
       - "revokeCaseAccessV2"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "nlrPhoneNumberSubmitted"
+=======
+      - "revokeCitizenAccess"
+>>>>>>> DIAC-2136-revoke-access
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"

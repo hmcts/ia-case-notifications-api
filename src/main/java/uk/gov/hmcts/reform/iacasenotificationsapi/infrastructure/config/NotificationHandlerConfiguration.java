@@ -3129,7 +3129,7 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isRpAndDcAppealType
                     && !isAcceleratedDetainedAppeal(asylumCase)
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                    && !isInternalCase(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()
@@ -3984,10 +3984,10 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
-                    && isPartiallyApproved
-                    && isPaAppeal(asylumCase);
+                       && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                       && !isInternalCase(asylumCase)
+                       && isPartiallyApproved
+                       && isPaAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -4036,13 +4036,11 @@ public class NotificationHandlerConfiguration {
 
                 boolean isRejected = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
                     .map(decision -> REJECTED == decision)
-
-
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                    && !isInternalCase(asylumCase)
                     && isRejected
                     && isPaAppeal(asylumCase);
             },
@@ -7903,11 +7901,11 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> generateRevokeAccessV2NotificationHandler(
-        @Qualifier("generateRevokeAccessV2NotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> generateRevokeCitizenAccessNotificationHandler(
+        @Qualifier("generateRevokeCitizenAccessNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                && callback.getEvent() == REVOKE_CASE_ACCESS_V2,
+                && callback.getEvent() == REVOKE_CITIZEN_ACCESS,
             notificationGenerators
         );
     }

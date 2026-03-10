@@ -131,11 +131,15 @@ public enum Event {
     SEND_PAYMENT_REMINDER_NOTIFICATION("sendPaymentReminderNotification"),
     PROGRESS_MIGRATED_CASE("progressMigratedCase"),
     REFUND_CONFIRMATION("refundConfirmation"),
-    REVOKE_CASE_ACCESS_V2("revokeCaseAccessV2"),
+<<<<<<< DIAC-2136-NLR
+    REVOKE_CITIZEN_ACCESS("revokeCitizenAccess"),
     SEND_INVITE_TO_NON_LEGAL_REP("sendInviteToNonLegalRep"),
     SEND_PIP_TO_NON_LEGAL_REP("sendPipToNonLegalRep"),
     JOIN_APPEAL_CONFIRMATION("joinAppealConfirmation"),
     NLR_PHONE_NUMBER_SUBMITTED("nlrPhoneNumberSubmitted"),
+=======
+    REVOKE_CITIZEN_ACCESS("revokeCitizenAccess"),
+>>>>>>> DIAC-2136-revoke-access
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),
