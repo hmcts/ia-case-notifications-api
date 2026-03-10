@@ -114,18 +114,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalre
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeRemoveDetentionStatusLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
-<<<<<<< DIAC-2136-NLR
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.AppealUpdatedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.CaseRevokedV2Personalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationAppellantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationAppellantPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.NlrPhoneNumberSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.RevokeCitizenAccessPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendInviteToNonLegalRepPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendPipToNonLegalRepPersonalisation;
-=======
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.RevokeCitizenAccessPersonalisation;
->>>>>>> DIAC-2136-revoke-access
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAdjournHearingWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAppellantFtpaSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
