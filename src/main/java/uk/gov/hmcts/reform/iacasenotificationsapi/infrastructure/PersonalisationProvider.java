@@ -125,6 +125,64 @@ public class PersonalisationProvider {
         return caseListingValues.build();
     }
 
+    public static void buildCmrHearingRequirementsFields(AsylumCase asylumCase, Builder<String, String> cmrCaseListingValues){
+
+        final Optional<YesOrNo> cmrHearingReqsProvided = asylumCase.read(CMR_HEARING_REQUIREMENTS_AVAILABLE).orElse(YesOrNo.NO);
+
+        if (cmrHearingReqsProvided.isPresent() && cmrHearingReqsProvided.get().equals(YesOrNo.YES)) {
+
+            cmrCaseListingValues
+                .put("cmrHearingRequirementVulnerabilities", generateAdjustmentOutput(
+                        asylumCase,
+                        CMR_VULNERABILITIES_DECISION_FOR_DISPLAY,
+                        CMR_VULNERABILITIES_TRIBUNAL_RESPONSE,
+                        "No special adjustments are being made to accommodate vulnerabilities"))
+                .put("cmrHearingRequirementMultimedia", generateAdjustmentOutput(
+                        asylumCase,
+                        CMR_MULTIMEDIA_DECISION_FOR_DISPLAY,
+                        CMR_MULTIMEDIA_TRIBUNAL_RESPONSE,
+                        "No multimedia equipment is being provided"))
+                .put("cmrHearingRequirementSingleSexCourt", generateAdjustmentOutput(
+                        asylumCase,
+                        CMR_SINGLE_SEX_COURT_DECISION_FOR_DISPLAY,
+                        CMR_SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
+                        "The court will not be single sex"))
+                .put("cmrHearingRequirementInCameraCourt", generateAdjustmentOutput(asylumCase,
+                        CMR_IN_CAMERA_COURT_DECISION_FOR_DISPLAY,
+                        CMR_IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
+                        "The hearing will be held in public court"))
+                .put("cmrHearingRequirementInCameraCourt", generateAdjustmentOutput(asylumCase,
+                        CMR_OTHER_REQUIREMENTS_FOR_DISPLAY,
+                        CMR_OTHER_REQUIREMENTS_RESPONSE,
+                        "The hearing will be held in public court"))
+                .put("cmrRemoteVideoCallTribunalResponse", readStringCaseField(asylumCase,
+                        CMR_REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
+                        ""));
+        } else {
+            cmrCaseListingValues
+                    .put("cmrHearingRequirementVulnerabilities", readStringCaseField(asylumCase, CMR_LIST_CASE_REQUIREMENTS_VULNERABILITIES,
+                            "No special adjustments are being made to accommodate vulnerabilities"))
+                    .put("cmrHearingRequirementMultimedia", readStringCaseField(asylumCase, CMR_LIST_CASE_REQUIREMENTS_MULTIMEDIA,
+                            "No multimedia equipment is being provided"))
+                    .put("cmrHearingRequirementSingleSexCourt", readStringCaseField(asylumCase, CMR_LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
+                            "The court will not be single sex"))
+                    .put("cmrHearingRequirementInCameraCourt", readStringCaseField(asylumCase, CMR_LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
+                            "The hearing will be held in public court"))
+                    .put("cmrHearingRequirementOther", readStringCaseField(asylumCase, CMR_LIST_CASE_REQUIREMENTS_OTHER,
+                            "No other adjustments are being made"))
+                    .put("cmrRemoteVideoCallTribunalResponse", readStringCaseField(asylumCase, CMR_REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
+                            ""));
+
+        }
+    }
+
+
+
+
+
+
+
+
     public static void buildHearingRequirementsFields(AsylumCase asylumCase, Builder<String, String> caseListingValues) {
 
         final Optional<YesOrNo> isSubmitRequirementsAvailable = asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE);
