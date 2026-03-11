@@ -51,7 +51,7 @@ public class SystemUserAccessTokenProvider implements AccessTokenProvider {
     }
 
     @Override
-    @Cacheable(value = "systemUserTokenCache")
+    @Cacheable(value = "systemUserTokenCache", key = "'systemUserTokenCache'")
     public Optional<String> tryGetAccessToken() {
         try {
             log.debug("Fetching system user access token from IDAM");
