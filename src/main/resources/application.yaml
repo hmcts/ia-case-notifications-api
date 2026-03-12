@@ -315,6 +315,9 @@ govnotify:
       appellant:
         email: 50f1b88e-51d5-446c-b2da-1188feb7e26c
         sms: a7056fd8-6de7-408e-881b-c6f9984fe5cf
+        paPayLater:
+          email: f2f9ddb7-e063-472e-b67d-a5a7882a464a
+          sms: b36db177-96b0-49aa-a234-42b3049f5c0a
     submitReasonsForAppeal:
       appellant:
         email: cd10866a-094d-43aa-bdf5-1e20fda9b10d

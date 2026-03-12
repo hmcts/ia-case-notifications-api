@@ -3402,10 +3402,10 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("aipPaPayLaterCaseBuildingNotificationGenerator")
-    public List<NotificationGenerator> aipPaPayLaterCaseBuildingNotificationHandler(
-            AipPaPayLaterCaseBuildingPersonalisationEmail aipPaPayLaterCaseBuildingPersonalisationEmail,
-            AipPaPayLaterCaseBuildingPersonalisationSms aipPaPayLaterCaseBuildingPersonalisationSms,
+    @Bean("aipPaPayLaterRequestReasonsForAppealNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterRequestReasonsForAppealNotificationHandler(
+            AipPaPayLaterRequestReasonsForAppealPersonalisationEmail aipPaPayLaterRequestReasonsForAppealPersonalisationEmail,
+            AipPaPayLaterRequestReasonsForAppealPersonalisationSms aipPaPayLaterRequestReasonsForAppealPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -3413,14 +3413,14 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                aipPaPayLaterCaseBuildingPersonalisationEmail
+                                aipPaPayLaterRequestReasonsForAppealPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new SmsNotificationGenerator(
                         newArrayList(
-                                aipPaPayLaterCaseBuildingPersonalisationSms
+                                aipPaPayLaterRequestReasonsForAppealPersonalisationSms
                         ),
                         notificationSender,
                         notificationIdAppender

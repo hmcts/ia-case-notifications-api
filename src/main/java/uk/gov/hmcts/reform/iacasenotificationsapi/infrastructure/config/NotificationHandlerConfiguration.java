@@ -7757,8 +7757,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> aipPaPayLaterCaseBuildingNotificationHandler(
-            @Qualifier("aipPaPayLaterCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayLaterRequestReasonsForAppealNotificationHandler(
+            @Qualifier("aipPaPayLaterRequestReasonsForAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
@@ -7776,7 +7776,7 @@ public class NotificationHandlerConfiguration {
                             .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
                             .map(paymentStatus -> paymentStatus == PAID).orElse(false);
 
-                    return callback.getEvent() == BUILD_CASE
+                    return callback.getEvent() == REQUEST_REASONS_FOR_APPEAL
                             && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCorrectAppealType
                             && !isInternalCase(asylumCase)
