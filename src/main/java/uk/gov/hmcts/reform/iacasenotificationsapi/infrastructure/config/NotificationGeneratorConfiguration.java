@@ -48,6 +48,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerChangeHearingCentrePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmaRequirementsSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrHearingCancelledPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerEditListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaDecisionPersonalisation;
@@ -6793,6 +6794,28 @@ public class NotificationGeneratorConfiguration {
                 new EmailNotificationGenerator(
                         newArrayList(
                                 detentionEngagementTeamHearingCancelledProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("cmrHearingCancelledProductionDetainedNotificationGenerator")
+    public List<NotificationGenerator> cmrHearingCancelledProductionDetainedNotificationGenerator(
+            CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerCmrHearingCancelledPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
