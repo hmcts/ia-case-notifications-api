@@ -82,6 +82,12 @@ public class HearingDetailsFinder {
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingDate is not present"));
     }
 
+    public String getCmrHearingDateTime(AsylumCase asylumCase) {
+        return asylumCase
+                .read(AsylumCaseDefinition.CMR_HEARING_DATE, String.class)
+                .orElseThrow(() -> new IllegalStateException("listCaseHearingDate is not present"));
+    }
+
     public String getBailHearingDateTime(BailCase bailCase) {
         return bailCase
             .read(LISTING_HEARING_DATE, String.class)
@@ -116,6 +122,25 @@ public class HearingDetailsFinder {
         if (isVirtualHearing(asylumCase)) {
             return "IAC National (Virtual)";
         } else if (hearingCentre == HearingCentre.REMOTE_HEARING) {
+            return "Remote hearing";
+        } else {
+            return getHearingCentreAddress(asylumCase);
+        }
+    }
+
+    public String getCmrHearingCentreLocation(AsylumCase asylumCase) {
+        if (isCaseUsingLocationRefData(asylumCase)) {
+            return getRefDataLocationAddress(asylumCase);
+        }
+
+        HearingCentre cmrHearingCentre =
+                asylumCase
+                        .read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class)
+                        .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
+
+        if (isVirtualHearing(asylumCase)) {
+            return "IAC National (Virtual)";
+        } else if (cmrHearingCentre == HearingCentre.REMOTE_HEARING) {
             return "Remote hearing";
         } else {
             return getHearingCentreAddress(asylumCase);

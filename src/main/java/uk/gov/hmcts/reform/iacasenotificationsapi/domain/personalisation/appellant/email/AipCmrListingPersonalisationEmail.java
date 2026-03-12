@@ -4,9 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -63,7 +61,7 @@ public class AipCmrListingPersonalisationEmail implements EmailNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (asylumCase.read(IS_REMOTE_CMR_HEARING, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
+        if (asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
             return
                     aipCmrListingRemoteAppellantEmailTemplateId;
         } else {
@@ -82,7 +80,7 @@ public class AipCmrListingPersonalisationEmail implements EmailNotificationPerso
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_LISTED_APPELLANT_EMAIL";
+        return caseId + "_CMR_LISTED_OR_REMOTE_APPELLANT_EMAIL";
     }
 
     @Override
@@ -99,12 +97,12 @@ public class AipCmrListingPersonalisationEmail implements EmailNotificationPerso
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("linkToOnlineService", iaAipFrontendUrl)
-                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+                .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
 
 
-        PersonalisationProvider.buildCmrHearingRequirementsFields(asylumCase, listCaseFields);
+        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
 
         return listCaseFields.build();
     }

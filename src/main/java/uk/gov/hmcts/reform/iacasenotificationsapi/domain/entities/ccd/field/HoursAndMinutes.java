@@ -5,7 +5,7 @@ public class HoursAndMinutes {
     private  String hours;
     private  String minutes;
 
-    public HoursAndMinutes(){
+    public HoursAndMinutes() {
 
         // noop -- for deserializer
     }
@@ -15,11 +15,12 @@ public class HoursAndMinutes {
         this.minutes = minutes;
 
     }
-    public String getHours(){
+
+    public String getHours() {
         return hours;
     }
 
-    public String getMinutes(){
+    public String getMinutes() {
         return minutes;
     }
 }

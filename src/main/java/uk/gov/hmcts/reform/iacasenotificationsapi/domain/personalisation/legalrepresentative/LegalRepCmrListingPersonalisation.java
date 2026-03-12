@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -51,11 +51,7 @@ public class LegalRepCmrListingPersonalisation implements LegalRepresentativeEma
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
 
-        boolean isRemote = asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
-                .map(centre -> centre == HearingCentre.REMOTE_HEARING)
-                .orElse(false);
-
-        if (isRemote) {
+        if (asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
             return legalRepresentativeRemoteCmrTemplateId;
         } else {
             return legalRepresentativeCmrListingTemplateId;

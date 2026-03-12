@@ -6505,6 +6505,7 @@ public class NotificationGeneratorConfiguration {
                 )
         );
     }
+
     @Bean("internalCaseListedAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseListedAppellantLetterNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
