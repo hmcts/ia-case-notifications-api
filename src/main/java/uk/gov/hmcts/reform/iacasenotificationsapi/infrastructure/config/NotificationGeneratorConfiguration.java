@@ -4868,26 +4868,59 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("removeStatutoryTimeframe24WeeksNotificationGenerator")
-    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksNotificationGenerator(
-        AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
-        LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
-        HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficeTransferOutOfStf24WeeksPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
+    @Bean("removeStatutoryTimeframe24WeeksAppellantNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantNotificationGenerator(
+            AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
     ) {
 
         return singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
-                    legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
-                    homeOfficeTransferOutOfStf24WeeksPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            )
-         );
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+    @Bean("removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator(
+            LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeTransferOutOfStf24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator(
+            HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficeTransferOutOfStf24WeeksPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeTransferOutOfStf24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
     }
 
     @Bean("markAppealAsAdaNotificationGenerator")

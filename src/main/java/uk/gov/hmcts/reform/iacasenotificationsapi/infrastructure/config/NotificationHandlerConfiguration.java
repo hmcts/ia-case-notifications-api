@@ -35,6 +35,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
@@ -5676,20 +5677,58 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksNotificationHandler(
-            @Qualifier("removeStatutoryTimeframe24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantNotificationHandler(
+            @Qualifier("removeStatutoryTimeframe24WeeksAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase =
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
+                    Set<String> emails = asylumCase.read(EMAIL, String.class)
+                            .map(Collections::singleton)
+                            .orElse(Collections.emptySet());
+                    log.info("Appellant emails {}", emails);
+                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
+                    log.info("can send 24WeeksNotification to appellant: {}", canSendNotifications);
+                    return canSendNotifications;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksLegalRepNotificationHandler(
+            @Qualifier("removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
+                    String emails = String.join(",", legalRepEmails);
+                    log.info("LegalRepresentative Emails {}", legalRepEmails);
+                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
+                    log.info("can send 24WeeksNotification to LR: {}", canSendNotifications);
+                    return canSendNotifications;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksHomeOfficeNotificationHandler(
+            @Qualifier("removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
-                    log.info("can send 24WeeksNotification: {}", canSendNotifications);
+                    log.info("can send 24WeeksNotification to HO : {}", canSendNotifications);
                     return canSendNotifications;
                 },
                 notificationGenerators,  getErrorHandler()
