@@ -112,8 +112,8 @@ class LegalRepCmrRelistingPersonalisationTest {
     @Test
     void should_return_remote_template_id_for_remote_hearing() {
 
-       when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-       assertEquals(remoteTemplateId, personalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(remoteTemplateId, personalisation.getTemplateId(asylumCase));
     }
 
     @Test
