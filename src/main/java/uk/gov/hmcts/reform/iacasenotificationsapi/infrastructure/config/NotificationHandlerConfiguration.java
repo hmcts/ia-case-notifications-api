@@ -7227,6 +7227,9 @@ public class NotificationHandlerConfiguration {
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+
+//                            && !isInternalCase(callback.getCaseDetails().getCaseData()) confirm if we want this as aip conditions instead
+//                            && isAipJourney(callback.getCaseDetails().getCaseData()),
                 },
                 notificationGenerators,
                 getErrorHandler()
