@@ -65,6 +65,7 @@ public class SystemUserAccessTokenProvider implements AccessTokenProvider {
             tokenRequest.add("password", systemPassword);
             tokenRequest.add("scope", systemUserScope);
 
+            log.info("System user token expired. Getting a new token in ia-case-notifications-api");
             Token tokenResponse = idamApi.token(tokenRequest);
             
             if (tokenResponse == null || tokenResponse.getAccessToken() == null || tokenResponse.getAccessToken().trim().isEmpty()) {
