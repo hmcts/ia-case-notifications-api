@@ -1509,7 +1509,7 @@ govnotify:
           email: 3b756f11-4c9c-4aac-9f39-b1d594a933b3
     editAppealPostSubmit:
       appellant:
-        letter: e68faac4-cf30-4e0b-b746-a7bafHi Ram, 036dc65
+        letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
     removeStatutoryTimeframe24Weeks:
       homeOffice:
         email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
