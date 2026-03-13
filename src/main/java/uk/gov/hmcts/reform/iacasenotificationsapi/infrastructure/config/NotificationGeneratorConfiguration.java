@@ -6446,6 +6446,103 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("legalRepCmrListingGenerator")
+    public List<NotificationGenerator> legalRepCmrListingGenerator(
+            LegalRepCmrListingPersonalisation legalRepCmrListingRelistingPersonalisation,
+            CaseOfficerCmrListingPersonalisation caseOfficerListingRelistingPersonalisation,
+            HomeOfficeCmrListingPersonalisation homeOfficeCmrListingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepCmrListingRelistingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerListingRelistingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeCmrListingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legalRepCmrRelistingGenerator")
+    public List<NotificationGenerator> legalRepCmrRelistingGenerator(
+            LegalRepCmrListingPersonalisation legalRepCmrRelistingPersonalisation,
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepCmrRelistingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(caseOfficerCmrRelistingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeCmrRelistingPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("aipCmrListingGenerator")
+    public List<NotificationGenerator> aipCmrListingGenerator(
+            AipCmrListingPersonalisationEmail aipCmrListingRelistingPersonalisationEmail,
+            AipCmrListingPersonalisationSms aipCmrListingRelistingPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(aipCmrListingRelistingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(aipCmrListingRelistingPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("aipCmrRelistingGenerator")
+    public List<NotificationGenerator> aipCmrRelistingGenerator(
+            AipCmrListingPersonalisationEmail aipCmrRelistingPersonalisationEmail,
+            AipCmrListingPersonalisationSms aipCmrRelistingPersonalisationSms,
+
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(aipCmrRelistingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(aipCmrRelistingPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("internalCaseListedAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalCaseListedAppellantLetterNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
