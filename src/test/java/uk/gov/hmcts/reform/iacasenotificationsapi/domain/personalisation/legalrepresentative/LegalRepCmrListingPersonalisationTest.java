@@ -10,6 +10,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -102,7 +103,7 @@ class LegalRepCmrListingPersonalisationTest {
     @Test
     void should_return_template_id_for_non_remote_hearing() {
 
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class))
                 .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
         assertEquals(templateId, personalisation.getTemplateId(asylumCase));
@@ -111,8 +112,7 @@ class LegalRepCmrListingPersonalisationTest {
     @Test
     void should_return_remote_template_id_for_remote_hearing() {
 
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
+        when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals(remoteTemplateId, personalisation.getTemplateId(asylumCase));
     }
