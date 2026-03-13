@@ -11,11 +11,15 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fix
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
 
@@ -23,7 +27,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -37,8 +43,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @Slf4j
@@ -95,6 +104,95 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(2);
         assertThat(notifications.get(0).getId()).contains("_RESPONDENT_NON_STANDARD_DIRECTION");
         assertThat(notifications.get(0).getValue()).matches(UUID_PATTERN);
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_email_to_all_three_users() {
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "appellant@domain.com");
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+        assertThat(notifications.size()).isEqualTo(3);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_email_to_legal_rep_and_home_office() {
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", null);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(2);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_email_to_appellant_and_hoe_office() {
+        PreSubmitCallbackResponseForTest response = mockResponse(null, "appellant@domain.com");
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(2);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+    }
+
+    private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail) {
+        addServiceAuthStub(server);
+        addNotificationEmailStub(server);
+        when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
+                .thenReturn(someNotificationId);
+        return aboutToSubmit(callback()
+                .event(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS)
+                .caseDetails(someCaseDetailsWith()
+                        .state(APPEAL_SUBMITTED)
+                        .caseData(anAsylumCase()
+                                .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
+                                .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
+                                .with(EMAIL, appellantEmail)
+                                .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, lrEmail)
+                                .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
+                                .with(SUBSCRIPTIONS, anySubscriptions())
+                                .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
+                        )));
+    }
+
+    private static @NotNull Optional<List<IdValue<Subscriber>>> anySubscriptions() {
+        Subscriber subscriber = new Subscriber(
+                SubscriberType.APPELLANT, //subscriberType
+                "ppellantInSubscription@gmail.com", //email
+                YesOrNo.YES, // wants email
+                "", //mobileNumber
+                YesOrNo.NO // wants sms
+        );
+
+        return Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber)));
     }
 
     private PreSubmitCallbackResponseForTest aboutToSubmit(CallbackForTest.CallbackForTestBuilder callback) {
