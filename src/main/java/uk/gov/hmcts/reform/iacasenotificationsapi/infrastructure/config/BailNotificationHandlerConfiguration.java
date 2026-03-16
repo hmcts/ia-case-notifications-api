@@ -172,11 +172,10 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                    && List.of(Event.UPLOAD_SIGNED_DECISION_NOTICE, Event.UPLOAD_SIGNED_DECISION_NOTICE_CONDITIONAL_GRANT).contains(callback.getEvent()));
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return ((callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE)
-                        && isLegallyRepresented(bailCase));
+                    return isLegallyRepresented(bailCase);
                 } else {
                     return false;
                 }
@@ -193,11 +192,10 @@ public class BailNotificationHandlerConfiguration {
         return new BailNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isAllowedBailCase = (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE);
+                    && List.of(Event.UPLOAD_SIGNED_DECISION_NOTICE, Event.UPLOAD_SIGNED_DECISION_NOTICE_CONDITIONAL_GRANT).contains(callback.getEvent()));
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
-                    return ((callback.getEvent() == Event.UPLOAD_SIGNED_DECISION_NOTICE)
-                        && !isLegallyRepresented(bailCase));
+                    return !isLegallyRepresented(bailCase);
                 } else {
                     return false;
                 }
@@ -534,16 +532,16 @@ public class BailNotificationHandlerConfiguration {
         return new BailPostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isNocBail = (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                        && callback.getEvent() == Event.NOC_REQUEST_BAIL);
+                    && callback.getEvent() == Event.NOC_REQUEST_BAIL);
 
                 if (!isNocBail) {
                     return false;
                 }
 
                 return Optional.ofNullable(callback.getCaseDetails())
-                        .map(CaseDetails::getCaseData)
-                        .map(this::hasLrEmail)
-                        .orElse(false);
+                    .map(CaseDetails::getCaseData)
+                    .map(this::hasLrEmail)
+                    .orElse(false);
 
             },
             bailNotificationGenerators
@@ -557,16 +555,16 @@ public class BailNotificationHandlerConfiguration {
         return new BailPostSubmitNotificationHandler(
             (callbackStage, callback) -> {
                 boolean isNocBail = (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                        && callback.getEvent() == Event.NOC_REQUEST_BAIL);
+                    && callback.getEvent() == Event.NOC_REQUEST_BAIL);
 
                 if (!isNocBail) {
                     return false;
                 }
 
                 return Optional.ofNullable(callback.getCaseDetails())
-                        .map(CaseDetails::getCaseData)
-                        .map(bailCase -> !hasLrEmail(bailCase))
-                        .orElse(false);
+                    .map(CaseDetails::getCaseData)
+                    .map(bailCase -> !hasLrEmail(bailCase))
+                    .orElse(false);
             },
             bailNotificationGenerators
         );
@@ -773,7 +771,7 @@ public class BailNotificationHandlerConfiguration {
 
     private boolean hasLrEmail(BailCase bailCase) {
         return bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)
-                .filter((email) -> !email.isEmpty())
-                .isPresent();
+            .filter((email) -> !email.isEmpty())
+            .isPresent();
     }
 }
