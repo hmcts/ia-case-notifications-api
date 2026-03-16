@@ -480,6 +480,9 @@ govnotify:
         remoteHearing:
           legalRep:
             email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
+#            need to confirm the case officer template for this below V
+          caseOfficer:
+            email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
       caseEdited:
         homeOffice:
           email: 071cc334-89f7-4bce-bf88-637057f4811a
@@ -493,6 +496,9 @@ govnotify:
           email: 29985e49-8d2a-4b94-9f0b-1484e1324efd
       caseEditedRemoteHearing:
         legalRep:
+          email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
+#        need to confirm the case officer template for this below V
+        caseOfficer:
           email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     appealOutcomeAllowed:
       homeOffice:

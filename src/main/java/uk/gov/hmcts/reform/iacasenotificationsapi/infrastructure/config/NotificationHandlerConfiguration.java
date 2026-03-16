@@ -7257,6 +7257,38 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipCmrListingSmsNotificationHandler(
+            @Qualifier("cmrListingAipSmsAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callback.getEvent() == CMR_LISTING
+                            && isAipJourney(asylumCase)
+                            && isSmsPreferred(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipCmrRelistingSmsNotificationHandler(
+            @Qualifier("cmrRelistingAipSmsAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    return callback.getEvent() == CMR_RELISTING
+                            && isAipJourney(asylumCase)
+                            && isSmsPreferred(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalCaseListedLrLetterNotificationHandler(
         @Qualifier("internalCaseListedLrLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

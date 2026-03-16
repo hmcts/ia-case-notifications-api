@@ -42,33 +42,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyfo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.DecideCostsLegalRepPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsApplicantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.RespondToCostsRespondentPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerAdjournHearingWithoutDatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerAppealOutcomeHomeOfficeNotificationFailedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerChangeHearingCentrePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmaRequirementsSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerEditListingPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaDecisionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerHearingBundleFailedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerHomeOfficeResponseUploadedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerListCasePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerListCmaPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerMakeAnApplicationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerManageFeeUpdatePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerPendingPaymentPaidPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerReasonForAppealSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerRecordAdjournmentDetailsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerRemoveRepresentationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerRequestHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerRespondentEvidenceSubmittedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerSubmitAppealPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerSubmitCasePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerSubmittedHearingRequirementsPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerUploadAddendumEvidencePersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerUploadAdditionalEvidencePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument.CaseOfficerEditDocumentsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAdaReviewHearingRequirementsPersonalisation;
@@ -6503,7 +6477,6 @@ public class NotificationGeneratorConfiguration {
     @Bean("aipCmrListingGenerator")
     public List<NotificationGenerator> aipCmrListingGenerator(
             AipCmrListingPersonalisationEmail aipCmrListingRelistingPersonalisationEmail,
-            AipCmrListingPersonalisationSms aipCmrListingRelistingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -6512,19 +6485,29 @@ public class NotificationGeneratorConfiguration {
                         newArrayList(aipCmrListingRelistingPersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
-                ),
+                )
+        );
+    }
+
+    @Bean("cmrRelistingAipSmsAppellantNotificationGenerator")
+    public List<NotificationGenerator> cmrRelistingAipSmsAppellantNotificationGenerator(
+            AppellantCmrRelistingPersonalisationSms appellantCmrRelistingPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
                 new SmsNotificationGenerator(
-                        newArrayList(aipCmrListingRelistingPersonalisationSms),
+                        newArrayList(appellantCmrRelistingPersonalisationSms),
                         notificationSender,
                         notificationIdAppender
                 )
+
         );
     }
 
     @Bean("aipCmrRelistingGenerator")
     public List<NotificationGenerator> aipCmrRelistingGenerator(
             AipCmrListingPersonalisationEmail aipCmrRelistingPersonalisationEmail,
-            AipCmrListingPersonalisationSms aipCmrRelistingPersonalisationSms,
 
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -6534,12 +6517,23 @@ public class NotificationGeneratorConfiguration {
                         newArrayList(aipCmrRelistingPersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
-                ),
+                )
+        );
+    }
+
+    @Bean("cmrListingAipSmsAppellantNotificationGenerator")
+    public List<NotificationGenerator> cmrListingAipSmsAppellantNotificationGenerator(
+            AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
                 new SmsNotificationGenerator(
-                        newArrayList(aipCmrRelistingPersonalisationSms),
+                        newArrayList(appellantCmrListingPersonalisationSms),
                         notificationSender,
                         notificationIdAppender
                 )
+
         );
     }
 
