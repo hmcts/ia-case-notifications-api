@@ -44,8 +44,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if(asylumCase.read(CMR_IS_REMOTE_HEARING).orElse(YesOrNo.NO).equals(YesOrNo.YES))
-        {
+        if (asylumCase.read(CMR_IS_REMOTE_HEARING).orElse(YesOrNo.NO).equals(YesOrNo.YES)) {
             return caseOfficerRemoteCmrRelistingTemplateId;
         } else {
             return caseOfficerCmrRelistingTemplateId;
@@ -63,7 +62,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
         return caseId + "_CMR_LISTED_CASE_OFFICER";
     }
 
-//    need to confirm placeholders here
+    //    need to confirm placeholders here
     @Override
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");

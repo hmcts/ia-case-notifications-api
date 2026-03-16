@@ -18,8 +18,6 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_IS_REMOTE_HEARING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 @Service
 public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPersonalisation {
@@ -46,8 +44,7 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if(asylumCase.read(CMR_IS_REMOTE_HEARING).orElse(YesOrNo.NO).equals(YesOrNo.YES))
-        {
+        if (asylumCase.read(CMR_IS_REMOTE_HEARING).orElse(YesOrNo.NO).equals(YesOrNo.YES)) {
             return caseOfficerRemoteCmrListingTemplateId;
         } else {
             return caseOfficerCmrListingTemplateId;
@@ -65,7 +62,7 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
         return caseId + "_CMR_LISTED_CASE_OFFICER";
     }
 
-//    need to confirm placeholders here
+    //    need to confirm placeholders here
     @Override
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
