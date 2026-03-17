@@ -89,6 +89,7 @@ public enum Event {
     SUBMIT_APPLICATION("submitApplication"),
     UPLOAD_BAIL_SUMMARY("uploadBailSummary"),
     UPLOAD_SIGNED_DECISION_NOTICE("uploadSignedDecisionNotice"),
+    UPLOAD_SIGNED_DECISION_NOTICE_CONDITIONAL_GRANT("uploadSignedDecisionNoticeConditionalGrant"),
     END_APPLICATION("endApplication"),
     UPLOAD_DOCUMENTS("uploadDocuments"),
     SEND_BAIL_DIRECTION("sendBailDirection"),
