@@ -125,6 +125,44 @@ public class PersonalisationProvider {
         return caseListingValues.build();
     }
 
+    public Map<String, String> getCmrRelistingPersonalisation(Callback<AsylumCase> callback) {
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+
+        final String hearingDateTime =
+                hearingDetailsFinder.getCmrHearingDateTime(asylumCase);
+
+        String hearingCentreNameBefore = "";
+        String oldHearingDate = "";
+
+
+        if (caseDetailsBefore.isPresent()) {
+
+            AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
+
+            hearingCentreNameBefore =
+                    hearingDetailsFinder.getOldHearingCentreName(asylumCaseBefore);
+
+            oldHearingDate =
+                    asylumCaseBefore.read(LIST_CASE_HEARING_DATE, String.class).orElse("");
+        }
+
+        final Builder<String, String> caseListingValues = ImmutableMap
+                .<String, String>builder()
+                .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
+                .put("oldHearingCentre", hearingCentreNameBefore)
+                .put("oldHearingDate", oldHearingDate.isEmpty() ? oldHearingDate : dateTimeExtractor.extractHearingDate(oldHearingDate))
+                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
+                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
+                .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
+                .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
+
+        buildHearingRequirementsFields(asylumCase, caseListingValues);
+
+        return caseListingValues.build();
+    }
+
     public static void buildHearingRequirementsFields(AsylumCase asylumCase, Builder<String, String> caseListingValues) {
 
         final Optional<YesOrNo> isSubmitRequirementsAvailable = asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE);
@@ -253,8 +291,10 @@ public class PersonalisationProvider {
             immutableMap.putAll(getChangeDirectionDueDatePersonalisation(callback));
         } else if (callback.getEvent() == Event.EDIT_CASE_LISTING) {
             immutableMap.putAll(getEditCaseListingPersonalisation(callback));
-        }
+        } else if (callback.getEvent() == CMR_RELISTING) {
+            immutableMap.putAll(getCmrRelistingPersonalisation(callback));
 
+        }
         return immutableMap;
     }
 

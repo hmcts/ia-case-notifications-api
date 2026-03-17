@@ -1,6 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import com.google.common.collect.ImmutableMap;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -10,8 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,22 +23,20 @@ import static java.util.Objects.requireNonNull;
 
 @Service
 public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationPersonalisation {
-
     private final String endAppealAppellantSmsTemplateId;
-    private final String iaAipFrontendUrl;
-    private final String iaAipFrontendPathToJudgeReview;
+    private final String iaExUiFrontendUrl;
     private final RecipientsFinder recipientsFinder;
+    private final PersonalisationProvider personalisationProvider;
 
     public AppellantCmrRelistingPersonalisationSms(
-            @Value("${govnotify.template.endAppeal.appellant.sms}") String endAppealAppellantSmsTemplateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            @Value("${iaAipFrontendPathToJudgeReview}") String iaAipFrontendPathToJudgeReview,
-            RecipientsFinder recipientsFinder
-    ) {
+            @Value("${govnotify.template.listAssistHearing.caseEdited.appellant.sms}") String endAppealAppellantSmsTemplateId,
+            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            RecipientsFinder recipientsFinder,
+            PersonalisationProvider personalisationProvider) {
         this.endAppealAppellantSmsTemplateId = endAppealAppellantSmsTemplateId;
-        this.iaAipFrontendUrl = iaAipFrontendUrl;
-        this.iaAipFrontendPathToJudgeReview = iaAipFrontendPathToJudgeReview;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.recipientsFinder = recipientsFinder;
+        this.personalisationProvider = personalisationProvider;
     }
 
 
@@ -51,31 +52,20 @@ public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationP
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_END_APPEAL_AIP_APPELLANT_SMS";
+        return caseId + "_CMR_RELISTED_APPELLANT_SMS";
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
-
-        return
-                ImmutableMap
-                        .<String, String>builder()
-                        .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                        .put("endAppealApprover", asylumCase.read(AsylumCaseDefinition.END_APPEAL_APPROVER_TYPE, String.class).orElse(""))
-                        .put("endAppealDate", asylumCase.read(AsylumCaseDefinition.END_APPEAL_DATE, String.class)
-                                .map(date -> LocalDate.parse(date).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
-                                .orElse(""))
-                        .put("outcomeOfAppeal", asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse(""))
-                        .put("Hyperlink to service", iaAipFrontendUrl)
-                        .put("direct link to judges’ review page", iaAipFrontendUrl + iaAipFrontendPathToJudgeReview)
-                        .build();
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "asylumCase must not be null");Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+        return ImmutableMap
+                .<String, String>builder()
+                .putAll(personalisationProvider.getPersonalisation(callback))
+                .put("hyperlink to service", iaExUiFrontendUrl)
+                .build();
     }
 
     protected boolean isAppealListed(AsylumCase asylumCase) {
-        final Optional<HearingCentre> appealListed = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
-
-        return appealListed.isPresent();
+        return AsylumCaseUtils.isAppealListed(asylumCase);
     }
 }
