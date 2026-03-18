@@ -5490,7 +5490,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                    && !isInternalCase(asylumCase)
+                    && isRepJourney(asylumCase)
                     && asylumCase.read(HAS_SERVICE_REQUEST_ALREADY, YesOrNo.class).isPresent()
                     && (isPaAppealType && paAppealTypePaymentOption.equals("payNow"))
                     && !isAcceleratedDetainedAppeal(asylumCase);
@@ -5810,26 +5811,29 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationHandler(
-        @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
+            @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
+                (callbackStage, callback) -> {
 
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
+                    boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isInternalCase(asylumCase)
-                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
-                    && isSubmissionOutOfTime(asylumCase)
-                    && isPaymentPending;
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == Event.SUBMIT_APPEAL
+                            && isInternalCase(asylumCase)
+                            && (!isAppellantInDetention(asylumCase)
+                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInFacilityType(asylumCase, OTHER))
+                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
+                            && isSubmissionOutOfTime(asylumCase)
+                            && isPaymentPending;
 
-            },
-            notificationGenerators,
-            getErrorHandler()
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
