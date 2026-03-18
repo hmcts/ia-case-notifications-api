@@ -144,11 +144,12 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(addressLine1, personalisation.get("address_line_2"));
+        assertEquals(addressLine2, personalisation.get("address_line_3"));
+        assertEquals(addressLine3, personalisation.get("address_line_4"));
+        assertEquals(postTown, personalisation.get("address_line_5"));
+        assertEquals(postCode, personalisation.get("address_line_6"));
     }
 
     @Test
@@ -160,11 +161,12 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(addressLine1, personalisation.get("address_line_2"));
+        assertEquals(addressLine2, personalisation.get("address_line_3"));
+        assertEquals(addressLine3, personalisation.get("address_line_4"));
+        assertEquals(postTown, personalisation.get("address_line_5"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_6"));
     }
 
     @Test

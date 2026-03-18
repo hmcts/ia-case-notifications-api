@@ -102,13 +102,13 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
     @Test
     void should_return_address_in_correct_format_appellant_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_appellant_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
@@ -166,11 +166,12 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(addressLine1, personalisation.get("address_line_2"));
+        assertEquals(addressLine2, personalisation.get("address_line_3"));
+        assertEquals(addressLine3, personalisation.get("address_line_4"));
+        assertEquals(postTown, personalisation.get("address_line_5"));
+        assertEquals(postCode, personalisation.get("address_line_6"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
@@ -188,11 +189,12 @@ class AppellantInternalCaseSubmitAppealOutOfTimeWithRemissionLetterPersonalisati
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(addressLine1, personalisation.get("address_line_2"));
+        assertEquals(addressLine2, personalisation.get("address_line_3"));
+        assertEquals(addressLine3, personalisation.get("address_line_4"));
+        assertEquals(postTown, personalisation.get("address_line_5"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_6"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));

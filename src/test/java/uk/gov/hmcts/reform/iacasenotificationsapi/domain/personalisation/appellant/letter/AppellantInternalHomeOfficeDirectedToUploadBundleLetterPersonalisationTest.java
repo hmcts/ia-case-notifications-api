@@ -103,13 +103,13 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
     @Test
     void should_return_address_in_correct_format_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
@@ -142,11 +142,12 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode.toString(), personalisation.get("address_line_5"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(addressLine1, personalisation.get("address_line_2"));
+        assertEquals(addressLine2, personalisation.get("address_line_3"));
+        assertEquals(addressLine3, personalisation.get("address_line_4"));
+        assertEquals(postTown, personalisation.get("address_line_5"));
+        assertEquals(postCode.toString(), personalisation.get("address_line_6"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));

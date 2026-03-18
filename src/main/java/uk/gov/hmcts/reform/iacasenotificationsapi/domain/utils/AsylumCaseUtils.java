@@ -267,6 +267,10 @@ public class AsylumCaseUtils {
 
         List<String> appellantAddressAsList = new ArrayList<>();
 
+        String appellantGivenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse("");
+        String appellantFamilyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse("");
+        appellantAddressAsList.add(appellantGivenNames + " " + appellantFamilyName);
+
         appellantAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("appellantAddress line 1 is not present")));
         String addressLine2 = address.getAddressLine2().orElse(null);
         String addressLine3 = address.getAddressLine3().orElse(null);
@@ -294,6 +298,10 @@ public class AsylumCaseUtils {
                 .orElseThrow(() -> new IllegalStateException("OOC Address line 2 is not present"));
 
         List<String> appellantAddressAsList = new ArrayList<>();
+
+        String appellantGivenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse("");
+        String appellantFamilyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse("");
+        appellantAddressAsList.add(appellantGivenNames + " " + appellantFamilyName);
 
         appellantAddressAsList.add(oocAddressLine1);
         appellantAddressAsList.add(oocAddressLine2);

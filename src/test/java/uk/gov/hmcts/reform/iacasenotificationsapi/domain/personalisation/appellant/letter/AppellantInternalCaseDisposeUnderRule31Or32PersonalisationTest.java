@@ -180,16 +180,18 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
             appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation(callback);
 
         if (appellantInUk == YesOrNo.YES) {
-            assertEquals(addressLine1, personalisation.get("address_line_1"));
-            assertEquals(addressLine2, personalisation.get("address_line_2"));
-            assertEquals(addressLine3, personalisation.get("address_line_3"));
-            assertEquals(postTown, personalisation.get("address_line_4"));
-            assertEquals(postCode, personalisation.get("address_line_5"));
+            assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+            assertEquals(addressLine1, personalisation.get("address_line_2"));
+            assertEquals(addressLine2, personalisation.get("address_line_3"));
+            assertEquals(addressLine3, personalisation.get("address_line_4"));
+            assertEquals(postTown, personalisation.get("address_line_5"));
+            assertEquals(postCode, personalisation.get("address_line_6"));
         } else {
-            assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-            assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-            assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-            assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+            assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+            assertEquals(oocAddressLine1, personalisation.get("address_line_2"));
+            assertEquals(oocAddressLine2, personalisation.get("address_line_3"));
+            assertEquals(oocAddressLine3, personalisation.get("address_line_4"));
+            assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         }
 
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));

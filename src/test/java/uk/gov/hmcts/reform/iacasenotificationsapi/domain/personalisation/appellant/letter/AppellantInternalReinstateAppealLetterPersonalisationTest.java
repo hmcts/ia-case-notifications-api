@@ -109,10 +109,10 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
     void should_return_appellant_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalReinstateAppealLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalReinstateAppealLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalReinstateAppealLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalReinstateAppealLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
@@ -168,11 +168,12 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(addressLine1, personalisation.get("address_line_2"));
+        assertEquals(addressLine2, personalisation.get("address_line_3"));
+        assertEquals(addressLine3, personalisation.get("address_line_4"));
+        assertEquals(postTown, personalisation.get("address_line_5"));
+        assertEquals(postCode, personalisation.get("address_line_6"));
         assertEquals(LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("reinstateAppealDate"));
         assertEquals(decisionMaker, personalisation.get("decisionMaker"));
         assertEquals(reinstateReason, personalisation.get("reinstateReason"));
@@ -195,10 +196,11 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
+        assertEquals(oocAddressLine1, personalisation.get("address_line_2"));
+        assertEquals(oocAddressLine2, personalisation.get("address_line_3"));
+        assertEquals(oocAddressLine3, personalisation.get("address_line_4"));
+        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
         assertEquals(LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("reinstateAppealDate"));
         assertEquals(decisionMaker, personalisation.get("decisionMaker"));
         assertEquals(reinstateReason, personalisation.get("reinstateReason"));
