@@ -58,7 +58,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
         Set<String> emails = asylumCase.read(EMAIL, String.class)
                 .map(Collections::singleton)
                 .orElse(Collections.emptySet());
-        log.info("getRecipientsList -> Appellant emails {}", emails);
+        log.info("getRecipientsList -> Appellant-emails {}", emails);
         return emails;
     }
 

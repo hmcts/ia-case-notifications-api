@@ -5689,10 +5689,11 @@ public class NotificationHandlerConfiguration {
                     Set<String> emails = asylumCase.read(EMAIL, String.class)
                             .map(Collections::singleton)
                             .orElse(Collections.emptySet());
-                    log.info("Appellant emails {}", emails);
+                    log.info("In Handler Appellant emails {}", emails);
+                    log.info("In Handler emails.isEmpty() {}", emails.isEmpty());
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
-                    log.info("can send 24WeeksNotification to appellant: {}", canSendNotifications);
+                    log.info("ABC can send 24WeeksNotification to appellant: {}", canSendNotifications);
                     return canSendNotifications;
                 },
                 notificationGenerators,  getErrorHandler()
