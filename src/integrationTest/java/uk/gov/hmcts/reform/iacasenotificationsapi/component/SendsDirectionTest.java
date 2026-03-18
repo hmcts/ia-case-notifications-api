@@ -146,7 +146,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_remove_email_to_appellant_and_hoe_office() {
+    void should_send_24weeks_remove_email_to_appellant_and_ho_office() {
         PreSubmitCallbackResponseForTest response = mockResponse(null, "appellant@domain.com");
         Optional<List<IdValue<String>>> notificationsSent =
                 response
@@ -160,6 +160,24 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
         assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_email_to_ho_office() {
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(1);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
         assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
     }
 
