@@ -161,7 +161,11 @@ public class EventTest {
             Arguments.of("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString()),
             Arguments.of("refundConfirmation", Event.REFUND_CONFIRMATION.toString()),
             Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
-            Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
+            Arguments.of("revokeCitizenAccess", Event.REVOKE_CITIZEN_ACCESS.toString()),
+            Arguments.of("sendInviteToNonLegalRep", Event.SEND_INVITE_TO_NON_LEGAL_REP.toString()),
+            Arguments.of("sendPipToNonLegalRep", Event.SEND_PIP_TO_NON_LEGAL_REP.toString()),
+            Arguments.of("joinAppealConfirmation", Event.JOIN_APPEAL_CONFIRMATION.toString()),
+            Arguments.of("nlrPhoneNumberSubmitted", Event.NLR_PHONE_NUMBER_SUBMITTED.toString()),
             Arguments.of("unknown", Event.UNKNOWN.toString()));
     }
 }
