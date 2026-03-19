@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.up
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal.UpperTribunalDecisionRefusedImaPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailEmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificationIdAppender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailSmsNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.BailGovNotifyNotificationSender;
 
@@ -31,7 +31,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> startApplicationDisposalNotificationGenerator(
         LegalRepresentativeBailApplicationStartedDisposalPersonalisationEmail legalRepresentativeBailApplicationStartedDisposalPersonalisationEmail,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender
+        NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
             new BailEmailNotificationGenerator(
@@ -46,7 +46,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> editBailApplicationDisposalNotificationGenerator(
         LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender
+        NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
             new BailEmailNotificationGenerator(
@@ -64,7 +64,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
         ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -88,7 +88,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
         ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -110,7 +110,7 @@ public class BailNotificationGeneratorConfiguration {
         AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
         LegalRepresentativeBailSummaryUploadedPersonalisation legalRepresentativeBailSummaryUploadedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -126,7 +126,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> uploadSummaryWithoutLrNotificationGenerator(
         AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -143,7 +143,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
         LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
@@ -165,7 +165,7 @@ public class BailNotificationGeneratorConfiguration {
         ApplicantBailSignedDecisionNoticeUploadedPersonalisationSms applicantBailSignedDecisionNoticeUploadedPersonalisationSms,
         HomeOfficeBailSignedDecisionNoticeUploadedPersonalisation homeOfficeBailSignedDecisionNoticeUploadedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
@@ -187,7 +187,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailApplicationEndedPersonalisation homeOfficeBailApplicationEndedPersonalisation,
         LegalRepresentativeBailApplicationEndedPersonalisation legalRepresentativeBailApplicationEndedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
@@ -209,7 +209,7 @@ public class BailNotificationGeneratorConfiguration {
         ApplicantBailApplicationEndedPersonalisationSms applicantBailApplicationEndedPersonalisationSms,
         HomeOfficeBailApplicationEndedPersonalisation homeOfficeBailApplicationEndedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailSmsNotificationGenerator(
@@ -230,7 +230,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailDocumentUploadedPersonalisation,
         LegalRepresentativeBailDocumentUploadedPersonalisation legalRepresentativeBailDocumentUploadedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -246,7 +246,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> uploadDocumentWithoutLrNotificationGenerator(
         HomeOfficeBailDocumentUploadedPersonalisation homeOfficeBailDocumentUploadedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -262,7 +262,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailDirectionSentPersonalisation homeOfficeBailDirectionSentPersonalisation,
         LegalRepresentativeBailDirectionSentPersonalisation legalRepresentativeBailDirectionSentPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -279,7 +279,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
         LegalRepresentativeBailChangeDirectionDueDatePersonalisation legalRepresentativeBailChangeDirectionDueDatePersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -295,7 +295,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> changeBailDirectionDueDateWithoutLrNotificationGenerator(
         HomeOfficeBailChangeDirectionDueDatePersonalisation homeOfficeBailChangeDirectionDueDatePersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -311,7 +311,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailDocumentsEditedPersonalisation homeOfficeBailDocumentsEditedPersonalisation,
         LegalRepresentativeBailDocumentsEditedPersonalisation legalRepresentativeBailDocumentsEditedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -327,7 +327,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> editBailDocumentsWithoutLrNotificationGenerator(
         HomeOfficeBailDocumentsEditedPersonalisation homeOfficeBailDocumentsEditedPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -343,7 +343,7 @@ public class BailNotificationGeneratorConfiguration {
         LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation legalRepresentativeBailApplicationEditAfterSubmitPersonalisation,
         HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -359,7 +359,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> editApplicationAfterSubmitWithoutLegalRepNotificationGenerator(
         HomeOfficeBailApplicationEditAfterSubmitPersonalisation homeOfficeBailApplicationEditAfterSubmitPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -375,7 +375,7 @@ public class BailNotificationGeneratorConfiguration {
         LegalRepresentativeCreateBailCaseLinkPersonalisation legalRepresentativeCreateBailCaseLinkPersonalisation,
         HomeOfficeCreateBailCaseLinkPersonalisation homeOfficeCreateBailCaseLinkPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -391,7 +391,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> createBailCaseLinkWithoutLrNotificationGenerator(
         HomeOfficeCreateBailCaseLinkPersonalisation homeOfficeCreateBailCaseLinkPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -407,7 +407,7 @@ public class BailNotificationGeneratorConfiguration {
         LegalRepresentativeMaintainBailCaseLinksPersonalisation legalRepresentativeMaintainBailCaseLinksPersonalisation,
         HomeOfficeMaintainBailCaseLinksPersonalisation homeOfficeMaintainBailCaseLinksPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -423,7 +423,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> maintainBailCaseLinksWithoutLrNotificationGenerator(
         HomeOfficeMaintainBailCaseLinksPersonalisation homeOfficeMaintainBailCaseLinksPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -441,7 +441,7 @@ public class BailNotificationGeneratorConfiguration {
             HomeOfficeBailStopLegalRepresentingPersonalisation homeOfficeBailStopLegalRepresentingPersonalisation,
             ApplicantBailStopLegalRepresentingPersonalisationSms applicantBailStopLegalRepresentingPersonalisationSms,
             BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+            NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new BailEmailNotificationGenerator(
@@ -466,7 +466,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailNocChangedLrPersonalisation homeOfficeBailNocChangedLrPersonalisation,
         ApplicantBailNocChangedLrPersonalisationSms applicantBailNocChangedLrPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -491,7 +491,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailNocChangedLrPersonalisation homeOfficeBailNocChangedLrPersonalisation,
         ApplicantBailNocChangedLrPersonalisationSms applicantBailNocChangedLrPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
@@ -512,7 +512,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> caseListingBailSummaryDirectionNotificationGenerator(
         HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -527,7 +527,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> upperTribunalDecisionRefusedImaNotificationGenerator(
         UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -542,7 +542,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> endApplicationNotificationForUtGenerator(
         UpperTribunalApplicationEndedImaPersonalisation upperTribunalApplicationEndedImaPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -559,7 +559,7 @@ public class BailNotificationGeneratorConfiguration {
         LegalRepresentativeBailCaseListingPersonalisation legalRepresentativeBailCaseListingPersonalisation,
         ApplicantBailCaseListingPersonalisationSms applicantBailCaseListingPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -581,7 +581,7 @@ public class BailNotificationGeneratorConfiguration {
         HomeOfficeBailCaseListingPersonalisation homeOfficeCaseListingPersonalisation,
         ApplicantBailCaseListingPersonalisationSms applicantBailCaseListingPersonalisationSms,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new BailEmailNotificationGenerator(
@@ -602,7 +602,7 @@ public class BailNotificationGeneratorConfiguration {
             HomeOfficeForceCaseToHearingPersonalisation respondentForceCaseToHearingPersonalisation,
             LegalRepresentativeForceCaseToHearingPersonalisation legalRepForceCaseToHearingPersonalisation,
             BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender
+            NotificationIdAppender notificationIdAppender
     ) {
 
         return Collections.singletonList(
@@ -621,7 +621,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> forceCaseToHearingNotificationGeneratorWithoutLegalRep(
         HomeOfficeForceCaseToHearingPersonalisation respondentForceCaseToHearingPersonalisation,
         BailGovNotifyNotificationSender notificationSender,
-        BailNotificationIdAppender notificationIdAppender
+        NotificationIdAppender notificationIdAppender
     ) {
 
         return Collections.singletonList(
@@ -639,7 +639,7 @@ public class BailNotificationGeneratorConfiguration {
     public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep(
             AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
             BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+            NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new BailEmailNotificationGenerator(
@@ -655,7 +655,7 @@ public class BailNotificationGeneratorConfiguration {
             AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
             LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation,
             BailGovNotifyNotificationSender notificationSender,
-            BailNotificationIdAppender notificationIdAppender) {
+            NotificationIdAppender notificationIdAppender) {
 
         return List.of(
                 new BailEmailNotificationGenerator(

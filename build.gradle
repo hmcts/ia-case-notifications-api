@@ -385,8 +385,8 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
 
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.110'
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.110'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.115'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.115'
 
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.9'
     implementation (group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'){
@@ -477,7 +477,7 @@ dependencies {
 }
 
 dependencyCheck {
-    suppressionFile = 'config/owasp/suppressions.xml'
+    suppressionFile = 'https://raw.githubusercontent.com/hmcts/ia-owasp-suppressions/refs/heads/master/ia-case-notifications-api/suppressions.xml'
 }
 
 dependencyUpdates.resolutionStrategy = {
