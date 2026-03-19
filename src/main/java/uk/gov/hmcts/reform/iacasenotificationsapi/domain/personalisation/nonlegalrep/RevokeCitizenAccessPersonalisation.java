@@ -40,16 +40,12 @@ public class RevokeCitizenAccessPersonalisation implements EmailNotificationPers
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         DynamicList revokeAccessDl = asylumCase.read(REVOKE_ACCESS_DL, DynamicList.class)
             .orElseThrow(() -> new IllegalStateException("Dynamic list of users to revoke access from is not present."));
-        if (revokeAccessDl.getValue() != null) {
-            String[] userString = Optional.ofNullable(revokeAccessDl.getValue().getLabel())
-                .orElse("")
-                .split(" - ");
-            if (userString.length > 1) {
-                String userEmail = userString[0].trim();
-                return Collections.singleton(userEmail);
-            }
-        }
-        return Collections.emptySet();
+        return Optional.ofNullable(revokeAccessDl.getValue())
+            .map(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Value::getCode)
+            .map(code -> code.substring(code.indexOf(':') + 1))
+            .filter(email -> !email.isBlank())
+            .map(Collections::singleton)
+            .orElse(Collections.emptySet());
     }
 
     @Override
