@@ -32,3 +32,4 @@
 bin/
 !bin/*.sh
 settings.json
+.mirrord/
