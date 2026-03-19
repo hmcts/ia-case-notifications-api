@@ -44,7 +44,7 @@ public class RevokeCitizenAccessPersonalisationTest {
     private final Long caseId = 12345L;
     private final String templateId = "joinAppealConfirmationTemplateId";
     private final String email = "someEmail";
-    private final Value userValue = new Value("someIdamId", email + " - someGivenNames someFamilyName");
+    private final Value userValue = new Value("someIdamId:" + email, email + " - someGivenNames someFamilyName");
     private final String appealReferenceNumber = "hmctsReference";
     private final String homeOfficeReference = "homeOfficeReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -90,8 +90,8 @@ public class RevokeCitizenAccessPersonalisationTest {
     }
 
     @Test
-    public void recipients_list_should_return_revoke_empty_if_dl_has_invalid_value_label() {
-        DynamicList dynamicList = new DynamicList(new Value("someIdamCode", "invalidLabel"), List.of(userValue));
+    public void recipients_list_should_return_revoke_empty_if_dl_has_no_email_in_code() {
+        DynamicList dynamicList = new DynamicList(new Value("someIdamCode:", "invalidLabel"), List.of(userValue));
         when(asylumCase.read(REVOKE_ACCESS_DL, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         Set<String> recipients = revokeCitizenAccessPersonalisation.getRecipientsList(asylumCase);
         verify(asylumCase, times(1)).read(REVOKE_ACCESS_DL, DynamicList.class);
