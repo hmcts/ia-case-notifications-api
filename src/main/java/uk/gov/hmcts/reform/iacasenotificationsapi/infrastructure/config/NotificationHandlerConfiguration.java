@@ -3708,7 +3708,7 @@ public class NotificationHandlerConfiguration {
         }
         return asylumCaseState == State.PENDING_PAYMENT
             && isEaAndHuAppealType
-            && eaHuAppealTypePaymentOption.equals("payOffline");
+            && (eaHuAppealTypePaymentOption.isEmpty() || eaHuAppealTypePaymentOption.equals("payOffline"));
     }
 
     private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
