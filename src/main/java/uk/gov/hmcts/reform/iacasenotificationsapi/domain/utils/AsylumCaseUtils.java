@@ -110,17 +110,13 @@ public class AsylumCaseUtils {
     public static String getDetentionFacilityName(AsylumCase asylumCase) {
         String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class)
                 .orElse("");
-        switch (detentionFacility) {
-            case "immigrationRemovalCentre":
-                return getFacilityName(IRC_NAME, asylumCase);
-            case "prison":
-                return getFacilityName(PRISON_NAME, asylumCase);
-            case "other":
-                return asylumCase.read(OTHER_DETENTION_FACILITY_NAME, OtherDetentionFacilityName.class)
-                        .orElseThrow(() -> new RequiredFieldMissingException("Other detention facility name is missing")).getOther();
-            default:
-                throw new RequiredFieldMissingException("Detention Facility is missing");
-        }
+        return switch (detentionFacility) {
+            case "immigrationRemovalCentre" -> getFacilityName(IRC_NAME, asylumCase);
+            case "prison" -> getFacilityName(PRISON_NAME, asylumCase);
+            case "other" -> asylumCase.read(OTHER_DETENTION_FACILITY_NAME, OtherDetentionFacilityName.class)
+                    .orElseThrow(() -> new RequiredFieldMissingException("Other detention facility name is missing")).getOther();
+            default -> throw new RequiredFieldMissingException("Detention Facility is missing");
+        };
     }
 
     public static DocumentWithMetadata getLetterForNotification(AsylumCase asylumCase, DocumentTag documentTag) {
@@ -158,11 +154,8 @@ public class AsylumCaseUtils {
     public static List<IdValue<DocumentWithMetadata>> getAddendumEvidenceDocuments(AsylumCase asylumCase) {
         Optional<List<IdValue<DocumentWithMetadata>>> maybeExistingAdditionalEvidenceDocuments =
                 asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS);
-        if (maybeExistingAdditionalEvidenceDocuments.isEmpty()) {
-            return emptyList();
-        }
+        return maybeExistingAdditionalEvidenceDocuments.orElse(emptyList());
 
-        return maybeExistingAdditionalEvidenceDocuments.get();
     }
 
     public static Optional<IdValue<DocumentWithMetadata>> getLatestAddendumEvidenceDocument(AsylumCase asylumCase) {
@@ -172,9 +165,7 @@ public class AsylumCaseUtils {
             return Optional.empty();
         }
 
-        Optional<IdValue<DocumentWithMetadata>> optionalLatestAddendum = addendums.stream().findFirst();
-
-        return optionalLatestAddendum.isEmpty() ? Optional.empty() : Optional.of(optionalLatestAddendum.get());
+        return addendums.stream().findFirst();
     }
 
     // This method uses the isEjp field which is set yes for EJP when a case is saved or no if paper form
@@ -240,7 +231,7 @@ public class AsylumCaseUtils {
     }
 
     public static PinInPostDetails generateAppellantPinIfNotPresent(AsylumCase asylumCase) {
-        if (!asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isPresent()) {
+        if (asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isEmpty()) {
             asylumCase.write(APPELLANT_PIN_IN_POST, PinInPostDetails.builder()
                     .accessCode(AccessCodeGenerator.generateAccessCode())
                     .expiryDate(LocalDate.now().plusDays(30).toString())
@@ -254,10 +245,6 @@ public class AsylumCaseUtils {
 
     public static boolean isSubmissionOutOfTime(AsylumCase asylumCase) {
         return asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(NO).equals(YES);
-    }
-
-    public static YesOrNo isAppellantInUK(AsylumCase asylumCase) {
-        return asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
     }
 
     public static List<String> getAppellantAddressAsList(final AsylumCase asylumCase) {
