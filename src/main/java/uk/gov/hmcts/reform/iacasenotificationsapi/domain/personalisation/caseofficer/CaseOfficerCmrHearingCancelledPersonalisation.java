@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -63,31 +61,13 @@ public class CaseOfficerCmrHearingCancelledPersonalisation implements EmailNotif
         requireNonNull(callback, "asylumCase must not be null");
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-        Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
-
-        String hearingDate;
-        String hearingTime;
-        String hearingCentreAddress;
-        if (caseDetailsBefore.isPresent()) {
-            AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
-            hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
-            hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
-            hearingCentreAddress = hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore);
-        } else {
-            hearingDate = "";
-            hearingTime = "";
-            hearingCentreAddress = "";
-        }
+        //Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
 
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-            //.put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            //.put("hearingDate", hearingDate)
-            //.put("hearingTime", hearingTime)
-            //.put("hearingCentreAddress", hearingCentreAddress)
             .build();
     }
 }
