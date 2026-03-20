@@ -2517,6 +2517,8 @@ security:
       - "changeHearingCentre"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+    caseworker-ia-internal:
+      - "revokeCitizenAccess"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
