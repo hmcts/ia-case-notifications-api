@@ -3984,10 +3984,10 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                       && !isInternalCase(asylumCase)
-                       && isPartiallyApproved
-                       && isPaAppeal(asylumCase);
+                    && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                    && !isInternalCase(asylumCase)
+                    && isPartiallyApproved
+                    && isPaAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -5813,29 +5813,29 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationHandler(
-            @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) -> {
+            (callbackStage, callback) -> {
 
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isInternalCase(asylumCase)
-                            && (!isAppellantInDetention(asylumCase)
-                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER))
-                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
-                            && isSubmissionOutOfTime(asylumCase)
-                            && isPaymentPending;
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SUBMIT_APPEAL
+                    && isInternalCase(asylumCase)
+                    && (!isAppellantInDetention(asylumCase)
+                    || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInFacilityType(asylumCase, OTHER))
+                    || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
+                    && isSubmissionOutOfTime(asylumCase)
+                    && isPaymentPending;
 
-                },
-                notificationGenerators,
-                getErrorHandler()
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 
@@ -7957,18 +7957,32 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> generateAppealUpdatedNonLegalRepNotificationHandler(
-        @Qualifier("generateAppealUpdatedNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("generateAppealUpdatedNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators,
+        DirectionFinder directionFinder) {
         return new NotificationHandler(
             (callbackStage, callback) -> {
-                List<Event> validNlrEvents = List.of(SUBMIT_REASONS_FOR_APPEAL);
                 if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    String nlrEmail =
-                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
-                            .map(NonLegalRepDetails::getEmailAddress)
-                            .orElse(null);
-                    return validNlrEvents.contains(callback.getEvent())
-                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                    Event event = callback.getEvent();
+                    boolean changeDirectionDueDateValid = event.equals(Event.CHANGE_DIRECTION_DUE_DATE)
+                        && asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
+                        .map(parties -> parties.equals(Parties.APPELLANT) || parties.equals(Parties.APPELLANT_AND_RESPONDENT))
+                        .orElse(false);
+                    boolean sendDirectionValid = event.equals(Event.SEND_DIRECTION)
+                        && (isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
+                        || isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.APPELLANT)
+                        || isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.APPELLANT_AND_RESPONDENT));
+                    boolean recordRemissionReminderValid = event.equals(Event.RECORD_REMISSION_REMINDER)
+                        && isRemissionRejectedOrPartiallyApproved(asylumCase);
+                    boolean shouldNlrNotificationBeSent = validNlrEvents.contains(event) || changeDirectionDueDateValid
+                        || sendDirectionValid || recordRemissionReminderValid;
+                    NonLegalRepDetails nlrEmail = asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                        .orElse(null);
+                    return shouldNlrNotificationBeSent
+                        && isAipJourney(asylumCase)
+                        && nlrEmail != null
+                        && isNotEmpty(nlrEmail.getEmailAddress())
+                        && isNotEmpty(nlrEmail.getIdamId());
                 }
                 return false;
             },
@@ -8106,4 +8120,53 @@ public class NotificationHandlerConfiguration {
                 == caseDataBefore.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class).orElse(null);
 
     }
+
+    private List<Event> validNlrEvents = List.of(
+        Event.UNLINK_APPEAL,
+        Event.LINK_APPEAL,
+        Event.END_APPEAL,
+        Event.SEND_DECISION_AND_REASONS,
+        Event.REQUEST_RESPONDENT_EVIDENCE,
+        Event.PAYMENT_APPEAL,
+        Event.REMOVE_APPEAL_FROM_ONLINE,
+        Event.CHANGE_HEARING_CENTRE,
+        Event.MAKE_AN_APPLICATION,
+        Event.REVIEW_TIME_EXTENSION,
+        Event.SEND_DIRECTION_WITH_QUESTIONS,
+        Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS,
+        Event.DECIDE_FTPA_APPLICATION,
+        Event.RESIDENT_JUDGE_FTPA_DECISION,
+        Event.LEADERSHIP_JUDGE_FTPA_DECISION,
+        Event.RECORD_OUT_OF_TIME_DECISION,
+        Event.END_APPEAL_AUTOMATICALLY,
+        Event.REQUEST_FEE_REMISSION,
+        Event.UPDATE_TRIBUNAL_DECISION,
+        Event.RECORD_REMISSION_DECISION,
+        Event.MARK_APPEAL_PAID,
+        Event.MANAGE_FEE_UPDATE,
+        Event.REFUND_CONFIRMATION,
+        Event.DRAFT_HEARING_REQUIREMENTS,
+        Event.ASYNC_STITCHING_COMPLETE,
+        Event.UPLOAD_ADDITIONAL_EVIDENCE,
+        Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
+        Event.SUBMIT_REASONS_FOR_APPEAL,
+        Event.BUILD_CASE,
+        Event.REQUEST_RESPONDENT_REVIEW,
+        Event.REQUEST_RESPONSE_REVIEW,
+        Event.SUBMIT_CMA_REQUIREMENTS,
+        Event.LIST_CMA,
+        Event.REQUEST_HEARING_REQUIREMENTS_FEATURE,
+        Event.MARK_AS_READY_FOR_UT_TRANSFER,
+        Event.MARK_APPEAL_AS_REMITTED,
+        Event.APPLY_FOR_FTPA_APPELLANT,
+        Event.APPLY_FOR_FTPA_RESPONDENT,
+        Event.SUBMIT_APPEAL,
+        Event.PAY_AND_SUBMIT_APPEAL,
+        Event.LIST_CASE,
+        Event.RECORD_ADJOURNMENT_DETAILS,
+        Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
+        Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
+        Event.UPLOAD_ADDENDUM_EVIDENCE,
+        Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
+    );
 }
