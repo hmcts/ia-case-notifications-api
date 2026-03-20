@@ -104,13 +104,9 @@ class CaseOfficerCmrHearingCancelledPersonalisationTest {
         Map<String, String> personalisationMap = personalisation.getPersonalisation(callback);
 
         assertThat(personalisationMap)
-                .containsEntry("appealReferenceNumber", "REF123")
-                //.containsEntry("legalRepReferenceNumber", "HO123")
-                .containsEntry("appellantGivenNames", "John")
-                .containsEntry("appellantFamilyName", "Doe");
-                //.containsEntry("hearingDate", "01-06-2024")
-                //.containsEntry("hearingTime", "10:00")
-                //.containsEntry("hearingCentreAddress", "some address");
+            .containsEntry("appealReferenceNumber", "REF123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe");
     }
 
     @Test
