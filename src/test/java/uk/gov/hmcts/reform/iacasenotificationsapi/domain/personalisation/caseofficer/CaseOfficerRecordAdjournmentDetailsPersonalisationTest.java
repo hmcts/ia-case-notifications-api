@@ -38,8 +38,8 @@ public class CaseOfficerRecordAdjournmentDetailsPersonalisationTest {
     private String caseOfficerEmailAddress = "caseOfficer@example.com";
 
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private CaseOfficerRecordAdjournmentDetailsPersonalisation caseOfficerRecordAdjournmentDetailsPersonalisation;
 

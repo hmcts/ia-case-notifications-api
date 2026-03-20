@@ -54,8 +54,8 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String listingReference = "listingReference";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
 
     DocumentWithMetadata appealResponseLetter = getDocumentWithMetadata(
             "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.UPLOAD_THE_APPEAL_RESPONSE);

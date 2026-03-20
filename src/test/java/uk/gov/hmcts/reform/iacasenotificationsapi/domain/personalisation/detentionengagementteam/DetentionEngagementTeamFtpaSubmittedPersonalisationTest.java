@@ -55,8 +55,8 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
     private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");

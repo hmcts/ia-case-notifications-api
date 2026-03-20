@@ -44,8 +44,8 @@ class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest {
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
 
     DocumentWithMetadata outOfTimeDecisionAllowedLetter = getDocumentWithMetadata(
             "1", "internal-detained-out-of-time-decision-allowed-letter", "Internal detained out of time decision allowed letter", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER);

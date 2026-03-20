@@ -49,8 +49,8 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";

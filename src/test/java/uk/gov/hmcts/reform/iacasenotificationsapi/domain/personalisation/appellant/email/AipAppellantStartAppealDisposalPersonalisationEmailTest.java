@@ -60,8 +60,8 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of("someHomeOfficeReferenceNumber"));
 
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("someAppellantGivenNames"));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("someAppellantFamilyName"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("appellantGivenNames"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("appellantFamilyName"));
 
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(mockedAppellantEmailAddress));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn("555 555 555");
@@ -110,7 +110,7 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
                 aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
-        assertEquals("someAppellantGivenNames someAppellantFamilyName", personalisation.get("appellantFullName"));
+        assertEquals("appellantGivenNames appellantFamilyName", personalisation.get("appellantFullName"));
         assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
         assertEquals("http://localhost", personalisation.get("linkToOnlineService"));
         assertNotNull(personalisation.get("creationDate"));

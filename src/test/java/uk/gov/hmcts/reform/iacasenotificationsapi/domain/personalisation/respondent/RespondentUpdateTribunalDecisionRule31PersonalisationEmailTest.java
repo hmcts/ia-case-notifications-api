@@ -48,8 +48,8 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     private String mockedRespondentEmail = "fake@faketest.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private RespondentUpdateTribunalDecisionRule31PersonalisationEmail respondentUpdateTribunalDecisionRule31PersonalisationEmail;

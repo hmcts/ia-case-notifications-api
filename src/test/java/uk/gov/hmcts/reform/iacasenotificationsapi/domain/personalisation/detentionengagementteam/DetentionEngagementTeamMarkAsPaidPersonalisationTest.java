@@ -53,8 +53,8 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
     private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     DocumentWithMetadata markAppealPaidDoc = getDocumentWithMetadata(
             "1", "ADA appellant letter-appeal reasons", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_PAID_LETTER);
     IdValue<DocumentWithMetadata> markAppealPaidDocId = new IdValue<>("1", markAppealPaidDoc);

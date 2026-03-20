@@ -45,8 +45,8 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
     private String legalRepEmailAddress = "legalRep@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String appealEndedDate = "2022-07-28";
     private String expectedAppealEndedDate = "28 Jul 2022";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";

@@ -39,8 +39,8 @@ public class AdminOfficerFtpaDecisionAppellantPersonalisationTest {
     private String upperTribunalPermissionApplicationsEmailAddress = "upperTribunalPermissionApplicationsEmailAddress";
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String grantedTemplateId = "grantedTemplateId";
     private String partiallyGrantedTemplateId = "partiallyGrantedTemplateId";

@@ -36,8 +36,8 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
     private final String homeOfficeReferenceNumber = "horeferencenumber";
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String legalRepReferenceNumber = "someLegalRepRefNumber";
-    private final String applicantGivenNames = "someAppellantGivenNames";
-    private final String applicantFamilyName = "someAppellantFamilyName";
+    private final String applicantGivenNames = "appellantGivenNames";
+    private final String applicantFamilyName = "appellantFamilyName";
     @Mock BailCase bailCase;
     @Mock private EmailAddressFinder emailAddressFinder;
     private HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation;

@@ -42,8 +42,8 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String mockedAriaListingReference = "someAriaListingReference";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
     private String iaServicesPhone = "0100000000";
     private String iaServicesEmail = "services@email.com";

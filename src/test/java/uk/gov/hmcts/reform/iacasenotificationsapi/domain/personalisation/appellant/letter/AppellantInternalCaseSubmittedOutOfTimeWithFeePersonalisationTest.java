@@ -45,8 +45,8 @@ class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String addressLine1 = "50";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
@@ -101,13 +101,13 @@ class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisationTest {
     @Test
     void should_return_address_in_correct_format_appellant_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_appellant_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test

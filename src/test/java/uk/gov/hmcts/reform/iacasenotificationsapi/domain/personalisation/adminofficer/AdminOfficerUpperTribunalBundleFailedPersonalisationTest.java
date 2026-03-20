@@ -35,8 +35,8 @@ public class AdminOfficerUpperTribunalBundleFailedPersonalisationTest {
     private String adminOfficeEmailAddress = "some-email@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String bundleFailedTemplateId = "bundleFailedTemplateId";
     private AdminOfficerUpperTribunalBundleFailedPersonalisation adminOfficerUpperTribunalBundleFailedPersonalisation;
 

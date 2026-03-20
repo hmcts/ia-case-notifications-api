@@ -44,8 +44,8 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
 
     DocumentWithMetadata appealSubmittedInTimeWithFeeToPayLetter = getDocumentWithMetadata(
             "1", "internal-detained-appeal-submitted-in-time-with-fee-to-pay-letter", "Internal detained appeal submitted in time with fee to pay letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER);

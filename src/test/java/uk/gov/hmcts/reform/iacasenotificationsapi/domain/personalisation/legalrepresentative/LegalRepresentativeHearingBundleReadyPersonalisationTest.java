@@ -39,9 +39,9 @@ public class LegalRepresentativeHearingBundleReadyPersonalisationTest {
     private String appealReferenceNumber = "someAppealReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
     private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
+    private String appellantGivenNames = "appellantGivenNames";
     private String ccdReferenceNumber = "1234 5678 4321 8765";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
 

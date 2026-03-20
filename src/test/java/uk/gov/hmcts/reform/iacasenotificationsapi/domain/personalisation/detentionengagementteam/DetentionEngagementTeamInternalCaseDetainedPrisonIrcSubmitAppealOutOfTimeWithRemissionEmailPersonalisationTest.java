@@ -92,8 +92,8 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("someReferenceNumber"));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("someHomeOfficeReferenceNumber"));
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("someAppellantGivenNames"));
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("someAppellantFamilyName"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("appellantGivenNames"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("appellantFamilyName"));
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(Collections.singletonList(appealSubmittedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonObject);
 
@@ -101,8 +101,8 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
 
         assertEquals("someReferenceNumber", personalisation.get("appealReferenceNumber"));
         assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("someAppellantGivenNames", personalisation.get("appellantGivenNames"));
-        assertEquals("someAppellantFamilyName", personalisation.get("appellantFamilyName"));
+        assertEquals("appellantGivenNames", personalisation.get("appellantGivenNames"));
+        assertEquals("appellantFamilyName", personalisation.get("appellantFamilyName"));
         assertEquals(NON_ADA_PREFIX, personalisation.get("subjectPrefix"));
         assertEquals(jsonObject, personalisation.get("documentLink"));
     }

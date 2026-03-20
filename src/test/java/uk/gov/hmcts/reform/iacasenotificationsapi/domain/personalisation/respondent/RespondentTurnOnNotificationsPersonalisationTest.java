@@ -51,8 +51,8 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
     private final String respondentReferenceNumber = "respondentReferenceNumber";
     private final String upperTribunalReferenceNumber = "upperTribunalReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "customer.services@example.com";
     private String homeOfficeEmailAddress = "homeOffice@example.com";

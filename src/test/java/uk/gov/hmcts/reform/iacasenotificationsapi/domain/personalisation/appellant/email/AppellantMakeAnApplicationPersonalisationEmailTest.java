@@ -62,8 +62,8 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private String ariaListingReference = "someReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
     private final String homeOfficeUser = "caseworker-ia-homeofficelart";
     private final String citizenUser = "citizen";

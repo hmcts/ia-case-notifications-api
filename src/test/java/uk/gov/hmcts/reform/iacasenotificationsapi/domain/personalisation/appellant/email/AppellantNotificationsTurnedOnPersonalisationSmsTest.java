@@ -45,8 +45,8 @@ class AppellantNotificationsTurnedOnPersonalisationSmsTest {
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String legalRepReferenceEjp = "someLegalRepReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private String dateOfBirth = "2020-03-01";
     private final String expectedDateOfBirth = "1 Mar 2020";
     private final String appellantMobileNumberEjp = "07777777777";

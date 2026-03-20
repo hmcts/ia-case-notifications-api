@@ -48,8 +48,8 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
     private Long caseId = 12345L;
     private String appellantInternalCaseDecisionWithoutHearingLetterTemplateId = "appellantInternalCaseDecisionWithoutHearingLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String addressLine1 = "50";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
@@ -58,8 +58,8 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
     private String postTown = "Town name";
     private String mockedAppealReferenceNumber = "someAppealRefNumber";
     private String mockedAriaListingReference = "someAriaListingReference";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String iaServicesPhone = "0300 123 1711";
     private String iaServicesEmail = "contactia@justice.gov.uk";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();

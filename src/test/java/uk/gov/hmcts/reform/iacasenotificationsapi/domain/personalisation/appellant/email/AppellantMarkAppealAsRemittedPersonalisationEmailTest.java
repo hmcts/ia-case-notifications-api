@@ -46,8 +46,8 @@ class AppellantMarkAppealAsRemittedPersonalisationEmailTest {
     private Long caseId = 12345L;
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String templateId = "templateId";
     private String iaServicesPhone = "0100000000";
     private String iaServicesEmail = "services@email.com";

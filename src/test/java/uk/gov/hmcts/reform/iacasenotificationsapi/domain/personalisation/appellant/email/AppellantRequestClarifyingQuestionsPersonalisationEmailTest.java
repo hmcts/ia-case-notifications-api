@@ -53,8 +53,8 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
 
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String mockedAppellantGivenNames = "appellantGivenNames";
+    private final String mockedAppellantFamilyName = "appellantFamilyName";
     private final String mockedAppellantEmailAddress = "appelant@example.net";
 
     private final String customerServicesTelephone = "555 555 555";

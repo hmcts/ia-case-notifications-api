@@ -43,8 +43,8 @@ public class HomeOfficeHearingBundleReadyPersonalisationTest {
     private String ccdReferenceNumber = "1234 5678 4321 8765";
     private String ariaListingReference = "someAriaListingReference";
     private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation;

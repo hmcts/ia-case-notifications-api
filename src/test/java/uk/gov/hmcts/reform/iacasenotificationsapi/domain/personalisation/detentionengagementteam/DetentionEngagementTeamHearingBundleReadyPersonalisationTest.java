@@ -45,8 +45,8 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String detHearingBundleReadyTemplateId = "detHearingBundleReadyTemplateId";
     private final String detentionEngagementTeamEmail = "det@email.com";
     private final String adaPrefix = "ADA - SERVE IN PERSON";

@@ -68,8 +68,8 @@ public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someReferenceNumber";
     private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String applicationType = "someApplicationType";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";

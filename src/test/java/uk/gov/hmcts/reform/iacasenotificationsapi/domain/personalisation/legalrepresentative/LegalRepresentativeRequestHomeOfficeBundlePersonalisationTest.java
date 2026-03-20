@@ -43,8 +43,8 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
 
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private LegalRepresentativeRequestHomeOfficeBundlePersonalisation
         legalRepresentativeRequestHomeOfficeBundlePersonalisation;

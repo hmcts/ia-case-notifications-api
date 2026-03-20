@@ -47,8 +47,8 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
     private String mockedAppellantEmail = "fake@faketest.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String refundDateMock = "12/03/2024";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail;

@@ -58,8 +58,8 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationSmsTest {
     private final String days14 = "14 days";
     private long mockedAppealReferenceNumber = 1236;
     private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String iaAipFrontendUrl = "http://localhost";
     private AppellantUpdateTribunalDecisionRule31PersonalisationSms appellantUpdateTribunalDecisionRule31PersonalisationSms;
     private final DynamicList dynamicAllowedDecisionList = new DynamicList(

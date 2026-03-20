@@ -53,8 +53,8 @@ public class CaseOfficerUploadAddendumEvidencePersonalisationTest {
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String appealReferenceNumber = "hmctsReference";
     private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private CaseOfficerUploadAddendumEvidencePersonalisation caseOfficerUploadAddendumEvidencePersonalisation;
 

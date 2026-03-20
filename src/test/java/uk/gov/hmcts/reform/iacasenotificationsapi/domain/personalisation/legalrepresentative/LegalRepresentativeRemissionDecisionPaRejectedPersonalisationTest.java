@@ -26,8 +26,8 @@ class LegalRepresentativeRemissionDecisionPaRejectedPersonalisationTest {
     private AsylumCase asylumCase;
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String templateId = "someTemplateId";
     private String legalRepEmailAddress = "legalRepEmailAddress@example.com";

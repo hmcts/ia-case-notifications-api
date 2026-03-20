@@ -39,8 +39,8 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
     private String adaPrefix = "Accelerated detained appeal";
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String homeOfficeEmail = "apchomeoffice@example.com";
 
     private HomeOfficeAppealSubmittedPayOfflinePersonalisation

@@ -50,8 +50,8 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
     private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String addressLine1 = "50";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";

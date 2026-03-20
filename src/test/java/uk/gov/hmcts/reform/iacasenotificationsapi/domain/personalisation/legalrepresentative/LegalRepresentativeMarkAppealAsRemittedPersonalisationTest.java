@@ -39,8 +39,8 @@ class LegalRepresentativeMarkAppealAsRemittedPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someReferenceNumber";
     private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String legalRepresentativeMarkAppealAsRemittedTemplateId = "templateId";
     private String iaServicesPhone = "0100000000";
     private String iaServicesEmail = "services@email.com";

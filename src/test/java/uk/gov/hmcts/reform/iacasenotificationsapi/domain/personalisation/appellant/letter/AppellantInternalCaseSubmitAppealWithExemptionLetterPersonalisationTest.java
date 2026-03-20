@@ -42,8 +42,8 @@ class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
     private final String letterTemplateId = "someLrLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String addressLine1 = "50";
     private final String addressLine2 = "Building name";
     private final String addressLine3 = "Street name";
@@ -93,25 +93,25 @@ class AppellantInternalCaseSubmitAppealWithExemptionLetterPersonalisationTest {
     @Test
     void should_return_address_in_correct_format_appellant_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_appellant_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
     void should_return_address_in_correct_format_legalRep_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_legalRep_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalCaseSubmitAppealWithExemptionLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test

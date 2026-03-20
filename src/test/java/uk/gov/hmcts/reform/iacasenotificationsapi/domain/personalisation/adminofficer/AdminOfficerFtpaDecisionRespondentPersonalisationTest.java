@@ -40,8 +40,8 @@ public class AdminOfficerFtpaDecisionRespondentPersonalisationTest {
     private String upperTribunalPermissionApplicationsEmailAddress = "upperTribunalPermissionApplicationsEmailAddress";
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String grantedTemplateId = "grantedTemplateId";
     private String grantedWithoutListingTemplateId = "grantedithoutListingTemplateId";

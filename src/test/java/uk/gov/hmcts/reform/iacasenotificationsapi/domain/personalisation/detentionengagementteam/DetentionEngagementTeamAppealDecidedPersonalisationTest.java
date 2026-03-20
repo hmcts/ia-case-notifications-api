@@ -50,8 +50,8 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
     private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String detentionEngagementTeamUploadAppealDecidedDismissedTemplateId = "detentionEngagementTeamUploadAppealDecidedDismissedTemplateId";
     private final String detentionEngagementTeamUploadAppealDecidedAllowedTemplateId = "detentionEngagementTeamUploadAppealDecidedAllowedTemplateId";
     private final String formNameForAdaDismissed = "IAFT-ADA5: Ask for permission to appeal to the Upper Tribunal (Immigration and Asylum Chamber) – Accelerated detained appeal (ADA)";

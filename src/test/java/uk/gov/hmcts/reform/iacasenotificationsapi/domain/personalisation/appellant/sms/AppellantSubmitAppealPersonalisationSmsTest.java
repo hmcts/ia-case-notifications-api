@@ -56,8 +56,8 @@ class AppellantSubmitAppealPersonalisationSmsTest {
     private String expectedDateOfBirth = "1 Mar 2020";
 
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
 
     private AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms;
 

@@ -43,8 +43,8 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     private Long ccdCaseId = 12345L;
     private String emailTemplateId = "someEmailTemplateId";
     private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private String securityCode = "securityCode";

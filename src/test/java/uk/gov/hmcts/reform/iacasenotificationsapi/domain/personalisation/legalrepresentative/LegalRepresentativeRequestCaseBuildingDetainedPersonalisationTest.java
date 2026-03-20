@@ -47,7 +47,7 @@ public class LegalRepresentativeRequestCaseBuildingDetainedPersonalisationTest {
 
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantGivenNames = "appellantGivenNames";
 
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
@@ -65,7 +65,7 @@ public class LegalRepresentativeRequestCaseBuildingDetainedPersonalisationTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantFamilyName = "appellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))

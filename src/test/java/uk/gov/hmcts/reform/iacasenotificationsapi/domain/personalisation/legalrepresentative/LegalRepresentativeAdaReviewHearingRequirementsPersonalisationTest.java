@@ -72,8 +72,8 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest 
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
     private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
     private String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
     private String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";

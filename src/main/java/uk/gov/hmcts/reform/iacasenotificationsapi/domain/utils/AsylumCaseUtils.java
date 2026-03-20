@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 
+import static java.lang.Math.min;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
@@ -268,46 +269,6 @@ public class AsylumCaseUtils {
         }
         appellantAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("appellantAddress postTown is not present")));
         appellantAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("appellantAddress postCode is not present")));
-
-        return appellantAddressAsList;
-    }
-
-    public static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
-
-        String oocAddressLine1 = asylumCase
-                .read(ADDRESS_LINE_1_ADMIN_J, String.class)
-                .orElseThrow(() -> new IllegalStateException("OOC Address line 1 is not present"));
-
-        String oocAddressLine2 = asylumCase
-                .read(ADDRESS_LINE_2_ADMIN_J, String.class)
-                .orElseThrow(() -> new IllegalStateException("OOC Address line 2 is not present"));
-
-        List<String> appellantAddressAsList = new ArrayList<>();
-
-        addAppellantName(asylumCase, appellantAddressAsList);
-
-        appellantAddressAsList.add(oocAddressLine1);
-        appellantAddressAsList.add(oocAddressLine2);
-
-        String oocAddressLine3 = asylumCase
-                .read(ADDRESS_LINE_3_ADMIN_J, String.class)
-                .orElse(null);
-
-        String oocAddressLine4 = asylumCase
-                .read(ADDRESS_LINE_4_ADMIN_J, String.class)
-                .orElse(null);
-
-        NationalityGovUk oocAddressCountry = NationalityGovUk.valueOf(asylumCase
-                .read(COUNTRY_GOV_UK_OOC_ADMIN_J, NationalityFieldValue.class)
-                .orElseThrow(() -> new IllegalStateException("OOC Address country is not present")).getCode());
-
-        if (oocAddressLine3 != null) {
-            appellantAddressAsList.add(oocAddressLine3);
-        }
-        if (oocAddressLine4 != null) {
-            appellantAddressAsList.add(oocAddressLine4);
-        }
-        appellantAddressAsList.add(oocAddressCountry.toString());
 
         return appellantAddressAsList;
     }
@@ -563,9 +524,50 @@ public class AsylumCaseUtils {
         return result;
     }
 
+    private static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
+
+        String oocAddressLine1 = asylumCase
+                .read(ADDRESS_LINE_1_ADMIN_J, String.class)
+                .orElseThrow(() -> new IllegalStateException("OOC Address line 1 is not present"));
+
+        String oocAddressLine2 = asylumCase
+                .read(ADDRESS_LINE_2_ADMIN_J, String.class)
+                .orElseThrow(() -> new IllegalStateException("OOC Address line 2 is not present"));
+
+        List<String> appellantAddressAsList = new ArrayList<>();
+
+        addAppellantName(asylumCase, appellantAddressAsList);
+
+        appellantAddressAsList.add(oocAddressLine1);
+        appellantAddressAsList.add(oocAddressLine2);
+
+        String oocAddressLine3 = asylumCase
+                .read(ADDRESS_LINE_3_ADMIN_J, String.class)
+                .orElse(null);
+
+        String oocAddressLine4 = asylumCase
+                .read(ADDRESS_LINE_4_ADMIN_J, String.class)
+                .orElse(null);
+
+        NationalityGovUk oocAddressCountry = NationalityGovUk.valueOf(asylumCase
+                .read(COUNTRY_GOV_UK_OOC_ADMIN_J, NationalityFieldValue.class)
+                .orElseThrow(() -> new IllegalStateException("OOC Address country is not present")).getCode());
+
+        if (oocAddressLine3 != null) {
+            appellantAddressAsList.add(oocAddressLine3);
+        }
+        if (oocAddressLine4 != null) {
+            appellantAddressAsList.add(oocAddressLine4);
+        }
+        appellantAddressAsList.add(oocAddressCountry.toString());
+
+        return appellantAddressAsList;
+    }
+
     private static void addAppellantName(AsylumCase asylumCase, List<String> appellantAddressAsList) {
         String appellantGivenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse("");
         String appellantFamilyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse("");
-        appellantAddressAsList.add(appellantGivenNames + " " + appellantFamilyName);
+        String fullName = appellantGivenNames + " " + appellantFamilyName;
+        appellantAddressAsList.add(fullName.substring(0, min(fullName.length(), 42)));
     }
 }

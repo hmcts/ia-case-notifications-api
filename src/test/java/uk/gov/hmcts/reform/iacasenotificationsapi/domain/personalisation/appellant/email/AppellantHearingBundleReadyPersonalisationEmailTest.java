@@ -38,8 +38,8 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String appealReferenceNumber = "someReferenceNumber";
     private String ccdReferenceNumber = "1234 5678 4321 8765";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock

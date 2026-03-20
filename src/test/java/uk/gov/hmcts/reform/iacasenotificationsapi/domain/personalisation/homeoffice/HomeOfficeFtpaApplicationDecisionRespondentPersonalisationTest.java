@@ -46,8 +46,8 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
     private String applicantPartiallyGrantedTemplateId = "applicantPartiallyGrantedTemplateId";

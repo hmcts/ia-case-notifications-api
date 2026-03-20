@@ -51,8 +51,8 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String addressLine1 = "50";
     private final String directionDueDate = "2024-08-27";
     private final String directionExplanation = "someExplanation";
@@ -101,13 +101,13 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
     @Test
     void should_return_address_in_correct_format_appellant_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_appellant_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test

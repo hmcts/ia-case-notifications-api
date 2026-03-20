@@ -53,8 +53,8 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
     private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyNames = "someAppellantFamilyNames";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyNames = "appellantFamilyNames";
     private String iaExUiFrontendUrl = "http://localhost";
     private String directionExplanation = "someExplanation";
     private String directionDueDate = "2019-10-29";

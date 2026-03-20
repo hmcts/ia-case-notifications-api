@@ -46,8 +46,8 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "ariaListingReference";
     private String legalRepReferenceNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
     private String applicantPartiallyGrantedTemplateId = "applicantPartiallyGrantedTemplateId";

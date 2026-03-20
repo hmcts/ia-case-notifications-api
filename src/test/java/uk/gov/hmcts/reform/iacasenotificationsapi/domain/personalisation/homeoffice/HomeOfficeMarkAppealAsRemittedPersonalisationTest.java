@@ -35,8 +35,8 @@ class HomeOfficeMarkAppealAsRemittedPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
 
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String upperTribunalNoticesEmailAddress = "upperTribunalNoticesEmailAddress";
     private String homeOfficeMarkAppealAsRemittedTemplateId = "templateId";
     private String iaServicesPhone = "0100000000";

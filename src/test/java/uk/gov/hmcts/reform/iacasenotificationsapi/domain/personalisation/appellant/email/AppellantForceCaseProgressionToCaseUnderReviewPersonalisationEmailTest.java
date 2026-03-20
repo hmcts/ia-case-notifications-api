@@ -37,8 +37,8 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
     private String templateId = "someTemplateId";
     private String appellantEmailAddress = "appellantp@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private final String iaExUiFrontendUrl = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
 
     private AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail

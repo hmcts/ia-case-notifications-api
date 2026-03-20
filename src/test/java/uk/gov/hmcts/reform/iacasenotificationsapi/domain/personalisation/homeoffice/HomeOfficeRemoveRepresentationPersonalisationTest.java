@@ -57,8 +57,8 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someReferenceNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
     private String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";

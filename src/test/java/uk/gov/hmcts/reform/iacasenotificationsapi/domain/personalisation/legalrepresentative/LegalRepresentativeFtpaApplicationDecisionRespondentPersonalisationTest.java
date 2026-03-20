@@ -38,8 +38,8 @@ public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "ariaListingReference";
     private String homeOfficeRefNumber = "homeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
     private String otherPartyPartiallyGrantedTemplateId = "otherPartyPartiallyGrantedTemplateId";

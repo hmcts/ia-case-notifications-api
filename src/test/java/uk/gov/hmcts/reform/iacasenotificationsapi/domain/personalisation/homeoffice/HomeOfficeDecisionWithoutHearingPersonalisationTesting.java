@@ -39,8 +39,8 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAriaListingReference = "someAriaListingReference";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String mockedHomeOfficeEmail = "ho-taylorhouse@example.com";
     private String iaServicesPhone = "0300 123 1711";
     private String iaServicesEmail = "contactia@justice.gov.uk";

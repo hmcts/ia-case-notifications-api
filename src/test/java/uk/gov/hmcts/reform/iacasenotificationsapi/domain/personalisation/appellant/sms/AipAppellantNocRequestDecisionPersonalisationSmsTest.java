@@ -40,8 +40,8 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
     private long mockedAppealReferenceNumber = 1236;
     private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String dateOfBirth = "2020-03-01";
     private String expectedDateOfBirth = "1 Mar 2020";
 

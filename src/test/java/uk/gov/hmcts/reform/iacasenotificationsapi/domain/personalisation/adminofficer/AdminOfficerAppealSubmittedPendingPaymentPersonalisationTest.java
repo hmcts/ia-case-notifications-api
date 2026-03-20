@@ -27,8 +27,8 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
 
     private String templateId = "someTemplateId";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String listRef = "LP/12345/2019";
     private String adminOfficerEmailAddress = "adminOfficer@example.com";
     private String paymentExceptionsAdminOfficerEmailAddress = "payment-exceptions-ao@example.com";

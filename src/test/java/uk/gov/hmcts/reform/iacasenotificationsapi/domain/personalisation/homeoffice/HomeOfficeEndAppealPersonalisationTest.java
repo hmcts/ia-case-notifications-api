@@ -58,8 +58,8 @@ public class HomeOfficeEndAppealPersonalisationTest {
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String endAppealOutcome = "someEndAppealOutcome";
     private String endAppealOutcomeReason = "someEndAppealOutcomeReason";

@@ -47,8 +47,8 @@ class DetentionEngagementTeamAppealSubmittedLateWithFeePersonalisationTest {
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
 
     DocumentWithMetadata feeDecisionLetter = getDocumentWithMetadata(
             "1", "internal-detained-appeal-submitted-out-of-time-with-fee-letter", "Internal detained appeal submitted out of time with fee letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_FEE_LETTER);

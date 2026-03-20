@@ -52,8 +52,8 @@ public class AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisationT
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String addressLine1 = "50";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
@@ -125,10 +125,10 @@ public class AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisationT
     void should_return_appellant_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test

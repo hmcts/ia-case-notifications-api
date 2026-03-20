@@ -37,8 +37,8 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
     private String templateId = "someTemplateId";
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private CaseOfficerPendingPaymentPaidPersonalisation caseOfficerPendingPaymentPaidPersonalisation;
 

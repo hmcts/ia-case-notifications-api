@@ -34,8 +34,8 @@ class AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisationTest {
     @BeforeEach
     public void setup() {
         String appealReferenceNumber = "someReferenceNumber";
-        String appellantGivenNames = "someAppellantGivenNames";
-        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String appellantFamilyName = "appellantFamilyName";
         when(adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()

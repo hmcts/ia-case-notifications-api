@@ -39,8 +39,8 @@ class LegalRepresentativeReheardUnderRule35PersonalisationTest {
     private String legalRepEmail = "example@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepReferenceNumber = "legalRepReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private LegalRepresentativeReheardUnderRule35Personalisation legalRepresentativeReheardUnderRule35Personalisation;

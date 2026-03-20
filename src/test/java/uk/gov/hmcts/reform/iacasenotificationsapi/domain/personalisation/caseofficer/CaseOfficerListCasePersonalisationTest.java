@@ -67,8 +67,8 @@ public class CaseOfficerListCasePersonalisationTest {
 
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation;
 

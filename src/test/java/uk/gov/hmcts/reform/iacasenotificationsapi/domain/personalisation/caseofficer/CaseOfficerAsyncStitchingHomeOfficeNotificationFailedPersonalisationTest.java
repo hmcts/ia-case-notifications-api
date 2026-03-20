@@ -38,8 +38,8 @@ class CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisationTest {
     private Long caseId = 12345L;
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private String iaExUiFrontendUrl = "frontend url";
     private String asyncStitchingHomeOfficeNotificationFailedTemplateId = "asyncStitchingHomeOfficeNotificationFailedTemplateId";

@@ -62,8 +62,8 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
 
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private String securityCode = "securityCode";
     private String validDate = "2022-12-31";
     private String validDateFormatted = "31 Dec 2022";

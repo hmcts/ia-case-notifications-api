@@ -46,8 +46,8 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
     private String legalRepEmailAddress = "legalrep@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
     private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String iaExUiFrontendUrl = "http://localhost";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "customer.services@example.com";

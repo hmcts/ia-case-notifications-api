@@ -61,8 +61,8 @@ public class CaseOfficerListCmaPersonalisationTest {
     private String hearingTime = "14:25";
 
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private CaseOfficerListCmaPersonalisation caseOfficerListCmaPersonalisation;
 

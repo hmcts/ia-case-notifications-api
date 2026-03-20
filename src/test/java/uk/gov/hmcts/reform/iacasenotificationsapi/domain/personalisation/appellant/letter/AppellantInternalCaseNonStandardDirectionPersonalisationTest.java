@@ -53,8 +53,8 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
     private Long caseId = 12345L;
     private String appellantInternalCaseNonStandardDirectionLetterTemplateId = "appellantInternalCaseNonStandardDirectionLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String expectedDirectionDueDate = "27 Aug 2024";
     private String directionDueDate = "2024-08-27";
     private String directionExplanation = "someExplanation";
@@ -65,8 +65,8 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
     private String postTown = "Town name";
     private String mockedAppealReferenceNumber = "someAppealRefNumber";
     private String mockedAriaListingReference = "someAriaListingReference";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "example@example.com";
     private String oocAddressLine1 = "Calle Toledo 32";

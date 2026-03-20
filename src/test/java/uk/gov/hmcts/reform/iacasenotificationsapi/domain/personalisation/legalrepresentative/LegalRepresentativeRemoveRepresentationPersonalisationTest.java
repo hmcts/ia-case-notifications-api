@@ -55,8 +55,8 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
 

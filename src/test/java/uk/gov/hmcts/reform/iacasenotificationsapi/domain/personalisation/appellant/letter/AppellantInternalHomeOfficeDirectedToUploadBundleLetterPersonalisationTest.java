@@ -51,8 +51,8 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
     private String letterTemplateId = "someLetterTemplateId";
     private String appealReferenceNumber = "someAppealRefNumber";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String expectedDirectionDueDate = "27 Aug 2024";
     private String directionDueDate = "2024-08-27";
     private String directionExplanation = "someExplanation";
@@ -103,13 +103,13 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
     @Test
     void should_return_address_in_correct_format_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test

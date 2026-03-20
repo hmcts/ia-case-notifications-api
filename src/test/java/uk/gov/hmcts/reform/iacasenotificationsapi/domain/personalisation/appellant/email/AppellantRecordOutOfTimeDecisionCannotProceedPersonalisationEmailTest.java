@@ -48,8 +48,8 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
     private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private String appealReferenceNumber = "someReferenceNumber";
     private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private String mockedAppellantEmailAddress = "appelant@example.net";

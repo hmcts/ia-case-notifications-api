@@ -49,8 +49,8 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     private String appealReferenceNumber = "someAppealRefNumber";
     private String referenceNumber = "1111222233334444";
     private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String addressLine1 = "50";
     private String addressLine2 = "Building name";
     private String addressLine3 = "Street name";
@@ -105,13 +105,13 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     @Test
     void should_return_address_in_correct_format_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(letterNotificationPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test

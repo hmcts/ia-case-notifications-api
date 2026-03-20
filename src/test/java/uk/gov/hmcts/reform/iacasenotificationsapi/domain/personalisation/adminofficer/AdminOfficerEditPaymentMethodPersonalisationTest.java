@@ -31,8 +31,8 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
     private String templateEaHuId = "eaHuTemplateId";
     private String templatePaId = "paTemplateId";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String adminOfficerEmailAddress = "adminOfficer@example.com";
     private String iaExUiFrontendUrl = "http://localhost";
 

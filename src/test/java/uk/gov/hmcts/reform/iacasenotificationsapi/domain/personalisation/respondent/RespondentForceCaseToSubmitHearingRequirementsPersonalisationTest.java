@@ -35,8 +35,8 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
 
     private final String hmctsReference = "hmctsReference";
     private final String homeOfficeReference = "homeOfficeReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
 
     private RespondentForceCaseToSubmitHearingRequirementsPersonalisation
          respondentForceCaseToSubmitHearingRequirementsPersonalisation;

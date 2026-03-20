@@ -46,8 +46,8 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     DocumentWithMetadata internalAdaSuitabilityLetter = getDocumentWithMetadata(
         "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.INTERNAL_ADA_SUITABILITY);

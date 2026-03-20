@@ -45,8 +45,8 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
     private String iaExUiFrontendUrl = "http://somefrontendurl";
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
 
     private CaseOfficerRespondentEvidenceSubmittedPersonalisation caseOfficerRespondentEvidenceSubmittedPersonalisation;
 

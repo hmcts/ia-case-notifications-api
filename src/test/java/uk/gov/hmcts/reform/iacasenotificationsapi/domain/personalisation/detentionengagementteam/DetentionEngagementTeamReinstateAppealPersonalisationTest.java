@@ -50,8 +50,8 @@ class DetentionEngagementTeamReinstateAppealPersonalisationTest {
     private final String uploadAdditionalEvidencePersonalisationReferenceId = "_INTERNAL_DET_REINSTATE_APPEAL_EMAIL";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String detEmailAddress = "some@example.com";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";

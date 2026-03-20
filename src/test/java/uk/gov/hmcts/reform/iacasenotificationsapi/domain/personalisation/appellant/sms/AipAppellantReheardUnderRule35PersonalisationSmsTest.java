@@ -40,8 +40,8 @@ class AipAppellantReheardUnderRule35PersonalisationSmsTest {
     private String smsTemplateId = "someSmsTemplateId";
     private long mockedAppealReferenceNumber = 1236;
     private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String iaAipFrontendUrl = "http://localhost";
     private AipAppellantReheardUnderRule35PersonalisationSms aipAppellantReheardUnderRule35PersonalisationSms;
 

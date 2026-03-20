@@ -55,8 +55,8 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
     private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     DocumentWithMetadata internalEditAppealLetter = getDocumentWithMetadata(
             "1", "Edit appeal letter", "some other desc", DocumentTag.INTERNAL_EDIT_APPEAL_LETTER);

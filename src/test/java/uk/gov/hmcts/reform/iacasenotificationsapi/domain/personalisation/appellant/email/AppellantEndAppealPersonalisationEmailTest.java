@@ -51,8 +51,8 @@ public class AppellantEndAppealPersonalisationEmailTest {
     private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private String mockedAppellantGivenNames = "appellantGivenNames";
+    private String mockedAppellantFamilyName = "appellantFamilyName";
     private String mockedAppellantEmailAddress = "appelant@example.net";
 
     private AppellantEndAppealPersonalisationEmail appellantEndAppealPersonalisationEmail;

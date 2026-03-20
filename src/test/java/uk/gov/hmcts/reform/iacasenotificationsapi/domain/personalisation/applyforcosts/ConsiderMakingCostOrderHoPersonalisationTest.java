@@ -32,8 +32,8 @@ class ConsiderMakingCostOrderHoPersonalisationTest {
     private String templateId = "testTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private String appellantGivenNames = "appellantGivenNames";
+    private String appellantFamilyName = "appellantFamilyName";
     private String customerServicesTelephone = "555 555 555";
     private String customerServicesEmail = "cust.services@example.com";
     private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";

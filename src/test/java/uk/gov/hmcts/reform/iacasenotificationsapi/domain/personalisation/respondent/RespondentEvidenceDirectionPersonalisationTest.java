@@ -64,8 +64,8 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
 
     private final AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
             "Spa Road",
