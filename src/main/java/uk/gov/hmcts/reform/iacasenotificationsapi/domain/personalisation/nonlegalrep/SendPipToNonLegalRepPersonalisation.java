@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
@@ -39,9 +40,10 @@ public class SendPipToNonLegalRepPersonalisation implements EmailNotificationPer
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        String nlrEmail = asylumCase.read(AsylumCaseDefinition.NLR_EMAIL, String.class)
+        return asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
+            .map(NonLegalRepDetails::getEmailAddress)
+            .map(Collections::singleton)
             .orElseThrow(() -> new IllegalStateException("NLR email address is not present"));
-        return Collections.singleton(nlrEmail);
     }
 
     @Override

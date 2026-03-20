@@ -7923,7 +7923,8 @@ public class NotificationHandlerConfiguration {
                 if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     String nlrEmail =
-                        asylumCase.read(NLR_EMAIL, String.class)
+                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                            .map(NonLegalRepDetails::getEmailAddress)
                             .orElse(null);
                     return validNlrEvents.contains(callback.getEvent())
                         && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);

@@ -453,9 +453,6 @@ public enum AsylumCaseDefinition {
     REVOKE_ACCESS_DL(
         "revokeAccessDl", new TypeReference<DynamicList>(){}),
 
-    NLR_EMAIL(
-        "nlrEmail", new TypeReference<String>() {}),
-
     NLR_DETAILS(
         "nlrDetails", new TypeReference<NonLegalRepDetails>(){}),
 

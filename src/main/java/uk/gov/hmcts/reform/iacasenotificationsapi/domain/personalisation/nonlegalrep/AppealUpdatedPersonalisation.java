@@ -38,9 +38,10 @@ public class AppealUpdatedPersonalisation implements EmailNotificationPersonalis
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        NonLegalRepDetails nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
+        return asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
+            .map(NonLegalRepDetails::getEmailAddress)
+            .map(Collections::singleton)
             .orElseThrow(() -> new IllegalStateException("NLR details is not present"));
-        return Collections.singleton(nlrDetails.getEmailAddress());
     }
 
     @Override
