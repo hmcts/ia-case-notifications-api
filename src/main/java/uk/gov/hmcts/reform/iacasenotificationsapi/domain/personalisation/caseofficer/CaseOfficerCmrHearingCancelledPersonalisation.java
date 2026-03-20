@@ -25,17 +25,20 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 public class CaseOfficerCmrHearingCancelledPersonalisation implements EmailNotificationPersonalisation {
 
     private final String caseOfficerCmrHearingCancelledTemplateId;
+    private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final EmailAddressFinder emailAddressFinder;
 
     public CaseOfficerCmrHearingCancelledPersonalisation(
         @Value("${govnotify.template.cmrHearingCancelled.caseOfficer.email}") String caseOfficerCmrHearingCancelledTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         EmailAddressFinder emailAddressFinder
     ) {
         this.caseOfficerCmrHearingCancelledTemplateId = caseOfficerCmrHearingCancelledTemplateId;
+        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
         this.emailAddressFinder = emailAddressFinder;
@@ -68,6 +71,7 @@ public class CaseOfficerCmrHearingCancelledPersonalisation implements EmailNotif
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+            .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();
     }
 }

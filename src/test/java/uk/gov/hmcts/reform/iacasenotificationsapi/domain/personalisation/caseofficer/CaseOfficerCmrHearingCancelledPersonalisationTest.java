@@ -34,6 +34,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 class CaseOfficerCmrHearingCancelledPersonalisationTest {
 
     private static final String TEMPLATE_ID = "templateId";
+    private static final String LINK_TO_ONLINE_SERVICE = "link";
     private static final String EMAIL = "detention@email.com";
 
     private CaseOfficerCmrHearingCancelledPersonalisation personalisation;
@@ -58,7 +59,7 @@ class CaseOfficerCmrHearingCancelledPersonalisationTest {
     @BeforeEach
     void setUp() {
         personalisation = new CaseOfficerCmrHearingCancelledPersonalisation(
-                TEMPLATE_ID, dateTimeExtractor, hearingDetailsFinder, emailAddressFinder);
+                TEMPLATE_ID, LINK_TO_ONLINE_SERVICE, dateTimeExtractor, hearingDetailsFinder, emailAddressFinder);
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -104,9 +105,10 @@ class CaseOfficerCmrHearingCancelledPersonalisationTest {
         Map<String, String> personalisationMap = personalisation.getPersonalisation(callback);
 
         assertThat(personalisationMap)
-            .containsEntry("appealReferenceNumber", "REF123")
-            .containsEntry("appellantGivenNames", "John")
-            .containsEntry("appellantFamilyName", "Doe");
+                .containsEntry("appealReferenceNumber", "REF123")
+                .containsEntry("appellantGivenNames", "John")
+                .containsEntry("appellantFamilyName", "Doe")
+                .containsEntry("linkToOnlineService", LINK_TO_ONLINE_SERVICE);
     }
 
     @Test
