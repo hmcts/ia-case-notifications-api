@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantCmrRelistingPersonalisationSmsTest {
@@ -45,8 +47,10 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
 
     private Long caseId = 12345L;
     private String templateId = "someTemplateId";
+    private String legallyReppedTemplateId = "legallyReppedTemplateId";
     private String iaAipFrontendUrl = "http://localhost";
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
     private String hearingCentreAddress = "some hearing centre address";
 
     private String hearingDateTime = "2019-08-27T14:25:15.000";
@@ -55,9 +59,12 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
 
     private String appellantGivenNames = "appellantGivenNames";
     private String appellantFamilyName = "appellantFamilyName";
+    private String homeOfficeRefNumber = "homeOfficeRefNumber";
 
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
+    private String customerServicesTelephone = "555 555 555";
+    private String customerServicesEmail = "cust.services@example.com";
 
     private String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
     private String remoteVideoCallTribunalResponse = "some tribunal response";
@@ -67,51 +74,69 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
     private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
     private String requirementsOther = "someRequirementsOther";
 
-    private AppellantCmrRelistingPersonalisationSms appellantCmrRelistingPersonalisationSms;
+    private AppellantEditListingPersonalisationSms appellantEditListingPersonalisationSms;
 
     @BeforeEach
     void setup() {
-        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-        when(asylumCase.read(CMR_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
 
-        appellantCmrRelistingPersonalisationSms = new AppellantCmrRelistingPersonalisationSms(
-                templateId,
-                iaAipFrontendUrl,
-                recipientsFinder,
-                personalisationProvider
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(tribunalCentre));
+        appellantEditListingPersonalisationSms = new AppellantEditListingPersonalisationSms(
+            templateId,
+            legallyReppedTemplateId,
+            iaAipFrontendUrl,
+            personalisationProvider,
+            recipientsFinder
         );
     }
 
     @Test
     public void should_return_correct_template_id() {
-        assertEquals(templateId, appellantCmrRelistingPersonalisationSms.getTemplateId());
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        assertEquals(templateId, appellantEditListingPersonalisationSms.getTemplateId(asylumCase));
+
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        assertEquals(legallyReppedTemplateId, appellantEditListingPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_CMR_RELISTED_APPELLANT_SMS",
-                appellantCmrRelistingPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_CASE_RE_LISTED_APPELLANT_SMS",
+            appellantEditListingPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
-        when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantCmrRelistingPersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        when(recipientsFinder.findAll(null, NotificationType.SMS))
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
+
+        assertThatThrownBy(() -> appellantEditListingPersonalisationSms.getRecipientsList(null))
+            .isExactlyInstanceOf(NullPointerException.class)
+            .hasMessage("asylumCase must not be null");
     }
 
     @Test
-    public void should_return_given_mobile_list_from_subscribers_in_asylum_case() {
+    public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case_aip() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
-
-        Set<String> response = appellantCmrRelistingPersonalisationSms.getRecipientsList(asylumCase);
-
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+        Set<String> response = appellantEditListingPersonalisationSms.getRecipientsList(asylumCase);
         verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
+        assertTrue(response.contains(mockedAppellantMobilePhone));
+    }
+
+    @Test
+    public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case_rep() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS))
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+        Set<String> response = appellantEditListingPersonalisationSms.getRecipientsList(asylumCase);
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(1)).findReppedAppellant(asylumCase, NotificationType.SMS);
         assertTrue(response.contains(mockedAppellantMobilePhone));
     }
 
@@ -120,9 +145,8 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-
         Map<String, String> personalisation =
-                appellantCmrRelistingPersonalisationSms.getPersonalisation(callback);
+            appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
         assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
@@ -133,9 +157,8 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithBlankValues());
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-
         Map<String, String> personalisation =
-                appellantCmrRelistingPersonalisationSms.getPersonalisation(callback);
+            appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
         assertThat(personalisation).isNotEmpty();
         assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
@@ -143,43 +166,44 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", mockedAppealReferenceNumber)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("hearingCentreName", hearingCentreName)
-                .put("remoteVideoCallTribunalResponse", remoteVideoCallTribunalResponse)
-                .put("hearingRequirementVulnerabilities", requirementsVulnerabilities)
-                .put("hearingRequirementMultimedia", requirementsMultimedia)
-                .put("hearingRequirementSingleSexCourt", requirementsSingleSexCourt)
-                .put("hearingRequirementInCameraCourt", requirementsInCamera)
-                .put("hearingRequirementOther", requirementsOther)
-                .put("oldHearingCentre", hearingDateTime)
-                .put("oldHearingDate", hearingDate)
-                .put("hearingDate", hearingDate)
-                .put("hearingTime", hearingTime)
-                .put("hearingCentreAddress", hearingCentreAddress)
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", mockedAppealReferenceNumber)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("linkToOnlineService", iaAipFrontendUrl)
+            .put("hearingCentreName", hearingCentreName)
+            .put("remoteVideoCallTribunalResponse", remoteVideoCallTribunalResponse)
+            .put("hearingRequirementVulnerabilities", requirementsVulnerabilities)
+            .put("hearingRequirementMultimedia", requirementsMultimedia)
+            .put("hearingRequirementSingleSexCourt", requirementsSingleSexCourt)
+            .put("hearingRequirementInCameraCourt", requirementsInCamera)
+            .put("hearingRequirementOther", requirementsOther)
+            .put("oldHearingCentre", hearingDateTime)
+            .put("oldHearingDate", hearingDate)
+            .put("hearingDate", hearingDate)
+            .put("hearingTime", hearingTime)
+            .put("hearingCentreAddress", hearingCentreAddress)
+            .build();
     }
 
     private Map<String, String> getPersonalisationMapWithBlankValues() {
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", "")
-                .put("appellantGivenNames", "")
-                .put("appellantFamilyName", "")
-                .put("hearingCentreName", "")
-                .put("remoteVideoCallTribunalResponse", "")
-                .put("hearingRequirementVulnerabilities", "")
-                .put("hearingRequirementMultimedia", "")
-                .put("hearingRequirementSingleSexCourt", "")
-                .put("hearingRequirementInCameraCourt", "")
-                .put("hearingRequirementOther", "")
-                .put("oldHearingCentre", "")
-                .put("oldHearingDate", "")
-                .put("hearingDate", "")
-                .put("hearingTime", "")
-                .put("hearingCentreAddress", hearingCentreAddress)
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", "")
+            .put("ariaListingReference", "")
+            .put("homeOfficeReferenceNumber", "")
+            .put("appellantGivenNames", "")
+            .put("appellantFamilyName", "")
+            .put("linkToOnlineService", iaAipFrontendUrl)
+            .put("hearingCentreName", "")
+            .put("remoteVideoCallTribunalResponse", "")
+            .put("hearingRequirementVulnerabilities", "")
+            .put("hearingRequirementMultimedia", "")
+            .put("hearingRequirementSingleSexCourt", "")
+            .put("hearingRequirementInCameraCourt", "")
+            .put("hearingRequirementOther", "")
+            .put("oldHearingCentre", "")
+            .put("hearingCentreAddress", hearingCentreAddress)
+            .build();
     }
 }
