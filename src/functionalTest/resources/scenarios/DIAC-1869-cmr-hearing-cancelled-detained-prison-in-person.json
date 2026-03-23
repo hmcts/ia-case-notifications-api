@@ -349,6 +349,7 @@
         "body": [
           "PA/12345/2019",
           "Talha Awan",
+          "{$iaExUiFrontendUrl}",
           "The hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
         ]
       }
