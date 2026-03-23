@@ -25,7 +25,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class NlrPhoneNumberSubmittedPersonalisationTest {
+public class NlrDetailsUpdatedPersonalisationTest {
 
     @Mock
     Callback<AsylumCase> callback;
@@ -37,7 +37,7 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
 
     private final Long caseId = 12345L;
-    private final String templateId = "nlrPhoneNumberSubmittedTemplateId";
+    private final String templateId = "nlrDetailsUpdatedTemplateId";
     private final String aipFrontendUrl = "http://localhost";
     private final NonLegalRepDetails nlrDetails = NonLegalRepDetails.builder()
         .emailAddress("someEmail")
@@ -50,11 +50,11 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
 
-    private NlrPhoneNumberSubmittedPersonalisation nlrPhoneNumberSubmittedPersonalisation;
+    private NlrDetailsUpdatedPersonalisation nlrDetailsUpdatedPersonalisation;
 
     @BeforeEach
     public void setUp() {
-        nlrPhoneNumberSubmittedPersonalisation = new NlrPhoneNumberSubmittedPersonalisation(
+        nlrDetailsUpdatedPersonalisation = new NlrDetailsUpdatedPersonalisation(
             templateId,
             aipFrontendUrl,
             customerServicesProvider
@@ -65,26 +65,26 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
     public void should_return_nlr_details() {
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
         assertEquals(Collections.singleton(nlrDetails.getEmailAddress()),
-            nlrPhoneNumberSubmittedPersonalisation.getRecipientsList(asylumCase));
+            nlrDetailsUpdatedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_throw_if_no_nlr_email_address() {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> nlrPhoneNumberSubmittedPersonalisation.getRecipientsList(asylumCase));
+            () -> nlrDetailsUpdatedPersonalisation.getRecipientsList(asylumCase));
         assertEquals("NLR details is not present", exception.getMessage());
     }
 
     @Test
     public void should_return_given_template_id() {
         assertEquals(templateId,
-            nlrPhoneNumberSubmittedPersonalisation.getTemplateId(asylumCase));
+            nlrDetailsUpdatedPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_NON_LEGAL_REP_PHONE_NUMBER_SUBMITTED",
-            nlrPhoneNumberSubmittedPersonalisation.getReferenceId(caseId));
+            nlrDetailsUpdatedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
-            nlrPhoneNumberSubmittedPersonalisation.getPersonalisation(callback);
+            nlrDetailsUpdatedPersonalisation.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
         assertEquals(personalisation.get("appealReferenceNumber"), appealReferenceNumber);
@@ -128,7 +128,7 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
-            nlrPhoneNumberSubmittedPersonalisation.getPersonalisation(callback);
+            nlrDetailsUpdatedPersonalisation.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
         assertEquals(personalisation.get("appealReferenceNumber"), appealReferenceNumber);
@@ -144,7 +144,7 @@ public class NlrPhoneNumberSubmittedPersonalisationTest {
     public void should_throw_exception_when_callback_is_null() {
 
         NullPointerException exception = assertThrows(NullPointerException.class,
-            () -> nlrPhoneNumberSubmittedPersonalisation.getPersonalisation((AsylumCase) null));
+            () -> nlrDetailsUpdatedPersonalisation.getPersonalisation((AsylumCase) null));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

@@ -8001,7 +8001,7 @@ public class NotificationHandlerConfiguration {
                         asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
                             .map(NonLegalRepDetails::getEmailAddress)
                             .orElse(null);
-                    return callback.getEvent().equals(NLR_PHONE_NUMBER_SUBMITTED)
+                    return callback.getEvent().equals(NLR_DETAILS_UPDATED)
                         && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
                 }
                 return false;

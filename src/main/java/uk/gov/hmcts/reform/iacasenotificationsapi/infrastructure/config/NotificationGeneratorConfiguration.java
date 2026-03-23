@@ -118,7 +118,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlega
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationAppellantPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationAppellantPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.JoinAppealConfirmationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.NlrPhoneNumberSubmittedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.NlrDetailsUpdatedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.RevokeCitizenAccessPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendInviteToNonLegalRepPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.SendPipToNonLegalRepPersonalisation;
@@ -7220,13 +7220,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("generateNlrPhoneNumberSubmittedNotificationGenerator")
     public List<NotificationGenerator> generateNlrPhoneNumberSubmittedNotificationGenerator(
-        NlrPhoneNumberSubmittedPersonalisation nlrPhoneNumberSubmittedPersonalisation,
+        NlrDetailsUpdatedPersonalisation nlrDetailsUpdatedPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
         return List.of(
             new EmailNotificationGenerator(
-                newArrayList(nlrPhoneNumberSubmittedPersonalisation),
+                newArrayList(nlrDetailsUpdatedPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )

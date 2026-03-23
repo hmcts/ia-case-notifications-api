@@ -15,25 +15,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class NlrPhoneNumberSubmittedPersonalisation implements EmailNotificationPersonalisation {
+public class NlrDetailsUpdatedPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String nlrPhoneNumberSubmittedTemplateId;
+    private final String nlrDetailsUpdatedTemplateId;
     private final String iaAipFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public NlrPhoneNumberSubmittedPersonalisation(
-        @Value("${govnotify.template.nlr.nlrPhoneNumberSubmitted.email}") String nlrPhoneNumberSubmittedTemplateId,
+    public NlrDetailsUpdatedPersonalisation(
+        @Value("${govnotify.template.nlr.nlrDetailsUpdated.email}") String nlrDetailsUpdatedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         CustomerServicesProvider customerServicesProvider
     ) {
-        this.nlrPhoneNumberSubmittedTemplateId = nlrPhoneNumberSubmittedTemplateId;
+        this.nlrDetailsUpdatedTemplateId = nlrDetailsUpdatedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return nlrPhoneNumberSubmittedTemplateId;
+        return nlrDetailsUpdatedTemplateId;
     }
 
     @Override
