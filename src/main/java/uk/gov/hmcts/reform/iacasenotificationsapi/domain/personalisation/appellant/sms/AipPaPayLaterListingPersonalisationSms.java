@@ -23,7 +23,7 @@ public class AipPaPayLaterListingPersonalisationSms implements SmsNotificationPe
     private final String iaAipFrontendUrl;
 
     public AipPaPayLaterListingPersonalisationSms(
-            @Value("${govnotify.template.decision.paPayLater.sms}") String templateId,
+            @Value("${govnotify.template.listing.paPayLater.sms}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder
     ) {
