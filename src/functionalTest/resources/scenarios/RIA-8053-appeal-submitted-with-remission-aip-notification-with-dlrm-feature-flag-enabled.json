@@ -15,6 +15,7 @@
           "journeyType": "aip",
           "remissionOption": "feeWaiverFromHo",
           "appealType":"refusalOfEu",
+          "eaHuAppealTypePaymentOption": "payLater",
           "subscriptions": [
             {
               "id": "1",

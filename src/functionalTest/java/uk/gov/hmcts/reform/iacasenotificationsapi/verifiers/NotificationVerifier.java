@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
@@ -24,7 +23,6 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Component
 @SuppressWarnings("unchecked")
-@Slf4j
 public class NotificationVerifier implements Verifier {
 
     @Autowired
@@ -53,10 +51,6 @@ public class NotificationVerifier implements Verifier {
                 notificationsSent.isEmpty(),
                 description + ": Notifications were not delivered"
             );
-        }
-
-        if (description.contains("RIA-8053 Appeal submitted with remission and dlrm fee remission feature flag enabled - AiP notification")) {
-            log.info("RIA-8053 Appeal submitted with remission AiP - notificationsSent: \n", notificationsSent);
         }
 
         Map<String, String> notificationsSentMap =

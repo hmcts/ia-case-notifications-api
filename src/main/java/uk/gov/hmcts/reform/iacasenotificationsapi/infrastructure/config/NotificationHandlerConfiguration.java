@@ -3696,6 +3696,9 @@ public class NotificationHandlerConfiguration {
     private boolean isPaymentPendingForEaOrHuAppeal(Callback<AsylumCase> callback) {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+        String eaHuAppealTypePaymentOption = asylumCase
+                .read(AsylumCaseDefinition.EA_HU_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
         State asylumCaseState = callback.getCaseDetails().getState();
         RemissionType remissionType = asylumCase.read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
         RemissionOption remissionOption = asylumCase.read(REMISSION_OPTION, RemissionOption.class)
@@ -3710,7 +3713,8 @@ public class NotificationHandlerConfiguration {
                 && isEaAndHuAppealType;
         }
 
-        return asylumCaseState == State.PENDING_PAYMENT && isEaAndHuAppealType;
+        return asylumCaseState == State.PENDING_PAYMENT && isEaAndHuAppealType
+                && (eaHuAppealTypePaymentOption.isEmpty() || eaHuAppealTypePaymentOption.equals("payOffline"));
     }
 
     private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
