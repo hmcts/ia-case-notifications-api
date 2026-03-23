@@ -3696,9 +3696,16 @@ public class NotificationHandlerConfiguration {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         State asylumCaseState = callback.getCaseDetails().getState();
+        RemissionType remissionType = asylumCase.read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
         boolean isEaAndHuAppealType = isEaHuEuAppeal(asylumCase);
-        return asylumCaseState == State.PENDING_PAYMENT
+        if (Arrays.asList(
+            HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)) {
+            return asylumCaseState == State.PENDING_PAYMENT
                 && isEaAndHuAppealType;
+        }
+        return asylumCaseState == State.PENDING_PAYMENT
+            && isEaAndHuAppealType
+            && remissionType == NO_REMISSION;
     }
 
     private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
