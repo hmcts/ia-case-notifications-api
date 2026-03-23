@@ -4868,6 +4868,29 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator(
+            AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation appellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
     @Bean("removeStatutoryTimeframe24WeeksAppellantNotificationGenerator")
     public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantNotificationGenerator(
             AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,

@@ -5676,6 +5676,17 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
+            @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantNotificationHandler(
