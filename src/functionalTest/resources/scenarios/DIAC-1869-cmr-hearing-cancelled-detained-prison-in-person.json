@@ -2,7 +2,7 @@
   "description": "DIAC-1869 CMR Hearing Cancelled - Detained ",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
-    "uri": "/asylum/ccdSubmitted",
+    "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
       "id": 18691,
