@@ -81,6 +81,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAppealSubmittedPendingPaymentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCaseLinkPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCaseUnlinkPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrHearingCancelledPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeDecideAnApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeDecisionWithoutHearingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEditListingNoChangePersonalisation;
@@ -6809,13 +6810,15 @@ public class NotificationGeneratorConfiguration {
     @Bean("cmrHearingCancelledProductionDetainedNotificationGenerator")
     public List<NotificationGenerator> cmrHearingCancelledProductionDetainedNotificationGenerator(
             CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
+            HomeOfficeCmrHearingCancelledPersonalisation homeOfficeCmrHearingCancelledPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                caseOfficerCmrHearingCancelledPersonalisation
+                                caseOfficerCmrHearingCancelledPersonalisation,
+                                homeOfficeCmrHearingCancelledPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender

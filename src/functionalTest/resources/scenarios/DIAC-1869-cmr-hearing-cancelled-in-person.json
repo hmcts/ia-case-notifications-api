@@ -11,6 +11,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "homeOfficeReferenceNumber": "1212-0099-0062-8083",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
@@ -155,8 +156,13 @@
           {
             "id": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "18691_CMR_HEARING_CANCELLED_Home_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
+        "homeOfficeReferenceNumber": "1212-0099-0062-8083",
         "appellantInDetention": "No",
         "appellantHasFixedAddress": "Yes",
         "appellantAddress": {
@@ -299,6 +305,23 @@
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
           "The hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
+        ]
+      },
+      {
+        "reference": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
+        "recipient": "{$homeOfficeEmailAddresses.glasgow}",
+        "subject": "Immigration and Asylum appeal: hearing cancellation",
+        "body": [
+          "PA/12345/2019",
+          "1212-0099-0062-8083",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "This case was listed for CMR hearing on",
+          "Please be advised that the hearing previously scheduled for the date and venue mentioned above has been cancelled.",
+          "The Tribunal will notify you when there is a new date for the hearing.",
+          "First-tier Tribunal (Immigration and Asylum Chamber)",
+          "If you’re unsure an email is from the HM Courts & Tribunals Service:",
+          "Do not reply to it or click on any links."
         ]
       }
     ]
