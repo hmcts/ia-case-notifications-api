@@ -177,7 +177,6 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
             "id": "18691_END_APPEAL_HOME_OFFICE",
@@ -191,7 +190,163 @@
             "id": "18691_DETAINED_HEARING_CANCELLED_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
-        ]
+        ],
+        "listCaseHearingCentre": "taylorHouse",
+        "ariaListingReference": "LP/12345/2019",
+        "appellantInDetention": "No",
+        "appellantHasFixedAddress": "Yes",
+        "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "SE12 0NB",
+          "PostTown": "London",
+          "AddressLine1": "17 Linchmere Road",
+          "AddressLine2": "",
+          "AddressLine3": ""
+        },
+        "hearingChannel": {
+          "value": {
+            "code": "INTER",
+            "label": "In Person"
+          },
+          "list_items": [
+            {
+              "code": "INTER",
+              "label": "In Person"
+            },
+            {
+              "code": "NA",
+              "label": "Not in Attendance"
+            },
+            {
+              "code": "TEL",
+              "label": "Telephone"
+            },
+            {
+              "code": "VID",
+              "label": "Video"
+            }
+          ]
+        },
+        "cmrHearingDate": "2026-03-27T09:45:00.000",
+        "cmrHearingCentre": "glasgowTribunalsCentre",
+        "cmrHearingLength": {
+          "hours": 3,
+          "minutes": 0
+        },
+        "cmrHearingChannel": {
+          "value": {
+            "code": "INTER",
+            "label": "In Person"
+          },
+          "list_items": [
+            {
+              "code": "INTER",
+              "label": "In Person"
+            }
+          ]
+        },
+        "cmrIsRemoteHearing": "No",
+        "cmrHearingCentreAddress": {
+          "value": {
+            "code": "366559",
+            "label": "Atlantic Quay - Glasgow"
+          },
+          "list_items": [
+            {
+              "code": "572158",
+              "label": "Bedlington Magistrates Court"
+            },
+            {
+              "code": "787030",
+              "label": "Coventry Magistrates' Court"
+            },
+            {
+              "code": "366559",
+              "label": "Atlantic Quay - Glasgow"
+            },
+            {
+              "code": "28837",
+              "label": "Harmondsworth Tribunal Hearing Centre"
+            },
+            {
+              "code": "386417",
+              "label": "Hatton Cross Tribunal Hearing Centre"
+            },
+            {
+              "code": "745389",
+              "label": "Hendon Magistrates' Court"
+            },
+            {
+              "code": "999970",
+              "label": "IAC National (Virtual)"
+            },
+            {
+              "code": "569737",
+              "label": "Leeds Magistrates' Court and Family Court"
+            },
+            {
+              "code": "144641",
+              "label": "Manchester Crown Court (Crown Square)"
+            },
+            {
+              "code": "326944",
+              "label": "Manchester Crown Court (Minshull st)"
+            },
+            {
+              "code": "783803",
+              "label": "Manchester Magistrates' Court"
+            },
+            {
+              "code": "512401",
+              "label": "Manchester Tribunal Hearing Centre - Piccadilly Exchange"
+            },
+            {
+              "code": "366796",
+              "label": "Newcastle Civil And Family Courts And Tribunals Centre"
+            },
+            {
+              "code": "227101",
+              "label": "Newport Tribunal Centre - Columbus House"
+            },
+            {
+              "code": "231596",
+              "label": "Birmingham Civil And Family Justice Centre"
+            },
+            {
+              "code": "443257",
+              "label": "North Tyneside Magistrates' Court"
+            },
+            {
+              "code": "698118",
+              "label": "Bradford Tribunal Hearing Centre"
+            },
+            {
+              "code": "618632",
+              "label": "Nottingham Magistrates' Court"
+            },
+            {
+              "code": "649000",
+              "label": "Yarls Wood Immigration And Asylum Hearing Centre"
+            },
+            {
+              "code": "765324",
+              "label": "Taylor House Tribunal Hearing Centre"
+            },
+            {
+              "code": "580554",
+              "label": "Bradford and Keighley Magistrates' Court and Family Court"
+            },
+            {
+              "code": "999971",
+              "label": "Alloa Sheriff Court"
+            },
+            {
+              "code": "999973",
+              "label": "Belfast Laganside Court"
+            }
+          ]
+        }
       }
     },
     "notifications": [
