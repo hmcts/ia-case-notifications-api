@@ -3691,21 +3691,25 @@ public class NotificationHandlerConfiguration {
         );
     }
 
-
     private boolean isPaymentPendingForEaOrHuAppeal(Callback<AsylumCase> callback) {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         State asylumCaseState = callback.getCaseDetails().getState();
         RemissionType remissionType = asylumCase.read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
+        RemissionOption remissionOption = asylumCase.read(REMISSION_OPTION, RemissionOption.class)
+                .orElse(RemissionOption.NO_REMISSION);
+
         boolean isEaAndHuAppealType = isEaHuEuAppeal(asylumCase);
         if (Arrays.asList(
             HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)) {
             return asylumCaseState == State.PENDING_PAYMENT
                 && isEaAndHuAppealType;
         }
+
         return asylumCaseState == State.PENDING_PAYMENT
             && isEaAndHuAppealType
-            && remissionType == NO_REMISSION;
+            && ((isAipJourney(asylumCase) && remissionOption == RemissionOption.NO_REMISSION)
+                || remissionType == NO_REMISSION);
     }
 
     private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
@@ -5075,45 +5079,6 @@ public class NotificationHandlerConfiguration {
                 return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
                     && state != State.APPEAL_STARTED);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PostSubmitCallbackHandler<AsylumCase> payForAppealAppealEmailNotificationHandler(
-        @Qualifier("payForAppealEmailNotificationGenerator")
-        List<NotificationGenerator> notificationGenerators) {
-
-        return new PostSubmitNotificationHandler(
-            (callbackStage, callback) -> {
-
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                boolean paymentFailed = asylumCase
-                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
-                    .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
-
-                boolean payLater = asylumCase
-                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
-                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
-                    .orElse(false);
-
-                boolean paymentFailedChangedToPayLater = paymentFailed && payLater;
-
-                boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
-                    .map(decision -> APPROVED == decision)
-                    .orElse(false);
-
-                return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
-                    && callback.getEvent() == Event.PAY_FOR_APPEAL
-                    && callback.getCaseDetails().getCaseData()
-                    .read(JOURNEY_TYPE, JourneyType.class)
-                    .map(type -> type == REP).orElse(true)
-                    && (!paymentFailed || paymentFailedChangedToPayLater)
-                    && !isPaymentPendingForEaOrHuAppeal(callback))
-                    || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                    && isRemissionApproved
-                    && isEaHuEuAppeal(asylumCase));
             }, notificationGenerators
         );
     }
