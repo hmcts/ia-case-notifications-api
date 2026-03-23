@@ -343,12 +343,13 @@
     },
     "notifications": [
       {
-        "reference": "18691_END_APPEAL_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: appeal ended –",
+        "reference": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+        "recipient": "{$listCaseCaseOfficerEmailAddress}",
+        "subject": "Immigration and Asylum appeal: hearing cancellation",
         "body": [
           "PA/12345/2019",
-          "Talha Awan"
+          "Talha Awan",
+          "The hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
         ]
       }
     ]
