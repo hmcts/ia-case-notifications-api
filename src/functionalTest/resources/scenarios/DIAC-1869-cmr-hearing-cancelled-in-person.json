@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-1869 CMR Hearing Cancelled - Detained ",
+  "description": "DIAC-1869 CMR Hearing Cancelled - In Person ",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -11,8 +11,6 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019",
           "appellantInDetention": "No",
           "appellantHasFixedAddress": "Yes",
           "appellantAddress": {
