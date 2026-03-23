@@ -3705,7 +3705,7 @@ public class NotificationHandlerConfiguration {
         if (Arrays.asList(
             HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)
             || Arrays.asList(ASYLUM_SUPPORT_FROM_HOME_OFFICE, FEE_WAIVER_FROM_HOME_OFFICE,
-            I_WANT_TO_GET_HELP_WITH_FEES, PARENT_GET_SUPPORT, UNDER_18_GET_SUPPORT) .contains(remissionOption)) {
+            I_WANT_TO_GET_HELP_WITH_FEES, PARENT_GET_SUPPORT, UNDER_18_GET_SUPPORT).contains(remissionOption)) {
             return asylumCaseState == State.PENDING_PAYMENT
                 && isEaAndHuAppealType;
         }
