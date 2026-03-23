@@ -27,6 +27,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 @ExtendWith(MockitoExtension.class)
@@ -98,6 +99,7 @@ class HomeOfficeCmrHearingCancelledPersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore)).thenReturn("some address");
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("REF123"));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("REF456"));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("HO123"));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("John"));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
@@ -106,6 +108,7 @@ class HomeOfficeCmrHearingCancelledPersonalisationTest {
 
         assertThat(personalisationMap)
                 .containsEntry("appealReferenceNumber", "REF123")
+                .containsEntry("homeOfficeReferenceNumber", "REF456")
                 .containsEntry("appellantGivenNames", "John")
                 .containsEntry("appellantFamilyName", "Doe")
                 .containsEntry("linkToOnlineService", LINK_TO_ONLINE_SERVICE)

@@ -21,25 +21,26 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 @Slf4j
 @Service
 public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String caseOfficerCmrHearingCancelledTemplateId;
+    private final String homeOfficeCmrHearingCancelledTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final EmailAddressFinder emailAddressFinder;
 
     public HomeOfficeCmrHearingCancelledPersonalisation(
-        @Value("${govnotify.template.cmrHearingCancelled.caseOfficer.email}") String caseOfficerCmrHearingCancelledTemplateId,
+        @Value("${govnotify.template.cmrHearingCancelled.homeOffice.email}") String homeOfficeCmrHearingCancelledTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         EmailAddressFinder emailAddressFinder
     ) {
-        this.caseOfficerCmrHearingCancelledTemplateId = caseOfficerCmrHearingCancelledTemplateId;
+        this.homeOfficeCmrHearingCancelledTemplateId = homeOfficeCmrHearingCancelledTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -48,7 +49,7 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
 
     @Override
     public String getTemplateId() {
-        return caseOfficerCmrHearingCancelledTemplateId;
+        return homeOfficeCmrHearingCancelledTemplateId;
     }
 
     @Override
@@ -85,6 +86,7 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
