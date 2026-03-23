@@ -19,6 +19,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.ASYLUM_SUPPORT_FROM_HOME_OFFICE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.FEE_WAIVER_FROM_HOME_OFFICE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.I_WANT_TO_GET_HELP_WITH_FEES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.PARENT_GET_SUPPORT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.UNDER_18_GET_SUPPORT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.EXCEPTIONAL_CIRCUMSTANCES_REMISSION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HELP_WITH_FEES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HO_WAIVER_REMISSION;
@@ -1218,10 +1223,7 @@ public class NotificationHandlerConfiguration {
 
                 return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && (callback.getCaseDetails().getCaseData()
-                    .read(JOURNEY_TYPE, JourneyType.class)
-                    .map(type -> type == REP).orElse(true)
-                    || isInternalCase(asylumCase))
+                    && (isRepJourney(asylumCase) || isInternalCase(asylumCase))
                     && (!paymentFailed || paymentFailedChangedToPayLater)
                     && !isPaymentPendingForEaOrHuAppeal(callback))
                     || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
@@ -3701,15 +3703,14 @@ public class NotificationHandlerConfiguration {
 
         boolean isEaAndHuAppealType = isEaHuEuAppeal(asylumCase);
         if (Arrays.asList(
-            HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)) {
+            HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)
+            || Arrays.asList(ASYLUM_SUPPORT_FROM_HOME_OFFICE, FEE_WAIVER_FROM_HOME_OFFICE,
+            I_WANT_TO_GET_HELP_WITH_FEES, PARENT_GET_SUPPORT, UNDER_18_GET_SUPPORT) .contains(remissionOption)) {
             return asylumCaseState == State.PENDING_PAYMENT
                 && isEaAndHuAppealType;
         }
 
-        return asylumCaseState == State.PENDING_PAYMENT
-            && isEaAndHuAppealType
-            && ((isAipJourney(asylumCase) && remissionOption == RemissionOption.NO_REMISSION)
-                || remissionType == NO_REMISSION);
+        return asylumCaseState == State.PENDING_PAYMENT && isEaAndHuAppealType;
     }
 
     private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
@@ -5079,6 +5080,45 @@ public class NotificationHandlerConfiguration {
                 return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
                     && state != State.APPEAL_STARTED);
+            }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PostSubmitCallbackHandler<AsylumCase> payForAppealAppealEmailNotificationHandler(
+        @Qualifier("payForAppealEmailNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new PostSubmitNotificationHandler(
+            (callbackStage, callback) -> {
+
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                boolean paymentFailed = asylumCase
+                    .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                    .map(paymentStatus -> paymentStatus == FAILED || paymentStatus == TIMEOUT).orElse(false);
+
+                boolean payLater = asylumCase
+                    .read(PA_APPEAL_TYPE_PAYMENT_OPTION, String.class)
+                    .map(paymentOption -> paymentOption.equals("payOffline") || paymentOption.equals("payLater"))
+                    .orElse(false);
+
+                boolean paymentFailedChangedToPayLater = paymentFailed && payLater;
+
+                boolean isRemissionApproved = asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
+                    .map(decision -> APPROVED == decision)
+                    .orElse(false);
+
+                return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
+                    && callback.getEvent() == Event.PAY_FOR_APPEAL
+                    && callback.getCaseDetails().getCaseData()
+                    .read(JOURNEY_TYPE, JourneyType.class)
+                    .map(type -> type == REP).orElse(true)
+                    && (!paymentFailed || paymentFailedChangedToPayLater)
+                    && !isPaymentPendingForEaOrHuAppeal(callback))
+                    || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                    && isRemissionApproved
+                    && isEaHuEuAppeal(asylumCase));
             }, notificationGenerators
         );
     }
