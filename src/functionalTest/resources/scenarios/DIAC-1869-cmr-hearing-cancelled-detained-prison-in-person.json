@@ -3,7 +3,7 @@
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdSubmitted",
-    "credentials": "CaseOfficer",
+    "credentials": "SystemUser",
     "input": {
       "id": 18691,
       "eventId": "cmrHearingCancelled",
