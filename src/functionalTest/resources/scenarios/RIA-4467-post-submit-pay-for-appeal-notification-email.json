@@ -23,7 +23,7 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([_APPEAL_SUBMITTED_HOME_OFFICE,_APPEAL_SUBMITTED_LEGAL_REP])"
+      "body": "contains([_APPEAL_SUBMITTED_HOME_OFFICE,_APPEAL_SUBMITTED_PAID_LEGAL_REPRESENTATIVE,_APPEAL_SUBMITTED_CASE_OFFICER])"
     }
   }
 }
