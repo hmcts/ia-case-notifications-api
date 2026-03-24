@@ -6815,19 +6815,11 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-        return Arrays.asList(
+        return singletonList(
                 new EmailNotificationGenerator(
-                        newArrayList(caseOfficerCmrHearingCancelledPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new EmailNotificationGenerator(
-                        newArrayList(homeOfficeCmrHearingCancelledPersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new EmailNotificationGenerator(
-                        newArrayList(legalRepCmrHearingCancelledPersonalisation),
+                        newArrayList(caseOfficerCmrHearingCancelledPersonalisation,
+                                homeOfficeCmrHearingCancelledPersonalisation,
+                                legalRepCmrHearingCancelledPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 )
