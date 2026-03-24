@@ -42,7 +42,6 @@
         "isRemissionsEnabled": "Yes",
         "remissionOption": "feeWaiverFromHo",
         "appealType":"refusalOfEu",
-        "eaHuAppealTypePaymentOption": "payLater",
         "notificationsSent": [
           {
             "id": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",
