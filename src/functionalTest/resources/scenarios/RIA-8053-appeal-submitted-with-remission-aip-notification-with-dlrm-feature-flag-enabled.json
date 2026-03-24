@@ -15,6 +15,7 @@
           "journeyType": "aip",
           "remissionOption": "feeWaiverFromHo",
           "appealType":"refusalOfEu",
+          "eaHuAppealTypePaymentOption": "payLater",
           "subscriptions": [
             {
               "id": "1",
@@ -42,6 +43,7 @@
         "isRemissionsEnabled": "Yes",
         "remissionOption": "feeWaiverFromHo",
         "appealType":"refusalOfEu",
+        "eaHuAppealTypePaymentOption": "payLater",
         "notificationsSent": [
           {
             "id": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",

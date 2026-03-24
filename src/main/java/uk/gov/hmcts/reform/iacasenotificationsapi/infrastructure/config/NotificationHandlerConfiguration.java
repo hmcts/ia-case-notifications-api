@@ -19,11 +19,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.ASYLUM_SUPPORT_FROM_HOME_OFFICE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.FEE_WAIVER_FROM_HOME_OFFICE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.I_WANT_TO_GET_HELP_WITH_FEES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.PARENT_GET_SUPPORT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption.UNDER_18_GET_SUPPORT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.EXCEPTIONAL_CIRCUMSTANCES_REMISSION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HELP_WITH_FEES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HO_WAIVER_REMISSION;
@@ -3550,6 +3545,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
                     && (isPaymentPendingForEaOrHuAppeal(callback)
                     || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
             notificationGenerators,
@@ -3698,13 +3694,12 @@ public class NotificationHandlerConfiguration {
 
         State asylumCaseState = callback.getCaseDetails().getState();
         RemissionType remissionType = asylumCase.read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-        RemissionOption remissionOption = asylumCase.read(REMISSION_OPTION, RemissionOption.class)
-                .orElse(RemissionOption.NO_REMISSION);
 
         boolean isEaAndHuAppealType = isEaHuEuAppeal(asylumCase);
 
-        return asylumCaseState == State.PENDING_PAYMENT && isEaAndHuAppealType
-                && (remissionType == NO_REMISSION || remissionOption == RemissionOption.NO_REMISSION);
+        return asylumCaseState == State.PENDING_PAYMENT
+                && isEaAndHuAppealType
+                && remissionType == NO_REMISSION;
     }
 
     private boolean isPaymentPendingForEaOrHuAppealWithRemission(Callback<AsylumCase> callback) {
@@ -3715,13 +3710,8 @@ public class NotificationHandlerConfiguration {
 
         RemissionType remissionType = asylumCase
             .read(REMISSION_TYPE, RemissionType.class).orElse(NO_REMISSION);
-        RemissionOption remissionOption = asylumCase.read(REMISSION_OPTION, RemissionOption.class)
-                .orElse(RemissionOption.NO_REMISSION);
-
         boolean isRemissionTypeValid = Arrays.asList(
-            HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType)
-            || Arrays.asList(ASYLUM_SUPPORT_FROM_HOME_OFFICE, FEE_WAIVER_FROM_HOME_OFFICE,
-                I_WANT_TO_GET_HELP_WITH_FEES, PARENT_GET_SUPPORT, UNDER_18_GET_SUPPORT).contains(remissionOption);
+            HO_WAIVER_REMISSION, HELP_WITH_FEES, EXCEPTIONAL_CIRCUMSTANCES_REMISSION).contains(remissionType);
 
         State asylumCaseState = callback.getCaseDetails().getState();
         return asylumCaseState == State.PENDING_PAYMENT
@@ -4886,10 +4876,8 @@ public class NotificationHandlerConfiguration {
 
                 return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                     && callback.getEvent() == Event.PAY_AND_SUBMIT_APPEAL
-                    && callback.getCaseDetails().getCaseData()
-                    .read(JOURNEY_TYPE, JourneyType.class)
-                    .map(type -> type == REP).orElse(true)
-                    && !isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(asylumCase)
+                    && !isInternalCase(asylumCase)
                     && (!paymentFailed || paymentFailedChangedToPayLater)
                     && !isPaymentPendingForEaOrHuAppeal(callback))
                     || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
@@ -5110,9 +5098,7 @@ public class NotificationHandlerConfiguration {
 
                 return (callbackStage == PostSubmitCallbackStage.CCD_SUBMITTED
                     && callback.getEvent() == Event.PAY_FOR_APPEAL
-                    && callback.getCaseDetails().getCaseData()
-                    .read(JOURNEY_TYPE, JourneyType.class)
-                    .map(type -> type == REP).orElse(true)
+                    && isRepJourney(asylumCase)
                     && (!paymentFailed || paymentFailedChangedToPayLater)
                     && !isPaymentPendingForEaOrHuAppeal(callback))
                     || (callback.getEvent() == Event.RECORD_REMISSION_DECISION
