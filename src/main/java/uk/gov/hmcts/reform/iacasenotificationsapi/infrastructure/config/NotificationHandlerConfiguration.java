@@ -1438,7 +1438,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                    && isNotInternalOrIsInternalWithLegalRepresentation(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(asylumCase)
                     && !isAppellantInDetention(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
@@ -1471,10 +1472,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && !isAipJourney(callback.getCaseDetails().getCaseData())
-                    && !hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData())
-                    && isAppellantInDetention(callback.getCaseDetails().getCaseData()),
+                    && isInternalCase(callback.getCaseDetails().getCaseData())                    
+                    && !hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData()),
             notificationGenerators
         );
     }
