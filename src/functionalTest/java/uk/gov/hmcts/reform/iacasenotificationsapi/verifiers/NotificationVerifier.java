@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.RetryableNotificationClient;
@@ -23,6 +24,7 @@ import uk.gov.service.notify.NotificationClientException;
 
 @Component
 @SuppressWarnings("unchecked")
+@Slf4j
 public class NotificationVerifier implements Verifier {
 
     @Autowired
@@ -52,6 +54,7 @@ public class NotificationVerifier implements Verifier {
                 description + ": Notifications were not delivered"
             );
         }
+        log.info("Notifications sent for case ID: {}, Notifications: {}", testCaseId, notificationsSent);
 
         Map<String, String> notificationsSentMap =
             notificationsSent
