@@ -21,7 +21,8 @@ import static java.util.Objects.requireNonNull;
 
 @Service
 public class AppellantCmrListingPersonalisationSms implements SmsNotificationPersonalisation {
-    private final String endAppealAppellantSmsTemplateId;
+    private final String legallyReppedAppellantCmrListingSmsTemplateId;
+    private final String appellantCmrListingSmsTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final RecipientsFinder recipientsFinder;
@@ -29,12 +30,15 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
     private final HearingDetailsFinder hearingDetailsFinder;
 
     public AppellantCmrListingPersonalisationSms(
-            @Value("${govnotify.template.listAssistHearing.caseListed.appellant.sms}") String endAppealAppellantSmsTemplateId,
+            @Value("${govnotify.template.listAssistHearing.caseListed.legallyReppedAppellant.sms}") String legallyReppedAppellantCmrListingSmsTemplateId,
+            @Value("${govnotify.template.listAssistHearing.caseListed.appellant.sms}") String appellantCmrListingSmsTemplateId,
+
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             RecipientsFinder recipientsFinder,
             DateTimeExtractor dateTimeExtractor,
             PersonalisationProvider personalisationProvider, HearingDetailsFinder hearingDetailsFinder) {
-        this.endAppealAppellantSmsTemplateId = endAppealAppellantSmsTemplateId;
+        this.legallyReppedAppellantCmrListingSmsTemplateId = legallyReppedAppellantCmrListingSmsTemplateId;
+        this.appellantCmrListingSmsTemplateId = appellantCmrListingSmsTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.recipientsFinder = recipientsFinder;
@@ -44,8 +48,12 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
 
     @Override
-    public String getTemplateId() {
-        return endAppealAppellantSmsTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        if (isLegallyRepped(asylumCase)) {
+            return legallyReppedAppellantCmrListingSmsTemplateId;
+        } else  {
+            return appellantCmrListingSmsTemplateId;
+        }
     }
 
     @Override
@@ -55,7 +63,7 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_LISTED_APPELLANT_SMS";
+        return caseId + "_LR_CMR_LISTED_APPELLANT_SMS";
     }
 
     @Override
@@ -67,11 +75,20 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
                 .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase))
+                .put("tribunalCentre", hearingDetailsFinder.getHearingCentreName(asylumCase))
                 .put("hyperlink to service", iaExUiFrontendUrl)
                 .build();
     }
 
     protected boolean isAppealListed(AsylumCase asylumCase) {
         return AsylumCaseUtils.isAppealListed(asylumCase);
+    }
+
+    public boolean isLegallyRepped(AsylumCase asylumCase) {
+        if (asylumCase.read(AsylumCaseDefinition.LEGAL_REP_NAME).isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

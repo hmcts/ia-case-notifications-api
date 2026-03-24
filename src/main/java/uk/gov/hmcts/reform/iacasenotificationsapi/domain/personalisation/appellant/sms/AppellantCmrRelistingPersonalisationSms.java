@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import com.google.common.collect.ImmutableMap;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -19,17 +20,20 @@ import static java.util.Objects.requireNonNull;
 
 @Service
 public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationPersonalisation {
-    private final String endAppealAppellantSmsTemplateId;
+    private final String legallyReppedAppellantCmrRelistingSmsTemplateId;
+    private final String appellantCmrRelistingSmsTemplateId;
     private final String iaExUiFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final PersonalisationProvider personalisationProvider;
 
     public AppellantCmrRelistingPersonalisationSms(
-            @Value("${govnotify.template.listAssistHearing.caseEdited.appellant.sms}") String endAppealAppellantSmsTemplateId,
+            @Value("${govnotify.template.listAssistHearing.caseEdited.legallyReppedAppellant.sms}") String legallyReppedAppellantCmrRelistingSmsTemplateId,
+            @Value("${govnotify.template.listAssistHearing.caseEdited.appellant.sms}") String appellantCmrRelistingSmsTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             RecipientsFinder recipientsFinder,
             PersonalisationProvider personalisationProvider) {
-        this.endAppealAppellantSmsTemplateId = endAppealAppellantSmsTemplateId;
+        this.legallyReppedAppellantCmrRelistingSmsTemplateId = legallyReppedAppellantCmrRelistingSmsTemplateId;
+        this.appellantCmrRelistingSmsTemplateId = appellantCmrRelistingSmsTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.personalisationProvider = personalisationProvider;
@@ -37,8 +41,12 @@ public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationP
 
 
     @Override
-    public String getTemplateId() {
-        return endAppealAppellantSmsTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        if (isLegallyRepped(asylumCase)) {
+            return legallyReppedAppellantCmrRelistingSmsTemplateId;
+        } else  {
+            return appellantCmrRelistingSmsTemplateId;
+        }
     }
 
     @Override
@@ -63,5 +71,13 @@ public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationP
 
     protected boolean isAppealListed(AsylumCase asylumCase) {
         return AsylumCaseUtils.isAppealListed(asylumCase);
+    }
+
+    public boolean isLegallyRepped(AsylumCase asylumCase) {
+        if (asylumCase.read(AsylumCaseDefinition.LEGAL_REP_NAME).isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

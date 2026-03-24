@@ -7176,7 +7176,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> legalRepCmrListingEmailNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> legalRepNonDetainedCmrListingEmailNotificationHandler(
             @Qualifier("legalRepCmrListingGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
@@ -7187,7 +7187,8 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == CMR_LISTING
                             && isRepJourney(asylumCase)
-                            && !isInternalCase(asylumCase);
+                            && !isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7195,7 +7196,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> legalRepCmrRelistingEmailNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> legalRepNonDetainedCmrRelistingEmailNotificationHandler(
             @Qualifier("legalRepCmrRelistingGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
@@ -7206,7 +7207,8 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == CMR_RELISTING
                             && isRepJourney(asylumCase)
-                            && !isInternalCase(asylumCase);
+                            && !isInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7214,7 +7216,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> aipCmrListingEmailNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> aipNonDetainedCmrListingEmailNotificationHandler(
             @Qualifier("aipCmrListingGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
@@ -7226,7 +7228,7 @@ public class NotificationHandlerConfiguration {
                     return callback.getEvent() == CMR_LISTING
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+                            && !isAppellantInDetention(asylumCase);
 
 //                            && !isInternalCase(callback.getCaseDetails().getCaseData()) confirm if we want this as aip conditions instead
 //                            && isAipJourney(callback.getCaseDetails().getCaseData()),
@@ -7237,7 +7239,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> aipCmrRelistingEmailNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> aipNonDetainedCmrRelistingEmailNotificationHandler(
             @Qualifier("aipCmrRelistingGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
@@ -7249,7 +7251,7 @@ public class NotificationHandlerConfiguration {
                     return callback.getEvent() == CMR_RELISTING
                             && isInternalCase(asylumCase)
                             && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -7257,7 +7259,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> aipCmrListingSmsNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> aipNonDetainedCmrListingSmsNotificationHandler(
             @Qualifier("cmrListingAipSmsAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
@@ -7273,7 +7275,7 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> aipCmrRelistingSmsNotificationHandler(
+    public PreSubmitCallbackHandler<AsylumCase> aipNonDetainedCmrRelistingSmsNotificationHandler(
             @Qualifier("cmrRelistingAipSmsAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
