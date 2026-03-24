@@ -2,22 +2,28 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionOption;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
 public class HomeOfficeAppealSubmittedPendingPaymentPersonalisation implements EmailNotificationPersonalisation {
 
+    private static final Logger log = LoggerFactory.getLogger(HomeOfficeAppealSubmittedPendingPaymentPersonalisation.class);
     private final String homeOfficeAppealSubmittedPendingPaymentTemplateId;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
@@ -43,6 +49,7 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisation implements E
 
     @Override
     public String getReferenceId(Long caseId) {
+        log.info("Sending HomeOffice email for caseId: {}", caseId);
         return caseId + "_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE";
     }
 
@@ -60,6 +67,10 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisation implements E
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        log.info("Sending HomeOffice email - AiP Journey: {}, RemissionType: {}",
+                isAipJourney(asylumCase),
+                asylumCase.read(AsylumCaseDefinition.REMISSION_OPTION, RemissionOption.class)
+                        .orElse(RemissionOption.NO_REMISSION));
         requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap
                 .<String, String>builder()

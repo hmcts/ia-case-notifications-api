@@ -3330,7 +3330,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        log.info("Executing Notification handler 'submitAppealPendingPaymentNotificationGenerator'");
+
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
             ? newArrayList(legalRepresentativeAppealSubmittedPendingPaymentPersonalisation, homeOfficeAppealSubmittedPendingPaymentPersonalisation)
@@ -3351,7 +3351,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        log.info("Executing Notification handler 'submitAppealPendingPaymentInternalNotificationGenerator'");
+
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         List<EmailNotificationPersonalisation> personalisations = isHomeOfficeGovNotifyEnabled
             ? newArrayList(homeOfficeAppealSubmittedPendingPaymentPersonalisation)
@@ -4387,7 +4387,6 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        log.info("Executing Notification handler 'editPaymentMethodNotificationGenerator'");
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
@@ -5873,7 +5872,6 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
-        log.info("Executing Notification handler 'appellantSubmittedWithRemissionRequestNotificationGenerator'");
 
         return Arrays.asList(
             new EmailNotificationGenerator(
