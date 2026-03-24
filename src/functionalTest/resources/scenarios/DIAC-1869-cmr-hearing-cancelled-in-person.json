@@ -158,7 +158,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "18691_CMR_HEARING_CANCELLED_Home_OFFICE",
+            "id": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -299,18 +299,18 @@
       {
         "reference": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
         "recipient": "{$listCaseCaseOfficerEmailAddress}",
-        "subject": "Immigration and Asylum appeal: hearing cancellation",
+        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
           "{$iaExUiFrontendUrl}",
-          "The hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
+          "The CMR hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
         ]
       },
       {
         "reference": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.glasgow}",
-        "subject": "Immigration and Asylum appeal: hearing cancellation",
+        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
         "body": [
           "PA/12345/2019",
           "1212-0099-0062-8083",
