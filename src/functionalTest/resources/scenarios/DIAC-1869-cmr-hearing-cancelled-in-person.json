@@ -154,11 +154,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
+            "id": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+            "id": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -297,6 +297,17 @@
     },
     "notifications": [
       {
+        "reference": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+        "recipient": "{$listCaseCaseOfficerEmailAddress}",
+        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
+        "body": [
+          "PA/12345/2019",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "The CMR hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
+        ]
+      },
+      {
         "reference": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.glasgow}",
         "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
@@ -311,17 +322,6 @@
           "First-tier Tribunal (Immigration and Asylum Chamber)",
           "If you’re unsure an email is from the HM Courts & Tribunals Service:",
           "Do not reply to it or click on any links."
-        ]
-      },
-      {
-        "reference": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
-        "recipient": "{$listCaseCaseOfficerEmailAddress}",
-        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "The CMR hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
         ]
       }
     ]
