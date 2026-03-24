@@ -6811,6 +6811,7 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> cmrHearingCancelledProductionDetainedNotificationGenerator(
             CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
             HomeOfficeCmrHearingCancelledPersonalisation homeOfficeCmrHearingCancelledPersonalisation,
+            LegalRepresentativeCmrHearingCancelledPersonalisation legalRepCmrHearingCancelledPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -6818,7 +6819,8 @@ public class NotificationGeneratorConfiguration {
                 new EmailNotificationGenerator(
                         newArrayList(
                                 caseOfficerCmrHearingCancelledPersonalisation,
-                                homeOfficeCmrHearingCancelledPersonalisation
+                                homeOfficeCmrHearingCancelledPersonalisation,
+                                legalRepCmrHearingCancelledPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender

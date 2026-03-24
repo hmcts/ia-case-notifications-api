@@ -807,6 +807,8 @@ govnotify:
         email: 2c9c4d9a-551d-480e-874e-46ef72b044ac
       appellant:
         email: 5e3e5142-5273-4768-b094-a0ab314df822
+      legalRep:
+        email: 7b1591cd-8c44-4b5c-921c-04b8c8d07bd6
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -2691,7 +2693,7 @@ detentionEngagementTeamIrcEmailAddresses:
   # See README.md for local development setup instructions
 prison:
   email:
-    mappings: "{   \"prisonEmailMappings\": {     \"Addiewell\": \"det-prison-addiewell@example.com\",     \"Albany\": \"det-prison-albany@example.com\"}}"
+    mappings: ${IA_DET_PRISON_EMAIL_MAPPINGS:}
 
 detentionEngagementTeamEmailAddress: ${DET_EMAIL_ADDRESS:dummyDetentionEngagementTeam@example.gov.uk}
 
