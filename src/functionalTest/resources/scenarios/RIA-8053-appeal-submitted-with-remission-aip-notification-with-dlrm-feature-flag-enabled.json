@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 8053,
+      "id": 3689,
       "eventId": "submitAppeal",
       "state": "pendingPayment",
       "caseData": {
@@ -46,15 +46,15 @@
         "eaHuAppealTypePaymentOption": "payLater",
         "notificationsSent": [
           {
-            "id": "8053_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",
+            "id": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8053_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
+            "id": "3689_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8053_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
+            "id": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -62,7 +62,7 @@
     },
     "notifications": [
       {
-        "reference": "8053_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",
+        "reference": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal details have been sent",
         "body": [
@@ -83,7 +83,7 @@
         ]
       },
       {
-        "reference": "8053_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
+        "reference": "3689_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -95,7 +95,7 @@
         ]
       },
       {
-        "reference": "8053_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
+        "reference": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

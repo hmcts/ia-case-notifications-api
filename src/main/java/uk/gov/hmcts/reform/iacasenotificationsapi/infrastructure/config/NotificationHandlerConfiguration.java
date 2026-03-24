@@ -3541,13 +3541,21 @@ public class NotificationHandlerConfiguration {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && !isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isRepJourney(callback.getCaseDetails().getCaseData())
-                    && (isPaymentPendingForEaOrHuAppeal(callback)
-                    || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
+                (callbackStage, callback) -> {
+                    boolean canHandle = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == Event.SUBMIT_APPEAL
+                        && !isInternalCase(callback.getCaseDetails().getCaseData())
+                        && isRepJourney(callback.getCaseDetails().getCaseData())
+                        && (isPaymentPendingForEaOrHuAppeal(callback)
+                        || isPaymentPendingForEaOrHuAppealWithRemission(callback));
+                    log.info(
+                        "'submitAppealPendingPaymentNotificationGenerator' canHandle: '{}' for caseID: {}, "
+                        + "AiP: {}, AiP remission: {}", canHandle, callback.getCaseDetails().getId(),
+                        isAipJourney(callback.getCaseDetails().getCaseData()),
+                        callback.getCaseDetails().getCaseData().read(REMISSION_OPTION, RemissionOption.class)
+                            .orElse(RemissionOption.NO_REMISSION));
+                    return canHandle;
+                },
             notificationGenerators,
             getErrorHandler()
         );
@@ -3560,12 +3568,20 @@ public class NotificationHandlerConfiguration {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                boolean canHandle = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && isInternalCase(callback.getCaseDetails().getCaseData())
                     && (isPaymentPendingForEaOrHuAppeal(callback)
-                    || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
+                    || isPaymentPendingForEaOrHuAppealWithRemission(callback));
+
+                log.info("'submitAppealPendingPaymentInternalNotificationGenerator' canHandle: '{}' for caseID: {},"
+                    + " AiP: {}, AiP remission: {}", canHandle, callback.getCaseDetails().getId(),
+                    isAipJourney(callback.getCaseDetails().getCaseData()),
+                    callback.getCaseDetails().getCaseData().read(REMISSION_OPTION, RemissionOption.class)
+                        .orElse(RemissionOption.NO_REMISSION));
+                return canHandle;
+            },
             notificationGenerators,
             getErrorHandler()
         );
@@ -5037,11 +5053,18 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 final State state = callback.getCaseDetails().getState();
 
-                return (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_PAYMENT_METHOD
-                    && state != State.APPEAL_STARTED
-                    && isEaHuEuAppeal(asylumCase)
-                    && !isRemissionRejectedAndPaymentChangedToCard(asylumCase));
+                boolean canHandle = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == EDIT_PAYMENT_METHOD
+                        && state != State.APPEAL_STARTED
+                        && isEaHuEuAppeal(asylumCase)
+                        && !isRemissionRejectedAndPaymentChangedToCard(asylumCase);
+
+                log.info("'editPaymentMethodNotificationGenerator' canHandle: '{}' for caseID: {},"
+                                + " AiP: {}, AiP remission: {}", canHandle, callback.getCaseDetails().getId(),
+                        isAipJourney(callback.getCaseDetails().getCaseData()),
+                        callback.getCaseDetails().getCaseData().read(REMISSION_OPTION, RemissionOption.class)
+                                .orElse(RemissionOption.NO_REMISSION));
+                return canHandle;
             }, notificationGenerators
         );
     }
@@ -6497,11 +6520,18 @@ public class NotificationHandlerConfiguration {
                 RemissionOption remissionOption = asylumCase
                     .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isAipJourney(asylumCase)
-                    && isDlrmFeeRemissionEnabled(asylumCase)
-                    && remissionOption != RemissionOption.NO_REMISSION;
+                boolean canHandle = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && callback.getEvent() == SUBMIT_APPEAL
+                        && isAipJourney(asylumCase)
+                        && isDlrmFeeRemissionEnabled(asylumCase)
+                        && remissionOption != RemissionOption.NO_REMISSION;
+
+                log.info("'appellantSubmittedWithRemissionRequestNotificationGenerator' canHandle: '{}' for caseID: "
+                        + "{}, AiP: {}, AiP remission: {}", canHandle, callback.getCaseDetails().getId(),
+                        isAipJourney(callback.getCaseDetails().getCaseData()),
+                        callback.getCaseDetails().getCaseData().read(REMISSION_OPTION, RemissionOption.class)
+                                .orElse(RemissionOption.NO_REMISSION));
+                return canHandle;
             },
             notificationGenerators,
             getErrorHandler()
