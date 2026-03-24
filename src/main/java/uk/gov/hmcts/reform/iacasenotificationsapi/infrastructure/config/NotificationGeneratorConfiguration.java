@@ -6815,21 +6815,22 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
-        return singletonList(
+        return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(
-                                caseOfficerCmrHearingCancelledPersonalisation,
-                                homeOfficeCmrHearingCancelledPersonalisation,
-                                legalRepCmrHearingCancelledPersonalisation
-                        ),
+                        newArrayList(caseOfficerCmrHearingCancelledPersonalisation),
                         notificationSender,
                         notificationIdAppender
-                ) {
-                    @Override
-                    public Message getSuccessMessage() {
-                        return new Message("success","body");
-                    }
-                }
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(homeOfficeCmrHearingCancelledPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepCmrHearingCancelledPersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
