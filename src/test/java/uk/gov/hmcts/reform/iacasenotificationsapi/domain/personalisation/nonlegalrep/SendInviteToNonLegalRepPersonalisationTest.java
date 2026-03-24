@@ -95,6 +95,8 @@ public class SendInviteToNonLegalRepPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class))
+            .thenReturn(Optional.of(NonLegalRepDetails.builder().givenNames("some").familyName("name").build()));
         Map<String, String> customerServicesPersonalisation = Map.of(
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
@@ -109,6 +111,8 @@ public class SendInviteToNonLegalRepPersonalisationTest {
         assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals("some", personalisation.get("nlrGivenNames"));
+        assertEquals("name", personalisation.get("nlrFamilyName"));
         assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
         assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
         assertEquals(aipFrontendUrl, personalisation.get("Hyperlink to service"));
@@ -140,6 +144,8 @@ public class SendInviteToNonLegalRepPersonalisationTest {
             sendInviteToNonLegalRepPersonalisation.getPersonalisation(callback);
         assertFalse(personalisation.isEmpty());
         assertEquals("http://localhost/login?register=true", personalisation.get("createAnAccountLink"));
+        assertEquals("Sir /", personalisation.get("nlrGivenNames"));
+        assertEquals("Madam", personalisation.get("nlrFamilyName"));
         verify(asylumCase).write(SHOULD_INVITE_NLR_TO_IDAM, null);
     }
 

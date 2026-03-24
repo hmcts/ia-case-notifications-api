@@ -100,6 +100,8 @@ public class SendPipToNonLegalRepPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdNumber));
+        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class))
+            .thenReturn(Optional.of(NonLegalRepDetails.builder().givenNames("some").familyName("name").build()));
         Map<String, String> customerServicesPersonalisation = Map.of(
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
@@ -117,10 +119,31 @@ public class SendPipToNonLegalRepPersonalisationTest {
         assertEquals(personalisation.get("appellantFamilyName"), appellantFamilyName);
         assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
         assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
+        assertEquals("some", personalisation.get("nlrGivenNames"));
+        assertEquals("name", personalisation.get("nlrFamilyName"));
         assertEquals(personalisation.get("Hyperlink to service"), aipFrontendUrl);
         assertEquals(personalisation.get("securityCode"), pipCode);
         assertEquals(personalisation.get("expirationDate"), pipExpiry);
         assertEquals(personalisation.get("ccdReferenceNumberForDisplay"), ccdNumber);
+    }
+
+    @Test
+    public void should_return_personalisation_if_no_nlr_details() {
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        Map<String, String> customerServicesPersonalisation = Map.of(
+            "customerServicesTelephone", customerServicesTelephone,
+            "customerServicesEmail", customerServicesEmail
+        );
+        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        PinInPostDetails pipDetails = new PinInPostDetails(pipCode, pipExpiry, YesOrNo.NO);
+        when(asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)).thenReturn(Optional.of(pipDetails));
+        Map<String, String> personalisation =
+            sendPipToNonLegalRepPersonalisation.getPersonalisation(callback);
+
+        assertFalse(personalisation.isEmpty());
+        assertEquals("Sir /", personalisation.get("nlrGivenNames"));
+        assertEquals("Madam", personalisation.get("nlrFamilyName"));
     }
 
     @Test

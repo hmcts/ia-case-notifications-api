@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NLR_DETAILS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SHOULD_INVITE_NLR_TO_IDAM;
 
 import com.google.common.collect.ImmutableMap;
@@ -55,6 +56,7 @@ public class SendInviteToNonLegalRepPersonalisation implements EmailNotification
         requireNonNull(asylumCase, "asylumCase must not be null");
         String createAnAccountSlug = (iaAipFrontendUrl.endsWith("/") ? "" : "/") + "login?register=true";
         asylumCase.write(SHOULD_INVITE_NLR_TO_IDAM, null);
+        NonLegalRepDetails nlrDetails = asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class).orElse(null);
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -63,6 +65,8 @@ public class SendInviteToNonLegalRepPersonalisation implements EmailNotification
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("createAnAccountLink", iaAipFrontendUrl + createAnAccountSlug)
+            .put("nlrGivenNames", nlrDetails != null ? nlrDetails.getGivenNames() : "Sir /")
+            .put("nlrFamilyName", nlrDetails != null ? nlrDetails.getFamilyName() : "Madam")
             .put("Hyperlink to service", iaAipFrontendUrl);
 
         return fields.build();

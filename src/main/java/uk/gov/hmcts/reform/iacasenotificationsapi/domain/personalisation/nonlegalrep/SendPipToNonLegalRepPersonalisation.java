@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NLR_DETAILS;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -55,6 +56,7 @@ public class SendPipToNonLegalRepPersonalisation implements EmailNotificationPer
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
         PinInPostDetails pip = AsylumCaseUtils.generateJoinAppealPinIfNotPresentOrUsed(asylumCase);
+        NonLegalRepDetails nlrDetails = asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class).orElse(null);
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -65,6 +67,8 @@ public class SendPipToNonLegalRepPersonalisation implements EmailNotificationPer
             .put("ccdReferenceNumberForDisplay", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("securityCode", pip.getAccessCode())
             .put("expirationDate", defaultDateFormat(pip.getExpiryDate()))
+            .put("nlrGivenNames", nlrDetails != null ? nlrDetails.getGivenNames() : "Sir /")
+            .put("nlrFamilyName", nlrDetails != null ? nlrDetails.getFamilyName() : "Madam")
             .put("Hyperlink to service", iaAipFrontendUrl);
 
         return fields.build();
