@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SHOULD_INVITE_NLR_TO_IDAM;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -53,6 +54,7 @@ public class SendInviteToNonLegalRepPersonalisation implements EmailNotification
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
         String createAnAccountSlug = (iaAipFrontendUrl.endsWith("/") ? "" : "/") + "login?register=true";
+        asylumCase.write(SHOULD_INVITE_NLR_TO_IDAM, null);
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation())

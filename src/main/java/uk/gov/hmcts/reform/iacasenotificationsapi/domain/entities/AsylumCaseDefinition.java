@@ -456,6 +456,9 @@ public enum AsylumCaseDefinition {
     NLR_DETAILS(
         "nlrDetails", new TypeReference<NonLegalRepDetails>(){}),
 
+    SHOULD_INVITE_NLR_TO_IDAM(
+        "shouldInviteNlrToIdam", new TypeReference<YesOrNo>(){}),
+
     REQUEST_FEE_REMISSION_DATE(
         "requestFeeRemissionDate", new TypeReference<String>(){}),
     REMISSION_REJECTED_DATE_PLUS_14DAYS(

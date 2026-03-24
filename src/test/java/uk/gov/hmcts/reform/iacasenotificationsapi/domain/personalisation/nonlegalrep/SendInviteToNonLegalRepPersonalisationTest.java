@@ -3,8 +3,10 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonleg
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NLR_DETAILS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SHOULD_INVITE_NLR_TO_IDAM;
 
 import java.util.Collections;
 import java.util.Map;
@@ -138,6 +140,7 @@ public class SendInviteToNonLegalRepPersonalisationTest {
             sendInviteToNonLegalRepPersonalisation.getPersonalisation(callback);
         assertFalse(personalisation.isEmpty());
         assertEquals("http://localhost/login?register=true", personalisation.get("createAnAccountLink"));
+        verify(asylumCase).write(SHOULD_INVITE_NLR_TO_IDAM, null);
     }
 
     @Test

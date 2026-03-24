@@ -7922,12 +7922,14 @@ public class NotificationHandlerConfiguration {
                 List<Event> validNlrEvents = List.of(SEND_INVITE_TO_NON_LEGAL_REP, SUBMIT_APPEAL);
                 if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    boolean shouldSend = asylumCase.read(SHOULD_INVITE_NLR_TO_IDAM, YesOrNo.class)
+                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
                     String nlrEmail =
                         asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
                             .map(NonLegalRepDetails::getEmailAddress)
                             .orElse(null);
                     return validNlrEvents.contains(callback.getEvent())
-                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail) && shouldSend;
                 }
                 return false;
             },
