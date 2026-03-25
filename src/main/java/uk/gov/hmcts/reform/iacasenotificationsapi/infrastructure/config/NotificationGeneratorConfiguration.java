@@ -6390,6 +6390,7 @@ public class NotificationGeneratorConfiguration {
             LegalRepCmrListingPersonalisation legalRepCmrListingRelistingPersonalisation,
             CaseOfficerCmrListingPersonalisation caseOfficerListingRelistingPersonalisation,
             HomeOfficeCmrListingPersonalisation homeOfficeCmrListingPersonalisation,
+
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -6439,6 +6440,37 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("legallyReppedAppellantCmrListingGenerator")
+    public List<NotificationGenerator> legallyReppedAppellantCmrListingGenerator(
+            AppellantLegallyReppedCmrListingPersonalisationEmail appellantLegallyReppedCmrListingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantLegallyReppedCmrListingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legallyReppedAppellantCmrRelistingGenerator")
+    public List<NotificationGenerator> legallyReppedAppellantCmrRelistingGenerator(
+            AppellantLegallyReppedCmrRelistingPersonalisationEmail appellantLegallyReppedCmrRelistingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(appellantLegallyReppedCmrRelistingPersonalisationEmail),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
     @Bean("aipCmrListingGenerator")
     public List<NotificationGenerator> aipCmrListingGenerator(
             AipCmrListingPersonalisationEmail aipCmrListingRelistingPersonalisationEmail,
@@ -6454,8 +6486,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("cmrRelistingAipSmsAppellantNotificationGenerator")
-    public List<NotificationGenerator> cmrRelistingAipSmsAppellantNotificationGenerator(
+    @Bean("cmrRelistingSmsAppellantNotificationGenerator")
+    public List<NotificationGenerator> cmrRelistingSmsAppellantNotificationGenerator(
             AppellantCmrRelistingPersonalisationSms appellantCmrRelistingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
@@ -6486,8 +6518,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("cmrListingAipSmsAppellantNotificationGenerator")
-    public List<NotificationGenerator> cmrListingAipSmsAppellantNotificationGenerator(
+    @Bean("cmrListingSmsAppellantNotificationGenerator")
+    public List<NotificationGenerator> cmrListingSmsAppellantNotificationGenerator(
             AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {

@@ -42,7 +42,8 @@ public class AppellantCmrListingPersonalisationSmsTest {
     HearingDetailsFinder hearingDetailsFinder;
 
     private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private String aipTemplateId = "aipTemplateId";
     private String iaExUiFrontendUrl = "http://localhost";
     private String mockedAppealReferenceNumber = "someReferenceNumber";
     private String mockedAppellantMobilePhone = "07123456789";
@@ -50,6 +51,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
     private String hearingDate = "2019-08-27";
     private String hearingTime = "14:25";
     private String hearingCentreAddress = "some hearing centre address";
+    private String hearingCentreName = "Taylor House";
 
     private AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms;
 
@@ -58,11 +60,13 @@ public class AppellantCmrListingPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
+        when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentreName);
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
         appellantCmrListingPersonalisationSms = new AppellantCmrListingPersonalisationSms(
-                templateId,
+                legallyReppedTemplateId,
+                aipTemplateId,
                 iaExUiFrontendUrl,
                 recipientsFinder,
                 dateTimeExtractor,
@@ -72,13 +76,20 @@ public class AppellantCmrListingPersonalisationSmsTest {
     }
 
     @Test
-    public void should_return_correct_template_id() {
-        assertEquals(templateId, appellantCmrListingPersonalisationSms.getTemplateId());
+    public void should_return_legally_repped_template_id_when_legal_rep_present() {
+        when(asylumCase.read(LEGAL_REP_NAME)).thenReturn(Optional.of("Some Legal Rep"));
+        assertEquals(legallyReppedTemplateId, appellantCmrListingPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_aip_template_id_when_legal_rep_absent() {
+        when(asylumCase.read(LEGAL_REP_NAME)).thenReturn(Optional.empty());
+        assertEquals(aipTemplateId, appellantCmrListingPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_CMR_LISTED_APPELLANT_SMS",
+        assertEquals(caseId + "_LR_CMR_LISTED_APPELLANT_SMS",
                 appellantCmrListingPersonalisationSms.getReferenceId(caseId));
     }
 
@@ -113,6 +124,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentreName, personalisation.get("tribunalCentre"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("hyperlink to service"));
     }
 
@@ -121,6 +133,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn("");
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn("");
+        when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn("");
         when(dateTimeExtractor.extractHearingDate("")).thenReturn("");
         when(dateTimeExtractor.extractHearingTime("")).thenReturn("");
 
@@ -132,6 +145,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
         assertEquals("", personalisation.get("hearingDate"));
         assertEquals("", personalisation.get("hearingTime"));
         assertEquals("", personalisation.get("hearingCentreAddress"));
+        assertEquals("", personalisation.get("tribunalCentre"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("hyperlink to service"));
     }
 }

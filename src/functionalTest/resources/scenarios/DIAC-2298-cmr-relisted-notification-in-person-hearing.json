@@ -1,0 +1,53 @@
+{
+  "description": "DIAC-2298 Send cmr listed notification to case officer, legal rep, appellant, home office in a remote hearing",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 37201,
+      "eventId": "cmrListing",
+      "state": "prepareForHearing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "appellantInUk": "Yes",
+          "remoteVideoCallTribunalResponse": "remote video call tribunal response",
+          "ariaListingReference": "LP/12345/2021",
+          "hearingCentre": "birmingham",
+          "listCaseHearingCentre": "remoteHearing",
+          "listCaseHearingDate": "2021-02-19T14:25:15.000",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appellantInUk": "No",
+        "remoteVideoCallTribunalResponse": "remote video call tribunal response",
+        "hearingCentre": "birmingham",
+        "listCaseHearingCentre": "remoteHearing",
+        "listCaseHearingDate": "2021-02-19T14:25:15.000",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "notificationsSent": [
+          {
+            "id": "37201_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "37201_CASE_LISTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "37201_CASE_LISTED_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}
