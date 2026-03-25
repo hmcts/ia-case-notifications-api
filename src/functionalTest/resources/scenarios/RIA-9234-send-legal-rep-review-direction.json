@@ -25,7 +25,16 @@
             }
           ],
           "notificationsSent": [],
-          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}"
+          "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepHasAddress": "Yes",
+          "legalRepAddressUK": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          }
         }
       }
     }
@@ -52,30 +61,12 @@
         ],
         "notificationsSent": [
           {
-            "id": "923424_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
+            "id": "923424_INTERNAL_REQUEST_CASE_BUILDING_LEGAL_REPRESENTATIVE_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}"
       }
-    },
-    "notifications": [
-      {
-        "reference": "923424_LEGAL_REPRESENTATIVE_REVIEW_DIRECTION",
-        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Immigration and Asylum appeal: review Home Office response direction",
-        "body": [
-          "PA/12345/2019",
-          "CASE001",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "The respondent has replied to your appeal argument and evidence.",
-          "You must now review their response.",
-          "{$TODAY+5|d MMM yyyy}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      }
-    ]
+    }
   }
 }
