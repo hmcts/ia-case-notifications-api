@@ -18,7 +18,7 @@ public class LegalRepresentativeRespondQueryPersonalisation implements LegalRepr
     private final String iaExUiFrontendUrl;
 
     public LegalRepresentativeRespondQueryPersonalisation(
-            @Value("${govnotify.template.raiseAQuery.legalRep.email}") String legalRepresentativeRespondQueryTemplateId,
+            @Value("${govnotify.template.respondQuery.legalRep.email}") String legalRepresentativeRespondQueryTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl) {
         this.legalRepresentativeRespondQueryTemplateId = legalRepresentativeRespondQueryTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;

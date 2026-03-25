@@ -339,7 +339,7 @@ govnotify:
     raiseQuery:
       legalRep:
         email: 18fc759f-0292-461e-82ad-ce094b3fe2fe
-    respondToQuery:
+    respondQuery:
       legalRep:
         email: 967dd872-890e-4c0c-86aa-6e34638b4f1b
     reviewDirection:
