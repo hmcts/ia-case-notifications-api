@@ -7787,8 +7787,8 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
 
-                    System.out.println("Stage raise test: " + callbackStage);
-                    System.out.println("Event raise test: " + callback.getEvent());
+                    System.out.println("Stage raise test: " + callback.getCaseDetails().getId() + callbackStage);
+                    System.out.println("Event raise test: " + callback.getCaseDetails().getId() + callback.getEvent());
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == QUERY_MANAGEMENT_RAISE_QUERY;
                 },
