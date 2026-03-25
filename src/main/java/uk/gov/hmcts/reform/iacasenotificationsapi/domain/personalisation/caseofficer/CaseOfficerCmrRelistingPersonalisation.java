@@ -30,7 +30,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
 
     public CaseOfficerCmrRelistingPersonalisation(
             @Value("${govnotify.template.listAssistHearing.caseEdited.caseOfficer.email}") String caseOfficerCmrRelistingTemplateId,
-            @Value("${govnotify.template.listAssistHearing.caseEditedRemoteHearing.caseOfficer.emaill}") String caseOfficerRemoteCmrRelistingTemplateId,
+            @Value("${govnotify.template.listAssistHearing.caseEditedRemoteHearing.caseOfficer.email}") String caseOfficerRemoteCmrRelistingTemplateId,
 
             EmailAddressFinder emailAddressFinder,
             PersonalisationProvider personalisationProvider,
