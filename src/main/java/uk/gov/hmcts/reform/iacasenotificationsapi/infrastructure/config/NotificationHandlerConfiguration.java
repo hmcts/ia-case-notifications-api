@@ -5681,8 +5681,10 @@ public class NotificationHandlerConfiguration {
             @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    boolean canSendLetter = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+                    log.info("Can send 24WeeksNotification letter to appellant: {}", canSendLetter);
+                    return canSendLetter;
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5700,6 +5702,11 @@ public class NotificationHandlerConfiguration {
                     Set<String> emails = asylumCase.read(EMAIL, String.class)
                             .map(Collections::singleton)
                             .orElse(Collections.emptySet());
+                    if (emails.isEmpty()) {
+                        emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+                                .map(Collections::singleton)
+                                .orElse(Collections.emptySet());
+                    }
                     log.info("In Handler Appellant emails {}", emails);
                     log.info("In Handler emails.isEmpty() {}", emails.isEmpty());
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT

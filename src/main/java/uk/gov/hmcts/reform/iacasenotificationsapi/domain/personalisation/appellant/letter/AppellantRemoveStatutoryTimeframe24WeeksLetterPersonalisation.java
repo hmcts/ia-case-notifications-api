@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -18,6 +19,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantOrLegalRepAddressLetterPersonalisation;
 
+@Slf4j
 @Service
 public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalCaseSubmitAppealWithRemissionLetterTemplateId;
@@ -44,7 +46,9 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return getAppellantAddressInCountryOrOoc(asylumCase);
+        Set<String> appellantAddressInCountryOrOoc = getAppellantAddressInCountryOrOoc(asylumCase);
+        log.info("Appellant Address {}", appellantAddressInCountryOrOoc);
+        return appellantAddressInCountryOrOoc;
     }
 
     @Override

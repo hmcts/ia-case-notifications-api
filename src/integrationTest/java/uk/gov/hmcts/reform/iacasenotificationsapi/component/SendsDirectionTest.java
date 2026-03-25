@@ -16,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
@@ -109,7 +110,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_all_three_users() {
-        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "appellant@domain.com");
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "appellant@domain.com", null);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -128,7 +129,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_legal_rep_and_home_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", null);
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", null, null);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -147,7 +148,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_appellant_and_ho_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse(null, "appellant@domain.com");
+        PreSubmitCallbackResponseForTest response = mockResponse(null, "appellant@domain.com", null);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -165,8 +166,26 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_email_to_appellant_with_internal_email_and_ho_office() {
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null, "appellant@domain.com");
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(2);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_ho_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse(null, null);
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null, null);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -181,7 +200,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
     }
 
-    private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail) {
+    private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail, String internalAppellantEmail) {
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
         when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
@@ -194,6 +213,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
                                 .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
                                 .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
                                 .with(EMAIL, appellantEmail)
+                                .with(INTERNAL_APPELLANT_EMAIL, internalAppellantEmail)
                                 .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, lrEmail)
                                 .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
                                 .with(SUBSCRIPTIONS, anySubscriptions())
