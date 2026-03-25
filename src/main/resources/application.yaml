@@ -336,7 +336,7 @@ govnotify:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
         detention:
           email: 68fdfc26-6bef-45c8-84cf-ae1ece8572cf
-    raiseAQuery:
+    raiseQuery:
       legalRep:
         email: 18fc759f-0292-461e-82ad-ce094b3fe2fe
     respondToQuery:
