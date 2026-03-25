@@ -504,6 +504,9 @@ govnotify:
 #        need to confirm the case officer template for this below V
         caseOfficer:
           email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
+        appellant:
+#          need to confirm below template
+          email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     appealOutcomeAllowed:
       homeOffice:
         email: 448a3cd5-a984-4981-9ac8-6388e65882ae
