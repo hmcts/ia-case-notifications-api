@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_VIRTUAL_HEARING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_REMOTE_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LISTING_HEARING_DATE;
@@ -38,15 +38,27 @@ public class HearingDetailsFinder {
         final HearingCentre listCaseHearingCentre =
                 getHearingCentre(asylumCase);
 
+        if (asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class).orElse("").isEmpty()) {
         Optional<String> refDataAddress = asylumCase
             .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
+            if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
+                return refDataAddress.get();
+            }
+            return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
+                    .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
+        } else {
 
+            Optional<String> refDataAddress = asylumCase
+                                .read(CMR_HEARING_CENTRE_ADDRESS, String.class);
         if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
             return refDataAddress.get();
         }
         return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
                 .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
     }
+        }
+
+
 
     public String getHearingCentreName(AsylumCase asylumCase) {
         if (isCaseUsingLocationRefData(asylumCase)) {
@@ -130,7 +142,7 @@ public class HearingDetailsFinder {
 
     public String getCmrHearingCentreLocation(AsylumCase asylumCase) {
         if (isCaseUsingLocationRefData(asylumCase)) {
-            return getRefDataLocationAddress(asylumCase);
+            return getCmrRefDataLocationAddress(asylumCase);
         }
 
         HearingCentre cmrHearingCentre =
@@ -162,6 +174,23 @@ public class HearingDetailsFinder {
 
         return asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)
             .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreAddress is not present"));
+    }
+
+    private String getCmrRefDataLocationAddress(AsylumCase asylumCase) {
+        boolean isVirtualHearing = isVirtualHearing(asylumCase);
+        YesOrNo isRemoteHearing = asylumCase.read(AsylumCaseDefinition.CMR_IS_REMOTE_HEARING, YesOrNo.class)
+                .orElseThrow(() -> new IllegalStateException("cmrIsRemoteHearing is not present"));
+
+        if (isVirtualHearing) {
+            return "IAC National (Virtual)";
+        }
+
+        if (isRemoteHearing.equals(YES)) {
+            return "Remote hearing";
+        }
+
+        return asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class)
+                .orElseThrow(() -> new IllegalStateException("cmrHearingCentreAddress is not present"));
     }
 
     private String getRefDataLocationName(AsylumCase asylumCase) {

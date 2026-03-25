@@ -359,4 +359,106 @@ class HearingDetailsFinderTest {
                         "TW14 0LS",
                 hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
+    // getCmrHearingDateTime tests
+    @Test
+    void should_return_given_cmr_hearing_date_time() {
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_DATE, String.class))
+                .thenReturn(Optional.of(hearingDateTime));
+        assertEquals(hearingDateTime, hearingDetailsFinder.getCmrHearingDateTime(asylumCase));
+    }
+
+    @Test
+    void should_throw_exception_when_cmr_hearing_date_time_is_empty() {
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_DATE, String.class))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> hearingDetailsFinder.getCmrHearingDateTime(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("listCaseHearingDate is not present");
+    }
+
+    // getCmrHearingCentreLocation tests
+    @Test
+    void getCmrHearingCentreLocation_should_return_refdata_address_when_location_ref_data_enabled() {
+        when(asylumCase.read(AsylumCaseDefinition.CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class))
+                .thenReturn(Optional.of(hearingCentreRefDataAddress));
+
+        assertEquals(hearingCentreRefDataAddress, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getCmrHearingCentreLocation_should_return_virtual_hearing_when_virtual() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(hearingCentre));
+        when(asylumCase.read(AsylumCaseDefinition.IS_VIRTUAL_HEARING, YesOrNo.class))
+                .thenReturn(Optional.of(YES));
+
+        assertEquals("IAC National (Virtual)", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getCmrHearingCentreLocation_should_return_remote_hearing_when_cmr_centre_is_remote() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
+        when(asylumCase.read(AsylumCaseDefinition.IS_VIRTUAL_HEARING, YesOrNo.class))
+                .thenReturn(Optional.of(NO));
+
+        assertEquals("Remote hearing", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getCmrHearingCentreLocation_should_return_hearing_centre_address_when_not_remote_or_virtual() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.of(hearingCentre));
+        when(asylumCase.read(AsylumCaseDefinition.IS_VIRTUAL_HEARING, YesOrNo.class))
+                .thenReturn(Optional.of(NO));
+
+        assertEquals(hearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getCmrHearingCentreLocation_should_throw_exception_when_cmr_hearing_centre_not_present() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("listCaseHearingCentre is not present");
+    }
+
+    @Test
+    void should_return_cmr_hearing_centre_address_when_cmr_address_is_present() {
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class))
+                .thenReturn(Optional.of(hearingCentreRefDataAddress));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+        assertEquals(hearingCentreRefDataAddress, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+    }
+
+    @Test
+    void should_return_string_provider_address_when_cmr_address_present_but_refdata_not_enabled() {
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class))
+                .thenReturn(Optional.of(hearingCentreRefDataAddress));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+        assertEquals(hearingCentreAddress, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+    }
+
+    @Test
+    void should_throw_exception_when_cmr_address_present_but_refdata_not_enabled_and_string_provider_empty() {
+        when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class))
+                .thenReturn(Optional.of(hearingCentreRefDataAddress));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(stringProvider.get(HEARING_CENTRE_ADDRESS, hearingCentre.toString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> hearingDetailsFinder.getHearingCentreAddress(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("hearingCentreAddress is not present");
+    }
 }

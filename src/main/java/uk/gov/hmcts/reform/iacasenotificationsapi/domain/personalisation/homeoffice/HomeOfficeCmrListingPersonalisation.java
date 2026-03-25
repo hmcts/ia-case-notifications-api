@@ -21,27 +21,21 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Service
 public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPersonalisation {
 
-    private final String listCmaAdminOfficerTemplateId;
+    private final String listCmrHomeOfficeTemplateId;
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final EmailAddressFinder emailAddressFinder;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
-
-
     public HomeOfficeCmrListingPersonalisation(
-        @NotNull(message = "listCmaAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.listCma.homeOffice.email}") String listCmaAdminOfficerTemplateId,
+        @Value("${govnotify.template.listAssistHearing.caseListed.homeOffice.email}") String listCmrHomeOfficeTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         EmailAddressFinder emailAddressFinder
 
     ) {
-        this.listCmaAdminOfficerTemplateId = listCmaAdminOfficerTemplateId;
+        this.listCmrHomeOfficeTemplateId = listCmrHomeOfficeTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -51,7 +45,7 @@ public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPer
 
     @Override
     public String getTemplateId() {
-        return listCmaAdminOfficerTemplateId;
+        return listCmrHomeOfficeTemplateId;
     }
 
     @Override
@@ -61,7 +55,7 @@ public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPer
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_LIST_CMA_HOME_OFFICE_EMAIL";
+        return caseId + "_LIST_CMR_HOME_OFFICE_EMAIL";
     }
 
     @Override
@@ -71,12 +65,11 @@ public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPer
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
+                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreAddress(asylumCase))
                 .put("Hyperlink to service", iaExUiFrontendUrl)
                 .build();

@@ -461,6 +461,37 @@ class PersonalisationProviderTest {
     }
 
     @Test
+    void should_return_cmr_relisting_personalisation() {
+        when(callback.getEvent()).thenReturn(Event.CMR_RELISTING);
+        when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
+        when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
+
+        Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
+
+        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(oldHearingCentreName, personalisation.get("oldHearingCentre"));
+        assertEquals(oldHearingDate, personalisation.get("oldHearingDate"));
+        assertEquals(hearingDate, personalisation.get("hearingDate"));
+        assertEquals(hearingTime, personalisation.get("hearingTime"));
+        assertEquals(hearingCentreName, personalisation.get("hearingCentreName"));
+        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+    }
+
+    @Test
+    void should_return_cmr_relisting_personalisation_when_no_case_before() {
+        when(callback.getEvent()).thenReturn(Event.CMR_RELISTING);
+        when(callback.getCaseDetailsBefore()).thenReturn(Optional.empty());
+        when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
+        when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
+
+        Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
+
+        assertEquals("", personalisation.get("oldHearingCentre"));
+        assertEquals("", personalisation.get("oldHearingDate"));
+    }
+
+    @Test
     void should_return_costs_decision_when_decideCostsApplicationList_is_present() {
         List<IdValue<ApplyForCosts>> applyForCostsList = List.of(
             new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", "costsType", applyForCostsCreationDate, applyForCostsDecision))

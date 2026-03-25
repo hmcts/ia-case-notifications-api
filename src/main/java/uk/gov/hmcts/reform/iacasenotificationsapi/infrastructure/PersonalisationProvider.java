@@ -56,6 +56,8 @@ public class PersonalisationProvider {
             .build())
         .put(EDIT_CASE_LISTING, personalisationBuilder
             .build())
+        .put(CMR_RELISTING, personalisationBuilder
+            .build())
         .put(UPLOAD_ADDITIONAL_EVIDENCE, personalisationBuilder
             .build())
         .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, personalisationBuilder
