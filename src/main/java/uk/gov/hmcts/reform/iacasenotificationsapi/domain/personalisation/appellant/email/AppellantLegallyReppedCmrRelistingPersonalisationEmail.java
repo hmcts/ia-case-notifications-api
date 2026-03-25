@@ -41,7 +41,7 @@ public class AppellantLegallyReppedCmrRelistingPersonalisationEmail implements E
     public AppellantLegallyReppedCmrRelistingPersonalisationEmail(
 
             @Value("${govnotify.template.listAssistHearing.caseEdited.appellant.email}") String appellantLrcmrRelistingEmailTemplateId,
-            @Value("${govnotify.template.listAssistHearing.caseEdited.remoteHearing.appellant.email}") String aipcmrRelistingRemoteAppellantEmailTemplateId, //template required, currently placeholder
+            @Value("${govnotify.template.listAssistHearing.caseEditedRemoteHearing.appellant.email}") String aipcmrRelistingRemoteAppellantEmailTemplateId, //template required, currently placeholder
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             PersonalisationProvider personalisationProvider,
             CustomerServicesProvider customerServicesProvider,
