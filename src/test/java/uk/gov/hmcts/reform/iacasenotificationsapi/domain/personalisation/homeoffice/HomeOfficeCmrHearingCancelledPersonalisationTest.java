@@ -93,10 +93,10 @@ class HomeOfficeCmrHearingCancelledPersonalisationTest {
         when(callback.getCaseDetailsBefore()).thenReturn(Optional.of(caseDetailsBefore));
         when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
 
-        when(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore)).thenReturn("2024-06-01T10:00");
+        when(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore)).thenReturn("2024-06-01T10:00");
         when(dateTimeExtractor.extractHearingDate("2024-06-01T10:00")).thenReturn("01-06-2024");
         when(dateTimeExtractor.extractHearingTime("2024-06-01T10:00")).thenReturn("10:00");
-        when(hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore)).thenReturn("some address");
+        when(hearingDetailsFinder.getCmrHearingCentreAddress(asylumCaseBefore)).thenReturn("some address");
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("REF123"));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("REF456"));

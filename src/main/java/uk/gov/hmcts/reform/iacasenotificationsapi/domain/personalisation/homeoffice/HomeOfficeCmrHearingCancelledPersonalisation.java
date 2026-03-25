@@ -74,9 +74,9 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
         String oldHearingCentreAddress;
         if (caseDetailsBefore.isPresent()) {
             AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
-            oldHearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
-            oldHearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
-            oldHearingCentreAddress = hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore);
+            oldHearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
+            oldHearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
+            oldHearingCentreAddress = hearingDetailsFinder.getCmrHearingCentreAddress(asylumCaseBefore);
         } else {
             oldHearingDate = "";
             oldHearingTime = "";

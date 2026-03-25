@@ -3,6 +3,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_CASE_USING_LOCATION_REF_DATA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
@@ -49,12 +52,16 @@ class HearingDetailsFinderTest {
     private HearingDetailsFinder hearingDetailsFinder;
     private CourtVenue hattonCross;
     private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private HearingCentre cmrHearingCentre = HearingCentre.GLASGOW;
     private String hearingCentreEmailAddress = "hearingCentre@example.com";
     private String hearingCentreName = "some hearing centre name";
     private String bailHearingLocationName = "Glasgow";
     private String hearingCentreAddress = "some hearing centre address";
+    private String cmrHearingCentreAddress = "some cmr hearing centre address";
     private String hearingCentreRefDataAddress = "hearing centre address retrieved from ref data";
+    private String cmrHearingCentreRefDataAddress = "cmr hearing centre address retrieved from ref data";
     private String hearingDateTime = "2019-08-27T14:25:15.000";
+    private String cmrHearingDateTime = "2019-08-28T14:25:15.000";
     private String bailHearingDateTime = "2024-01-01T10:29:00.000";
     private String hearingDate = "2019-08-27";
     private String hearingTime = "14:25";
@@ -63,11 +70,17 @@ class HearingDetailsFinderTest {
     void setUp() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(cmrHearingCentre));
+        when(asylumCase.read(CMR_HEARING_DATE, String.class)).thenReturn(Optional.of(cmrHearingDateTime));
 
         when(stringProvider.get("hearingCentreAddress", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreAddress));
         when(stringProvider.get("hearingCentreName", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreName));
+        when(stringProvider.get("cmrHearingCentreAddress", cmrHearingCentre.toString()))
+                .thenReturn(Optional.of(cmrHearingCentreAddress));
+
+
         when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class))
                 .thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
         when(stringProvider.get(HEARING_CENTRE_ADDRESS, BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE.getValue()))
@@ -101,6 +114,11 @@ class HearingDetailsFinderTest {
     }
 
     @Test
+    void should_return_given_cmr_hearing_centre_address() {
+        assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+    }
+
+    @Test
     void getHearingCentreLocation_should_return_remote_hearing_if_remote_field_is_yes_and_refdata_enabled() {
         when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
@@ -123,6 +141,16 @@ class HearingDetailsFinderTest {
         when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
             .thenReturn(Optional.of("testAddress"));
+
+        assertEquals("testAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getHearingCentreLocation_should_return_refdata_address_if_remote_field_is_no_and_refdata_enabled_cmr() {
+        when(asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+                .thenReturn(Optional.of("testAddress"));
 
         assertEquals("testAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
     }
@@ -155,12 +183,30 @@ class HearingDetailsFinderTest {
     }
 
     @Test
+    void should_return_given_cmr_hearing_centre_address_from_ref_data_if_location_ref_data_enabled() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class))
+                .thenReturn(Optional.of(cmrHearingCentreRefDataAddress));
+
+        assertEquals(cmrHearingCentreRefDataAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+    }
+
+    @Test
     void should_throw_exception_when_hearing_centre_address_is_empty() {
         when(stringProvider.get(HEARING_CENTRE_ADDRESS, hearingCentre.toString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> hearingDetailsFinder.getHearingCentreAddress(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("hearingCentreAddress is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_cmr_hearing_centre_address_is_empty() {
+        when(stringProvider.get("cmrHearingCentreAddress", cmrHearingCentre.toString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("cmrHearingCentreAddress is not present");
     }
 
     @Test
@@ -255,12 +301,26 @@ class HearingDetailsFinderTest {
     }
 
     @Test
+    void should_return_given_cmr_hearing_date_time() {
+        assertEquals(cmrHearingDateTime, hearingDetailsFinder.getCmrHearingDateTime(asylumCase));
+    }
+
+    @Test
     void should_throw_exception_when_hearing_date_time_is_empty() {
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> hearingDetailsFinder.getHearingDateTime(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("listCaseHearingDate is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_cmr_hearing_date_time_is_empty() {
+        when(asylumCase.read(CMR_HEARING_DATE, String.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> hearingDetailsFinder.getCmrHearingDateTime(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("cmrHearingDate is not present");
     }
 
     @Test
@@ -285,6 +345,15 @@ class HearingDetailsFinderTest {
         assertThatThrownBy(() -> hearingDetailsFinder.getHearingCentreAddress(asylumCase))
             .isExactlyInstanceOf(IllegalStateException.class)
             .hasMessage("listCaseHearingCentre is not present");
+    }
+
+    @Test
+    void should_throw_exception_when_cmr_hearing_centre_is_empty() {
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase))
+                .isExactlyInstanceOf(IllegalStateException.class)
+                .hasMessage("cmrHearingCentre is not present");
     }
 
     @Test

@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.r
 public class HearingDetailsFinder {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String CMR_HEARING_CENTRE_ADDRESS = "cmrHearingCentreAddress";
     private static final String REMOTE_HEARING_LOCATION = "Cloud Video Platform (CVP)";
 
     private final StringProvider stringProvider;
@@ -46,6 +47,19 @@ public class HearingDetailsFinder {
         }
         return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
                 .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
+    }
+
+    public String getCmrHearingCentreAddress(AsylumCase asylumCase) {
+        final HearingCentre cmrHearingCentre = getCmrHearingCentre(asylumCase);
+
+        Optional<String> refDataAddress = asylumCase
+                .read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class);
+
+        if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
+            return refDataAddress.get();
+        }
+        return stringProvider.get(CMR_HEARING_CENTRE_ADDRESS, cmrHearingCentre.toString())
+                .orElseThrow(() -> new IllegalStateException("cmrHearingCentreAddress is not present"));
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {
@@ -82,6 +96,12 @@ public class HearingDetailsFinder {
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingDate is not present"));
     }
 
+    public String getCmrHearingDateTime(AsylumCase asylumCase) {
+        return asylumCase
+                .read(AsylumCaseDefinition.CMR_HEARING_DATE, String.class)
+                .orElseThrow(() -> new IllegalStateException("cmrHearingDate is not present"));
+    }
+
     public String getBailHearingDateTime(BailCase bailCase) {
         return bailCase
             .read(LISTING_HEARING_DATE, String.class)
@@ -99,6 +119,21 @@ public class HearingDetailsFinder {
                 asylumCase
                     .read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)
                     .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+        }
+        return hearingCentre;
+    }
+
+    private HearingCentre getCmrHearingCentre(AsylumCase asylumCase) {
+        HearingCentre hearingCentre =
+                asylumCase
+                        .read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class)
+                        .orElseThrow(() -> new IllegalStateException("cmrHearingCentre is not present"));
+
+        if (hearingCentre == HearingCentre.REMOTE_HEARING) {
+            return
+                    asylumCase
+                            .read(AsylumCaseDefinition.CMR_HEARING_CENTRE, HearingCentre.class)
+                            .orElseThrow(() -> new IllegalStateException("cmrHearingCentre is not present"));
         }
         return hearingCentre;
     }
