@@ -83,6 +83,8 @@ public class LegalRepresentativeCmrHearingCancelledPersonalisation implements Em
             oldHearingCentreAddress = "";
         }
 
+        log.info("Legal Rep Old hearing details - Date: {}, Time: {}, Centre Address: {}", oldHearingDate, oldHearingTime, oldHearingCentreAddress);
+
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
