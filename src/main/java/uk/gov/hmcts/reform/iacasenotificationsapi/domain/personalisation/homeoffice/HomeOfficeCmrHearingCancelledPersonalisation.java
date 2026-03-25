@@ -66,7 +66,7 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "asylumCase must not be null");
 
-        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
 
         String oldHearingDate;
@@ -82,6 +82,10 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
             oldHearingTime = "";
             oldHearingCentreAddress = "";
         }
+
+        oldHearingDate = "01-06-2024";
+        oldHearingTime = "10:00";
+        oldHearingCentreAddress = "some address";
 
         log.info("Home Office Old hearing details - Date: {}, Time: {}, Centre Address: {}", oldHearingDate, oldHearingTime, oldHearingCentreAddress);
 
