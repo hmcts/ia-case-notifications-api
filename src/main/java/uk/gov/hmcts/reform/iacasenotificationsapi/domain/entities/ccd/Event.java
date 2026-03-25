@@ -132,6 +132,8 @@ public enum Event {
     SEND_PAYMENT_REMINDER_NOTIFICATION("sendPaymentReminderNotification"),
     PROGRESS_MIGRATED_CASE("progressMigratedCase"),
     REFUND_CONFIRMATION("refundConfirmation"),
+    QUERY_MANAGEMENT_RAISE_QUERY("queryManagementRaiseQuery"),
+    QUERY_MANAGEMENT_RESPOND_QUERY("queryManagementRespondQuery"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),
