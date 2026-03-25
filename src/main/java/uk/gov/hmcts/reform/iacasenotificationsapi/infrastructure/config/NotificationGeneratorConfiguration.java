@@ -3366,7 +3366,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
+    @Bean("legalRepresentationRaiseQueryNotificationGenerator")
     public List<NotificationGenerator> legalRepresentativeRaiseQueryNotificationHandler(
         LegalRepresentativeRaiseQueryPersonalisation legalRepresentativeRaiseQueryPersonalisation,
         GovNotifyNotificationSender notificationSender,
