@@ -6817,7 +6817,8 @@ public class NotificationGeneratorConfiguration {
     ) {
         return singletonList(
                 new EmailNotificationGenerator(
-                        newArrayList(homeOfficeCmrHearingCancelledPersonalisation,
+                        newArrayList(caseOfficerCmrHearingCancelledPersonalisation,
+                                homeOfficeCmrHearingCancelledPersonalisation,
                                 legalRepCmrHearingCancelledPersonalisation),
                         notificationSender,
                         notificationIdAppender

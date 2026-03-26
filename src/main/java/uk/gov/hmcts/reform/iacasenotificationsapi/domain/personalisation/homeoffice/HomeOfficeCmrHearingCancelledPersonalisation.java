@@ -83,10 +83,6 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
             oldHearingCentreAddress = "";
         }
 
-        oldHearingDate = "01-06-2024";
-        oldHearingTime = "10:00";
-        oldHearingCentreAddress = "some address";
-
         log.info("Home Office Personalisation - Appeal Reference Number: {}, Home Office Reference Number: {}, Appellant Given Names: {}, Appellant Family Name: {}, Link to Online Service: {}, Old Hearing Date: {}, Old Hearing Time: {}, Old Hearing Centre Address: {}",
                 asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""),
                 asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""),
