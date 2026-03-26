@@ -359,7 +359,7 @@ class HearingDetailsFinderTest {
                         "TW14 0LS",
                 hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
-    // getCmrHearingDateTime tests
+
     @Test
     void should_return_given_cmr_hearing_date_time() {
         when(asylumCase.read(AsylumCaseDefinition.CMR_HEARING_DATE, String.class))

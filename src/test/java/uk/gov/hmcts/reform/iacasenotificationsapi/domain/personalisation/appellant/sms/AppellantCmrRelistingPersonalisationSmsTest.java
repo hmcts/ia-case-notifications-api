@@ -12,7 +12,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
@@ -68,6 +67,7 @@ public class AppellantCmrRelistingPersonalisationSmsTest {
                 personalisationProvider
         );
     }
+
     @Test
     public void should_return_correct_template_id() {
         assertEquals(inPersonTemplateId, appellantCmrRelistingPersonalisationSms.getTemplateId(asylumCase));

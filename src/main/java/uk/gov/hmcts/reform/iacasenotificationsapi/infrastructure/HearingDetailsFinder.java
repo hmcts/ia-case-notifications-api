@@ -39,8 +39,8 @@ public class HearingDetailsFinder {
                 getHearingCentre(asylumCase);
 
         if (asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class).orElse("").isEmpty()) {
-        Optional<String> refDataAddress = asylumCase
-            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
+            Optional<String> refDataAddress = asylumCase
+                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
             if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
                 return refDataAddress.get();
             }
@@ -50,13 +50,13 @@ public class HearingDetailsFinder {
 
             Optional<String> refDataAddress = asylumCase
                                 .read(CMR_HEARING_CENTRE_ADDRESS, String.class);
-        if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
-            return refDataAddress.get();
-        }
-        return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
+            if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
+                return refDataAddress.get();
+            }
+            return stringProvider.get(HEARING_CENTRE_ADDRESS, listCaseHearingCentre.toString())
                 .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
-    }
         }
+    }
 
 
 

@@ -10,13 +10,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtract
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 @Service
 public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPersonalisation {

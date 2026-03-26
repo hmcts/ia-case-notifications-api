@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import com.google.common.collect.ImmutableMap;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_IS_REMOTE_HEARING;
 
 @Service
 public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationPersonalisation {
