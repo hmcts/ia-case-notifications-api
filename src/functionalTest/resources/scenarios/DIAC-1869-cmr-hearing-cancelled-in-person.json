@@ -11,6 +11,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "contactPreference": "wantsEmail",
           "legalRepReferenceNumber": "REF54321",
           "legalRepresentativeEmailAddress": "legalRep@test.com",
           "homeOfficeReferenceNumber": "1212-0099-0062-8083",
@@ -69,6 +70,7 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
+        "contactPreference": "wantsEmail",
         "legalRepReferenceNumber": "REF54321",
         "legalRepresentativeEmailAddress": "legalRep@test.com",
         "homeOfficeReferenceNumber": "1212-0099-0062-8083",
