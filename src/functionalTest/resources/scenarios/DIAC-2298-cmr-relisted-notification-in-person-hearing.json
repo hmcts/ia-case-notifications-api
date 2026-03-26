@@ -10,13 +10,16 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "appellantInUk": "Yes",
-          "remoteVideoCallTribunalResponse": "remote video call tribunal response",
+          "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
           "hearingCentre": "birmingham",
-          "listCaseHearingCentre": "remoteHearing",
+          "listCaseHearingCentre": "birmingham",
           "listCaseHearingDate": "2021-02-19T14:25:15.000",
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "cmrHearingCentre": "remoteHearing",
+          "cmrHearingDate": "2021-03-19T10:00:00.000",
+          "cmrHearingCentreAddress": "Remote hearing",
+          "cmrIsRemoteHearing": "Yes"
         }
       }
     }
@@ -27,23 +30,25 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appellantInUk": "No",
-        "remoteVideoCallTribunalResponse": "remote video call tribunal response",
-        "hearingCentre": "birmingham",
-        "listCaseHearingCentre": "remoteHearing",
+        "appealReferenceNumber": "PA/12345/2023",
+        "listCaseHearingCentre": "birmingham",
         "listCaseHearingDate": "2021-02-19T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "37201_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "37201_CMR_LISTED_OR_REMOTE_LEGAL_REPRESENTATIVE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "37201_CASE_LISTED_HOME_OFFICE",
+            "id": "37201_LIST_CMR_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "37201_CASE_LISTED_CASE_OFFICER",
+            "id": "37201_CMR_LISTED_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "37201_CMR_LISTED_OR_REMOTE_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
