@@ -2,7 +2,7 @@
   "description": "DIAC-2298 Send cmr listed notification to case officer, legal rep, appellant, home office in a remote hearing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "SystemUser",
     "input": {
       "id": 37201,
       "eventId": "cmrListing",
