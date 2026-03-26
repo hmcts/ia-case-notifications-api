@@ -12,6 +12,7 @@
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
+          "hearingCentre": "taylorHouse",
           "listCaseHearingCentre": "birmingham",
           "listCaseHearingDate": "2021-02-19T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
@@ -30,6 +31,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
+        "hearingCentre": "taylorHouse",
         "listCaseHearingCentre": "birmingham",
         "listCaseHearingDate": "2021-02-19T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
