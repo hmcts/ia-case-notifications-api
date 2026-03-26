@@ -2510,7 +2510,6 @@ security:
       - "editAppeal"
       - "decideCostsApplication"
     caseworker-ia-system:
-      - "cmrListing"
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
       - "updatePaymentStatus"
@@ -2522,6 +2521,7 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+      - "cmrListing"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
