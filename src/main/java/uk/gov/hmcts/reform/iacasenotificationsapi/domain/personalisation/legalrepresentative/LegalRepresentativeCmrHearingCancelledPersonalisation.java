@@ -83,7 +83,16 @@ public class LegalRepresentativeCmrHearingCancelledPersonalisation implements Em
             oldHearingCentreAddress = "";
         }
 
-        log.info("Legal Rep Old hearing details - Date: {}, Time: {}, Centre Address: {}", oldHearingDate, oldHearingTime, oldHearingCentreAddress);
+        log.info("Legal Representative Personalisation - Appeal Reference Number: {}, Legal Rep Reference Number: {}, Appellant Given Names: {}, Appellant Family Name: {}, Link to Online Service: {}, Old Hearing Date: {}, Old Hearing Time: {}, Old Hearing Centre Address: {}",
+                asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""),
+                asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""),
+                asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""),
+                asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""),
+                iaExUiFrontendUrl,
+                oldHearingDate,
+                oldHearingTime,
+                oldHearingCentreAddress
+        );
 
         return ImmutableMap
             .<String, String>builder()

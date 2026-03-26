@@ -87,8 +87,16 @@ public class HomeOfficeCmrHearingCancelledPersonalisation implements EmailNotifi
         oldHearingTime = "10:00";
         oldHearingCentreAddress = "some address";
 
-        log.info("Home Office Old hearing details - Date: {}, Time: {}, Centre Address: {}", oldHearingDate, oldHearingTime, oldHearingCentreAddress);
-
+        log.info("Home Office Personalisation - Appeal Reference Number: {}, Home Office Reference Number: {}, Appellant Given Names: {}, Appellant Family Name: {}, Link to Online Service: {}, Old Hearing Date: {}, Old Hearing Time: {}, Old Hearing Centre Address: {}",
+                asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""),
+                asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""),
+                asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""),
+                asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""),
+                iaExUiFrontendUrl,
+                oldHearingDate,
+                oldHearingTime,
+                oldHearingCentreAddress
+        );
 
         return ImmutableMap
             .<String, String>builder()
