@@ -141,6 +141,8 @@ public class EventTest {
         assertEquals("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString());
         assertEquals("refundConfirmation", Event.REFUND_CONFIRMATION.toString());
         assertEquals("hearingCancelled", HEARING_CANCELLED.toString());
+        assertEquals("queryManagementRaiseQuery", Event.QUERY_MANAGEMENT_RAISE_QUERY.toString());
+        assertEquals("queryManagementRespondQuery", Event.QUERY_MANAGEMENT_RESPOND_QUERY.toString());
     }
 
     @Test
