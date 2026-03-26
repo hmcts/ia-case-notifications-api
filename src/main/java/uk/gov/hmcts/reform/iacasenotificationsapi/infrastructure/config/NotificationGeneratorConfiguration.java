@@ -6807,11 +6807,12 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("cmrHearingCancelledProductionDetainedNotificationGenerator")
-    public List<NotificationGenerator> cmrHearingCancelledProductionDetainedNotificationGenerator(
+    @Bean("cmrHearingCancelledEmailPreferredNotificationGenerator")
+    public List<NotificationGenerator> cmrHearingEmailPreferredNotificationGenerator(
             CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
             HomeOfficeCmrHearingCancelledPersonalisation homeOfficeCmrHearingCancelledPersonalisation,
             LegalRepresentativeCmrHearingCancelledPersonalisation legalRepCmrHearingCancelledPersonalisation,
+            AppellantCmrHearingCancelledPersonalisationEmail appellantCmrHearingCancelledPersonalisationEmail,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -6819,7 +6820,8 @@ public class NotificationGeneratorConfiguration {
                 new EmailNotificationGenerator(
                         newArrayList(caseOfficerCmrHearingCancelledPersonalisation,
                                 homeOfficeCmrHearingCancelledPersonalisation,
-                                legalRepCmrHearingCancelledPersonalisation),
+                                legalRepCmrHearingCancelledPersonalisation,
+                                appellantCmrHearingCancelledPersonalisationEmail),
                         notificationSender,
                         notificationIdAppender
                 )

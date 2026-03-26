@@ -7702,15 +7702,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledProductionDetainedNotificationHandler(
-            @Qualifier("cmrHearingCancelledProductionDetainedNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledEmailPreferredNotificationHandler(
+            @Qualifier("cmrHearingCancelledEmailPreferredNotificationGenerator")
             List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean emailPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                            .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
+                            .orElse(false);
+
                     return callback.getEvent() == CMR_HEARING_CANCELLED
-                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT;
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && emailPreferred;
                 }, notificationGenerators
         );
     }
