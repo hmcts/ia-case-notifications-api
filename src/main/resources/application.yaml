@@ -2510,6 +2510,7 @@ security:
       - "editAppeal"
       - "decideCostsApplication"
     caseworker-ia-system:
+      - "cmrListing"
       - "requestHearingRequirementsFeature"
       - "endAppealAutomatically"
       - "updatePaymentStatus"
