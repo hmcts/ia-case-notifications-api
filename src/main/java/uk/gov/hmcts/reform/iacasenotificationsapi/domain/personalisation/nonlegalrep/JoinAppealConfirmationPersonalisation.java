@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -51,8 +52,7 @@ public class JoinAppealConfirmationPersonalisation implements EmailNotificationP
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        NonLegalRepDetails nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
-            .orElse(null);
+        Optional<NonLegalRepDetails> nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class);
 
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
@@ -61,8 +61,8 @@ public class JoinAppealConfirmationPersonalisation implements EmailNotificationP
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("nlrGivenNames", nlrDetails != null ? nlrDetails.getGivenNames() : "Sir /")
-            .put("nlrFamilyName", nlrDetails != null ? nlrDetails.getFamilyName() : "Madam")
+            .put("nlrGivenNames", nlrDetails.map(NonLegalRepDetails::getGivenNames).orElse("Sir /"))
+            .put("nlrFamilyName", nlrDetails.map(NonLegalRepDetails::getFamilyName).orElse("Madam"))
             .put("Hyperlink to service", iaAipFrontendUrl);
 
         return fields.build();

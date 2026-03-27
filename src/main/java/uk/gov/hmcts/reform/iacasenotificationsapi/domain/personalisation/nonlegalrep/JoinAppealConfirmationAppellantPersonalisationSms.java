@@ -6,6 +6,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -51,14 +52,13 @@ public class JoinAppealConfirmationAppellantPersonalisationSms implements SmsNot
         requireNonNull(callback, "callback must not be null");
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-        NonLegalRepDetails nlrDetails = asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
-            .orElse(null);
+        Optional<NonLegalRepDetails> nlrDetails = asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class);
         return
             ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("nlrGivenNames", nlrDetails != null ? nlrDetails.getGivenNames() : "Sir /")
-                .put("nlrFamilyName", nlrDetails != null ? nlrDetails.getFamilyName() : "Madam")
+                .put("nlrGivenNames", nlrDetails.map(NonLegalRepDetails::getGivenNames).orElse("Sir /"))
+                .put("nlrFamilyName", nlrDetails.map(NonLegalRepDetails::getFamilyName).orElse("Madam"))
                 .build();
     }
 }
