@@ -1,11 +1,11 @@
 {
-  "description": "DIAC-1869 CMR Hearing Cancelled - In Person ",
+  "description": "DIAC-1869 CMR Hearing Cancelled - In Person - SMS",
   "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 18691,
+      "id": 18693,
       "eventId": "cmrHearingCancelled",
       "state": "preHearing",
       "caseData": {
@@ -58,15 +58,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+            "id": "18693_CMR_HEARING_CANCELLED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
+            "id": "18693_CMR_HEARING_CANCELLED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "18691_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
+            "id": "18693_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -109,7 +109,7 @@
     },
     "notifications": [
       {
-        "reference": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+        "reference": "18693_CMR_HEARING_CANCELLED_CASE_OFFICER",
         "recipient": "{$listCaseCaseOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
         "body": [
@@ -120,7 +120,7 @@
         ]
       },
       {
-        "reference": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
+        "reference": "18693_CMR_HEARING_CANCELLED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.glasgow}",
         "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
         "body": [
@@ -137,7 +137,7 @@
         ]
       },
       {
-        "reference": "18691_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
+        "reference": "18693_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
         "recipient": "legalRep@test.com",
         "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
         "body": [
