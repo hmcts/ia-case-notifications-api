@@ -121,7 +121,7 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
         Set<String> response = personalisation.getRecipientsList(asylumCase);
-        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(2)).findAll(asylumCase, NotificationType.SMS);
         verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
         assertTrue(response.contains(mockedAppellantMobilePhone));
     }
@@ -133,7 +133,7 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
         Set<String> response = personalisation.getRecipientsList(asylumCase);
         verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
-        verify(recipientsFinder, times(1)).findReppedAppellant(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(2)).findReppedAppellant(asylumCase, NotificationType.SMS);
         assertTrue(response.contains(mockedAppellantMobilePhone));
     }
 

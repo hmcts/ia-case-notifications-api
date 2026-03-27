@@ -90,7 +90,7 @@ class AppellantCmrHearingCancelledPersonalisationEmailTest {
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
         Set<String> response = personalisation.getRecipientsList(asylumCase);
-        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(2)).findAll(asylumCase, NotificationType.EMAIL);
         verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
         assertTrue(response.contains(mockedAppellantEmailAddress));
     }
