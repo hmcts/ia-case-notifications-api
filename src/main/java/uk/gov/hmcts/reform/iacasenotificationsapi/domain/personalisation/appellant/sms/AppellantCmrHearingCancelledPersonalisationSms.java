@@ -56,6 +56,11 @@ public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotifi
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+
+        log.info("getRecipientsList sms: {}", isAipJourney(asylumCase) ?
+                recipientsFinder.findAll(asylumCase, NotificationType.SMS) :
+                recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS));
+
         return isAipJourney(asylumCase) ?
             recipientsFinder.findAll(asylumCase, NotificationType.SMS) :
             recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);

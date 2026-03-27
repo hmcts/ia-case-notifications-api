@@ -55,6 +55,8 @@ public class AppellantCmrHearingCancelledPersonalisationEmail implements EmailNo
         boolean isAip = asylumCase.read(JOURNEY_TYPE, JourneyType.class)
             .map(type -> type == AIP).orElse(false);
 
+        log.info("getRecipientsList email: {}", isAip ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) : Collections.emptySet());
+
         return isAip ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) : Collections.emptySet();
     }
 
