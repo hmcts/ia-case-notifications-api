@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -20,6 +21,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
+@Slf4j
 @Service
 public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotificationPersonalisation {
 
@@ -84,6 +86,14 @@ public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotifi
             oldHearingTime = "";
             oldHearingCentreAddress = "";
         }
+
+        log.info("Appellant Email Personalisation - Appeal Reference Number: {}, Link to Service: {}, Old Hearing Date: {}, Old Hearing Time: {}, Old Hearing Centre Address: {}",
+                asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""),
+                iaAipFrontendUrl,
+                oldHearingDate,
+                oldHearingTime,
+                oldHearingCentreAddress
+        );
 
         return ImmutableMap
             .<String, String>builder()

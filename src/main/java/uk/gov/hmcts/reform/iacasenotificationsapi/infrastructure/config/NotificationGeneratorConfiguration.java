@@ -6816,6 +6816,7 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
+        log.info("Creating bean for cmrHearingCancelledEmailPreferredNotificationGenerator");
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(caseOfficerCmrHearingCancelledPersonalisation,
@@ -6837,6 +6838,7 @@ public class NotificationGeneratorConfiguration {
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
+        log.info("Creating bean for cmrHearingCancelledSmsPreferredNotificationGenerator");
         return Arrays.asList(
                 new EmailNotificationGenerator(
                         newArrayList(caseOfficerCmrHearingCancelledPersonalisation,

@@ -94,7 +94,7 @@ public class AppellantCmrHearingCancelledPersonalisationEmail implements EmailNo
             oldHearingCentreAddress = "";
         }
 
-        log.info("Legal Representative Personalisation - Appeal Reference Number: {}, Legal Rep Reference Number: {}, Appellant Given Names: {}, Appellant Family Name: {}, Old Hearing Date: {}, Old Hearing Time: {}, Old Hearing Centre Address: {}",
+        log.info("Appellant Email Personalisation - Appeal Reference Number: {}, Legal Rep Reference Number: {}, Appellant Given Names: {}, Appellant Family Name: {}, Old Hearing Date: {}, Old Hearing Time: {}, Old Hearing Centre Address: {}",
                 asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""),
                 asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""),
                 asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""),
