@@ -64,7 +64,7 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
 
     //    need to confirm placeholders here
     @Override
-    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+    public Map<String, String> getPersonalisation(Callback<   AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
 
         final Map<String, String> listCaseFields = new HashMap<>();
