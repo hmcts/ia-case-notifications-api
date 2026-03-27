@@ -1,0 +1,158 @@
+{
+  "description": "DIAC-1869 CMR Hearing Cancelled - In Person ",
+  "launchDarklyKey": "tcw-notifications-feature:true",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "SystemUser",
+    "input": {
+      "id": 18691,
+      "eventId": "cmrHearingCancelled",
+      "state": "preHearing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "contactPreference": "wantsSms",
+          "legalRepReferenceNumber": "REF54321",
+          "legalRepresentativeEmailAddress": "legalRep@test.com",
+          "homeOfficeReferenceNumber": "1212-0099-0062-8083",
+          "appellantInDetention": "No",
+          "appellantHasFixedAddress": "Yes",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "SE12 0NB",
+            "PostTown": "London",
+            "AddressLine1": "17 Linchmere Road",
+            "AddressLine2": "",
+            "AddressLine3": ""
+          },
+          "cmrHearingDate": "2026-03-27T09:45:00.000",
+          "cmrHearingCentre": "glasgowTribunalsCentre",
+          "cmrHearingLength": {
+            "hours": 3,
+            "minutes": 0
+          },
+          "cmrHearingChannel": {
+            "value": {
+              "code": "INTER",
+              "label": "In Person"
+            },
+            "list_items": [
+              {
+                "code": "INTER",
+                "label": "In Person"
+              }
+            ]
+          },
+          "cmrIsRemoteHearing": "No",
+          "cmrHearingCentreAddress": "Atlantic Quay - Glasgow"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "notificationsSent": [
+          {
+            "id": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "18691_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ],
+        "contactPreference": "wantsSms",
+        "legalRepReferenceNumber": "REF54321",
+        "legalRepresentativeEmailAddress": "legalRep@test.com",
+        "homeOfficeReferenceNumber": "1212-0099-0062-8083",
+        "appellantInDetention": "No",
+        "appellantHasFixedAddress": "Yes",
+        "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "SE12 0NB",
+          "PostTown": "London",
+          "AddressLine1": "17 Linchmere Road",
+          "AddressLine2": "",
+          "AddressLine3": ""
+        },
+        "cmrHearingDate": "2026-03-27T09:45:00.000",
+        "cmrHearingCentre": "glasgowTribunalsCentre",
+        "cmrHearingLength": {
+          "hours": 3,
+          "minutes": 0
+        },
+        "cmrHearingChannel": {
+          "value": {
+            "code": "INTER",
+            "label": "In Person"
+          },
+          "list_items": [
+            {
+              "code": "INTER",
+              "label": "In Person"
+            }
+          ]
+        },
+        "cmrIsRemoteHearing": "No",
+        "cmrHearingCentreAddress": "Atlantic Quay - Glasgow"
+      }
+    },
+    "notifications": [
+      {
+        "reference": "18691_CMR_HEARING_CANCELLED_CASE_OFFICER",
+        "recipient": "{$listCaseCaseOfficerEmailAddress}",
+        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
+        "body": [
+          "PA/12345/2019",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "The CMR hearing for this appeal has been cancelled. You can view the reason for this in the hearing tab."
+        ]
+      },
+      {
+        "reference": "18691_CMR_HEARING_CANCELLED_HOME_OFFICE",
+        "recipient": "{$homeOfficeEmailAddresses.glasgow}",
+        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
+        "body": [
+          "PA/12345/2019",
+          "1212-0099-0062-8083",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "This case was listed for CMR hearing on",
+          "Please be advised that the hearing previously scheduled for the date and venue mentioned above has been cancelled.",
+          "The Tribunal will notify you when there is a new date for the hearing.",
+          "First-tier Tribunal (Immigration and Asylum Chamber)",
+          "If you’re unsure an email is from the HM Courts & Tribunals Service:",
+          "Do not reply to it or click on any links."
+        ]
+      },
+      {
+        "reference": "18691_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
+        "recipient": "legalRep@test.com",
+        "subject": "Immigration and Asylum appeal: CMR hearing cancelled",
+        "body": [
+          "PA/12345/2019",
+          "REF54321",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "This case was listed for CMR hearing on",
+          "Please be advised that the hearing previously scheduled for the date and venue mentioned above has been cancelled.",
+          "The Tribunal will notify you when there is a new date for the hearing.",
+          "First-tier Tribunal (Immigration and Asylum Chamber)",
+          "If you’re unsure an email is from the HM Courts & Tribunals Service:",
+          "Do not reply to it or click on any links."
+        ]
+      }
+    ]
+  }
+}
