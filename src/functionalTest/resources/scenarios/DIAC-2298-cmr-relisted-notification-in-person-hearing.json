@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 37201,
+      "id": 30201,
       "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -38,10 +38,6 @@
         "notificationsSent": [
           {
             "id": "37201_CMR_LISTED_OR_REMOTE_LEGAL_REPRESENTATIVE_EMAIL",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "37201_LIST_CMR_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
