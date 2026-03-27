@@ -6808,7 +6808,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("cmrHearingCancelledEmailPreferredNotificationGenerator")
-    public List<NotificationGenerator> cmrHearingEmailPreferredNotificationGenerator(
+    public List<NotificationGenerator> cmrHearingCancelledEmailPreferredNotificationGenerator(
             CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
             HomeOfficeCmrHearingCancelledPersonalisation homeOfficeCmrHearingCancelledPersonalisation,
             LegalRepresentativeCmrHearingCancelledPersonalisation legalRepCmrHearingCancelledPersonalisation,
@@ -6829,7 +6829,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("cmrHearingCancelledSmsPreferredNotificationGenerator")
-    public List<NotificationGenerator> cmrHearingSmsPreferredNotificationGenerator(
+    public List<NotificationGenerator> cmrHearingCancelledSmsPreferredNotificationGenerator(
             CaseOfficerCmrHearingCancelledPersonalisation caseOfficerCmrHearingCancelledPersonalisation,
             HomeOfficeCmrHearingCancelledPersonalisation homeOfficeCmrHearingCancelledPersonalisation,
             LegalRepresentativeCmrHearingCancelledPersonalisation legalRepCmrHearingCancelledPersonalisation,
