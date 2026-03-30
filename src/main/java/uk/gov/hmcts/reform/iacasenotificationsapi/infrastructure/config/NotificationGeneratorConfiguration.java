@@ -6387,8 +6387,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("legalRepCmrListingGenerator")
     public List<NotificationGenerator> legalRepCmrListingGenerator(
-            LegalRepCmrListingPersonalisation legalRepCmrListingRelistingPersonalisation,
-            CaseOfficerCmrListingPersonalisation caseOfficerListingRelistingPersonalisation,
+            LegalRepCmrListingPersonalisation legalRepCmrListingPersonalisation,
+            CaseOfficerCmrListingPersonalisation caseOfficerListingPersonalisation,
             HomeOfficeCmrListingPersonalisation homeOfficeCmrListingPersonalisation,
 
             GovNotifyNotificationSender notificationSender,
@@ -6396,12 +6396,12 @@ public class NotificationGeneratorConfiguration {
     ) {
         return Arrays.asList(
                 new EmailNotificationGenerator(
-                        newArrayList(legalRepCmrListingRelistingPersonalisation),
+                        newArrayList(legalRepCmrListingPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new EmailNotificationGenerator(
-                        newArrayList(caseOfficerListingRelistingPersonalisation),
+                        newArrayList(caseOfficerListingPersonalisation),
                         notificationSender,
                         notificationIdAppender
                 ),

@@ -10,6 +10,8 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "appellantInDetention": "No",
+          "appellantsRepresentation": "Yes",
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
           "hearingCentre": "taylorHouse",
@@ -30,11 +32,18 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appellantInDetention": "No",
+        "appellantsRepresentation": "Yes",
         "appealReferenceNumber": "PA/12345/2023",
+        "ariaListingReference": "LP/12345/2021",
         "hearingCentre": "taylorHouse",
         "listCaseHearingCentre": "birmingham",
         "listCaseHearingDate": "2021-02-19T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "cmrHearingCentre": "remoteHearing",
+        "cmrHearingDate": "2021-03-19T10:00:00.000",
+        "cmrHearingCentreAddress": "Remote hearing",
+        "cmrIsRemoteHearing": "Yes",
         "notificationsSent": [
           {
             "id": "30201_CMR_LISTED_OR_REMOTE_LEGAL_REPRESENTATIVE_EMAIL",
