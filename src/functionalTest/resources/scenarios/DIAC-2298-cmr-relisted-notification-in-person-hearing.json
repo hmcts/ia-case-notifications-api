@@ -33,6 +33,7 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "appellantInDetention": "No",
+        "contactPreference": "wantsEmail",
         "appellantsRepresentation": "Yes",
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
