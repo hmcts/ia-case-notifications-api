@@ -5423,10 +5423,13 @@ public class NotificationHandlerConfiguration {
     }
 
     private ErrorHandler<AsylumCase> getErrorHandler() {
-        return (callback, e) -> callback
-            .getCaseDetails()
-            .getCaseData()
-            .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+        return (callback, e) -> {
+            log.error("Notification failed with exception: ", e);
+            callback
+                    .getCaseDetails()
+                    .getCaseData()
+                    .write(SUBMIT_NOTIFICATION_STATUS, "Failed");
+        };
     }
 
     private ErrorHandler<AsylumCase> getSmsErrorHandling() {
@@ -7187,8 +7190,7 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == CMR_LISTING
                             && isRepJourney(asylumCase)
-                            && !isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase);
+                            && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
