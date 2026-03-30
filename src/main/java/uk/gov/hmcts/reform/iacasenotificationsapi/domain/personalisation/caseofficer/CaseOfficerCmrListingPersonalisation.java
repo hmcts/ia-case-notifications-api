@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +26,6 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
     private final DateTimeExtractor dateTimeExtractor;
     private final String iaExUiFrontendUrl;
     private final String caseOfficerRemoteCmrListingTemplateId;
-    private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
     private final HearingDetailsFinder hearingDetailsFinder;
 
@@ -44,7 +41,6 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
         this.emailAddressFinder = emailAddressFinder;
         this.dateTimeExtractor = dateTimeExtractor;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.personalisationProvider = personalisationProvider;
         this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
