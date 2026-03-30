@@ -167,7 +167,8 @@ def secrets = [
     secret('det-irc-yarlswood-email', 'IA_DET_IRC_YARLSWOOD_EMAIL'),
 
     secret('ia-redis-access-key', 'IA_REDIS_ACCESS_KEY'),
-    secret('ia-redis-connection-string', 'IA_REDIS_CONNECTION_STRING')
+    secret('ia-redis-connection-string', 'IA_REDIS_CONNECTION_STRING'),
+    secret('ia-redis-encryption-key', 'IA_REDIS_ENCRYPTION_KEY')
     ]
 ]
 
