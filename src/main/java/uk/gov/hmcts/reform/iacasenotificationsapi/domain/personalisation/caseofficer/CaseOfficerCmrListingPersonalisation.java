@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 import java.util.Collections;
 import java.util.Map;
@@ -34,7 +33,6 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
             @Value("${govnotify.template.listAssistHearing.caseListed.remoteHearing.caseOfficer.email}") String caseOfficerRemoteCmrListingTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder,
-            PersonalisationProvider personalisationProvider,
             HearingDetailsFinder hearingDetailsFinder, DateTimeExtractor dateTimeExtractor) {
         this.caseOfficerCmrListingTemplateId = caseOfficerCmrListingTemplateId;
         this.caseOfficerRemoteCmrListingTemplateId = caseOfficerRemoteCmrListingTemplateId;
