@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -32,6 +33,8 @@ class HomeOfficeCmrListingPersonalisationTest {
     HearingDetailsFinder hearingDetailsFinder;
     @Mock
     EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
 
     private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
@@ -63,6 +66,7 @@ class HomeOfficeCmrListingPersonalisationTest {
                 iaExUiFrontendUrl,
                 dateTimeExtractor,
                 hearingDetailsFinder,
+                customerServicesProvider,
                 emailAddressFinder
         );
     }
@@ -91,13 +95,13 @@ class HomeOfficeCmrListingPersonalisationTest {
                 homeOfficeCmrListingPersonalisation.getPersonalisation(asylumCase);
 
         assertFalse(personalisation.isEmpty());
-        assertEquals(appealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
     }
 
     @Test
@@ -109,7 +113,7 @@ class HomeOfficeCmrListingPersonalisationTest {
         Map<String, String> personalisation =
                 homeOfficeCmrListingPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
     }

@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 import java.util.Collections;
 import java.util.Map;
@@ -24,12 +22,14 @@ public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPer
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final EmailAddressFinder emailAddressFinder;
+    private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeCmrListingPersonalisation(
         @Value("${govnotify.template.listAssistHearing.caseListed.homeOffice.email}") String listCmrHomeOfficeTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
+        CustomerServicesProvider customerServicesProvider,
         EmailAddressFinder emailAddressFinder
 
     ) {
@@ -37,6 +37,7 @@ public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPer
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
+        this.customerServicesProvider = customerServicesProvider;
         this.emailAddressFinder = emailAddressFinder;
 
     }
@@ -60,16 +61,19 @@ public class HomeOfficeCmrListingPersonalisation implements EmailNotificationPer
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase cannot be null");
 
-        return
-            ImmutableMap
+        final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
-                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreAddress(asylumCase))
-                .put("Hyperlink to service", iaExUiFrontendUrl)
-                .build();
+                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+
+        return listCaseFields.build();
     }
 }
