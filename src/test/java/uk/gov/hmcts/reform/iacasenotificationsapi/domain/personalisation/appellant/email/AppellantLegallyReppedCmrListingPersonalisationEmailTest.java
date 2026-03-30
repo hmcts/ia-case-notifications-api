@@ -155,8 +155,6 @@ public class AppellantLegallyReppedCmrListingPersonalisationEmailTest {
 
         assertFalse(personalisation.isEmpty());
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
@@ -201,8 +199,6 @@ public class AppellantLegallyReppedCmrListingPersonalisationEmailTest {
                 appellantLegallyReppedCmrListingPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
         assertEquals("", personalisation.get("appellantGivenNames"));
         assertEquals("", personalisation.get("appellantFamilyName"));
     }

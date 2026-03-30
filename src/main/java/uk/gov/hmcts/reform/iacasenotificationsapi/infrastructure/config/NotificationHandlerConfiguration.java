@@ -7209,9 +7209,8 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == CMR_LISTING
                             && isRepJourney(asylumCase)
-                            && !isInternalCase(asylumCase)
-                            && !isSmsPreferred(asylumCase)
-                            && !isAppellantInDetention(asylumCase);
+                            && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
+                            && !isSmsPreferred(asylumCase);
 
 //                            && !isInternalCase(callback.getCaseDetails().getCaseData()) confirm if we want this as aip conditions instead
 //                            && isAipJourney(callback.getCaseDetails().getCaseData()),
