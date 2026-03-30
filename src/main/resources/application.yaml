@@ -484,7 +484,7 @@ govnotify:
             email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
 #            need to confirm the case officer template for this below V
           caseOfficer:
-            email: 031b65ee-6f5f-4c02-8a5f-8d56221272e9
+            email: 6323f0ca-e74c-46f7-b83b-e0a7e71d68ee
           appellant:
             email: 59a9e5a0-e5ef-4e97-8592-1a60bc94987f
       caseEdited:
