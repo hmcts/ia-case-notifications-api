@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailHearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 
@@ -207,10 +208,16 @@ public class EmailAddressFinder {
                    .orElse(false);
     }
 
-
-
     public String getListCaseCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
-        if (isRemoteHearing(asylumCase)) {
+        if (isRemoteHearing(asylumCase) || asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class).orElse(YesOrNo.NO).equals(YesOrNo.YES)) {
+            if (asylumCase.read(CMR_HEARING_CENTRE).isPresent()) {
+                final HearingCentre hearingCentre = getHearingCentre(asylumCase, CMR_HEARING_CENTRE);
+                if (Arrays.asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
+                    return listCaseCaseOfficerEmailAddress;
+                } else {
+                    return getHearingCentreEmailAddress(asylumCase);
+                }
+            }
             final HearingCentre hearingCentre = getHearingCentre(asylumCase, HEARING_CENTRE);
             if (Arrays.asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
                 return listCaseCaseOfficerEmailAddress;
