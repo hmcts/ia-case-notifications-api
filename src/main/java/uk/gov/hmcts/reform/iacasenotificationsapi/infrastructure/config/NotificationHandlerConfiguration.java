@@ -3545,7 +3545,6 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isRepJourney(callback.getCaseDetails().getCaseData())
                     && (isPaymentPendingForEaOrHuAppeal(callback)
                     || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
             notificationGenerators,
