@@ -10,6 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
+          "contactPreference": "wantsEmail",
           "appellantInDetention": "No",
           "appellantsRepresentation": "Yes",
           "appealReferenceNumber": "PA/12345/2023",
