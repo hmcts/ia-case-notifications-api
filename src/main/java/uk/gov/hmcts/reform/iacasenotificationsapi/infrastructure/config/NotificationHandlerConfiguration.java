@@ -7206,12 +7206,19 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
+
+                    Set<IdValue<Subscriber>> emailPreferred = maybeSubscribers
+                            .orElse(Collections.emptyList()).stream()
+                            .filter(subscriber -> YES.equals(subscriber.getValue().getWantsEmail()))
+                            .collect(Collectors.toSet());
 
                     return callback.getEvent() == CMR_LISTING
                             && isRepJourney(asylumCase)
                             && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase)
-                            && (isEmailPreferred(asylumCase) || !isSmsPreferred(asylumCase));
-
+                            && !emailPreferred.isEmpty()
+                            && emailPreferred.stream().findFirst().map(subscriberIdValue ->
+                            subscriberIdValue.getValue().getEmail()).isPresent();
 //                            && !isInternalCase(callback.getCaseDetails().getCaseData()) confirm if we want this as aip conditions instead
 //                            && isAipJourney(callback.getCaseDetails().getCaseData()),
                 },
