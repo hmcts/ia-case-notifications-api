@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
@@ -26,6 +27,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterSubmitAppeal;
+    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
 
     public AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation(
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.letter}") String removeStatutoryTimeframe24WeeksAppellantLetterId,
@@ -71,7 +73,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("tenDaysAfterSubmitDate", dueDate);
+                .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase));
         List<String> address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
