@@ -3345,8 +3345,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitAppealPendingPaymentInternalNotificationGenerator")
-    public List<NotificationGenerator> submitAppealPendingPaymentInternalNotificationGenerator(
+    @Bean("submitAppealPendingPaymentAipAndInternalNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPendingPaymentAipAndInternalNotificationGenerator(
         HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender

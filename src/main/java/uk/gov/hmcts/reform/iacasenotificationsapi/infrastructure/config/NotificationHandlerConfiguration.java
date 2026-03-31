@@ -3545,6 +3545,7 @@ public class NotificationHandlerConfiguration {
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
                     && (isPaymentPendingForEaOrHuAppeal(callback)
                     || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
             notificationGenerators,
@@ -3553,8 +3554,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> submitAppealPendingPaymentInternalNotificationHandler(
-        @Qualifier("submitAppealPendingPaymentInternalNotificationGenerator")
+    public PreSubmitCallbackHandler<AsylumCase> submitAppealPendingPaymentAipAndInternalNotificationHandler(
+        @Qualifier("submitAppealPendingPaymentAipAndInternalNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
@@ -3562,7 +3563,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
+                    && (isInternalCase(callback.getCaseDetails().getCaseData())
+                    || isAipJourney(callback.getCaseDetails().getCaseData()))
                     && (isPaymentPendingForEaOrHuAppeal(callback)
                     || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
             notificationGenerators,
