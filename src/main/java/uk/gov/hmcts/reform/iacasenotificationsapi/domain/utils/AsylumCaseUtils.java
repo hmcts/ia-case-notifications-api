@@ -580,4 +580,17 @@ public class AsylumCaseUtils {
                 .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
         return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
     }
+
+    public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
+
+        Set<String> emails = asylumCase.read(EMAIL, String.class)
+                .map(Collections::singleton)
+                .orElse(Collections.emptySet());
+        if (emails.isEmpty()) {
+            emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+                    .map(Collections::singleton)
+                    .orElse(Collections.emptySet());
+        }
+        return emails;
+    }
 }

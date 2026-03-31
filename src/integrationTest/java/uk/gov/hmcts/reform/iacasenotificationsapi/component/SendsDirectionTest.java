@@ -11,6 +11,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fix
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DIRECTIONS;
@@ -40,6 +42,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotifi
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
@@ -47,6 +50,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
@@ -138,11 +142,12 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(2);
+        assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
         assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL");
         assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
     }
 
     @Test
@@ -194,10 +199,31 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(1);
+        assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
         assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
+    }
+
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_letter_to_appellant() {
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null, null);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(2);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
     }
 
     private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail, String internalAppellantEmail) {
@@ -205,6 +231,10 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         addNotificationEmailStub(server);
         when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
                 .thenReturn(someNotificationId);
+
+        when(notificationSender.sendLetter(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
+                .thenReturn(someNotificationId);
+
         return aboutToSubmit(callback()
                 .event(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS)
                 .caseDetails(someCaseDetailsWith()
@@ -218,6 +248,9 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
                                 .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
                                 .with(SUBSCRIPTIONS, anySubscriptions())
                                 .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
+                                .with(APPELLANT_IN_UK, YesOrNo.YES)
+                                .with(APPELLANTS_REPRESENTATION,  YesOrNo.YES)
+                                .with(AsylumCaseDefinition.APPELLANT_ADDRESS, new AddressUk("l1", "l2", "l2", "pt", "county", "pc", "uk"))
                         )));
     }
 

@@ -1517,7 +1517,7 @@ govnotify:
         email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
       appellant:
         email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
-        letter: 8458015d-e43e-4dfb-8683-293db32e4286
+        letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}

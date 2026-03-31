@@ -113,6 +113,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.Noti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicationRespondentFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 @Slf4j
 @Configuration
@@ -5681,8 +5682,13 @@ public class NotificationHandlerConfiguration {
             @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> emails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     boolean canSendLetter = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && emails.isEmpty();
                     log.info("Can send 24WeeksNotification letter to appellant: {}", canSendLetter);
                     return canSendLetter;
                 },
@@ -5699,14 +5705,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    Set<String> emails = asylumCase.read(EMAIL, String.class)
-                            .map(Collections::singleton)
-                            .orElse(Collections.emptySet());
-                    if (emails.isEmpty()) {
-                        emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
-                                .map(Collections::singleton)
-                                .orElse(Collections.emptySet());
-                    }
+                    Set<String> emails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     log.info("In Handler Appellant emails {}", emails);
                     log.info("In Handler emails.isEmpty() {}", emails.isEmpty());
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT

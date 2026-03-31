@@ -9,15 +9,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
-
 
 @Service
 @Slf4j
@@ -56,15 +51,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-
-        Set<String> emails = asylumCase.read(EMAIL, String.class)
-                .map(Collections::singleton)
-                .orElse(Collections.emptySet());
-        if (emails.isEmpty()) {
-            emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
-                    .map(Collections::singleton)
-                    .orElse(Collections.emptySet());
-        }
+        Set<String> emails = AsylumCaseUtils.getApplicantEmail(asylumCase);
         log.info("getRecipientsList -> Appellant-emails {}", emails);
         return emails;
     }
