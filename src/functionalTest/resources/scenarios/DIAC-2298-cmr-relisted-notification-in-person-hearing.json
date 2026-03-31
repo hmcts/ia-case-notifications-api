@@ -11,6 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "contactPreference": "wantsEmail",
+          "email": "{$TEST_CITIZEN_USERNAME}",
           "appellantInDetention": "No",
           "appellantsRepresentation": "Yes",
           "appealReferenceNumber": "PA/12345/2023",
@@ -35,6 +36,7 @@
       "replacements": {
         "appellantInDetention": "No",
         "contactPreference": "wantsEmail",
+        "email": "{$TEST_CITIZEN_USERNAME}",
         "appellantsRepresentation": "Yes",
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
