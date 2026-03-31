@@ -7211,8 +7211,7 @@ public class NotificationHandlerConfiguration {
 
                     return callback.getEvent() == CMR_LISTING
                             && isRepJourney(asylumCase)
-                            && isEmailPreferred(asylumCase)
-                            && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
+                            && isEmailPreferred(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
