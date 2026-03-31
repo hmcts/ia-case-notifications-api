@@ -19,7 +19,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 @Service
 public class EmailAddressFinder {
 
-    private static final Set<HearingCentre> SHARED_HEARING_CENTRES = Set.of(HearingCentre.HENDON);
+    private static final Set<HearingCentre> SHARED_HEARING_CENTRES = Set.of(HearingCentre.HENDON,
+            HearingCentre.BRADFORD_KEIGHLEY, HearingCentre.MCC_MINSHULL, HearingCentre.MCC_CROWN_SQUARE,
+            HearingCentre.MANCHESTER_MAGS, HearingCentre.NTH_TYNE_MAGS, HearingCentre.LEEDS_MAGS, HearingCentre.ALLOA_SHERRIF);
+
     public static final String NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING = "No email address for decisions made without hearing";
 
     private final String listCaseHearingCentreIsNotPresent = "listCaseHearingCentre is not present";
