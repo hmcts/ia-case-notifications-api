@@ -32,7 +32,7 @@
                 "email": "{$TEST_CITIZEN_USERNAME}",
                 "wantsEmail": "Yes",
                 "wantsSms": "No",
-                "mobileNumber": ""
+                "mobileNumber": "+447123456789"
               }
             }
           ]
