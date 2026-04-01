@@ -7207,8 +7207,6 @@ public class NotificationHandlerConfiguration {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-
-
                     return callback.getEvent() == CMR_LISTING
                             && isRepJourney(asylumCase)
                             && isEmailPreferred(asylumCase);
