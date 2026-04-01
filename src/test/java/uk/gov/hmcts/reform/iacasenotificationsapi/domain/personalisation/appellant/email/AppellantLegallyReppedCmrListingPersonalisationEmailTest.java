@@ -157,7 +157,7 @@ public class AppellantLegallyReppedCmrListingPersonalisationEmailTest {
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("Hyperlink to service"));
         assertEquals(hearingDate, personalisation.get("hearingDate"));
         assertEquals(hearingTime, personalisation.get("hearingTime"));
         assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));

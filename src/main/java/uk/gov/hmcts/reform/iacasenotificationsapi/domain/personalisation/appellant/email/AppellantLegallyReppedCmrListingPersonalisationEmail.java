@@ -101,7 +101,7 @@ public class AppellantLegallyReppedCmrListingPersonalisationEmail implements Ema
                 .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase))
-                .put("linkToOnlineService", iaExUiFrontendUrl);
+                .put("Hyperlink to service", iaExUiFrontendUrl);
 
 
 

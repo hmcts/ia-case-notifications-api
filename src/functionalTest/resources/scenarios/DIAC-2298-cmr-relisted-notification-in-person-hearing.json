@@ -46,7 +46,9 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "contactPreference": "wantsEmail",
         "appellantInDetention": "No",
+        "email": "{$TEST_CITIZEN_USERNAME}",
         "appellantsRepresentation": "Yes",
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
