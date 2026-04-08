@@ -63,6 +63,12 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     private static final String someNotificationId = UUID.randomUUID().toString();
     private static final String UUID_PATTERN =
         "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
+
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
+
     @MockBean
     private GovNotifyNotificationSender notificationSender;
 
@@ -125,14 +131,14 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_remove_email_to_legal_rep_and_home_office() {
+    void should_send_24weeks_remove_letter_to_appellant_and_email_to_legal_rep_and_home_office() {
         PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", null, null);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
@@ -145,9 +151,29 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_letter_to_appellant_and_legal_rep_and_home_office_when_appellant_emails_are_empty() {
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "", "");
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(3);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
     }
 
     @Test
@@ -165,8 +191,8 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
@@ -183,13 +209,13 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_remove_email_to_ho_office() {
+    void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
         PreSubmitCallbackResponseForTest response = mockResponse(null, null, null);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
@@ -202,28 +228,8 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
-    }
-
-
-    @Test
-    @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_remove_letter_to_appellant() {
-        PreSubmitCallbackResponseForTest response = mockResponse(null, null, null);
-        Optional<List<IdValue<String>>> notificationsSent =
-                response
-                        .getData()
-                        .read(NOTIFICATIONS_SENT);
-
-        assertTrue(notificationsSent.isPresent());
-        List<IdValue<String>> notifications = notificationsSent.get();
-
-        assertThat(notifications.size()).isEqualTo(2);
-        List<String> idList = notifications.stream().map(IdValue::getId).toList();
-        String idsString = String.join(",", idList);
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL");
-        assertThat(idsString).contains("REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
     }
 
     private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail, String internalAppellantEmail) {

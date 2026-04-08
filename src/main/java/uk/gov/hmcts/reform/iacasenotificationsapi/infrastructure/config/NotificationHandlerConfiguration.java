@@ -5686,11 +5686,10 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    Set<String> emails = AsylumCaseUtils.getApplicantEmail(asylumCase);
-                    boolean canSendLetter = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && emails.isEmpty();
-                    log.info("Can send 24WeeksNotification letter to appellant: {}", canSendLetter);
-                    return canSendLetter;
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5705,13 +5704,10 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    Set<String> emails = AsylumCaseUtils.getApplicantEmail(asylumCase);
-                    log.info("In Handler Appellant emails {}", emails);
-                    log.info("In Handler emails.isEmpty() {}", emails.isEmpty());
-                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
-                    log.info("ABC can send 24WeeksNotification to appellant: {}", canSendNotifications);
-                    return canSendNotifications;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -5728,11 +5724,8 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
                     String emails = String.join(",", legalRepEmails);
-                    log.info("LegalRepresentative Emails {}", legalRepEmails);
-                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
-                    log.info("can send 24WeeksNotification to LR: {}", canSendNotifications);
-                    return canSendNotifications;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -5743,10 +5736,8 @@ public class NotificationHandlerConfiguration {
             @Qualifier("removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
-                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
-                    log.info("can send 24WeeksNotification to HO : {}", canSendNotifications);
-                    return canSendNotifications;
                 },
                 notificationGenerators,  getErrorHandler()
         );
