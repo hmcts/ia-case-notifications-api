@@ -10,35 +10,28 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantOrLegalRepAddressLetterPersonalisation;
 
 @Slf4j
 @Service
 public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalCaseSubmitAppealWithRemissionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final SystemDateProvider systemDateProvider;
-    private final int daysAfterSubmitAppeal;
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
 
     public AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation(
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.letter}") String removeStatutoryTimeframe24WeeksAppellantLetterId,
-            @Value("${appellantDaysToWait.letter.afterSubmitAppeal}") int daysAfterSubmitAppeal,
-            CustomerServicesProvider customerServicesProvider,
-            SystemDateProvider systemDateProvider
+            CustomerServicesProvider customerServicesProvider
     ) {
         this.appellantInternalCaseSubmitAppealWithRemissionLetterTemplateId = removeStatutoryTimeframe24WeeksAppellantLetterId;
         this.customerServicesProvider = customerServicesProvider;
-        this.systemDateProvider = systemDateProvider;
-        this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
     }
 
     @Override
@@ -65,7 +58,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
                 callback
                         .getCaseDetails()
                         .getCaseData();
-        final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
+
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -74,7 +67,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase));
-        List<String> address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
+        List<String> address = getAppellantAddressAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));

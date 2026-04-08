@@ -11,7 +11,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fix
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
@@ -120,7 +119,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_all_three_users() {
-        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "appellant@domain.com", null);
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "appellant@domain.com", null, YesOrNo.YES);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -139,7 +138,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_letter_to_appellant_and_email_to_legal_rep_and_home_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", null, null);
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", null, null, YesOrNo.YES);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -159,7 +158,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_letter_to_appellant_and_legal_rep_and_home_office_when_appellant_emails_are_empty() {
-        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "", "");
+        PreSubmitCallbackResponseForTest response = mockResponse("legalrep@domain.com", "", "", YesOrNo.YES);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -179,7 +178,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_appellant_and_ho_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse(null, "appellant@domain.com", null);
+        PreSubmitCallbackResponseForTest response = mockResponse(null, "appellant@domain.com", null, YesOrNo.YES);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -198,7 +197,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_email_to_appellant_with_internal_email_and_ho_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse(null, null, "appellant@domain.com");
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null, "appellant@domain.com", YesOrNo.YES);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -216,7 +215,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
-        PreSubmitCallbackResponseForTest response = mockResponse(null, null, null);
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null, null, YesOrNo.YES);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
                         .getData()
@@ -232,7 +231,26 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
     }
 
-    private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail, String internalAppellantEmail) {
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_not_send_24weeks_remove_letter_to_appellant_if_application_is_ooc() {
+        PreSubmitCallbackResponseForTest response = mockResponse(null, null, null, YesOrNo.NO);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertTrue(notificationsSent.isPresent());
+        List<IdValue<String>> notifications = notificationsSent.get();
+
+        assertThat(notifications.size()).isEqualTo(1);
+        List<String> idList = notifications.stream().map(IdValue::getId).toList();
+        String idsString = String.join(",", idList);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+    }
+
+
+    private PreSubmitCallbackResponseForTest mockResponse(String lrEmail, String appellantEmail, String internalAppellantEmail, YesOrNo inCountry) {
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
         when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
@@ -254,8 +272,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
                                 .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
                                 .with(SUBSCRIPTIONS, anySubscriptions())
                                 .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
-                                .with(APPELLANT_IN_UK, YesOrNo.YES)
-                                .with(APPELLANTS_REPRESENTATION,  YesOrNo.YES)
+                                .with(APPELLANT_IN_UK, inCountry)
                                 .with(AsylumCaseDefinition.APPELLANT_ADDRESS, new AddressUk("l1", "l2", "l2", "pt", "county", "pc", "uk"))
                         )));
     }

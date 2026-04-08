@@ -5689,7 +5689,7 @@ public class NotificationHandlerConfiguration {
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && emails.isEmpty();
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && emails.isEmpty() && AsylumCaseUtils.inCountryAppeal(asylumCase);
                 },
                 notificationGenerators, getErrorHandler()
         );
