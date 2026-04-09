@@ -12,10 +12,19 @@ management:
   endpoints:
     web:
       base-path: "/"
+      exposure:
+        include: health, info, prometheus
 
   health:
+    redis:
+      enabled: false  # don't let Redis affect pod health
     probes:
       enabled: true
+    group:
+      readiness:
+        include: ping
+      liveness:
+        include: ping
   services:
     notificationService:
       uri: "https://status.notifications.service.gov.uk"
@@ -45,10 +54,15 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}/o/jwks
-  cache:
-    cache-names: userInfoCache, systemUserTokenCache
-    caffeine:
-      spec: expireAfterAccess=3600s
+  data:
+    redis:
+      url: ${IA_REDIS_CONNECTION_STRING:}
+      secret: ${IA_REDIS_ACCESS_KEY:}
+      encryption:
+        key: ${IA_REDIS_ENCRYPTION_KEY:}
+      ssl:
+        enabled: true
+
 featureFlag:
   homeOfficeGovNotifyEnabled: ${IA_HOME_OFFICE_GOV_NOTIFY_ENABLED:true}
   appealsLocationReferenceData: ${APPEALS_LOCATION_REFERENCE_DATA_ENABLED:true}
