@@ -25,15 +25,6 @@
               }
             }
           ],
-          "legalRepHasAddress": "Yes",
-          "legalRepAddressUK": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
           "notificationsSent": []
         }
       }
@@ -60,15 +51,6 @@
             }
           }
         ],
-        "legalRepHasAddress": "Yes",
-        "legalRepAddressUK": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
         "notificationsSent": [
           {
             "id": "923414_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
@@ -76,6 +58,22 @@
           }
         ]
       }
-    }
+    },
+    "notifications": [
+      {
+        "reference": "923414_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Immigration and Asylum appeal: review Build your case direction",
+        "body": [
+          "PA/12345/2019",
+          "CASE001",
+          "Talha Awan",
+          "{$iaExUiFrontendUrl}",
+          "{$TODAY+28|d MMM yyyy}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
+        ]
+      }
+    ]
   }
 }
