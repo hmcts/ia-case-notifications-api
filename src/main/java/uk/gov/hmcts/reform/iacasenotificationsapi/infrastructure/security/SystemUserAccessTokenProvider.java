@@ -51,7 +51,7 @@ public class SystemUserAccessTokenProvider implements AccessTokenProvider {
     }
 
     @Override
-    @Cacheable(value = "systemUserTokenCache")
+    @Cacheable(value = "systemUserTokenCache", key = "'systemUserTokenCache'")
     public Optional<String> tryGetAccessToken() {
         try {
             log.debug("Fetching system user access token from IDAM");
@@ -65,6 +65,7 @@ public class SystemUserAccessTokenProvider implements AccessTokenProvider {
             tokenRequest.add("password", systemPassword);
             tokenRequest.add("scope", systemUserScope);
 
+            log.info("System user token expired. Getting a new token in ia-case-notifications-api");
             Token tokenResponse = idamApi.token(tokenRequest);
             
             if (tokenResponse == null || tokenResponse.getAccessToken() == null || tokenResponse.getAccessToken().trim().isEmpty()) {
