@@ -630,7 +630,8 @@ public enum AsylumCaseDefinition {
 
     LAST_EDIT_APPEAL_NOTIFICATION_DATE(
         "lastEditAppealNotificationDate", new TypeReference<String>(){}),
-    ;
+
+    COMPLETE_CASE_REVIEW_DATE("completeCaseReviewDate", new TypeReference<String>(){});
 
 
     private final String value;
