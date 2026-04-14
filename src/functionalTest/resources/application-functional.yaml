@@ -5,6 +5,8 @@ idam:
   scope: "openid profile authorities acr roles search-user manage-user create-user"
 
 spring:
+  profiles:
+    active: functional
   cache:
     cache-names: userInfoCache, legalRepATokenCache, caseOfficerTokenCache, adminOfficerTokenCache, homeOfficeApcTokenCache, homeOfficeLartTokenCache, homeOfficePouTokenCache, homeOfficeGenericTokenCache, legalRepShareCaseATokenCache, judgeTokenCache, citizenTokenCache, systemTokenCache
     caffeine:
