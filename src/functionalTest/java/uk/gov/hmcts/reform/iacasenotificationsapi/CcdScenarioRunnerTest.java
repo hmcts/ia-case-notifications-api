@@ -26,13 +26,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import uk.gov.hmcts.reform.iacasenotificationsapi.config.FunctionalTestCacheConfiguration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackResponse;
 import uk.gov.hmcts.reform.iacasenotificationsapi.fixtures.Fixture;
@@ -47,6 +50,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.verifiers.Verifier;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest
+@ImportAutoConfiguration
+@Import(FunctionalTestCacheConfiguration.class)
 @ActiveProfiles("functional")
 public class CcdScenarioRunnerTest {
 
