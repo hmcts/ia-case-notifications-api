@@ -36,7 +36,7 @@ public class FunctionalTestCacheConfiguration {
                 "legalRepShareCaseATokenCache",
                 "judgeTokenCache",
                 "citizenTokenCache",
-                "systemTokenCache"
+                "systemUserTokenCache"
         );
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(Duration.ofSeconds(3600))
