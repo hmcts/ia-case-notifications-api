@@ -105,6 +105,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRemoveRepresentationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeSubmitAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeTransferOutOfAdaPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAddendumEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUploadAdditionalEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
@@ -4996,6 +4997,84 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator(
+            AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation appellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean("removeStatutoryTimeframe24WeeksAppellantNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantNotificationGenerator(
+            AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
+    @Bean("removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator(
+            LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation legalRepresentativeTransferOutOfStf24WeeksPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeTransferOutOfStf24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator(
+            HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation homeOfficeTransferOutOfStf24WeeksPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeTransferOutOfStf24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
