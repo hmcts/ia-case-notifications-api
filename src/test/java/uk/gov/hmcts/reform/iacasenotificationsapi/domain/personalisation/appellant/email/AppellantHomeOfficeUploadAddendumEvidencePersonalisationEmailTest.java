@@ -28,7 +28,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -54,8 +53,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
     RecipientsFinder recipientsFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    @Mock
-    FeatureToggler featureToggler;
 
     private AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail;
 
@@ -76,8 +73,7 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
                         templateId,
                         iaAipFrontendUrl,
                         recipientsFinder,
-                        customerServicesProvider,
-                        featureToggler
+                        customerServicesProvider
                 );
     }
 
@@ -114,7 +110,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
 
     @Test
     public void should_return_appellant_email_address_from_asylum_case() {
-        when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(appellantEmailAddress));
 

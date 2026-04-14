@@ -1,6 +1,5 @@
 {
   "description": "RIA-5808 AIP Case Officer Upload Addendum Evidence notification",
-  "launchDarklyKey": "aip-upload-addendum-evidence-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

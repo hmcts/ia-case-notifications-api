@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,8 +31,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationSmsTest {
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-    @Mock
-    private FeatureToggler featureToggler;
     private AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms appellantHomeOfficeTcwUploadAddendumEvidencePersonalisationSms;
 
     @BeforeEach
@@ -45,8 +42,7 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationSmsTest {
         appellantHomeOfficeTcwUploadAddendumEvidencePersonalisationSms = new AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms(
                 smsTemplateId,
                 iaAipFrontendUrl,
-                recipientsFinder,
-                featureToggler);
+                recipientsFinder);
     }
 
     @Test
@@ -81,7 +77,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationSmsTest {
 
     @Test
     void should_return_appellant_phone_number_from_asylum_case() {
-        when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
