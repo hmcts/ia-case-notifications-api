@@ -22,7 +22,7 @@ public class FunctionalTestCacheConfiguration {
 
     @Bean
     @Primary
-    public CacheManager cacheManagerCustomizer() {
+    public CacheManager caffeineCacheManager() {
         log.info("Caffeine cache manager..");
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(
                 "userInfoCache",

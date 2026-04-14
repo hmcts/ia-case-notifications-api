@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.IdamApi
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.idam.Token;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.idam.IdentityManagerResponseException;
 
+@Slf4j
 @Service
 public class IdamAuthProvider {
 
@@ -23,6 +25,8 @@ public class IdamAuthProvider {
     private IdamApi idamApi;
 
     public String getUserToken(String username, String password) {
+
+        log.info("Making IDAM call for user: {}", username);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "password");

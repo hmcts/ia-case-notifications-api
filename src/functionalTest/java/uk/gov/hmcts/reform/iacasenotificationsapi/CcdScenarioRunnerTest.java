@@ -51,7 +51,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.verifiers.Verifier;
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest
 @ImportAutoConfiguration
-@Import(FunctionalTestCacheConfiguration.class)
 @ActiveProfiles("functional")
 public class CcdScenarioRunnerTest {
 
