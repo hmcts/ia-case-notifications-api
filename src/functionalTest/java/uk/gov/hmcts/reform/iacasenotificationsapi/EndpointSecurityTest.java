@@ -10,17 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import uk.gov.hmcts.reform.iacasenotificationsapi.config.FunctionalTestCacheConfiguration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.util.AuthorizationHeadersProvider;
 
 @SpringBootTest
-@ImportAutoConfiguration
-@Import(FunctionalTestCacheConfiguration.class)
 @ActiveProfiles("functional")
 public class EndpointSecurityTest {
 

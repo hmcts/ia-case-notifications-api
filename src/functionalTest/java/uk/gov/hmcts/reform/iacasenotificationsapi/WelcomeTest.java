@@ -6,18 +6,13 @@ import io.restassured.RestAssured;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import uk.gov.hmcts.reform.iacasenotificationsapi.config.FunctionalTestCacheConfiguration;
 
 @SpringBootTest
 @ActiveProfiles("functional")
-@ImportAutoConfiguration
-@Import(FunctionalTestCacheConfiguration.class)
 public class WelcomeTest {
 
     @Value("${targetInstance}")
