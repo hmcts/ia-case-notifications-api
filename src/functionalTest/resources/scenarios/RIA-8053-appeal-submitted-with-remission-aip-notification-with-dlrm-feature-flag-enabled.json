@@ -59,61 +59,6 @@
           }
         ]
       }
-    },
-    "notifications": [
-      {
-        "reference": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_EMAIL",
-        "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "Immigration and Asylum appeal: Your appeal details have been sent",
-        "body": [
-          "Appeal reference: PA/12345/2019",
-          "Home Office reference: A1234567",
-          "",
-          "Dear Talha Awan,",
-          "",
-          "Your appeal details have been sent to the Tribunal.",
-          "",
-          "There is a fee for this appeal. You told the Tribunal that you believe you do not have to pay some or all of the fee.",
-          "",
-          "# What happens next",
-          "The Tribunal will check the information you sent and let you know if you have to pay a fee.",
-          "",
-          "This should be by {$TODAY+14|d MMM yyyy} but it might take longer than that.",
-          ""
-        ]
-      },
-      {
-        "reference": "3689_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
-        "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      },
-      {
-        "reference": "3689_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
-        "recipient": "{$TEST_CITIZEN_MOBILE}",
-        "subject": "",
-        "body": [
-          "Appeal reference: PA/12345/2019",
-          "",
-          "Your appeal details have been sent to the Tribunal.",
-          "There is a fee for this appeal. You told the Tribunal",
-          "that you believe you do not have to pay some or all of",
-          "the fee.",
-          "",
-          "A Legal Officer will check the information you sent",
-          "and let you know if you have to pay a fee. This should",
-          "be by {$TODAY+14|d MMM yyyy} but it might",
-          "take longer than that.",
-          "",
-          "Sign in to your account to see the details of your"
-        ]
-      }
-    ]
+    }
   }
 }
