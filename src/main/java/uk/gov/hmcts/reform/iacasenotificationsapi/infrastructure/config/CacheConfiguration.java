@@ -50,43 +50,54 @@ public class CacheConfiguration {
 
             // Idam user info config
             AesEncryptingRedisSerializer<UserInfo> userInfoSerializer =
-                    new AesEncryptingRedisSerializer<>(
-                            new Jackson2JsonRedisSerializer<>(UserInfo.class),
-                            redisEncryptionKey
-                    );
+                new AesEncryptingRedisSerializer<>(
+                    new Jackson2JsonRedisSerializer<>(UserInfo.class),
+                    redisEncryptionKey
+                );
 
             RedisCacheConfiguration userInfoCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofSeconds(1800))
-                    .disableCachingNullValues()
-                    .serializeKeysWith(
-                            RedisSerializationContext.SerializationPair
-                                    .fromSerializer(new StringRedisSerializer()))
-                    .serializeValuesWith(
-                            RedisSerializationContext.SerializationPair
-                                    .fromSerializer(userInfoSerializer));
+                .entryTtl(Duration.ofSeconds(1800))
+                .disableCachingNullValues()
+                .serializeKeysWith(
+                    RedisSerializationContext.SerializationPair
+                        .fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                    RedisSerializationContext.SerializationPair
+                        .fromSerializer(userInfoSerializer));
 
             // system user token config
             AesEncryptingRedisSerializer<String> tokenSerializer =
-                    new AesEncryptingRedisSerializer<>(
-                            new Jackson2JsonRedisSerializer<>(String.class),
-                            redisEncryptionKey
-                    );
+                new AesEncryptingRedisSerializer<>(
+                    new Jackson2JsonRedisSerializer<>(String.class),
+                    redisEncryptionKey
+                );
 
             RedisCacheConfiguration tokenCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofSeconds(1800))  // 30mins (token might expire before cache)
-                    .disableCachingNullValues()
-                    .serializeKeysWith(
-                            RedisSerializationContext.SerializationPair
-                                    .fromSerializer(new StringRedisSerializer()))
-                    .serializeValuesWith(
-                            RedisSerializationContext.SerializationPair
-                                    .fromSerializer(tokenSerializer));
+                .entryTtl(Duration.ofSeconds(1800))  // 30mins (token might expire before cache)
+                .disableCachingNullValues()
+                .serializeKeysWith(
+                    RedisSerializationContext.SerializationPair
+                        .fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                    RedisSerializationContext.SerializationPair
+                        .fromSerializer(tokenSerializer));
 
             return RedisCacheManager.builder(redisConnectionFactory)
-                    .cacheDefaults(tokenCacheConfig)
-                    .withCacheConfiguration("systemUserTokenCache", tokenCacheConfig)
-                    .withCacheConfiguration("userInfoCache", userInfoCacheConfig)
-                    .build();
+                .cacheDefaults(tokenCacheConfig)
+                .withCacheConfiguration("systemUserTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("userInfoCache", userInfoCacheConfig)
+                // caches for functional tests
+                .withCacheConfiguration("legalRepATokenCache", tokenCacheConfig)
+                .withCacheConfiguration("caseOfficerTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("adminOfficerTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("homeOfficeApcTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("homeOfficeLartTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("homeOfficePouTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("homeOfficeGenericTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("legalRepShareCaseATokenCache", tokenCacheConfig)
+                .withCacheConfiguration("judgeTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("citizenTokenCache", tokenCacheConfig)
+                .build();
 
         } catch (Exception e) {
             // if redis is down, dont cache make idam calls, until pod restarts
@@ -97,14 +108,8 @@ public class CacheConfiguration {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory(
-            @Value("${spring.data.redis.url}") String redisUrl,
-            @Value("${spring.data.redis.secret}") String accessKey) {
-
-        if (redisUrl == null || redisUrl.isBlank()) {
-            log.warn("No Redis URL configured - falling back to Caffeine");
-            // return a dummy factory - cacheManager will catch the ping failure and fall back
-            return new LettuceConnectionFactory();
-        }
+        @Value("${spring.data.redis.url}") String redisUrl,
+        @Value("${spring.data.redis.secret}") String accessKey) {
 
         try {
             RedisURI redisUri = RedisURI.create(redisUrl);
@@ -127,14 +132,14 @@ public class CacheConfiguration {
             }
 
             LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-                    .commandTimeout(Duration.ofSeconds(5))
-                    .useSsl()
-                    .disablePeerVerification()
-                    .build();
+                .commandTimeout(Duration.ofSeconds(5))
+                .useSsl()
+                .disablePeerVerification()
+                .build();
 
             LettuceConnectionFactory factory = new LettuceConnectionFactory(
-                    config,
-                    clientConfig
+                config,
+                clientConfig
             );
 
             log.info("Successful Redis connection.");
