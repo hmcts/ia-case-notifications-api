@@ -107,11 +107,12 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
             .containsEntry("appellantFamilyName", "Doe")
             .containsEntry("completeCaseReviewDate", "15 May 1990")
             .containsEntry("customerServices", "value")
-            .containsEntry("address_line_1", "10")
-            .containsEntry("address_line_2", "Main St")
-            .containsEntry("address_line_3", "")
-            .containsEntry("address_line_4", "Sometown")
-            .containsEntry("address_line_5", "CM3 4DC");
+            .containsEntry("address_line_1", "John Doe")
+            .containsEntry("address_line_2", "10")
+            .containsEntry("address_line_3", "Main St")
+            .containsEntry("address_line_4", "")
+            .containsEntry("address_line_5", "Sometown")
+            .containsEntry("address_line_6", "CM3 4DC");
     }
 
     @Test
