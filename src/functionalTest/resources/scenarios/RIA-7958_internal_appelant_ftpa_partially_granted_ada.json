@@ -1,6 +1,5 @@
 {
   "description": "RIA-7958 Internal appellant's FTPA partially granted by RJ as granted for ADA case",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

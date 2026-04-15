@@ -1,6 +1,5 @@
 {
   "description": "RIA-6071 notifications when an appellant makes a time extension application (AIP)",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
