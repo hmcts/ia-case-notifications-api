@@ -3562,16 +3562,27 @@ public class NotificationHandlerConfiguration {
 
         // RIA-3631 - submitAppeal This needs to be changed as per ACs
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SUBMIT_APPEAL
-                    && (isInternalCase(callback.getCaseDetails().getCaseData())
-                    || isAipJourney(callback.getCaseDetails().getCaseData()))
-                    && (isPaymentPendingForEaOrHuAppeal(callback)
-                    || isPaymentPendingForEaOrHuAppealWithRemission(callback)),
-            notificationGenerators,
-            getErrorHandler()
+                (callbackStage, callback) ->
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && callback.getEvent() == Event.SUBMIT_APPEAL
+                                && (isInternalCasePaymentPending(callback) 
+                                || (isAipJourney(callback.getCaseDetails().getCaseData()) 
+                                && !hasAipAppealRemissionType(callback.getCaseDetails().getCaseData()))),
+                notificationGenerators,
+                getErrorHandler()
         );
+    }
+
+    private boolean hasAipAppealRemissionType(AsylumCase asylumCase) {
+        RemissionOption remissionOption = asylumCase
+                .read(REMISSION_OPTION, RemissionOption.class).orElse(RemissionOption.NO_REMISSION);
+        return remissionOption != RemissionOption.NO_REMISSION;
+    }
+
+    private boolean isInternalCasePaymentPending(Callback<AsylumCase> callback) {
+        return isInternalCase(callback.getCaseDetails().getCaseData())
+                && (isPaymentPendingForEaOrHuAppeal(callback)
+                || isPaymentPendingForEaOrHuAppealWithRemission(callback));
     }
 
     @Bean
