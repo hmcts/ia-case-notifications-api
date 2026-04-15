@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -48,7 +47,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.verifiers.Verifier;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest
-@ImportAutoConfiguration
 @ActiveProfiles("functional")
 public class CcdScenarioRunnerTest {
 

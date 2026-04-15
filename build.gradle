@@ -460,8 +460,6 @@ dependencies {
         exclude group: "com.github.tomakehurst", module: "wiremock-standalone"
     }
 
-    functionalTestImplementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.9.3'
-
     integrationTestImplementation sourceSets.main.runtimeClasspath
     integrationTestImplementation sourceSets.test.runtimeClasspath
 
