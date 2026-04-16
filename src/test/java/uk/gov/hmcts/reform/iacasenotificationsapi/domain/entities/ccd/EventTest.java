@@ -165,6 +165,7 @@ public class EventTest {
             Arguments.of("sendPipToNonLegalRep", Event.SEND_PIP_TO_NON_LEGAL_REP.toString()),
             Arguments.of("joinAppealConfirmation", Event.JOIN_APPEAL_CONFIRMATION.toString()),
             Arguments.of("nlrDetailsUpdated", Event.NLR_DETAILS_UPDATED.toString()),
+            Arguments.of("removeStatutoryTimeframe24Weeks", REMOVE_STATUTORY_TIMEFRAME_24_WEEKS.toString()),
             Arguments.of("unknown", Event.UNKNOWN.toString()));
     }
 }
